@@ -1,0 +1,57 @@
+﻿@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Localization
+@using Nop.Web.Framework.Themes
+@{
+    //logo path
+    var currentThemeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
+    var logoPath = "~/Themes/" + currentThemeName + "/Content/images/logo.png";
+
+    //store name
+    var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.GetLocalized(x => x.Name);
+}
+
+<div class="header">
+    @Html.Widget("header")
+    <div class="header-upper">
+        <div class="container">
+            <div class="header-selectors-wrapper">
+            
+                @Html.Action("TaxTypeSelector", "Common")
+            
+                @Html.Action("CurrencySelector", "Common")
+            
+                @Html.Action("LanguageSelector", "Common")
+            
+                @Html.Widget("header_selectors")
+            </div>
+            <div class="header-links-wrapper">
+                @Html.Action("HeaderLinks", "Common")
+            </div>
+        </div>
+    </div>
+
+    <div class="container header-lower">
+        <div class="row">
+            <div class="header-logo col s12 m3">
+                <a href="@Url.RouteUrl("HomePage")">
+                    <img title="" alt="@storeName" src="@Url.Content(logoPath)">
+                </a>
+            </div>
+            <div class="search-box input-field col s12 m6">
+                @Html.Action("SearchBox", "Catalog")
+            </div>
+            <div class="col s12 m3" id="topcartlink">
+                <div class="topcart">
+                    <a class="btn waves-effect waves-light" href="@Url.RouteUrl("ShoppingCart")">
+                        <span class="cart-label">@T("ShoppingCart")</span>
+                        <span class="cart-qty">@T("ShoppingCart.HeaderQuantity")</span>
+                        <i class="material-icons left">shopping_cart</i>
+                    </a>
+                    @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

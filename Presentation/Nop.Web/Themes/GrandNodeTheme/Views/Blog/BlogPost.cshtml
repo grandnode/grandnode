@@ -1,0 +1,141 @@
+﻿@model BlogPostModel
+@using Nop.Web.Models.Blogs;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+}
+@section left {
+    @Html.Widget("left_side_column_blog_before")
+    @Html.Action("BlogMonths", "Blog")
+    @Html.Widget("left_side_column_after_blog_archive")
+    @Html.Action("BlogTags", "Blog")
+    @Html.Widget("left_side_column_blog_after")
+}
+<div class="page blogpost-page">
+    @Html.Widget("blogpost_page_top", Model.Id)
+    <div class="blogpost-title">
+        <h1>@Model.Title</h1>
+    </div>
+    <div class="blogpost-body">
+        <div class="post-date">
+            @Model.CreatedOn.ToString("MMMM dd, yyyy")
+        </div>
+        @Html.Widget("blogpost_page_before_body", Model.Id)
+        <div class="post-body">
+            @Html.Raw(Model.Body)
+        </div>
+        @if (Model.Tags.Count > 0)
+        {
+            <div class="blogpost-tags">
+                <ul>
+                    @for (int i = 0; i < Model.Tags.Count; i++)
+                    {
+                        var tag = Model.Tags[i];
+                        <li><a href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a></li>
+                    }
+                </ul>
+            </div>
+        }
+        @Html.Widget("blogpost_page_before_comments", Model.Id)
+        @if (Model.AllowComments)
+        {
+            <div class="new-comment">
+                <div class="title">
+                    <h5>@T("Blog.Comments.LeaveYourComment")</h5>
+                </div>
+                @{
+                    var validationSummary = Html.ValidationSummary(true);
+                }
+                <div class="notifications">
+                    @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                    {
+                        <div class="message-error">@validationSummary</div>
+                    }
+                    @{
+                        var result = TempData["nop.blog.addcomment.result"] as string;
+                    }
+                    @if (!String.IsNullOrEmpty(result))
+                    {
+                        <div class="result">@result</div>
+                    }
+                </div>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="input-field col s12">
+                        @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "materialize-textarea" })
+                        @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                        @Html.LabelFor(model => model.AddNewComment.CommentText, new {}, ":")
+                    </div>
+                    if (Model.AddNewComment.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            @Html.Raw(Html.GenerateCaptcha())
+                        </div>
+                    }
+
+                    <input class="btn waves-effect waves-light" type="submit" name="add-comment" value="@T("Blog.Comments.SubmitButton")" />
+                    
+                }
+            </div>
+            if (Model.Comments.Count > 0)
+            {
+                <div class="comment-list">
+                    <div class="title">
+                        <h5>@T("Blog.Comments")</h5>
+                    </div>
+                    <div class="comments">
+                        @foreach (var comment in Model.Comments)
+                        {
+                            <div class="comment blog-comment">
+                                <div class="comment-info">
+                                    <div class="user-info">
+                                        @if (comment.AllowViewingProfiles)
+                                        {
+                                            <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="username">@(comment.CustomerName)</span>
+                                        }
+
+                                        @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                        {
+                                            <div class="avatar">
+                                                @if (comment.AllowViewingProfiles)
+                                                {
+                                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="avatar-img-link">
+                                                        <img src="@(comment.CustomerAvatarUrl)" class="circle responsive-img" alt="avatar" />
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <img src="@(comment.CustomerAvatarUrl)" class="circle responsive-img" alt="avatar" />
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="comment-content">
+                                    <div class="comment-time">
+                                        <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                    </div>
+                                    <div class="comment-body">
+                                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
+                                    </div>
+                                </div>
+                                @Html.Widget("blogpost_page_inside_comment", comment.Id)
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        @Html.Widget("blogpost_page_after_comments", Model.Id)
+    </div>
+    @Html.Widget("blogpost_page_bottom", Model.Id)
+</div>

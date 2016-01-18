@@ -1,0 +1,12 @@
+﻿@model ActiveDiscussionsModel
+@using Nop.Web.Models.Boards;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
+}
+<div class="page active-discussions-page">
+    @Html.Action("ForumBreadcrumb")
+    @Html.Partial("_ForumHeader")
+    @Html.Partial("_ActiveTopics", Model)
+</div>

@@ -1,0 +1,140 @@
+﻿<Language Name="Türkçe" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Yönetici e-posta</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Yönetici e-posta alanı boş bırakılamaz</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Yönetici şifre</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Yönetici şifre alanı boş bırakılamaz</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>The '{0}' hesabı '{1}' klasörü için değiştirme yetkisi yok. Lütfen bu hakları düzenleyiniz.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>The '{0}' hesabı '{1}'. dosyası için değiştirme yetkisi yok. Lütfen bu hakları düzenleyiniz.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Şifreyi onayla</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Şifreyi onayla alanı boş bırakılamaz</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Bağlantı cümleciği (Connection string)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Bağlantı cümleciği (Connection string) alanı boş bırakılamaz</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>MongoDB bağlantı değerlerini girin</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Hatalı MongoDB bağlantı cümleciği (connection string) biçimi</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Veritabanı yok ise oluştur</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Örnek veriler oluştur</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Özel MongoDB Server alfabe düzeni</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Veritabanı oluşturulurken hata oluştu: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Veritabanı bilgisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Veritabanı adı</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Veritabanı adı alanı boş bırakılamaz</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Veritabanı yok veya bağlanmak için gerekli izinleriniz yok</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Veri kaynağını seçin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>grandnode'in nasıl kullanıldığı hakkında daha fazla bilgi için </Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>grandnode.com adresincen document bölümünü ziyaret edin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Örnek</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Yükle</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>grandnode yükleniyor...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Şifreler uyuşmuyor</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>raw bağlantı cümleciği (connection string) giriniz (ileri düzey)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Önerilen]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Yüklemeyi yeniden başlat</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Yükleme işlemini yeniden başlatmak için tıklayınız. (Önbellekteki tüm bilgileri temizle)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Kurulum başarısız: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBAuthentication">
+    <Value>MongoDB Server hesabı kullan</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBCompact">
+    <Value>MongoDB Server Compact kullan</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerName">
+    <Value>MongoDB Server adı</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerNameRequired">
+    <Value>MongoDB Server adı alanı boş bırakılamaz</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerPassword">
+    <Value>MongoDB Şifre</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerPasswordRequired">
+    <Value>MongoDB Şifre alanı boş bırakılamaz</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerUsername">
+    <Value>MongoDB Kullanıcı adı</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBServerUsernameRequired">
+    <Value>MongoDB Kullanıcı adı boş bırakılamaz</Value>
+  </LocaleResource>
+  <LocaleResource Name="MongoDBStandard">
+    <Value>MongoDB Server (veya MongoDB Express) veritabanı kullan</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Mağaza bilgisi</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>grandnode Yükle</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>grandnode ASP.NET ile yazılmış lider online e-ticaret çözümüdür. Bu sihirbaz grandnode kurulumu sırasında size yol gösterecektir.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Bu sihirbazı tamamlamak için bazı bilgilere ihtiyaç duyacaksınız. MongoDB bağlantı cümleciğinizi ("connection string") bilmiyorsanız lütfen internet servis sağlayıcınız ile iletişime geçin. Kurulumu kendi bilgisayarınız üzerinde gerçekleştirecekseniz sistem yöneticinizden bu bilgileri alabilirsiniz.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Windows kullanıcı bilgilerini kullan</Value>
+  </LocaleResource>
+</Language>

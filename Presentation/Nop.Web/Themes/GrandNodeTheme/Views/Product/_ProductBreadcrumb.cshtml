@@ -1,0 +1,29 @@
+﻿@model ProductDetailsModel.ProductBreadcrumbModel
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@{
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+}
+@if (Model.Enabled)
+{
+    <nav>
+        <div class="nav-wrapper">
+            <div class="col s12">
+                @Html.Widget("productbreadcrumb_before", Model.ProductId)
+
+                <a href="@Url.RouteUrl("HomePage")" itemprop="url" class="breadcrumb">@T("Products.Breadcrumb.Top")</a>
+
+                @foreach (var cat in Model.CategoryBreadcrumb)
+                {
+                    <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name" class="breadcrumb">@cat.Name</a>
+                }
+
+                <a class="breadcrumb">@Model.ProductName</a>
+                @Html.Widget("productbreadcrumb_after", Model.ProductId)
+
+            </div>
+        </div>
+    </nav>
+
+}

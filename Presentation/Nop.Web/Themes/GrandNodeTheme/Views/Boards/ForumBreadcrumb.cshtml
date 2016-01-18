@@ -1,0 +1,40 @@
+﻿@model ForumBreadcrumbModel
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Boards;
+@{
+    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+}
+<nav>
+        
+    <div class="nav-wrapper">
+        <div class="col s12">
+            
+            <a href="@Url.RouteUrl("HomePage")" class="breadcrumb" title="@T("Forum.Breadcrumb.HomeTitle")">@T("Forum.Home")</a>
+            
+                @Html.RouteLink(T("Forum.Forums").Text, "Boards", null, new { title = T("Forum.Breadcrumb.ForumHomeTitle"), @class = "breadcrumb" })
+            @if (Model.ForumGroupId > 0)
+            {
+                    @Html.RouteLink(Model.ForumGroupName, "ForumGroupSlug",
+                 new { id = Model.ForumGroupId, slug = Model.ForumGroupSeName },
+                new { @class = "breadcrumb", title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumGroupTitle"), Model.ForumGroupName) })
+            }
+            @if (Model.ForumId > 0)
+            {
+                    @Html.RouteLink(Model.ForumName, "ForumSlug",
+                 new { id = Model.ForumId, slug = Model.ForumSeName },
+                new {  @class = "breadcrumb", title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.ForumTitle"), Model.ForumName) })
+            }
+            @if (Model.ForumTopicId > 0)
+            {
+                    @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug",
+                 new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName },
+                new { @class = "breadcrumb", title = String.Format("{0}: {1} ", T("Forum.Breadcrumb.TopicTitle"), Model.ForumTopicSubject) })
+            }
+        </div>
+    </div>
+</nav>
+
+
+
+

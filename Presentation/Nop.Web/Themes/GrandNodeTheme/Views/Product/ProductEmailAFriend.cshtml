@@ -1,0 +1,65 @@
+﻿@model ProductEmailAFriendModel
+@using Nop.Web.Models.Catalog;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(Model.ProductName);
+    Html.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
+}
+<div class="page email-a-friend-page">
+    
+    <div class="container">
+        <div class="page-title">
+            <h1>@T("Products.EmailAFriend.Title") - <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">"@Model.ProductName"</a></h1>
+        </div>
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                var validationSummary = Html.ValidationSummary(true);
+                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                {
+                    <div class="message-error">@validationSummary</div>
+                }
+                <div class="fieldset card-panel grey lighten-4">
+                    <div class="form-fields">
+                        <div class="input-field col s12">
+                            @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email" })
+                            @Html.LabelFor(model => model.FriendEmail)
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.FriendEmail)
+                        </div>
+                        <div class="input-field col s12">
+                            @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email" })
+                            @Html.LabelFor(model => model.YourEmailAddress)
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.YourEmailAddress)
+                        </div>
+                        <div class="input-field col s12">
+                            @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "materialize-textarea personal-message" })
+                            @Html.LabelFor(model => model.PersonalMessage)
+                            @Html.ValidationMessageFor(model => model.PersonalMessage)
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                        }
+                    </div>
+                </div>
+                <button type="submit" name="send-email" class="btn waves-effect waves-light">
+                    @T("Products.EmailAFriend.Button") 
+                </button>
+            }
+        }
+    </div>
+</div>

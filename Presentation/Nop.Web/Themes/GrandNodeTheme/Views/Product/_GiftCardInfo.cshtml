@@ -1,0 +1,33 @@
+﻿@model ProductDetailsModel.GiftCardModel
+@using Nop.Web.Models.Catalog;
+@if (Model.IsGiftCard)
+{
+    <div class="giftcard">
+        <div class="input-field col s12">
+            @Html.TextBoxFor(model => model.RecipientName, new { @class = "recipient-name" })
+            @Html.LabelFor(model => model.RecipientName, new { }, ":")
+        </div>
+        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+        {
+            <div class ="input-field col s12">
+                @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipient-email" })
+                @Html.LabelFor(model => model.RecipientEmail, new { }, ":")
+            </div>
+        }
+        <div class="input-field col s12">
+            @Html.TextBoxFor(model => model.SenderName, new { @class = "sender-name" })
+            @Html.LabelFor(model => model.SenderName, new { }, ":")
+        </div>
+        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+        {
+            <div class="input-field col s12">
+                @Html.TextBoxFor(model => model.SenderEmail, new { @class = "sender-email" })
+                @Html.LabelFor(model => model.SenderEmail, new { }, ":")
+            </div>
+        }
+        <div class="input-field col s12">
+            @Html.TextAreaFor(model => model.Message, new { @class = "message materialize-textarea" })
+            @Html.LabelFor(model => model.Message, new { }, ":")
+        </div>
+    </div>
+}
