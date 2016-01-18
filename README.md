@@ -29,6 +29,14 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
 Browse our shopping cart demo store to get a feel for nopCommerce shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
 
-##### View demo of our shop:
+##### Frontend:
 [![ScreenShot](http://grandnode.com/Content/Images/uploaded/grand.png)](http://demo.grandnode.com/)
 
+##### Frontend:
+[![ScreenShot](http://grandnode.com/Content/Images/uploaded/back.png)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
+
+Demo is restoring every hour to the original state.
+
+Access to the admin panel:
+Admin email: admin@yourstore.com
+Admin password: 123456
