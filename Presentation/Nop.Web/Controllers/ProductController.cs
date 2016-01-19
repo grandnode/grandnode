@@ -1007,7 +1007,7 @@ namespace Nop.Web.Controllers
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.ViewProduct", _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
+            _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
 
             return View(model.ProductTemplateViewPath, model);
         }
@@ -1322,7 +1322,7 @@ namespace Nop.Web.Controllers
                     _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.AddProductReview", _localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name);
+                _customerActivityService.InsertActivity("PublicStore.AddProductReview", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name);
 
                 //raise event
                 if (productReview.IsApproved)
@@ -1509,7 +1509,7 @@ namespace Nop.Web.Controllers
             _compareProductsService.AddProductToCompareList(productId);
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.AddToCompareList", _localizationService.GetResource("ActivityLog.PublicStore.AddToCompareList"), product.Name);
+            _customerActivityService.InsertActivity("PublicStore.AddToCompareList", productId, _localizationService.GetResource("ActivityLog.PublicStore.AddToCompareList"), product.Name);
             
             return Json(new
             {

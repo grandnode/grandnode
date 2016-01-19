@@ -186,10 +186,10 @@ namespace Nop.Services.Logging
         /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword,
+        public virtual ActivityLog InsertActivity(string systemKeyword, int entityKeyId,
             string comment, params object[] commentParams)
         {
-            return InsertActivity(systemKeyword, comment, _workContext.CurrentCustomer, commentParams);
+            return InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer, commentParams);
         }
         
 
@@ -201,7 +201,7 @@ namespace Nop.Services.Logging
         /// <param name="customer">The customer</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, 
+        public virtual ActivityLog InsertActivity(string systemKeyword, int entityKeyId,
             string comment, Customer customer, params object[] commentParams)
         {
             if (customer == null)
@@ -217,10 +217,10 @@ namespace Nop.Services.Logging
             comment = CommonHelper.EnsureMaximumLength(comment, 4000);
 
             
-
             var activity = new ActivityLog();
             activity.ActivityLogTypeId = activityType.Id;
             activity.CustomerId = customer.Id;
+            activity.EntityKeyId = entityKeyId;
             activity.Comment = comment;
             activity.CreatedOnUtc = DateTime.UtcNow;
             activity.ActivityLogType = new ActivityLogType();

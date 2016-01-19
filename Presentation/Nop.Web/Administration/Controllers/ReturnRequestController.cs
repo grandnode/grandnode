@@ -184,7 +184,7 @@ namespace Nop.Admin.Controllers
                 //_customerService.UpdateCustomer(returnRequest.Customer);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditReturnRequest", _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
+                _customerActivityService.InsertActivity("EditReturnRequest", returnRequest.Id, _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id}) : RedirectToAction("List");
@@ -232,7 +232,7 @@ namespace Nop.Admin.Controllers
             _returnRequestService.DeleteReturnRequest(returnRequest);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteReturnRequest", _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);
+            _customerActivityService.InsertActivity("DeleteReturnRequest", returnRequest.Id, _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Deleted"));
             return RedirectToAction("List");

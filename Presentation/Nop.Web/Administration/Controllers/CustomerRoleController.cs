@@ -136,7 +136,7 @@ namespace Nop.Admin.Controllers
                 _customerService.InsertCustomerRole(customerRole);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewCustomerRole", _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
+                _customerActivityService.InsertActivity("AddNewCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
@@ -189,7 +189,7 @@ namespace Nop.Admin.Controllers
                     _customerService.UpdateCustomerRole(customerRole);
 
                     //activity log
-                    _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+                    _customerActivityService.InsertActivity("EditCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id}) : RedirectToAction("List");
@@ -218,10 +218,10 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                _customerService.DeleteCustomerRole(customerRole);
-
                 //activity log
-                _customerActivityService.InsertActivity("DeleteCustomerRole", _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
+                _customerActivityService.InsertActivity("DeleteCustomerRole", customerRole.Id, _localizationService.GetResource("ActivityLog.DeleteCustomerRole"), customerRole.Name);
+
+                _customerService.DeleteCustomerRole(customerRole);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Deleted"));
                 return RedirectToAction("List");

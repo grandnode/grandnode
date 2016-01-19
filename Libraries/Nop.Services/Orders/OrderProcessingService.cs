@@ -1618,7 +1618,7 @@ namespace Nop.Services.Orders
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
                         _customerActivityService.InsertActivity(
-                            "PublicStore.PlaceOrder",
+                            "PublicStore.PlaceOrder",0,
                             _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"),
                             order.Id);
                     }

@@ -151,7 +151,7 @@ namespace Nop.Admin.Controllers
                 _giftCardService.InsertGiftCard(giftCard);
 
                 //activity log
-                _customerActivityService.InsertActivity("AddNewGiftCard", _localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode);
+                _customerActivityService.InsertActivity("AddNewGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.AddNewGiftCard"), giftCard.GiftCardCouponCode);
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = giftCard.Id }) : RedirectToAction("List");
@@ -203,7 +203,7 @@ namespace Nop.Admin.Controllers
                 _giftCardService.UpdateGiftCard(giftCard);
 
                 //activity log
-                _customerActivityService.InsertActivity("EditGiftCard", _localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode);
+                _customerActivityService.InsertActivity("EditGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.EditGiftCard"), giftCard.GiftCardCouponCode);
 
                 SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Updated"));
 
@@ -294,7 +294,7 @@ namespace Nop.Admin.Controllers
             _giftCardService.DeleteGiftCard(giftCard);
 
             //activity log
-            _customerActivityService.InsertActivity("DeleteGiftCard", _localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode);
+            _customerActivityService.InsertActivity("DeleteGiftCard", giftCard.Id, _localizationService.GetResource("ActivityLog.DeleteGiftCard"), giftCard.GiftCardCouponCode);
 
             SuccessNotification(_localizationService.GetResource("Admin.GiftCards.Deleted"));
             return RedirectToAction("List");

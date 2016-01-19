@@ -21,6 +21,10 @@ namespace Nop.Core.Domain.Logging
         public int CustomerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the entity key identifier
+        /// </summary>
+        public int EntityKeyId { get; set; }
+        /// <summary>
         /// Gets or sets the activity comment
         /// </summary>
         public string Comment { get; set; }
