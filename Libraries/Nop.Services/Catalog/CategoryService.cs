@@ -32,7 +32,7 @@ namespace Nop.Services.Catalog
         /// </remarks>
         private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
         /// <summary>
-        /// Key for caching
+        /// Key for caching 
         /// </summary>
         /// <remarks>
         /// {0} : parent category ID
