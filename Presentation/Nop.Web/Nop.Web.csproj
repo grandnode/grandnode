@@ -502,6 +502,11 @@
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\Images\default-image.png" />
+    <Content Include="Content\Images\MessageTemplate\img01.jpg" />
+    <Content Include="Content\Images\MessageTemplate\img02.jpg" />
+    <Content Include="Content\Images\MessageTemplate\img03.jpg" />
+    <Content Include="Content\Images\MessageTemplate\img04.jpg" />
+    <Content Include="Content\Images\MessageTemplate\logo.png" />
     <Content Include="Content\kendo\2014.1.318\Black\editor.png" />
     <Content Include="Content\kendo\2014.1.318\Black\imagebrowser.png" />
     <Content Include="Content\kendo\2014.1.318\Black\indeterminate.gif" />

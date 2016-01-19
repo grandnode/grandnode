@@ -10,6 +10,7 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Services.Customers;
 
 namespace Nop.Admin.Controllers
 {
@@ -21,6 +22,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerService _customerService;
 
         #endregion Fields
 
@@ -28,13 +30,14 @@ namespace Nop.Admin.Controllers
 
         public ActivityLogController(ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, ICustomerService customerService)
 		{
             this._customerActivityService = customerActivityService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
-		}
+            this._customerService = customerService;
+        }
 
 		#endregion 
 
@@ -116,8 +119,10 @@ namespace Nop.Admin.Controllers
             {
                 Data = activityLog.Select(x =>
                 {
+                    var customer = _customerService.GetCustomerById(x.CustomerId);
                     var m = x.ToModel();
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    m.CustomerEmail = customer != null ? customer.Email : "NULL";
                     return m;
                     
                 }),
