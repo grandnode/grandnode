@@ -21,7 +21,6 @@ namespace Nop.Services.Blogs
 
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly IRepository<BlogComment> _blogCommentRepository;
-        //private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -31,13 +30,11 @@ namespace Nop.Services.Blogs
 
         public BlogService(IRepository<BlogPost> blogPostRepository,
             IRepository<BlogComment> blogCommentRepository,
-            //IRepository<StoreMapping> storeMappingRepository,
             CatalogSettings catalogSettings, 
             IEventPublisher eventPublisher)
         {
             this._blogPostRepository = blogPostRepository;
             this._blogCommentRepository = blogCommentRepository;
-            //this._storeMappingRepository = storeMappingRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
         }
