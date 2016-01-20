@@ -97,4 +97,27 @@
             </tr>
         }
     </table>
+    <p>
+        <hr />
+    </p>
+    <table width="100%">
+        <tr>
+            <td colspan="2">
+                <strong>@T("Admin.System.Maintenance.DeleteActivityLog")</strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="delete-activitylog" class="k-button" value="@T("Admin.Common.Delete")" />
+            </td>
+        </tr>
+        @if (Model.DeleteActivityLog)
+        {
+            <tr>
+                <td colspan="2">
+                    <strong>@T("Admin.System.Maintenance.DeleteActivityLog.Deleted")</strong>
+                </td>
+            </tr>
+        }
+    </table>
 }

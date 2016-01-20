@@ -11,6 +11,7 @@ using Nop.Services.Security;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Services.Customers;
+using Nop.Services.Catalog;
 
 namespace Nop.Admin.Controllers
 {
@@ -23,23 +24,30 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerService _customerService;
-
+        private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IProductService _productService;
         #endregion Fields
 
         #region Constructors
 
         public ActivityLogController(ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService, ICustomerService customerService)
-		{
+            IPermissionService permissionService, ICustomerService customerService,
+            ICategoryService categoryService, IManufacturerService manufacturerService,
+            IProductService productService)
+        {
             this._customerActivityService = customerActivityService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._customerService = customerService;
+            this._categoryService = categoryService;
+            this._manufacturerService = manufacturerService;
+            this._productService = productService;
         }
 
-		#endregion 
+        #endregion
 
         #region Activity log types
 
@@ -62,8 +70,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             string formKey = "checkbox_activity_types";
-            var checkedActivityTypes = form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x)).ToList() : new List<int>();
-            
+            var checkedActivityTypes = form[formKey] != null ? form[formKey].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x)).ToList() : new List<int>();
+
             var activityTypes = _customerActivityService.GetAllActivityTypes();
             foreach (var activityType in activityTypes)
             {
@@ -75,9 +83,9 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Activity log
-        
+
         public ActionResult ListLogs()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
@@ -114,7 +122,7 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var activityLog = _customerActivityService.GetAllActivities(startDateValue, endDateValue,null, model.ActivityLogTypeId, command.Page - 1, command.PageSize);
+            var activityLog = _customerActivityService.GetAllActivities(startDateValue, endDateValue, null, model.ActivityLogTypeId, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = activityLog.Select(x =>
@@ -124,7 +132,7 @@ namespace Nop.Admin.Controllers
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.CustomerEmail = customer != null ? customer.Email : "NULL";
                     return m;
-                    
+
                 }),
                 Total = activityLog.TotalCount
             };
@@ -157,5 +165,104 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
+        #region Acticity Stats
+
+        public ActionResult ListStats()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
+            var activityLogSearchModel = new ActivityLogSearchModel();
+            activityLogSearchModel.ActivityLogType.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = "All"
+            });
+
+
+            foreach (var at in _customerActivityService.GetAllActivityTypes())
+            {
+                activityLogSearchModel.ActivityLogType.Add(new SelectListItem
+                {
+                    Value = at.Id.ToString(),
+                    Text = at.Name
+                });
+            }
+            return View(activityLogSearchModel);
+        }
+
+        [HttpPost]
+        public ActionResult ListStats(DataSourceRequest command, ActivityLogSearchModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActivityLog))
+                return AccessDeniedView();
+
+            DateTime? startDateValue = (model.CreatedOnFrom == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.CreatedOnTo == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            var activityLog = _customerActivityService.GetStatsActivities(startDateValue, endDateValue, model.ActivityLogTypeId, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = activityLog.Select(x =>
+                {
+                    var activityLogType = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId);
+                    string _name = "-empty-";
+                    if(activityLogType!=null)
+                    {
+                        IList<string> systemKeywordsCategory = new List<string>();
+                        systemKeywordsCategory.Add("PublicStore.ViewCategory");
+                        systemKeywordsCategory.Add("EditCategory");
+                        systemKeywordsCategory.Add("AddNewCategory");
+
+                        if (systemKeywordsCategory.Contains(activityLogType.SystemKeyword))
+                        {
+                            var category = _categoryService.GetCategoryById(x.EntityKeyId);
+                            if (category != null)
+                                _name = category.Name;
+                        }
+
+                        IList<string> systemKeywordsManufacturer = new List<string>();
+                        systemKeywordsManufacturer.Add("PublicStore.ViewManufacturer");
+                        systemKeywordsManufacturer.Add("EditManufacturer");
+                        systemKeywordsManufacturer.Add("AddNewManufacturer");
+
+                        if (systemKeywordsManufacturer.Contains(activityLogType.SystemKeyword))
+                        {
+                            var manufacturer = _manufacturerService.GetManufacturerById(x.EntityKeyId);
+                            if (manufacturer != null)
+                                _name = manufacturer.Name;
+                        }
+
+                        IList<string> systemKeywordsProduct = new List<string>();
+                        systemKeywordsProduct.Add("PublicStore.ViewProduct");
+                        systemKeywordsProduct.Add("EditProduct");
+                        systemKeywordsProduct.Add("AddNewProduct");
+
+                        if (systemKeywordsProduct.Contains(activityLogType.SystemKeyword))
+                        {
+                            var product = _productService.GetProductById(x.EntityKeyId);
+                            if (product != null)
+                                _name = product.Name;
+                        }
+
+                    }
+
+                    var m = x.ToModel();
+                    m.ActivityLogTypeName = activityLogType!=null ? activityLogType.Name : "-empty-";
+                    m.Name = _name;
+                    return m;
+
+                }),
+                Total = activityLog.TotalCount
+            };
+            return Json(gridModel);
+        }
+
+
+        #endregion
+    
     }
 }

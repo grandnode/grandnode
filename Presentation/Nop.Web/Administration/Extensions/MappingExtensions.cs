@@ -396,8 +396,12 @@ namespace Nop.Admin.Extensions
             return entity.MapTo<ActivityLog, ActivityLogModel>();
         }
 
+        public static ActivityStatsModel ToModel(this ActivityStats entity)
+        {
+            return entity.MapTo<ActivityStats, ActivityStatsModel>();
+        }
         #endregion
-        
+
         #region Currencies
 
         public static CurrencyModel ToModel(this Currency entity)

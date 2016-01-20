@@ -9,6 +9,7 @@ using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using System;
 
 namespace Nop.Admin.Models.Catalog
 {
@@ -154,6 +155,21 @@ namespace Nop.Admin.Models.Catalog
 
             public int[] SelectedProductIds { get; set; }
         }
+
+        public partial class ActivityLogModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Manufacturers.ActivityLog.ActivityLogType")]
+            public string ActivityLogTypeName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Manufacturers.ActivityLog.Comment")]
+            public string Comment { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Manufacturers.ActivityLog.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Manufacturers.ActivityLog.Customer")]
+            public int CustomerId { get; set; }
+            public string CustomerEmail { get; set; }
+        }
+
+
 
         #endregion
     }

@@ -4847,5 +4847,40 @@ namespace Nop.Admin.Controllers
         #endregion
 
         #endregion
+
+        #region Activity log
+
+        [HttpPost]
+        public ActionResult ListActivityLog(DataSourceRequest command, int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return Content("");
+
+            var activityLog = _customerActivityService.GetProductActivities(null, null, productId, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = activityLog.Select(x =>
+                {
+                    var customer = _customerService.GetCustomerById(x.CustomerId);
+                    var m = new ProductModel.ActivityLogModel
+                    {
+                        Id = x.Id,
+                        ActivityLogTypeName = x.ActivityLogType.Name,
+                        Comment = x.Comment,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        CustomerId = x.CustomerId,
+                        CustomerEmail = customer != null ? customer.Email : "null"
+                    };
+                    return m;
+
+                }),
+                Total = activityLog.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        #endregion
+
     }
 }

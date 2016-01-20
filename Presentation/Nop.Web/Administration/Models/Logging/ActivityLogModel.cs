@@ -17,4 +17,21 @@ namespace Nop.Admin.Models.Logging
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
     }
+
+    public partial class ActivityStatsModel : BaseNopEntityModel
+    {
+        [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityStats.Fields.ActivityLogType")]
+        public string ActivityLogTypeName { get; set; }
+        public int ActivityLogTypeId { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityStats.Fields.EntityKeyId")]
+        public int EntityKeyId { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityStats.Fields.Name")]
+        public string Name { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityStats.Fields.Count")]
+        public int Count { get; set; }
+
+    }
 }

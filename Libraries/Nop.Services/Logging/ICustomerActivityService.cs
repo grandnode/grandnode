@@ -81,7 +81,56 @@ namespace Nop.Services.Logging
         IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, int? customerId = null, int activityLogTypeId = 0,
             int pageIndex = 0, int pageSize = int.MaxValue);
-        
+
+        /// <summary>
+        /// Gets stats activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="activityLogTypeId">Activity log type identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Stats Activity log items</returns>
+        IPagedList<ActivityStats> GetStatsActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int activityLogTypeId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets category activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="categoryId">Category identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        IPagedList<ActivityLog> GetCategoryActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int categoryId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets manufacturer activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="manufacturerId">Manufacturer identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        IPagedList<ActivityLog> GetManufacturerActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int manufacturerId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets product activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="productId">Manufacturer identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        IPagedList<ActivityLog> GetProductActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int productId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+
         /// <summary>
         /// Gets an activity log item
         /// </summary>

@@ -1578,6 +1578,12 @@
   <LocaleResource Name="Admin.Catalog.Categories.Acl">
     <Value>Access control list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog">
+    <Value>Activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog.ActivityLogType">
+    <Value>Activity Log Type</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Added">
     <Value>The new category has been added successfully.</Value>
   </LocaleResource>
@@ -1589,6 +1595,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Breadcrumb">
     <Value>Breadcrumb</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog.Customer">
+    <Value>Customer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Deleted">
     <Value>The category has been deleted successfully.</Value>
@@ -1788,6 +1803,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Acl">
     <Value>Access control list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog">
+    <Value>Activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog.ActivityLogType">
+    <Value>Activity Log Type</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Manufacturers.Added">
     <Value>The new manufacturer has been added successfully.</Value>
   </LocaleResource>
@@ -1796,6 +1817,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.BackToList">
     <Value>back to manufacturer list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog.Customer">
+    <Value>Customer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Deleted">
     <Value>The manufacturer has been deleted successfully.</Value>
@@ -2052,6 +2082,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Acl">
     <Value>Access control list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog">
+    <Value>Activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog.ActivityLogType">
+    <Value>Activity Log Type</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Added">
     <Value>The new product has been added successfully.</Value>
   </LocaleResource>
@@ -2100,6 +2136,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Categories.SaveBeforeEdit">
     <Value>You need to save the product before you can map categories for this product page.</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Products.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Copy">
     <Value>Copy product</Value>
   </LocaleResource>
@@ -2121,6 +2160,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Copy.Published.Hint">
     <Value>Check to mark a product as published.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.CrossSells">
     <Value>Cross-sells</Value>
   </LocaleResource>
@@ -2133,6 +2175,9 @@
   <LocaleResource Name="Admin.Catalog.Products.CrossSells.SaveBeforeEdit">
     <Value>You need to save the product before you can add cross-sell products for this product page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Products.Deleted">
     <Value>The product has been deleted successfully.</Value>
   </LocaleResource>
@@ -3542,6 +3587,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLogType.Updated">
     <Value>The types have been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats">
+    <Value>Activity Stat</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats.Fields.ActivityLogType">
+    <Value>Activity Types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats.Fields.Name">
+    <Value>Catalog name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats.Fields.Count">
+    <Value>Visit counter</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Countries">
     <Value>Countries</Value>
@@ -10547,6 +10604,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance">
     <Value>Maintenance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteActivityLog">
+    <Value>Deleting activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteActivityLog.Deleted">
+    <Value>Deleted activity Log</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts">
     <Value>Deleting abandoned shopping carts</Value>

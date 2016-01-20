@@ -40,4 +40,15 @@ namespace Nop.Core.Domain.Logging
         public virtual ActivityLogType ActivityLogType { get; set; }
 
     }
+
+    /// <summary>
+    /// Represents an activity stats record - Auxiliary class to reports
+    /// </summary>
+    public class ActivityStats
+    {
+        public int ActivityLogTypeId { get; set; }
+        public int EntityKeyId { get; set; }
+        public int Count { get; set; }
+    }
+
 }

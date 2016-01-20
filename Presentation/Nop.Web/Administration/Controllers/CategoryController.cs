@@ -23,6 +23,7 @@ using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Core.Domain.Localization;
 using MongoDB.Bson;
+using Nop.Services.Helpers;
 
 namespace Nop.Admin.Controllers
 {
@@ -47,6 +48,7 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -68,6 +70,7 @@ namespace Nop.Admin.Controllers
             IExportManager exportManager, 
             IVendorService vendorService, 
             ICustomerActivityService customerActivityService,
+            IDateTimeHelper dateTimeHelper,
             CatalogSettings catalogSettings)
         {
             this._categoryService = categoryService;
@@ -87,6 +90,7 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
+            this._dateTimeHelper = dateTimeHelper;
             this._catalogSettings = catalogSettings;
         }
 
@@ -742,5 +746,40 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+        #region Activity log
+
+        [HttpPost]
+        public ActionResult ListActivityLog(DataSourceRequest command, int categoryId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return Content("");
+
+            var activityLog = _customerActivityService.GetCategoryActivities(null, null, categoryId, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = activityLog.Select(x =>
+                {
+                    var customer = _customerService.GetCustomerById(x.CustomerId);
+                    var m = new CategoryModel.ActivityLogModel
+                    {
+                        Id = x.Id,
+                        ActivityLogTypeName = x.ActivityLogType.Name,
+                        Comment = x.Comment,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        CustomerId = x.CustomerId,
+                        CustomerEmail = customer!=null? customer.Email : "null"
+                    };
+                    return m;
+
+                }),
+                Total = activityLog.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        #endregion
+
     }
 }

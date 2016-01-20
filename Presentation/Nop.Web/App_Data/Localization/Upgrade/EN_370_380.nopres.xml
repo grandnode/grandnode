@@ -17,4 +17,67 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture.Hint">
     <Value>Upload a picture to be used with the image squares attribute control</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog">
+    <Value>Activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog">
+    <Value>Activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog">
+    <Value>Activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog.ActivityLogType">
+    <Value>Activity Log Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog.ActivityLogType">
+    <Value>Activity Log Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog.ActivityLogType">
+    <Value>Activity Log Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.ActivityLog.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.ActivityLog.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ActivityLog.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteActivityLog">
+    <Value>Deleting activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteActivityLog.Deleted">
+    <Value>Deleted activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats">
+    <Value>Activity Stats</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats.Fields.ActivityLogType">
+    <Value>Activity Types</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats.Fields.Name">
+    <Value>Catalog name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats.Fields.Count">
+    <Value>Visit counter</Value>
+  </LocaleResource>
 </Language>

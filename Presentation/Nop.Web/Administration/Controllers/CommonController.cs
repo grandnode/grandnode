@@ -32,6 +32,8 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Security;
 using Nop.Core.Infrastructure;
+using Nop.Core.Domain.Logging;
+using Nop.Core.Data;
 
 namespace Nop.Admin.Controllers
 {
@@ -491,6 +493,19 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("delete-activitylog")]
+        public ActionResult MaintenanceDeleteActivitylog(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var _activityLogRepository = EngineContext.Current.Resolve<IRepository<ActivityLog>>();
+            _activityLogRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());
+            model.DeleteActivityLog = true;            
+            return View(model);
+        }
 
         [ChildActionOnly]
         public ActionResult LanguageSelector()

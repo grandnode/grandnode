@@ -65,6 +65,20 @@ namespace Nop.Core
             this.AddRange(products.Take(pageSize));
         }
 
+        public PagedList(IAggregateFluent<T> source, int pageIndex, int pageSize)
+        {
+            var range = source.Skip(pageIndex * pageSize).Limit(pageSize+1).ToList();
+            int total = range.Count > pageSize ? range.Count : pageSize;
+            this.TotalCount = total;
+            this.TotalPages = total / pageSize;
+
+            if (total % pageSize > 0)
+                TotalPages++;
+
+            this.PageSize = pageSize;
+            this.PageIndex = pageIndex;
+            this.AddRange(range.Take(pageSize));
+        }
 
         /// <summary>
         /// Ctor

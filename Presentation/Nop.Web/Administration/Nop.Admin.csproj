@@ -1328,6 +1328,12 @@
     <Content Include="Views\Setting\_ReturnRequestActions.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Activitylog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ActivityLog\ListStats.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -1356,7 +1362,7 @@
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>True</UseCustomServer>
-          <CustomServerUrl>http://www.nopcommerce.com/</CustomServerUrl>
+          <CustomServerUrl>http://www.grandnode.com/</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

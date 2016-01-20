@@ -58,9 +58,13 @@
         <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-associated-products">
             @T("Admin.Catalog.Products.AssociatedProducts")
         </li>
+        <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Products.ActivityLog")
+        </li>
+
         @if (Model.Id > 0)
         {
-            <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.PurchasedWithOrders")
             </li>
         }
@@ -109,6 +113,9 @@
     </div>
     @if (Model.Id > 0)
     {
+        <div>
+            @TabActivityLog()
+        </div>
         <div>
             @TabPurchasedWithOrders()
         </div>
@@ -184,6 +191,10 @@
 @helper TabAssociatedProducts()
 {
     @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
+}
+@helper TabActivityLog()
+{
+    @Html.Partial("_CreateOrUpdate.Activitylog", Model)
 }
 @helper TabPurchasedWithOrders()
 {

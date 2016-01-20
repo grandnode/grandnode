@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
 using Nop.Data;
 using MongoDB.Driver.Linq;
+using MongoDB.Driver;
 
 namespace Nop.Services.Logging
 {
@@ -274,7 +275,153 @@ namespace Nop.Services.Logging
             var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
             return activityLog;
         }
-        
+
+        /// <summary>
+        /// Gets stats activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="activityLogTypeId">Activity log type identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        public virtual IPagedList<ActivityStats> GetStatsActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null,int activityLogTypeId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+
+            var builder = Builders<ActivityLog>.Filter;
+            var filter = builder.Where(x=>true);
+            if (createdOnFrom.HasValue)
+                filter = filter & builder.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
+            if (createdOnTo.HasValue)
+                filter = filter & builder.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
+            if (activityLogTypeId > 0)
+                filter = filter & builder.Where(al => activityLogTypeId == al.ActivityLogTypeId);
+
+            var query = _activityLogRepository.Collection
+                    .Aggregate()
+                    .Match(filter)
+                    .Group(
+                        key => new { key.ActivityLogTypeId, key.EntityKeyId },
+                            g => new
+                            {
+                                Id = g.Key,
+                                Count = g.Count()
+                    })
+                    .Project(x => new ActivityStats
+                    {
+                        ActivityLogTypeId = x.Id.ActivityLogTypeId,
+                        EntityKeyId = x.Id.EntityKeyId,
+                        Count = x.Count
+                    })
+                    .SortByDescending(x=>x.Count);
+                
+            var activityLog = new PagedList<ActivityStats>(query, pageIndex, pageSize);
+            return activityLog;
+        }
+        /// <summary>
+        /// Gets category activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="categoryId">Category identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        public virtual IPagedList<ActivityLog> GetCategoryActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int categoryId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _activityLogRepository.Table;
+            if (createdOnFrom.HasValue)
+                query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
+            if (createdOnTo.HasValue)
+                query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
+
+            IList<string> systemKeywords = new List<string>();
+            systemKeywords.Add("PublicStore.ViewCategory");
+            systemKeywords.Add("EditCategory");
+            systemKeywords.Add("AddNewCategory");
+
+            var activityTypes = GetAllActivityTypesCached();
+            var activityTypeIds = activityTypes.ToList().Where(at => systemKeywords.Contains(at.SystemKeyword)).Select(x=>x.Id);
+            
+            query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
+
+            query = query.Where(al => al.EntityKeyId == categoryId);
+            query = query.OrderByDescending(al => al.CreatedOnUtc);
+            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
+            return activityLog;
+        }
+
+        /// <summary>
+        /// Gets manufacturer activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="categoryId">Manufacturer identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        public virtual IPagedList<ActivityLog> GetManufacturerActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int manufacturerId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _activityLogRepository.Table;
+            if (createdOnFrom.HasValue)
+                query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
+            if (createdOnTo.HasValue)
+                query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
+
+            IList<string> systemKeywords = new List<string>();
+            systemKeywords.Add("PublicStore.ViewManufacturer");
+            systemKeywords.Add("EditManufacturer");
+            systemKeywords.Add("AddNewManufacturer");
+
+            var activityTypes = GetAllActivityTypesCached();
+            var activityTypeIds = activityTypes.ToList().Where(at => systemKeywords.Contains(at.SystemKeyword)).Select(x => x.Id);
+
+            query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
+
+            query = query.Where(al => al.EntityKeyId == manufacturerId);
+            query = query.OrderByDescending(al => al.CreatedOnUtc);
+            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
+            return activityLog;
+        }
+
+        /// <summary>
+        /// Gets product activity log items
+        /// </summary>
+        /// <param name="createdOnFrom">Log item creation from; null to load all records</param>
+        /// <param name="createdOnTo">Log item creation to; null to load all records</param>
+        /// <param name="productId">Product identifier</param>        
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Activity log items</returns>
+        public virtual IPagedList<ActivityLog> GetProductActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int productId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _activityLogRepository.Table;
+            if (createdOnFrom.HasValue)
+                query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
+            if (createdOnTo.HasValue)
+                query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
+
+            IList<string> systemKeywords = new List<string>();
+            systemKeywords.Add("PublicStore.ViewProduct");
+            systemKeywords.Add("EditProduct");
+            systemKeywords.Add("AddNewProduct");
+
+            var activityTypes = GetAllActivityTypesCached();
+            var activityTypeIds = activityTypes.ToList().Where(at => systemKeywords.Contains(at.SystemKeyword)).Select(x => x.Id);
+
+            query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
+
+            query = query.Where(al => al.EntityKeyId == productId);
+            query = query.OrderByDescending(al => al.CreatedOnUtc);
+            var activityLog = new PagedList<ActivityLog>(query, pageIndex, pageSize);
+            return activityLog;
+        }
+
         /// <summary>
         /// Gets an activity log item
         /// </summary>
@@ -293,9 +440,7 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearAllActivities()
         {
-                var activityLog = _activityLogRepository.Table.ToList();
-                foreach (var activityLogItem in activityLog)
-                    _activityLogRepository.Delete(activityLogItem);
+            _activityLogRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());                
         }
         #endregion
 

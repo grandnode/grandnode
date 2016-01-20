@@ -909,8 +909,24 @@ namespace Nop.Admin.Models.Catalog
 
                 public int AssociatedToProductId { get; set; }
             }
+
+
             #endregion
         }
+
+        public partial class ActivityLogModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.ActivityLogType")]
+            public string ActivityLogTypeName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.Comment")]
+            public string Comment { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.Customer")]
+            public int CustomerId { get; set; }
+            public string CustomerEmail { get; set; }
+        }
+
         public partial class ProductAttributeValueLocalizedModel : ILocalizedModelLocal
         {
             public int LanguageId { get; set; }
