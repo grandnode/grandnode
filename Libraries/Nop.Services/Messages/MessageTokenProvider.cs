@@ -35,6 +35,8 @@ using Nop.Services.Blogs;
 using Nop.Services.News;
 using Nop.Services.Shipping;
 using Nop.Core.Domain.Vendors;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain;
 
 namespace Nop.Services.Messages
 {
@@ -61,7 +63,7 @@ namespace Nop.Services.Messages
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly ShippingSettings _shippingSettings;
-
+        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -86,6 +88,7 @@ namespace Nop.Services.Messages
             TaxSettings taxSettings,
             CurrencySettings currencySettings,
             ShippingSettings shippingSettings,
+            StoreInformationSettings storeInformationSettings,
             IEventPublisher eventPublisher)
         {
             this._languageService = languageService;
@@ -106,6 +109,7 @@ namespace Nop.Services.Messages
             this._catalogSettings = catalogSettings;
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
+            this._storeInformationSettings = storeInformationSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -552,6 +556,10 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Store.CompanyAddress", store.CompanyAddress));
             tokens.Add(new Token("Store.CompanyPhoneNumber", store.CompanyPhoneNumber));
             tokens.Add(new Token("Store.CompanyVat", store.CompanyVat));
+            tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
+            tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
+            tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
+            tokens.Add(new Token("GooglePlus.URL", _storeInformationSettings.GooglePlusLink));
 
             //event notification
             _eventPublisher.EntityTokensAdded(store, tokens);
@@ -943,6 +951,10 @@ namespace Nop.Services.Messages
                 "%Store.CompanyAddress%",
                 "%Store.CompanyPhoneNumber%",
                 "%Store.CompanyVat%",
+                "%Twitter.URL%",
+                "%Facebook.URL%",
+                "%YouTube.URL%",
+                "%GooglePlus.URL%",
                 "%Order.OrderNumber%",
                 "%Order.CustomerFullName%",
                 "%Order.CustomerEmail%",
