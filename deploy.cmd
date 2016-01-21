@@ -96,11 +96,10 @@ call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Plugins\Nop.Plugin.Widget
 call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Plugins\Nop.Plugin.Widgets.NivoSlider\Nop.Plugin.Widgets.NivoSlider.csproj" /nologo /verbosity:m /t:Build /p:AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 
 :: 2. Build to the temporary path
-call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Presentation\Nop.Web\Nop.Web.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release;UseSharedCompilation=false /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 
 IF !ERRORLEVEL! NEQ 0 goto error
 
-:: 3. KuduSync
+:: 3. Build admin website
 call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Presentation\Nop.Web\Administration\Nop.Admin.csproj" /nologo /verbosity:m /t:Build /p:AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
