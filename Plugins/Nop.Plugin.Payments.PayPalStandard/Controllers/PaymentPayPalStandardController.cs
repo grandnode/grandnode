@@ -304,6 +304,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                         string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", mc_gross, order.OrderTotal);
                         _logger.Error(errorStr);
 
+                        //order note
+                        order.OrderNotes.Add(new OrderNote
+                        {
+                            Note = errorStr,
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
+
                         return RedirectToAction("Index", "Home", new { area = "" });
                     }
 
