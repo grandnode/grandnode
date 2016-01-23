@@ -268,6 +268,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerLifetimeScope();
 
             builder.RegisterType<CustomerActivityService>().As<ICustomerActivityService>().InstancePerLifetimeScope();
+            builder.RegisterType<ActivityKeywordsProvider>().As<IActivityKeywordsProvider>().InstancePerLifetimeScope();
 
             bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
             if (!databaseInstalled)

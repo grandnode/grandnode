@@ -40,9 +40,10 @@ namespace Nop.Services.Logging
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IWorkContext _workContext;
+        private readonly IActivityKeywordsProvider _activityKeywordsProvider;
         private readonly CommonSettings _commonSettings;
         #endregion
-        
+
         #region Ctor
         /// <summary>
         /// Ctor
@@ -51,19 +52,20 @@ namespace Nop.Services.Logging
         /// <param name="activityLogRepository">Activity log repository</param>
         /// <param name="activityLogTypeRepository">Activity log type repository</param>
         /// <param name="workContext">Work context</param>
-        /// <param name="dbContext">DB context</param>>
-        /// <param name="dataProvider">WeData provider</param>
+        /// <param name="activityKeywordsProvider">Activity Keywords provider</param>
         /// <param name="commonSettings">Common settings</param>
         public CustomerActivityService(ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWorkContext workContext,
+            IActivityKeywordsProvider activityKeywordsProvider,
             CommonSettings commonSettings)
         {
             this._cacheManager = cacheManager;
             this._activityLogRepository = activityLogRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
-            this._workContext = workContext;                        
+            this._workContext = workContext;
+            this._activityKeywordsProvider = activityKeywordsProvider;
             this._commonSettings = commonSettings;
         }
 
@@ -338,13 +340,8 @@ namespace Nop.Services.Logging
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
 
-            IList<string> systemKeywords = new List<string>();
-            systemKeywords.Add("PublicStore.ViewCategory");
-            systemKeywords.Add("EditCategory");
-            systemKeywords.Add("AddNewCategory");
-
             var activityTypes = GetAllActivityTypesCached();
-            var activityTypeIds = activityTypes.ToList().Where(at => systemKeywords.Contains(at.SystemKeyword)).Select(x=>x.Id);
+            var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetCategorySystemKeywords().Contains(at.SystemKeyword)).Select(x=>x.Id);
             
             query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
 
@@ -372,13 +369,8 @@ namespace Nop.Services.Logging
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
 
-            IList<string> systemKeywords = new List<string>();
-            systemKeywords.Add("PublicStore.ViewManufacturer");
-            systemKeywords.Add("EditManufacturer");
-            systemKeywords.Add("AddNewManufacturer");
-
             var activityTypes = GetAllActivityTypesCached();
-            var activityTypeIds = activityTypes.ToList().Where(at => systemKeywords.Contains(at.SystemKeyword)).Select(x => x.Id);
+            var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetManufacturerSystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
 
             query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
 
@@ -406,13 +398,8 @@ namespace Nop.Services.Logging
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
 
-            IList<string> systemKeywords = new List<string>();
-            systemKeywords.Add("PublicStore.ViewProduct");
-            systemKeywords.Add("EditProduct");
-            systemKeywords.Add("AddNewProduct");
-
             var activityTypes = GetAllActivityTypesCached();
-            var activityTypeIds = activityTypes.ToList().Where(at => systemKeywords.Contains(at.SystemKeyword)).Select(x => x.Id);
+            var activityTypeIds = activityTypes.ToList().Where(at => _activityKeywordsProvider.GetProductSystemKeywords().Contains(at.SystemKeyword)).Select(x => x.Id);
 
             query = query.Where(al => activityTypeIds.Contains(al.ActivityLogTypeId));
 
