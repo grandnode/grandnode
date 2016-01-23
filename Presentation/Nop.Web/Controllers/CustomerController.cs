@@ -1463,6 +1463,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AddressDelete(int addressId)
         {
@@ -1478,12 +1479,13 @@ namespace Nop.Web.Controllers
                 customer.RemoveAddress(address);
                 address.CustomerId = customer.Id;
                 _customerService.DeleteAddress(address);
-                //_customerService.UpdateCustomer(customer);
-                //now delete the address record
-                //_addressService.DeleteAddress(address);
             }
 
-            return RedirectToRoute("CustomerAddresses");
+            return Json(new
+            {
+                redirect = Url.RouteUrl("CustomerAddresses"),
+            });
+
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
