@@ -118,6 +118,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
+        private readonly IRepository<ContactUs> _contactUsRepository;
 
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
@@ -198,6 +199,7 @@ namespace Nop.Services.Installation
             IRepository<DiscountUsageHistory> discountusageRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
+            IRepository<ContactUs> contactUsRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
@@ -271,6 +273,7 @@ namespace Nop.Services.Installation
             this._externalAuthenticationRepository = externalAuthenticationRepository;
             this._discountusageRepository = discountusageRepository;
             this._returnRequestReasonRepository = returnRequestReasonRepository;
+            this._contactUsRepository = contactUsRepository;
             this._returnRequestActionRepository = returnRequestActionRepository;
         }
 
@@ -4727,6 +4730,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new CommonSettings
                 {
+                    StoreInDatabaseContactUsForm = true,
                     UseSystemEmailForContactUsForm = true,
                     UseStoredProceduresIfSupported = true,
                     SitemapEnabled = true,
@@ -11427,6 +11431,10 @@ namespace Nop.Services.Installation
 
             _returnRequestActionRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _returnRequestReasonRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestReason>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
+            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
         }
 

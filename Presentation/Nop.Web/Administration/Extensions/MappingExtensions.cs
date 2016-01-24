@@ -312,6 +312,14 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Contact form
+
+        public static ContactFormModel ToModel(this ContactUs entity)
+        {
+            return entity.MapTo<ContactUs, ContactFormModel>();
+        }
+        #endregion
+
         #region Queued email
 
         public static QueuedEmailModel ToModel(this QueuedEmail entity)

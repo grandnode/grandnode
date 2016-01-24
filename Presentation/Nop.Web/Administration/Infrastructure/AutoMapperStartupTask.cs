@@ -156,7 +156,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest._id, mo => mo.Ignore());
             //queued email
             Mapper.CreateMap<QueuedEmail, QueuedEmailModel>()
-                //.ForMember(dest => dest.EmailAccountName, mo => mo.MapFrom(src => src.EmailAccount != null ? src.EmailAccount.FriendlyName : string.Empty))
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.PriorityName, mo => mo.Ignore())
                 .ForMember(dest => dest.SentOn, mo => mo.Ignore())
@@ -172,6 +171,12 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AttachmentFilePath, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachedDownloadId, mo => mo.Ignore());
+
+            //contact form
+            Mapper.CreateMap<ContactUs, ContactFormModel>()
+                .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
             //campaign
             Mapper.CreateMap<Campaign, CampaignModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())

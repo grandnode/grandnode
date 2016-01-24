@@ -1064,11 +1064,14 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
 var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
 var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
+    <br />
+    <strong>@T("Admin.Configuration.Activitylog")</strong>
+
+
     <table class="adminContent">
         <tr>
             <td>
                 <div id="activitylog-grid"></div>
-
                 <script>
                     $(document).ready(function () {
                         $("#activitylog-grid").kendoGrid({
@@ -1126,6 +1129,85 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
             </td>
         </tr>
     </table>
+
+    if (Model.ShowMessageContactForm)
+    {
+    <br />
+    <strong>@T("Admin.System.ContactForm")</strong>
+
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="contactform-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#contactform-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ContactFormList", "Customer", new { customerId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "CreatedOn",
+                                title: "@T("Admin.System.ContactForm.Fields.CreatedOn")",
+                                width: 100,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "Store",
+                                title: "@T("Admin.System.ContactForm.Fields.Store")",
+                                width: 100
+                            }, {
+                                field: "Email",
+                                title: "@T("Admin.System.ContactForm.Fields.FullName")",
+                                width: 150
+                            }, {
+                                field: "IpAddress",
+                                title: "@T("Admin.System.ContactForm.Fields.IpAddress")",
+                                width: 50
+                            }, {
+                                field: "Subject",
+                                title: "@T("Admin.System.ContactForm.Fields.Subject")",
+                                width: 300
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 30,
+                                template: '<a href="@Url.Content("~/Admin/ContactForm/Details/")#=Id#">@T("admin.common.view")</a>'
+                            }]
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+    }
 }
 @helper TabImpersonate()
 {

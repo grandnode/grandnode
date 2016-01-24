@@ -216,6 +216,7 @@ namespace Nop.Admin.Models.Customers
         public bool AllowSendingOfWelcomeMessage { get; set; }
         //re-send the activation message
         public bool AllowReSendingOfActivationMessage { get; set; }
+        public bool ShowMessageContactForm { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }

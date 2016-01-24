@@ -53,6 +53,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManagePlugins = new PermissionRecord { Name = "Admin area. Manage Plugins", SystemName = "ManagePlugins", Category = "Configuration" };
         public static readonly PermissionRecord ManageSystemLog = new PermissionRecord { Name = "Admin area. Manage System Log", SystemName = "ManageSystemLog", Category = "Configuration" };
         public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = "ManageMessageQueue", Category = "Configuration" };
+        public static readonly PermissionRecord ManageMessageContactForm = new PermissionRecord { Name = "Admin area. Manage Message Contact form", SystemName = "ManageMessageContactForm", Category = "Configuration" };
         public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = "ManageMaintenance", Category = "Configuration" };
         public static readonly PermissionRecord HtmlEditorManagePictures = new PermissionRecord { Name = "Admin area. HTML Editor. Manage pictures", SystemName = "HtmlEditor.ManagePictures", Category = "Configuration" };
         public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
@@ -111,6 +112,7 @@ namespace Nop.Services.Security
                 ManagePlugins,
                 ManageSystemLog,
                 ManageMessageQueue,
+                ManageMessageContactForm,
                 ManageMaintenance,
                 HtmlEditorManagePictures,
                 ManageScheduleTasks,
@@ -174,6 +176,7 @@ namespace Nop.Services.Security
                         ManagePlugins,
                         ManageSystemLog,
                         ManageMessageQueue,
+                        ManageMessageContactForm,
                         ManageMaintenance,
                         HtmlEditorManagePictures,
                         ManageScheduleTasks,

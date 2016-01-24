@@ -80,4 +80,106 @@
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityStats.Fields.Count">
     <Value>Visit counter</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInDatabaseContactUsForm">
+    <Value>Contact us page - stores the request in the database</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInDatabaseContactUsForm.Hint">
+    <Value>Save inquiries from the contact page - to store history</Value>
+  </LocaleResource>
+
+
+  <LocaleResource Name="Admin.System.ContactForm">
+    <Value>Message Contact form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.BackToList">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Admin.System.ContactForm.Delete">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.DeleteAll">
+    <Value>Delete all</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Details">
+    <Value>Contact form - details</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.System.ContactForm.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.CreatedOn.hint">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.List.Email">
+    <Value>Email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.List.Email.Hint">
+    <Value>Filter by email address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.List.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.List.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.System.ContactForm.List.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.List.StartDate.Hint">
+    <Value>The start date for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.List.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.List.Store.hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Email.hint">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.EmailAccountName">
+    <Value>Email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.EmailAccountName.hint">
+    <Value>The email account that will be used to send this email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Enquiry">
+    <Value>Enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Enquiry.hint">
+    <Value>Enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Contactform.Fields.Fullname">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Contactform.Fields.Fullname.hint">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Id">
+    <Value>Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.IpAddress">
+    <Value>IP Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.IpAddress.hint">
+    <Value>IP Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Store">
+    <Value>Store name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Store.hint">
+    <Value>Store name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Subject">
+    <Value>Subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.Fields.Subject.hint">
+    <Value>Subject</Value>
+  </LocaleResource>
 </Language>

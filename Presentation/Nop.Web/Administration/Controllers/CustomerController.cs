@@ -82,6 +82,7 @@ namespace Nop.Admin.Controllers
         private readonly IForumService _forumService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly AddressSettings _addressSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly IStoreService _storeService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
@@ -91,6 +92,7 @@ namespace Nop.Admin.Controllers
         private readonly IAffiliateService _affiliateService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        private readonly IContactUsService _contactUsService;
 
         #endregion
 
@@ -129,6 +131,7 @@ namespace Nop.Admin.Controllers
             IForumService forumService, 
             IOpenAuthenticationService openAuthenticationService,
             AddressSettings addressSettings,
+            CommonSettings commonSettings,
             IStoreService storeService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerAttributeService customerAttributeService,
@@ -137,7 +140,8 @@ namespace Nop.Admin.Controllers
             IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
             IWorkflowMessageService workflowMessageService,
-            IBackInStockSubscriptionService backInStockSubscriptionService)
+            IBackInStockSubscriptionService backInStockSubscriptionService,
+            IContactUsService contactUsService)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -154,6 +158,7 @@ namespace Nop.Admin.Controllers
             this._stateProvinceService = stateProvinceService;
             this._addressService = addressService;
             this._customerSettings = customerSettings;
+            this._commonSettings = commonSettings;
             this._taxService = taxService;
             this._workContext = workContext;
             this._vendorService = vendorService;
@@ -181,6 +186,7 @@ namespace Nop.Admin.Controllers
             this._affiliateService = affiliateService;
             this._workflowMessageService = workflowMessageService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
+            this._contactUsService = contactUsService;
         }
 
         #endregion
@@ -495,6 +501,7 @@ namespace Nop.Admin.Controllers
             if (customer != null)
             {
                 model.Id = customer.Id;
+                model.ShowMessageContactForm = _commonSettings.StoreInDatabaseContactUsForm; 
                 if (!excludeProperties)
                 {
                     model.Email = customer.Email;
@@ -1985,7 +1992,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Activity log
+        #region Activity log and message contact form
 
         [HttpPost]
         public ActionResult ListActivityLog(DataSourceRequest command, int customerId)
@@ -2013,6 +2020,46 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+
+        [HttpPost]
+        public ActionResult ContactFormList(DataSourceRequest command, int customerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageContactForm))
+                return AccessDeniedView();
+
+
+            int vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+            {
+                vendorId = _workContext.CurrentVendor.Id;
+            }
+
+            var contactform = _contactUsService.GetAllContactUs(
+                storeId: 0,
+                vendorId: vendorId,
+                customerId: customerId,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = contactform.Select(x => {
+                    var store = _storeService.GetStoreById(x.StoreId);
+                    var m = x.ToModel();
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    m.Enquiry = "";
+                    m.Email = m.FullName + " - " + m.Email;
+                    m.Store = store != null ? store.Name : "-empty-";
+                    return m;
+                }),
+                Total = contactform.TotalCount
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
 
         #endregion
 

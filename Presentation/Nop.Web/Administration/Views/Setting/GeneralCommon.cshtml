@@ -192,6 +192,17 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm_OverrideForStore, model => model.StoreInformationSettings.StoreInDatabaseContactUsForm, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm):
             </td>

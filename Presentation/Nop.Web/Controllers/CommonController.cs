@@ -69,6 +69,7 @@ namespace Nop.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
+        private readonly IContactUsService _contactUsService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -108,6 +109,7 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
             IVendorService vendorService,
+            IContactUsService contactUsService,
             CustomerSettings customerSettings, 
             TaxSettings taxSettings, 
             CatalogSettings catalogSettings,
@@ -142,6 +144,7 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
+            this._contactUsService = contactUsService;
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -556,6 +559,25 @@ namespace Nop.Web.Controllers
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.ContactUs", 0, _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
 
+                //store in database
+                if(_commonSettings.StoreInDatabaseContactUsForm)
+                {
+                    var contactus = new ContactUs()
+                    {
+                        CreatedOnUtc = DateTime.UtcNow,
+                        CustomerId = _workContext.CurrentCustomer.Id,
+                        StoreId = _storeContext.CurrentStore.Id,
+                        VendorId = 0,
+                        Email = email,
+                        FullName = fullName,
+                        Subject = subject,
+                        Enquiry = body,
+                        EmailAccountId = emailAccount.Id,
+                        IpAddress = _webHelper.GetCurrentIpAddress()
+                    };
+                    _contactUsService.InsertContactUs(contactus);
+                }
+
                 return View(model);
             }
 
@@ -654,6 +676,26 @@ namespace Nop.Web.Controllers
 
                 model.SuccessfullySent = true;
                 model.Result = _localizationService.GetResource("ContactVendor.YourEnquiryHasBeenSent");
+
+                //store in database
+                if (_commonSettings.StoreInDatabaseContactUsForm)
+                {
+                    var contactus = new ContactUs()
+                    {
+                        CreatedOnUtc = DateTime.UtcNow,
+                        CustomerId = _workContext.CurrentCustomer.Id,
+                        StoreId = _storeContext.CurrentStore.Id,
+                        VendorId = model.VendorId,
+                        Email = email,
+                        FullName = fullName,
+                        Subject = subject,
+                        Enquiry = body,
+                        EmailAccountId = emailAccount.Id,
+                        IpAddress = _webHelper.GetCurrentIpAddress()
+                    };
+                    _contactUsService.InsertContactUs(contactus);
+                }
+
 
                 return View(model);
             }

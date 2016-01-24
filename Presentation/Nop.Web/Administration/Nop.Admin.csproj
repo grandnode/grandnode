@@ -161,6 +161,7 @@
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\JbimagesController.cs" />
+    <Compile Include="Controllers\ContactFormController.cs" />
     <Compile Include="Controllers\RoxyFilemanController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
@@ -237,6 +238,8 @@
     <Compile Include="Models\Customers\CustomerAttributeValueModel.cs" />
     <Compile Include="Models\Discounts\DiscountListModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
+    <Compile Include="Models\Messages\ContactFormListModel.cs" />
+    <Compile Include="Models\Messages\ContactFormModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
@@ -1333,6 +1336,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ActivityLog\ListStats.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ContactForm\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ContactForm\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
