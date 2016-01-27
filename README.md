@@ -34,7 +34,7 @@ Browse our shopping cart demo store to get a feel for nopCommerce shopping cart.
 [![ScreenShot](http://grandnode.com/Content/Images/uploaded/grand.png)](http://demo.grandnode.com/)
 
 ##### Frontend:
-[![ScreenShot](http://grandnode.com/Content/Images/uploaded/backend2jpg.jpg)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
+[![ScreenShot](http://grandnode.com/Content/Images/uploaded/backend2.jpg)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
 
 Demo is restoring every hour to the original state.
 
