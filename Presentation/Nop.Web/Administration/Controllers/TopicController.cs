@@ -14,6 +14,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Logging;
 
 namespace Nop.Admin.Controllers
 {
@@ -31,6 +32,7 @@ namespace Nop.Admin.Controllers
         private readonly ITopicTemplateService _topicTemplateService;
         private readonly ICustomerService _customerService;
         private readonly IAclService _aclService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         #endregion Fields
 
@@ -45,7 +47,8 @@ namespace Nop.Admin.Controllers
             IUrlRecordService urlRecordService,
             ITopicTemplateService topicTemplateService,
             ICustomerService customerService,
-            IAclService aclService)
+            IAclService aclService,
+            ICustomerActivityService customerActivityService)
         {
             this._topicService = topicService;
             this._languageService = languageService;
@@ -57,6 +60,7 @@ namespace Nop.Admin.Controllers
             this._topicTemplateService = topicTemplateService;
             this._customerService = customerService;
             this._aclService = aclService;
+            this._customerActivityService = customerActivityService;
         }
 
         #endregion
@@ -277,6 +281,10 @@ namespace Nop.Admin.Controllers
                 _topicService.UpdateTopic(topic);
                 _urlRecordService.SaveSlug(topic, model.SeName, 0);
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
+                
+                //activity log
+                _customerActivityService.InsertActivity("AddNewTopic", topic.Id, _localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName);
+
                 return continueEditing ? RedirectToAction("Edit", new { id = topic.Id }) : RedirectToAction("List");
             }
 
@@ -353,7 +361,10 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(topic, model.SeName, 0);
                 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
-                
+
+                //activity log
+                _customerActivityService.InsertActivity("EditTopic", topic.Id, _localizationService.GetResource("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName);                
+
                 if (continueEditing)
                 {
                     //selected tab
@@ -391,6 +402,9 @@ namespace Nop.Admin.Controllers
             _topicService.DeleteTopic(topic);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
+            //activity log
+            _customerActivityService.InsertActivity("DeleteTopic", topic.Id, _localizationService.GetResource("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName);
+            
             return RedirectToAction("List");
         }
         

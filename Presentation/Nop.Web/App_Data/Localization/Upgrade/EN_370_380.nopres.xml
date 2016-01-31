@@ -182,4 +182,14 @@
   <LocaleResource Name="Admin.System.ContactForm.Fields.Subject.hint">
     <Value>Subject</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewTopic">
+    <Value>Added a new topic ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteTopic">
+    <Value>Deleted a topic ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditTopic">
+    <Value>Edited a topic ('{0}')</Value>
+  </LocaleResource>
+
 </Language>
