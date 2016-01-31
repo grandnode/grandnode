@@ -47,7 +47,6 @@ namespace Nop.Services.Catalog
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
-        private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -61,19 +60,16 @@ namespace Nop.Services.Catalog
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="specificationAttributeRepository">Specification attribute repository</param>
         /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
-        /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="eventPublisher">Event published</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
-            IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IRepository<Product> productRepository,
             IEventPublisher eventPublisher)
         {
             _cacheManager = cacheManager;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
-            _productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             _eventPublisher = eventPublisher;
             _productRepository = productRepository;
         }
@@ -237,7 +233,6 @@ namespace Nop.Services.Catalog
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException("productSpecificationAttribute");
 
-            //_productSpecificationAttributeRepository.Delete(productSpecificationAttribute);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductSpecificationAttributes, productSpecificationAttribute);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productSpecificationAttribute.ProductId), update);

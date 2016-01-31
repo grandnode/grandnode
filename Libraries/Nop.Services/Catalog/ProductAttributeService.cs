@@ -98,7 +98,6 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
-        private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
@@ -116,14 +115,12 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeCombinationRepository">Product attribute combination repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ProductAttributeService(ICacheManager cacheManager,
-            IRepository<ProductAttribute> productAttributeRepository,
-            IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
+            IRepository<ProductAttribute> productAttributeRepository,            
             IRepository<Product> productRepository,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._productAttributeRepository = productAttributeRepository;
-            this._productAttributeCombinationRepository = productAttributeCombinationRepository;
             this._productRepository = productRepository;
             this._eventPublisher = eventPublisher;
         }
@@ -327,9 +324,6 @@ namespace Nop.Services.Catalog
             if (productAttributeValue == null)
                 throw new ArgumentNullException("productAttributeValue");
 
-            //_productAttributeValueRepository.Delete(productAttributeValue);
-
-
            var filter = Builders<Product>.Filter.And(Builders<Product>.Filter.Eq(x => x.Id, productAttributeValue.ProductId),
            Builders<Product>.Filter.ElemMatch(x => x.ProductAttributeMappings, x => x.Id == productAttributeValue.ProductAttributeMappingId));
 
@@ -482,27 +476,6 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityDeleted(combination);
         }
 
-
-        /// <summary>
-        /// Gets a product attribute combination by SKU
-        /// </summary>
-        /// <param name="sku">SKU</param>
-        /// <returns>Product attribute combination</returns>
-        public virtual ProductAttributeCombination GetProductAttributeCombinationBySku(string sku)
-        {
-            if (String.IsNullOrEmpty(sku))
-                return null;
-
-            sku = sku.Trim();
-
-            var query = from pac in _productAttributeCombinationRepository.Table
-                        orderby pac.Id
-                        where pac.Sku == sku
-                        select pac;
-            var combination = query.FirstOrDefault();
-            return combination;
-        }
-        
         /// <summary>
         /// Inserts a product attribute combination
         /// </summary>
@@ -511,8 +484,6 @@ namespace Nop.Services.Catalog
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
-
-            //_productAttributeCombinationRepository.Insert(combination);
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductAttributeCombinations, combination);

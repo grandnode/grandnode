@@ -38,12 +38,12 @@ namespace Nop.Services.Catalog
             IProductAttributeService productAttributeService,
             ILanguageService languageService,
             IPictureService pictureService,
-            ICategoryService categoryService, 
+            ICategoryService categoryService,
             IManufacturerService manufacturerService,
             ISpecificationAttributeService specificationAttributeService,
             IDownloadService downloadService,
             IProductAttributeParser productAttributeParser,
-            IUrlRecordService urlRecordService, 
+            IUrlRecordService urlRecordService,
             IStoreMappingService storeMappingService)
         {
             this._productService = productService;
@@ -222,7 +222,7 @@ namespace Nop.Services.Catalog
                 AvailableStartDateTimeUtc = product.AvailableStartDateTimeUtc,
                 AvailableEndDateTimeUtc = product.AvailableEndDateTimeUtc,
                 DisplayOrder = product.DisplayOrder,
-                Published = isPublished,                
+                Published = isPublished,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 Locales = product.Locales,
@@ -283,7 +283,7 @@ namespace Nop.Services.Catalog
             {
                 var pwiCopy = new ProductWarehouseInventory
                 {
-                    Id = productCopy.ProductWarehouseInventory.Count > 0 ? productCopy.ProductWarehouseInventory.Max(x=>x.Id)+1:1,
+                    Id = productCopy.ProductWarehouseInventory.Count > 0 ? productCopy.ProductWarehouseInventory.Max(x => x.Id) + 1 : 1,
                     _id = ObjectId.GenerateNewId().ToString(),
                     ProductId = productCopy.Id,
                     WarehouseId = pwi.WarehouseId,

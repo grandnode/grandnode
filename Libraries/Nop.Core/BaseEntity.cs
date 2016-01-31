@@ -18,12 +18,10 @@ namespace Nop.Core
         }
         /// <summary>
         /// Gets or sets the entity identifier
-        /// </summary>        
-        //[BsonId]
+        /// </summary>                
         [BsonRepresentation(BsonType.ObjectId)]
         [BsonId]
-        public string _id { get; set; }
-        //MongoDB.Bson.ObjectId
+        public string _id { get; set; }        
 
         public int Id { get; set; }
 

@@ -10,7 +10,6 @@ namespace Nop.Core.Domain.Customers
     [BsonIgnoreExtraElements]
     public partial class CustomerRole : BaseEntity
     {
-        //private ICollection<PermissionRecord> _permissionRecords;
 
         /// <summary>
         /// Gets or sets the customer role name
@@ -54,16 +53,6 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public int PurchasedWithProductId { get; set; }
         
-        /// <summary>
-        /// Gets or sets the permission records
-        /// </summary>
-        /*
-        public virtual ICollection<PermissionRecord> PermissionRecords
-        {
-            get { return _permissionRecords ?? (_permissionRecords = new List<PermissionRecord>()); }
-            protected set { _permissionRecords = value; }
-        }
-        */
     }
 
 }

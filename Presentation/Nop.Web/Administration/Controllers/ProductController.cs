@@ -95,25 +95,25 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public ProductController(IProductService productService, 
+        public ProductController(IProductService productService,
             IProductTemplateService productTemplateService,
-            ICategoryService categoryService, 
+            ICategoryService categoryService,
             IManufacturerService manufacturerService,
             ICustomerService customerService,
-            IUrlRecordService urlRecordService, 
-            IWorkContext workContext, 
-            ILanguageService languageService, 
-            ILocalizationService localizationService, 
-            ISpecificationAttributeService specificationAttributeService, 
+            IUrlRecordService urlRecordService,
+            IWorkContext workContext,
+            ILanguageService languageService,
+            ILocalizationService localizationService,
+            ISpecificationAttributeService specificationAttributeService,
             IPictureService pictureService,
-            ITaxCategoryService taxCategoryService, 
+            ITaxCategoryService taxCategoryService,
             IProductTagService productTagService,
-            ICopyProductService copyProductService, 
+            ICopyProductService copyProductService,
             IPdfService pdfService,
-            IExportManager exportManager, 
+            IExportManager exportManager,
             IImportManager importManager,
             ICustomerActivityService customerActivityService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             IAclService aclService,
             IStoreService storeService,
             IOrderService orderService,
@@ -121,7 +121,7 @@ namespace Nop.Admin.Controllers
             IVendorService vendorService,
             IShippingService shippingService,
             IShipmentService shipmentService,
-            ICurrencyService currencyService, 
+            ICurrencyService currencyService,
             CurrencySettings currencySettings,
             IMeasureService measureService,
             MeasureSettings measureSettings,
@@ -180,7 +180,7 @@ namespace Nop.Admin.Controllers
             this._cacheManager = cacheManager;
         }
 
-        #endregion 
+        #endregion 
 
         #region Utilities
 
@@ -314,7 +314,7 @@ namespace Nop.Admin.Controllers
             foreach (var pp in product.ProductPictures)
                 _pictureService.SetSeoFilename(pp.PictureId, _pictureService.GetPictureSeName(product.Name));
         }
-        
+
         [NonAction]
         protected virtual void PrepareAclModel(ProductModel model, Product product, bool excludeProperties)
         {
@@ -366,7 +366,7 @@ namespace Nop.Admin.Controllers
             model.NotifyAdminForQuantityBelow = 1;
 
             var attributes = product.ProductAttributeMappings //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
-                //ignore non-combinable attributes for combinations
+                                                              //ignore non-combinable attributes for combinations
                 .Where(x => !x.IsNonCombinable())
                 .ToList();
             foreach (var attribute in attributes)
@@ -401,14 +401,14 @@ namespace Nop.Admin.Controllers
                 model.ProductAttributes.Add(attributeModel);
             }
         }
-        
+
         [NonAction]
         protected virtual string[] ParseProductTags(string productTags)
         {
             var result = new List<string>();
             if (!String.IsNullOrWhiteSpace(productTags))
             {
-                string[] values = productTags.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] values = productTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string val1 in values)
                     if (!String.IsNullOrEmpty(val1.Trim()))
                         result.Add(val1.Trim());
@@ -580,7 +580,6 @@ namespace Nop.Admin.Controllers
                     //specification attributes
                     /*
                     var selectedAttributeId = int.Parse(model.AddSpecificationAttributeModel.AvailableAttributes.First().Value);
-
                     //var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
                     for (int i = 0; i < specificationAttributes.Count; i++)
                     {
@@ -782,7 +781,7 @@ namespace Nop.Admin.Controllers
             foreach (var warehouse in warehouses)
             {
                 //parse stock quantity
-                int stockQuantity = 0; 
+                int stockQuantity = 0;
                 foreach (string formKey in this.Request.Form.AllKeys)
                     if (formKey.Equals(string.Format("warehouse_qty_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -831,7 +830,7 @@ namespace Nop.Admin.Controllers
                         //no need to insert a record for qty 0
                         existingPwI = new ProductWarehouseInventory
                         {
-                            Id = product.ProductWarehouseInventory.Count > 0 ? product.ProductWarehouseInventory.Max(x=>x.Id)+1:1,
+                            Id = product.ProductWarehouseInventory.Count > 0 ? product.ProductWarehouseInventory.Max(x => x.Id) + 1 : 1,
                             _id = ObjectId.GenerateNewId().ToString(),
                             WarehouseId = warehouse.Id,
                             ProductId = product.Id,
@@ -844,7 +843,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            
+
 
         }
 
@@ -897,7 +896,7 @@ namespace Nop.Admin.Controllers
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0"});
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //"published" property
             //0 - all (according to "ShowHidden" parameter)
@@ -942,7 +941,7 @@ namespace Nop.Admin.Controllers
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
                 warehouseId: model.SearchWarehouseId,
-                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId: null,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
@@ -986,20 +985,9 @@ namespace Nop.Admin.Controllers
 
             //try to load a product entity
             var product = _productService.GetProductBySku(sku);
-
-            //if not found, then try to load a product attribute combination
-            if (product == null)
-            {
-                var combination = _productAttributeService.GetProductAttributeCombinationBySku(sku);
-                if (combination != null)
-                {
-                    product = _productService.GetProductById(combination.ProductId);
-                }
-            }
-
             if (product != null)
                 return RedirectToAction("Edit", "Product", new { id = product.Id });
-            
+
             //not found
             return List();
         }
@@ -1072,7 +1060,7 @@ namespace Nop.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewProduct", product.Id, _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
-                
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = product.Id }) : RedirectToAction("List");
             }
@@ -1102,15 +1090,15 @@ namespace Nop.Admin.Controllers
             var model = product.ToModel();
             PrepareProductModel(model, product, false, false);
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
-                {
-                    locale.Name = product.GetLocalized(x => x.Name, languageId, false, false);
-                    locale.ShortDescription = product.GetLocalized(x => x.ShortDescription, languageId, false, false);
-                    locale.FullDescription = product.GetLocalized(x => x.FullDescription, languageId, false, false);
-                    locale.MetaKeywords = product.GetLocalized(x => x.MetaKeywords, languageId, false, false);
-                    locale.MetaDescription = product.GetLocalized(x => x.MetaDescription, languageId, false, false);
-                    locale.MetaTitle = product.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                    locale.SeName = product.GetSeName(languageId, false, false);
-                });
+            {
+                locale.Name = product.GetLocalized(x => x.Name, languageId, false, false);
+                locale.ShortDescription = product.GetLocalized(x => x.ShortDescription, languageId, false, false);
+                locale.FullDescription = product.GetLocalized(x => x.FullDescription, languageId, false, false);
+                locale.MetaKeywords = product.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaDescription = product.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaTitle = product.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = product.GetSeName(languageId, false, false);
+            });
 
             PrepareAclModel(model, product, false);
             PrepareStoresMappingModel(model, product, false);
@@ -1218,7 +1206,7 @@ namespace Nop.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("EditProduct", product.Id, _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
-                
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Updated"));
 
                 if (continueEditing)
@@ -1226,7 +1214,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", new {id = product.Id});
+                    return RedirectToAction("Edit", new { id = product.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -1258,7 +1246,7 @@ namespace Nop.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("DeleteProduct", product.Id, _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
-                
+
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Deleted"));
             return RedirectToAction("List");
         }
@@ -1304,7 +1292,7 @@ namespace Nop.Admin.Controllers
                 if (_workContext.CurrentVendor != null && originalProduct.VendorId != _workContext.CurrentVendor.Id)
                     return RedirectToAction("List");
 
-                var newProduct = _copyProductService.CopyProduct(originalProduct, 
+                var newProduct = _copyProductService.CopyProduct(originalProduct,
                     copyModel.Name, copyModel.Published, copyModel.CopyImages);
                 SuccessNotification("The product has been copied successfully");
                 return RedirectToAction("Edit", new { id = newProduct.Id });
@@ -1315,7 +1303,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", new { id = copyModel.Id });
             }
         }
-        
+
         #endregion
 
         #region Required products
@@ -1333,7 +1321,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = new List<int>();
                 var rangeArray = productIds
-                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
                     .ToList();
 
@@ -1428,7 +1416,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Product categories
 
         [HttpPost]
@@ -1441,13 +1429,13 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                if (product != null&& product.VendorId != _workContext.CurrentVendor.Id)
+                if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
                 }
             }
 
-            var productCategories = product.ProductCategories.OrderBy(x=>x.DisplayOrder); //_categoryService.GetProductCategoriesByProductId(productId, true);
+            var productCategories = product.ProductCategories.OrderBy(x => x.DisplayOrder); //_categoryService.GetProductCategoriesByProductId(productId, true);
             var productCategoriesModel = productCategories
                 .Select(x => new ProductModel.ProductCategoryModel
                 {
@@ -1456,7 +1444,7 @@ namespace Nop.Admin.Controllers
                     ProductId = x.ProductId,
                     CategoryId = x.CategoryId,
                     IsFeaturedProduct = x.IsFeaturedProduct,
-                    DisplayOrder  = x.DisplayOrder
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
@@ -1490,14 +1478,14 @@ namespace Nop.Admin.Controllers
 
             //var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, showHidden: true);
             //if (existingProductCategories.FindProductCategory(productId, categoryId) == null)
-            if (product.ProductCategories.Where(x=>x.CategoryId == categoryId).Count() == 0)
+            if (product.ProductCategories.Where(x => x.CategoryId == categoryId).Count() == 0)
             {
                 var productCategory = new ProductCategory
                 {
                     ProductId = productId,
                     CategoryId = categoryId,
                     DisplayOrder = model.DisplayOrder,
-                    Id = product.ProductCategories.Count > 0 ? product.ProductCategories.Max(x=>x.Id)+1:1,
+                    Id = product.ProductCategories.Count > 0 ? product.ProductCategories.Max(x => x.Id) + 1 : 1,
                     _id = ObjectId.GenerateNewId().ToString(),
                 };
                 //a vendor cannot edit "IsFeaturedProduct" property
@@ -1518,7 +1506,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var product = _productService.GetProductById(model.ProductId);
-            var productCategory = product.ProductCategories.Where(x=>x.Id == model.Id).FirstOrDefault();
+            var productCategory = product.ProductCategories.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
 
@@ -1582,7 +1570,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                
+
                 if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
@@ -1623,7 +1611,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                
+
                 if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
@@ -1659,14 +1647,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var product = _productService.GetProductById(model.ProductId);
-            var productManufacturer = product.ProductManufacturers.Where(x=>x.Id == model.Id).FirstOrDefault();
+            var productManufacturer = product.ProductManufacturers.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                
+
                 if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
@@ -1709,7 +1697,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
+
         #endregion
 
         #region Related products
@@ -1724,7 +1712,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-               
+
                 if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
@@ -1759,7 +1747,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var product1 = _productService.GetProductById(model.ProductId1);
-            var relatedProduct = product1.RelatedProducts.Where(x=>x.Id == model.Id).FirstOrDefault(); //_productService.GetRelatedProductById(model.ProductId2);
+            var relatedProduct = product1.RelatedProducts.Where(x => x.Id == model.Id).FirstOrDefault(); //_productService.GetRelatedProductById(model.ProductId2);
             if (relatedProduct == null)
                 throw new ArgumentException("No related product found with the specified id");
 
@@ -1769,7 +1757,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                
+
                 if (product2 != null && product2.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
@@ -1796,7 +1784,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                
+
                 if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
@@ -1807,7 +1795,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-        
+
         public ActionResult RelatedProductAddPopup(int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -1897,8 +1885,8 @@ namespace Nop.Admin.Controllers
 
                         var existingRelatedProducts = productId1.RelatedProducts;  //_productService.GetRelatedProductsByProductId1(model.ProductId);
                         //if (existingRelatedProducts.FindRelatedProduct(model.ProductId, id) == null)
-                        if(model.ProductId != id)
-                            if(existingRelatedProducts.Where(x=>x.ProductId2 == id).Count()==0)
+                        if (model.ProductId != id)
+                            if (existingRelatedProducts.Where(x => x.ProductId2 == id).Count() == 0)
                             {
                                 var related = new RelatedProduct
                                 {
@@ -1922,7 +1910,7 @@ namespace Nop.Admin.Controllers
             ViewBag.formId = formId;
             return View(model);
         }
-        
+
         #endregion
 
         #region Cross-sell products
@@ -1972,7 +1960,7 @@ namespace Nop.Admin.Controllers
 
             var product = _productService.GetProductById(productId2);
 
-            var crossSellProduct = product.CrossSellProduct.Where(x=>x == id).FirstOrDefault();  //_productService.GetCrossSellProductById(id);
+            var crossSellProduct = product.CrossSellProduct.Where(x => x == id).FirstOrDefault();  //_productService.GetCrossSellProductById(id);
             if (crossSellProduct == 0)
                 throw new ArgumentException("No cross-sell product found with the specified id");
 
@@ -2086,7 +2074,7 @@ namespace Nop.Admin.Controllers
                         //var existingCrossSellProducts = product.CrossSellProduct.Where(x => x == model.ProductId); //_productService.GetCrossSellProductsByProductId1(model.ProductId);
                         if (product.CrossSellProduct.Where(x => x == model.ProductId).Count() == 0)
                         {
-                            if(model.ProductId!=id)
+                            if (model.ProductId != id)
                                 _productService.InsertCrossSellProduct(
                                     new CrossSellProduct
                                     {
@@ -2133,7 +2121,7 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
-            var associatedProducts = _productService.GetAssociatedProducts(parentGroupedProductId: productId, 
+            var associatedProducts = _productService.GetAssociatedProducts(parentGroupedProductId: productId,
                 vendorId: vendorId,
                 showHidden: true);
             var associatedProductsModel = associatedProducts
@@ -2172,7 +2160,7 @@ namespace Nop.Admin.Controllers
 
             associatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateAssociatedProduct(associatedProduct);
-            
+
             return new NullJsonResult();
         }
 
@@ -2311,7 +2299,7 @@ namespace Nop.Admin.Controllers
         #region Product pictures
 
         [ValidateInput(false)]
-        public ActionResult ProductPictureAdd(int pictureId, int displayOrder, 
+        public ActionResult ProductPictureAdd(int pictureId, int displayOrder,
             string overrideAltAttribute, string overrideTitleAttribute,
             int productId)
         {
@@ -2324,11 +2312,11 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
-            
+
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
-            
+
             var picture = _pictureService.GetPictureById(pictureId);
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
@@ -2342,7 +2330,7 @@ namespace Nop.Admin.Controllers
 
             _productService.InsertProductPicture(new ProductPicture
             {
-                Id = product.ProductPictures.Count > 0 ? product.ProductPictures.Max(x=>x.Id) + 1: 1,
+                Id = product.ProductPictures.Count > 0 ? product.ProductPictures.Max(x => x.Id) + 1 : 1,
                 _id = ObjectId.GenerateNewId().ToString(),
                 PictureId = pictureId,
                 ProductId = productId,
@@ -2353,7 +2341,7 @@ namespace Nop.Admin.Controllers
                 TitleAttribute = overrideTitleAttribute
             });
 
-            
+
 
             _pictureService.SetSeoFilename(pictureId, _pictureService.GetPictureSeName(product.Name));
 
@@ -2379,22 +2367,22 @@ namespace Nop.Admin.Controllers
             var productPictures = product.ProductPictures.OrderBy(x => x.DisplayOrder);
             var productPicturesModel = productPictures
                 .Select(x =>
-                        {
-                            var picture = _pictureService.GetPictureById(x.PictureId);
-                            if (picture == null)
-                                throw new Exception("Picture cannot be loaded");
-                            var m = new ProductModel.ProductPictureModel
-                                    {
-                                        Id = x.Id,
-                                        ProductId = x.ProductId,
-                                        PictureId = x.PictureId,
-                                        PictureUrl = _pictureService.GetPictureUrl(picture),
-                                        OverrideAltAttribute = picture.AltAttribute,
-                                        OverrideTitleAttribute = picture.TitleAttribute,
-                                        DisplayOrder = x.DisplayOrder
-                                    };
-                            return m;
-                        })
+                {
+                    var picture = _pictureService.GetPictureById(x.PictureId);
+                    if (picture == null)
+                        throw new Exception("Picture cannot be loaded");
+                    var m = new ProductModel.ProductPictureModel
+                    {
+                        Id = x.Id,
+                        ProductId = x.ProductId,
+                        PictureId = x.PictureId,
+                        PictureUrl = _pictureService.GetPictureUrl(picture),
+                        OverrideAltAttribute = picture.AltAttribute,
+                        OverrideTitleAttribute = picture.TitleAttribute,
+                        DisplayOrder = x.DisplayOrder
+                    };
+                    return m;
+                })
                 .ToList();
 
             var gridModel = new DataSourceResult
@@ -2414,14 +2402,14 @@ namespace Nop.Admin.Controllers
 
             var product = _productService.GetProductById(model.ProductId);
 
-            var productPicture = product.ProductPictures.Where(x=>x.Id == model.Id).FirstOrDefault();
+            var productPicture = product.ProductPictures.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                
+
                 if (product != null && product.VendorId != _workContext.CurrentVendor.Id)
                 {
                     return Content("This is not your product");
@@ -2445,8 +2433,8 @@ namespace Nop.Admin.Controllers
             _pictureService.UpdatePicture(picture.Id,
                 _pictureService.LoadPictureBinary(picture),
                 picture.MimeType,
-                picture.SeoFilename, 
-                model.OverrideAltAttribute, 
+                picture.SeoFilename,
+                model.OverrideAltAttribute,
                 model.OverrideTitleAttribute);
 
             return new NullJsonResult();
@@ -2460,7 +2448,7 @@ namespace Nop.Admin.Controllers
 
             var product = _productService.GetProductById(model.ProductId);
 
-            var productPicture = product.ProductPictures.Where(x=>x.Id == model.Id).FirstOrDefault();
+            var productPicture = product.ProductPictures.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
 
@@ -2489,7 +2477,7 @@ namespace Nop.Admin.Controllers
 
         [ValidateInput(false)]
         public ActionResult ProductSpecificationAttributeAdd(int attributeTypeId, int specificationAttributeId, int specificationAttributeOptionId,
-            string customValue, bool allowFiltering, bool showOnProductPage, 
+            string customValue, bool allowFiltering, bool showOnProductPage,
             int displayOrder, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -2523,7 +2511,7 @@ namespace Nop.Admin.Controllers
                 ShowOnProductPage = showOnProductPage,
                 DisplayOrder = displayOrder,
                 _id = ObjectId.GenerateNewId().ToString(),
-                Id = product.ProductSpecificationAttributes.Count > 0 ? product.ProductSpecificationAttributes.Max(x=>x.Id)+1:1
+                Id = product.ProductSpecificationAttributes.Count > 0 ? product.ProductSpecificationAttributes.Max(x => x.Id) + 1 : 1
             };
 
             _specificationAttributeService.InsertProductSpecificationAttribute(psa);
@@ -2532,7 +2520,7 @@ namespace Nop.Admin.Controllers
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
-        
+
         [HttpPost]
         public ActionResult ProductSpecAttrList(DataSourceRequest command, int productId)
         {
@@ -2549,8 +2537,8 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            var productrSpecs = product.ProductSpecificationAttributes.OrderBy(x => x.DisplayOrder); 
-            
+            var productrSpecs = product.ProductSpecificationAttributes.OrderBy(x => x.DisplayOrder);
+
             var productrSpecsModel = productrSpecs
                 .Select(x =>
                 {
@@ -2569,7 +2557,7 @@ namespace Nop.Admin.Controllers
                     switch (x.AttributeType)
                     {
                         case SpecificationAttributeType.Option:
-                            psaModel.ValueRaw = HttpUtility.HtmlEncode(specificationAttribute.SpecificationAttributeOptions.Where(y=>y.Id == x.SpecificationAttributeOptionId).FirstOrDefault().Name);
+                            psaModel.ValueRaw = HttpUtility.HtmlEncode(specificationAttribute.SpecificationAttributeOptions.Where(y => y.Id == x.SpecificationAttributeOptionId).FirstOrDefault().Name);
                             break;
                         case SpecificationAttributeType.CustomText:
                             psaModel.ValueRaw = HttpUtility.HtmlEncode(x.CustomValue);
@@ -2780,7 +2768,7 @@ namespace Nop.Admin.Controllers
 
             var orders = _orderService.SearchOrders(
                 productId: productId,
-                pageIndex: command.Page - 1, 
+                pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -2926,7 +2914,7 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 products.AddRange(_productService.GetProductsByIds(ids));
@@ -3007,7 +2995,7 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 products.AddRange(_productService.GetProductsByIds(ids));
@@ -3163,7 +3151,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var products = _productService.SearchProducts(categoryIds: new List<int> { model.SearchCategoryId},
+            var products = _productService.SearchProducts(categoryIds: new List<int> { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
                 vendorId: vendorId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
@@ -3348,7 +3336,7 @@ namespace Nop.Admin.Controllers
                 Quantity = model.Quantity,
                 Price = model.Price,
                 _id = ObjectId.GenerateNewId().ToString(),
-                Id = product.TierPrices.Count > 0 ? product.TierPrices.Max(x=>x.Id) + 1: 1,
+                Id = product.TierPrices.Count > 0 ? product.TierPrices.Max(x => x.Id) + 1 : 1,
             };
             _productService.InsertTierPrice(tierPrice);
 
@@ -3368,7 +3356,7 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var tierPrice = product.TierPrices.Where(x=>x.Id == model.Id).FirstOrDefault();
+            var tierPrice = product.TierPrices.Where(x => x.Id == model.Id).FirstOrDefault();
             if (tierPrice == null)
                 throw new ArgumentException("No tier price found with the specified id");
 
@@ -3396,7 +3384,7 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var tierPrice = product.TierPrices.Where(x=>x.Id == id).FirstOrDefault();
+            var tierPrice = product.TierPrices.Where(x => x.Id == id).FirstOrDefault();
             if (tierPrice == null)
                 throw new ArgumentException("No tier price found with the specified id");
 
@@ -3431,7 +3419,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var attributes = product.ProductAttributeMappings.OrderBy(x => x.DisplayOrder); 
+            var attributes = product.ProductAttributeMappings.OrderBy(x => x.DisplayOrder);
             var attributesModel = attributes
                 .Select(x =>
                 {
@@ -3497,9 +3485,9 @@ namespace Nop.Admin.Controllers
                 AttributeControlTypeId = model.AttributeControlTypeId,
                 DisplayOrder = model.DisplayOrder,
                 _id = ObjectId.GenerateNewId().ToString(),
-                Id = product.ProductAttributeMappings.Count > 0 ? product.ProductAttributeMappings.Max(x=>x.Id) + 1: 1,
+                Id = product.ProductAttributeMappings.Count > 0 ? product.ProductAttributeMappings.Max(x => x.Id) + 1 : 1,
             };
-            
+
 
             //predefined values
             var predefinedValues = _productAttributeService.GetPredefinedProductAttributeValues(model.ProductAttributeId);
@@ -3648,7 +3636,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
-            
+
             if (ModelState.IsValid)
             {
                 productAttributeMapping.ValidationMinLength = model.ValidationMinLength;
@@ -3706,7 +3694,7 @@ namespace Nop.Admin.Controllers
                 .FirstOrDefault();
 
             var attributes = product.ProductAttributeMappings //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
-                //ignore non-combinable attributes (should have selectable values)
+                                                              //ignore non-combinable attributes (should have selectable values)
                 .Where(x => x.CanBeUsedAsCondition())
                 //ignore this attribute (it cannot depend on itself)
                 .Where(x => x.Id != productAttributeMapping.Id)
@@ -3717,7 +3705,7 @@ namespace Nop.Admin.Controllers
                 var attributeModel = new ProductAttributeConditionModel.ProductAttributeModel
                 {
                     Id = attribute.Id,
-                    ProductAttributeId = attribute.ProductAttributeId,                    
+                    ProductAttributeId = attribute.ProductAttributeId,
                     Name = pam.Name,
                     TextPrompt = attribute.TextPrompt,
                     IsRequired = attribute.IsRequired,
@@ -3797,7 +3785,7 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(model.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
-            
+
             var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.ProductAttributeMappingId).FirstOrDefault();
             //_productAttributeService.GetProductAttributeMappingById(model.ProductAttributeMappingId);
             if (productAttributeMapping == null)
@@ -3955,10 +3943,10 @@ namespace Nop.Admin.Controllers
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
-           
+
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null  && product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
             var values = productAttributeMapping.ProductAttributeValues.OrderBy(x => x.DisplayOrder); //_productAttributeService.GetProductAttributeValues(productAttributeMappingId);
@@ -3982,7 +3970,7 @@ namespace Nop.Admin.Controllers
                         AttributeValueTypeId = x.AttributeValueTypeId,
                         AttributeValueTypeName = x.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext),
                         AssociatedProductId = x.AssociatedProductId,
-                        AssociatedProductName = associatedProduct != null ? associatedProduct.Name  : "",
+                        AssociatedProductName = associatedProduct != null ? associatedProduct.Name : "",
                         Name = productAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
                         ColorSquaresRgb = x.ColorSquaresRgb,
                         ImageSquaresPictureId = x.ImageSquaresPictureId,
@@ -4015,7 +4003,7 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x=>x.Id == productAttributeMappingId).FirstOrDefault();
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
@@ -4065,14 +4053,14 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var productAttributeMapping = product.ProductAttributeMappings.Where(x=>x.Id == model.ProductAttributeMappingId).FirstOrDefault();
+            var productAttributeMapping = product.ProductAttributeMappings.Where(x => x.Id == model.ProductAttributeMappingId).FirstOrDefault();
             if (productAttributeMapping == null)
                 //No product attribute found with the specified id
                 return RedirectToAction("List", "Product");
 
-          
+
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null&& product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
@@ -4115,7 +4103,7 @@ namespace Nop.Admin.Controllers
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                     PictureId = model.PictureId,
-                    Id = productAttributeMapping.ProductAttributeValues.Count > 0 ? productAttributeMapping.ProductAttributeValues.Max(x=>x.Id) + 1 : 1,
+                    Id = productAttributeMapping.ProductAttributeValues.Count > 0 ? productAttributeMapping.ProductAttributeValues.Max(x => x.Id) + 1 : 1,
                     _id = ObjectId.GenerateNewId().ToString()
                 };
                 pav.Locales = UpdateLocales(pav, model);
@@ -4131,7 +4119,7 @@ namespace Nop.Admin.Controllers
 
 
             //pictures
-            model.ProductPictureModels = product.ProductPictures.OrderBy(x=>x.DisplayOrder) 
+            model.ProductPictureModels = product.ProductPictures.OrderBy(x => x.DisplayOrder)
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
@@ -4446,7 +4434,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var combinations = product.ProductAttributeCombinations; 
+            var combinations = product.ProductAttributeCombinations;
             var combinationsModel = combinations
                 .Select(x =>
                 {
@@ -4496,11 +4484,11 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var combination = product.ProductAttributeCombinations.Where(x=>x.Id == model.Id).FirstOrDefault();
+            var combination = product.ProductAttributeCombinations.Where(x => x.Id == model.Id).FirstOrDefault();
             if (combination == null)
                 throw new ArgumentException("No product attribute combination found with the specified id");
 
-           
+
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
@@ -4535,7 +4523,7 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var combination = product.ProductAttributeCombinations.Where(x=>x.Id == id).FirstOrDefault();
+            var combination = product.ProductAttributeCombinations.Where(x => x.Id == id).FirstOrDefault();
             if (combination == null)
                 throw new ArgumentException("No product attribute combination found with the specified id");
 
@@ -4591,7 +4579,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List", "Product");
 
             //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null&& product.VendorId != _workContext.CurrentVendor.Id)
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
             ViewBag.btnId = btnId;
@@ -4604,7 +4592,7 @@ namespace Nop.Admin.Controllers
             #region Product attributes
 
             var attributes = product.ProductAttributeMappings //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
-                //ignore non-combinable attributes for combinations
+                                                              //ignore non-combinable attributes for combinations
                 .Where(x => !x.IsNonCombinable())
                 .ToList();
             foreach (var attribute in attributes)
@@ -4633,7 +4621,7 @@ namespace Nop.Admin.Controllers
                             var cblAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -4646,7 +4634,7 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = attribute.ProductAttributeValues; 
+                            var attributeValues = attribute.ProductAttributeValues;
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
@@ -4745,7 +4733,7 @@ namespace Nop.Admin.Controllers
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
                 ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
-            if(product.ProductAttributeCombinations.Where(x=>x.AttributesXml== attributesXml).Count() > 0)
+            if (product.ProductAttributeCombinations.Where(x => x.AttributesXml == attributesXml).Count() > 0)
             {
                 warnings.Add("This combination attributes exists!");
             }
@@ -4763,7 +4751,7 @@ namespace Nop.Admin.Controllers
                     Gtin = model.Gtin,
                     OverriddenPrice = model.OverriddenPrice,
                     NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow,
-                    Id = product.ProductAttributeCombinations.Count > 0 ? product.ProductAttributeCombinations.Max(x=>x.Id)+1: 1,
+                    Id = product.ProductAttributeCombinations.Count > 0 ? product.ProductAttributeCombinations.Max(x => x.Id) + 1 : 1,
                     _id = ObjectId.GenerateNewId().ToString()
                 };
                 _productAttributeService.InsertProductAttributeCombination(combination);
@@ -4778,13 +4766,13 @@ namespace Nop.Admin.Controllers
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
-            
+
             //If we got this far, something failed, redisplay form
             PrepareAddProductAttributeCombinationModel(model, product);
             model.Warnings = warnings;
             return View(model);
         }
-        
+
         [HttpPost]
         public ActionResult GenerateAllAttributeCombinations(int productId)
         {

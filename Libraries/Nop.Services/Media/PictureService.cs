@@ -32,7 +32,6 @@ namespace Nop.Services.Media
         private static readonly object s_lock = new object();
 
         private readonly IRepository<Picture> _pictureRepository;
-        private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly ILogger _logger;
@@ -55,7 +54,6 @@ namespace Nop.Services.Media
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
-            IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService, 
             IWebHelper webHelper,
             ILogger logger,
@@ -63,7 +61,6 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings)
         {
             this._pictureRepository = pictureRepository;
-            this._productPictureRepository = productPictureRepository;
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._logger = logger;
@@ -612,31 +609,6 @@ namespace Nop.Services.Media
             return pics;
         }
         
-
-        /// <summary>
-        /// Gets pictures by product identifier
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="recordsToReturn">Number of records to return. 0 if you want to get all items</param>
-        /// <returns>Pictures</returns>
-        //public virtual IList<Picture> GetPicturesByProductId(int productId, int recordsToReturn = 0)
-        //{
-        //    if (productId == 0)
-        //        return new List<Picture>();
-
-            
-        //    var query = from p in _pictureRepository.Table
-        //                join pp in _productPictureRepository.Table on p.Id equals pp.PictureId
-        //                orderby pp.DisplayOrder
-        //                where pp.ProductId == productId
-        //                select p;
-
-        //    if (recordsToReturn > 0)
-        //        query = query.Take(recordsToReturn);
-
-        //    var pics = query.ToList();
-        //    return pics;
-        //}
 
         /// <summary>
         /// Inserts a picture

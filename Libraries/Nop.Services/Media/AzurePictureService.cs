@@ -30,7 +30,6 @@ namespace Nop.Services.Media
         #region Ctor
 
         public AzurePictureService(IRepository<Picture> pictureRepository,
-            IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService,
             IWebHelper webHelper,
             ILogger logger,
@@ -38,7 +37,6 @@ namespace Nop.Services.Media
             MediaSettings mediaSettings,
             NopConfig config)
             : base(pictureRepository,
-                productPictureRepository,
                 settingService,
                 webHelper,
                 logger,

@@ -63,6 +63,15 @@ namespace Nop.Data
             collection = database.GetCollection<T>(typeof(T).Name);
         }
 
+        public MongoDBRepository(IMongoClient client)
+        {
+            string connectionString = DataSettingsHelper.ConnectionString();
+            var databaseName = new MongoUrl(connectionString).DatabaseName;
+            database = client.GetDatabase(databaseName);
+            collection = database.GetCollection<T>(typeof(T).Name);
+        }
+
+
         #endregion
 
         #region Methods

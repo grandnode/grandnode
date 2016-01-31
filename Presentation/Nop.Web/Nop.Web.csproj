@@ -2241,6 +2241,7 @@
     <Content Include="Themes\GrandNodeTheme\Views\ShoppingCart\_GiftCardBox.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Vendor\ApplyVendor.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Web.config" />
+    <Content Include="Themes\GrandNodeTheme\Views\Checkout\OpcPaymentInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

@@ -138,14 +138,6 @@ namespace Nop.Services.Catalog
         /// <param name="combination">Product attribute combination</param>
         void DeleteProductAttributeCombination(ProductAttributeCombination combination);
 
-
-        /// <summary>
-        /// Gets a product attribute combination by SKU
-        /// </summary>
-        /// <param name="sku">SKU</param>
-        /// <returns>Product attribute combination</returns>
-        ProductAttributeCombination GetProductAttributeCombinationBySku(string sku);
-
         /// <summary>
         /// Inserts a product attribute combination
         /// </summary>

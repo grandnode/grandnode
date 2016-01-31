@@ -93,7 +93,6 @@ namespace Nop.Services.Catalog
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<AclRecord> _aclRepository;
-        //private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IEventPublisher _eventPublisher;
@@ -114,7 +113,6 @@ namespace Nop.Services.Catalog
         /// <param name="categoryRepository">Category repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="aclRepository">ACL record repository</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="workContext">Work context</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="eventPublisher">Event publisher</param>
@@ -125,7 +123,6 @@ namespace Nop.Services.Catalog
             IRepository<Category> categoryRepository,
             IRepository<Product> productRepository,
             IRepository<AclRecord> aclRepository,
-            //IRepository<StoreMapping> storeMappingRepository,
             IWorkContext workContext,
             IStoreContext storeContext,
             IEventPublisher eventPublisher,
@@ -138,7 +135,6 @@ namespace Nop.Services.Catalog
             this._categoryRepository = categoryRepository;
             this._productRepository = productRepository;
             this._aclRepository = aclRepository;
-            //this._storeMappingRepository = storeMappingRepository;
             this._workContext = workContext;
             this._storeContext = storeContext;
             this._eventPublisher = eventPublisher;
@@ -554,8 +550,6 @@ namespace Nop.Services.Catalog
             if (productCategory == null)
                 throw new ArgumentNullException("productCategory");
 
-            //_productCategoryRepository.Update(productCategory);
-
             var builder = Builders<Product>.Filter;
             var filter = builder.Eq(x => x.Id, productCategory.ProductId);
             filter = filter & builder.Where(x => x.ProductCategories.Any(y => y.Id == productCategory.Id));
@@ -565,9 +559,6 @@ namespace Nop.Services.Catalog
                 .Set(x => x.ProductCategories.ElementAt(-1).DisplayOrder, productCategory.DisplayOrder);
 
             var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
-
-            //var result = collectionProduct.UpdateManyAsync(filter, update).Result;
-
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);

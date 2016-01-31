@@ -53,6 +53,8 @@ using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
 using Nop.Services.Infrastructure;
+using MongoDB.Driver;
+using System.ComponentModel;
 
 namespace Nop.Web.Framework
 {
@@ -101,10 +103,11 @@ namespace Nop.Web.Framework
             {
                 var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
                 var dataProvider = mongoDBDataProviderManager.LoadDataProvider();
+                builder.Register(c => new MongoClient(dataProviderSettings.DataConnectionString)).As(typeof(IMongoClient)).SingleInstance();
             }
 
             builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-            
+
             //plugins
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerLifetimeScope();
             builder.RegisterType<OfficialFeedManager>().As<IOfficialFeedManager>().InstancePerLifetimeScope();
