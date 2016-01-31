@@ -62,17 +62,6 @@ namespace Nop.Core
             this.AddRange(range.Take(pageSize));
         }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="source">source</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        public PagedList(IList<T> source, int pageIndex, int pageSize)
-        {
-            Init(source, pageIndex, pageSize);
-        }
-
         public PagedList(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
         {
             var task = source.CountAsync(filterdefinition);
@@ -123,6 +112,11 @@ namespace Nop.Core
         /// <param name="totalCount">Total count</param>
         private void Init(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount = null)
         {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (pageSize <= 0)
+                throw new ArgumentException("pageSize must be greater than zero");
+
             TotalCount = totalCount ?? source.Count();
             TotalPages = TotalCount / pageSize;
 
@@ -131,7 +125,8 @@ namespace Nop.Core
 
             PageSize = pageSize;
             PageIndex = pageIndex;
-            AddRange(source.Skip(pageIndex * pageSize).Take(pageSize));
+            source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
+            AddRange(source);
         }
 
         public int PageIndex { get; private set; }

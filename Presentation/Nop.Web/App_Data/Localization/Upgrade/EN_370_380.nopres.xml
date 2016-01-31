@@ -191,5 +191,10 @@
   <LocaleResource Name="ActivityLog.EditTopic">
     <Value>Edited a topic ('{0}')</Value>
   </LocaleResource>
-
+  <LocaleResource Name="ActivityLog.DeleteOrder">
+    <Value>Deleted an order (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditOrder">
+    <Value>Edited an order (ID = {0}). See order notes for details</Value>
+  </LocaleResource>
 </Language>
