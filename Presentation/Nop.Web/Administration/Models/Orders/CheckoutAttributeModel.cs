@@ -7,6 +7,7 @@ using Nop.Admin.Validators.Orders;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Nop.Admin.Models.Customers;
 
 namespace Nop.Admin.Models.Orders
 {
@@ -17,6 +18,7 @@ namespace Nop.Admin.Models.Orders
         {
             Locales = new List<CheckoutAttributeLocalizedModel>();
             AvailableTaxCategories = new List<SelectListItem>();
+            AvailableCustomerRoles = new List<CustomerRoleModel>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")]
@@ -78,6 +80,12 @@ namespace Nop.Admin.Models.Orders
         public List<StoreModel> AvailableStores { get; set; }
         public int[] SelectedStoreIds { get; set; }
 
+        //ACL
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.SubjectToAcl")]
+        public bool SubjectToAcl { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AclCustomerRoles")]
+        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
+        public int[] SelectedCustomerRoleIds { get; set; }
     }
 
     public partial class CheckoutAttributeLocalizedModel : ILocalizedModelLocal

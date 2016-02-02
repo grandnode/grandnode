@@ -22,7 +22,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
         /// <returns>Checkout attributes</returns>
-        IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false);
+        IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false, bool ignorAcl = false);
 
         /// <summary>
         /// Gets a checkout attribute 

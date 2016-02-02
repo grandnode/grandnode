@@ -1218,6 +1218,12 @@
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.EditAttributeDetails">
     <Value>Edit checkout attribute details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the manufacturer will be shown.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType">
     <Value>Control type</Value>
   </LocaleResource>
@@ -1299,6 +1305,12 @@
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.ShippableProductRequired.Hint">
     <Value>An option indicating whether shippable products are required in order to display this attribute.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the checkout attrubutes is subject to ACL (access control list).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.TaxCategory">
     <Value>Tax category</Value>
   </LocaleResource>
@@ -1310,6 +1322,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.TextPrompt.Hint">
     <Value>Enter text prompt.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Acl">
+    <Value>Access control list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Info">
     <Value>Attribute info</Value>

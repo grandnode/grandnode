@@ -29,6 +29,9 @@
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores")
         </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Acl")
+        </li>
     </ul>
     <div>
         @TabInfo()
@@ -38,6 +41,9 @@
     </div>
     <div>
         @TabStores()
+    </div>
+    <div>
+        @TabAcl()
     </div>
 </div>
 @{
@@ -429,6 +435,62 @@
                 else
                 {
                     <div>No stores defined</div>
+                }
+            </td>
+        </tr>
+    </table>
+}
+
+
+@helper TabAcl()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.SubjectToAcl)").click(toggleAcl);
+
+            toggleAcl();
+        });
+
+
+        function toggleAcl() {
+            if ($('#@Html.FieldIdFor(model => model.SubjectToAcl)').is(':checked')) {
+                $('#pnl-acl').show();
+            }
+            else {
+                $('#pnl-acl').hide();
+            }
+        }
+
+    </script>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SubjectToAcl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SubjectToAcl)
+                @Html.ValidationMessageFor(model => model.SubjectToAcl)
+            </td>
+        </tr>
+        <tr id="pnl-acl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvailableCustomerRoles):
+            </td>
+            <td class="adminData">
+                @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
+                {
+                    @Html.Action("AclDisabledWarning", "Common")
+                    foreach (var customerRole in Model.AvailableCustomerRoles)
+                    {
+                        <div>
+                            <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div>No customer roles defined</div>
                 }
             </td>
         </tr>

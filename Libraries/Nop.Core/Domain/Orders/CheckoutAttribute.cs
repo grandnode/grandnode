@@ -3,6 +3,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Stores;
 using MongoDB.Bson.Serialization.Attributes;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Core.Domain.Orders
 {
@@ -10,7 +11,7 @@ namespace Nop.Core.Domain.Orders
     /// Represents a checkout attribute
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class CheckoutAttribute : BaseEntity, ILocalizedEntity, IStoreMappingSupported
+    public partial class CheckoutAttribute : BaseEntity, ILocalizedEntity, IStoreMappingSupported, IAclSupported
     {
         private ICollection<CheckoutAttributeValue> _checkoutAttributeValues;
 
@@ -18,6 +19,7 @@ namespace Nop.Core.Domain.Orders
         {
             Stores = new List<int>();
             Locales = new List<LocalizedProperty>();
+            CustomerRoles = new List<int>();
         }
         /// <summary>
         /// Gets or sets the name
@@ -99,7 +101,11 @@ namespace Nop.Core.Domain.Orders
         public string DefaultValue { get; set; }
 
 
-
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+        /// </summary>
+        public bool SubjectToAcl { get; set; }
+        public IList<int> CustomerRoles { get; set; }
 
 
 

@@ -197,4 +197,19 @@
   <LocaleResource Name="ActivityLog.EditOrder">
     <Value>Edited an order (ID = {0}). See order notes for details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the checkout attrubutes is subject to ACL (access control list).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the manufacturer will be shown.</Value>
+  </LocaleResource>
 </Language>

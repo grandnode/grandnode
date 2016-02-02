@@ -6,6 +6,10 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Events;
 using Nop.Services.Stores;
+using Nop.Services.Customers;
+using Nop.Core.Domain.Catalog;
+using Nop.Core;
+using MongoDB.Driver.Linq;
 
 namespace Nop.Services.Orders
 {
@@ -22,8 +26,9 @@ namespace Nop.Services.Orders
         /// <remarks>
         /// {0} : store ID
         /// {1} : >A value indicating whether we should exlude shippable attributes
+        /// {2} : ignore ACL?
         /// </remarks>
-        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}-{1}";
+        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}-{1}-{2}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -62,7 +67,9 @@ namespace Nop.Services.Orders
         private readonly IStoreMappingService _storeMappingService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
-        
+        private readonly IWorkContext _workContext;
+        private readonly CatalogSettings _catalogSettings;
+
         #endregion
 
         #region Ctor
@@ -79,13 +86,17 @@ namespace Nop.Services.Orders
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,
             IStoreMappingService storeMappingService,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IWorkContext workContext,
+            CatalogSettings catalogSettings)
         {
             this._cacheManager = cacheManager;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
             this._checkoutAttributeValueRepository = checkoutAttributeValueRepository;
             this._storeMappingService = storeMappingService;
             this._eventPublisher = eventPublisher;
+            this._workContext = workContext;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -118,26 +129,45 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
         /// <returns>Checkout attributes</returns>
-        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
+        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false, bool ignorAcl = false)
         {
-            string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes);
+            string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes, ignorAcl);
             return _cacheManager.Get(key, () =>
             {
-                var query = from ca in _checkoutAttributeRepository.Table
-                            orderby ca.DisplayOrder
-                            select ca;
-                var checkoutAttributes = query.ToList();
-                if (storeId > 0)
+                var query = _checkoutAttributeRepository.Table;
+                query = query.OrderBy(c => c.DisplayOrder);
+
+                if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
+                    (!ignorAcl && !_catalogSettings.IgnoreAcl))
                 {
-                    //store mapping
-                    checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.Authorize(ca)).ToList();
+                    if (!ignorAcl && !_catalogSettings.IgnoreAcl)
+                    {
+                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                        query = from p in query
+                                where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
+                                select p;
+                    }
+                    //Store mapping
+                    if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                    {
+                        query = from p in query
+                                where !p.LimitedToStores || p.Stores.Contains(storeId)
+                                select p; 
+                    }
                 }
-                if (excludeShippableAttributes)
-                {
-                    //remove attributes which require shippable products
-                    checkoutAttributes = checkoutAttributes.RemoveShippableAttributes().ToList();
-                }
-                return checkoutAttributes;
+                return query.ToList();
+
+                //if (storeId > 0)
+                //{
+                //    //store mapping
+                //    checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.Authorize(ca)).ToList();
+                //}
+                //if (excludeShippableAttributes)
+                //{
+                //    //remove attributes which require shippable products
+                //    checkoutAttributes = checkoutAttributes.RemoveShippableAttributes().ToList();
+                //}
+                //return checkoutAttributes;
             });
         }
 
@@ -212,40 +242,7 @@ namespace Nop.Services.Orders
             //event notification
             _eventPublisher.EntityDeleted(checkoutAttributeValue);
         }
-
-        /// <summary>
-        /// Gets checkout attribute values by checkout attribute identifier
-        /// </summary>
-        /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
-        /// <returns>Checkout attribute values</returns>
-        //public virtual IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
-        //{
-        //    string key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);
-        //    return _cacheManager.Get(key, () =>
-        //    {
-        //        var query = from cav in _checkoutAttributeValueRepository.Table
-        //                    orderby cav.DisplayOrder
-        //                    where cav.CheckoutAttributeId == checkoutAttributeId
-        //                    select cav;
-        //        var checkoutAttributeValues = query.ToList();
-        //        return checkoutAttributeValues;
-        //    });
-        //}
         
-        /// <summary>
-        /// Gets a checkout attribute value
-        /// </summary>
-        /// <param name="checkoutAttributeValueId">Checkout attribute value identifier</param>
-        /// <returns>Checkout attribute value</returns>
-        //public virtual CheckoutAttributeValue GetCheckoutAttributeValueById(int checkoutAttributeValueId)
-        //{
-        //    if (checkoutAttributeValueId == 0)
-        //        return null;
-            
-        //    string key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
-        //    return _cacheManager.Get(key, () => _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId));
-        //}
-
         /// <summary>
         /// Inserts a checkout attribute value
         /// </summary>

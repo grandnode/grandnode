@@ -20,6 +20,7 @@ using Nop.Web.Framework.Mvc;
 using Nop.Core.Domain.Localization;
 using System.Collections.Generic;
 using MongoDB.Bson;
+using Nop.Services.Customers;
 
 namespace Nop.Admin.Controllers
 {
@@ -40,6 +41,8 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly ICustomerService _customerService;
+        private readonly IAclService _aclService;
 
         #endregion
 
@@ -57,7 +60,9 @@ namespace Nop.Admin.Controllers
             MeasureSettings measureSettings,
             IPermissionService permissionService,
             IStoreService storeService,
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            ICustomerService customerService,
+            IAclService aclService)
         {
             this._checkoutAttributeService = checkoutAttributeService;
             this._languageService = languageService;
@@ -72,6 +77,8 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
+            this._customerService = customerService;
+            this._aclService = aclService;
         }
 
         #endregion
@@ -166,9 +173,27 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected virtual void PrepareAclModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (checkoutAttribute != null)
+                {
+                    model.SelectedCustomerRoleIds = checkoutAttribute.CustomerRoles.ToArray();
+                }
+            }
+        }
 
         #endregion
-        
+
         #region Checkout attributes
 
         //list
@@ -218,6 +243,9 @@ namespace Nop.Admin.Controllers
             PrepareTaxCategories(model, null, true);
             //Stores
             PrepareStoresMappingModel(model, null, false);
+            //ACL
+            PrepareAclModel(model, null, false);
+
             return View(model);
         }
 
@@ -230,6 +258,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var checkoutAttribute = model.ToEntity();
+                checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
                 checkoutAttribute.Locales = UpdateAttributeLocales(checkoutAttribute, model);
                 checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
@@ -247,6 +276,9 @@ namespace Nop.Admin.Controllers
             PrepareTaxCategories(model, null, true);
             //Stores
             PrepareStoresMappingModel(model, null, true);
+            //ACL
+            PrepareAclModel(model, null, true);
+
             return View(model);
         }
 
@@ -268,6 +300,8 @@ namespace Nop.Admin.Controllers
                 locale.Name = checkoutAttribute.GetLocalized(x => x.Name, languageId, false, false);
                 locale.TextPrompt = checkoutAttribute.GetLocalized(x => x.TextPrompt, languageId, false, false);
             });
+            //ACL
+            PrepareAclModel(model, checkoutAttribute, false);
             //tax categories
             PrepareTaxCategories(model, checkoutAttribute, false);
             //Stores
@@ -290,6 +324,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 checkoutAttribute = model.ToEntity(checkoutAttribute);
+                checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
                 checkoutAttribute.Locales = UpdateAttributeLocales(checkoutAttribute, model);
                 checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
                 _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
@@ -314,7 +349,8 @@ namespace Nop.Admin.Controllers
             PrepareTaxCategories(model, checkoutAttribute, true);
             //Stores
             PrepareStoresMappingModel(model, checkoutAttribute, true);
-
+            //ACL
+            PrepareAclModel(model, checkoutAttribute, false);
             return View(model);
         }
 
