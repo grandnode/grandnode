@@ -188,30 +188,6 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
-        /// Find customer role identifiers with granted access
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
-        /// <returns>Customer role identifiers</returns>
-        public virtual int[] GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported
-        {
-            if (entity == null)
-                throw new ArgumentNullException("entity");
-
-            int entityId = entity.Id;
-            string entityName = typeof(T).Name;
-            string key = string.Format(ACLRECORD_BY_ENTITYID_NAME_KEY, entityId, entityName);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from ur in _aclRecordRepository.Table
-                            where ur.EntityId == entityId &&
-                            ur.EntityName == entityName 
-                            select ur.CustomerRoleId;
-                return query.ToArray();
-            });
-        }
-
-        /// <summary>
         /// Authorize ACL permission
         /// </summary>
         /// <typeparam name="T">Type</typeparam>

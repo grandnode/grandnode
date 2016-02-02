@@ -52,14 +52,6 @@ namespace Nop.Services.Security
         void UpdateAclRecord(AclRecord aclRecord);
 
         /// <summary>
-        /// Find customer role identifiers with granted access
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="entity">Wntity</param>
-        /// <returns>Customer role identifiers</returns>
-        int[] GetCustomerRoleIdsWithAccess<T>(T entity) where T : BaseEntity, IAclSupported;
-
-        /// <summary>
         /// Authorize ACL permission
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
