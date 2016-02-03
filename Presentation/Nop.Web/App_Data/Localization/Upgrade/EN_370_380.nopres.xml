@@ -212,4 +212,19 @@
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.AclCustomerRoles.Hint">
     <Value>Select customer roles for which the manufacturer will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the category will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the category is subject to ACL (access control list).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
 </Language>

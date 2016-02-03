@@ -7,6 +7,7 @@ using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.News;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Admin.Models.Customers;
 
 namespace Nop.Admin.Models.News
 {
@@ -16,6 +17,7 @@ namespace Nop.Admin.Models.News
         public NewsItemModel()
         {
             this.AvailableStores = new List<StoreModel>();
+            AvailableCustomerRoles = new List<CustomerRoleModel>();
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
@@ -79,5 +81,13 @@ namespace Nop.Admin.Models.News
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+
+        //ACL
+        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SubjectToAcl")]
+        public bool SubjectToAcl { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AclCustomerRoles")]
+        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
+        public int[] SelectedCustomerRoleIds { get; set; }
+
     }
 }

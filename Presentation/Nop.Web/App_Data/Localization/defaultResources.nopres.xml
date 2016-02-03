@@ -7347,6 +7347,9 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems">
     <Value>News items</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Added">
     <Value>The new news item has been added successfully.</Value>
   </LocaleResource>
@@ -7361,6 +7364,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.EditNewsItemDetails">
     <Value>Edit news item details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the category will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.AllowComments">
     <Value>Allow comments</Value>
@@ -7452,6 +7461,12 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.StartDate.Hint">
     <Value>Set the news item start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the category is subject to ACL (access control list).</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>

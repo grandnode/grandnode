@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
+using Nop.Services.Customers;
 using MongoDB.Driver.Linq;
 
 namespace Nop.Services.News
@@ -20,9 +21,9 @@ namespace Nop.Services.News
 
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly IRepository<NewsComment> _newsCommentRepository;
-        //private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
@@ -30,15 +31,15 @@ namespace Nop.Services.News
 
         public NewsService(IRepository<NewsItem> newsItemRepository, 
             IRepository<NewsComment> newsCommentRepository,
-            //IRepository<StoreMapping> storeMappingRepository,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IWorkContext workContext)
         {
             this._newsItemRepository = newsItemRepository;
             this._newsCommentRepository = newsCommentRepository;
-            //this._storeMappingRepository = storeMappingRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -83,7 +84,7 @@ namespace Nop.Services.News
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>News items</returns>
         public virtual IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false)
         {
             var query = _newsItemRepository.Table;
 
@@ -98,14 +99,23 @@ namespace Nop.Services.News
             }
             query = query.OrderByDescending(n => n.CreatedOnUtc);
 
-            //Store mapping
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
+                    (!ignorAcl && !_catalogSettings.IgnoreAcl))
             {
-                query = from p in query
-                        where !p.LimitedToStores || p.Stores.Contains(storeId)
-                        select p;
-
-                query = query.OrderByDescending(n => n.CreatedOnUtc);
+                if (!ignorAcl && !_catalogSettings.IgnoreAcl)
+                {
+                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                    query = from p in query
+                            where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
+                            select p;
+                }
+                //Store mapping
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    query = from p in query
+                            where !p.LimitedToStores || p.Stores.Contains(storeId)
+                            select p;
+                }
             }
 
             var news = new PagedList<NewsItem>(query, pageIndex, pageSize);

@@ -33,10 +33,11 @@ namespace Nop.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
-        
-		#endregion
+        private readonly ICustomerService _customerService;
 
-		#region Constructors
+        #endregion
+
+        #region Constructors
 
         public NewsController(INewsService newsService, 
             ILanguageService languageService,
@@ -45,7 +46,8 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             IUrlRecordService urlRecordService,
             IStoreService storeService, 
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            ICustomerService customerService)
         {
             this._newsService = newsService;
             this._languageService = languageService;
@@ -55,11 +57,31 @@ namespace Nop.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
-		}
+            this._customerService = customerService;
+        }
 
-		#endregion 
+        #endregion
 
         #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareAclModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (newsItem != null)
+                {
+                    model.SelectedCustomerRoleIds = newsItem.CustomerRoles.ToArray();
+                }
+            }
+        }
 
         [NonAction]
         protected virtual void PrepareStoresMappingModel(NewsItemModel model, NewsItem newsItem, bool excludeProperties)
@@ -144,6 +166,8 @@ namespace Nop.Admin.Controllers
             //default values
             model.Published = true;
             model.AllowComments = true;
+            //ACL
+            PrepareAclModel(model, null, false);
             return View(model);
         }
 
@@ -159,6 +183,7 @@ namespace Nop.Admin.Controllers
                 newsItem.StartDateUtc = model.StartDate;
                 newsItem.EndDateUtc = model.EndDate;
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
+                newsItem.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
                 newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
                 _newsService.InsertNews(newsItem);
 
@@ -176,6 +201,8 @@ namespace Nop.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Stores
             PrepareStoresMappingModel(model, null, true);
+            //ACL
+            PrepareAclModel(model, null, true);
             return View(model);
         }
 
@@ -195,6 +222,8 @@ namespace Nop.Admin.Controllers
             model.EndDate = newsItem.EndDateUtc;
             //Store
             PrepareStoresMappingModel(model, newsItem, false);
+            //ACL
+            PrepareAclModel(model, newsItem, false);
             return View(model);
         }
 
@@ -214,6 +243,7 @@ namespace Nop.Admin.Controllers
                 newsItem = model.ToEntity(newsItem);
                 newsItem.StartDateUtc = model.StartDate;
                 newsItem.EndDateUtc = model.EndDate;
+                newsItem.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
                 newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 newsItem.SeName = seName;
@@ -239,6 +269,8 @@ namespace Nop.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Store
             PrepareStoresMappingModel(model, newsItem, true);
+            //ACL
+            PrepareAclModel(model, newsItem, false);
             return View(model);
         }
 

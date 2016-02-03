@@ -4,6 +4,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 using MongoDB.Bson.Serialization.Attributes;
+using Nop.Core.Domain.Security;
 
 namespace Nop.Core.Domain.News
 {
@@ -11,7 +12,7 @@ namespace Nop.Core.Domain.News
     /// Represents a news item
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported, ILocalizedEntity
+    public partial class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported, ILocalizedEntity, IAclSupported
     {
         private ICollection<NewsComment> _newsComments;
 
@@ -19,6 +20,7 @@ namespace Nop.Core.Domain.News
         {
             Stores = new List<int>();
             Locales = new List<LocalizedProperty>();
+            CustomerRoles = new List<int>();
         }
         /// <summary>
         /// Gets or sets the language identifier
@@ -102,6 +104,12 @@ namespace Nop.Core.Domain.News
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+        /// </summary>
+        public bool SubjectToAcl { get; set; }
+        public IList<int> CustomerRoles { get; set; }
 
         /// <summary>
         /// Gets or sets the news comments
