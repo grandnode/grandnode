@@ -63,6 +63,7 @@ namespace Nop.Web.Models.Catalog
         public bool IsFreeShipping { get; set; }
         public bool FreeShippingNotificationEnabled { get; set; }
         public string DeliveryDate { get; set; }
+        public string DeliveryColorSquaresRgb { get; set; }
 
 
         public bool IsRental { get; set; }

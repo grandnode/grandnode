@@ -1,4 +1,8 @@
 ﻿@model DeliveryDateModel
+@{
+    Html.AddScriptParts("~/Scripts/farbtastic.js");
+    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
+}
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 @(Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
@@ -32,6 +36,21 @@
                 </table>
             ))
 <table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ColorSquaresRgb):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.ColorSquaresRgb)
+            <div id="color-picker"></div>
+            <script type="text/javascript">
+                    $(document).ready(function(){
+                        $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                    });
+            </script>
+            @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+        </td>
+    </tr>
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.DisplayOrder):

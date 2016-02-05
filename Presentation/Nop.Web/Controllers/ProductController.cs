@@ -242,6 +242,7 @@ namespace Nop.Web.Controllers
                 if (deliveryDate != null)
                 {
                     model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name);
+                    model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
                 }
             }
             

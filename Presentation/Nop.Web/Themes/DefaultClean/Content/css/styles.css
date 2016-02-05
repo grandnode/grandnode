@@ -1819,6 +1819,14 @@ label, label + * {
 	margin: 25px 0;
 	overflow: hidden;
 }
+.delivery-date .color {
+    display: inline-block;
+    height: 14px;
+    width: 28px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+
+}
+
 .overview .free-shipping,
 .variant-overview .free-shipping {
 	display: inline-block;

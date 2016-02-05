@@ -227,4 +227,10 @@
   <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Acl">
     <Value>Access control list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.ColorSquaresRgb">
+    <Value>RGB color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.ColorSquaresRgb.Hint">
+    <Value>Choose color to be used with the color squares attribute control.</Value>
+  </LocaleResource>
 </Language>

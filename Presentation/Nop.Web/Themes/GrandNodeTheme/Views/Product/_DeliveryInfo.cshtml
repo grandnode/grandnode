@@ -14,6 +14,8 @@
         {
             <div class="delivery-date">
                 <span class="label">@T("Products.DeliveryDate"):</span>
+                <span class="color" style="background-color: @(Model.DeliveryColorSquaresRgb);
+                      @(!String.IsNullOrEmpty(Model.DeliveryColorSquaresRgb) ? "" : "display:none;")" title="@Model.DeliveryDate"></span>
                 <span class="value">@Model.DeliveryDate</span>
             </div>
         }

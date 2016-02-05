@@ -366,6 +366,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new DeliveryDateModel();
+            model.ColorSquaresRgb = "#000000";
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -381,6 +382,20 @@ namespace Nop.Admin.Controllers
             {
                 var deliveryDate = model.ToEntity();
                 deliveryDate.Locales = UpdateLocales(deliveryDate, model);
+
+                //ensure valid color is chosen/entered
+                if (!String.IsNullOrEmpty(model.ColorSquaresRgb))
+                {
+                    try
+                    {
+                        //ensure color is valid (can be instanciated)
+                        System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    }
+                    catch (Exception exc)
+                    {
+                        ModelState.AddModelError("", exc.Message);
+                    }
+                }
                 _shippingService.InsertDeliveryDate(deliveryDate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Added"));
@@ -402,6 +417,12 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("DeliveryDates");
 
             var model = deliveryDate.ToModel();
+
+            if (String.IsNullOrEmpty(model.ColorSquaresRgb))
+            {
+                model.ColorSquaresRgb = "#000000";
+            }
+
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -422,6 +443,19 @@ namespace Nop.Admin.Controllers
                 //No delivery date found with the specified id
                 return RedirectToAction("DeliveryDates");
 
+            //ensure valid color is chosen/entered
+            if (!String.IsNullOrEmpty(model.ColorSquaresRgb))
+            {
+                try
+                {
+                    //ensure color is valid (can be instanciated)
+                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                }
+                catch (Exception exc)
+                {
+                    ModelState.AddModelError("", exc.Message);
+                }
+            }
             if (ModelState.IsValid)
             {
                 deliveryDate = model.ToEntity(deliveryDate);

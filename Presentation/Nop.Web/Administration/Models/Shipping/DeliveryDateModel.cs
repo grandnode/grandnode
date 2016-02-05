@@ -22,6 +22,10 @@ namespace Nop.Admin.Models.Shipping
         [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.ColorSquaresRgb")]
+        [AllowHtml]
+        public string ColorSquaresRgb { get; set; }
+
         public IList<DeliveryDateLocalizedModel> Locales { get; set; }
     }
 

@@ -6654,6 +6654,12 @@
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails">
     <Value>Edit delivery date details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.ColorSquaresRgb">
+    <Value>RGB color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.ColorSquaresRgb.Hint">
+    <Value>Choose color to be used with the color squares attribute control.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>

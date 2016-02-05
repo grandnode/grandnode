@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.Shipping
         public int DisplayOrder { get; set; }
 
         /// <summary>
+        /// Gets or sets the color RGB value (used with "Color squares" attribute type)
+        /// </summary>
+        public string ColorSquaresRgb { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }
