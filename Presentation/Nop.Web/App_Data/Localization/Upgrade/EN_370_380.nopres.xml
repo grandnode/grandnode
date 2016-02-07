@@ -233,4 +233,7 @@
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Fields.ColorSquaresRgb.Hint">
     <Value>Choose color to be used with the color squares attribute control.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SaveBeforeEdit">
+    <Value>You need to save the language before you can make or change resources for this language</Value>
+  </LocaleResource>
 </Language>
