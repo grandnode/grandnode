@@ -1411,6 +1411,9 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [PublicAntiForgery]
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult RemoveExternalAssociation(int id)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1421,11 +1424,20 @@ namespace Nop.Web.Controllers
                 .FirstOrDefault(x => x.Id == id);
 
             if (ear == null)
-                return RedirectToAction("Info");
+            {
+                return Json(new
+                {
+                    redirect = Url.Action("Info"),
+                });
+            }
+            
 
             _openAuthenticationService.DeletExternalAuthenticationRecord(ear);
 
-            return RedirectToAction("Info");
+            return Json(new
+            {
+                redirect = Url.Action("Info"),
+            });
         }
 
         #endregion
