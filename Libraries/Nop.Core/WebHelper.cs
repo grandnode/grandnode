@@ -19,6 +19,7 @@ namespace Nop.Core
         #region Fields 
 
         private readonly HttpContextBase _httpContext;
+        private readonly string[] _staticFileExtensions;
 
         #endregion
 
@@ -31,6 +32,7 @@ namespace Nop.Core
         public WebHelper(HttpContextBase httpContext)
         {
             this._httpContext = httpContext;
+            this._staticFileExtensions = new[] { ".axd", ".ashx", ".bmp", ".css", ".gif", ".htm", ".html", ".ico", ".jpeg", ".jpg", ".js", ".png", ".rar", ".zip" };
         }
 
         #endregion
@@ -402,26 +404,7 @@ namespace Nop.Core
 
             if (extension == null) return false;
 
-            switch (extension.ToLower())
-            {
-                case ".axd":
-                case ".ashx":
-                case ".bmp":
-                case ".css":
-                case ".gif":
-                case ".htm":
-                case ".html":
-                case ".ico":
-                case ".jpeg":
-                case ".jpg":
-                case ".js":
-                case ".png":
-                case ".rar":
-                case ".zip":
-                    return true;
-            }
-
-            return false;
+            return _staticFileExtensions.Contains(extension);
         }
 
         /// <summary>
@@ -431,16 +414,7 @@ namespace Nop.Core
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public virtual string MapPath(string path)
         {
-            if (HostingEnvironment.IsHosted)
-            {
-                //hosted
-                return HostingEnvironment.MapPath(path);
-            }
-
-            //not hosted. For example, run in unit tests
-            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
-            return Path.Combine(baseDirectory, path);
+            return CommonHelper.MapPath(path);
         }
 
         /// <summary>
@@ -656,8 +630,8 @@ namespace Nop.Core
                         "- run the application in a full trust environment, or" + Environment.NewLine +
                         "- give the application write access to the 'web.config' file.");
                 }
-
                 success = TryWriteGlobalAsax();
+
                 if (!success)
                 {
                     throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +
