@@ -277,6 +277,8 @@
     <Compile Include="Discounts\DiscountRequirementValidationRequest.cs" />
     <Compile Include="Discounts\DiscountRequirementValidationResult.cs" />
     <Compile Include="Discounts\DiscountValidationResult.cs" />
+    <Compile Include="ExportImport\Help\PropertyByName.cs" />
+    <Compile Include="ExportImport\Help\PropertyManager.cs" />
     <Compile Include="Installation\UpgradeService.cs" />
     <Compile Include="Installation\IUpgradeService.cs" />
     <Compile Include="Logging\ActivityKeywordsProvider.cs" />
