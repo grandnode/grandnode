@@ -4867,9 +4867,7 @@ namespace Nop.Services.Installation
                 DisplayTaxShippingInfoWishlist = false,
                 DisplayTaxShippingInfoOrderDetailsPage = false,
                 DefaultCategoryPageSizeOptions = "6, 3, 9",
-                DefaultCategoryPageSize = 6,
-                DefaultManufacturerPageSizeOptions = "6, 3, 9",
-                DefaultManufacturerPageSize = 6,
+                DefaultManufacturerPageSize = 6
             });
 
             settingService.SaveSetting(new LocalizationSettings
