@@ -2082,6 +2082,12 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReviewText.Required">
     <Value>Review text is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store.Hint">
+    <Value>A store name in which this review was placed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>
@@ -2102,6 +2108,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchProduct">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchProduct.Hint">
+   <Value>Search by a specific product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchText">
     <Value>Message</Value>
@@ -2872,7 +2890,7 @@
     <Value>The width of the product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Imported">
-    <Value>Product(s) have been imported successfully.</Value>
+    <Value>Products have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Info">
     <Value>Product Info</Value>
@@ -4916,6 +4934,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductSku.Hint">
     <Value>Check to show product SKU in public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore">
+    <Value>Reviews per store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
+    <Value>Enable show reviews per store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>

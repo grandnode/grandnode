@@ -478,12 +478,29 @@ namespace Nop.Services.Catalog
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="productId">Product identifier; 0 to load all records</param>
         /// <returns>Reviews</returns>
         IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null);
+            string message = null, int storeId = 0, int productId = 0);
 
-        IList<ProductReview> GetProductReviewsForProduct(int productId, int customerId, bool? approved);
+        /// <summary>
+        /// Get rating sum for product
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="storeId">Store identifier, 0 to load all records</param> 
+        /// <returns>Sum</returns>
+        int RatingSumProduct(int productId, int storeId);
+
+        /// <summary>
+        /// Total reviews for product
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="storeId">Store identifier, 0 to load all records</param> 
+        /// <returns>Sum</returns>
+        int TotalReviewsProduct(int productId, int storeId);
+
         /// <summary>
         /// Gets product review
         /// </summary>

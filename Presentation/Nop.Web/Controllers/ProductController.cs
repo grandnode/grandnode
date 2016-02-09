@@ -809,13 +809,7 @@ namespace Nop.Web.Controllers
 
             #region Product review overview
 
-            model.ProductReviewOverview = new ProductReviewOverviewModel
-            {
-                ProductId = product.Id,
-                RatingSum = product.ApprovedRatingSum,
-                TotalReviews = product.ApprovedTotalReviews,
-                AllowCustomerReviews = product.AllowCustomerReviews
-            };
+            model.ProductReviewOverview = this.PrepareProductReviewOverviewModel(_productService, _storeContext, _catalogSettings, _cacheManager, product);
 
             #endregion
 
@@ -911,7 +905,7 @@ namespace Nop.Web.Controllers
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
 
-            var productReviews = _productService.GetProductReviewsForProduct(product.Id, 0, true).OrderBy(pr => pr.CreatedOnUtc);
+            var productReviews = _productService.GetAllProductReviews(0, true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : 0, product.Id).OrderBy(pr => pr.CreatedOnUtc);
             foreach (var pr in productReviews)
             {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(pr.CustomerId);
@@ -1297,6 +1291,7 @@ namespace Nop.Web.Controllers
                 {
                     _id = ObjectId.GenerateNewId().ToString(),
                     ProductId = product.Id,
+                    StoreId = _storeContext.CurrentStore.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
                     Title = model.AddProductReview.Title,
                     ReviewText = model.AddProductReview.ReviewText,

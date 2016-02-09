@@ -5875,6 +5875,11 @@ namespace Nop.Services.Installation
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
             var sampleDownloadsPath = _webHelper.MapPath("~/content/samples/");
 
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
             //products
             var allProducts = new List<Product>();
 
@@ -10323,6 +10328,7 @@ namespace Nop.Services.Installation
                     CustomerId = defaultCustomer.Id,
                     ProductId = product.Id,
                     IsApproved = true,
+                    StoreId = defaultStore.Id,
                     Title = "Some sample review",
                     ReviewText = string.Format("This sample review is for the {0}. I've been waiting for this product to be available. It is priced just right.", product.Name),
                     Rating = rating,

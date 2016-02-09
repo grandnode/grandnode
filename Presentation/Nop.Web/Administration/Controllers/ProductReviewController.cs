@@ -15,6 +15,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
+using Nop.Services.Stores;
 
 namespace Nop.Admin.Controllers
 {
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IStoreService _storeService;
 
         #endregion Fields
 
@@ -36,13 +38,15 @@ namespace Nop.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, 
             IPermissionService permissionService,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IStoreService storeService)
         {
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._eventPublisher = eventPublisher;
+            this._storeService = storeService;
         }
 
         #endregion
@@ -60,7 +64,9 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("productReview");
             var product = _productService.GetProductById(productReview.ProductId);
             var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(productReview.CustomerId);
+            var store = _storeService.GetStoreById(productReview.StoreId);
             model.Id = productReview.Id;
+            model.StoreName = store!=null ? store.Name : "";
             model.ProductId = productReview.ProductId;
             model.ProductName = product.Name;
             model.CustomerId = productReview.CustomerId;
@@ -94,6 +100,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ProductReviewListModel();
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var stores = _storeService.GetAllStores().Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
+                        foreach (var selectListItem in stores)
+                model.AvailableStores.Add(selectListItem);
             return View(model);
         }
 
@@ -110,7 +120,7 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var productReviews = _productService.GetAllProductReviews(0, null, 
-                createdOnFromValue, createdToFromValue, model.SearchText);
+                createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId, model.SearchProductId);
             var gridModel = new DataSourceResult
             {
                 Data = productReviews.PagedForCommand(command).Select(x =>
@@ -263,6 +273,29 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
+
+        public ActionResult ProductSearchAutoComplete(string term)
+        {
+            const int searchTermMinimumLength = 3;
+            if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+                return Content("");
+
+            //products
+            const int productNumber = 15;
+            var products = _productService.SearchProducts(
+                keywords: term,
+                pageSize: productNumber,
+                showHidden: true);
+
+            var result = (from p in products
+                          select new
+                          {
+                              label = p.Name,
+                              productid = p.Id
+                          })
+                .ToList();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         #endregion
     }
 }

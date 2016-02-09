@@ -95,6 +95,8 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<ProductPicture>>,
         IConsumer<EntityUpdated<ProductPicture>>,
         IConsumer<EntityDeleted<ProductPicture>>,
+        //Product review
+        IConsumer<EntityDeleted<ProductReview>>,
         //polls
         IConsumer<EntityInserted<Poll>>,
         IConsumer<EntityUpdated<Poll>>,
@@ -486,6 +488,15 @@ namespace Nop.Web.Infrastructure.Cache
         public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}";
         public const string PRODUCT_DETAILS_TPICTURES_PATTERN_KEY = "Nop.pres.product.picture";
 
+
+        /// Key for product reviews caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// {1} : current store ID
+        /// </remarks>
+        public const string PRODUCT_REVIEWS_MODEL_KEY = "Nop.pres.product.reviews-{0}-{1}";
+        public const string PRODUCT_REVIEWS_PATTERN_KEY = "Nop.pres.product.reviews";
         /// <summary>
         /// Key for product attribute picture caching on the product details page
         /// </summary>
@@ -922,13 +933,11 @@ namespace Nop.Web.Infrastructure.Cache
         }
         public void HandleEvent(EntityDeleted<Product> eventMessage)
         {
-            //_cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
-            //_cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
-            //_cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_REVIEWS_PATTERN_KEY);
         }
 
         //product tags
@@ -1269,6 +1278,12 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityUpdated<ShoppingCartItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
+        }
+
+        //product reviews
+        public void HandleEvent(EntityDeleted<ProductReview> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_REVIEWS_PATTERN_KEY);
         }
 
     }

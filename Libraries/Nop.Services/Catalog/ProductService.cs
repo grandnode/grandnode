@@ -2044,7 +2044,7 @@ namespace Nop.Services.Catalog
         /// <returns>Reviews</returns>
         public virtual IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null)
+            string message = null, int storeId = 0, int productId = 0)
         {
             var query = from p in _productReviewRepository.Table
                         select p;
@@ -2059,23 +2059,8 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => toUtc.Value >= c.CreatedOnUtc);
             if (!String.IsNullOrEmpty(message))
                 query = query.Where(c => c.Title.Contains(message) || c.ReviewText.Contains(message));
-
-            query = query.OrderBy(c => c.CreatedOnUtc);
-            var content = query.ToList();
-            return content;
-        }
-
-        public virtual IList<ProductReview> GetProductReviewsForProduct(int productId, int customerId, bool? approved)
-        {
-            var query = from p in _productReviewRepository.Table
-                        select p;
-
-            if (approved.HasValue)
-                query = query.Where(c => c.IsApproved == approved);
-
-            if (customerId > 0)
-                query = query.Where(c => c.CustomerId == customerId);
-
+            if (storeId > 0)
+                query = query.Where(c => c.StoreId == storeId || c.StoreId == 0);
             if (productId > 0)
                 query = query.Where(c => c.ProductId == productId);
 
@@ -2083,6 +2068,30 @@ namespace Nop.Services.Catalog
             var content = query.ToList();
             return content;
         }
+
+        
+
+        public virtual int RatingSumProduct(int productId, int storeId)
+        {
+            var query = from p in _productReviewRepository.Table
+                        where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == 0)
+                        group p by true into g
+                        select new { Sum = g.Sum(x=>x.Rating) };
+            var content = query.ToListAsync().Result;
+            return content.Count > 0 ? content.FirstOrDefault().Sum : 0;
+        }
+
+        public virtual int TotalReviewsProduct(int productId, int storeId)
+        {
+            var query = from p in _productReviewRepository.Table
+                        where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == 0)
+                        group p by true into g
+                        select new { Count = g.Count() };
+            var content = query.ToListAsync().Result;
+            return content.Count > 0 ? content.FirstOrDefault().Count : 0;
+        }
+
+
         /// <summary>
         /// Inserts a product review
         /// </summary>
@@ -2109,7 +2118,9 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productReview");
 
             _productReviewRepository.Delete(productReview);
-
+            
+            //event notification
+            _eventPublisher.EntityDeleted(productReview);
         }
 
         /// <summary>

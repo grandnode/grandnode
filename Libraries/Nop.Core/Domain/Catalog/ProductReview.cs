@@ -24,6 +24,10 @@ namespace Nop.Core.Domain.Catalog
         public int ProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public int StoreId { get; set; }
+        /// <summary>
         /// Gets or sets a value indicating whether the content is approved
         /// </summary>
         public bool IsApproved { get; set; }

@@ -1080,6 +1080,7 @@ namespace Nop.Admin.Controllers
                 model.DisplayTaxShippingInfoShoppingCart_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoShoppingCart, storeScope);
                 model.DisplayTaxShippingInfoWishlist_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoWishlist, storeScope);
                 model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoOrderDetailsPage, storeScope);
+                model.ShowProductReviewsPerStore_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
             }
             return View(model);
         }
@@ -1373,6 +1374,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.DisplayTaxShippingInfoOrderDetailsPage, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.DisplayTaxShippingInfoOrderDetailsPage, storeScope);
+
+            if (model.ShowProductReviewsPerStore_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope, false);
+                       else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

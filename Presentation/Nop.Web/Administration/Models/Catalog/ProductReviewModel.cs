@@ -22,6 +22,9 @@ namespace Nop.Admin.Models.Catalog
             }
         }
 
+        [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Store")]
+        public string StoreName { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Customer")]
         public int CustomerId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Customer")]
