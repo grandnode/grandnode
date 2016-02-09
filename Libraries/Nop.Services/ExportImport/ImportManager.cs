@@ -205,7 +205,6 @@ namespace Nop.Services.ExportImport
                     "Length",
                     "Width",
                     "Height",
-                    "CreatedOnUtc",
                     "CategoryIds",
                     "ManufacturerIds",
                     "Picture1",
@@ -337,8 +336,7 @@ namespace Nop.Services.ExportImport
                     decimal weight = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Weight")].Value);
                     decimal length = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Length")].Value);
                     decimal width = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Width")].Value);
-                    decimal height = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Height")].Value);
-                    DateTime createdOnUtc = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[iRow, GetColumnIndex(properties, "CreatedOnUtc")].Value));
+                    decimal height = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Height")].Value);                    
                     string categoryIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "CategoryIds")].Value);
                     string manufacturerIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerIds")].Value);
                     string picture1 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture1")].Value);
@@ -442,10 +440,10 @@ namespace Nop.Services.ExportImport
                     product.Width = width;
                     product.Height = height;
                     product.Published = published;
-                    product.CreatedOnUtc = createdOnUtc;
                     product.UpdatedOnUtc = DateTime.UtcNow;
                     if (newProduct)
                     {
+                        product.CreatedOnUtc = DateTime.UtcNow;
                         _productService.InsertProduct(product);
                     }
                     else

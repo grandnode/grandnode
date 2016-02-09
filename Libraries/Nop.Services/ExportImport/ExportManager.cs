@@ -605,7 +605,6 @@ namespace Nop.Services.ExportImport
                     new PropertyByName<Product>("Length", p => p.Length),
                     new PropertyByName<Product>("Width", p => p.Width),
                     new PropertyByName<Product>("Height", p => p.Height),
-                    new PropertyByName<Product>("CreatedOnUtc", p => p.CreatedOnUtc),
                     new PropertyByName<Product>("CategoryIds", p =>  string.Join(";", p.ProductCategories.Select(n => n.CategoryId.ToString()).ToArray())),
                     new PropertyByName<Product>("ManufacturerIds", p=>  string.Join(";", p.ProductManufacturers.Select(n => n.ManufacturerId.ToString()).ToArray())),
                     new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
