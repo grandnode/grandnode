@@ -2263,10 +2263,6 @@
       <Project>{75FD4163-333C-4DD5-854D-2EF294E45D94}</Project>
       <Name>Nop.Web.Framework</Name>
     </ProjectReference>
-    <ProjectReference Include="Administration\Nop.Admin.csproj">
-      <Project>{152c761a-dd2e-4c1f-af89-dfb2547a3bca}</Project>
-      <Name>Nop.Admin</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.cshtml" />
