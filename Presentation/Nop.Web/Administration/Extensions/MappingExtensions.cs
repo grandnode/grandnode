@@ -50,6 +50,7 @@ using Nop.Services.Common;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Admin.Infrastructure.Mapper;
 
 namespace Nop.Admin.Extensions
 {
@@ -57,12 +58,12 @@ namespace Nop.Admin.Extensions
     {
         public static TDestination MapTo<TSource, TDestination>(this TSource source)
         {
-            return Mapper.Map<TSource, TDestination>(source);
+            return AutoMapperConfiguration.Mapper.Map<TSource, TDestination>(source);
         }
 
         public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
         {
-            return Mapper.Map(source, destination);
+            return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
         
         #region Category
