@@ -11,8 +11,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Stores;
-using Nop.Data;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -27,7 +25,6 @@ using Nop.Core.Domain.Seo;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using MongoDB.Bson;
-using MongoDB.Driver.Builders;
 using System.Threading.Tasks;
 
 namespace Nop.Services.Catalog
@@ -54,7 +51,15 @@ namespace Nop.Services.Catalog
         /// Key pattern to clear cache
         /// </summary>
         private const string PRODUCTS_SHOWONHOMEPAGE = "Nop.product.showonhomepage";
-        
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product ID
+        /// </remarks>
+        private const string PRODUCTS_CUSTOMER_ROLE = "Nop.product.cr-{0}";
+
         #endregion
 
         #region Fields
@@ -67,6 +72,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ProductAlsoPurchased> _productalsopurchasedRepository;
+        private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILanguageService _languageService;
@@ -114,6 +120,7 @@ namespace Nop.Services.Catalog
             IRepository<AclRecord> aclRepository,
             IRepository<UrlRecord> urlRecordRepository,
             IRepository<Customer> customerRepository,
+            IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
@@ -137,6 +144,7 @@ namespace Nop.Services.Catalog
             this._aclRepository = aclRepository;
             this._urlRecordRepository = urlRecordRepository;
             this._customerRepository = customerRepository;
+            this._customerRoleProductRepository = customerRoleProductRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._languageService = languageService;
@@ -187,6 +195,9 @@ namespace Nop.Services.Catalog
             var filtersPurchased = Builders<ProductAlsoPurchased>.Filter.Eq(x => x.ProductId, product.Id);
             _productalsopurchasedRepository.Collection.DeleteManyAsync(filtersPurchased);
 
+            var filtersCrp = Builders<CustomerRoleProduct>.Filter;
+            var filterCrp = filtersCrp.Eq(x => x.ProductId, product.Id);            
+            _customerRoleProductRepository.Collection.DeleteManyAsync(filterCrp);
 
             var filters = Builders<UrlRecord>.Filter;
             var filter = filters.Eq(x => x.EntityId, product.Id);
@@ -1055,7 +1066,65 @@ namespace Nop.Services.Catalog
 
             return products;
         }
+
+        /// <summary>
+        /// Get low stock products
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="products">Low stock products</param>
+        /// <param name="combinations">Low stock attribute combinations</param>
+        public virtual void GetLowStockProducts(int vendorId,
+            out IList<Product> products,
+            out IList<ProductAttributeCombination> combinations)
+        {
+            //Track inventory for product
+            string vendors = "";
+            if (vendorId != 0)
+                vendors = " && this.VendorId==" + vendorId.ToString();
+
+            var doc = MongoDB.Bson.Serialization.BsonSerializer
+                        .Deserialize<BsonDocument>
+                        ("{$where: \" this.MinStockQuantity > this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0 " + vendors + " \" }");
+
+            products = _productRepository.Collection.Find(new CommandDocument(doc)).ToListAsync().Result;
+
+
+            //Track inventory for product by product attributes
+            var query2_1 = from p in _productRepository.Table
+                           where
+                           p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
+                           (vendorId == 0 || p.VendorId == vendorId)
+                           from c in p.ProductAttributeCombinations
+                           select c;
+
+            var query2_2 = from c in query2_1
+                           where c.StockQuantity <= 0
+                           select c;
+
+            combinations = query2_2.ToList();
+        }
+
         
+        /// <summary>
+        /// Gets a product by SKU
+        /// </summary>
+        /// <param name="sku">SKU</param>
+        /// <returns>Product</returns>
+        public virtual Product GetProductBySku(string sku)
+        {
+            if (String.IsNullOrEmpty(sku))
+                return null;
+
+            sku = sku.Trim();
+
+            var query = from p in _productRepository.Table
+                        orderby p.Id
+                        where p.Sku == sku
+                        select p;
+            var product = query.FirstOrDefault();
+            return product;
+        }
+
         /// <summary>
         /// Update product review totals
         /// </summary>
@@ -1066,7 +1135,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("product");
 
             int approvedRatingSum = 0;
-            int notApprovedRatingSum = 0; 
+            int notApprovedRatingSum = 0;
             int approvedTotalReviews = 0;
             int notApprovedTotalReviews = 0;
             var reviews = _productReviewRepository.Table.Where(x => x.ProductId == product.Id); //product.ProductReviews;
@@ -1075,7 +1144,7 @@ namespace Nop.Services.Catalog
                 if (pr.IsApproved)
                 {
                     approvedRatingSum += pr.Rating;
-                    approvedTotalReviews ++;
+                    approvedTotalReviews++;
                 }
                 else
                 {
@@ -1122,10 +1191,6 @@ namespace Nop.Services.Catalog
 
             var result = _productReviewRepository.Collection.UpdateManyAsync(filter, update).Result;
 
-            //cache
-            //_cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productreview.Id));
-
-
             //event notification
             _eventPublisher.EntityUpdated(productreview);
         }
@@ -1151,63 +1216,7 @@ namespace Nop.Services.Catalog
 
         }
 
-        /// <summary>
-        /// Get low stock products
-        /// </summary>
-        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-        /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock attribute combinations</param>
-        public virtual void GetLowStockProducts(int vendorId,
-            out IList<Product> products, 
-            out IList<ProductAttributeCombination> combinations)
-        {
-            //Track inventory for product
-            string vendors = "";
-            if (vendorId != 0)
-                vendors = " && this.VendorId=="+vendorId.ToString();
 
-            var doc = MongoDB.Bson.Serialization.BsonSerializer
-                        .Deserialize<BsonDocument>
-                        ("{$where: \" this.MinStockQuantity > this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0 "+ vendors + " \" }");
-
-            products = _productRepository.Collection.Find(new CommandDocument(doc)).ToListAsync().Result;
-
-
-            //Track inventory for product by product attributes
-            var query2_1 = from p in _productRepository.Table
-                         where
-                         p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                         (vendorId == 0 || p.VendorId == vendorId)
-                         from c in p.ProductAttributeCombinations
-                         select c;
-
-            var query2_2 = from c in query2_1
-                           where c.StockQuantity <= 0
-                           select c;
-
-            combinations = query2_2.ToList();
-        }
-        
-        /// <summary>
-        /// Gets a product by SKU
-        /// </summary>
-        /// <param name="sku">SKU</param>
-        /// <returns>Product</returns>
-        public virtual Product GetProductBySku(string sku)
-        {
-            if (String.IsNullOrEmpty(sku))
-                return null;
-
-            sku = sku.Trim();
-
-            var query = from p in _productRepository.Table
-                        orderby p.Id
-                        where p.Sku == sku
-                        select p;
-            var product = query.FirstOrDefault();
-            return product;
-        }
-        
         /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
@@ -1231,11 +1240,6 @@ namespace Nop.Services.Catalog
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-            //_cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-
-
-
-            //UpdateProduct(product);
         }
 
         /// <summary>
@@ -2025,9 +2029,35 @@ namespace Nop.Services.Catalog
 
         #endregion
 
-        #region Product Warehouse
+        #region Recommended products
 
+        /// <summary>
+        /// Gets recommended products for customer roles
+        /// </summary>
+        /// <param name="customerRoleIds">Customer role ids</param>
+        /// <returns>Products</returns>
+        public virtual IList<Product> GetRecommendedProducts(int[] customerRoleIds)
+        {
 
+            return _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)), 
+                () =>
+                {
+                    var query = from cr in _customerRoleProductRepository.Table
+                                orderby cr.DisplayOrder
+                                where customerRoleIds.Contains(cr.CustomerRoleId)
+                                select cr.ProductId;
+
+                    var productIds = query.ToList().Distinct();
+
+                    var products = new List<Product>();
+
+                    foreach (var product in GetProductsByIds(productIds.ToArray()))
+                        if (product.Published)
+                            products.Add(product);
+
+                    return products;
+                });
+        }
 
         #endregion
 

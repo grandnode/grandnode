@@ -1046,6 +1046,7 @@ namespace Nop.Admin.Controllers
                 model.AllowAnonymousUsersToEmailAFriend_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeScope);
                 model.RecentlyViewedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsNumber, storeScope);
                 model.RecentlyViewedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeScope);
+                model.RecommendedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecommendedProductsEnabled, storeScope);
                 model.NewProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsNumber, storeScope);
                 model.NewProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsEnabled, storeScope);
                 model.CompareProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CompareProductsEnabled, storeScope);
@@ -1203,6 +1204,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeScope);
+
+            if (model.RecommendedProductsEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.RecommendedProductsEnabled, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.RecommendedProductsEnabled, storeScope);
 
             if (model.NewProductsNumber_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(catalogSettings, x => x.NewProductsNumber, storeScope, false);

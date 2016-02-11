@@ -69,6 +69,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Currency> _currencyRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
+        private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
@@ -148,6 +149,7 @@ namespace Nop.Services.Installation
             IRepository<Currency> currencyRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
+            IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IRepository<ProductAttribute> productAttributeRepository,
@@ -220,6 +222,7 @@ namespace Nop.Services.Installation
             this._currencyRepository = currencyRepository;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerRoleProductRepository = customerRoleProductRepository;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
             this._productAttributeRepository = productAttributeRepository;
@@ -4827,6 +4830,7 @@ namespace Nop.Services.Installation
                 AllowAnonymousUsersToEmailAFriend = false,
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,
+                RecommendedProductsEnabled = false,
                 NewProductsNumber = 6,
                 NewProductsEnabled = true,
                 CompareProductsEnabled = true,
@@ -11338,6 +11342,8 @@ namespace Nop.Services.Installation
             _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Username), new CreateIndexOptions() { Name = "Username" });
 
             _customerRoleRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x=>x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
 
             _addressRepository.Collection.Indexes.CreateOneAsync(Builders<Address>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 

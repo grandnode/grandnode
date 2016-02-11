@@ -6,6 +6,15 @@
 <script type="text/javascript">
     $(document).ready(function () {
         toggleRemoveButton();
+
+        $("#customerrole-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
     });
 
     function toggleRemoveButton() {
@@ -17,6 +26,40 @@
         }
     }
 </script>
+
+
+<div id="customerrole-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerRoles.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerRoles.Products")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabProducts()
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customerrole-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@helper TabInfo()
+{
 <table class="adminContent">
     <tr>
         <td class="adminTitle">
@@ -106,3 +149,135 @@
         </td>
     </tr>
 </table>
+}
+
+@helper TabProducts()
+{
+    <table class="adminContent">
+        <tr>
+            <td>
+                @if (Model.Id == 0)
+                {
+                    @T("Admin.Customers.CustomerRoles.Products.SaveBeforeEdit")
+                }
+            </td>
+        </tr>
+    @if (Model.Id > 0)
+    {
+        <tr>
+            <td>
+                    @{ 
+                        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+                        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+                    }
+                    <div id="products-grid"></div>
+
+                    <script>
+                            $(document).ready(function () {
+                                $("#products-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("Products", "CustomerRole", new {customerRoleId = Model.Id }))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            },
+                                                update: {
+                                                url: "@Html.Raw(Url.Action("ProductUpdate", "CustomerRole"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            },
+                                            destroy: {
+                                                url: "@Html.Raw(Url.Action("ProductDelete", "CustomerRole"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors",
+                                            model: {
+                                                id: "Id",
+                                                fields: {
+                                                    Name: { editable: false, type: "string" },
+                                                    DisplayOrder: { editable: true, type: "number" },
+                                                }
+                                            }
+                                        },
+                                        error: function(e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        numeric: false,
+                                        previousNext: false,
+                                        info: false
+                                    },
+                                    editable: {
+                                        confirmation: false,
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                    {
+                                            field: "Name",
+                                            title: "@T("Admin.Customers.CustomerRoles.Products.Fields.Name")",
+                                            width: 300,
+                                            filterable: false,
+                                            sortable: false
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Customers.CustomerRoles.Products.Fields.DisplayOrder")",
+                                        width: 100
+                                    },{
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200,
+                                        filterable: false
+                                    }]
+                                });
+                            });
+                </script>
+                
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Customers.CustomerRoles.Products.Fields.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "CustomerRole", new { customerRoleId = Model.Id, btnId = "btnRefreshProducts" }))    ', 800, 800, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefreshProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshProducts').click(function () {
+                            var grid = $("#products-grid").data('kendoGrid');
+                            grid.dataSource.read();
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    }
+    </table>
+}

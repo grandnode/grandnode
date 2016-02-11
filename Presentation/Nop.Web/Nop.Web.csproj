@@ -2242,6 +2242,7 @@
     <Content Include="Themes\GrandNodeTheme\Views\Vendor\ApplyVendor.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Web.config" />
     <Content Include="Themes\GrandNodeTheme\Views\Checkout\OpcPaymentInfo.cshtml" />
+    <Content Include="Views\Product\RecommendedProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

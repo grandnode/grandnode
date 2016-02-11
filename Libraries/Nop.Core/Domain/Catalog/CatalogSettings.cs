@@ -136,6 +136,11 @@ namespace Nop.Core.Domain.Catalog
         public bool RecentlyViewedProductsEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether "Recommended products" feature is enabled
+        /// </summary>
+        public bool RecommendedProductsEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of products on the "New products" page
         /// </summary>
         public int NewProductsNumber { get; set; }

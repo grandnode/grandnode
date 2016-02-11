@@ -26,7 +26,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <returns>Products</returns>
         IList<Product> GetAllProductsDisplayedOnHomePage();
-        
+
+        /// <summary>
+        /// Gets recommended products for customer roles
+        /// </summary>
+        /// <returns>Products</returns>
+        IList<Product> GetRecommendedProducts(int[] customerRoleIds);
+
         /// <summary>
         /// Gets product
         /// </summary>

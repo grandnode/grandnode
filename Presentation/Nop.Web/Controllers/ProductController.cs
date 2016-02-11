@@ -1190,7 +1190,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Home page bestsellers and products
+        #region Home page bestseller, recommended and products
 
         [ChildActionOnly]
         public ActionResult HomepageBestSellers(int? productThumbPictureSize)
@@ -1225,8 +1225,9 @@ namespace Nop.Web.Controllers
         public ActionResult HomepageProducts(int? productThumbPictureSize)
         {
             var products = _productService.GetAllProductsDisplayedOnHomePage();
+            
             //ACL and store mapping
-            //products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //availability dates
             products = products.Where(p => p.IsAvailable()).ToList();
 
@@ -1237,6 +1238,28 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        [ChildActionOnly]
+        public ActionResult RecommendedProducts(int? productThumbPictureSize)
+        {
+            if (!_catalogSettings.RecommendedProductsEnabled)
+                return Content("");
+
+            var products = _productService.GetRecommendedProducts(_workContext.CurrentCustomer.GetCustomerRoleIds());
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (products.Count == 0)
+                return Content("");
+
+            //prepare model
+            var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+
+            return PartialView(model);
+        }
         #endregion
 
         #region Product reviews

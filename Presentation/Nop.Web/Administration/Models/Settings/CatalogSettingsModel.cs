@@ -99,6 +99,10 @@ namespace Nop.Admin.Models.Settings
         public bool RecentlyViewedProductsEnabled { get; set; }
         public bool RecentlyViewedProductsEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.RecommendedProductsEnabled")]
+        public bool RecommendedProductsEnabled { get; set; }
+        public bool RecommendedProductsEnabled_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsNumber")]
         public int NewProductsNumber { get; set; }
         public bool NewProductsNumber_OverrideForStore { get; set; }

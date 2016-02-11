@@ -342,6 +342,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.RecommendedProductsEnabled_OverrideForStore, model => model.RecommendedProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.RecommendedProductsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecommendedProductsEnabled)
+                @Html.ValidationMessageFor(model => model.RecommendedProductsEnabled)
+            </td>
+        </tr>        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.NewProductsEnabled_OverrideForStore, model => model.NewProductsEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NewProductsEnabled):
             </td>

@@ -280,5 +280,35 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchProduct.Hint">
    <Value>Search by a specific product.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Info">
+    <Value>Customer role Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Products">
+    <Value>Recommended products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Products.AddNew">
+    <Value>Recommended products assigned to the Customer Role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Products.Fields.AddNew">
+    <Value>Add new products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Products.Fields.Name">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Products.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Products.SaveBeforeEdit">
+    <Value>You need to save the customer role before you can add values for this page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecommendedProductsEnabled">
+    <Value>'Recommended products' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecommendedProductsEnabled.Hint">
+    <Value>Check to allow customers to use the 'Recommended products - customer role' feature in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="HomePage.Recommended.Products">
+    <Value>Recommended products for you</Value>
+  </LocaleResource>
 </Language>

@@ -316,5 +316,50 @@ namespace Nop.Services.Customers
         void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem);
 
         #endregion
+
+        #region Customer role products
+        /// <summary>
+        /// Gets customer roles products for customer role
+        /// </summary>
+        /// <param name="customerRoleId">Customer role id</param>
+        /// <returns>Customer role products</returns>
+        IList<CustomerRoleProduct> GetCustomerRoleProducts(int customerRoleId);
+        
+
+        /// <summary>
+        /// Gets customer roles products for customer role
+        /// </summary>
+        /// <param name="customerRoleId">Customer role id</param>
+        /// <param name="productId">Product id</param>
+        /// <returns>Customer role product</returns>
+        CustomerRoleProduct GetCustomerRoleProduct(int customerRoleId, int productId);
+
+        /// <summary>
+        /// Gets customer roles product
+        /// </summary>
+        /// <param name="Id">id</param>
+        /// <returns>Customer role product</returns>
+        CustomerRoleProduct GetCustomerRoleProductById(int id);
+
+
+        /// <summary>
+        /// Inserts a customer role product
+        /// </summary>
+        /// <param name="customerRoleProduct">Customer role product</param>
+        void InsertCustomerRoleProduct(CustomerRoleProduct customerRoleProduct);
+
+        /// <summary>
+        /// Updates the customer role product
+        /// </summary>
+        /// <param name="customerRoleProduct">Customer role product</param>
+        void UpdateCustomerRoleProduct(CustomerRoleProduct customerRoleProduct);
+
+        /// <summary>
+        /// Delete a customer role product
+        /// </summary>
+        /// <param name="customerRoleProduct">Customer role product</param>
+        void DeleteCustomerRoleProduct(CustomerRoleProduct customerRoleProduct);
+
+        #endregion
     }
 }

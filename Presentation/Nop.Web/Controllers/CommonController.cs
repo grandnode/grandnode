@@ -467,6 +467,7 @@ namespace Nop.Web.Controllers
                 ForumEnabled = _forumSettings.ForumsEnabled,
                 NewsEnabled = _newsSettings.Enabled,
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
+                RecommendedProductsEnabled = _catalogSettings.RecommendedProductsEnabled,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
                 HidePoweredByGrandNode = _storeInformationSettings.HidePoweredByGrandNode,

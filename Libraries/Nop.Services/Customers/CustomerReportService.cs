@@ -89,18 +89,6 @@ namespace Nop.Services.Customers
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
 
-            /*
-            var query1 = from c in _customerRepository.Table
-                         join o in _orderRepository.Table on c.Id equals o.CustomerId
-                         where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-                         (!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-                         (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-                         (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
-                         (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
-                         (!o.Deleted) &&
-                         (!c.Deleted)
-                         select new { c, o };
-            */
             var query2 = from co in query
                          group co by co.CustomerId into g
                          select new

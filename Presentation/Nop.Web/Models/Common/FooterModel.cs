@@ -24,6 +24,7 @@ namespace Nop.Web.Models.Common
         public bool CompareProductsEnabled { get; set; }
         public bool ForumEnabled { get; set; }
         public bool RecentlyViewedProductsEnabled { get; set; }
+        public bool RecommendedProductsEnabled { get; set; }
         public bool NewProductsEnabled { get; set; }
         public bool AllowCustomersToApplyForVendorAccount { get; set; }
         public bool DisplayTaxShippingInfoFooter { get; set; }

@@ -50,6 +50,15 @@ namespace Nop.Services.Customers
         /// Key pattern to clear cache
         /// </summary>
         private const string CUSTOMERROLES_PATTERN_KEY = "Nop.customerrole.";
+        private const string CUSTOMERROLESPRODUCTS_PATTERN_KEY = "Nop.product.cr";
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer role Id?
+        /// </remarks>
+        private const string CUSTOMERROLESPRODUCTS_ROLE_KEY = "Nop.customerroleproducts.role-{0}";
 
         #endregion
 
@@ -57,7 +66,7 @@ namespace Nop.Services.Customers
 
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
-        //private readonly IRepository<GenericAttribute> _gaRepository;
+        private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
@@ -80,7 +89,7 @@ namespace Nop.Services.Customers
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            //IRepository<GenericAttribute> gaRepository,
+            IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<Order> orderRepository,
             IRepository<ForumPost> forumPostRepository,
             IRepository<ForumTopic> forumTopicRepository,
@@ -98,7 +107,7 @@ namespace Nop.Services.Customers
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
-            //this._gaRepository = gaRepository;
+            this._customerRoleProductRepository = customerRoleProductRepository;
             this._orderRepository = orderRepository;
             this._forumPostRepository = forumPostRepository;
             this._forumTopicRepository = forumTopicRepository;
@@ -708,44 +717,6 @@ namespace Nop.Services.Customers
                 .Set(x => x.IsHasPoolVoting, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateBillingAddress(Address address)
-        {
-            if (address == null)
-                throw new ArgumentNullException("address");
-            //_customerRepository.Update(customer);
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, address.CustomerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.BillingAddress, address);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-
-        }
-        public virtual void UpdateShippingAddress(Address address)
-        {
-            if (address == null)
-                throw new ArgumentNullException("address");
-            //_customerRepository.Update(customer);
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, address.CustomerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.ShippingAddress, address);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-
-        }
-
-        public virtual void RemoveShippingAddress(int customerId)
-        {
-            if (customerId == 0)
-                throw new ArgumentNullException("customerId");
-            //_customerRepository.Update(customer);
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customerId);
-            var update = Builders<Customer>.Update
-                .Set(x => x.ShippingAddress, null);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-
-        }
-
 
         /// <summary>
         /// Reset data required for checkout
@@ -1022,7 +993,127 @@ namespace Nop.Services.Customers
             _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerRole.CustomerId), update);
 
         }
+        #endregion
 
+        #region Customer Role Products
+
+        /// <summary>
+        /// Delete a customer role product
+        /// </summary>
+        /// <param name="customerRoleProduct">Customer role product</param>
+        public virtual void DeleteCustomerRoleProduct(CustomerRoleProduct customerRoleProduct)
+        {
+            if (customerRoleProduct == null)
+                throw new ArgumentNullException("customerRole");
+
+            _customerRoleProductRepository.Delete(customerRoleProduct);
+            
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(customerRoleProduct);
+        }
+
+
+        /// <summary>
+        /// Inserts a customer role product
+        /// </summary>
+        /// <param name="customerRoleProduct">Customer role product</param>
+        public virtual void InsertCustomerRoleProduct(CustomerRoleProduct customerRoleProduct)
+        {
+            if (customerRoleProduct == null)
+                throw new ArgumentNullException("customerRoleProduct");
+
+            _customerRoleProductRepository.Insert(customerRoleProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(customerRoleProduct);
+        }
+
+        /// <summary>
+        /// Updates the customer role product
+        /// </summary>
+        /// <param name="customerRoleProduct">Customer role product</param>
+        public virtual void UpdateCustomerRoleProduct(CustomerRoleProduct customerRoleProduct)
+        {
+            if (customerRoleProduct == null)
+                throw new ArgumentNullException("customerRoleProduct");
+
+            var builder = Builders<CustomerRoleProduct>.Filter;
+            var filter = builder.Eq(x => x.Id, customerRoleProduct.Id);
+            var update = Builders<CustomerRoleProduct>.Update
+                .Set(x => x.DisplayOrder, customerRoleProduct.DisplayOrder);
+            var result = _customerRoleProductRepository.Collection.UpdateOneAsync(filter, update).Result;
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            _cacheManager.RemoveByPattern(CUSTOMERROLESPRODUCTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(customerRoleProduct);
+        }
+
+
+        /// <summary>
+        /// Gets customer roles products for customer role
+        /// </summary>
+        /// <param name="customerRoleId">Customer role id</param>
+        /// <returns>Customer role products</returns>
+        public virtual IList<CustomerRoleProduct> GetCustomerRoleProducts(int customerRoleId)
+        {
+            string key = string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from cr in _customerRoleProductRepository.Table
+                            orderby cr.DisplayOrder
+                            where (cr.CustomerRoleId == customerRoleId)
+                            select cr;
+                var customerRoles = query.ToList();
+                return customerRoles;
+            });
+        }
+
+        /// <summary>
+        /// Gets customer roles products for customer role
+        /// </summary>
+        /// <param name="customerRoleId">Customer role id</param>
+        /// <param name="productId">Product id</param>
+        /// <returns>Customer role product</returns>
+        public virtual CustomerRoleProduct GetCustomerRoleProduct(int customerRoleId, int productId)
+        {
+            var query = from cr in _customerRoleProductRepository.Table
+                        orderby cr.DisplayOrder
+                        where cr.CustomerRoleId == customerRoleId && cr.ProductId == productId
+                        select cr;
+            var customerRoles = query.ToList();
+            return query.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets customer roles product
+        /// </summary>
+        /// <param name="Id">id</param>
+        /// <returns>Customer role product</returns>
+        public virtual CustomerRoleProduct GetCustomerRoleProductById(int id)
+        {
+            var query = from cr in _customerRoleProductRepository.Table
+                        orderby cr.DisplayOrder
+                        where cr.Id == id
+                        select cr;
+            var customerRoles = query.ToList();
+            return query.FirstOrDefault();
+        }
+
+
+        #endregion
+
+        #region Customer Address
 
         public virtual void DeleteAddress(Address address)
         {
@@ -1077,6 +1168,48 @@ namespace Nop.Services.Customers
             _eventPublisher.EntityUpdated(address);
         }
 
+
+        public virtual void UpdateBillingAddress(Address address)
+        {
+            if (address == null)
+                throw new ArgumentNullException("address");
+            //_customerRepository.Update(customer);
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, address.CustomerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.BillingAddress, address);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+
+        }
+        public virtual void UpdateShippingAddress(Address address)
+        {
+            if (address == null)
+                throw new ArgumentNullException("address");
+            //_customerRepository.Update(customer);
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, address.CustomerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.ShippingAddress, address);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+
+        }
+
+        public virtual void RemoveShippingAddress(int customerId)
+        {
+            if (customerId == 0)
+                throw new ArgumentNullException("customerId");
+            //_customerRepository.Update(customer);
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.ShippingAddress, null);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+
+        }
+
+        #endregion
+
+        #region Customer Shopping Cart Item
 
         public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {

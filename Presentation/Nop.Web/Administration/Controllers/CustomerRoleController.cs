@@ -17,6 +17,8 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Security;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -331,6 +333,155 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-		#endregion
+        #endregion
+
+        #region Products
+        [HttpPost]
+        public ActionResult Products(int customerRoleId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var products = _customerService.GetCustomerRoleProducts(customerRoleId);
+                
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => new CustomerRoleProductModel
+                {
+                    Id = x.Id,
+                    Name = _productService.GetProductById(x.ProductId).Name,
+                    DisplayOrder = x.DisplayOrder
+                }),
+                Total = products.Count()
+            };            
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult ProductDelete(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var crp = _customerService.GetCustomerRoleProductById(id);
+            if (crp == null)
+                throw new ArgumentException("No found the specified id");
+
+            _customerService.DeleteCustomerRoleProduct(crp);
+
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public ActionResult ProductUpdate(CustomerRoleProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var crp = _customerService.GetCustomerRoleProductById(model.Id);
+            if (crp == null)
+                throw new ArgumentException("No customer role product found with the specified id");
+
+            crp.DisplayOrder = model.DisplayOrder;
+            _customerService.UpdateCustomerRoleProduct(crp);
+
+            return new NullJsonResult();
+        }
+
+        public ActionResult ProductAddPopup(int customerRoleId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new CustomerRoleProductModel.AddProductModel();
+            model.CustomerRoleId = customerRoleId;            
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var categories = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ProductAddPopupList(DataSourceRequest command, CustomerRoleProductModel.AddProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int> { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
+            var gridModel = new DataSourceResult();
+            gridModel.Data = products.Select(x => x.ToModel());
+            gridModel.Total = products.TotalCount;
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult ProductAddPopup(string btnId, CustomerRoleProductModel.AddProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            if (model.SelectedProductIds != null)
+            {
+                foreach (int id in model.SelectedProductIds)
+                {
+                    var product = _productService.GetProductById(id);
+                    if (product != null)
+                    {
+                        var customerRoleProduct = _customerService.GetCustomerRoleProduct(model.CustomerRoleId, id);
+                        if(customerRoleProduct==null)
+                        {
+                            customerRoleProduct = new CustomerRoleProduct();
+                            customerRoleProduct.CustomerRoleId = model.CustomerRoleId;
+                            customerRoleProduct.ProductId = id;
+                            customerRoleProduct.DisplayOrder = 0;
+                            _customerService.InsertCustomerRoleProduct(customerRoleProduct);
+                        }
+                    }
+                }
+            }
+
+            //a vendor should have access only to his products
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            return View(model);
+        }
+
+
+
+        #endregion
     }
 }
