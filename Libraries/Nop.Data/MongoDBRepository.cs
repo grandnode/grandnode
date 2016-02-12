@@ -92,25 +92,27 @@ namespace Nop.Data
         /// <param name="entity">Entity</param>
         public virtual T Insert(T entity)
         {
-            entity._id = ObjectId.GenerateNewId().ToString();
+
+            var newId = ObjectId.GenerateNewId();
+            entity._id = newId.ToString();
 
             if (entity.Id == 0)
             {
-                var resultMax = this.collection.Find(e=>true).SortByDescending(x => x.Id).FirstOrDefaultAsync().Result;               
-                entity.Id = resultMax != null ? resultMax.Id+1 : 1;
-                
+                var resultMax = this.collection.Find(e => true).SortByDescending(x => x.Id).FirstOrDefaultAsync().Result;
+                entity.Id = resultMax != null ? resultMax.Id + 1 : 1;
             }
             else
             {
                 var result = this.collection.Find(e => e.Id == entity.Id).ToListAsync().Result;
-                if(result.Count > 0)
+                if (result.Count > 0)
                 {
                     var resultMax = this.collection.Find(e => true).SortByDescending(x => x.Id).FirstOrDefaultAsync().Result;
                     entity.Id = resultMax != null ? resultMax.Id + 1 : 1;
                 }
             }
-            this.collection.InsertOne(entity);
+            this.collection.InsertOne(entity);           
             return entity;
+            
         }
 
         /// <summary>
