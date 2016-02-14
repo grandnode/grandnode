@@ -1,7 +1,9 @@
 ﻿using Nop.Core.Caching;
+using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Nop.Core
 {
@@ -17,5 +19,12 @@ namespace Nop.Core
             foreach (var key in keys.Where(p => regex.IsMatch(p)))
                 obj.Remove(key);
         }
-    }
+
+        public static TResult Return<TInput, TResult>(this TInput o, Func<TInput, TResult> evaluator, TResult failureValue)
+            where TInput : class
+        {
+            return o == null ? failureValue : evaluator(o);
+        }
+
+}
 }

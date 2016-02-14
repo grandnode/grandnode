@@ -2970,12 +2970,7 @@ namespace Nop.Admin.Controllers
             );
             try
             {
-                byte[] bytes;
-                using (var stream = new MemoryStream())
-                {
-                    _exportManager.ExportProductsToXlsx(stream, products);
-                    bytes = stream.ToArray();
-                }
+                byte[] bytes = _exportManager.ExportProductsToXlsx(products);
                 return File(bytes, "text/xls", "products.xlsx");
             }
             catch (Exception exc)
@@ -3006,12 +3001,7 @@ namespace Nop.Admin.Controllers
                 products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
             }
 
-            byte[] bytes = null;
-            using (var stream = new MemoryStream())
-            {
-                _exportManager.ExportProductsToXlsx(stream, products);
-                bytes = stream.ToArray();
-            }
+            byte[] bytes = _exportManager.ExportProductsToXlsx(products);
             return File(bytes, "text/xls", "products.xlsx");
         }
 

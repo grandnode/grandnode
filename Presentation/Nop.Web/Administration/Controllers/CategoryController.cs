@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -49,6 +50,8 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IWorkContext _workContext;
+        private readonly IImportManager _importManager;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -71,6 +74,8 @@ namespace Nop.Admin.Controllers
             IVendorService vendorService, 
             ICustomerActivityService customerActivityService,
             IDateTimeHelper dateTimeHelper,
+            IWorkContext workContext,
+            IImportManager importManager,
             CatalogSettings catalogSettings)
         {
             this._categoryService = categoryService;
@@ -91,6 +96,8 @@ namespace Nop.Admin.Controllers
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
             this._dateTimeHelper = dateTimeHelper;
+            this._workContext = workContext;
+            this._importManager = importManager;
             this._catalogSettings = catalogSettings;
         }
 
@@ -585,6 +592,55 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        public ActionResult ExportXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+
+            try
+            {
+                var bytes = _exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true));
+
+                return File(bytes, "text/xls", "categories.xlsx");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ImportFromXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+
+            //a vendor cannot import categories
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
+            try
+            {
+                var file = Request.Files["importexcelfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    _importManager.ImportCategoryFromXlsx(file.InputStream);
+                }
+                else
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    return RedirectToAction("List");
+                }
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Category.Imported"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
         #endregion
 
         #region Products

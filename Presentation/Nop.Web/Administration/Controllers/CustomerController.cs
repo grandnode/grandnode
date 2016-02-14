@@ -2138,12 +2138,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                byte[] bytes;
-                using (var stream = new MemoryStream())
-                {
-                    _exportManager.ExportCustomersToXlsx(stream, customers);
-                    bytes = stream.ToArray();
-                }
+                byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
                 return File(bytes, "text/xls", "customers.xlsx");
             }
             catch (Exception exc)
@@ -2169,12 +2164,7 @@ namespace Nop.Admin.Controllers
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
 
-            byte[] bytes;
-            using (var stream = new MemoryStream())
-            {
-                _exportManager.ExportCustomersToXlsx(stream, customers);
-                bytes = stream.ToArray();
-            }
+            byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
             return File(bytes, "text/xls", "customers.xlsx");
         }
 
