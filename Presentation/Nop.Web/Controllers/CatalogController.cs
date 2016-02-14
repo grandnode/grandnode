@@ -1286,6 +1286,27 @@ namespace Nop.Web.Controllers
                     });
             }
 
+            model.asv = _vendorSettings.AllowSearchByVendor;
+            if (model.asv)
+            {
+                var vendors = _vendorService.GetAllVendors();
+                if (vendors.Count > 0)
+                {
+                    model.AvailableVendors.Add(new SelectListItem
+                    {
+                        Value = "0",
+                        Text = _localizationService.GetResource("Common.All")
+                    });
+                    foreach (var vendor in vendors)
+                        model.AvailableVendors.Add(new SelectListItem
+                        {
+                            Value = vendor.Id.ToString(),
+                            Text = vendor.GetLocalized(x => x.Name),
+                            Selected = model.vid == vendor.Id
+                        });
+                }
+            }
+
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
             // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
             if (Request.Params["q"] != null)
@@ -1301,6 +1322,7 @@ namespace Nop.Web.Controllers
                     decimal? minPriceConverted = null;
                     decimal? maxPriceConverted = null;
                     bool searchInDescriptions = false;
+                    int vendorId = 0;
                     if (model.adv)
                     {
                         //advanced search
@@ -1334,6 +1356,8 @@ namespace Nop.Web.Controllers
                         }
 
                         searchInDescriptions = model.sid;
+                        if (model.asv)
+                            vendorId = model.vid;
                     }
                     
                     //var searchInProductTags = false;
@@ -1354,7 +1378,8 @@ namespace Nop.Web.Controllers
                         languageId: _workContext.WorkingLanguage.Id,
                         orderBy: (ProductSortingEnum)command.OrderBy,
                         pageIndex: command.PageNumber - 1,
-                        pageSize: command.PageSize);
+                        pageSize: command.PageSize,
+                        vendorId: vendorId);
                     model.Products = PrepareProductOverviewModels(products).ToList();
 
                     model.NoResults = !model.Products.Any();
@@ -1387,7 +1412,8 @@ namespace Nop.Web.Controllers
                         SearchInDescriptions = searchInDescriptions,
                         CategoryIds = categoryIds,
                         ManufacturerId = manufacturerId,
-                        WorkingLanguageId = _workContext.WorkingLanguage.Id
+                        WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                        VendorId = vendorId
                     });
                 }
             }

@@ -69,6 +69,13 @@
                                     @Html.LabelFor(model => model.mid, new { }, ":")
                                 </div>
                             }
+                            @if (Model.asv && Model.AvailableVendors.Count > 0)
+                            {
+                                <div class="inputs">
+                                    @Html.LabelFor(model => model.vid, new { }, ":")
+                                    @Html.DropDownListFor(model => model.vid, Model.AvailableVendors)
+                                </div>
+                            }
                             <div class="input-field col s12">
 
                                 <span class="price-range">

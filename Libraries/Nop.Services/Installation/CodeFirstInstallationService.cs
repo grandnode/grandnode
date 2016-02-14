@@ -11242,6 +11242,7 @@ namespace Nop.Services.Installation
             {
                 new Vendor
                 {
+                    Id = 1,
                     Name = "Vendor 1",
                     Email = "vendor1email@gmail.com",
                     Description = "Some description...",
@@ -11255,6 +11256,7 @@ namespace Nop.Services.Installation
                 },
                 new Vendor
                 {
+                    Id = 2,
                     Name = "Vendor 2",
                     Email = "vendor2email@gmail.com",
                     Description = "Some description...",
@@ -11269,6 +11271,24 @@ namespace Nop.Services.Installation
             };
 
             _vendorRepository.Insert(vendors);
+
+            //search engine names
+            foreach (var vendor in vendors)
+            {
+                var seName = vendor.ValidateSeName(vendor.SeName, vendor.Name, true);
+                _urlRecordRepository.Insert(new UrlRecord
+                {
+                    EntityId = vendor.Id,
+                    EntityName = "Vendor",
+                    LanguageId = 0,
+                    IsActive = true,
+                    Slug = seName
+                });
+                vendor.SeName = seName;
+                _vendorRepository.Update(vendor);
+            }
+
+
         }
 
         protected virtual void InstallAffiliates()
