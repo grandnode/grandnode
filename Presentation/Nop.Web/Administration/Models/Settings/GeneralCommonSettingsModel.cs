@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Models.Settings
 {
@@ -163,6 +164,10 @@ namespace Nop.Admin.Models.Settings
 
         public partial class SecuritySettingsModel : BaseNopModel
         {
+            public SecuritySettingsModel()
+            {
+                this.AvailableReCaptchaVersions = new List<SelectListItem>();
+            }
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
             [AllowHtml]
             public string EncryptionKey { get; set; }
@@ -221,6 +226,10 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
             [AllowHtml]
             public string ReCaptchaPrivateKey { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion")]
+            public ReCaptchaVersion ReCaptchaVersion { get; set; }
+            public IList<SelectListItem> AvailableReCaptchaVersions { get; set; }
         }
 
         public partial class PdfSettingsModel : BaseNopModel
