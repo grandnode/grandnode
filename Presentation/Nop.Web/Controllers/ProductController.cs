@@ -1162,7 +1162,7 @@ namespace Nop.Web.Controllers
                                     string.Format("{0}: New products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Information about products",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    "NewProductsRSS",
+                                    string.Format("urn:store:{0}:newProducts", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
             if (!_catalogSettings.NewProductsEnabled)
@@ -1181,7 +1181,7 @@ namespace Nop.Web.Controllers
                 string productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, "http");
                 string productName = product.GetLocalized(x => x.Name);
                 string productDescription = product.GetLocalized(x => x.ShortDescription);
-                var item = new SyndicationItem(productName, productDescription, new Uri(productUrl), String.Format("NewProduct:{0}", product.Id), product.CreatedOnUtc);
+                var item = new SyndicationItem(productName, productDescription, new Uri(productUrl), String.Format("urn:store:{0}:newProducts:product:{1}", _storeContext.CurrentStore.Id, product.Id), product.CreatedOnUtc);
                 items.Add(item);
             }
             feed.Items = items;
