@@ -173,7 +173,6 @@ namespace Nop.Services.Customers
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerRoles.Any(x => customerRoleIds.Contains(x.Id)));
-                //query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Intersect(customerRoleIds).Any());
             if (!String.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email!=null && c.Email.ToLower().Contains(email.ToLower()));
             if (!String.IsNullOrWhiteSpace(username))
@@ -465,7 +464,7 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
@@ -490,15 +489,13 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            //_customerRepository.Update(customer);
+            
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
                 .Set(x => x.LastActivityDateUtc, customer.LastActivityDateUtc);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
-            //event notification
-            //_eventPublisher.EntityUpdated(customer);
         }
 
         /// <summary>
@@ -509,15 +506,13 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
                 .Set(x => x.LastLoginDateUtc, customer.LastLoginDateUtc);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
-            //event notification
-            //_eventPublisher.EntityUpdated(customer);
         }
 
         /// Updates the customer - last activity date
@@ -527,7 +522,7 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
@@ -535,7 +530,7 @@ namespace Nop.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
             //event notification
-            //_eventPublisher.EntityUpdated(customer);
+            _eventPublisher.EntityUpdated(customer);
         }
 
         /// <summary>
@@ -546,7 +541,7 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
@@ -563,7 +558,7 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
@@ -575,7 +570,7 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
@@ -608,7 +603,7 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
@@ -769,7 +764,6 @@ namespace Nop.Services.Customers
                 _genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.SelectedPaymentMethod, null, storeId);
             }
             
-            //UpdateCustomer(customer);
         }
         
         /// <summary>
@@ -975,7 +969,6 @@ namespace Nop.Services.Customers
             if (customerRole == null)
                 throw new ArgumentNullException("pwi");
 
-            //_productWarehouseInventoryRepository.Delete(pwi);
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.Pull(p => p.CustomerRoles, customerRole);
             _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerRole.CustomerId), update);
@@ -987,7 +980,6 @@ namespace Nop.Services.Customers
             if (customerRole == null)
                 throw new ArgumentNullException("productWarehouse");
 
-            //_productPictureRepository.Insert(productPicture);
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.CustomerRoles, customerRole);
             _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerRole.CustomerId), update);
@@ -1144,7 +1136,6 @@ namespace Nop.Services.Customers
             if (address == null)
                 throw new ArgumentNullException("address");
 
-            //_productPictureRepository.Update(productPicture);
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, address.CustomerId);
             filter = filter & builder.ElemMatch(x => x.Addresses, y => y.Id == address.Id);
@@ -1173,7 +1164,7 @@ namespace Nop.Services.Customers
         {
             if (address == null)
                 throw new ArgumentNullException("address");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, address.CustomerId);
             var update = Builders<Customer>.Update
@@ -1185,7 +1176,7 @@ namespace Nop.Services.Customers
         {
             if (address == null)
                 throw new ArgumentNullException("address");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, address.CustomerId);
             var update = Builders<Customer>.Update
@@ -1198,7 +1189,7 @@ namespace Nop.Services.Customers
         {
             if (customerId == 0)
                 throw new ArgumentNullException("customerId");
-            //_customerRepository.Update(customer);
+
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
@@ -1240,7 +1231,6 @@ namespace Nop.Services.Customers
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
-            //_productPictureRepository.Update(productPicture);
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, shoppingCartItem.CustomerId);
             filter = filter & builder.ElemMatch(x => x.ShoppingCartItems, y => y.Id == shoppingCartItem.Id);

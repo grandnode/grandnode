@@ -597,6 +597,9 @@
   <LocaleResource Name="ActivityLog.AddNewCustomerRole">
     <Value>Added a new customer role ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCustomerTag">
+   <Value>Added a new customer tag ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewDiscount">
     <Value>Added a new discount ('{0}')</Value>
   </LocaleResource>
@@ -634,6 +637,9 @@
     <Value>Deleted a customer (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteCustomerRole">
+    <Value>Deleted a customer role ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCustomerTag">
     <Value>Deleted a customer role ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteDiscount">
@@ -679,6 +685,9 @@
     <Value>Edited a customer (ID = {0})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditCustomerRole">
+    <Value>Edited a customer role ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditCustomerTag">
     <Value>Edited a customer role ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditDiscount">
@@ -8073,6 +8082,48 @@
   <LocaleResource Name="Admin.Customers.CustomerRoles.Updated">
     <Value>The customer role has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags">
+    <Value>Customer tags</Value>
+  </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerTags.Added">
+    <Value>Added a tag</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Customers.CustomerTags.Deleted">
+    <Value>The tag has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Updated">
+    <Value>The tag has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.BackToList">
+    <Value>back to tags list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Customers">
+    <Value>Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Customers.SaveBeforeEdit">
+    <Value>You need to save the tag.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.EditCustomerTagDetails">
+    <Value>Edit customer tag details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Fields.Count">
+    <Value>Count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Fields.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Fields.Name.Required">
+    <Value>Tag name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Fields.Name.Hint">
+    <Value>The name of this tag.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Info">
+    <Value>Tag Info</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Customers.Customers">
     <Value>Customers</Value>
   </LocaleResource>
@@ -8222,6 +8273,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerRoles">
     <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerTags">
+    <Value>Customer tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.CustomerTags.Hint">
+    <Value>Customer tags are keywords that this customer can also be identified by. Enter a comma separated list of the tags to be associated with this customer.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.DateOfBirth">
     <Value>Date of birth</Value>

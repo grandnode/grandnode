@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -93,7 +92,7 @@ namespace Nop.Admin.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IContactUsService _contactUsService;
-
+        private readonly ICustomerTagService _customerTagService;
         #endregion
 
         #region Constructors
@@ -141,7 +140,8 @@ namespace Nop.Admin.Controllers
             IAffiliateService affiliateService,
             IWorkflowMessageService workflowMessageService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
-            IContactUsService contactUsService)
+            IContactUsService contactUsService,
+            ICustomerTagService customerTagService)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -187,11 +187,79 @@ namespace Nop.Admin.Controllers
             this._workflowMessageService = workflowMessageService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._contactUsService = contactUsService;
+            this._customerTagService = customerTagService;
         }
 
         #endregion
 
         #region Utilities
+
+        [NonAction]
+        protected virtual string[] ParseCustomerTags(string customerTags)
+        {
+            var result = new List<string>();
+            if (!String.IsNullOrWhiteSpace(customerTags))
+            {
+                string[] values = customerTags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string val1 in values)
+                    if (!String.IsNullOrEmpty(val1.Trim()))
+                        result.Add(val1.Trim());
+            }
+            return result.ToArray();
+        }
+
+        [NonAction]
+        protected virtual void SaveCustomerTags(Customer customer, string[] customerTags)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            //product tags
+            var existingCustomerTags = customer.CustomerTags.ToList();
+            var customerTagsToRemove = new List<CustomerTag>();
+            foreach (var existingCustomerTag in existingCustomerTags)
+            {
+                bool found = false;
+                var existingCustomerTagName = _customerTagService.GetCustomerTagById(existingCustomerTag);
+                foreach (string newCustomerTag in customerTags)
+                {
+                    if (existingCustomerTagName.Name.Equals(newCustomerTag, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    customerTagsToRemove.Add(existingCustomerTagName);
+                    _customerTagService.DeleteTagFromCustomer(existingCustomerTagName.Id, customer.Id);
+                }
+            }
+            
+            foreach (string customerTagName in customerTags)
+            {
+                CustomerTag customerTag;
+                var customerTag2 = _customerTagService.GetCustomerTagByName(customerTagName);
+                if (customerTag2 == null)
+                {
+                    customerTag = new CustomerTag
+                    {
+                        Name = customerTagName,
+                    };
+                    _customerTagService.InsertCustomerTag(customerTag);
+                }
+                else
+                {
+                    customerTag = customerTag2;
+                }
+                if (!customer.CustomerTags.Contains(customerTag.Id))
+                {
+                    _customerTagService.InsertTagToCustomer(customerTag.Id, customer.Id);
+                }
+            }
+        }
+
+
 
         [NonAction]
         protected virtual string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
@@ -510,7 +578,14 @@ namespace Nop.Admin.Controllers
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
                     model.Active = customer.Active;
-
+                    var result = new StringBuilder();
+                    foreach (var item in customer.CustomerTags)
+                    {
+                        var ct = _customerTagService.GetCustomerTagById(item);
+                        result.Append(ct.Name);
+                        result.Append(", ");
+                    }
+                    model.CustomerTags = result.ToString(); 
                     var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
                     if (affiliate != null)
                     {
@@ -974,7 +1049,6 @@ namespace Nop.Admin.Controllers
                     customerRole.CustomerId = customer.Id;
                     _customerService.InsertCustomerRoleInCustomer(customerRole);
                 }
-                //_customerService.UpdateCustomer(customer);
                 
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
@@ -983,7 +1057,6 @@ namespace Nop.Admin.Controllers
                 {
                     customer.VendorId = 0;
                     _customerService.UpdateCustomerVendor(customer);
-                    //_customerService.UpdateCustomerinAdminPanel(customer);
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                 }
 
@@ -997,9 +1070,11 @@ namespace Nop.Admin.Controllers
                     customer.CustomerRoles.Remove(vendorRole);
                     vendorRole.CustomerId = customer.Id;
                     _customerService.DeleteCustomerRoleInCustomer(vendorRole);
-                    //_customerService.UpdateCustomer(customer);
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                 }
+
+                //tags
+                SaveCustomerTags(customer, ParseCustomerTags(model.CustomerTags));
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCustomer", customer.Id, _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
@@ -1226,10 +1301,11 @@ namespace Nop.Admin.Controllers
                         customer.CustomerRoles.Remove(vendorRole);
                         vendorRole.CustomerId = customer.Id;
                         _customerService.DeleteCustomerRoleInCustomer(vendorRole);
-                        //_customerService.UpdateCustomer(customer);
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.CannotBeInVendoRoleWithoutVendorAssociated"));
                     }
 
+                    //tags
+                    SaveCustomerTags(customer, ParseCustomerTags(model.CustomerTags));
 
                     //activity log
                     _customerActivityService.InsertActivity("EditCustomer", customer.Id, _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
@@ -1658,8 +1734,6 @@ namespace Nop.Admin.Controllers
                 return Content("No customer found with the specified id");
             customer.RemoveAddress(address);
             _customerService.UpdateCustomerinAdminPanel(customer);
-            //now delete the address record
-            //_addressService.DeleteAddress(address);
 
             return new NullJsonResult();
         }
@@ -1769,8 +1843,6 @@ namespace Nop.Admin.Controllers
                 address = model.Address.ToEntity(address);
                 address.CustomAttributes = customAttributes;
                 _customerService.UpdateCustomerinAdminPanel(customer);
-
-                //_addressService.UpdateAddress(address);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Updated"));
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, customerId = model.CustomerId });

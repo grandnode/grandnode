@@ -15,6 +15,7 @@ namespace Nop.Core.Domain.Customers
         private ICollection<CustomerRole> _customerRoles;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<Address> _addresses;
+        private ICollection<int> _customerTags;
 
         /// <summary>
         /// Ctor
@@ -208,6 +209,14 @@ namespace Nop.Core.Domain.Customers
             protected set { _addresses = value; }            
         }
 
+        /// <summary>
+        /// Gets or sets the customer tags
+        /// </summary>
+        public virtual ICollection<int> CustomerTags
+        {
+            get { return _customerTags ?? (_customerTags = new List<int>()); }
+            protected set { _customerTags = value; }
+        }
         #endregion
     }
 }

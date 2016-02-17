@@ -273,6 +273,8 @@
     <Compile Include="Customers\ICustomerAttributeService.cs" />
     <Compile Include="Customers\CustomerAttributeService.cs" />
     <Compile Include="Customers\CustomerAttributeExtensions.cs" />
+    <Compile Include="Customers\ICustomerTagService.cs" />
+    <Compile Include="Customers\CustomerTagService.cs" />
     <Compile Include="Discounts\Cache\DiscountRequirementEventConsumer.cs" />
     <Compile Include="Discounts\DiscountRequirementValidationRequest.cs" />
     <Compile Include="Discounts\DiscountRequirementValidationResult.cs" />

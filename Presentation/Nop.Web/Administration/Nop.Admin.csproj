@@ -183,6 +183,7 @@
     <Compile Include="Controllers\AffiliateController.cs" />
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\CustomerTagController.cs" />
     <Compile Include="Controllers\JbimagesController.cs" />
     <Compile Include="Controllers\ContactFormController.cs" />
     <Compile Include="Controllers\RoxyFilemanController.cs" />
@@ -260,6 +261,7 @@
     <Compile Include="Models\Common\SystemInfoModel.cs" />
     <Compile Include="Models\Customers\CustomerAttributeModel.cs" />
     <Compile Include="Models\Customers\CustomerAttributeValueModel.cs" />
+    <Compile Include="Models\Customers\CustomerTagModel.cs" />
     <Compile Include="Models\Customers\CustomerRoleProductModel.cs" />
     <Compile Include="Models\Discounts\DiscountListModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
@@ -388,6 +390,7 @@
     <Compile Include="Validators\Common\AddressAttributeValueValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValueValidator.cs" />
+    <Compile Include="Validators\Customers\CustomerTagValidator.cs" />
     <Compile Include="Validators\Messages\TestMessageTemplateValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestActionValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestReasonValidator.cs" />
@@ -1371,6 +1374,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CustomerRole\ProductAddPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerTag\_CreateOrUpdate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerTag\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerTag\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerTag\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

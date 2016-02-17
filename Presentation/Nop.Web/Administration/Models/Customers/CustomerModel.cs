@@ -43,6 +43,9 @@ namespace Nop.Admin.Models.Customers
         [AllowHtml]
         public string Password { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerTags")]
+        public string CustomerTags { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Vendor")]
         public int VendorId { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }

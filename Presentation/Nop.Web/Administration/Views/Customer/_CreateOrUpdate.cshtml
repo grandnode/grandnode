@@ -1,7 +1,15 @@
 ﻿@model CustomerModel
 @using Nop.Core.Domain.Orders;
+@using Nop.Services.Customers;
+@using System.Text;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
+@{
+    //resources for product tags input
+    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css");
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js");
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js");
+}
 
 <script>
     $(document).ready(function() {
@@ -14,6 +22,25 @@
             select: tabstrip_on_tab_select
         });
     });
+    
+
+
+    //tags
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.CustomerTags)").tagEditor({
+            autocomplete: {
+                delay: 0,
+                position: { collision: 'flip' },
+                source: '/Admin/CustomerTag/Search',
+                minLength: 3,
+                //source: initialProductTags
+            },
+            delimiter: ',',
+            placeholder: 'Enter tags ...'
+        });
+    });
+
+
 </script>
 <div id="customer-edit">
     <ul>
@@ -189,6 +216,17 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 }
             </td>
         </tr>
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerTags):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerTags)
+                @Html.ValidationMessageFor(model => model.CustomerTags)
+            </td>
+        </tr>
+
         @if (Model.Id > 0 && Model.AssociatedExternalAuthRecords.Count > 0)
         {
             <tr>

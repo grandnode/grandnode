@@ -1,0 +1,79 @@
+using System.Collections.Generic;
+using Nop.Core.Domain.Customers;
+using Nop.Core;
+
+namespace Nop.Services.Customers
+{
+    /// <summary>
+    /// Product tag service interface
+    /// </summary>
+    public partial interface ICustomerTagService
+    {
+        /// <summary>
+        /// Delete a customer tag
+        /// </summary>
+        /// <param name="productTag">Customer tag</param>
+        void DeleteCustomerTag(CustomerTag customerTag);
+
+        /// <summary>
+        /// Gets all customer tags
+        /// </summary>
+        /// <returns>Customer tags</returns>
+        IList<CustomerTag> GetAllCustomerTags();
+
+        /// <summary>
+        /// Gets all customer for tag id
+        /// </summary>
+        /// <returns>Customers</returns>
+        IPagedList<Customer> GetCustomersByTag(int customerTagId = 0, int pageIndex = 0, int pageSize = 2147483647);
+        /// <summary>
+        /// Gets customer tag
+        /// </summary>
+        /// <param name="customerTagId">Customer tag identifier</param>
+        /// <returns>Product tag</returns>
+        CustomerTag GetCustomerTagById(int customerTagId);
+
+        /// <summary>
+        /// Gets customer tag by name
+        /// </summary>
+        /// <param name="name">Customer tag name</param>
+        /// <returns>Customer tag</returns>
+        CustomerTag GetCustomerTagByName(string name);
+
+        /// <summary>
+        /// Gets customer tags search by name
+        /// </summary>
+        /// <param name="name">Customer tags name</param>
+        /// <returns>Customer tags</returns>
+        IList<CustomerTag> GetCustomerTagsByName(string name);
+
+        /// <summary>
+        /// Inserts a customer tag
+        /// </summary>
+        /// <param name="customerTag">Customer tag</param>
+        void InsertCustomerTag(CustomerTag customerTag);
+
+        /// <summary>
+        /// Insert tag to a customer
+        /// </summary>
+        void InsertTagToCustomer(int customerTagId, int customerId);
+
+        /// <summary>
+        /// Delete tag from a customer
+        /// </summary>
+        void DeleteTagFromCustomer(int customerTagId, int customerId);
+
+        /// <summary>
+        /// Updates the customer tag
+        /// </summary>
+        /// <param name="productTag">Product tag</param>
+        void UpdateCustomerTag(CustomerTag customerTag);
+
+        /// <summary>
+        /// Get number of customers
+        /// </summary>
+        /// <param name="customerTagId">Customer tag identifier</param>
+        /// <returns>Number of products</returns>
+        int GetCustomerCount(int customerTagId);
+    }
+}

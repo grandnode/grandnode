@@ -547,6 +547,12 @@ namespace Nop.Admin.Infrastructure.Mapper
             cfg.CreateMap<CustomerRoleModel, CustomerRole>()
                 .ForMember(dest => dest._id, mo => mo.Ignore());
 
+            //customer tags
+            cfg.CreateMap<CustomerTag, CustomerTagModel>()                
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            cfg.CreateMap<CustomerTagModel, CustomerTag>()
+                .ForMember(dest => dest._id, mo => mo.Ignore());
+
             //product attributes
             cfg.CreateMap<ProductAttribute, ProductAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
