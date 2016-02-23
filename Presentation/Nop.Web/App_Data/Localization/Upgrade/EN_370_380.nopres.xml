@@ -350,6 +350,9 @@
   <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActions">
+    <Value>Customer actions</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerTags">
     <Value>Customer tags</Value>
   </LocaleResource>
@@ -407,4 +410,177 @@
   <LocaleResource Name="Admin.Customers.CustomerTags.Fields.Count">
     <Value>Count</Value>
   </LocaleResource>
+
+  <LocaleResource Name="admin.customers.customeraction.added">
+    <Value>Action added</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.addnew">
+    <Value>Add new action</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.backtoaction">
+    <Value>Back to Action</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.backtolist">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.conditions">
+    <Value>Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.conditions.addnew">
+    <Value>Add new condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.editcustomeraction">
+    <Value>Edit action</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.editcustomeractioncondition">
+    <Value>Edit condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.actionTypeId">
+    <Value>Action Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.actionTypeId.hint">
+    <Value>Action Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.active.hint">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.conditionId">
+    <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.conditionId.hint">
+    <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.conditiontype">
+    <Value>Condition type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.endDateTimeUtc">
+    <Value>End DateTime (Utc)</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.endDateTimeUtc.hint">
+    <Value>End DateTime (Utc)</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.name.hint">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.name.required">
+    <Value>Field name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.startDateTimeUtc">
+    <Value>Start DateTime (Utc)</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.fields.startDateTimeUtc.hint">
+    <Value>Start DateTime (Utc)</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.info">
+    <Value>Action Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.saveBeforeEdit">
+    <Value>You need to save the  before you can add values for this page</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.updated">
+    <Value>Action updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.categories">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.category.addnew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.categoryname">
+    <Value>Add category</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.conditionId">
+    <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.conditionId.hint">
+    <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.customerconditionTypeId">
+    <Value>Condition Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.customerconditionTypeId.hint">
+    <Value>Condition Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.name">
+    <Value>Condition name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.name.hint">
+    <Value>Condition name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.name.required">
+    <Value>Field name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.productattributename">
+    <Value>Product attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.productattributevaluename">
+    <Value>Product attribute value</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.productname">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.specificationname">
+    <Value>Product Specification</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.specificationvaluename">
+    <Value>Product specification value</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.vendorname">
+    <Value>Vendor name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.info">
+    <Value>Condition info</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.manufacturers.addnew">
+    <Value>Add new manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.products">
+    <Value>Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.products.addnew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.productattributes">
+    <Value>Product attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.productspecification">
+    <Value>Product specifications</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.saveBeforeEdit">
+    <Value>You need to save the  before you can add values for this page</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.updated">
+    <Value>Condition updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.vendors">
+    <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.addcustomeractioncondition">
+    <Value>Add new condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.added">
+    <Value>Added condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype">
+    <Value>Customer action type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.fields.enabled">
+    <Value>Is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.fields.name">
+    <Value>Action type name</Value>
+  </LocaleResource>
+
 </Language>

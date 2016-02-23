@@ -119,7 +119,10 @@ namespace Nop.Services.Installation
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ContactUs> _contactUsRepository;
-
+        private readonly IRepository<CustomerAction> _customerAction;
+        private readonly IRepository<CustomerActionType> _customerActionType;
+        private readonly IRepository<CustomerActionConditionType> _customerActionConditionType;
+        private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -200,7 +203,11 @@ namespace Nop.Services.Installation
             IRepository<ReturnRequestReason> returnRequestReasonRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ContactUs> contactUsRepository,
+            IRepository<CustomerAction> customerAction,
+            IRepository<CustomerActionType> customerActionType,
+            IRepository<CustomerActionConditionType> customerActionConditionType,
             IGenericAttributeService genericAttributeService,
+            ICustomerActionService customerActionService,
             IWebHelper webHelper)
         {
             this._versionRepository = versionRepository;
@@ -275,6 +282,10 @@ namespace Nop.Services.Installation
             this._returnRequestReasonRepository = returnRequestReasonRepository;
             this._contactUsRepository = contactUsRepository;
             this._returnRequestActionRepository = returnRequestActionRepository;
+            this._customerAction = customerAction;
+            this._customerActionType = customerActionType;
+            this._customerActionConditionType = customerActionConditionType;
+            this._customerActionService = customerActionService;
         }
 
         #endregion
@@ -4236,6 +4247,74 @@ namespace Nop.Services.Installation
             };
             backgroundTaskUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(backgroundTaskUser);
+        }
+
+        protected virtual void InstallCustomerAction()
+        {
+            var customerActionConditionType = new List<CustomerActionConditionType>()
+            {
+                new CustomerActionConditionType()
+                {
+                    Id = 1,
+                    Name = "Product"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 2,
+                    Name = "Category"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 3,
+                    Name = "Manufacturer"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 4,
+                    Name = "Vendor"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 5,
+                    Name = "Product attribute"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 5,
+                    Name = "Product specification"
+                }
+            };
+            _customerActionConditionType.Insert(customerActionConditionType);
+
+            var customerActionType = new List<CustomerActionType>()
+            {
+                new CustomerActionType()
+                {
+                    Id = 1,
+                    Name = "Add to cart",
+                    SystemKeyword = "AddToCart",
+                    Enabled = false,
+                    ConditionType = {1, 2, 3, 4, 5, 6 }
+                },
+                new CustomerActionType()
+                {
+                    Id = 1,
+                    Name = "Add order",
+                    SystemKeyword = "AddOrder",
+                    Enabled = false,
+                    ConditionType = {1, 2, 3, 4, 5, 6 }
+                },
+                new CustomerActionType()
+                {
+                    Id = 1,
+                    Name = "Viewed",
+                    SystemKeyword = "Viewed",
+                    Enabled = false,
+                    ConditionType = {1, 2, 3, 6}
+                }
+            };
+            _customerActionType.Insert(customerActionType);
+
         }
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
@@ -11493,6 +11572,11 @@ namespace Nop.Services.Installation
             _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
             _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
+            //customer action
+            _customerActionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerActionConditionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionConditionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
         }
 
         #endregion
@@ -11516,6 +11600,7 @@ namespace Nop.Services.Installation
             InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();
+            InstallCustomerAction();
             InstallSettings();
             InstallTopicTemplates();
             InstallTopics();

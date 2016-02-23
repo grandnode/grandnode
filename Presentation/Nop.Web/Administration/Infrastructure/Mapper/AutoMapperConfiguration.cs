@@ -553,8 +553,27 @@ namespace Nop.Admin.Infrastructure.Mapper
             cfg.CreateMap<CustomerTagModel, CustomerTag>()
                 .ForMember(dest => dest._id, mo => mo.Ignore());
 
-            //product attributes
-            cfg.CreateMap<ProductAttribute, ProductAttributeModel>()
+            //customer action
+            cfg.CreateMap<CustomerAction, CustomerActionModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            cfg.CreateMap<CustomerActionModel, CustomerAction>()
+                .ForMember(dest => dest._id, mo => mo.Ignore());
+
+            cfg.CreateMap<CustomerAction.ActionCondition, CustomerActionConditionModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            cfg.CreateMap<CustomerActionConditionModel, CustomerAction.ActionCondition>();
+
+            //Customer action type
+            cfg.CreateMap<CustomerActionTypeModel, CustomerActionType>()
+                .ForMember(dest => dest._id, mo => mo.Ignore())
+                .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore());
+            cfg.CreateMap<CustomerActionType, CustomerActionTypeModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+
+
+                //product attributes
+                cfg.CreateMap<ProductAttribute, ProductAttributeModel>()
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             cfg.CreateMap<ProductAttributeModel, ProductAttribute>()

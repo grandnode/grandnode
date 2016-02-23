@@ -854,6 +854,52 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Customer Action
+
+        //customer action
+        public static CustomerActionModel ToModel(this CustomerAction entity)
+        {
+            return entity.MapTo<CustomerAction, CustomerActionModel>();
+        }
+
+        public static CustomerAction ToEntity(this CustomerActionModel model)
+        {
+            return model.MapTo<CustomerActionModel, CustomerAction>();
+        }
+
+        public static CustomerAction ToEntity(this CustomerActionModel model, CustomerAction destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
+        public static CustomerActionConditionModel ToModel(this CustomerAction.ActionCondition entity)
+        {
+            return entity.MapTo<CustomerAction.ActionCondition, CustomerActionConditionModel>();
+        }
+
+        public static CustomerAction.ActionCondition ToEntity(this CustomerActionConditionModel model)
+        {
+            return model.MapTo<CustomerActionConditionModel, CustomerAction.ActionCondition>();
+        }
+
+        public static CustomerAction.ActionCondition ToEntity(this CustomerActionConditionModel model, CustomerAction.ActionCondition destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Customer Action Type
+
+        public static CustomerActionTypeModel ToModel(this CustomerActionType entity)
+        {
+            return entity.MapTo<CustomerActionType, CustomerActionTypeModel>();
+        }
+
+        #endregion
+
+
         #region Gift Cards
 
         public static GiftCardModel ToModel(this GiftCard entity)

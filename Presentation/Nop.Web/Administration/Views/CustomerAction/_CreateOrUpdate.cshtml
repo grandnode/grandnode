@@ -1,0 +1,218 @@
+﻿@model CustomerActionModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#customeraction-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+
+   
+<div id="customeraction-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerAction.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerAction.Conditions")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabConditions()
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customeraction-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@helper TabInfo()
+{
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Active)
+        </td>   
+        <td class="adminData">
+            @Html.EditorFor(model => model.Active)
+            @Html.ValidationMessageFor(model => model.Active)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StartDateTimeUtc)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.StartDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+        </td>
+    </tr>
+
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.EndDateTimeUtc)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.EndDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+        </td>
+    </tr>
+
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ActionTypeId)
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.ActionTypeId, Model.ActionType)
+            @Html.ValidationMessageFor(model => model.ActionTypeId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ConditionId)
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.ConditionId, ((Nop.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
+            @Html.ValidationMessageFor(model => model.ConditionId)
+        </td>
+    </tr>
+</table>
+}
+
+@helper TabConditions()
+{
+    <table class="adminContent">
+        <tr>
+            <td>
+                @if (Model.Id == 0)
+                {
+                    @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
+                }
+            </td>
+        </tr>
+    @if (Model.Id > 0)
+    {
+        <tr>
+            <td>
+                    @{ 
+                        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+                        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+                    }
+                    <div id="conditions-grid"></div>
+                    
+                    <script>
+                        $(document).ready(function () {
+                            $("#conditions-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("Conditions", "CustomerAction", new { customerActionId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ConditionDelete", "CustomerAction", new { customerActionId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Customers.CustomerAction.Fields.Name")",
+                                    width: 300,
+                                    filterable: false,
+                                    sortable: false
+                                },
+                                {
+                                    field: "Condition",
+                                    title: "@T("Admin.Customers.CustomerAction.Fields.ConditionType")",
+                                    width: 100,
+                                },
+                                {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: '<a href="@Url.Content("~/Admin/CustomerAction/EditCondition")?customerActionId=@(Model.Id)&conditionId=#=Id#">@T("Admin.Common.Edit")</a>'
+                                },
+                                {
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 100
+                                }]
+                            });
+                        });
+                </script>                                        
+            </td>
+        </tr>
+        <tr>
+            <td class="adminData">
+                <input type="submit" id="btnAddNewCondition" name="btnAddNewCondition" value="@T("Admin.Customers.CustomerAction.Conditions.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddCondition", "CustomerAction", new { customerActionId = Model.Id }))'); return false;" class="k-button" />
+            </td>
+        </tr>
+
+                        }
+    </table>
+}

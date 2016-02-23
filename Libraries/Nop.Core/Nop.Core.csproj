@@ -125,8 +125,13 @@
     <Compile Include="Domain\Catalog\ProductType.cs" />
     <Compile Include="Domain\Common\AddressAttribute.cs" />
     <Compile Include="Domain\Common\AddressAttributeValue.cs" />
+    <Compile Include="Domain\Customers\CustomerActionConditionType.cs" />
+    <Compile Include="Domain\Customers\CustomerActionType.cs" />
+    <Compile Include="Domain\Customers\CustomerActionEnum.cs" />
     <Compile Include="Domain\Customers\CustomerRoleProducts.cs" />
+    <Compile Include="Domain\Customers\CustomerAction.cs" />
     <Compile Include="Domain\Customers\CustomerTag.cs" />
+    <Compile Include="Domain\Messages\Banner.cs" />
     <Compile Include="Domain\Messages\ContactUs.cs" />
     <Compile Include="Domain\Common\SearchTermReportLine.cs" />
     <Compile Include="Domain\Common\SearchTerm.cs" />
