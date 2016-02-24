@@ -43,7 +43,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ListTypes()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var model = _customerActionService.GetCustomerActionType()
@@ -55,7 +55,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult SaveTypes(FormCollection form)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             string formKey = "checkbox_action_types";

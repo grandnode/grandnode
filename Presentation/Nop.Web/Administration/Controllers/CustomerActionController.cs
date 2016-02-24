@@ -84,7 +84,7 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult List()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
             
 			return View();
@@ -93,7 +93,7 @@ namespace Nop.Admin.Controllers
 		[HttpPost]
 		public ActionResult List(DataSourceRequest command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customeractions = _customerActionService.GetCustomerActions();
@@ -110,7 +110,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Create()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
             
             var model = new CustomerActionModel();
@@ -132,7 +132,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public ActionResult Create(CustomerActionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
             
             if (ModelState.IsValid)
@@ -153,7 +153,7 @@ namespace Nop.Admin.Controllers
 
 		public ActionResult Edit(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerAction = _customerActionService.GetCustomerActionById(id);
@@ -177,7 +177,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public ActionResult Edit(CustomerActionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
             
             var customeraction = _customerActionService.GetCustomerActionById(model.Id);
@@ -213,7 +213,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
             
             var customerAction = _customerActionService.GetCustomerActionById(id);
@@ -242,7 +242,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult Conditions(int customerActionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var conditions = _customerActionService.GetCustomerActionById(customerActionId);
@@ -263,7 +263,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult AddCondition(int customerActionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
@@ -287,7 +287,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public ActionResult AddCondition(CustomerActionConditionModel model, bool continueEditing)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             if (ModelState.IsValid)
@@ -320,7 +320,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult EditCondition(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
@@ -389,7 +389,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionDelete(int Id, int customerActionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
@@ -403,7 +403,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionDeletePosition(int id, int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
@@ -447,7 +447,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionProduct(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
@@ -467,7 +467,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ProductAddPopup(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var model = new CustomerActionConditionModel.AddProductToConditionModel();
@@ -504,7 +504,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ProductAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddProductToConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var products = _productService.SearchProducts(
@@ -529,7 +529,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult ProductAddPopup(string btnId, CustomerActionConditionModel.AddProductToConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             if (model.SelectedProductIds != null)
@@ -562,7 +562,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionCategory(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
@@ -581,7 +581,7 @@ namespace Nop.Admin.Controllers
 
         public ActionResult CategoryAddPopup(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var model = new CustomerActionConditionModel.AddCategoryConditionModel();
@@ -593,7 +593,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult CategoryAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddCategoryConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
@@ -616,7 +616,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult CategoryAddPopup(string btnId, CustomerActionConditionModel.AddCategoryConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             if (model.SelectedCategoryIds != null)
@@ -651,7 +651,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionManufacturer(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
@@ -680,7 +680,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ManufacturerAddPopupList(DataSourceRequest command, CustomerActionConditionModel.AddManufacturerConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
@@ -698,7 +698,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("save")]
         public ActionResult ManufacturerAddPopup(string btnId, CustomerActionConditionModel.AddManufacturerConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             if (model.SelectedManufacturerIds != null)
@@ -735,7 +735,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionVendor(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
@@ -755,7 +755,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionVendorInsert(CustomerActionConditionModel.AddVendorConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
@@ -778,7 +778,7 @@ namespace Nop.Admin.Controllers
         [HttpGet]
         public ActionResult Vendors()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
             var customerVendors = _vendorService.GetAllVendors().Select(x => new { Id = x.Id, Name = x.Name });
             return Json
@@ -795,7 +795,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionProductAttribute(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
@@ -815,7 +815,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionProductAttributeInsert(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
@@ -838,7 +838,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionProductAttributeUpdate(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
@@ -861,7 +861,7 @@ namespace Nop.Admin.Controllers
         [HttpGet]
         public ActionResult ProductAttributes()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
             var customerAttr = _productAttributeService.GetAllProductAttributes().Select(x => new { Id = x.Id, Name = x.Name });
             return Json
@@ -877,7 +877,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionProductSpecification(int customerActionId, int conditionId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
@@ -902,7 +902,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult ConditionProductSpecificationInsert(CustomerActionConditionModel.AddProductSpecificationConditionModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
@@ -930,7 +930,7 @@ namespace Nop.Admin.Controllers
         [HttpGet]
         public ActionResult ProductSpecification()
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
             var customerAttr = _specificationAttributeService.GetSpecificationAttributes().Select(x => new { Id = x.Id, Name = x.Name });
             return Json
@@ -942,7 +942,7 @@ namespace Nop.Admin.Controllers
         [HttpGet]
         public ActionResult ProductSpecificationValue(int specificationId)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             if(specificationId==0)
