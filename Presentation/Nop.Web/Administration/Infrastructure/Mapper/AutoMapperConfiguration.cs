@@ -174,6 +174,14 @@ namespace Nop.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
+            //banner
+            cfg.CreateMap<Banner, BannerModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            cfg.CreateMap<BannerModel, Banner>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest._id, mo => mo.Ignore());
+
             //campaign
             cfg.CreateMap<Campaign, CampaignModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())

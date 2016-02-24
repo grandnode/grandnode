@@ -582,5 +582,47 @@
   <LocaleResource Name="admin.customers.actiontype.fields.name">
     <Value>Action type name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners">
+    <Value>Banners</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Added">
+    <Value>The new banner has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.AddNew">
+    <Value>Add a new banner</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.BackToList">
+    <Value>back to banner list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Deleted">
+    <Value>The banner has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.EditBannerDetails">
+    <Value>Edit banner</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Fields.Body">
+    <Value>Body</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Fields.Body.Hint">
+    <Value>The body of your banner email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Fields.Body.Required">
+    <Value>Body is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Fields.Name.Hint">
+    <Value>The name of this banner.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Fields.Name.Required">
+    <Value>Banner name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Banners.Updated">
+    <Value>The banner has been updated successfully.</Value>
+  </LocaleResource>
 
 </Language>

@@ -340,6 +340,26 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Banner
+
+        public static BannerModel ToModel(this Banner entity)
+        {
+            return entity.MapTo<Banner, BannerModel>();
+        }
+
+        public static Banner ToEntity(this BannerModel model)
+        {
+            return model.MapTo<BannerModel, Banner>();
+        }
+
+        public static Banner ToEntity(this BannerModel model, Banner destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+
         #region Campaigns
 
         public static CampaignModel ToModel(this Campaign entity)

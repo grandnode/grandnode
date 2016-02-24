@@ -288,7 +288,9 @@
     <Compile Include="Logging\ActivityKeywordsProvider.cs" />
     <Compile Include="Logging\IActivityKeywordsProvider.cs" />
     <Compile Include="Media\AzurePictureService.cs" />
+    <Compile Include="Messages\BannerService.cs" />
     <Compile Include="Messages\ContactUsService.cs" />
+    <Compile Include="Messages\IBannerService.cs" />
     <Compile Include="Messages\IContactUsService.cs" />
     <Compile Include="Orders\IReturnRequestService.cs" />
     <Compile Include="Orders\IRewardPoints.cs" />
