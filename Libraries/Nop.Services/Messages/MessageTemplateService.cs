@@ -227,7 +227,9 @@ namespace Nop.Services.Messages
                 EmailAccountId = messageTemplate.EmailAccountId,
                 LimitedToStores = messageTemplate.LimitedToStores,
                 Locales = messageTemplate.Locales,
-                Stores = messageTemplate.Stores
+                Stores = messageTemplate.Stores,
+                DelayBeforeSend = messageTemplate.DelayBeforeSend,
+                DelayPeriod = messageTemplate.DelayPeriod
             };
 
             InsertMessageTemplate(mtCopy);

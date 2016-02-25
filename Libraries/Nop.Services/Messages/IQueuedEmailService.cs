@@ -54,7 +54,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued emails</returns>
         IPagedList<QueuedEmail> SearchEmails(string fromEmail,
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
-            bool loadNotSentItemsOnly, int maxSendTries,
+            bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>

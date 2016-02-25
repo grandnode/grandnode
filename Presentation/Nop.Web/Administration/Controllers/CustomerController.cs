@@ -1557,6 +1557,8 @@ namespace Nop.Admin.Controllers
                     Subject = model.SendEmail.Subject,
                     Body = model.SendEmail.Body,
                     CreatedOnUtc = DateTime.UtcNow,
+                    DontSendBeforeDateUtc = (model.SendEmail.SendImmediately || !model.SendEmail.DontSendBeforeDate.HasValue) ?
+                        null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SendEmail.DontSendBeforeDate.Value)
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));

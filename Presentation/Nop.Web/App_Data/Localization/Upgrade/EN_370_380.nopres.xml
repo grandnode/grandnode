@@ -624,5 +624,47 @@
   <LocaleResource Name="Admin.Promotions.Banners.Updated">
     <Value>The banner has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend">
+    <Value>Delay send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend.Hint">
+    <Value>The delay before sending message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.SendImmediately.Hint">
+   <Value>Send message immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.MessageDelayPeriod.Days">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.MessageDelayPeriod.Hours">
+    <Value>Hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
+  </LocaleResource>
 
 </Language>

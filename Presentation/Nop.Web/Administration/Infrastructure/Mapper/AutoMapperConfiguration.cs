@@ -150,12 +150,15 @@ namespace Nop.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             cfg.CreateMap<MessageTemplateModel, MessageTemplate>()
+                .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest._id, mo => mo.Ignore());
             //queued email
             cfg.CreateMap<QueuedEmail, QueuedEmailModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                 .ForMember(dest => dest.PriorityName, mo => mo.Ignore())
+                .ForMember(dest => dest.DontSendBeforeDate, mo => mo.Ignore())
+                .ForMember(dest => dest.SendImmediately, mo => mo.Ignore())
                 .ForMember(dest => dest.SentOn, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             cfg.CreateMap<QueuedEmailModel, QueuedEmail>()
@@ -163,6 +166,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.Priority, dt => dt.Ignore())
                 .ForMember(dest => dest.PriorityId, dt => dt.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                .ForMember(dest => dest.DontSendBeforeDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.SentOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.EmailAccountId, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachmentFilePath, mo => mo.Ignore())

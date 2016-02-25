@@ -136,7 +136,7 @@ namespace Nop.Services.Messages
         /// <returns>Email item list</returns>
         public virtual IPagedList<QueuedEmail> SearchEmails(string fromEmail,
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
-            bool loadNotSentItemsOnly, int maxSendTries,
+            bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             fromEmail = (fromEmail ?? String.Empty).Trim();
@@ -154,6 +154,13 @@ namespace Nop.Services.Messages
                 query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
             if (loadNotSentItemsOnly)
                 query = query.Where(qe => !qe.SentOnUtc.HasValue);
+
+            if (loadOnlyItemsToBeSent)
+            {
+                var nowUtc = DateTime.UtcNow;
+                query = query.Where(qe => !qe.DontSendBeforeDateUtc.HasValue || qe.DontSendBeforeDateUtc.Value <= nowUtc);
+            }
+
             query = query.Where(qe => qe.SentTries < maxSendTries);
             if (loadNewest)
             {
