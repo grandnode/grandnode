@@ -43,13 +43,11 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the start date 
         /// </summary>
-        [BsonDateTimeOptions(Kind = DateTimeKind.Unspecified)]
         public DateTime StartDateTimeUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the end date
         /// </summary>
-        [BsonDateTimeOptions(Kind = DateTimeKind.Unspecified)]
         public DateTime EndDateTimeUtc { get; set; }
 
         /// <summary>

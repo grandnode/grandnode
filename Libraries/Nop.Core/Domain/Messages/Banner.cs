@@ -32,7 +32,6 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
-        [BsonDateTimeOptions(Kind = DateTimeKind.Unspecified)]
         public DateTime CreatedOnUtc { get; set; }
 
         

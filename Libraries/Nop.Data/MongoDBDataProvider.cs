@@ -6,6 +6,8 @@ using System.IO;
 using System.Text;
 using System.Web.Hosting;
 using Nop.Core.Data;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 
 namespace Nop.Data
 {
@@ -24,6 +26,15 @@ namespace Nop.Data
             DataSettingsHelper.InitConnectionString();
         }
 
+        /// <summary>
+        /// Set database initializer
+        /// </summary>
+        public virtual void SetDatabaseInitializer()
+        {
+            BsonSerializer.RegisterSerializer(typeof(DateTime),
+             new DateTimeSerializer(DateTimeKind.Unspecified));
+        }
+        
         #endregion
     }
 }

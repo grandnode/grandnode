@@ -11,6 +11,12 @@ namespace Nop.Core.Data
         /// <summary>
         /// Initialize database
         /// </summary>
-        void InitDatabase();        
+        void InitDatabase();
+
+        /// <summary>
+        /// Set database initializer
+        /// </summary>
+        void SetDatabaseInitializer();
+
     }
 }
