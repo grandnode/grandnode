@@ -14,19 +14,26 @@ namespace Nop.Web.Models.Install
         {
             this.AvailableLanguages = new List<SelectListItem>();
         }
+
         [AllowHtml]
         public string AdminEmail { get; set; }
+
         [AllowHtml]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string AdminPassword { get; set; }
+
         [AllowHtml]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
 
         [AllowHtml]
         public string DatabaseConnectionString { get; set; }
+
         public string DataProvider { get; set; }
+
         public bool MongoDBConnectionInfo { get; set; }
         [AllowHtml]
         public string MongoDBServerName { get; set; }
