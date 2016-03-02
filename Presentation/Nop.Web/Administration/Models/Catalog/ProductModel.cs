@@ -780,6 +780,7 @@ namespace Nop.Admin.Models.Catalog
             public int? ValidationMaxLength { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions")]
+            [AllowHtml]
             public string ValidationFileAllowedExtensions { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize")]
@@ -787,6 +788,7 @@ namespace Nop.Admin.Models.Catalog
             public int? ValidationFileMaximumSize { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue")]
+            [AllowHtml]
             public string DefaultValue { get; set; }
             //condition
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")]
