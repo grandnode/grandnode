@@ -18,9 +18,9 @@ namespace Nop.Web.Framework.Themes
 
         #region Constructors
 
-        public ThemeProvider(IWebHelper webHelper)
+        public ThemeProvider()
         {
-            _basePath = webHelper.MapPath("~/Themes/");
+            _basePath = CommonHelper.MapPath("~/Themes/");
             LoadConfigurations();
         }
 

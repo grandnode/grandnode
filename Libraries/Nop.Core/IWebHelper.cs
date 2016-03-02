@@ -86,14 +86,6 @@ namespace Nop.Core
         bool IsStaticResource(HttpRequest request);
         
         /// <summary>
-        /// Maps a virtual path to a physical disk path.
-        /// </summary>
-        /// <param name="path">The path to map. E.g. "~/bin"</param>
-        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
-        string MapPath(string path);
-
-
-        /// <summary>
         /// Modifies query string
         /// </summary>
         /// <param name="url">Url to modify</param>

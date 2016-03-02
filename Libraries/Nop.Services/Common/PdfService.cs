@@ -26,7 +26,6 @@ using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Core.Infrastructure;
-using Nop.Core.Data;
 
 namespace Nop.Services.Common
 {
@@ -52,7 +51,6 @@ namespace Nop.Services.Common
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingContext;
-        private readonly IWebHelper _webHelper;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         private readonly CatalogSettings _catalogSettings;
@@ -81,7 +79,6 @@ namespace Nop.Services.Common
             IStoreService storeService,
             IStoreContext storeContext,
             ISettingService settingContext,
-            IWebHelper webHelper,
             IAddressAttributeFormatter addressAttributeFormatter,
             CatalogSettings catalogSettings, 
             CurrencySettings currencySettings,
@@ -105,7 +102,6 @@ namespace Nop.Services.Common
             this._storeService = storeService;
             this._storeContext = storeContext;
             this._settingContext = settingContext;
-            this._webHelper = webHelper;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
@@ -124,7 +120,7 @@ namespace Nop.Services.Common
             //nopCommerce supports unicode characters
             //nopCommerce uses Free Serif font by default (~/App_Data/Pdf/FreeSerif.ttf file)
             //It was downloaded from http://savannah.gnu.org/projects/freefont
-            string fontPath = Path.Combine(_webHelper.MapPath("~/App_Data/Pdf/"), _pdfSettings.FontFileName);
+            string fontPath = Path.Combine(CommonHelper.MapPath("~/App_Data/Pdf/"), _pdfSettings.FontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             var font = new Font(baseFont, 10, Font.NORMAL);
             return font;
@@ -171,7 +167,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException("order");
 
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = Path.Combine(_webHelper.MapPath("~/content/files/ExportImport"), fileName);
+            string filePath = Path.Combine(CommonHelper.MapPath("~/content/files/ExportImport"), fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var orders = new List<Order>();

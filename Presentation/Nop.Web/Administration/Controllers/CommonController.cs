@@ -353,7 +353,7 @@ namespace Nop.Admin.Controllers
 
             //validate write permissions (the same procedure like during installation)
             var dirPermissionsOk = true;
-            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(_webHelper);
+            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
             foreach (string dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                 {
@@ -372,7 +372,7 @@ namespace Nop.Admin.Controllers
                 });
 
             var filePermissionsOk = true;
-            var filesToCheck = FilePermissionHelper.GetFilesWrite(_webHelper);
+            var filesToCheck = FilePermissionHelper.GetFilesWrite();
             foreach (string file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                 {
