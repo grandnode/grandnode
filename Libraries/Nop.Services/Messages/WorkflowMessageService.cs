@@ -1657,6 +1657,133 @@ namespace Nop.Services.Messages
 
         #endregion
 
+        #region Customer Action Event
+
+        /// <summary>
+        /// Sends a customer action event - Add to cart notification to a customer
+        /// </summary>
+        /// <param name="CustomerAction">Customer action</param>
+        /// <param name="ShoppingCartItem">Item</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, int languageId, int customerId)
+        {
+            if (cartItem == null)
+                throw new ArgumentNullException("cartItem");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            var product = EngineContext.Current.Resolve<IProductService>().GetProductById(cartItem.ProductId);
+            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(customerId);
+
+            var toEmail = customer.Email;
+            var toName = customer.GetFullName();
+
+            if (!String.IsNullOrEmpty(toEmail))
+                toEmail = emailAccount.Email;
+
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+
+        /// <summary>
+        /// Sends a customer action event - Add to cart notification to a customer
+        /// </summary>
+        /// <param name="CustomerAction">Customer action</param>
+        /// <param name="Order">Order</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+
+        }
+
+        /// <summary>
+        /// Sends a customer action event - Add to cart notification to a customer
+        /// </summary>
+        /// <param name="CustomerAction">Customer action</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendCustomerActionEvent_Notification(CustomerAction action, int languageId, int customerId)
+        {
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = _messageTemplateService.GetMessageTemplateById(action.MessageTemplateId);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(customerId);
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = customer.Email;
+            var toName = customer.GetFullName();
+
+            if (!String.IsNullOrEmpty(toEmail))
+                toEmail = emailAccount.Email;
+
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+        #endregion
+
         #endregion
     }
 }

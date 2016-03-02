@@ -173,6 +173,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerTagService>().As<ICustomerTagService>().InstancePerLifetimeScope();
             builder.RegisterType<CustomerActionService>().As<ICustomerActionService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerActionEventService>().As<ICustomerActionEventService>().InstancePerLifetimeScope();
 
             builder.RegisterType<RewardPointsService>().As<IRewardPointsService>().InstancePerLifetimeScope();
 

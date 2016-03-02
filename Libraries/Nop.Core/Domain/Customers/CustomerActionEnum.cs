@@ -19,6 +19,19 @@ namespace Nop.Core.Domain.Customers
         Manufacturer = 3,
         Vendor = 4,
         ProductAttribute = 5,
-        ProductSpecification = 6
+        ProductSpecification = 6,
+        CustomerRole = 7,
+        CustomerTag = 8,
+        CustomerRegisterField = 9,
+        UrlReferrer = 10,
+        UrlCurrent = 11
+    }
+
+    public enum CustomerReactionTypeEnum
+    {
+        Banner = 1,
+        Email = 2,
+        AssignToCustomerRole = 3,
+        AssignToCustomerTag = 4,            
     }
 }

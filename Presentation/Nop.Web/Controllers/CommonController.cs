@@ -70,7 +70,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
         private readonly IContactUsService _contactUsService;
-
+        private readonly IBannerService _bannerService;
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -110,6 +110,7 @@ namespace Nop.Web.Controllers
             ICustomerActivityService customerActivityService,
             IVendorService vendorService,
             IContactUsService contactUsService,
+            IBannerService bannerService,
             CustomerSettings customerSettings, 
             TaxSettings taxSettings, 
             CatalogSettings catalogSettings,
@@ -145,6 +146,7 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
             this._contactUsService = contactUsService;
+            this._bannerService = bannerService;
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -1056,6 +1058,35 @@ namespace Nop.Web.Controllers
             return View();
         }
 
+
+        //Get banner for customer
+        [HttpGet]
+        public ActionResult GetActiveBanner()
+        {
+            var result = _bannerService.GetActiveBannerByCustomerId(_workContext.CurrentCustomer.Id);
+            if(result!=null)
+            {
+                return Json
+                    (
+                        new { Id = result.Id, Body = result.Body },
+                        JsonRequestBehavior.AllowGet
+                    );
+            }
+            else
+                return Json
+                    (
+                        new { empty = "" },
+                        JsonRequestBehavior.AllowGet
+                    );
+        }
+
+        [HttpPost]
+        public ActionResult RemoveBanner(int Id)
+        {
+            _bannerService.MoveBannerToArchive(Id, _workContext.CurrentCustomer.Id);
+            return Json (JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
+        }
     }
-}

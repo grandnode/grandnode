@@ -1460,6 +1460,21 @@
   <ItemGroup>
     <Content Include="Views\Banner\List.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerAction\_ConditionCustomerRole.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerAction\_ConditionCustomerTag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerAction\_ConditionCustomerRegister.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerAction\_ConditionUrlReferrer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerAction\_ConditionUrlCurrent.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

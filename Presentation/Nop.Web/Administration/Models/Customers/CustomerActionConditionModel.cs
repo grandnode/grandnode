@@ -99,12 +99,45 @@ namespace Nop.Admin.Models.Customers
             public int Id { get; set; }
         }
 
+        public partial class AddCustomerRoleConditionModel
+        {
+            public int CustomerActionId { get; set; }
+            public int ConditionId { get; set; }
+
+            public int CustomerRoleId { get; set; }
+            public int Id { get; set; }
+        }
+        public partial class AddCustomerTagConditionModel
+        {
+            public int CustomerActionId { get; set; }
+            public int ConditionId { get; set; }
+
+            public int CustomerTagId { get; set; }
+            public int Id { get; set; }
+        }
+
         public partial class AddProductAttributeConditionModel
         {
             public int CustomerActionId { get; set; }
             public int ConditionId { get; set; }
             public int ProductAttributeId { get; set; }
             public string Name { get; set; }
+            public int Id { get; set; }
+        }
+        public partial class AddUrlConditionModel
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public int CustomerActionId { get; set; }
+            public int ConditionId { get; set; }
+        }
+
+        public partial class AddCustomerRegisterConditionModel
+        {
+            public int CustomerActionId { get; set; }
+            public int ConditionId { get; set; }
+            public string CustomerRegisterName { get; set; }
+            public string CustomerRegisterValue { get; set; }
             public int Id { get; set; }
         }
 

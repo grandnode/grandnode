@@ -7923,11 +7923,11 @@
   <LocaleResource Name="admin.customers.actiontype.fields.name">
     <Value>Action type name</Value>
   </LocaleResource>  
-  <LocaleResource Name="admin.customers.customeraction.addcustomeractioncondition">
-    <Value>Add new condition</Value>
-  </LocaleResource>
-  <LocaleResource Name="admin.customers.customeraction.added">
-   <Value>Action added</Value>
+ <LocaleResource Name="admin.customers.customeraction.addcustomeractioncondition">
+   <Value>Add new condition</Value>
+ </LocaleResource>
+ <LocaleResource Name="admin.customers.customeraction.added">
+  <Value>Action added</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.addnew">
   <Value>Add new action</Value>
@@ -7962,6 +7962,12 @@
  <LocaleResource Name="admin.customers.customeraction.fields.active.hint">
   <Value>Active</Value>
  </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.Banner">
+  <Value>Display banner</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.Banner.hint">
+  <Value>Display banner</Value>
+ </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.fields.conditionId">
   <Value>Condition</Value>
  </LocaleResource>
@@ -7970,6 +7976,18 @@
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.fields.conditiontype">
   <Value>Condition type</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerRole">
+  <Value>Customer role</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerRole.hint">
+  <Value>Customer role</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerTag">
+  <Value>Customer tag</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerTag.hint">
+  <Value>Customer tag</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.fields.endDateTimeUtc">
   <Value>End DateTime (Utc)</Value>
@@ -7986,6 +8004,18 @@
  <LocaleResource Name="admin.customers.customeraction.fields.name.required">
   <Value>Field name is required</Value>
  </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.MessageTemplate">
+  <Value>Send email</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.MessageTemplate.hint">
+  <Value>Send email</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.ReactionType">
+  <Value>Reaction type</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerAction.Fields.ReactionType.hint">
+  <Value>Run event when the conditions are met.</Value>
+ </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.fields.startDateTimeUtc">
   <Value>Start DateTime (Utc)</Value>
  </LocaleResource>
@@ -8001,10 +8031,7 @@
  <LocaleResource Name="admin.customers.customeraction.updated">
   <Value>Action updated</Value>
  </LocaleResource>
-  <LocaleResource Name="Admin.Customers.CustomerActionType">
-    <Value>Customer Action Type</Value>
-  </LocaleResource>  
-  <LocaleResource Name="admin.customers.customeractioncondition.added">
+ <LocaleResource Name="admin.customers.customeractioncondition.added">
    <Value>Added condition</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeractioncondition.categories">
@@ -8016,7 +8043,16 @@
  <LocaleResource Name="admin.customers.customeractioncondition.fields.categoryname">
   <Value>Add category</Value> 
  </LocaleResource>
- <LocaleResource Name="admin.customers.customeractioncondition.fields.conditionId">
+  <LocaleResource Name="admin.customers.customeractioncondition.customerregister">
+    <Value>Customer register</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.customerrole">
+    <Value>Customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.customertag">
+    <Value>Customer tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.fields.conditionId">
   <Value>Condition</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeractioncondition.fields.conditionId.hint">
@@ -8027,6 +8063,18 @@
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeractioncondition.fields.customerconditionTypeId.hint">
   <Value>Condition Type</Value>
+ </LocaleResource>
+ <LocaleResource Name="admin.customers.customerActionCondition.fields.customerRegisterName">
+  <Value>Customer registration - field name</Value>
+ </LocaleResource>
+ <LocaleResource Name="admin.customers.customerActionCondition.fields.customerRegisterValue">
+  <Value>Customer registration - field value</Value>
+ </LocaleResource>
+ <LocaleResource Name="admin.customers.customerActionCondition.fields.customerRoleName">
+  <Value>Customer role</Value>
+ </LocaleResource>
+ <LocaleResource Name="admin.customers.customerActionCondition.fields.customerTagName">
+  <Value>Tag name</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeractioncondition.fields.name">
   <Value>Condition name</Value>
@@ -8054,6 +8102,12 @@
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeractioncondition.fields.specificationvaluename">
   <Value>Product specification value</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.UrlCurrentName">
+  <Value>Current Url</Value>
+ </LocaleResource>
+ <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.UrlReferrerName">
+  <Value>Url Referrer</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeractioncondition.fields.vendorname">
   <Value>Vendor name</Value>
@@ -8085,10 +8139,22 @@
  <LocaleResource Name="admin.customers.customeractioncondition.updated">
   <Value>Condition updated</Value>
  </LocaleResource>
+ <LocaleResource Name="admin.customers.customeractioncondition.urlcurrent">
+  <Value>Current URL</Value>
+ </LocaleResource>
+ <LocaleResource Name="admin.customers.customeractioncondition.urlreferrer">
+  <Value>Url referrer</Value>
+ </LocaleResource>
  <LocaleResource Name="admin.customers.customeractioncondition.vendors">
   <Value>Vendors</Value>
  </LocaleResource>
- <LocaleResource Name="ActivityLog.editcustomeraction">
+ <LocaleResource Name="Admin.Customers.CustomerActionType">
+   <Value>Customer Action Type</Value>
+ </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.reaction">
+    <Value>Reaction</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.editcustomeraction">
   <Value>Edit customer action ('{0}')</Value>
  </LocaleResource>  
   <LocaleResource Name="Admin.Customers.CustomerAttributes">

@@ -567,16 +567,20 @@ namespace Nop.Admin.Infrastructure.Mapper
 
             //customer action
             cfg.CreateMap<CustomerAction, CustomerActionModel>()
+                .ForMember(dest => dest.MessageTemplates, mo => mo.Ignore())
+                .ForMember(dest => dest.Banners, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             cfg.CreateMap<CustomerActionModel, CustomerAction>()
                 .ForMember(dest => dest._id, mo => mo.Ignore());
 
             cfg.CreateMap<CustomerAction.ActionCondition, CustomerActionConditionModel>()
-                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
-            cfg.CreateMap<CustomerActionConditionModel, CustomerAction.ActionCondition>();
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomerActionConditionType, mo => mo.Ignore());
+            cfg.CreateMap<CustomerActionConditionModel, CustomerAction.ActionCondition>()
+                .ForMember(dest => dest.CustomerActionConditionType, mo => mo.Ignore());
 
-            //Customer action type
-            cfg.CreateMap<CustomerActionTypeModel, CustomerActionType>()
+                //Customer action type
+                cfg.CreateMap<CustomerActionTypeModel, CustomerActionType>()
                 .ForMember(dest => dest._id, mo => mo.Ignore())
                 .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore());
             cfg.CreateMap<CustomerActionType, CustomerActionTypeModel>()

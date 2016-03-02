@@ -41,6 +41,25 @@ namespace Nop.Core.Domain.Customers
 
 
         /// <summary>
+        /// Gets or sets the action conditions
+        /// </summary>
+        public int ReactionTypeId { get; set; }
+
+        [BsonIgnoreAttribute]
+        public CustomerReactionTypeEnum ReactionType
+        {
+            get { return (CustomerReactionTypeEnum)ReactionTypeId; }
+            set { this.ReactionTypeId = (int)value; }
+        }
+
+        public int BannerId { get; set; }
+
+        public int MessageTemplateId { get; set; }
+
+        public int CustomerRoleId { get; set; }
+
+        public int CustomerTagId { get; set; }
+        /// <summary>
         /// Gets or sets the start date 
         /// </summary>
         public DateTime StartDateTimeUtc { get; set; }
@@ -66,13 +85,25 @@ namespace Nop.Core.Domain.Customers
             private ICollection<int> _categories;
             private ICollection<int> _manufacturers;
             private ICollection<int> _vendors;
+            private ICollection<int> _customerRoles;
+            private ICollection<int> _customerTags;
             private ICollection<ProductAttributeValue> _productAttribute;
             private ICollection<ProductSpecification> _productSpecification;
+            private ICollection<CustomerRegister> _customerRegister;
+            private ICollection<Url> _urlReferrer;
+            private ICollection<Url> _urlCurrent;
 
             public int Id { get; set; }
             public string Name { get; set; }
 
             public int CustomerActionConditionTypeId { get; set; }
+
+            [BsonIgnoreAttribute]
+            public CustomerActionConditionTypeEnum CustomerActionConditionType
+            {
+                get { return (CustomerActionConditionTypeEnum)CustomerActionConditionTypeId; }
+                set { this.CustomerActionConditionTypeId = (int)value; }
+            }            
 
             public int ConditionId { get; set; }
 
@@ -107,6 +138,16 @@ namespace Nop.Core.Domain.Customers
                 get { return _vendors ?? (_vendors = new List<int>()); }
                 protected set { _vendors = value; }
             }
+            public virtual ICollection<int> CustomerRoles
+            {
+                get { return _customerRoles ?? (_customerRoles = new List<int>()); }
+                protected set { _customerRoles = value; }
+            }
+            public virtual ICollection<int> CustomerTags
+            {
+                get { return _customerTags ?? (_customerTags = new List<int>()); }
+                protected set { _customerTags = value; }
+            }
             public virtual ICollection<ProductAttributeValue> ProductAttribute
             {
                 get { return _productAttribute ?? (_productAttribute = new List<ProductAttributeValue>()); }
@@ -119,11 +160,35 @@ namespace Nop.Core.Domain.Customers
                 protected set { _productSpecification = value; }
             }
 
+            public virtual ICollection<CustomerRegister> CustomerRegistration
+            {
+                get { return _customerRegister ?? (_customerRegister = new List<CustomerRegister>()); }
+                protected set { _customerRegister = value; }
+            }
+
+            public virtual ICollection<Url> UrlReferrer
+            {
+                get { return _urlReferrer ?? (_urlReferrer = new List<Url>()); }
+                protected set { _urlReferrer = value; }
+            }
+
+            public virtual ICollection<Url> UrlCurrent
+            {
+                get { return _urlCurrent ?? (_urlCurrent = new List<Url>()); }
+                protected set { _urlCurrent = value; }
+            }
+
             [BsonIgnoreExtraElements]
             public partial class ProductAttributeValue
             {
                 public int Id { get; set; }
                 public int ProductAttributeId { get; set; }
+                public string Name { get; set; }
+            }
+
+            public partial class Url
+            {
+                public int Id { get; set; }
                 public string Name { get; set; }
             }
 
@@ -134,6 +199,15 @@ namespace Nop.Core.Domain.Customers
                 public int ProductSpecyficationId { get; set; }
                 public int ProductSpecyficationValueId { get; set; }
             }
+
+            [BsonIgnoreExtraElements]
+            public partial class CustomerRegister
+            {
+                public int Id { get; set; }
+                public string RegisterField { get; set; }
+                public string RegisterValue { get; set; }
+            }
+
 
         }
 

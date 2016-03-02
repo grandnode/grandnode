@@ -35,6 +35,13 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <returns>Banners</returns>
         IList<Banner> GetAllBanners();
-        
+
+        /// <summary>
+        /// Gets active banner for customer
+        /// </summary>
+        /// <returns>BannerActive</returns>
+        BannerActive GetActiveBannerByCustomerId(int customerId);
+        void MoveBannerToArchive(int id, int customerId);
+
     }
 }

@@ -12,25 +12,25 @@ namespace Nop.Services.Messages
     public partial class BannerService : IBannerService
     {
         private readonly IRepository<Banner> _bannerRepository;
-        private readonly ICustomerService _customerService;
-        private readonly IStoreContext _storeContext;
+        private readonly IRepository<BannerActive> _bannerActiveRepository;
+        private readonly IRepository<BannerArchive> _bannerArchiveRepository;
         private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="bannerRepository">Banner repository</param>
-        /// <param name="customerService">Customer service</param>
-        /// <param name="storeContext">Store context</param>
+        /// <param name="bannerActiveRepository">Banner Active repository</param>
+        /// <param name="bannerArchiveRepository">Banner Archive repository</param>
         /// <param name="eventPublisher">Event published</param>
-        /// <param name="languageService">Language service</param>
-        public BannerService(IRepository<Banner> bannerRepository,            
-            ICustomerService customerService, IStoreContext storeContext,
+        public BannerService(IRepository<Banner> bannerRepository, 
+            IRepository<BannerActive> bannerActiveRepository,
+            IRepository<BannerArchive> bannerArchiveRepository,
             IEventPublisher eventPublisher)
         {
             this._bannerRepository = bannerRepository;
-            this._storeContext = storeContext;
-            this._customerService = customerService;
+            this._bannerActiveRepository = bannerActiveRepository;
+            this._bannerArchiveRepository = bannerArchiveRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -106,7 +106,54 @@ namespace Nop.Services.Messages
             var banners = query.ToList();
 
             return banners;
-        }        
+        }
+
+        /// <summary>
+        /// Gets a banner by identifier
+        /// </summary>
+        /// <param name="bannerId">Banner identifier</param>
+        /// <returns>Banner</returns>
+        public virtual BannerActive GetActiveBannerByCustomerId(int customerId)
+        {
+            if (customerId == 0)
+                return null;
+
+            var query = from c in _bannerActiveRepository.Table
+                        where c.CustomerId == customerId
+                        orderby c.CreatedOnUtc 
+                        select c;
+            var banner = query.FirstOrDefault();
+            return banner;
+
+        }
+
+        public virtual void MoveBannerToArchive(int id, int customerId)
+        {
+            if (customerId == 0 || id == 0)
+                return;
+
+            var query = from c in _bannerActiveRepository.Table
+                        where c.CustomerId == customerId && c.Id == id
+                        select c;
+            var banner = query.FirstOrDefault();
+            if(banner!=null)
+            {
+                var archiveBanner = new BannerArchive()
+                {
+                    Body = banner.Body,
+                    BACreatedOnUtc = banner.CreatedOnUtc,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    CustomerActionId = banner.CustomerActionId,
+                    CustomerId = banner.CustomerId,
+                    BannerActiveId = banner.Id,
+                    Name = banner.Name,
+                    _id = banner._id,
+                };
+                _bannerArchiveRepository.Insert(archiveBanner);
+                _bannerActiveRepository.Delete(banner);
+            }
+
+        }
 
     }
 }

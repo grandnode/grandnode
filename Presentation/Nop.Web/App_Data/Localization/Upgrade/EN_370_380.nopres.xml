@@ -87,6 +87,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInDatabaseContactUsForm.Hint">
     <Value>Save inquiries from the contact page - to store history</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewCustomerAction">
+    <Value>Added a new customer action (ID = {0})</Value>
+  </LocaleResource>
 
 
   <LocaleResource Name="Admin.System.ContactForm">
@@ -666,5 +669,76 @@
   <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
     <Value>Send message immediately.</Value>
   </LocaleResource>
+ <LocaleResource Name="admin.customers.customeraction.reaction">
+  <Value>Reaction</Value>
+ </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.Banner">
+    <Value>Display banner</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.Banner.hint">
+    <Value>Display banner</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.MessageTemplate">
+    <Value>Send email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.MessageTemplate.hint">
+    <Value>Send email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.ReactionType">
+    <Value>Reaction type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.ReactionType.hint">
+    <Value>Run event when the conditions are met.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.editcustomeraction">
+    <Value>Edit customer action ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.CustomerRegisterName">
+    <Value>Customer registration - field name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.CustomerRegisterValue">
+    <Value>Customer registration - field value</Value>
+  </LocaleResource>
 
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.CustomerRoleName">
+    <Value>Customer role</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.CustomerTagName">
+    <Value>Tag name</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.UrlCurrentName">
+    <Value>Current Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.UrlReferrerName">
+    <Value>Url Referrer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerRole">
+    <Value>Customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerRole.hint">
+    <Value>Customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerTag">
+    <Value>Customer tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.CustomerTag.hint">
+    <Value>Customer tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.urlcurrent">
+    <Value>Current URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.urlreferrer">
+    <Value>Url referrer</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.customerregister">
+    <Value>Customer register</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.customertag">
+    <Value>Customer tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeractioncondition.customerrole">
+    <Value>Customer role</Value>
+  </LocaleResource>
 </Language>

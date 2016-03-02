@@ -13,7 +13,53 @@
             },
             select: tabstrip_on_tab_select
         });
+
+        $("#@Html.FieldIdFor(model => model.ReactionTypeId)").change(toggleReaction);
+        toggleReaction();
+
+        function toggleReaction() {
+            var selectedReactionTypeId = $("#@Html.FieldIdFor(model => model.ReactionTypeId)").val();
+            if (selectedReactionTypeId == @(((int)Nop.Core.Domain.Customers.CustomerReactionTypeEnum.Banner).ToString()))
+            {
+                $('#plnBanner').show();
+                $('#plnMessage').hide();
+                $('#plnRole').hide();
+                $('#plnTag').hide();
+            }
+            else if (selectedReactionTypeId == @(((int)Nop.Core.Domain.Customers.CustomerReactionTypeEnum.Email).ToString()))
+            {
+                $('#plnBanner').hide();
+                $('#plnMessage').show();
+                $('#plnRole').hide();
+                $('#plnTag').hide();
+
+            } else if (selectedReactionTypeId == @(((int)Nop.Core.Domain.Customers.CustomerReactionTypeEnum.AssignToCustomerRole).ToString()))
+            {
+                $('#plnBanner').hide();
+                $('#plnMessage').hide();
+                $('#plnRole').show();
+                $('#plnTag').hide();
+
+            } else if (selectedReactionTypeId == @(((int)Nop.Core.Domain.Customers.CustomerReactionTypeEnum.AssignToCustomerTag).ToString()))
+            {
+                $('#plnBanner').hide();
+                $('#plnMessage').hide();
+                $('#plnRole').hide();
+                $('#plnTag').show();
+            } else
+            {
+                $('#plnBanner').hide();
+                $('#plnMessage').hide();
+                $('#plnRole').hide();
+                $('#plnTag').hide();
+            }
+        }
+
+
     });
+
+
+
 </script>
 
 
@@ -26,12 +72,18 @@
         <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
             @T("Admin.Customers.CustomerAction.Conditions")
         </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerAction.Reaction")
+        </li>
     </ul>
     <div>
         @TabInfo()
     </div>
     <div>
         @TabConditions()
+    </div>
+    <div>
+        @TabReaction()
     </div>
 </div>
 
@@ -195,7 +247,7 @@
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
-                                    template: '<a href="@Url.Content("~/Admin/CustomerAction/EditCondition")?customerActionId=@(Model.Id)&conditionId=#=Id#">@T("Admin.Common.Edit")</a>'
+                                    template: '<a href="@Url.Content("~/Admin/CustomerAction/EditCondition")?customerActionId=@(Model.Id)&cid=#=Id#">@T("Admin.Common.Edit")</a>'
                                 },
                                 {
                                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
@@ -216,3 +268,57 @@
                         }
     </table>
 }
+@helper TabReaction()
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ReactionTypeId)
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.ReactionTypeId, ((Nop.Core.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ReactionTypeId)
+            </td>
+        </tr>
+        <tr id="plnBanner">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BannerId)
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.BannerId, Model.Banners)
+                @Html.ValidationMessageFor(model => model.BannerId)
+            </td>
+        </tr>
+        <tr id="plnMessage">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MessageTemplateId)
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.MessageTemplateId, Model.MessageTemplates)
+                @Html.ValidationMessageFor(model => model.MessageTemplateId)
+            </td>
+        </tr>
+        <tr id="plnRole">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerRoleId)
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CustomerRoleId, Model.CustomerRoles)
+                @Html.ValidationMessageFor(model => model.CustomerRoleId)
+            </td>
+        </tr>
+        <tr id="plnTag">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerTagId)
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CustomerTagId, Model.CustomerTags)
+                @Html.ValidationMessageFor(model => model.CustomerTagId)
+            </td>
+        </tr>
+    </table>
+}
+
+
+
+

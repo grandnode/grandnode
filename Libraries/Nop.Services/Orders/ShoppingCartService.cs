@@ -46,6 +46,7 @@ namespace Nop.Services.Orders
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly ICustomerActionEventService _customerActionEventService;
         #endregion
 
         #region Ctor
@@ -90,7 +91,8 @@ namespace Nop.Services.Orders
             IStoreMappingService storeMappingService,
             IGenericAttributeService genericAttributeService,
             IProductAttributeService productAttributeService,
-            IDateTimeHelper dateTimeHelper)
+            IDateTimeHelper dateTimeHelper,
+            ICustomerActionEventService customerActionEventService)
         {
             //this._sciRepository = sciRepository;
             this._workContext = workContext;
@@ -111,6 +113,7 @@ namespace Nop.Services.Orders
             this._genericAttributeService = genericAttributeService;
             this._productAttributeService = productAttributeService;
             this._dateTimeHelper = dateTimeHelper;
+            this._customerActionEventService = customerActionEventService;
         }
 
         #endregion
@@ -1082,7 +1085,6 @@ namespace Nop.Services.Orders
                     shoppingCartItem.Quantity = newQuantity;
                     shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
                     _customerService.UpdateShoppingCartItem(shoppingCartItem);
-                    //_customerService.UpdateCustomer(customer);
 
                     //event notification
                     _eventPublisher.EntityUpdated(shoppingCartItem);
@@ -1147,15 +1149,13 @@ namespace Nop.Services.Orders
                         UpdatedOnUtc = now
                     };
                     customer.ShoppingCartItems.Add(shoppingCartItem);
-                    //_customerService.UpdateCustomer(customer);
 
                     //updated "HasShoppingCartItems" property used for performance optimization
                     customer.HasShoppingCartItems = customer.ShoppingCartItems.Count > 0;
                     _customerService.InsertShoppingCartItem(shoppingCartItem);
                     _customerService.UpdateHasShoppingCartItems(customer);
-                    //_customerService.InsertShoppingCartItem(customer);
-                    //_customerService.UpdateCustomer(customer);
 
+                    _customerActionEventService.AddToCart(shoppingCartItem, product);
                     //event notification
                     _eventPublisher.EntityInserted(shoppingCartItem);
                 }

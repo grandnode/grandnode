@@ -268,7 +268,9 @@
     <Compile Include="Common\AddressAttributeFormatter.cs" />
     <Compile Include="Common\IAddressAttributeFormatter.cs" />
     <Compile Include="Configuration\SettingExtensions.cs" />
+    <Compile Include="Customers\CustomerActionEventService.cs" />
     <Compile Include="Customers\CustomerActionService.cs" />
+    <Compile Include="Customers\ICustomerActionEventService.cs" />
     <Compile Include="Customers\ICustomerActionService.cs" />
     <Compile Include="Customers\ICustomerAttributeParser.cs" />
     <Compile Include="Customers\CustomerAttributeParser.cs" />
