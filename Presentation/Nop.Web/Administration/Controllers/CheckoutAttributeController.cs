@@ -29,6 +29,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly ICheckoutAttributeService _checkoutAttributeService;
+        private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ITaxCategoryService _taxCategoryService;
@@ -49,6 +50,7 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public CheckoutAttributeController(ICheckoutAttributeService checkoutAttributeService,
+            ICheckoutAttributeParser checkoutAttributeParser,
             ILanguageService languageService, 
             ILocalizationService localizationService,
             ITaxCategoryService taxCategoryService,
@@ -65,6 +67,7 @@ namespace Nop.Admin.Controllers
             IAclService aclService)
         {
             this._checkoutAttributeService = checkoutAttributeService;
+            this._checkoutAttributeParser = checkoutAttributeParser;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._taxCategoryService = taxCategoryService;
@@ -192,6 +195,97 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected virtual void PrepareConditionAttributes(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            //currenty any checkout attribute can have condition.
+            model.ConditionAllowed = true;
+
+            if (checkoutAttribute == null)
+                return;
+
+            var selectedAttribute = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttribute.ConditionAttributeXml).FirstOrDefault();
+            var selectedValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(checkoutAttribute.ConditionAttributeXml);
+
+            model.ConditionModel = new ConditionModel()
+            {
+                EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml),
+                SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : 0,
+                ConditionAttributes = _checkoutAttributeService.GetAllCheckoutAttributes()
+                    //ignore this attribute and non-combinable attributes
+                    .Where(x => x.Id != checkoutAttribute.Id && x.CanBeUsedAsCondition())
+                    .Select(x =>
+                        new AttributeConditionModel()
+                        {
+                            Id = x.Id,
+                            Name = x.Name,
+                            AttributeControlType = x.AttributeControlType,
+                            Values = x.CheckoutAttributeValues //_checkoutAttributeService.GetCheckoutAttributeValues(x.Id)
+                                .Select(v => new SelectListItem()
+                                {
+                                    Text = v.Name,
+                                    Value = v.Id.ToString(),
+                                    Selected = selectedAttribute != null && selectedAttribute.Id == x.Id && selectedValues.Any(sv => sv.Id == v.Id)
+                                }).ToList()
+                        }).ToList()
+            };
+        }
+
+        [NonAction]
+        protected virtual void SaveConditionAttributes(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
+        {
+            string attributesXml = null;
+            if (model.ConditionModel.EnableCondition)
+            {
+                var attribute = _checkoutAttributeService.GetCheckoutAttributeById(model.ConditionModel.SelectedAttributeId);
+                if (attribute != null)
+                {
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.ImageSquares:
+                            {
+                                var selectedAttribute = model.ConditionModel.ConditionAttributes
+                                    .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
+                                var selectedValue = selectedAttribute != null ? selectedAttribute.SelectedValueId : null;
+                                if (!String.IsNullOrEmpty(selectedValue))
+                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, selectedValue);
+                                else
+                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, string.Empty);
+                            }
+                            break;
+                        case AttributeControlType.Checkboxes:
+                            {
+                                var selectedAttribute = model.ConditionModel.ConditionAttributes
+                                    .FirstOrDefault(x => x.Id == model.ConditionModel.SelectedAttributeId);
+                                var selectedValues = selectedAttribute != null ? selectedAttribute.Values.Where(x => x.Selected).Select(x => x.Value) : null;
+                                if (selectedValues.Any())
+                                    foreach (var value in selectedValues)
+                                        attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, value);
+                                else
+                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, string.Empty);
+                            }
+                            break;
+                        case AttributeControlType.ReadonlyCheckboxes:
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
+                        case AttributeControlType.Datepicker:
+                        case AttributeControlType.FileUpload:
+                        default:
+                            //these attribute types are not supported as conditions
+                            break;
+                    }
+                }
+            }
+            checkoutAttribute.ConditionAttributeXml = attributesXml;
+        }
+
+
         #endregion
 
         #region Checkout attributes
@@ -245,6 +339,8 @@ namespace Nop.Admin.Controllers
             PrepareStoresMappingModel(model, null, false);
             //ACL
             PrepareAclModel(model, null, false);
+            //condition
+            PrepareConditionAttributes(model, null);
 
             return View(model);
         }
@@ -262,7 +358,7 @@ namespace Nop.Admin.Controllers
                 checkoutAttribute.Locales = UpdateAttributeLocales(checkoutAttribute, model);
                 checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
-                
+               
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCheckoutAttribute", checkoutAttribute.Id, _localizationService.GetResource("ActivityLog.AddNewCheckoutAttribute"), checkoutAttribute.Name);
 
@@ -306,6 +402,8 @@ namespace Nop.Admin.Controllers
             PrepareTaxCategories(model, checkoutAttribute, false);
             //Stores
             PrepareStoresMappingModel(model, checkoutAttribute, false);
+            //condition
+            PrepareConditionAttributes(model, checkoutAttribute);
 
             return View(model);
         }
@@ -324,6 +422,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 checkoutAttribute = model.ToEntity(checkoutAttribute);
+                SaveConditionAttributes(checkoutAttribute, model);
                 checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
                 checkoutAttribute.Locales = UpdateAttributeLocales(checkoutAttribute, model);
                 checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
