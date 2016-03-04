@@ -68,6 +68,7 @@ namespace Nop.Services.Orders
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IVendorService _vendorService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly ICurrencyService _currencyService;
         private readonly IAffiliateService _affiliateService;
         private readonly IEventPublisher _eventPublisher;
@@ -151,6 +152,7 @@ namespace Nop.Services.Orders
             IWorkflowMessageService workflowMessageService,
             IVendorService vendorService,
             ICustomerActivityService customerActivityService,
+            ICustomerActionEventService customerActionEventService,
             ICurrencyService currencyService,
             IAffiliateService affiliateService,
             IEventPublisher eventPublisher,
@@ -189,6 +191,7 @@ namespace Nop.Services.Orders
             this._discountService = discountService;
             this._encryptionService = encryptionService;
             this._customerActivityService = customerActivityService;
+            this._customerActionEventService = customerActionEventService;
             this._currencyService = currencyService;
             this._affiliateService = affiliateService;
             this._eventPublisher = eventPublisher;
@@ -1625,7 +1628,7 @@ namespace Nop.Services.Orders
                     
                     //raise event       
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
-
+                    _customerActionEventService.AddOrder(order);
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
                         ProcessOrderPaid(order);

@@ -73,6 +73,7 @@ namespace Nop.Web.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingService _shippingService;
         private readonly IEventPublisher _eventPublisher;
@@ -118,6 +119,7 @@ namespace Nop.Web.Controllers
             IStoreMappingService storeMappingService,
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
+            ICustomerActionEventService customerActionEventService,
             IProductAttributeParser productAttributeParser,
             IShippingService shippingService,
             IEventPublisher eventPublisher,
@@ -159,6 +161,7 @@ namespace Nop.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
+            this._customerActionEventService = customerActionEventService;
             this._productAttributeParser = productAttributeParser;
             this._shippingService = shippingService;
             this._eventPublisher = eventPublisher;
@@ -1003,7 +1006,7 @@ namespace Nop.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
-
+            _customerActionEventService.Viewed(_workContext.CurrentCustomer.Id, Request.Url.ToString(), Request.UrlReferrer!=null ? Request.UrlReferrer.ToString() : "");
             return View(model.ProductTemplateViewPath, model);
         }
 
@@ -1331,7 +1334,6 @@ namespace Nop.Web.Controllers
                     _workContext.CurrentCustomer.IsHasProductReview = true;
                     EngineContext.Current.Resolve<ICustomerService>().UpdateHasProductReview(_workContext.CurrentCustomer.Id);
                 }
-                //_productService.UpdateProduct(product);
 
                 //update product totals
                 _productService.UpdateProductReviewTotals(product);
@@ -1424,8 +1426,6 @@ namespace Nop.Web.Controllers
             productReview.HelpfulYesTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => x.WasHelpful);
             productReview.HelpfulNoTotal = productReview.ProductReviewHelpfulnessEntries.Count(x => !x.WasHelpful);
             _productService.UpdateProductReview(productReview);
-
-            //_productService.UpdateProduct(product);
 
             return Json(new
             {

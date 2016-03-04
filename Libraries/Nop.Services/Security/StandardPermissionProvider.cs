@@ -80,6 +80,8 @@ namespace Nop.Services.Security
                 ManageProductTags,
                 ManageAttributes,
                 ManageCustomers,
+                ManageActions,
+                ManageBanners,
                 ManageVendors,
                 ManageCurrentCarts,
                 ManageOrders,
@@ -186,7 +188,9 @@ namespace Nop.Services.Security
                         EnableShoppingCart,
                         EnableWishlist,
                         PublicStoreAllowNavigation,
-                        AccessClosedStore
+                        AccessClosedStore,
+                        ManageBanners,
+                        ManageActions
                     }
                 },
                 new DefaultPermissionRecord 

@@ -68,6 +68,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IVendorService _vendorService;
         private readonly IContactUsService _contactUsService;
         private readonly IBannerService _bannerService;
@@ -108,6 +109,7 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
+            ICustomerActionEventService customerActionEventService,
             IVendorService vendorService,
             IContactUsService contactUsService,
             IBannerService bannerService,
@@ -144,6 +146,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
+            this._customerActionEventService = customerActionEventService;
             this._vendorService = vendorService;
             this._contactUsService = contactUsService;
             this._bannerService = bannerService;
@@ -1087,6 +1090,19 @@ namespace Nop.Web.Controllers
             return Json (JsonRequestBehavior.AllowGet);
         }
 
-        #endregion
+
+        [HttpGet]
+        public ActionResult CustomerActionEventUrl(string curl, string purl)
+        {
+            _customerActionEventService.Url(_workContext.CurrentCustomer.Id, curl, purl);
+            return Json
+                (
+                    new { empty = "" },
+                    JsonRequestBehavior.AllowGet
+                );
         }
+
+
+        #endregion
     }
+}

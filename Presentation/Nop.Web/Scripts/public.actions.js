@@ -2,17 +2,32 @@
 ** grandnode actions
 */
 var CustomerAction = {
-    Url: false,
+    UrlActive: false,
+    UrlBanner: false,
     RemoveUrl: false,
 
-    init: function(url, removeUrl){
-        this.Url = url;
+    init: function (activeurl, bannerurl, removeUrl) {
+        this.UrlActive = activeurl;
+        this.UrlBanner = bannerurl;
         this.RemoveUrl = removeUrl;
     },
+
+    checkActiveUrl: function (_curl, _purl) {
+        $.ajax({
+            type: "GET",
+            url: this.UrlActive,
+            data: {"curl": _curl, "purl": _purl }
+        }).complete(() =>
+            this.checkActiveBanner())
+        .fail((failureResponse) =>
+            ajaxFailure(failureResponse)
+        );
+    },
+
     checkActiveBanner: function () {
         $.ajax({
                 type: "GET",
-                url: this.Url
+                url: this.UrlBanner
         }).then((success) =>
             this.nextStep(success)
         ).fail((failureResponse) =>
@@ -25,7 +40,7 @@ var CustomerAction = {
             $('#action-body').html(response.Body);
             window.setTimeout(function () {
                 $('.popup-action-form').magnificPopup('open');
-            }, 800);
+            }, 100);
             this.removeAction(response.Id);
         }
     },

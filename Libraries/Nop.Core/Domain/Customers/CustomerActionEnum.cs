@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Nop.Core.Domain.Customers
 {
+    public enum CustomerActionTypeEnum
+    {
+        AddToCart = 1,
+        AddOrder = 2,
+        Viewed = 3,
+        Url = 4
+    }
     public enum CustomerActionConditionEnum
     {
         OneOfThem = 0,

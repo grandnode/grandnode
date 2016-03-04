@@ -12,5 +12,20 @@ namespace Nop.Services.Customers
         /// Run action add to cart 
         /// </summary>
         void AddToCart(ShoppingCartItem cart, Product product);
+
+        /// <summary>
+        /// Run action add new order
+        /// </summary>
+        void AddOrder(Order order);
+
+        /// <summary>
+        /// Viewed
+        /// </summary>
+        void Viewed(int customerId, string currentUrl, string previousUrl);
+
+        /// <summary>
+        /// Run action url
+        /// </summary>
+        void Url(int customerId, string currentUrl, string previousUrl);
     }
 }

@@ -762,4 +762,7 @@
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit">
     <Value>You need to save the checkout attribute before you can edit conditional attributes.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Products.Fields.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
 </Language>
