@@ -43,6 +43,14 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchCustomerTagIds):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SearchCustomerTagIds, new { SelectList = Model.AvailableCustomerTags })
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.SearchEmail):
             </td>
             <td class="adminData">
@@ -76,33 +84,6 @@
                 @Html.EditorFor(model => model.SearchLastName)
             </td>
         </tr>
-        @if (Model.DateOfBirthEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SearchDayOfBirth):
-                </td>
-                <td class="adminData">
-                    @{
-            var monthOfBirthValues = new List<SelectListItem>();
-            monthOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0" });
-            for (int i = 1; i <= 12; i++)
-            {
-                monthOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
-            }
-            var dayOfBirthValues = new List<SelectListItem>();
-            dayOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0" });
-            for (int i = 1; i <= 31; i++)
-            {
-                dayOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
-            }
-                    }
-                    @Html.DropDownListFor(model => model.SearchMonthOfBirth, monthOfBirthValues)
-                    @Html.DropDownListFor(model => model.SearchDayOfBirth, dayOfBirthValues)
-                </td>
-            </tr>
-        }
-        
         @if (Model.CompanyEnabled)
         {
             <tr>
@@ -380,15 +361,18 @@
                         $('[name=SearchCustomerRoleIds]:checked').each(function () {
                             customerRoleIds.push($(this).val());
                         });
+                        var customerTagIds = [];
+                        if($('#@Html.FieldIdFor(model => model.SearchCustomerTagIds)').val()!=null){
+                            customerTagIds = $('#@Html.FieldIdFor(model => model.SearchCustomerTagIds)').val();
+                        }
 
                         var data = {
                             SearchCustomerRoleIds: customerRoleIds.join(","),
+                            SearchCustomerTagIds: customerTagIds,  
                             SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
                             SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val(),
                             SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
                             SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
-                            SearchDayOfBirth: $('#@Html.FieldIdFor(model => model.SearchDayOfBirth)').val(),
-                            SearchMonthOfBirth: $('#@Html.FieldIdFor(model => model.SearchMonthOfBirth)').val(),
                             SearchCompany: $('#@Html.FieldIdFor(model => model.SearchCompany)').val(),
                             SearchPhone: $('#@Html.FieldIdFor(model => model.SearchPhone)').val(),
                             SearchZipPostalCode: $('#@Html.FieldIdFor(model => model.SearchZipPostalCode)').val()

@@ -153,9 +153,8 @@ namespace Nop.Services.Customers
         /// <returns>Customers</returns>
         public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
-            int[] customerRoleIds = null, string email = null, string username = null,
+            int[] customerRoleIds = null, int[] customerTagIds = null, string email = null, string username = null,
             string firstName = null, string lastName = null,
-            int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
             int pageIndex = 0, int pageSize = 2147483647)
@@ -173,6 +172,13 @@ namespace Nop.Services.Customers
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
                 query = query.Where(c => c.CustomerRoles.Any(x => customerRoleIds.Contains(x.Id)));
+            if (customerTagIds != null && customerTagIds.Length > 0)
+            {
+                foreach (var item in customerTagIds)
+                {
+                    query = query.Where(c => c.CustomerTags.Contains(item));
+                }
+            }
             if (!String.IsNullOrWhiteSpace(email))
                 query = query.Where(c => c.Email!=null && c.Email.ToLower().Contains(email.ToLower()));
             if (!String.IsNullOrWhiteSpace(username))
@@ -188,29 +194,6 @@ namespace Nop.Services.Customers
                 query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.LastName && y.Value != null && y.Value.ToLower().Contains(lastName.ToLower())));
             }
 
-            //date of birth is stored as a string into database.
-            //we also know that date of birth is stored in the following format YYYY-MM-DD (for example, 1983-02-18).
-            //so let's search it as a string
-            if (dayOfBirth > 0 && monthOfBirth > 0)
-            {
-                //both are specified
-                string dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" + dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-                query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.DateOfBirth && y.Value != null && y.Value.ToLower().Contains(dateOfBirthStr.ToLower())));
-
-            }
-            else if (dayOfBirth > 0)
-            {
-                //only day is specified
-                string dateOfBirthStr = dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
-                query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.DateOfBirth && y.Value != null && y.Value.ToLower().Contains(dateOfBirthStr.ToLower())));
-
-            }
-            else if (monthOfBirth > 0)
-            {
-                //only month is specified
-                string dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
-                query = query.Where(x => x.GenericAttributes.Any(y => y.Key == SystemCustomerAttributeNames.DateOfBirth && y.Value != null && y.Value.ToLower().Contains(dateOfBirthStr.ToLower())));
-            }
             //search by company
             if (!String.IsNullOrWhiteSpace(company))
             {

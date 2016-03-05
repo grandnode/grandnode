@@ -2,17 +2,33 @@
 using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Admin.Models.Customers
 {
     public partial class CustomerListModel : BaseNopModel
     {
+        public CustomerListModel()
+        {
+            AvailableCustomerTags = new List<SelectListItem>();
+            SearchCustomerTagIds = new List<int>();
+        }
+
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
         [AllowHtml]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
 
+
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
         public int[] SearchCustomerRoleIds { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerTags")]
+        public IList<SelectListItem> AvailableCustomerTags { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerTags")]
+        [UIHint("MultiSelect")]
+        public IList<int> SearchCustomerTagIds { get; set; }
+
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchEmail")]
         [AllowHtml]
@@ -29,16 +45,6 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchLastName")]
         [AllowHtml]
         public string SearchLastName { get; set; }
-
-
-        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchDateOfBirth")]
-        [AllowHtml]
-        public string SearchDayOfBirth { get; set; }
-        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchDateOfBirth")]
-        [AllowHtml]
-        public string SearchMonthOfBirth { get; set; }
-        public bool DateOfBirthEnabled { get; set; }
-
 
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchCompany")]

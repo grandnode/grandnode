@@ -848,11 +848,11 @@ namespace Nop.Admin.Controllers
             var model = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
-                DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled,
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
+                AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id.ToString() }).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds,
             };
             return View(model);
@@ -860,27 +860,19 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         public ActionResult CustomerList(DataSourceRequest command, CustomerListModel model,
-            [ModelBinder(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds)
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds, int[] searchCustomerTagIds)
         {
             //we use own own binder for searchCustomerRoleIds property 
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
-            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
-                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
-            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
-                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-            
             var customers = _customerService.GetAllCustomers(
                 customerRoleIds: searchCustomerRoleIds,
+                customerTagIds: searchCustomerTagIds,
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
                 lastName: model.SearchLastName,
-                dayOfBirth: searchDayOfBirth,
-                monthOfBirth: searchMonthOfBirth,
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode,
@@ -2190,21 +2182,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
-            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
-                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
-            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
-                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-
             var customers = _customerService.GetAllCustomers(
                 customerRoleIds: model.SearchCustomerRoleIds,
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
                 lastName: model.SearchLastName,
-                dayOfBirth: searchDayOfBirth,
-                monthOfBirth: searchMonthOfBirth,
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode,
@@ -2249,21 +2232,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
-            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
-                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
-            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
-                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-
             var customers = _customerService.GetAllCustomers(
                 customerRoleIds: model.SearchCustomerRoleIds,
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
                 lastName: model.SearchLastName,
-                dayOfBirth: searchDayOfBirth,
-                monthOfBirth: searchMonthOfBirth,
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode,

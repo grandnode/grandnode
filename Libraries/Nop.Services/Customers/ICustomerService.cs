@@ -38,9 +38,8 @@ namespace Nop.Services.Customers
         /// <returns>Customers</returns>
         IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
-            int[] customerRoleIds = null, string email = null, string username = null,
+            int[] customerRoleIds = null, int[] customerTagIds = null, string email = null, string username = null,
             string firstName = null, string lastName = null,
-            int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
             int pageIndex = 0, int pageSize = 2147483647); //Int32.MaxValue

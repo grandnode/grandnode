@@ -8766,6 +8766,12 @@
   <LocaleResource Name="Admin.Customers.Customers.Info">
     <Value>Customer Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.CustomerTags">
+    <Value>Customer tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.CustomerTags.Hint">
+    <Value>Filter by customer tag.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.CustomerRoles">
     <Value>Customer roles</Value>
   </LocaleResource>
