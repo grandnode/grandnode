@@ -524,6 +524,7 @@
     <Content Include="Content\Images\MessageTemplate\img03.jpg" />
     <Content Include="Content\Images\MessageTemplate\img04.jpg" />
     <Content Include="Content\Images\MessageTemplate\logo.png" />
+    <Content Include="Content\Images\Thumbs\placeholder2.txt" />
     <Content Include="Content\Images\Thumbs\placeholder.txt" />
     <Content Include="Content\kendo\2014.1.318\Black\editor.png" />
     <Content Include="Content\kendo\2014.1.318\Black\imagebrowser.png" />
