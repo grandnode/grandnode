@@ -18,21 +18,21 @@ namespace Nop.Core.Caching
     {
         #region Fields
 
-        private readonly ConnectionMultiplexer _muxer;
+        private readonly IRedisConnectionWrapper _connectionWrapper;
         private readonly IDatabase _db;
 
         #endregion
 
         #region Ctor
 
-        public RedisCacheManager(NopConfig config)
+        public RedisCacheManager(NopConfig config, IRedisConnectionWrapper connectionWrapper)
         {
             if (String.IsNullOrEmpty(config.RedisCachingConnectionString))
                 throw new Exception("Redis connection string is empty");
 
-            this._muxer = ConnectionMultiplexer.Connect(config.RedisCachingConnectionString);
-
-            this._db = _muxer.GetDatabase();
+            // ConnectionMultiplexer.Connect should only be called once and shared between callers
+            this._connectionWrapper = connectionWrapper;
+            this._db = _connectionWrapper.Database();
         }
 
         #endregion
@@ -113,12 +113,12 @@ namespace Nop.Core.Caching
         /// <param name="pattern">pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            foreach (var ep in _muxer.GetEndPoints())
+            foreach (var ep in _connectionWrapper.GetEndpoints())
             {
-                var server = _muxer.GetServer(ep);
+                var server = _connectionWrapper.Server(ep);
                 var keys = server.Keys(pattern: "*" + pattern + "*");
                 foreach (var key in keys)
-                    Remove(key);
+                    _db.KeyDelete(key);
             }
         }
 
@@ -127,9 +127,9 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Clear()
         {
-            foreach (var ep in _muxer.GetEndPoints())
+            foreach (var ep in _connectionWrapper.GetEndpoints())
             {
-                var server = _muxer.GetServer(ep);
+                var server = _connectionWrapper.Server(ep);
                 //we can use the code belwo (commented)
                 //but it requires administration permission - ",allowAdmin=true"
                 //server.FlushDatabase();
@@ -137,7 +137,7 @@ namespace Nop.Core.Caching
                 //that's why we simply interate through all elements now
                 var keys = server.Keys();
                 foreach (var key in keys)
-                    Remove(key);
+                    _db.KeyDelete(key);
             }
         }
 
@@ -146,8 +146,7 @@ namespace Nop.Core.Caching
         /// </summary>
         public virtual void Dispose()
         {
-            if (_muxer != null)
-                _muxer.Dispose();
+            
         }
 
         #endregion
