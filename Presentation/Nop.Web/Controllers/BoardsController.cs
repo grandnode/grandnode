@@ -269,7 +269,7 @@ namespace Nop.Web.Controllers
             }
 
             var topics = _forumService.GetActiveTopics(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
-            string url = Url.RouteUrl("ActiveDiscussionsRSS", null, "http");
+            string url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
 
             var feedTitle = _localizationService.GetResource("Forum.ActiveDiscussionsFeedTitle");
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
@@ -288,7 +288,7 @@ namespace Nop.Web.Controllers
 
             foreach (var topic in topics)
             {
-                string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, "http");
+                string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 string content = String.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
                 items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl),
@@ -385,8 +385,7 @@ namespace Nop.Web.Controllers
                 var topics = _forumService.GetAllTopics(forum.Id, 0, string.Empty,
                      ForumSearchType.All, 0, 0, topicLimit);
 
-                string url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, "http");
-
+                string url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 var feedTitle = _localizationService.GetResource("Forum.ForumFeedTitle");
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
 
@@ -404,7 +403,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var topic in topics)
                 {
-                    string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, "http");
+                    string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                     string content = string.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
                     items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl), String.Format("urn:store:{0}:forum:topic:{1}", _storeContext.CurrentStore.Id, topic.Id),
