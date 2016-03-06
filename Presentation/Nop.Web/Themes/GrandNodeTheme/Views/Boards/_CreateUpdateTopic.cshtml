@@ -1,17 +1,17 @@
-﻿@model EditForumPostModel
+﻿@model EditForumTopicModel
 @using Nop.Core.Domain.Forums;
 @using Nop.Web.Models.Boards;
 
-@Html.Action("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
+@Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
 <div class="page forum-edit-page">
     <div class="page-title">
         @if (Model.IsEdit)
         {
-            <h1>@T("Forum.EditPost")</h1>
+            <h1>@T("Forum.EditTopic")</h1>
         }
         else
         {
-            <h1>@T("Forum.NewPost")</h1>
+            <h1>@T("Forum.NewTopic")</h1>
         }
     </div>
     <div class="page-body">
@@ -24,16 +24,17 @@
                 <div class="message-error">@validationSummary</div>
             }
             @Html.HiddenFor(model => model.Id)
-            @Html.HiddenFor(model => model.ForumTopicId)
+            @Html.HiddenFor(model => model.ForumId)
             <div class="fieldset">
                 <div class="form-fields">
                     <div class="inputs">
                         <label>@T("Forum.ForumName"):</label>
-                        <strong class="forum-subject">@Model.ForumName</strong>
+                        <strong>@Model.ForumName</strong>
                     </div>
                     <div class="inputs">
                         <label>@T("Forum.TopicTitle"):</label>
-                        <strong class="topic-subject">@Model.ForumTopicSubject</strong>
+                        @Html.TextBoxFor(model => model.Subject, new { @class = "forum-topic-title-text" })
+                        @Html.ValidationMessageFor(model => model.Subject)
                     </div>
                     <div class="inputs">
                         @if (Model.ForumEditor == EditorType.BBCodeEditor)
@@ -43,6 +44,13 @@
                         @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
                         @Html.ValidationMessageFor(model => model.Text)
                     </div>
+                    @if (Model.IsCustomerAllowedToSetTopicPriority)
+                    {
+                        <div class="inputs">
+                            <label>@T("Forum.Priority"):</label>
+                            @Html.DropDownList("TopicTypeId", new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))
+                        </div>
+                    }
                     @if (Model.IsCustomerAllowedToSubscribe)
                     {
                         <div class="inputs reversed">
@@ -54,13 +62,10 @@
                 </div>
             </div>
             <div class="buttons">
-                <button type="submit" value="@T("Forum.Submit")" class="btn waves-effect waves-ligth">
-                    @T("Forum.Submit")
-                </button>
-                <button type="button" class="btn-flat wavel-green waves-effect" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')">
-                    @T("Forum.Cancel")
-                </button>
+                <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-topic-button" />
+                <input type="button" class="button-2 cancel-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')" />
             </div>
         }
     </div>
 </div>
+
