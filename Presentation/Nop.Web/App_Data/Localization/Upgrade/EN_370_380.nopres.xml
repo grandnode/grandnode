@@ -771,5 +771,8 @@
   <LocaleResource Name="Admin.Customers.Customers.List.CustomerTags.Hint">
     <Value>Filter by customer tag.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImage">
+   <Value>Flag</Value>
+  </LocaleResource>
 
 </Language>
