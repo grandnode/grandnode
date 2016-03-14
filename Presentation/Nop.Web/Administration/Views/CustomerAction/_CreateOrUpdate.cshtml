@@ -148,6 +148,12 @@
         <td class="adminData">
             @Html.DropDownListFor(model => model.ActionTypeId, Model.ActionType)
             @Html.ValidationMessageFor(model => model.ActionTypeId)
+            <em>
+                <p>@T("admin.customers.actiontype.helpText.AddToCart")</p>
+                <p>@T("admin.customers.actiontype.helpText.AddOrder")</p>
+                <p>@T("admin.customers.actiontype.helpText.Viewed")</p>
+                <p>@T("admin.customers.actiontype.helpText.Url")</p>
+            </em>
         </td>
     </tr>
     <tr>
@@ -157,6 +163,10 @@
         <td class="adminData">
             @Html.DropDownListFor(model => model.ConditionId, ((Nop.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
             @Html.ValidationMessageFor(model => model.ConditionId)
+            <em>
+                <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>
+                <p>@T("admin.customers.actiontype.helpText.AllOfThem")</p>
+            </em>
         </td>
     </tr>
 </table>
@@ -278,6 +288,12 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.ReactionTypeId, ((Nop.Core.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList())
                 @Html.ValidationMessageFor(model => model.ReactionTypeId)
+                <em>
+                    <p>@T("admin.customers.actiontype.helpText.Banner")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Email")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Customerrole")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Customertag")</p>
+                </em>
             </td>
         </tr>
         <tr id="plnBanner">

@@ -67,7 +67,7 @@ namespace Nop.Admin.Controllers
                 actionType.Enabled = checkedActionTypes.Contains(actionType.Id);
                 _customerActionService.UpdateCustomerActionType(actionType);
             }
-            SuccessNotification(_localizationService.GetResource("Admin.Customer.ActionType.Updated"));
+            SuccessNotification(_localizationService.GetResource("Admin.Customers.ActionType.Updated"));
             return RedirectToAction("ListTypes");
         }
 

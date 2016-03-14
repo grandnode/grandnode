@@ -690,6 +690,9 @@
   <LocaleResource Name="ActivityLog.editcustomeraction">
     <Value>Edit customer action ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.editcustomeractioncondition">
+    <Value>Edit customer action condition ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.EditCustomerRole">
     <Value>Edited a customer role ('{0}')</Value>
   </LocaleResource>
@@ -7940,14 +7943,47 @@
   </LocaleResource>
   <LocaleResource Name="admin.customers.actiontype">
     <Value>Customer action type</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="admin.customers.actiontype.fields.enabled">
     <Value>Is enabled</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.actiontype.fields.name">
     <Value>Action type name</Value>
-  </LocaleResource>  
- <LocaleResource Name="admin.customers.customeraction.addcustomeractioncondition">
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.AddToCart">
+    <Value>Add to cart – Action type when customer add specified products to cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.AddOrder">
+    <Value>Add order – Action type when customer add order with specified conditions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.Viewed">
+    <Value>Viewed – Action type when customer view specified products, categories, manufacturers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.Url">
+    <Value>URL – Action type when customer come to site from referral url.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.OneOfThem">
+    <Value>One of them – One of condition must be met.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.AllOfThem">
+    <Value>All of them – All of the conditions must be met.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.Banner">
+    <Value>Banner – Store automatically view banner which is assigned to a particular action.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.Email">
+    <Value>Email – Store automatically send email to customer, who made particular action.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.Customerrole">
+    <Value>Assign to customer role – Store automatically assign customer to specified customer role.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.Customertag">
+    <Value>Assign to customer tag – Store automatically assign customer to specified customer tag. </Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.updated">
+    <Value>Action type updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.addcustomeractioncondition">
    <Value>Add new condition</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.added">
@@ -8375,6 +8411,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerTags">
     <Value>Customer tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.AddNew">
+    <Value>Add a new tag</Value>
   </LocaleResource>
  <LocaleResource Name="Admin.Customers.CustomerTags.Added">
     <Value>Added a tag</Value>
