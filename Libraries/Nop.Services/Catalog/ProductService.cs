@@ -625,7 +625,7 @@ namespace Nop.Services.Catalog
             out IList<string> filterableSpecificationAttributeOptionIds,
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
-            int pageSize = 2147483647,  //Int32.MaxValue
+            int pageSize = int.MaxValue,  //Int32.MaxValue
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,
