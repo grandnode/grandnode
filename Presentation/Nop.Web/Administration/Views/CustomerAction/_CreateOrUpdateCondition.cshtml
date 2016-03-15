@@ -48,10 +48,13 @@
         <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex()) id="tab-customerRegister">
             @T("Admin.Customers.CustomerActionCondition.CustomerRegister")
         </li>
-        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex()) id="tab-urlReferrer">
+        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex()) id="tab-customAttribute">
+            @T("Admin.Customers.CustomerActionCondition.CustomCustomerAttribute")
+        </li>
+        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex()) id="tab-urlReferrer">
             @T("Admin.Customers.CustomerActionCondition.UrlReferrer")
         </li>
-        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex()) id="tab-urlCurrent">
+        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex()) id="tab-urlCurrent">
             @T("Admin.Customers.CustomerActionCondition.UrlCurrent")
         </li>
     </ul>
@@ -84,6 +87,9 @@
     </div>
     <div>
         @TabCustomerRegister()
+    </div>
+    <div>
+        @TabCustomAttribute()
     </div>
     <div>
         @TabUrlReferrer()
@@ -127,6 +133,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
@@ -141,6 +148,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
 
@@ -155,6 +163,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
@@ -169,6 +178,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
@@ -183,6 +193,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
@@ -197,6 +208,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
@@ -211,6 +223,7 @@
                 $('#tab-customerRole').show();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
@@ -225,6 +238,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').show();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
@@ -239,6 +253,22 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').show();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Nop.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomCustomerAttribute).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').show();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
             }
@@ -253,6 +283,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').show();
                 $('#tab-urlCurrent').hide();
             }
@@ -267,6 +298,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').show();
             }
@@ -281,6 +313,7 @@
                 $('#tab-customerRole').hide();
                 $('#tab-customerTag').hide();
                 $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
                 $('#tab-urlReferrer').hide();
                 $('#tab-urlCurrent').hide();
              }
@@ -376,6 +409,10 @@
     @Html.Partial("_ConditionCustomerRegister", Model)
 }
 
+@helper TabCustomAttribute()
+{
+    @Html.Partial("_ConditionCustomCustomerAttribute", Model)
+}
 @helper TabUrlReferrer()           
 {
     @Html.Partial("_ConditionUrlReferrer", Model)

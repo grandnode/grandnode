@@ -28,6 +28,7 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
 		private readonly ICustomerService _customerService;
+        private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerTagService _customerTagService;
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -48,6 +49,7 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public CustomerActionController(ICustomerService customerService,
+            ICustomerAttributeService customerAttributeService,
             ICustomerTagService customerTagService,
             ILocalizationService localizationService, 
             ICustomerActivityService customerActivityService,
@@ -65,6 +67,7 @@ namespace Nop.Admin.Controllers
             IMessageTemplateService messageTemplateService)
 		{
             this._customerService = customerService;
+            this._customerAttributeService = customerAttributeService;
             this._customerTagService = customerTagService;
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
@@ -514,6 +517,29 @@ namespace Nop.Admin.Controllers
                 condition.CustomerTags.Remove(id);
                 _customerActionService.UpdateCustomerAction(customerActions);
             }
+
+            if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.CustomCustomerAttribute)
+            {
+                condition.CustomCustomerAttributes.Remove(condition.CustomCustomerAttributes.FirstOrDefault(x => x.Id == id));
+                _customerActionService.UpdateCustomerAction(customerActions);
+            }
+            if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.CustomerRegisterField)
+            {
+                condition.CustomerRegistration.Remove(condition.CustomerRegistration.FirstOrDefault(x => x.Id == id));
+                _customerActionService.UpdateCustomerAction(customerActions);
+            }
+            if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.UrlCurrent)
+            {
+                condition.UrlCurrent.Remove(condition.UrlCurrent.FirstOrDefault(x => x.Id == id));
+                _customerActionService.UpdateCustomerAction(customerActions);
+            }
+            if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.UrlReferrer)
+            {
+                condition.UrlReferrer.Remove(condition.UrlReferrer.FirstOrDefault(x => x.Id == id));
+                _customerActionService.UpdateCustomerAction(customerActions);
+            }
+
+
             return new NullJsonResult();
         }
         #endregion
@@ -1160,6 +1186,7 @@ namespace Nop.Admin.Controllers
 
         #region Condition Customer Register
 
+
         [HttpPost]
         public ActionResult ConditionCustomerRegister(int customerActionId, int conditionId)
         {
@@ -1171,7 +1198,9 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerRegistration.Select(z => new { Id = z.Id, CustomerRegisterName = z.RegisterField, CustomerRegisterValue = z.RegisterValue }) : null,
+                Data = condition != null ? condition.CustomerRegistration.Select(z => new { Id = z.Id,
+                    CustomerRegisterName = z.RegisterField, CustomerRegisterValue = z.RegisterValue }) 
+                    : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -1225,8 +1254,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-
-
         [HttpGet]
         public ActionResult CustomerRegisterFields()
         {
@@ -1237,7 +1264,12 @@ namespace Nop.Admin.Controllers
             list.Add(Tuple.Create("Gender", "Gender"));
             list.Add(Tuple.Create("Company", "Company"));
             list.Add(Tuple.Create("CountryId", "CountryId"));
-
+            list.Add(Tuple.Create("City", "City"));
+            list.Add(Tuple.Create("StateProvinceId", "StateProvinceId"));
+            list.Add(Tuple.Create("StreetAddress", "StreetAddress"));
+            list.Add(Tuple.Create("ZipPostalCode", "ZipPostalCode"));
+            list.Add(Tuple.Create("Phone", "Phone"));
+            list.Add(Tuple.Create("Fax", "Fax"));
 
             var customer = list.Select(x => new { Id = x.Item1, Name = x.Item2 });
             return Json
@@ -1247,6 +1279,128 @@ namespace Nop.Admin.Controllers
                 );
         }
         #endregion
+
+        #region Condition Custom Customer Attribute
+
+        private string CustomerAttribute(string registerField)
+        {
+            string _field = registerField;
+            var _rf = registerField.Split(':');
+            if(_rf.Count() > 1)
+            {
+                var ca = _customerAttributeService.GetCustomerAttributeById(Convert.ToInt32(_rf.FirstOrDefault()));
+                if (ca != null)
+                {
+                    _field = ca.Name;
+                    if(ca.CustomerAttributeValues.FirstOrDefault(x=>x.Id == Convert.ToInt32(_rf.LastOrDefault()))!=null)
+                    {
+                        _field = ca.Name + "->"+ ca.CustomerAttributeValues.FirstOrDefault(x => x.Id == Convert.ToInt32(_rf.LastOrDefault())).Name;
+                    }
+                }
+
+            }
+
+            return _field;
+        }
+
+        [HttpPost]
+        public ActionResult ConditionCustomCustomerAttribute(int customerActionId, int conditionId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
+                return AccessDeniedView();
+
+            var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
+            var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = condition != null ? condition.CustomCustomerAttributes.Select(z => new {
+                    Id = z.Id,
+                    CustomerAttributeId = CustomerAttribute(z.RegisterField),
+                    CustomerAttributeName = z.RegisterField,
+                    CustomerAttributeValue = z.RegisterValue
+                })
+                    : null,
+                Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+        [HttpPost]
+        public ActionResult ConditionCustomCustomerAttributeInsert(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
+                return AccessDeniedView();
+
+            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            if (customerAction != null)
+            {
+                var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
+                if (condition != null)
+                {
+                    var _cr = new CustomerAction.ActionCondition.CustomerRegister()
+                    {
+                        Id = condition.CustomCustomerAttributes.Count > 0 ? condition.CustomCustomerAttributes.Max(x => x.Id) + 1 : 1,
+                        RegisterField = model.CustomerAttributeName,
+                        RegisterValue = model.CustomerAttributeValue,
+                    };
+                    condition.CustomCustomerAttributes.Add(_cr);
+                    _customerActionService.UpdateCustomerAction(customerAction);
+                }
+            }
+            return new NullJsonResult();
+        }
+        [HttpPost]
+        public ActionResult ConditionCustomCustomerAttributeUpdate(CustomerActionConditionModel.AddCustomCustomerAttributeConditionModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
+                return AccessDeniedView();
+
+            var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
+            if (customerAction != null)
+            {
+                var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
+                if (condition != null)
+                {
+                    var cr = condition.CustomCustomerAttributes.FirstOrDefault(x => x.Id == model.Id);
+                    cr.RegisterField = model.CustomerAttributeName;
+                    cr.RegisterValue = model.CustomerAttributeValue;
+                    _customerActionService.UpdateCustomerAction(customerAction);
+                }
+            }
+            return new NullJsonResult();
+        }
+
+        [HttpGet]
+        public ActionResult CustomCustomerAttributeFields()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
+                return AccessDeniedView();
+            var list = new List<Tuple<string, string>>();
+            foreach (var item in _customerAttributeService.GetAllCustomerAttributes())
+            {
+                if(item.AttributeControlType == AttributeControlType.Checkboxes ||
+                    item.AttributeControlType == AttributeControlType.DropdownList ||
+                    item.AttributeControlType == AttributeControlType.RadioList)
+                {
+                    foreach (var value in item.CustomerAttributeValues)
+                    {
+                        list.Add(Tuple.Create(string.Format("{0}:{1}", item.Id, value.Id), item.Name + "->"+value.Name));
+                    }
+                }
+            }
+            var customer = list.Select(x => new { Id = x.Item1, Name = x.Item2 });
+            return Json
+                (
+                    customer,
+                    JsonRequestBehavior.AllowGet
+                );
+        }
+        #endregion
+
 
         #region Url Referrer
 

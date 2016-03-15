@@ -810,4 +810,16 @@
   <LocaleResource Name="admin.customers.actiontype.helpText.Customertag">
     <Value>Assign to customer tag – Store automatically assign customer to specified customer tag. </Value>
   </LocaleResource>
+  <LocaleResource Name="admin.customers.customerActionCondition.customCustomerAttribute">
+    <Value>Custom Customer Attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.CustomCustomerAttributeName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.CustomCustomerAttributeValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.Registration">
+    <Value>Customer Registration - Action type, when a new customer registers to our store.</Value>
+  </LocaleResource>
 </Language>

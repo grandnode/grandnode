@@ -141,6 +141,15 @@ namespace Nop.Admin.Models.Customers
             public int Id { get; set; }
         }
 
+        public partial class AddCustomCustomerAttributeConditionModel
+        {
+            public int CustomerActionId { get; set; }
+            public int ConditionId { get; set; }
+            public string CustomerAttributeName { get; set; }
+            public string CustomerAttributeValue { get; set; }
+            public int Id { get; set; }
+        }
+
         public partial class AddProductSpecificationConditionModel
         {
             public int CustomerActionId { get; set; }

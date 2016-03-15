@@ -7962,6 +7962,9 @@
   <LocaleResource Name="admin.customers.actiontype.helpText.Url">
     <Value>URL – Action type when customer come to site from referral url.</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.customers.actiontype.helpText.Registration">
+    <Value>Customer Registration - Action type, when a new customer registers to our store.</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.customers.actiontype.helpText.OneOfThem">
     <Value>One of them – One of condition must be met.</Value>
   </LocaleResource>
@@ -8100,9 +8103,18 @@
  <LocaleResource Name="admin.customers.customeractioncondition.category.addnew">
   <Value>Add new</Value>
  </LocaleResource>
+ <LocaleResource Name="admin.customers.customerActionCondition.customCustomerAttribute">
+   <Value>Custom Customer Attributes</Value>
+ </LocaleResource>  
  <LocaleResource Name="admin.customers.customeractioncondition.fields.categoryname">
   <Value>Add category</Value> 
  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.CustomCustomerAttributeName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerActionCondition.Fields.CustomCustomerAttributeValue">
+    <Value>Value</Value>
+  </LocaleResource>  
   <LocaleResource Name="admin.customers.customeractioncondition.customerregister">
     <Value>Customer register</Value>
   </LocaleResource>

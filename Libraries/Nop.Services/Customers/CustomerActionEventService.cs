@@ -37,6 +37,8 @@ namespace Nop.Services.Customers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
+        private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerTagService _customerTagService;
         private readonly HttpContextBase _httpContext;
         #endregion
@@ -58,6 +60,8 @@ namespace Nop.Services.Customers
             IWorkflowMessageService workflowMessageService,
             IWorkContext workContext,
             ICustomerService customerService,
+            ICustomerAttributeService customerAttributeService,
+            ICustomerAttributeParser customerAttributeParser,
             ICustomerTagService customerTagService,
             HttpContextBase httpContext)
         {
@@ -76,6 +80,8 @@ namespace Nop.Services.Customers
             this._workflowMessageService = workflowMessageService;
             this._workContext = workContext;
             this._customerService = customerService;
+            this._customerAttributeService = customerAttributeService;
+            this._customerAttributeParser = customerAttributeParser;
             this._customerTagService = customerTagService;
             this._httpContext = httpContext;
         }
@@ -147,7 +153,9 @@ namespace Nop.Services.Customers
 
                 }
                 #endregion
-                if(action.ActionTypeId == (int)CustomerActionTypeEnum.Viewed)
+
+                #region Action type viewed
+                if (action.ActionTypeId == (int)CustomerActionTypeEnum.Viewed)
                 {
                     cond = false;
                     if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.Category)
@@ -203,6 +211,7 @@ namespace Nop.Services.Customers
                         }
                     }
                 }
+                #endregion
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomerRole)
                 {
@@ -217,6 +226,11 @@ namespace Nop.Services.Customers
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomerRegisterField)
                 {
                     cond = ConditionCustomerRegister(item, customerId);
+                }
+
+                if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomCustomerAttribute)
+                {
+                    cond = ConditionCustomerAttribute(item, customerId);
                 }
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.UrlCurrent)
@@ -474,6 +488,61 @@ namespace Nop.Services.Customers
             }
             return cond;
         }
+
+        protected bool ConditionCustomerAttribute(CustomerAction.ActionCondition condition, int customerId)
+        {
+            bool cond = false;
+            var customer = _customerService.GetCustomerById(customerId);
+            if (customer != null)
+            {
+                if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
+                {
+                    var customCustomerAttributes = customer.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
+                    if (customCustomerAttributes != null)
+                    {
+                        if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
+                        {
+                            var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            cond = true;
+                            foreach (var item in condition.CustomCustomerAttributes)
+                            {
+                                var _fields = item.RegisterField.Split(':');
+                                if (_fields.Count() > 1)
+                                {
+                                    if (selectedValues.Where(x => x.CustomerAttributeId == Convert.ToInt32(_fields.FirstOrDefault()) && x.Id == Convert.ToInt32(_fields.LastOrDefault())).Count() == 0)
+                                        cond = false;
+                                }
+                                else
+                                    cond = false;
+                            }
+                        }
+                    }
+                }
+                if (condition.Condition == CustomerActionConditionEnum.OneOfThem)
+                {
+
+                    var customCustomerAttributes = customer.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
+                    if(customCustomerAttributes!=null)
+                    {
+                        if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
+                        {
+                            var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            foreach (var item in condition.CustomCustomerAttributes)
+                            {
+                                var _fields = item.RegisterField.Split(':');
+                                if(_fields.Count() > 1)
+                                {
+                                    if (selectedValues.Where(x => x.CustomerAttributeId==Convert.ToInt32( _fields.FirstOrDefault()) && x.Id == Convert.ToInt32(_fields.LastOrDefault())).Count() > 0)
+                                        cond = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return cond;
+        }
+
         #endregion
 
         #region Reaction
@@ -665,7 +734,30 @@ namespace Nop.Services.Customers
 
             }
         }
+        public virtual void Registration(int customerId)
+        {
+            var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
+            if (actionType.Enabled)
+            {
+                var datetimeUtcNow = DateTime.UtcNow;
+                var query = from a in _customerActionRepository.Table
+                            where a.Active == true && a.ActionTypeId == actionType.Id
+                                    && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                            select a;
 
+                foreach (var item in query.ToList())
+                {
+                    if (!UsedAction(item.Id, customerId))
+                    {
+                        if (Condition(item, null, null, customerId, null, null))
+                        {
+                            Reaction(item, customerId, null, null);
+                        }
+                    }
+                }
+
+            }
+        }
         #endregion
     }
 }

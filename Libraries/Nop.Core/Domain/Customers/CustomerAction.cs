@@ -90,6 +90,7 @@ namespace Nop.Core.Domain.Customers
             private ICollection<ProductAttributeValue> _productAttribute;
             private ICollection<ProductSpecification> _productSpecification;
             private ICollection<CustomerRegister> _customerRegister;
+            private ICollection<CustomerRegister> _customCustomerAttributes;
             private ICollection<Url> _urlReferrer;
             private ICollection<Url> _urlCurrent;
 
@@ -166,6 +167,12 @@ namespace Nop.Core.Domain.Customers
                 protected set { _customerRegister = value; }
             }
 
+            public virtual ICollection<CustomerRegister> CustomCustomerAttributes
+            {
+                get { return _customCustomerAttributes ?? (_customCustomerAttributes = new List<CustomerRegister>()); }
+                protected set { _customCustomerAttributes = value; }
+            }
+
             public virtual ICollection<Url> UrlReferrer
             {
                 get { return _urlReferrer ?? (_urlReferrer = new List<Url>()); }
@@ -207,7 +214,6 @@ namespace Nop.Core.Domain.Customers
                 public string RegisterField { get; set; }
                 public string RegisterValue { get; set; }
             }
-
 
         }
 

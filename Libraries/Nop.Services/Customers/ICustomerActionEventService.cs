@@ -27,5 +27,11 @@ namespace Nop.Services.Customers
         /// Run action url
         /// </summary>
         void Url(int customerId, string currentUrl, string previousUrl);
+
+
+        /// <summary>
+        /// Run action url
+        /// </summary>
+        void Registration(int customerId);
     }
 }

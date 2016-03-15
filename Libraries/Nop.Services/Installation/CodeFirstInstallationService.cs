@@ -4301,11 +4301,16 @@ namespace Nop.Services.Installation
                 new CustomerActionConditionType()
                 {
                     Id = 10,
-                    Name = "URL Referrer"
+                    Name = "Custom Customer Attribute"
                 },
                 new CustomerActionConditionType()
                 {
                     Id = 11,
+                    Name = "URL Referrer"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 12,
                     Name = "Url Current"
                 }
             };
@@ -4319,7 +4324,7 @@ namespace Nop.Services.Installation
                     Name = "Add to cart",
                     SystemKeyword = "AddToCart",
                     Enabled = false,
-                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9 }
+                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
                 },
                 new CustomerActionType()
                 {
@@ -4327,7 +4332,7 @@ namespace Nop.Services.Installation
                     Name = "Add order",
                     SystemKeyword = "AddOrder",
                     Enabled = false,
-                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9 }
+                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
                 },
                 new CustomerActionType()
                 {
@@ -4335,7 +4340,7 @@ namespace Nop.Services.Installation
                     Name = "Viewed",
                     SystemKeyword = "Viewed",
                     Enabled = false,
-                    ConditionType = {1, 2, 3, 6, 7, 8, 9}
+                    ConditionType = {1, 2, 3, 6, 7, 8, 9, 10}
                 },
                 new CustomerActionType()
                 {
@@ -4343,7 +4348,15 @@ namespace Nop.Services.Installation
                     Name = "Url",
                     SystemKeyword = "Url",
                     Enabled = false,
-                    ConditionType = {10, 11}
+                    ConditionType = {7, 8, 9, 10, 11, 12}
+                },
+                new CustomerActionType()
+                {
+                    Id = 5,
+                    Name = "Customer Registration",
+                    SystemKeyword = "Registration",
+                    Enabled = false,
+                    ConditionType = {7, 8, 9, 10}
                 }
             };
             _customerActionType.Insert(customerActionType);

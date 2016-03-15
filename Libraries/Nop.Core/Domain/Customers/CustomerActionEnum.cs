@@ -11,7 +11,9 @@ namespace Nop.Core.Domain.Customers
         AddToCart = 1,
         AddOrder = 2,
         Viewed = 3,
-        Url = 4
+        Url = 4,
+        Registration = 5,
+
     }
     public enum CustomerActionConditionEnum
     {
@@ -30,8 +32,9 @@ namespace Nop.Core.Domain.Customers
         CustomerRole = 7,
         CustomerTag = 8,
         CustomerRegisterField = 9,
-        UrlReferrer = 10,
-        UrlCurrent = 11
+        CustomCustomerAttribute = 10,
+        UrlReferrer = 11,
+        UrlCurrent = 12
     }
 
     public enum CustomerReactionTypeEnum
@@ -41,4 +44,6 @@ namespace Nop.Core.Domain.Customers
         AssignToCustomerRole = 3,
         AssignToCustomerTag = 4,            
     }
+
+    
 }
