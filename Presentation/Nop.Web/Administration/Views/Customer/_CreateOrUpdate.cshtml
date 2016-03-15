@@ -494,6 +494,15 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 @Html.ValidationMessageFor(model => model.IsTaxExempt)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FreeShipping):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FreeShipping)
+                @Html.ValidationMessageFor(model => model.FreeShipping)
+            </td>
+        </tr>
         @if (Model.AllowCustomersToSetTimeZone)
         {
             <tr>

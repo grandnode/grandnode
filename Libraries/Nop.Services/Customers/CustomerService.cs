@@ -570,6 +570,7 @@ namespace Nop.Services.Customers
                 .Set(x => x.Username, customer.Username)
                 .Set(x => x.CustomerRoles, customer.CustomerRoles)
                 .Set(x => x.Addresses, customer.Addresses)
+                .Set(x => x.FreeShipping, customer.FreeShipping)
                 .Set(x => x.VendorId, customer.VendorId);
 
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
@@ -578,10 +579,17 @@ namespace Nop.Services.Customers
 
         }
 
-        /// <summary>
-        /// Updates the customer - last activity date
-        /// </summary>
-        /// <param name="customer">Customer</param>
+        public virtual void UpdateFreeShipping(int customerId, bool freeShipping)
+        {
+            if (customerId == 0)
+                throw new ArgumentNullException("customer");
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.FreeShipping, freeShipping);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+        }
+
         public virtual void UpdateAffiliate(Customer customer)
         {
             if (customer == null)

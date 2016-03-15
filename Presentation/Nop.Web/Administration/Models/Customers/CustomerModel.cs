@@ -127,6 +127,9 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.FreeShipping")]
+        public bool FreeShipping { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Active")]
         public bool Active { get; set; }
 

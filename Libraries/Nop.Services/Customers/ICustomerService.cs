@@ -145,6 +145,9 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomerPassword(Customer customer);
+
+        void UpdateFreeShipping(int customerId, bool freeShipping);
+
         /// <summary>
         /// Updates the customer
         /// </summary>

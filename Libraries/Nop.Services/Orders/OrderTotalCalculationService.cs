@@ -428,11 +428,16 @@ namespace Nop.Services.Orders
             Customer customer = cart.GetCustomer();
             if (customer != null)
             {
+                //check whether customer has a free shipping
+                if (customer.FreeShipping)
+                    return true;
+
                 //check whether customer is in a customer role with free shipping applied
                 var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
                 foreach (var customerRole in customerRoles)
                     if (customerRole.FreeShipping)
                         return true;
+
             }
 
             bool shoppingCartRequiresShipping = cart.RequiresShipping();

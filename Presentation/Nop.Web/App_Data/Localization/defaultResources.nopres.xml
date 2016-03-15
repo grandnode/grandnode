@@ -5331,6 +5331,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneRequired.Hint">
     <Value>Check if 'Phone number' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RegistrationFreeShipping">
+    <Value>New customer has a free shipping for the first order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RegistrationFreeShipping.hint">
+    <Value>New customer has a free shipping for the first order.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate">
     <Value>Show customers' join date</Value>
   </LocaleResource>
@@ -8654,6 +8660,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.FirstName.Required">
     <Value>Please provide a first name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.FreeShipping">
+    <Value>Free shipping to the next order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.FreeShipping.hint">
+    <Value>Assign a free shipping to the next order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.FullName">
     <Value>Name</Value>

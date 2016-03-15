@@ -822,4 +822,16 @@
   <LocaleResource Name="admin.customers.actiontype.helpText.Registration">
     <Value>Customer Registration - Action type, when a new customer registers to our store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.FreeShipping">
+    <Value>Free shipping to the next order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.FreeShipping.hint">
+    <Value>Assign a free shipping to the next order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RegistrationFreeShipping">
+    <Value>New customer has a free shipping for the first order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RegistrationFreeShipping.hint">
+    <Value>New customer has a free shipping for the first order.</Value>
+  </LocaleResource>
 </Language>

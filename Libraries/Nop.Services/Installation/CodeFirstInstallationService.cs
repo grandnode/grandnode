@@ -5051,6 +5051,7 @@ namespace Nop.Services.Installation
                 NewsletterEnabled = true,
                 NewsletterTickedByDefault = true,
                 HideNewsletterBlock = false,
+                RegistrationFreeShipping = false,
                 NewsletterBlockAllowToUnsubscribe = false,
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,

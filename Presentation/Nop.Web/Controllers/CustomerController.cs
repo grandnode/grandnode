@@ -1083,6 +1083,10 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.NotifyNewCustomerRegistration)
                         _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, _localizationSettings.DefaultAdminLanguageId);
 
+                    //New customer has a free shipping for the first order
+                    if (_customerSettings.RegistrationFreeShipping)
+                        _customerService.UpdateFreeShipping(customer.Id, true);
+
                     _customerActionEventService.Registration(customer.Id);
 
                     //raise event       

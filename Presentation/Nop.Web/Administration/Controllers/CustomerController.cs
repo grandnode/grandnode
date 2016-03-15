@@ -577,6 +577,7 @@ namespace Nop.Admin.Controllers
                     model.VendorId = customer.VendorId;
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
+                    model.FreeShipping = customer.FreeShipping;
                     model.Active = customer.Active;
                     var result = new StringBuilder();
                     foreach (var item in customer.CustomerTags)
@@ -944,6 +945,7 @@ namespace Nop.Admin.Controllers
                     VendorId = model.VendorId,
                     AdminComment = model.AdminComment,
                     IsTaxExempt = model.IsTaxExempt,
+                    FreeShipping = model.FreeShipping,
                     Active = model.Active,
                     CreatedOnUtc = DateTime.UtcNow,
                     LastActivityDateUtc = DateTime.UtcNow,
@@ -1128,6 +1130,7 @@ namespace Nop.Admin.Controllers
                 {
                     customer.AdminComment = model.AdminComment;
                     customer.IsTaxExempt = model.IsTaxExempt;
+                    customer.FreeShipping = model.FreeShipping;
                     customer.Active = model.Active;
                     //email
                     if (!String.IsNullOrWhiteSpace(model.Email))

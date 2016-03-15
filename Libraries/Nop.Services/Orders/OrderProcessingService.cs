@@ -1625,7 +1625,10 @@ namespace Nop.Services.Orders
                             _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"),
                             order.Id);
                     }
-                    
+
+                    //Updated field "free shipping" after added a new order
+                    _customerService.UpdateFreeShipping(order.CustomerId, false);
+
                     //raise event       
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
                     _customerActionEventService.AddOrder(order);
