@@ -104,6 +104,9 @@ namespace Nop.Web.Extensions
                     ShortDescription = product.GetLocalized(x => x.ShortDescription),
                     FullDescription = product.GetLocalized(x => x.FullDescription),
                     SeName = product.GetSeName(),
+                    MarkAsNew = product.MarkAsNew &&
+                        (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
+                        (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)
                 };
                 //price
                 if (preparePriceModel)
@@ -180,7 +183,7 @@ namespace Nop.Web.Extensions
 
                                                         priceModel.OldPrice = null;
                                                         priceModel.Price = String.Format(localizationService.GetResource("Products.PriceRangeFrom"), priceFormatter.FormatPrice(finalPrice));
-
+                                                        priceModel.PriceValue = finalPrice;
                                                     }
                                                     else
                                                     {
@@ -276,6 +279,7 @@ namespace Nop.Web.Extensions
                                             {
                                                 priceModel.OldPrice = null;
                                                 priceModel.Price = String.Format(localizationService.GetResource("Products.PriceRangeFrom"), priceFormatter.FormatPrice(finalPrice));
+                                                priceModel.PriceValue = finalPrice;
                                             }
                                             else
                                             {
@@ -283,11 +287,13 @@ namespace Nop.Web.Extensions
                                                 {
                                                     priceModel.OldPrice = priceFormatter.FormatPrice(oldPrice);
                                                     priceModel.Price = priceFormatter.FormatPrice(finalPrice);
+                                                    priceModel.PriceValue = finalPrice;
                                                 }
                                                 else
                                                 {
                                                     priceModel.OldPrice = null;
                                                     priceModel.Price = priceFormatter.FormatPrice(finalPrice);
+                                                    priceModel.PriceValue = finalPrice;
                                                 }
                                             }
                                             if (product.IsRental)
