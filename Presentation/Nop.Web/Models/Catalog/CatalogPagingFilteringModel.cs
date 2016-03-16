@@ -308,9 +308,10 @@ namespace Nop.Web.Models.Catalog
                                 SpecificationAttributeId = sa.Id,
                                 SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
                                 SpecificationAttributeDisplayOrder = sa.DisplayOrder,
-                                SpecificationAttributeOptionId = sao, //_specificationAttributeOptionId.ToString(),  //sa.SpecificationAttributeOptions.FirstOrDefault(x=>x.Id == ),
+                                SpecificationAttributeOptionId = sao, 
                                 SpecificationAttributeOptionName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == _specificationAttributeOptionId).GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
-                                SpecificationAttributeOptionDisplayOrder = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == _specificationAttributeOptionId).DisplayOrder
+                                SpecificationAttributeOptionDisplayOrder = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == _specificationAttributeOptionId).DisplayOrder,
+                                SpecificationAttributeOptionColorRgb = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == _specificationAttributeOptionId).ColorSquaresRgb,
                             });
                         }
                     }
@@ -351,7 +352,7 @@ namespace Nop.Web.Models.Catalog
                         var item = new SpecificationFilterItem();
                         item.SpecificationAttributeName = x.SpecificationAttributeName;
                         item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
-
+                        item.SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb;
                         return item;
                     }).ToList();
 
@@ -360,6 +361,7 @@ namespace Nop.Web.Models.Catalog
                         var item = new SpecificationFilterItem();
                         item.SpecificationAttributeName = x.SpecificationAttributeName;
                         item.SpecificationAttributeOptionName = x.SpecificationAttributeOptionName;
+                        item.SpecificationAttributeOptionColorRgb = x.SpecificationAttributeOptionColorRgb;
 
                         //filter URL
                         var alreadyFilteredOptionIds = GetAlreadyFilteredSpecOptionIds(webHelper);
@@ -400,6 +402,7 @@ namespace Nop.Web.Models.Catalog
         {
             public string SpecificationAttributeName { get; set; }
             public string SpecificationAttributeOptionName { get; set; }
+            public string SpecificationAttributeOptionColorRgb { get; set; }
             public string FilterUrl { get; set; }
         }
 

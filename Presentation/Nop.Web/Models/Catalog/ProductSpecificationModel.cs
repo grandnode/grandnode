@@ -10,5 +10,6 @@ namespace Nop.Web.Models.Catalog
 
         //this value is already HTML encoded
         public string ValueRaw { get; set; }
+        public string ColorSquaresRgb { get; set; }
     }
 }

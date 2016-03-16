@@ -1403,6 +1403,10 @@ label, label + * {
 	padding: 10px;
 	color: #444;
 }
+
+.product-filter .group li.color-item:before {
+ 	top: 25px;
+ }
 .product-filter .available-items:after {
 	content: "";
 	display: block;

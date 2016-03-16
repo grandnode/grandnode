@@ -295,12 +295,15 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var sao = model.ToEntity();
+                //clear "Color" values if it's disabled
+                if (!model.EnableColorSquaresRgb)
+                   sao.ColorSquaresRgb = null;
+
                 sao.Id = specificationAttribute.SpecificationAttributeOptions.Count > 0 ? specificationAttribute.SpecificationAttributeOptions.Max(x => x.Id) + 1 : 1;
                 sao._id = ObjectId.GenerateNewId().ToString();
                 sao.Locales = UpdateOptionLocales(sao, model);
                 specificationAttribute.SpecificationAttributeOptions.Add(sao);
-                _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
-                //_specificationAttributeService.InsertSpecificationAttributeOption(sao);
+                _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);                
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
@@ -324,6 +327,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = sao.ToModel();
+            model.EnableColorSquaresRgb = !String.IsNullOrEmpty(sao.ColorSquaresRgb);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -349,6 +353,9 @@ namespace Nop.Admin.Controllers
             {
                 sao = model.ToEntity(sao);
                 sao.Locales = UpdateOptionLocales(sao, model);
+                //clear "Color" values if it's disabled
+                if (!model.EnableColorSquaresRgb)
+                    sao.ColorSquaresRgb = null;
 
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
 
@@ -384,12 +391,7 @@ namespace Nop.Admin.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetOptionsByAttributeId(string attributeId)
         {
-            //do not make any permission validation here 
-            //because this method could be used on some other pages (such as product editing)
-            //if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
-            //    return AccessDeniedView();
-
-            // This action method gets called via an ajax request
+            
             if (String.IsNullOrEmpty(attributeId))
                 throw new ArgumentNullException("attributeId");
 

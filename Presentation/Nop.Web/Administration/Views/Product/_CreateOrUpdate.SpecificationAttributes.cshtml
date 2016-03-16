@@ -215,6 +215,7 @@
 
         $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").change(toggleAttributeType);
+            $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change();
 
             toggleAttributeType();
         });

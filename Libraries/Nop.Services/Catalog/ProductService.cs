@@ -852,7 +852,7 @@ namespace Nop.Services.Catalog
                         int _specId = Convert.ToInt32(spec.Split(':').FirstOrDefault().ToString());
                         int _specOptionId = Convert.ToInt32(spec.Split(':').Last().ToString());
 
-                        filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y=>y.Id == _specId && y.SpecificationAttributeOptionId == _specOptionId));
+                        filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y=>y.SpecificationAttributeId == _specId && y.SpecificationAttributeOptionId == _specOptionId));
                     }
             }
 
