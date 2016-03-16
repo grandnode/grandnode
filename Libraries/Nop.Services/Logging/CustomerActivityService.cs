@@ -40,6 +40,7 @@ namespace Nop.Services.Logging
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IWorkContext _workContext;
+        private readonly IWebHelper _webHelper;
         private readonly IActivityKeywordsProvider _activityKeywordsProvider;
         private readonly CommonSettings _commonSettings;
         #endregion
@@ -52,12 +53,14 @@ namespace Nop.Services.Logging
         /// <param name="activityLogRepository">Activity log repository</param>
         /// <param name="activityLogTypeRepository">Activity log type repository</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="webHelper">Web helper</param>
         /// <param name="activityKeywordsProvider">Activity Keywords provider</param>
         /// <param name="commonSettings">Common settings</param>
         public CustomerActivityService(ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IWorkContext workContext,
+            IWebHelper webHelper,
             IActivityKeywordsProvider activityKeywordsProvider,
             CommonSettings commonSettings)
         {
@@ -65,6 +68,7 @@ namespace Nop.Services.Logging
             this._activityLogRepository = activityLogRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._workContext = workContext;
+            this._webHelper = webHelper;
             this._activityKeywordsProvider = activityKeywordsProvider;
             this._commonSettings = commonSettings;
         }
@@ -230,7 +234,7 @@ namespace Nop.Services.Logging
             activity.ActivityLogType.Id = activityType.Id;
             activity.ActivityLogType.Name = activityType.Name;
             activity.ActivityLogType.SystemKeyword = activityType.SystemKeyword;
-
+            activity.IpAddress = _webHelper.GetCurrentIpAddress();
             _activityLogRepository.Insert(activity);
 
             return activity;
