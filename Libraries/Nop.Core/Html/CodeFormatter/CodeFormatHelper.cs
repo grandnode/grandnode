@@ -122,13 +122,7 @@ namespace Nop.Core.Html.CodeFormatter
                     text = text.Replace("<br />", "\r\n");
                     text = StripHtml(text).Trim();
                     string xml = xmlf.FormatCode(HttpUtility.HtmlDecode(text)).Trim();
-                    return xml.Replace("\r\n", "<br />").Replace("\n", "<br />");
-
-                case "tsql":
-                    var tsqlf = new TsqlFormat();
-                    tsqlf.LineNumbers = options.DisplayLineNumbers;
-                    tsqlf.Alternate = options.AlternateLineNumbers;
-                    return HttpUtility.HtmlDecode(tsqlf.FormatCode(text));
+                    return xml.Replace("\r\n", "<br />").Replace("\n", "<br />");                
 
                 case "msh":
                     var mshf = new MshFormat();

@@ -29,10 +29,7 @@ namespace Nop.Data
         /// </summary>
         private IMongoCollection<T> collection;
 
-        #endregion
-
-        #region Ctor
-
+        
         /// <summary>
         /// Gets the the collection
         /// </summary>
@@ -50,6 +47,9 @@ namespace Nop.Data
                 return database;
             }
         }
+        #endregion
+
+        #region Ctor
 
         /// <summary>
         /// Ctor
@@ -121,8 +121,7 @@ namespace Nop.Data
         /// </summary>
         /// <param name="entities">Entities</param>
         public virtual void Insert(IEnumerable<T> entities)
-        {
-            //await this.collection.InsertManyAsync(entities);
+        {            
             foreach (var entity in entities)
                 Insert(entity);
         }
@@ -182,6 +181,7 @@ namespace Nop.Data
         {
             get { return this.collection.AsQueryable(); }
         }
+
         #endregion
 
     }

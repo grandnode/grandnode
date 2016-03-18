@@ -334,7 +334,6 @@
     <Compile Include="Html\CodeFormatter\JavaScriptFormat.cs" />
     <Compile Include="Html\CodeFormatter\MshFormat.cs" />
     <Compile Include="Html\CodeFormatter\SourceFormat.cs" />
-    <Compile Include="Html\CodeFormatter\TsqlFormat.cs" />
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />

@@ -41,7 +41,6 @@ namespace Nop.Core.Data
         public static void ResetCache()
         {
             _databaseIsInstalled = null;
-            //_connectionString = null;
         }
        
     }

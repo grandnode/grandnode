@@ -12,8 +12,7 @@ namespace Nop.Core.Html
     {
         #region Fields
         private readonly static Regex paragraphStartRegex = new Regex("<p>", RegexOptions.IgnoreCase);
-        private readonly static Regex paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);
-        //private static Regex ampRegex = new Regex("&(?!(?:#[0-9]{2,4};|[a-z0-9]+;))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly static Regex paragraphEndRegex = new Regex("</p>", RegexOptions.IgnoreCase);        
 
         #endregion
 
