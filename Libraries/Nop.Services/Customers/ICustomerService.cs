@@ -199,28 +199,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateHasPoolVoting(int customerId);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateHasShoppingCartItems(Customer customer);
+        
 
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateBillingAddress(Address address);
-        /// <summary>
-        /// Updates the customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void UpdateShippingAddress(Address address);
-
-        /// <summary>
-        /// Remove shipping address from customer
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        void RemoveShippingAddress(int customerId);
         /// <summary>
         /// Updates the customer
         /// </summary>
@@ -233,6 +213,21 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         void UpdateCustomerLastIpAddress(Customer customer);
 
+        /// <summary>
+        /// Updates the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        void UpdateCustomerLastPurchaseDate(int customerId, DateTime date);
+        /// <summary>
+        /// Updates the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        void UpdateCustomerLastUpdateCartDate(int customerId, DateTime date);
+        /// <summary>
+        /// Updates the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        void UpdateCustomerLastUpdateWishList(int customerId, DateTime date);
         /// <summary>
         /// Updates the customer in admin panel
         /// </summary>
@@ -267,6 +262,18 @@ namespace Nop.Services.Customers
         #region Customer roles
 
         /// <summary>
+        /// Inserts a customer role
+        /// </summary>
+        /// <param name="customerRole">Customer role</param>
+        void InsertCustomerRole(CustomerRole customerRole);
+
+        /// <summary>
+        /// Updates the customer role
+        /// </summary>
+        /// <param name="customerRole">Customer role</param>
+        void UpdateCustomerRole(CustomerRole customerRole);
+
+        /// <summary>
         /// Delete a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
@@ -294,39 +301,11 @@ namespace Nop.Services.Customers
         IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false);
 
         /// <summary>
-        /// Inserts a customer role
-        /// </summary>
-        /// <param name="customerRole">Customer role</param>
-        void InsertCustomerRole(CustomerRole customerRole);
-
-        /// <summary>
-        /// Updates the customer role
-        /// </summary>
-        /// <param name="customerRole">Customer role</param>
-        void UpdateCustomerRole(CustomerRole customerRole);
-
-
-        void DeleteCustomerRoleInCustomer(CustomerRole customerRole);
-        void InsertCustomerRoleInCustomer(CustomerRole customerRole);
-
-        void DeleteAddress(Address address);
-        void InsertAddress(Address address);
-        void UpdateAddress(Address address);
-
-        void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem);
-        void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem);
-        void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem);
-
-        #endregion
-
-        #region Customer role products
-        /// <summary>
         /// Gets customer roles products for customer role
         /// </summary>
         /// <param name="customerRoleId">Customer role id</param>
         /// <returns>Customer role products</returns>
         IList<CustomerRoleProduct> GetCustomerRoleProducts(int customerRoleId);
-        
 
         /// <summary>
         /// Gets customer roles products for customer role
@@ -362,6 +341,36 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleProduct">Customer role product</param>
         void DeleteCustomerRoleProduct(CustomerRoleProduct customerRoleProduct);
 
+
         #endregion
+
+        #region Customer Role in Customer
+
+        void InsertCustomerRoleInCustomer(CustomerRole customerRole);
+
+        void DeleteCustomerRoleInCustomer(CustomerRole customerRole);
+        
+        #endregion
+
+        #region Customer address
+
+        void DeleteAddress(Address address);
+        void InsertAddress(Address address);
+        void UpdateAddress(Address address);
+        void UpdateBillingAddress(Address address);
+        void UpdateShippingAddress(Address address);
+        void RemoveShippingAddress(int customerId);
+
+        #endregion
+
+        #region Shopping cart 
+
+        void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem);
+        void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem);
+        void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem);
+        void UpdateHasShoppingCartItems(Customer customer);
+        #endregion
+
+
     }
 }

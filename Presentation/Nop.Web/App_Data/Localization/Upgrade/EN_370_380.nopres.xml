@@ -849,4 +849,10 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists">
     <Value>This attribute is already added to this product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.LastPurchaseDate">
+    <Value>Last purchase date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.LastPurchaseDate.Hint">
+    <Value>The last purchase date.</Value>
+  </LocaleResource>
 </Language>

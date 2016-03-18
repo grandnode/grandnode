@@ -600,6 +600,8 @@ namespace Nop.Admin.Controllers
                         .GetLocalizedEnum(_localizationService, _workContext);
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
                     model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
+                    if(customer.LastPurchaseDateUtc.HasValue)
+                        model.LastPurchaseDate = _dateTimeHelper.ConvertToUserTime(customer.LastPurchaseDateUtc.Value, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
 

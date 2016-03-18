@@ -174,7 +174,22 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the date and time of last activity
         /// </summary>
         public DateTime LastActivityDateUtc { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the date and time of last purchase
+        /// </summary>
+        public DateTime? LastPurchaseDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time of last update cart
+        /// </summary>
+        public DateTime? LastUpdateCartDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time of last update wishlist
+        /// </summary>
+        public DateTime? LastUpdateWishListDateUtc { get; set; }
+
         #region Navigation properties
 
         /// <summary>

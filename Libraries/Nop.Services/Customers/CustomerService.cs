@@ -622,17 +622,7 @@ namespace Nop.Services.Customers
                 .Set(x => x.IsNewsItem, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasShoppingCartItems(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-            var builder = Builders<Customer>.Filter;
-            var filter = builder.Eq(x => x.Id, customer.Id);
-            var update = Builders<Customer>.Update
-                .Set(x => x.HasShoppingCartItems, customer.HasShoppingCartItems);
-            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-        }
-
+        
         public virtual void UpdateHasForumTopic(int customerId)
         {
             if (customerId == 0)
@@ -704,6 +694,42 @@ namespace Nop.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
 
+        public virtual void UpdateCustomerLastPurchaseDate(int customerId, DateTime date)
+        {
+            if (customerId == 0)
+                throw new ArgumentNullException("customer");
+
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.LastPurchaseDateUtc, date);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+
+        }
+        public virtual void UpdateCustomerLastUpdateCartDate(int customerId, DateTime date)
+        {
+            if (customerId == 0)
+                throw new ArgumentNullException("customer");
+
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.LastUpdateCartDateUtc, date);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+
+        }
+        public virtual void UpdateCustomerLastUpdateWishList(int customerId, DateTime date)
+        {
+            if (customerId == 0)
+                throw new ArgumentNullException("customer");
+
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.LastUpdateWishListDateUtc, date);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+
+        }
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
@@ -767,68 +793,65 @@ namespace Nop.Services.Customers
         public virtual int DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
 
-                #region No stored procedure
+            var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
+            if (guestRole == null)
+                throw new NopException("'Guests' role could not be loaded");
 
-                var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
-                if (guestRole == null)
-                    throw new NopException("'Guests' role could not be loaded");
+            var query = _customerRepository.Table;
 
-                var query = _customerRepository.Table;
+            if (createdFromUtc.HasValue)
+                query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
+            if (createdToUtc.HasValue)
+                query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
+            query = query.Where(c => c.CustomerRoles.Any(cr => cr.Id == guestRole.Id));
+            if (onlyWithoutShoppingCart)
+                query = query.Where(c => !c.ShoppingCartItems.Any());
 
-                if (createdFromUtc.HasValue)
-                    query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
-                if (createdToUtc.HasValue)
-                    query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
-                query = query.Where(c => c.CustomerRoles.Any(cr => cr.Id == guestRole.Id));
-                if (onlyWithoutShoppingCart)
-                    query = query.Where(c => !c.ShoppingCartItems.Any());
+            //no orders     
+            query = query.Where(c => !c.IsHasOrders);
+            //no blog comments
+            query = query.Where(c => !c.IsHasBlogComments);
 
-                //no orders     
-                query = query.Where(c => !c.IsHasOrders);
-                //no blog comments
-                query = query.Where(c => !c.IsHasBlogComments);
+            //no news comments
+            query = query.Where(c => !c.IsNewsItem);
 
-                //no news comments
-                query = query.Where(c => !c.IsNewsItem);
+            //no product reviews
+            query = query.Where(c => !c.IsHasProductReview);
 
-                //no product reviews
-                query = query.Where(c => !c.IsHasProductReview);
+            //no product reviews helpfulness
+            query = query.Where(c => !c.IsHasProductReviewH);
 
-                //no product reviews helpfulness
-                query = query.Where(c => !c.IsHasProductReviewH);
+            //no poll voting
+            query = query.Where(c => !c.IsHasPoolVoting);
 
-                //no poll voting
-                query = query.Where(c => !c.IsHasPoolVoting);
+            //no forum posts 
+            query = query.Where(c => !c.IsHasForumPost);
 
-                //no forum posts 
-                query = query.Where(c => !c.IsHasForumPost);
+            //no forum topics
+            query = query.Where(c => !c.IsHasForumTopic);
 
-                //no forum topics
-                query = query.Where(c => !c.IsHasForumTopic);
+            //don't delete system accounts
+            query = query.Where(c => !c.IsSystemAccount);
 
-                //don't delete system accounts
-                query = query.Where(c => !c.IsSystemAccount);
+            query = query.OrderBy(c => c.Id);
+            var customers = query.ToList();
 
-                query = query.OrderBy(c => c.Id);
-                var customers = query.ToList();
-
-                int totalRecordsDeleted = 0;
-                foreach (var c in customers)
+            int totalRecordsDeleted = 0;
+            foreach (var c in customers)
+            {
+                try
                 {
-                    try
-                    {
-                        //delete from database
-                        _customerRepository.Delete(c);
-                        totalRecordsDeleted++;
-                    }
-                    catch (Exception exc)
-                    {
-                        Debug.WriteLine(exc);
-                    }
+                    //delete from database
+                    _customerRepository.Delete(c);
+                    totalRecordsDeleted++;
+                }
+                catch (Exception exc)
+                {
+                    Debug.WriteLine(exc);
+                }
             }
             return totalRecordsDeleted;
 
-                #endregion
         }
 
         #endregion
@@ -954,6 +977,9 @@ namespace Nop.Services.Customers
             _eventPublisher.EntityUpdated(customerRole);
         }
 
+        #endregion
+
+        #region Customer role in customer
 
         public virtual void DeleteCustomerRoleInCustomer(CustomerRole customerRole)
         {
@@ -976,6 +1002,7 @@ namespace Nop.Services.Customers
             _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerRole.CustomerId), update);
 
         }
+
         #endregion
 
         #region Customer Role Products
@@ -1202,6 +1229,12 @@ namespace Nop.Services.Customers
             var update = updatebuilder.Pull(p => p.ShoppingCartItems, shoppingCartItem);
             _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", shoppingCartItem.CustomerId), update);
             _eventPublisher.EntityDeleted(shoppingCartItem);
+
+            if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                UpdateCustomerLastUpdateCartDate(shoppingCartItem.CustomerId, DateTime.UtcNow);
+            else
+                UpdateCustomerLastUpdateWishList(shoppingCartItem.CustomerId, DateTime.UtcNow);
+
         }
 
         public virtual void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem)
@@ -1215,6 +1248,11 @@ namespace Nop.Services.Customers
 
             //event notification
             _eventPublisher.EntityInserted(shoppingCartItem);
+
+            if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                UpdateCustomerLastUpdateCartDate(shoppingCartItem.CustomerId, DateTime.UtcNow);
+            else
+                UpdateCustomerLastUpdateWishList(shoppingCartItem.CustomerId, DateTime.UtcNow);
         }
 
         public virtual void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem)
@@ -1243,8 +1281,24 @@ namespace Nop.Services.Customers
             var result = _customerRepository.Collection.UpdateManyAsync(filter, update).Result;
             //event notification
             _eventPublisher.EntityUpdated(shoppingCartItem);
+
+            if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                UpdateCustomerLastUpdateCartDate(shoppingCartItem.CustomerId, DateTime.UtcNow);
+            else
+                UpdateCustomerLastUpdateWishList(shoppingCartItem.CustomerId, DateTime.UtcNow);
+
         }
 
+        public virtual void UpdateHasShoppingCartItems(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customer.Id);
+            var update = Builders<Customer>.Update
+                .Set(x => x.HasShoppingCartItems, customer.HasShoppingCartItems);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+        }
         #endregion
 
         #endregion

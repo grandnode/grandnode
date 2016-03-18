@@ -1629,6 +1629,9 @@ namespace Nop.Services.Orders
                     //Updated field "free shipping" after added a new order
                     _customerService.UpdateFreeShipping(order.CustomerId, false);
 
+                    //Update field Last purchase date after added a new order
+                    _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
+
                     //raise event       
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
                     _customerActionEventService.AddOrder(order);

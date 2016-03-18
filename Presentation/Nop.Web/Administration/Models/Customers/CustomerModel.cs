@@ -172,6 +172,8 @@ namespace Nop.Admin.Models.Customers
         public DateTime CreatedOn { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastActivityDate")]
         public DateTime LastActivityDate { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastPurchaseDate")]
+        public DateTime? LastPurchaseDate { get; set; }
 
         //IP adderss
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.IPAddress")]

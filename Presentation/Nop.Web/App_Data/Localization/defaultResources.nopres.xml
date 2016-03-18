@@ -8715,6 +8715,12 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.LastActivityDate.Hint">
     <Value>The last activity date.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.LastPurchaseDate">
+    <Value>Last purchase date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.LastPurchaseDate.Hint">
+    <Value>The last purchase date.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.LastName">
     <Value>Last name</Value>
   </LocaleResource>
