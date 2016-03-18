@@ -128,7 +128,7 @@ namespace Nop.Plugin.Shipping.USPS
                 throw new NopException(string.Format("USPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
 
             var baseusedMeasureDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
-            if (usedMeasureDimension == null)
+            if (baseusedMeasureDimension == null)
                 throw new NopException("Primary dimension can't be loaded");
 
             decimal lengthTmp, widthTmp, heightTmp;

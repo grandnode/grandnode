@@ -52,8 +52,6 @@ namespace Nop.Services.Localization
         private readonly ILogger _logger;
         private readonly ILanguageService _languageService;
         private readonly ICacheManager _cacheManager;
-        private readonly IDataProvider _dataProvider;
-        private readonly CommonSettings _commonSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -69,16 +67,12 @@ namespace Nop.Services.Localization
         /// <param name="workContext">Work context</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
         /// <param name="languageService">Language service</param>
-        /// <param name="dataProvider">Data provider</param>
-        /// <param name="dbContext">Database Context</param>
-        /// <param name="commonSettings">Common settings</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="eventPublisher">Event published</param>
         public LocalizationService(ICacheManager cacheManager,
             ILogger logger, IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository, 
             ILanguageService languageService,
-            IDataProvider dataProvider, CommonSettings commonSettings,
             LocalizationSettings localizationSettings, IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
@@ -86,10 +80,6 @@ namespace Nop.Services.Localization
             this._workContext = workContext;
             this._lsrRepository = lsrRepository;
             this._languageService = languageService;
-            this._dataProvider = dataProvider;
-            this._commonSettings = commonSettings;
-            this._dataProvider = dataProvider;
-            this._commonSettings = commonSettings;
             this._localizationSettings = localizationSettings;
             this._eventPublisher = eventPublisher;
         }
