@@ -3503,6 +3503,11 @@ namespace Nop.Admin.Controllers
                 return Content("This is not your product");
             }
 
+            //ensure this attribute is not mapped yet
+            if (product.ProductAttributeMappings.Any(x => x.ProductAttributeId == model.ProductAttributeId))
+            {
+                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists") });
+            }
             //insert mapping
             var productAttributeMapping = new ProductAttributeMapping
             {

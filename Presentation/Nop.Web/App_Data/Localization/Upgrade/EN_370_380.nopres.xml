@@ -846,5 +846,7 @@
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint">
     <Value>Check to choose color to be used instead of an option text name (it''ll be displayed as "color square").</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists">
+    <Value>This attribute is already added to this product</Value>
+  </LocaleResource>
 </Language>
