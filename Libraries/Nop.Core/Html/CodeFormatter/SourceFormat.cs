@@ -118,11 +118,12 @@ namespace Nop.Core.Html.CodeFormatter
 		/// <returns>A string containing the HTML formatted code.</returns>
 		public string FormatCode(Stream source)
 		{
-            var reader = new StreamReader(source);
-			string s = reader.ReadToEnd();
-			reader.Close();
-			return FormatCode(s, _lineNumbers, _alternate, _embedStyleSheet, false);
-		}
+            using (var reader = new StreamReader(source))
+            {
+                string s = reader.ReadToEnd();
+                return FormatCode(s, _lineNumbers, _alternate, _embedStyleSheet, false);
+            }
+        }
 
 		/// <summary>
 		/// Transforms a source code string to HTML 4.01.
