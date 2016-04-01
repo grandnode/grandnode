@@ -206,15 +206,11 @@ namespace Nop.Admin.Controllers
             {
                 var customeraction = model.ToEntity();
                 _customerActionService.InsertCustomerAction(customeraction);
-
-                //activity log
                 _customerActivityService.InsertActivity("AddNewCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.AddNewCustomerAction"), customeraction.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAction.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customeraction.Id }) : RedirectToAction("List");
             }
-
-            //If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -225,10 +221,10 @@ namespace Nop.Admin.Controllers
 
             var customerAction = _customerActionService.GetCustomerActionById(id);
             if (customerAction == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
 
             var model = customerAction.ToModel();
+            model.ConditionCount = customerAction.Conditions.Count();
             PrepareReactObjectModel(model);
             foreach (var item in _customerActionService.GetCustomerActionType())
             {
@@ -250,25 +246,19 @@ namespace Nop.Admin.Controllers
             
             var customeraction = _customerActionService.GetCustomerActionById(model.Id);
             if (customeraction == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
-
             try
             {
                 if (ModelState.IsValid)
                 {
-
                     customeraction = model.ToEntity(customeraction);
                     _customerActionService.UpdateCustomerAction(customeraction);
 
-                    //activity log
                     _customerActivityService.InsertActivity("EditCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.EditCustomerAction"), customeraction.Name);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAction.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customeraction.Id}) : RedirectToAction("List");
                 }
-
-                //If we got this far, something failed, redisplay form
                 return View(model);
             }
             catch (Exception exc)
@@ -286,7 +276,6 @@ namespace Nop.Admin.Controllers
             
             var customerAction = _customerActionService.GetCustomerActionById(id);
             if (customerAction == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
 
             try
@@ -304,7 +293,6 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customerAction.Id });
             }
-
 		}
 
         [HttpPost]
@@ -393,12 +381,10 @@ namespace Nop.Admin.Controllers
 
             var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
             if (customerAction == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
 
             var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == cid);
             if (condition == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
 
             var customerActionType = _customerActionService.GetCustomerActionTypeById(customerAction.ActionTypeId);
@@ -422,29 +408,22 @@ namespace Nop.Admin.Controllers
         {
             var customerAction = _customerActionService.GetCustomerActionById(customerActionId);
             if (customerAction == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
 
             var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == cid);
             if (condition == null)
-                //No customer role found with the specified id
                 return RedirectToAction("List");
             try
             {
                 if (ModelState.IsValid)
                 {
-
                     condition = model.ToEntity(condition);
                     _customerActionService.UpdateCustomerAction(customerAction);
-
                     //activity log
                     _customerActivityService.InsertActivity("EditCustomerActionCondition", customerAction.Id, _localizationService.GetResource("ActivityLog.EditCustomerActionCondition"), customerAction.Name);
-
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerActionCondition.Updated"));
                     return continueEditing ? RedirectToAction("EditCondition", new { customerActionId = customerAction.Id, cid = condition.Id }) : RedirectToAction("Edit", new { id = customerAction.Id });
                 }
-
-                //If we got this far, something failed, redisplay form
                 return View(model);
             }
             catch (Exception exc)
@@ -557,7 +536,7 @@ namespace Nop.Admin.Controllers
             
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z).Name}) : null,
+                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z)!= null ? _productService.GetProductById(z).Name : ""}) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -672,7 +651,7 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z).Name }) : null,
+                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z)!=null ? _categoryService.GetCategoryById(z).Name: "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -761,7 +740,7 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Manufacturers.Select(z => new { Id = z, ManufacturerName = _manufacturerService.GetManufacturerById(z).Name }) : null,
+                Data = condition != null ? condition.Manufacturers.Select(z => new { Id = z, ManufacturerName = _manufacturerService.GetManufacturerById(z)!=null ? _manufacturerService.GetManufacturerById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -904,7 +883,7 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerRoles.Select(z => new { Id = z, CustomerRole = _customerService.GetCustomerRoleById(z).Name }) : null,
+                Data = condition != null ? condition.CustomerRoles.Select(z => new { Id = z, CustomerRole = _customerService.GetCustomerRoleById(z) != null ?  _customerService.GetCustomerRoleById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -964,7 +943,7 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerTags.Select(z => new { Id = z, CustomerTag = _customerTagService.GetCustomerTagById(z).Name }) : null,
+                Data = condition != null ? condition.CustomerTags.Select(z => new { Id = z, CustomerTag = _customerTagService.GetCustomerTagById(z)!= null ? _customerTagService.GetCustomerTagById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult

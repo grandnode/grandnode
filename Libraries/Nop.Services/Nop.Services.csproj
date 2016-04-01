@@ -266,6 +266,7 @@
     <Compile Include="Configuration\SettingExtensions.cs" />
     <Compile Include="Customers\CustomerActionEventService.cs" />
     <Compile Include="Customers\CustomerActionService.cs" />
+    <Compile Include="Customers\CustomerReminderService.cs" />
     <Compile Include="Customers\ICustomerActionEventService.cs" />
     <Compile Include="Customers\ICustomerActionService.cs" />
     <Compile Include="Customers\ICustomerAttributeParser.cs" />
@@ -273,6 +274,7 @@
     <Compile Include="Customers\ICustomerAttributeService.cs" />
     <Compile Include="Customers\CustomerAttributeService.cs" />
     <Compile Include="Customers\CustomerAttributeExtensions.cs" />
+    <Compile Include="Customers\ICustomerReminderService.cs" />
     <Compile Include="Customers\ICustomerTagService.cs" />
     <Compile Include="Customers\CustomerTagService.cs" />
     <Compile Include="Discounts\Cache\DiscountRequirementEventConsumer.cs" />

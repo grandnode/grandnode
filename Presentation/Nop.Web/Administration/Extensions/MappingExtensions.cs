@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Cms;
@@ -919,6 +918,59 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+
+        #region Customer Reminder
+
+        //customer action
+        public static CustomerReminderModel ToModel(this CustomerReminder entity)
+        {
+            return entity.MapTo<CustomerReminder, CustomerReminderModel>();
+        }
+
+        public static CustomerReminder ToEntity(this CustomerReminderModel model)
+        {
+            return model.MapTo<CustomerReminderModel, CustomerReminder>();
+        }
+
+        public static CustomerReminder ToEntity(this CustomerReminderModel model, CustomerReminder destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
+
+        public static CustomerReminderModel.ReminderLevelModel ToModel(this CustomerReminder.ReminderLevel entity)
+        {
+            return entity.MapTo<CustomerReminder.ReminderLevel, CustomerReminderModel.ReminderLevelModel>();
+        }
+
+        public static CustomerReminder.ReminderLevel ToEntity(this CustomerReminderModel.ReminderLevelModel model)
+        {
+            return model.MapTo<CustomerReminderModel.ReminderLevelModel, CustomerReminder.ReminderLevel>();
+        }
+
+        public static CustomerReminder.ReminderLevel ToEntity(this CustomerReminderModel.ReminderLevelModel model, CustomerReminder.ReminderLevel destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        public static CustomerReminderModel.ConditionModel ToModel(this CustomerReminder.ReminderCondition entity)
+        {
+            return entity.MapTo<CustomerReminder.ReminderCondition, CustomerReminderModel.ConditionModel>();
+        }
+
+        public static CustomerReminder.ReminderCondition ToEntity(this CustomerReminderModel.ConditionModel model)
+        {
+            return model.MapTo<CustomerReminderModel.ConditionModel, CustomerReminder.ReminderCondition>();
+        }
+
+        public static CustomerReminder.ReminderCondition ToEntity(this CustomerReminderModel.ConditionModel model, CustomerReminder.ReminderCondition destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
+        #endregion
 
         #region Gift Cards
 

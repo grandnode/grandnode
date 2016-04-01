@@ -1,0 +1,21 @@
+﻿@model CustomerReminderModel.ConditionModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.CustomerReminder.EditCondition").Text;
+}
+
+@using(Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="section-header">
+        <div class="title">
+            <img src = "@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
+            @T("Admin.Customers.CustomerReminder.EditCondition") - @Model.Name @Html.ActionLink("(" + T("Admin.Customers.CustomerReminder.BackToAction") + ")", "Edit", new { Id = Model.CustomerReminderId})
+        </div>
+        <div class="options">
+            <input type = "submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type = "submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateCondition", Model)
+}

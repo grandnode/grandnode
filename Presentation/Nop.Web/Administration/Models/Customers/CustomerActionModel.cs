@@ -37,6 +37,7 @@ namespace Nop.Admin.Models.Customers
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.ConditionId")]
         public int ConditionId { get; set; }
+        public int ConditionCount { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.ReactionType")]
         public int ReactionTypeId { get; set; }

@@ -146,7 +146,15 @@
             @Html.NopLabelFor(model => model.ActionTypeId)
         </td>
         <td class="adminData">
-            @Html.DropDownListFor(model => model.ActionTypeId, Model.ActionType)
+            @if (Model.ConditionCount > 0)
+            {
+                @Html.DropDownListFor(model => model.ActionTypeId, Model.ActionType, new { @disabled = "disabled" })
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.ActionTypeId, Model.ActionType)
+            }
+
             @Html.ValidationMessageFor(model => model.ActionTypeId)
             <em>
                 <p>@T("admin.customers.actiontype.helpText.AddToCart")</p>

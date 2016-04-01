@@ -579,12 +579,29 @@ namespace Nop.Admin.Infrastructure.Mapper
             cfg.CreateMap<CustomerActionConditionModel, CustomerAction.ActionCondition>()
                 .ForMember(dest => dest.CustomerActionConditionType, mo => mo.Ignore());
 
-                //Customer action type
-                cfg.CreateMap<CustomerActionTypeModel, CustomerActionType>()
+            //Customer action type
+            cfg.CreateMap<CustomerActionTypeModel, CustomerActionType>()
                 .ForMember(dest => dest._id, mo => mo.Ignore())
                 .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore());
             cfg.CreateMap<CustomerActionType, CustomerActionTypeModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            //Customer reminder
+            cfg.CreateMap<CustomerReminderModel, CustomerReminder>()
+                .ForMember(dest => dest._id, mo => mo.Ignore());
+            cfg.CreateMap<CustomerReminder, CustomerReminderModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
+            cfg.CreateMap<CustomerReminder.ReminderLevel, CustomerReminderModel.ReminderLevelModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.EmailAccounts, mo => mo.Ignore());
+            cfg.CreateMap<CustomerReminderModel.ReminderLevelModel, CustomerReminder.ReminderLevel>();
+
+            cfg.CreateMap<CustomerReminder.ReminderCondition, CustomerReminderModel.ConditionModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore())
+                .ForMember(dest => dest.ConditionType, mo => mo.Ignore());
+            cfg.CreateMap<CustomerReminderModel.ConditionModel, CustomerReminder.ReminderCondition>()
+                .ForMember(dest => dest.ConditionType, mo => mo.Ignore());
 
 
 

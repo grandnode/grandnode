@@ -8007,6 +8007,285 @@
   <LocaleResource Name="admin.customers.actiontype.updated">
     <Value>Action type updated</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Condition.Fields.ConditionId">
+    <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Condition.Fields.ConditionId.Hint">
+    <Value>Select condition.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Condition.Fields.ConditionTypeId">
+    <Value>Condition type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Condition.Fields.ConditionTypeId.Hint">
+    <Value>Select condition type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Condition.Fields.Name.hint">
+    <Value>Enter condition name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.ConditionId">
+    <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.ReminderRule">
+    <Value>Reminder Rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.RenewedDay">
+    <Value>Renewed Day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.AllowedTokens">
+    <Value>Allowed Tokens</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.AllowedTokens.Hint">
+    <Value>Tokens which you can use.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.BccEmailAddresses">
+    <Value>BCC</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Body">
+    <Value>Body</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Body.Hint">
+    <Value>Body of your email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Level">
+    <Value>Level</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Level.Hint">
+    <Value>Enter level</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Name">
+    <Value>Level name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Name.Hint">
+    <Value>Enter the level name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendDay">
+    <Value>Send after days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendDay.Hint">
+    <Value>Select how many days is to send.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendHour">
+    <Value>Send after hours</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendHour.Hint">
+    <Value>Select how many hours is to send.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Subject">
+    <Value>Subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Subject.Hint">
+    <Value>Enter the subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.AddNew">
+    <Value>Add a new customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customerreminder.Addcondition">
+    <Value>Add condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customerreminder.Addlevel">
+    <Value>Add level</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customerreminder.Addnew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customerreminder.Condition.Products.Addnew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customerreminder.Edit">
+    <Value>Reminder Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customerreminder.Editcondition">
+    <Value>Edit condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customerreminders">
+    <Value>Customer Reminders</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.added">
+    <Value>Reminder added</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.backtoaction">
+    <Value>Back to action</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.backtolist">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.added">
+    <Value>Condition added</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.categories">
+    <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.category.addnew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.customcustomerattribute">
+    <Value>Customer attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.customerregister">
+    <Value>Customer register</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.customerrole">
+    <Value>Customer Role</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.customertag">
+    <Value>Customer tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.categoryname">
+    <Value>Category name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.customcustomerattributename">
+    <Value>Customer Attribute Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.customcustomerattributevalue">
+    <Value>Customer Attribute Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.customerregistername">
+    <Value>Customer Register Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.customerregistervalue">
+    <Value>Customer Register Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.customerrolename">
+    <Value>Customer Role Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.customertagname">
+    <Value>Customer Tag Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.name">
+    <Value>Condition name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.fields.productname">
+    <Value>Product Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.info">
+    <Value>Condition info</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.manufacturers">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.manufacturers.addnew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.condition.savebeforeedit">
+    <Value>You must save it before edit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.conditions">
+    <Value>Reminder Conditions</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.conditions.addnew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.deleted">
+    <Value>Customer Reminder Deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.editlevel">
+    <Value>Edit level</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.active">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.active.hint">
+    <Value>Select if this reminder is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.conditionid.hint">
+    <Value>Select condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.conditiontype">
+    <Value>Condition Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.displayorder.hint">
+    <Value>Choose reminder display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.level">
+    <Value>Reminder level</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.name">
+    <Value>Reminder name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.name.hint">
+    <Value>Enter the reminder name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.name.required">
+    <Value>Reminder name requires</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.reminderrule.hint">
+    <Value>Choose reminder rule</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.fields.renewedday.hint">
+    <Value>Choose when reminder should run again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.info">
+    <Value>Reminder Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.level.fields.bccemailaddresses.Hint">
+    <Value>Enter BCC email addresses</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.level.fields.body.required">
+    <Value>Body is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.level.fields.dayhour.required">
+    <Value>You must enter Day or Hour.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.level.fields.emailaccountid">
+    <Value>Email Account</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.level.fields.name.required">
+    <Value>Level name required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.level.fields.subject.required">
+    <Value>Subject required</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.levels">
+    <Value>Reminder Levels</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.levels.addnew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.savebeforeedit">
+    <Value>You must save it before edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.updated">
+    <Value>Reminder updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerremindercondition.updated">
+    <Value>Condition updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminderlevel.added">
+    <Value>Level added</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminderlevel.exists">
+    <Value>This Level exist</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminderlevel.updated">
+    <Value>Reminder level updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="activitylog.addnewcustomerreminder">
+    <Value>Add new customer reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="activitylog.addnewcustomerreminderlevel">
+    <Value>Add new Customer Reminder Level</Value>
+  </LocaleResource>
+  <LocaleResource Name="activitylog.deletecustomerreminder">
+    <Value>Delete Customer Reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="activitylog.editcustomerreminder">
+    <Value>Edit Customer Reminder</Value>
+  </LocaleResource>
+  <LocaleResource Name="activitylog.editcustomerremindercondition">
+    <Value>Edit Customer Reminder Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="activitylog.editcustomerreminderlevel">
+    <Value>Edit Customer Reminder Level</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.customers.customeraction.addcustomeractioncondition">
    <Value>Add new condition</Value>
  </LocaleResource>

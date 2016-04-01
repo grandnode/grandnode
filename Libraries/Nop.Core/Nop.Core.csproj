@@ -127,6 +127,8 @@
     <Compile Include="Domain\Catalog\ProductType.cs" />
     <Compile Include="Domain\Common\AddressAttribute.cs" />
     <Compile Include="Domain\Common\AddressAttributeValue.cs" />
+    <Compile Include="Domain\Customers\CustomerReminderEnum.cs" />
+    <Compile Include="Domain\Customers\CustomerReminder.cs" />
     <Compile Include="Domain\Customers\CustomerActionHistory.cs" />
     <Compile Include="Domain\Customers\CustomerActionConditionType.cs" />
     <Compile Include="Domain\Customers\CustomerActionType.cs" />

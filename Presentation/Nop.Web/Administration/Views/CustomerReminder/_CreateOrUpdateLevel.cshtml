@@ -1,0 +1,96 @@
+﻿@model CustomerReminderModel.ReminderLevelModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.CustomerReminderId)
+
+@{ 
+    var validationSummary = Html.ValidationSummary(false);
+    if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+    {
+        <div class="message-error">@validationSummary</div>
+    }
+}
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Level)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Level)
+            @Html.ValidationMessageFor(model => model.Level)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Day)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Day)
+            @Html.ValidationMessageFor(model => model.Day)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Hour)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Hour)
+            @Html.ValidationMessageFor(model => model.Hour)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.EmailAccounts)
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.EmailAccountId, Model.EmailAccounts)
+            @Html.ValidationMessageFor(model => model.EmailAccountId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.BccEmailAddresses)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.BccEmailAddresses)
+            @Html.ValidationMessageFor(model => model.BccEmailAddresses)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Subject)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Subject)
+            @Html.ValidationMessageFor(model => model.Subject)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AllowedTokens)
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.AllowedTokens)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Body)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Body, "RichEditor")
+            @Html.ValidationMessageFor(model => model.Body)
+        </td>
+    </tr>
+</table>
+
+

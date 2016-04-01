@@ -190,6 +190,7 @@
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\CustomerActionController.cs" />
+    <Compile Include="Controllers\CustomerReminderController.cs" />
     <Compile Include="Controllers\CustomerTagController.cs" />
     <Compile Include="Controllers\JbimagesController.cs" />
     <Compile Include="Controllers\ContactFormController.cs" />
@@ -266,6 +267,7 @@
     <Compile Include="Models\Common\MaintenanceModel.cs" />
     <Compile Include="Models\Common\SystemWarningModel.cs" />
     <Compile Include="Models\Common\SystemInfoModel.cs" />
+    <Compile Include="Models\Customers\CustomerReminderModel.cs" />
     <Compile Include="Models\Customers\CustomerActionTypeModel.cs" />
     <Compile Include="Models\Customers\CustomerActionConditionModel.cs" />
     <Compile Include="Models\Customers\CustomerActionModel.cs" />
@@ -400,6 +402,7 @@
     <Compile Include="Validators\Common\AddressAttributeValidator.cs" />
     <Compile Include="Validators\Common\AddressAttributeValueValidator.cs" />
     <Compile Include="Validators\Customers\CustomerActionConditionValidator.cs" />
+    <Compile Include="Validators\Customers\CustomerReminderValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValueValidator.cs" />
     <Compile Include="Validators\Customers\CustomerActionValidator.cs" />
@@ -1484,6 +1487,66 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CustomerAction\_ConditionCustomCustomerAttribute.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_CreateOrUpdate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_CreateOrUpdateLevel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\AddLevel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\EditLevel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\AddCondition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_CreateOrUpdateCondition.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_ConditionCategory.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_ConditionCustomCustomerAttribute.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_ConditionCustomerRegister.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_ConditionCustomerRole.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_ConditionCustomerTag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_ConditionManufacturer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\_ConditionProduct.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\CategoryAddPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\ManufacturerAddPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\ProductAddPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerReminder\EditCondition.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
