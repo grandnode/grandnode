@@ -54,7 +54,6 @@ namespace Nop.Services.Messages
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductService _productService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
@@ -84,7 +83,6 @@ namespace Nop.Services.Messages
             IStoreContext storeContext,
             IProductAttributeParser productAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
-            IProductService productService,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
@@ -105,7 +103,6 @@ namespace Nop.Services.Messages
             this._productAttributeParser = productAttributeParser;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._storeService = storeService;
-            this._productService = productService;
             this._storeContext = storeContext;
             this._shippingSettings = shippingSettings;
             this._templatesSettings = templatesSettings;
@@ -540,10 +537,10 @@ namespace Nop.Services.Messages
             sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Cart.Product(s).Name", languageId)));
             sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Cart.Product(s).Quantity", languageId)));
             sb.AppendLine("</tr>");
-
+            var productService = EngineContext.Current.Resolve<IProductService>();
             foreach (var item in customer.ShoppingCartItems)
             {
-                var product = _productService.GetProductById(item.ProductId);
+                var product = productService.GetProductById(item.ProductId);
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
                 //product name
                 string productName = product.GetLocalized(x => x.Name, languageId);

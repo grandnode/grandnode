@@ -201,6 +201,11 @@ namespace Nop.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (customerreminder.Conditions.Count() > 0)
+                        model.ReminderRuleId = customerreminder.ReminderRuleId;
+                    if (model.ReminderRuleId==0)
+                        model.ReminderRuleId = customerreminder.ReminderRuleId;
+
                     customerreminder = model.ToEntity(customerreminder);
                     _customerReminderService.UpdateCustomerReminder(customerreminder);
                     _customerActivityService.InsertActivity("EditCustomerReminder", customerreminder.Id, _localizationService.GetResource("ActivityLog.EditCustomerReminder"), customerreminder.Name);

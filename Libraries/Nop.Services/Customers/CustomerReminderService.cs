@@ -51,6 +51,7 @@ namespace Nop.Services.Customers
             this._tokenizer = tokenizer;
             this._emailAccountService = emailAccountService;
             this._messageTokenProvider = messageTokenProvider;
+            this._queuedEmailService = queuedEmailService;
             this._storeService = storeService;
         }
 
