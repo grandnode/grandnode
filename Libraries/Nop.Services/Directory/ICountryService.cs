@@ -19,7 +19,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false);
+        IList<Country> GetAllCountries(string languageId = "", bool showHidden = false);
 
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        IList<Country> GetAllCountriesForBilling(int languageId = 0, bool showHidden = false);
+        IList<Country> GetAllCountriesForBilling(string languageId = "", bool showHidden = false);
 
         /// <summary>
         /// Gets all countries that allow shipping
@@ -36,7 +36,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        IList<Country> GetAllCountriesForShipping(int languageId = 0, bool showHidden = false);
+        IList<Country> GetAllCountriesForShipping(string languageId = "", bool showHidden = false);
 
 
         /// <summary>
@@ -44,14 +44,14 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
-        Country GetCountryById(int countryId);
+        Country GetCountryById(string countryId);
 
         /// <summary>
         /// Get countries by identifiers
         /// </summary>
         /// <param name="countryIds">Country identifiers</param>
         /// <returns>Countries</returns>
-        IList<Country> GetCountriesByIds(int[] countryIds);
+        IList<Country> GetCountriesByIds(string[] countryIds);
 
         /// <summary>
         /// Gets a country by two letter ISO code

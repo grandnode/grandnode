@@ -2,7 +2,7 @@
 @using Nop.Services.Stores
 @model ProductModel
 
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 {
     <div id="tierprices-grid"></div>
 
@@ -45,13 +45,12 @@
                             id: "Id",
                             fields: {
                                 Store: { editable: true, type: "string" },
-                                StoreId: { editable: true, type: "number" },
+                                StoreId: { editable: true, type: "string" },
                                 CustomerRole: { editable: true, type: "string" },
-                                CustomerRoleId: { editable: true, type: "number" },
-                                //ProductId: { editable: false, type: "number" },
+                                CustomerRoleId: { editable: true, type: "string" },
                                 Quantity: { editable: true, type: "number" },
                                 Price: { editable: true, type: "number" },
-                                Id: { editable: false, type: "number" }
+                                Id: { editable: false, type: "string" }
                             }
                         }
                     },
@@ -134,7 +133,7 @@
         //local datasource
         var allStores = [
             {
-                Id : 0,
+                Id : ' ',
                 Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
             }
             @{
@@ -145,7 +144,7 @@
             {
                 <text>
                         , {
-                            Id: @(store.Id),
+                            Id: "@(store.Id)",
                             Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
                         }
                         </text>
@@ -154,7 +153,7 @@
 
         var allCustomerRoles = [
             {
-                Id : 0,
+                Id : ' ',
                 Name : "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
             }
             @{
@@ -165,7 +164,7 @@
             {
                 <text>
                     , {
-            Id: @(customerRole.Id),
+            Id: "@(customerRole.Id)",
             Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(customerRole.Name)))"
         }
         </text>

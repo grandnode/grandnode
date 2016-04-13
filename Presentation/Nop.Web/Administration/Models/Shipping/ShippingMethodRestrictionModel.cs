@@ -10,12 +10,12 @@ namespace Nop.Admin.Models.Shipping
         {
             AvailableShippingMethods = new List<ShippingMethodModel>();
             AvailableCountries = new List<CountryModel>();
-            Restricted = new Dictionary<int, IDictionary<int, bool>>();
+            Restricted = new Dictionary<string, IDictionary<string, bool>>();
         }
         public IList<ShippingMethodModel> AvailableShippingMethods { get; set; }
         public IList<CountryModel> AvailableCountries { get; set; }
 
         //[country id] / [shipping method id] / [restricted]
-        public IDictionary<int, IDictionary<int, bool>> Restricted { get; set; }
+        public IDictionary<string, IDictionary<string, bool>> Restricted { get; set; }
     }
 }

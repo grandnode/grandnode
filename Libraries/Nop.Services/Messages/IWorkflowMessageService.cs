@@ -21,7 +21,7 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerRegisteredNotificationMessage(Customer customer, int languageId);
+        int SendCustomerRegisteredNotificationMessage(Customer customer, string languageId);
 
         /// <summary>
         /// Sends a welcome message to a customer
@@ -29,7 +29,7 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerWelcomeMessage(Customer customer, int languageId);
+        int SendCustomerWelcomeMessage(Customer customer, string languageId);
 
         /// <summary>
         /// Sends an email validation message to a customer
@@ -37,7 +37,7 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerEmailValidationMessage(Customer customer, int languageId);
+        int SendCustomerEmailValidationMessage(Customer customer, string languageId);
 
         /// <summary>
         /// Sends password recovery message to a customer
@@ -45,7 +45,7 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId);
+        int SendCustomerPasswordRecoveryMessage(Customer customer, string languageId);
         
         #endregion
 
@@ -58,7 +58,7 @@ namespace Nop.Services.Messages
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedVendorNotification(Order order, Vendor vendor, int languageId);
+        int SendOrderPlacedVendorNotification(Order order, Vendor vendor, string languageId);
 
         /// <summary>
         /// Sends an order placed notification to a store owner
@@ -66,7 +66,7 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedStoreOwnerNotification(Order order, int languageId);
+        int SendOrderPlacedStoreOwnerNotification(Order order, string languageId);
 
         /// <summary>
         /// Sends an order paid notification to a store owner
@@ -74,7 +74,7 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPaidStoreOwnerNotification(Order order, int languageId);
+        int SendOrderPaidStoreOwnerNotification(Order order, string languageId);
 
         /// <summary>
         /// Sends an order paid notification to a customer
@@ -84,7 +84,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPaidCustomerNotification(Order order, int languageId,
+        int SendOrderPaidCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Nop.Services.Messages
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPaidVendorNotification(Order order, Vendor vendor, int languageId);
+        int SendOrderPaidVendorNotification(Order order, Vendor vendor, string languageId);
 
         /// <summary>
         /// Sends an order placed notification to a customer
@@ -104,7 +104,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPlacedCustomerNotification(Order order, int languageId,
+        int SendOrderPlacedCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Nop.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendShipmentSentCustomerNotification(Shipment shipment, int languageId);
+        int SendShipmentSentCustomerNotification(Shipment shipment, string languageId);
 
         /// <summary>
         /// Sends a shipment delivered notification to a customer
@@ -121,7 +121,7 @@ namespace Nop.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendShipmentDeliveredCustomerNotification(Shipment shipment, int languageId);
+        int SendShipmentDeliveredCustomerNotification(Shipment shipment, string languageId);
 
         /// <summary>
         /// Sends an order completed notification to a customer
@@ -131,7 +131,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderCompletedCustomerNotification(Order order, int languageId, 
+        int SendOrderCompletedCustomerNotification(Order order, string languageId, 
             string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderCancelledCustomerNotification(Order order, int languageId);
+        int SendOrderCancelledCustomerNotification(Order order, string languageId);
 
         /// <summary>
         /// Sends an order refunded notification to a store owner
@@ -149,7 +149,7 @@ namespace Nop.Services.Messages
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, int languageId);
+        int SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, string languageId);
 
         /// <summary>
         /// Sends an order refunded notification to a customer
@@ -158,7 +158,7 @@ namespace Nop.Services.Messages
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, int languageId);
+        int SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, string languageId);
 
         /// <summary>
         /// Sends a new order note added notification to a customer
@@ -166,7 +166,7 @@ namespace Nop.Services.Messages
         /// <param name="orderNote">Order note</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, int languageId);
+        int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, string languageId);
 
         /// <summary>
         /// Sends a "Recurring payment cancelled" notification to a store owner
@@ -174,7 +174,7 @@ namespace Nop.Services.Messages
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, int languageId);
+        int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, string languageId);
         
         #endregion
 
@@ -187,7 +187,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
-            int languageId);
+            string languageId);
 
         /// <summary>
         /// Sends a newsletter subscription deactivation message
@@ -196,7 +196,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
-            int languageId);
+            string languageId);
 
         #endregion
 
@@ -212,7 +212,7 @@ namespace Nop.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        int SendProductEmailAFriendMessage(Customer customer, int languageId,
+        int SendProductEmailAFriendMessage(Customer customer, string languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage);
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace Nop.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        int SendWishlistEmailAFriendMessage(Customer customer, int languageId,
+        int SendWishlistEmailAFriendMessage(Customer customer, string languageId,
              string customerEmail, string friendsEmail, string personalMessage);
 
         #endregion
@@ -238,7 +238,7 @@ namespace Nop.Services.Messages
         /// <param name="orderItem">Order item</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId);
+        int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId);
         
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace Nop.Services.Messages
         /// <param name="orderItem">Order item</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId);
+        int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId);
 
         #endregion
 
@@ -263,7 +263,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendNewForumTopicMessage(Customer customer,
-            ForumTopic forumTopic, Forum forum, int languageId);
+            ForumTopic forumTopic, Forum forum, string languageId);
 
         /// <summary>
         /// Sends a forum subscription message to a customer
@@ -278,7 +278,7 @@ namespace Nop.Services.Messages
         int SendNewForumPostMessage(Customer customer,
             ForumPost forumPost, ForumTopic forumTopic,
             Forum forum, int friendlyForumTopicPageIndex, 
-            int languageId);
+            string languageId);
 
         /// <summary>
         /// Sends a private message notification
@@ -286,7 +286,7 @@ namespace Nop.Services.Messages
         /// <param name="privateMessage">Private message</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendPrivateMessageNotification(PrivateMessage privateMessage, int languageId);
+        int SendPrivateMessageNotification(PrivateMessage privateMessage, string languageId);
 
         #endregion
 
@@ -299,7 +299,7 @@ namespace Nop.Services.Messages
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, int languageId);
+        int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, string languageId);
 
         /// <summary>
         /// Sends a product review notification message to a store owner
@@ -308,7 +308,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendProductReviewNotificationMessage(ProductReview productReview,
-            int languageId);
+            string languageId);
 
         /// <summary>
         /// Sends a gift card notification
@@ -316,7 +316,7 @@ namespace Nop.Services.Messages
         /// <param name="giftCard">Gift card</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendGiftCardNotification(GiftCard giftCard, int languageId);
+        int SendGiftCardNotification(GiftCard giftCard, string languageId);
 
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace Nop.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendQuantityBelowStoreOwnerNotification(Product product, int languageId);
+        int SendQuantityBelowStoreOwnerNotification(Product product, string languageId);
 
         /// <summary>
         /// Sends a "quantity below" notification to a store owner
@@ -333,7 +333,7 @@ namespace Nop.Services.Messages
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, int languageId);
+        int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, string languageId);
 
         /// <summary>
         /// Sends a "new VAT sumitted" notification to a store owner
@@ -344,7 +344,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendNewVatSubmittedStoreOwnerNotification(Customer customer,
-            string vatName, string vatAddress, int languageId);
+            string vatName, string vatAddress, string languageId);
 
         /// <summary>
         /// Sends a blog comment notification message to a store owner
@@ -352,7 +352,7 @@ namespace Nop.Services.Messages
         /// <param name="blogComment">Blog comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId);
+        int SendBlogCommentNotificationMessage(BlogComment blogComment, string languageId);
 
         /// <summary>
         /// Sends a news comment notification message to a store owner
@@ -360,7 +360,7 @@ namespace Nop.Services.Messages
         /// <param name="newsComment">News comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId);
+        int SendNewsCommentNotificationMessage(NewsComment newsComment, string languageId);
 
         /// <summary>
         /// Sends a 'Back in stock' notification message to a customer
@@ -368,7 +368,7 @@ namespace Nop.Services.Messages
         /// <param name="subscription">Subscription</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendBackInStockNotification(BackInStockSubscription subscription, int languageId);
+        int SendBackInStockNotification(BackInStockSubscription subscription, string languageId);
 
         /// <summary>
         /// Sends a test email
@@ -378,8 +378,8 @@ namespace Nop.Services.Messages
         /// <param name="tokens">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendTestEmail(int messageTemplateId, string sendToEmail,
-            List<Token> tokens, int languageId);
+        int SendTestEmail(string messageTemplateId, string sendToEmail,
+            List<Token> tokens, string languageId);
 
 
         /// <summary>
@@ -391,7 +391,7 @@ namespace Nop.Services.Messages
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, 
-            int languageId, int customerId);
+            string languageId, string customerId);
 
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace Nop.Services.Messages
         /// <param name="Order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, int languageId);
+        int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, string languageId);
 
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerActionEvent_Notification(CustomerAction action, int languageId, int customerId);
+        int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, string customerId);
 
         #endregion
     }

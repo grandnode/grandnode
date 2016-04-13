@@ -5,7 +5,7 @@ namespace Nop.Web.Models.News
 {
     public partial class NewsCommentModel : BaseNopEntityModel
     {
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         public string CustomerName { get; set; }
 

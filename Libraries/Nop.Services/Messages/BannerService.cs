@@ -84,13 +84,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="bannerId">Banner identifier</param>
         /// <returns>Banner</returns>
-        public virtual Banner GetBannerById(int bannerId)
+        public virtual Banner GetBannerById(string bannerId)
         {
-            if (bannerId == 0)
-                return null;
-
             return _bannerRepository.GetById(bannerId);
-
         }
 
         /// <summary>
@@ -113,11 +109,8 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="bannerId">Banner identifier</param>
         /// <returns>Banner</returns>
-        public virtual BannerActive GetActiveBannerByCustomerId(int customerId)
+        public virtual BannerActive GetActiveBannerByCustomerId(string customerId)
         {
-            if (customerId == 0)
-                return null;
-
             var query = from c in _bannerActiveRepository.Table
                         where c.CustomerId == customerId
                         orderby c.CreatedOnUtc 
@@ -127,9 +120,9 @@ namespace Nop.Services.Messages
 
         }
 
-        public virtual void MoveBannerToArchive(int id, int customerId)
+        public virtual void MoveBannerToArchive(string id, string customerId)
         {
-            if (customerId == 0 || id == 0)
+            if (String.IsNullOrEmpty(customerId) || String.IsNullOrEmpty(id))
                 return;
 
             var query = from c in _bannerActiveRepository.Table
@@ -147,7 +140,6 @@ namespace Nop.Services.Messages
                     CustomerId = banner.CustomerId,
                     BannerActiveId = banner.Id,
                     Name = banner.Name,
-                    _id = banner._id,
                 };
                 _bannerArchiveRepository.Insert(archiveBanner);
                 _bannerActiveRepository.Delete(banner);

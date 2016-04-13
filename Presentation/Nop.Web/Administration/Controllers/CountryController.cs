@@ -179,7 +179,7 @@ namespace Nop.Admin.Controllers
             {
                 var country = model.ToEntity();
                 country.Locales = UpdateLocales(country, model);
-                country.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                country.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _countryService.InsertCountry(country);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
@@ -193,7 +193,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -229,7 +229,7 @@ namespace Nop.Admin.Controllers
             {
                 country = model.ToEntity(country);
                 country.Locales = UpdateLocales(country, model);
-                country.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                country.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _countryService.UpdateCountry(country);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
@@ -252,7 +252,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -280,7 +280,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult PublishSelected(ICollection<int> selectedIds)
+        public ActionResult PublishSelected(ICollection<string> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -298,7 +298,7 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
         [HttpPost]
-        public ActionResult UnpublishSelected(ICollection<int> selectedIds)
+        public ActionResult UnpublishSelected(ICollection<string> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -320,7 +320,7 @@ namespace Nop.Admin.Controllers
         #region States / provinces
 
         [HttpPost]
-        public ActionResult States(int countryId, DataSourceRequest command)
+        public ActionResult States(string countryId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -336,7 +336,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult StateCreatePopup(int countryId)
+        public ActionResult StateCreatePopup(string countryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -378,7 +378,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult StateEditPopup(int id)
+        public ActionResult StateEditPopup(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -426,7 +426,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult StateDelete(int id)
+        public ActionResult StateDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
@@ -457,14 +457,14 @@ namespace Nop.Admin.Controllers
             if (String.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException("countryId");
 
-            var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
+            var country = _countryService.GetCountryById(countryId);
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
             var result = (from s in states
                          select new { id = s.Id, name = s.Name }).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)
             {
                 //asterisk
-                result.Insert(0, new { id = 0, name = "*" });
+                result.Insert(0, new { id = "", name = "*" });
             }
             else
             {
@@ -473,11 +473,11 @@ namespace Nop.Admin.Controllers
                     //country is not selected ("choose country" item)
                     if (addSelectStateItem.HasValue && addSelectStateItem.Value)
                     {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.SelectState") });
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.SelectState") });
                     }
                     else
                     {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
                     }
                 }
                 else
@@ -486,14 +486,14 @@ namespace Nop.Admin.Controllers
                     if (result.Count == 0)
                     {
                         //country does not have states
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
                     }
                     else
                     {
                         //country has some states
                         if (addSelectStateItem.HasValue && addSelectStateItem.Value)
                         {
-                            result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.SelectState") });
+                            result.Insert(0, new { id = "", name = _localizationService.GetResource("Admin.Address.SelectState") });
                         }
                     }
                 }

@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Directory
 
         public Country()
         {
-            Stores = new List<int>();
+            Stores = new List<string>();
             Locales = new List<LocalizedProperty>();
         }
         /// <summary>
@@ -69,7 +69,7 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-        public IList<int> Stores { get; set; }
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales

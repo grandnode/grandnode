@@ -22,7 +22,7 @@ namespace Nop.Admin.Models.Orders
         }
 
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Store")]
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.StartDate")]
         [UIHint("DateNullable")]
@@ -38,14 +38,14 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
         public int PaymentStatusId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Category")]
-        public int CategoryId { get; set; }
+        public string CategoryId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Manufacturer")]
-        public int ManufacturerId { get; set; }
+        public string ManufacturerId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
-        public int BillingCountryId { get; set; }
+        public string BillingCountryId { get; set; }
 
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Vendor")]
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }

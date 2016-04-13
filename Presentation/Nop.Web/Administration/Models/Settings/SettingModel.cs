@@ -19,6 +19,6 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.StoreName")]
         public string Store { get; set; }
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
     }
 }

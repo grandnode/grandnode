@@ -71,11 +71,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTemplateId">Product template identifier</param>
         /// <returns>Product template</returns>
-        public virtual ProductTemplate GetProductTemplateById(int productTemplateId)
+        public virtual ProductTemplate GetProductTemplateById(string productTemplateId)
         {
-            if (productTemplateId == 0)
-                return null;
-
             return _productTemplateRepository.GetById(productTemplateId);
         }
 

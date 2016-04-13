@@ -19,7 +19,7 @@ namespace Nop.Admin.Models.Catalog
         public bool ShowOnProductPage { get; set; }
 
         public int DisplayOrder { get; set; }
-        public int ProductSpecificationId { get; set; }
-        public int ProductId { get; set; }
+        public string ProductSpecificationId { get; set; }
+        public string ProductId { get; set; }
     }
 }

@@ -390,7 +390,7 @@
 
 </script>
 <table class="adminContent">
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <tr>
             <td class="adminTitle">
@@ -420,7 +420,7 @@
             @Html.ValidationMessageFor(model => model.VisibleIndividually)
         </td>
     </tr>
-    @if (Model.Id > 0 && Model.AssociatedToProductId > 0)
+    @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.AssociatedToProductId))
     {
         <tr>
             <td class="adminTitle">

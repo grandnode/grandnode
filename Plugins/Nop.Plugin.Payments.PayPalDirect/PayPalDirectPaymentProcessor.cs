@@ -172,7 +172,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             details.CreditCard.CardOwner.Address.Street1 = customer.BillingAddress.Address1;
             details.CreditCard.CardOwner.Address.Street2 = customer.BillingAddress.Address2;
             details.CreditCard.CardOwner.Address.CityName = customer.BillingAddress.City;
-            if (customer.BillingAddress.StateProvinceId != 0)
+            if (!String.IsNullOrEmpty(customer.BillingAddress.StateProvinceId))
             {
                 var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(customer.BillingAddress.StateProvinceId);
                 details.CreditCard.CardOwner.Address.StateOrProvince = state.Abbreviation;
@@ -196,7 +196,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             //shipping
             if (customer.ShippingAddress != null)
             {
-                if (customer.ShippingAddress.StateProvinceId != 0 && customer.ShippingAddress.CountryId != 0)
+                if (!String.IsNullOrEmpty(customer.ShippingAddress.StateProvinceId) && !String.IsNullOrEmpty(customer.ShippingAddress.CountryId))
                 {
                     var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(customer.ShippingAddress.StateProvinceId);
                     var countryshipping = EngineContext.Current.Resolve<ICountryService>().GetCountryById(customer.ShippingAddress.CountryId);
@@ -481,7 +481,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             details.CreditCard.CardOwner.Address.Street1 = customer.BillingAddress.Address1;
             details.CreditCard.CardOwner.Address.Street2 = customer.BillingAddress.Address2;
             details.CreditCard.CardOwner.Address.CityName = customer.BillingAddress.City;
-            if (customer.BillingAddress.StateProvinceId != 0)
+            if (!String.IsNullOrEmpty(customer.BillingAddress.StateProvinceId))
             {
                 var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(customer.BillingAddress.StateProvinceId);
                 details.CreditCard.CardOwner.Address.StateOrProvince = state.Abbreviation;

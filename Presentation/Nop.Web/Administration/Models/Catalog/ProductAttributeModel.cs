@@ -43,7 +43,7 @@ namespace Nop.Admin.Models.Catalog
 
     public partial class ProductAttributeLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
         [AllowHtml]
@@ -63,7 +63,7 @@ namespace Nop.Admin.Models.Catalog
             Locales = new List<PredefinedProductAttributeValueLocalizedModel>();
         }
 
-        public int ProductAttributeId { get; set; }
+        public string ProductAttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
         [AllowHtml]
@@ -94,7 +94,7 @@ namespace Nop.Admin.Models.Catalog
     }
     public partial class PredefinedProductAttributeValueLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
         [AllowHtml]

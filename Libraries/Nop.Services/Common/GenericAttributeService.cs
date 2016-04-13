@@ -69,7 +69,7 @@ namespace Nop.Services.Common
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
         /// <param name="storeId">Store identifier; pass 0 if this attribute will be available for all stores</param>
-        public virtual void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, int storeId = 0)
+        public virtual void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, string storeId = "")
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -95,7 +95,7 @@ namespace Nop.Services.Common
                     //delete
                     var builder = Builders<BaseEntity>.Update;
                     var updatefilter = builder.PullFilter(x => x.GenericAttributes, y => y.Key == prop.Key &&  y.StoreId == storeId);
-                    var result = collection.UpdateManyAsync(new BsonDocument("Id", entity.Id), updatefilter).Result;
+                    var result = collection.UpdateManyAsync(new BsonDocument("_id", entity.Id), updatefilter).Result;
                 }
                 else
                 {
@@ -124,7 +124,7 @@ namespace Nop.Services.Common
                     };
                     var updatebuilder = Builders<BaseEntity>.Update;
                     var update = updatebuilder.AddToSet(p => p.GenericAttributes, prop);
-                    var result = collection.UpdateOneAsync(new BsonDocument("Id", entity.Id), update).Result;
+                    var result = collection.UpdateOneAsync(new BsonDocument("_id", entity.Id), update).Result;
                 }
             }
         }

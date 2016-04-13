@@ -31,7 +31,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
         /// <returns>Message template</returns>
-        MessageTemplate GetMessageTemplateById(int messageTemplateId);
+        MessageTemplate GetMessageTemplateById(string messageTemplateId);
 
         /// <summary>
         /// Gets a message template by name
@@ -39,14 +39,14 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplateName">Message template name</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Message template</returns>
-        MessageTemplate GetMessageTemplateByName(string messageTemplateName, int storeId);
+        MessageTemplate GetMessageTemplateByName(string messageTemplateName, string storeId);
 
         /// <summary>
         /// Gets all message templates
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Message template list</returns>
-        IList<MessageTemplate> GetAllMessageTemplates(int storeId);
+        IList<MessageTemplate> GetAllMessageTemplates(string storeId);
 
         /// <summary>
         /// Create a copy of message template with all depended data

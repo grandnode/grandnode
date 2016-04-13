@@ -26,7 +26,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
         /// <returns>Currency</returns>
-        Currency GetCurrencyById(int currencyId);
+        Currency GetCurrencyById(string currencyId);
 
         /// <summary>
         /// Gets a currency by code
@@ -41,7 +41,7 @@ namespace Nop.Services.Directory
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Currencies</returns>
-        IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0);
+        IList<Currency> GetAllCurrencies(bool showHidden = false, string storeId = "");
 
         /// <summary>
         /// Inserts a currency

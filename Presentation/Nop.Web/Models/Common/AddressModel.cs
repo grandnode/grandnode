@@ -36,14 +36,14 @@ namespace Nop.Web.Models.Common
 
         public bool CountryEnabled { get; set; }
         [NopResourceDisplayName("Address.Fields.Country")]
-        public int? CountryId { get; set; }
+        public string CountryId { get; set; }
         [NopResourceDisplayName("Address.Fields.Country")]
         [AllowHtml]
         public string CountryName { get; set; }
 
         public bool StateProvinceEnabled { get; set; }
         [NopResourceDisplayName("Address.Fields.StateProvince")]
-        public int? StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
         [NopResourceDisplayName("Address.Fields.StateProvince")]
         [AllowHtml]
         public string StateProvinceName { get; set; }

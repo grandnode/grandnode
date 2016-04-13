@@ -1,4 +1,5 @@
 
+using MongoDB.Bson.Serialization.Attributes;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Core.Domain.Shipping
@@ -6,22 +7,24 @@ namespace Nop.Core.Domain.Shipping
     /// <summary>
     /// Represents a shipment item
     /// </summary>
-    public partial class ShipmentItem : BaseEntity
+    [BsonIgnoreExtraElements]
+    public partial class ShipmentItem : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the shipment identifier
         /// </summary>
-        public int ShipmentId { get; set; }
+        [BsonIgnore]
+        public string ShipmentId { get; set; }
 
         /// <summary>
         /// Gets or sets the order item identifier
         /// </summary>
-        public int OrderItemId { get; set; }
+        public string OrderItemId { get; set; }
 
         /// <summary>
         /// Gets or sets the product
         /// </summary>
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
@@ -31,11 +34,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets the warehouse identifier
         /// </summary>
-        public int WarehouseId { get; set; }
+        public string WarehouseId { get; set; }
 
-        /// <summary>
-        /// Gets the shipment
-        /// </summary>
-        //public virtual Shipment Shipment { get; set; }
     }
 }

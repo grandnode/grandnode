@@ -13,7 +13,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="id">Customer reminder identifier</param>
         /// <returns>Customer reminder</returns>
-        CustomerReminder GetCustomerReminderById(int id);
+        CustomerReminder GetCustomerReminderById(string id);
 
 
         /// <summary>
@@ -46,5 +46,10 @@ namespace Nop.Services.Customers
         /// <param name="Rule">Customer Reminder Rule</param>
         string[] AllowedTokens(CustomerReminderRuleEnum rule);
 
+
+        /// <summary>
+        /// Run task Abandoned Cart
+        /// </summary>
+        void Task_AbandonedCart();
     }
 }

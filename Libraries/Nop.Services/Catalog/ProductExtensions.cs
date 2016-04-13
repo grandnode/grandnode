@@ -53,7 +53,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId2">The second product identifier</param>
         /// <returns>Related product</returns>
         public static RelatedProduct FindRelatedProduct(this IList<RelatedProduct> source,
-            int productId1, int productId2)
+            string productId1, string productId2)
         {
             foreach (RelatedProduct relatedProduct in source)
                 if (relatedProduct.ProductId1 == productId1 && relatedProduct.ProductId2 == productId2)
@@ -69,7 +69,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId2">The second product identifier</param>
         /// <returns>Cross-sell product</returns>
         public static CrossSellProduct FindCrossSellProduct(this IList<CrossSellProduct> source,
-            int productId1, int productId2)
+            string productId1, string productId2)
         {
             foreach (CrossSellProduct crossSellProduct in source)
                 if (crossSellProduct.ProductId1 == productId1 && crossSellProduct.ProductId2 == productId2)
@@ -199,7 +199,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Result</returns>
         public static bool ProductTagExists(this Product product,
-            int productTagId)
+            string productTagId)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -251,7 +251,7 @@ namespace Nop.Services.Catalog
         /// </param>
         /// <returns>Result</returns>
         public static int GetTotalStockQuantity(this Product product, 
-            bool useReservedQuantity = true, int warehouseId = 0)
+            bool useReservedQuantity = true, string warehouseId = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -265,7 +265,7 @@ namespace Nop.Services.Catalog
             if (product.UseMultipleWarehouses)
             {
                 var pwi = product.ProductWarehouseInventory;
-                if (warehouseId > 0)
+                if (!String.IsNullOrEmpty(warehouseId))
                 {
                     pwi = pwi.Where(x => x.WarehouseId == warehouseId).ToList();
                 }

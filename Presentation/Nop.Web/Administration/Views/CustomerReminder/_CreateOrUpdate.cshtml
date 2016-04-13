@@ -131,13 +131,13 @@
     <table class="adminContent">
         <tr>
             <td>
-                @if (Model.Id == 0)
+                @if (String.IsNullOrEmpty(Model.Id))
                 {
                     @T("Admin.Customers.CustomerReminder.SaveBeforeEdit")
                 }
             </td>
         </tr>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <tr>
             <td>
@@ -237,13 +237,13 @@
     <table class="adminContent">
         <tr>
             <td>
-                @if (Model.Id == 0)
+                @if (String.IsNullOrEmpty(Model.Id))
                 {
                     @T("Admin.Customers.CustomerReminder.SaveBeforeEdit")
                 }
             </td>
         </tr>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
     {
             <tr>
                 <td>

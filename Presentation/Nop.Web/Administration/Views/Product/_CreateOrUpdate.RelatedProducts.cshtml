@@ -1,7 +1,7 @@
 ﻿@model ProductModel
 
 
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 {
 
     <table class="adminContent">
@@ -43,7 +43,7 @@
                                         fields: {
                                             Product2Name: { editable: false, type: "string" },
                                             DisplayOrder: {editable: true, type: "number" },
-                                            ProductId2: { editable: false, type: "number" }
+                                            ProductId2: { editable: false, type: "string" }
                                         }
                                     }
                                 },

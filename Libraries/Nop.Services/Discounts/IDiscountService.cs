@@ -21,7 +21,7 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Discount</returns>
-        Discount GetDiscountById(int discountId);
+        Discount GetDiscountById(string discountId);
 
         /// <summary>
         /// Gets all discounts
@@ -97,7 +97,7 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountUsageHistoryId">Discount usage history record identifier</param>
         /// <returns>Discount usage history</returns>
-        DiscountUsageHistory GetDiscountUsageHistoryById(int discountUsageHistoryId);
+        DiscountUsageHistory GetDiscountUsageHistoryById(string discountUsageHistoryId);
         
         /// <summary>
         /// Gets all discount usage history records
@@ -108,8 +108,8 @@ namespace Nop.Services.Discounts
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
-        IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId = null,
-            int? customerId = null, int? orderId = null, 
+        IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(string discountId = "",
+            string customerId = "", string orderId = "", 
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>

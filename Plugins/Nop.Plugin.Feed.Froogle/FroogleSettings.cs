@@ -27,11 +27,11 @@ namespace Nop.Plugin.Feed.Froogle
         /// <summary>
         /// Store identifier for which feed file(s) will be generated
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         /// <summary>
         /// Currency identifier for which feed file(s) will be generated
         /// </summary>
-        public int CurrencyId { get; set; }
+        public string CurrencyId { get; set; }
 
         /// <summary>
         /// Default Google category

@@ -64,7 +64,7 @@ namespace Nop.Services.ExportImport
 
         #region Utilities
 
-        protected virtual void WriteCategories(XmlWriter xmlWriter, int parentCategoryId)
+        protected virtual void WriteCategories(XmlWriter xmlWriter, string parentCategoryId)
         {
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
             if (categories != null && categories.Count > 0)
@@ -79,8 +79,8 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteElementString("MetaKeywords", null, category.MetaKeywords);
                     xmlWriter.WriteElementString("MetaDescription", null, category.MetaDescription);
                     xmlWriter.WriteElementString("MetaTitle", null, category.MetaTitle);
-                    xmlWriter.WriteElementString("SeName", null, category.GetSeName(0));
-                    xmlWriter.WriteElementString("ParentCategoryId", null, category.ParentCategoryId.ToString());
+                    xmlWriter.WriteElementString("SeName", null, category.GetSeName(""));
+                    xmlWriter.WriteElementString("ParentCategoryId", null, category.ParentCategoryId);
                     xmlWriter.WriteElementString("PictureId", null, category.PictureId.ToString());
                     xmlWriter.WriteElementString("PageSize", null, category.PageSize.ToString());
                     xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, category.AllowCustomersToSelectPageSize.ToString());
@@ -150,7 +150,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("MetaKeywords", null, manufacturer.MetaKeywords);
                 xmlWriter.WriteElementString("MetaDescription", null, manufacturer.MetaDescription);
                 xmlWriter.WriteElementString("MetaTitle", null, manufacturer.MetaTitle);
-                xmlWriter.WriteElementString("SEName", null, manufacturer.GetSeName(0));
+                xmlWriter.WriteElementString("SEName", null, manufacturer.GetSeName(""));
                 xmlWriter.WriteElementString("PictureId", null, manufacturer.PictureId.ToString());
                 xmlWriter.WriteElementString("PageSize", null, manufacturer.PageSize.ToString());
                 xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, manufacturer.AllowCustomersToSelectPageSize.ToString());
@@ -233,7 +233,7 @@ namespace Nop.Services.ExportImport
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Categories");
             xmlWriter.WriteAttributeString("Version", GrandVersion.CurrentVersion);
-            WriteCategories(xmlWriter, 0);
+            WriteCategories(xmlWriter, "");
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
             xmlWriter.Close();
@@ -302,7 +302,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("MetaKeywords", null, product.MetaKeywords);
                 xmlWriter.WriteElementString("MetaDescription", null, product.MetaDescription);
                 xmlWriter.WriteElementString("MetaTitle", null, product.MetaTitle);
-                xmlWriter.WriteElementString("SEName", null, product.GetSeName(0));
+                xmlWriter.WriteElementString("SEName", null, product.GetSeName(""));
                 xmlWriter.WriteElementString("AllowCustomerReviews", null, product.AllowCustomerReviews.ToString());
                 xmlWriter.WriteElementString("SKU", null, product.Sku);
                 xmlWriter.WriteElementString("ManufacturerPartNumber", null, product.ManufacturerPartNumber);
@@ -407,7 +407,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteStartElement("TierPrice");
                     xmlWriter.WriteElementString("TierPriceId", null, tierPrice.Id.ToString());
                     xmlWriter.WriteElementString("StoreId", null, tierPrice.StoreId.ToString());
-                    xmlWriter.WriteElementString("CustomerRoleId", null, tierPrice.CustomerRoleId > 0 ? tierPrice.CustomerRoleId.ToString() : "0");
+                    xmlWriter.WriteElementString("CustomerRoleId", null, tierPrice.CustomerRoleId != "" ? tierPrice.CustomerRoleId : "");
                     xmlWriter.WriteElementString("Quantity", null, tierPrice.Quantity.ToString());
                     xmlWriter.WriteElementString("Price", null, tierPrice.Price.ToString());
                     xmlWriter.WriteEndElement();
@@ -576,7 +576,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords),
                 new PropertyByName<Product>("MetaDescription", p => p.MetaDescription),
                 new PropertyByName<Product>("MetaTitle", p => p.MetaTitle),
-                new PropertyByName<Product>("SeName", p => p.GetSeName(0)),
+                new PropertyByName<Product>("SeName", p => p.GetSeName("")),
                 new PropertyByName<Product>("AllowCustomerReviews", p => p.AllowCustomerReviews),
                 new PropertyByName<Product>("Published", p => p.Published),
                 new PropertyByName<Product>("SKU", p => p.Sku),
@@ -1108,7 +1108,7 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="pictureId">Picture ID</param>
         /// <returns>Path to the image file</returns>
-        protected virtual string GetPictures(int pictureId)
+        protected virtual string GetPictures(string pictureId)
         {
             var picture = _pictureService.GetPictureById(pictureId);
             return _pictureService.GetThumbLocalPath(picture);

@@ -3,7 +3,7 @@ namespace Nop.Web.Models.Profile
 {
     public partial class ProfileInfoModel
     {
-        public int CustomerProfileId { get; set; }
+        public string CustomerProfileId { get; set; }
 
         public string AvatarUrl { get; set; }
 

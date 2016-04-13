@@ -25,13 +25,13 @@ namespace Nop.Services.Customers
         /// Gets all customer for tag id
         /// </summary>
         /// <returns>Customers</returns>
-        IPagedList<Customer> GetCustomersByTag(int customerTagId = 0, int pageIndex = 0, int pageSize = 2147483647);
+        IPagedList<Customer> GetCustomersByTag(string customerTagId = "", int pageIndex = 0, int pageSize = 2147483647);
         /// <summary>
         /// Gets customer tag
         /// </summary>
         /// <param name="customerTagId">Customer tag identifier</param>
         /// <returns>Product tag</returns>
-        CustomerTag GetCustomerTagById(int customerTagId);
+        CustomerTag GetCustomerTagById(string customerTagId);
 
         /// <summary>
         /// Gets customer tag by name
@@ -56,12 +56,12 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Insert tag to a customer
         /// </summary>
-        void InsertTagToCustomer(int customerTagId, int customerId);
+        void InsertTagToCustomer(string customerTagId, string customerId);
 
         /// <summary>
         /// Delete tag from a customer
         /// </summary>
-        void DeleteTagFromCustomer(int customerTagId, int customerId);
+        void DeleteTagFromCustomer(string customerTagId, string customerId);
 
         /// <summary>
         /// Updates the customer tag
@@ -74,6 +74,6 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerTagId">Customer tag identifier</param>
         /// <returns>Number of products</returns>
-        int GetCustomerCount(int customerTagId);
+        int GetCustomerCount(string customerTagId);
     }
 }

@@ -81,10 +81,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                         {
                             //the third way (the quantity rage specified)
                             //{Product ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-                            int restrictedProductId;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
-                                //parsing error; exit;
-                                return result;
+                            string restrictedProductId = restrictedProduct.Split(new[] { ':' })[0];
+
                             int quantityMin;
                             if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out quantityMin))
                                 //parsing error; exit;
@@ -104,10 +102,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                         {
                             //the second way (the quantity specified)
                             //{Product ID}:{Quantity}. For example, 77:1, 123:2, 156:3
-                            int restrictedProductId;
-                            if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
-                                //parsing error; exit;
-                                return result;
+                            string restrictedProductId = restrictedProduct.Split(new[] { ':' })[0];
+
                             int quantity;
                             if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1], out quantity))
                                 //parsing error; exit;
@@ -123,14 +119,10 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                     else
                     {
                         //the first way (the quantity is not specified)
-                        int restrictedProductId;
-                        if (int.TryParse(restrictedProduct, out restrictedProductId))
+                        if (sci.ProductId == restrictedProduct)
                         {
-                            if (sci.ProductId == restrictedProductId)
-                            {
-                                found = true;
-                                break;
-                            }
+                            found = true;
+                            break;
                         }
                     }
                 }
@@ -157,12 +149,12 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
         /// <param name="discountId">Discount identifier</param>
         /// <param name="discountRequirementId">Discount requirement identifier (if editing)</param>
         /// <returns>URL</returns>
-        public string GetConfigurationUrl(int discountId, int? discountRequirementId)
+        public string GetConfigurationUrl(string discountId, string discountRequirementId)
         {
             //configured in RouteProvider.cs
             string result = "Plugins/DiscountRulesHasOneProduct/Configure/?discountId=" + discountId;
-            if (discountRequirementId.HasValue)
-                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+            if (!String.IsNullOrEmpty(discountRequirementId))
+                result += string.Format("&discountRequirementId={0}", discountRequirementId);
             return result;
         }
 

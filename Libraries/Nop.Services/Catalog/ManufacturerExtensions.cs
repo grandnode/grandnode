@@ -16,7 +16,7 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>A ProductManufacturer that has the specified values; otherwise null</returns>
         public static ProductManufacturer FindProductManufacturer(this IList<ProductManufacturer> source,
-            int productId, int manufacturerId)
+            string productId, string manufacturerId)
         {
             foreach (var productManufacturer in source)
                 if (productManufacturer.ProductId == productId && productManufacturer.ManufacturerId == manufacturerId)

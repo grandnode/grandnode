@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Settings
             DefaultTaxAddress = new AddressModel();
         }
 
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.PricesIncludeTax")]
@@ -78,7 +78,7 @@ namespace Nop.Admin.Models.Settings
         public bool ShippingPriceIncludesTax_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.ShippingTaxClass")]
-        public int ShippingTaxClassId { get; set; }
+        public string ShippingTaxClassId { get; set; }
         public bool ShippingTaxClassId_OverrideForStore { get; set; }
         public IList<SelectListItem> ShippingTaxCategories { get; set; }
 
@@ -95,7 +95,7 @@ namespace Nop.Admin.Models.Settings
         public bool PaymentMethodAdditionalFeeIncludesTax_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.PaymentMethodAdditionalFeeTaxClass")]
-        public int PaymentMethodAdditionalFeeTaxClassId { get; set; }
+        public string PaymentMethodAdditionalFeeTaxClassId { get; set; }
         public bool PaymentMethodAdditionalFeeTaxClassId_OverrideForStore { get; set; }
         public IList<SelectListItem> PaymentMethodAdditionalFeeTaxCategories { get; set; }
 
@@ -107,7 +107,7 @@ namespace Nop.Admin.Models.Settings
         public bool EuVatEnabled_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.EuVatShopCountry")]
-        public int EuVatShopCountryId { get; set; }
+        public string EuVatShopCountryId { get; set; }
         public bool EuVatShopCountryId_OverrideForStore { get; set; }
         public IList<SelectListItem> EuVatShopCountries { get; set; }
 

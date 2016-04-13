@@ -60,11 +60,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
         /// <returns>Gift card entry</returns>
-        public virtual GiftCard GetGiftCardById(int giftCardId)
+        public virtual GiftCard GetGiftCardById(string giftCardId)
         {
-            if (giftCardId == 0)
-                return null;
-
             return _giftCardRepository.GetById(giftCardId);
         }
 
@@ -80,7 +77,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null,
+        public virtual IPagedList<GiftCard> GetAllGiftCards(string purchasedWithOrderId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null, 
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
@@ -88,8 +85,8 @@ namespace Nop.Services.Orders
         {
             var query = _giftCardRepository.Table;
 
-            if (purchasedWithOrderId.HasValue)
-                query = query.Where(gc => gc.PurchasedWithOrderItem != null && gc.PurchasedWithOrderItem.OrderId == purchasedWithOrderId.Value);
+            if (!String.IsNullOrEmpty(purchasedWithOrderId))
+                query = query.Where(gc => gc.PurchasedWithOrderItem != null && gc.PurchasedWithOrderItem.OrderId == purchasedWithOrderId);
             if (createdFromUtc.HasValue)
                 query = query.Where(gc => createdFromUtc.Value <= gc.CreatedOnUtc);
             if (createdToUtc.HasValue)
@@ -106,7 +103,7 @@ namespace Nop.Services.Orders
             return giftCards;
         }
 
-        public IList<GiftCardUsageHistory> GetAllGiftCardUsageHistory(int orderId = 0)
+        public IList<GiftCardUsageHistory> GetAllGiftCardUsageHistory(string orderId = "")
         {
             var query = from g in _giftCardRepository.Table
                         from h in g.GiftCardUsageHistory
@@ -151,9 +148,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="purchasedWithOrderItemId">Purchased with order item identifier</param>
         /// <returns>Gift card entries</returns>
-        public virtual IList<GiftCard> GetGiftCardsByPurchasedWithOrderItemId(int purchasedWithOrderItemId)
+        public virtual IList<GiftCard> GetGiftCardsByPurchasedWithOrderItemId(string purchasedWithOrderItemId)
         {
-            if (purchasedWithOrderItemId == 0)
+            if (String.IsNullOrEmpty(purchasedWithOrderItemId))
                 return new List<GiftCard>();
 
             var query = _giftCardRepository.Table;

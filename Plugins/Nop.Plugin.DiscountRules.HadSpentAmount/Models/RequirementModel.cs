@@ -7,8 +7,8 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount.Models
         [NopResourceDisplayName("Plugins.DiscountRules.HadSpentAmount.Fields.Amount")]
         public decimal SpentAmount { get; set; }
 
-        public int DiscountId { get; set; }
+        public string DiscountId { get; set; }
 
-        public int RequirementId { get; set; }
+        public string RequirementId { get; set; }
     }
 }

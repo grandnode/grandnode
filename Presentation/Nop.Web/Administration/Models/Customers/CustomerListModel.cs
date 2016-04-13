@@ -11,7 +11,7 @@ namespace Nop.Admin.Models.Customers
         public CustomerListModel()
         {
             AvailableCustomerTags = new List<SelectListItem>();
-            SearchCustomerTagIds = new List<int>();
+            SearchCustomerTagIds = new List<string>();
         }
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
@@ -20,14 +20,14 @@ namespace Nop.Admin.Models.Customers
 
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerRoles")]
-        public int[] SearchCustomerRoleIds { get; set; }
+        public string[] SearchCustomerRoleIds { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerTags")]
         public IList<SelectListItem> AvailableCustomerTags { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.CustomerTags")]
         [UIHint("MultiSelect")]
-        public IList<int> SearchCustomerTagIds { get; set; }
+        public IList<string> SearchCustomerTagIds { get; set; }
 
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchEmail")]

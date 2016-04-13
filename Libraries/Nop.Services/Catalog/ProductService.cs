@@ -66,7 +66,7 @@ namespace Nop.Services.Catalog
 
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
+        //private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
@@ -116,7 +116,7 @@ namespace Nop.Services.Catalog
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductReview> productReviewRepository,
-            IRepository<LocalizedProperty> localizedPropertyRepository,
+            //IRepository<LocalizedProperty> localizedPropertyRepository,
             IRepository<AclRecord> aclRepository,
             IRepository<UrlRecord> urlRecordRepository,
             IRepository<Customer> customerRepository,
@@ -140,7 +140,7 @@ namespace Nop.Services.Catalog
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
             this._productReviewRepository = productReviewRepository;
-            this._localizedPropertyRepository = localizedPropertyRepository;
+            //this._localizedPropertyRepository = localizedPropertyRepository;
             this._aclRepository = aclRepository;
             this._urlRecordRepository = urlRecordRepository;
             this._customerRepository = customerRepository;
@@ -235,9 +235,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product</returns>
-        public virtual Product GetProductById(int productId)
+        public virtual Product GetProductById(string productId)
         {
-            if (productId == 0)
+            if (String.IsNullOrEmpty(productId))
                 return null;            
             string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
             return _cacheManager.Get(key, () => _productRepository.GetById(productId));
@@ -248,7 +248,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetProductsByIds(int[] productIds)
+        public virtual IList<Product> GetProductsByIds(string[] productIds)
         {
             if (productIds == null || productIds.Length == 0)
                 return new List<Product>();
@@ -259,7 +259,7 @@ namespace Nop.Services.Catalog
 
             //sort by passed identifiers
             var sortedProducts = new List<Product>();
-            foreach (int id in productIds)
+            foreach (string id in productIds)
             {
                 var product = products.Find(x => x.Id == id);
                 if (product != null)
@@ -273,7 +273,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="discountId">Product identifiers</param>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetProductsByDiscount(int discountId)
+        public virtual IList<Product> GetProductsByDiscount(string discountId)
         {
             var query = from c in _productRepository.Table
                         where c.AppliedDiscounts.Any(x=>x.Id == discountId)
@@ -451,7 +451,7 @@ namespace Nop.Services.Catalog
                             .Set(x => x.ShoppingCartItems.ElementAt(-1).IsTaxExempt, product.IsTaxExempt);
 
                         var _builderCustomer = Builders<Customer>.Filter;
-                        var _filterCustomer = _builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y._id == item._id);
+                        var _filterCustomer = _builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.Id == item.Id);
                         var resultcustomer = _customerRepository.Collection.UpdateManyAsync(_filterCustomer, updateCustomer).Result;
                     }
                 }
@@ -491,11 +491,11 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Product number</returns>
-        public virtual int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0)
+        public virtual int GetCategoryProductNumber(IList<string> categoryIds = null, string storeId = "")
         {
             //validate "categoryIds" parameter
-            if (categoryIds != null && categoryIds.Contains(0))
-                categoryIds.Remove(0);
+            if (categoryIds != null && categoryIds.Contains(""))
+                categoryIds.Remove("");
 
 
             var builder = Builders<Product>.Filter;
@@ -513,10 +513,10 @@ namespace Nop.Services.Catalog
                 filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
             }
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
             {
                 //Store mapping
-                var currentStoreId = new List<int> { _storeContext.CurrentStore.Id };
+                var currentStoreId = new List<string> { _storeContext.CurrentStore.Id };
                 filter = filter & (builder.AnyIn(x => x.Stores, currentStoreId) | builder.Where(x => !x.LimitedToStores));
             }
 
@@ -557,23 +557,23 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Product> SearchProducts(
             int pageIndex = 0,
             int pageSize = int.MaxValue,
-            IList<int> categoryIds = null,
-            int manufacturerId = 0,
-            int storeId = 0,
-            int vendorId = 0,
-            int warehouseId = 0,
+            IList<string> categoryIds = null,
+            string manufacturerId = "",
+            string storeId = "",
+            string vendorId = "",
+            string warehouseId = "",
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
             bool markedAsNewOnly = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            int productTagId = 0,
+            string productTagId = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
             bool searchProductTags = false,
-            int languageId = 0,
+            string languageId = "",
             IList<string> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
@@ -626,23 +626,23 @@ namespace Nop.Services.Catalog
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
             int pageSize = int.MaxValue,  //Int32.MaxValue
-            IList<int> categoryIds = null,
-            int manufacturerId = 0,
-            int storeId = 0,
-            int vendorId = 0,
-            int warehouseId = 0,
+            IList<string> categoryIds = null,
+            string manufacturerId = "",
+            string storeId = "",
+            string vendorId = "",
+            string warehouseId = "",
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
             bool markedAsNewOnly = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            int productTagId = 0,
+            string productTagId = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
             bool searchProductTags = false,
-            int languageId = 0,
+            string languageId = "",
             IList<string> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
@@ -652,7 +652,7 @@ namespace Nop.Services.Catalog
             featuredProducts = featuredProducts.HasValue ? featuredProducts : false;
             //search by keyword
             bool searchLocalizedValue = false;
-            if (languageId > 0)
+            if (!String.IsNullOrEmpty(languageId))
             {
                 if (showHidden)
                 {
@@ -667,8 +667,8 @@ namespace Nop.Services.Catalog
             }
 
             //validate "categoryIds" parameter
-            if (categoryIds !=null && categoryIds.Contains(0))
-                categoryIds.Remove(0);
+            if (categoryIds !=null && categoryIds.Contains(""))
+                categoryIds.Remove("");
 
             //Access control list. Allowed customer roles
             var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
@@ -686,7 +686,7 @@ namespace Nop.Services.Catalog
 
                 if (featuredProducts.Value)
                 {
-                    int categoryId = categoryIds[0];
+                    string categoryId = categoryIds[0];
                     filter = filter & builder.Where(x => x.ProductCategories.Any(y => y.CategoryId == categoryId && y.IsFeaturedProduct));
                 }
                 else
@@ -695,7 +695,7 @@ namespace Nop.Services.Catalog
                 }
             }
             //manufacturer filtering
-            if (manufacturerId > 0)
+            if (!String.IsNullOrEmpty(manufacturerId))
             {
                 if (featuredProducts.Value)
                 {
@@ -838,9 +838,9 @@ namespace Nop.Services.Catalog
                 filter = filter & (builder.AnyIn(x => x.CustomerRoles, allowedCustomerRolesIds) | builder.Where(x => !x.SubjectToAcl));
             }
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
             {
-                filter = filter & builder.Where(x => x.Stores.Contains(storeId) || !x.LimitedToStores);
+                filter = filter & builder.Where(x => x.Stores.Any(y=>y == storeId) || !x.LimitedToStores);
 
             }
 
@@ -849,31 +849,32 @@ namespace Nop.Services.Catalog
             {
                     foreach(var spec in filteredSpecs)
                     {
-                        int _specId = Convert.ToInt32(spec.Split(':').FirstOrDefault().ToString());
-                        int _specOptionId = Convert.ToInt32(spec.Split(':').Last().ToString());
+                        string _specId = spec.Split(':').FirstOrDefault();
+                        string _specOptionId = spec.Split(':').Last();
 
                         filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y=>y.SpecificationAttributeId == _specId && y.SpecificationAttributeOptionId == _specOptionId));
                     }
             }
 
             //vendor filtering
-            if (vendorId > 0)
+            if (!String.IsNullOrEmpty(vendorId))
             {
-                //query = query.Where(p => p.VendorId == vendorId);
                 filter = filter & builder.Where(x => x.VendorId == vendorId);
             }
 
             //warehouse filtering
-            if (warehouseId > 0)
+            if (!String.IsNullOrEmpty(warehouseId))
             {
-                var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
-                  filter = filter & (builder.Where(x => x.ManageInventoryMethodId == manageStockInventoryMethodId && x.UseMultipleWarehouses && x.ProductWarehouseInventory.Any(y=>y.WarehouseId == warehouseId)) |
-                    builder.Where(x => x.ManageInventoryMethodId != manageStockInventoryMethodId && !x.UseMultipleWarehouses && x.WarehouseId == warehouseId));
-                   
+                //var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
+                //   filter = filter & (builder.Where(x => x.ManageInventoryMethodId == manageStockInventoryMethodId && x.UseMultipleWarehouses && x.ProductWarehouseInventory.Any(y=>y.WarehouseId == warehouseId)) |
+                //    builder.Where(x => x.ManageInventoryMethodId != manageStockInventoryMethodId && !x.UseMultipleWarehouses && x.WarehouseId == warehouseId));
+                filter = filter & (builder.Where(x => x.UseMultipleWarehouses && x.ProductWarehouseInventory.Any(y=>y.WarehouseId == warehouseId)) |
+                    builder.Where(x => !x.UseMultipleWarehouses && x.WarehouseId == warehouseId));
+
             }
 
             //tag filtering
-            if (productTagId > 0)
+            if (!String.IsNullOrEmpty(productTagId))
             {
                 filter = filter & builder.Where(x => x.ProductTags.Any(y => y.Id == productTagId));
             }
@@ -886,7 +887,7 @@ namespace Nop.Services.Catalog
                 //category position
                 builderSort = Builders<Product>.Sort.Ascending(x => x.DisplayOrderCategory);
             }
-            else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
+            else if (orderBy == ProductSortingEnum.Position && !String.IsNullOrEmpty(manufacturerId))
             {
                 //manufacturer position
                 builderSort = Builders<Product>.Sort.Ascending(x => x.DisplayOrderManufacturer);
@@ -1003,7 +1004,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> GetProductsByProductAtributeId(int productAttributeId,
+        public virtual IPagedList<Product> GetProductsByProductAtributeId(string productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _productRepository.Table
@@ -1024,8 +1025,8 @@ namespace Nop.Services.Catalog
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetAssociatedProducts(int parentGroupedProductId,
-            int storeId = 0, int vendorId = 0, bool showHidden = false)
+        public virtual IList<Product> GetAssociatedProducts(string parentGroupedProductId,
+            string storeId = "", string vendorId = "", bool showHidden = false)
         {
             var query = from p in _productRepository.Table
                         select p;
@@ -1044,7 +1045,7 @@ namespace Nop.Services.Catalog
                     (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > nowUtc));
             }
             //vendor filtering
-            if (vendorId > 0)
+            if (!String.IsNullOrEmpty(vendorId))
             {
                 query = query.Where(p => p.VendorId == vendorId);
             }
@@ -1059,7 +1060,7 @@ namespace Nop.Services.Catalog
                 products = products.Where(x => _aclService.Authorize(x)).ToList();
             }
             //Store mapping
-            if (!showHidden && storeId > 0)
+            if (!showHidden && !String.IsNullOrEmpty(storeId))
             {
                 products = products.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
             }
@@ -1073,14 +1074,16 @@ namespace Nop.Services.Catalog
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="products">Low stock products</param>
         /// <param name="combinations">Low stock attribute combinations</param>
-        public virtual void GetLowStockProducts(int vendorId,
+        public virtual void GetLowStockProducts(string vendorId,
             out IList<Product> products,
             out IList<ProductAttributeCombination> combinations)
         {
             //Track inventory for product
             string vendors = "";
-            if (vendorId != 0)
+            if (!String.IsNullOrEmpty(vendorId))
                 vendors = " && this.VendorId==" + vendorId.ToString();
+            if (String.IsNullOrEmpty(vendorId))
+                vendorId = "";
 
             var doc = MongoDB.Bson.Serialization.BsonSerializer
                         .Deserialize<BsonDocument>
@@ -1093,7 +1096,7 @@ namespace Nop.Services.Catalog
             var query2_1 = from p in _productRepository.Table
                            where
                            p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                           (vendorId == 0 || p.VendorId == vendorId)
+                           (vendorId == "" || p.VendorId == vendorId)
                            from c in p.ProductAttributeCombinations
                            select c;
 
@@ -1221,7 +1224,7 @@ namespace Nop.Services.Catalog
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void UpdateHasTierPricesProperty(int productId)
+        public virtual void UpdateHasTierPricesProperty(string productId)
         {
             var product = GetProductById(productId);
             if (product == null)
@@ -1246,7 +1249,7 @@ namespace Nop.Services.Catalog
         /// Update HasDiscountsApplied property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void UpdateHasDiscountsApplied(int productId)
+        public virtual void UpdateHasDiscountsApplied(string productId)
         {
             var product = GetProductById(productId);
             if (product == null)
@@ -1548,7 +1551,6 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(product);
-            //UpdateProduct(product);
         }
 
         /// <summary>
@@ -1557,7 +1559,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        public virtual void BookReservedInventory(Product product, int warehouseId, int quantity)
+        public virtual void BookReservedInventory(Product product, string warehouseId, int quantity)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1591,8 +1593,6 @@ namespace Nop.Services.Catalog
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
             //event notification
             _eventPublisher.EntityUpdated(product);
-
-            //UpdateProduct(product);
 
             //TODO add support for bundled products (AttributesXml)
         }
@@ -1673,7 +1673,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.RelatedProducts, relatedProduct);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", relatedProduct.ProductId1), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", relatedProduct.ProductId1), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, relatedProduct.ProductId1));
@@ -1692,7 +1692,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.RelatedProducts, relatedProduct);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", relatedProduct.ProductId1), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", relatedProduct.ProductId1), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, relatedProduct.ProductId1));
@@ -1741,7 +1741,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.CrossSellProduct, crossSellProduct.ProductId2);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", crossSellProduct.ProductId1), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", crossSellProduct.ProductId1), update);
 
 
             //cache
@@ -1765,7 +1765,7 @@ namespace Nop.Services.Catalog
             //_crossSellProductRepository.Insert(crossSellProduct);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.CrossSellProduct, crossSellProduct.ProductId2);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", crossSellProduct.ProductId1), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", crossSellProduct.ProductId1), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, crossSellProduct.ProductId1));
@@ -1791,10 +1791,10 @@ namespace Nop.Services.Catalog
             if (cart == null || cart.Count == 0)
                 return result;
 
-            var cartProductIds = new List<int>();
+            var cartProductIds = new List<string>();
             foreach (var sci in cart)
             {
-                int prodId = sci.ProductId;
+                string prodId = sci.ProductId;
                 if (!cartProductIds.Contains(prodId))
                     cartProductIds.Add(prodId);
             }
@@ -1840,7 +1840,7 @@ namespace Nop.Services.Catalog
             //_tierPriceRepository.Delete(tierPrice);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.TierPrices, tierPrice);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", tierPrice.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", tierPrice.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
@@ -1862,7 +1862,7 @@ namespace Nop.Services.Catalog
             
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.TierPrices, tierPrice);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", tierPrice.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", tierPrice.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
@@ -1918,7 +1918,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductPictures, productPicture);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productPicture.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productPicture.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productPicture.ProductId));
@@ -1939,7 +1939,7 @@ namespace Nop.Services.Catalog
             //_productPictureRepository.Insert(productPicture);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductPictures, productPicture);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productPicture.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productPicture.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productPicture.ProductId));
@@ -1960,7 +1960,7 @@ namespace Nop.Services.Catalog
            
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductTags, productTag);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productTag.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
 
             var builder = Builders<ProductTag>.Filter;
             var filter = builder.Eq(x => x.Id, productTag.Id);
@@ -1983,7 +1983,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductTags, productTag);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productTag.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
 
             var builder = Builders<ProductTag>.Filter;
             var filter = builder.Eq(x => x.Id, productTag.Id);
@@ -2036,7 +2036,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="customerRoleIds">Customer role ids</param>
         /// <returns>Products</returns>
-        public virtual IList<Product> GetRecommendedProducts(int[] customerRoleIds)
+        public virtual IList<Product> GetRecommendedProducts(string[] customerRoleIds)
         {
 
             return _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_ROLE, string.Join(",", customerRoleIds)), 
@@ -2072,16 +2072,16 @@ namespace Nop.Services.Catalog
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
         /// <returns>Reviews</returns>
-        public virtual IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+        public virtual IList<ProductReview> GetAllProductReviews(string customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, int storeId = 0, int productId = 0)
+            string message = null, string storeId = "", string productId = "")
         {
             var query = from p in _productReviewRepository.Table
                         select p;
 
             if (approved.HasValue)
                 query = query.Where(c => c.IsApproved == approved);
-            if (customerId > 0)
+            if (!String.IsNullOrEmpty(customerId))
                 query = query.Where(c => c.CustomerId == customerId);
             if (fromUtc.HasValue)
                 query = query.Where(c => fromUtc.Value <= c.CreatedOnUtc);
@@ -2089,9 +2089,9 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => toUtc.Value >= c.CreatedOnUtc);
             if (!String.IsNullOrEmpty(message))
                 query = query.Where(c => c.Title.Contains(message) || c.ReviewText.Contains(message));
-            if (storeId > 0)
-                query = query.Where(c => c.StoreId == storeId || c.StoreId == 0);
-            if (productId > 0)
+            if (!String.IsNullOrEmpty(storeId))
+                query = query.Where(c => c.StoreId == storeId || c.StoreId == "");
+            if (!String.IsNullOrEmpty(productId))
                 query = query.Where(c => c.ProductId == productId);
 
             query = query.OrderBy(c => c.CreatedOnUtc);
@@ -2101,20 +2101,20 @@ namespace Nop.Services.Catalog
 
         
 
-        public virtual int RatingSumProduct(int productId, int storeId)
+        public virtual int RatingSumProduct(string productId, string storeId)
         {
             var query = from p in _productReviewRepository.Table
-                        where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == 0)
+                        where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == "")
                         group p by true into g
                         select new { Sum = g.Sum(x=>x.Rating) };
             var content = query.ToListAsync().Result;
             return content.Count > 0 ? content.FirstOrDefault().Sum : 0;
         }
 
-        public virtual int TotalReviewsProduct(int productId, int storeId)
+        public virtual int TotalReviewsProduct(string productId, string storeId)
         {
             var query = from p in _productReviewRepository.Table
-                        where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == 0)
+                        where p.ProductId == productId && p.IsApproved && (p.StoreId == storeId || p.StoreId == "")
                         group p by true into g
                         select new { Count = g.Count() };
             var content = query.ToListAsync().Result;
@@ -2158,11 +2158,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReviewId">Product review identifier</param>
         /// <returns>Product review</returns>
-        public virtual ProductReview GetProductReviewById(int productReviewId)
+        public virtual ProductReview GetProductReviewById(string productReviewId)
         {
-            if (productReviewId == 0)
-                return null;
-
             return _productReviewRepository.GetById(productReviewId);
         }
 
@@ -2182,7 +2179,7 @@ namespace Nop.Services.Catalog
             //_productWarehouseInventoryRepository.Delete(pwi);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductWarehouseInventory, pwi);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", pwi.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", pwi.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, pwi.ProductId));
@@ -2197,7 +2194,7 @@ namespace Nop.Services.Catalog
             //_productPictureRepository.Insert(productPicture);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductWarehouseInventory, pwi);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", pwi.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", pwi.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, pwi.ProductId));
@@ -2228,7 +2225,7 @@ namespace Nop.Services.Catalog
         }
 
 
-        public virtual void DeleteDiscount(Discount discount, int productId)
+        public virtual void DeleteDiscount(Discount discount, string productId)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -2236,7 +2233,7 @@ namespace Nop.Services.Catalog
             //_productWarehouseInventoryRepository.Delete(pwi);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.AppliedDiscounts, discount);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
@@ -2245,7 +2242,7 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityDeleted(discount);
         }
 
-        public virtual void InsertDiscount(Discount discount, int productId)
+        public virtual void InsertDiscount(Discount discount, string productId)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -2253,7 +2250,7 @@ namespace Nop.Services.Catalog
             //_productPictureRepository.Insert(productPicture);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.AppliedDiscounts, discount);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));

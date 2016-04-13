@@ -31,7 +31,7 @@ namespace Nop.Services.Orders
         /// <returns>Warnings</returns>
         IList<string> GetRequiredProductWarnings(Customer customer,
             ShoppingCartType shoppingCartType, Product product,
-            int storeId, bool automaticallyAddRequiredProductsIfEnabled);
+            string storeId, bool automaticallyAddRequiredProductsIfEnabled);
 
         /// <summary>
         /// Validates a product for standard properties
@@ -104,7 +104,7 @@ namespace Nop.Services.Orders
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, int storeId,
+            Product product, string storeId,
             string attributesXml, decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
@@ -157,7 +157,7 @@ namespace Nop.Services.Orders
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
         IList<string> AddToCart(Customer customer, Product product,
-            ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
+            ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero, 
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true);
@@ -175,7 +175,7 @@ namespace Nop.Services.Orders
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
         IList<string> UpdateShoppingCartItem(Customer customer,
-            int shoppingCartItemId, string attributesXml,
+            string shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool resetCheckoutData = true);

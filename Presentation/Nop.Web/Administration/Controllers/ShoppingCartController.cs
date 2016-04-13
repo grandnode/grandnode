@@ -96,7 +96,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetCartDetails(int customerId)
+        public ActionResult GetCartDetails(string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();
@@ -172,7 +172,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetWishlistDetails(int customerId)
+        public ActionResult GetWishlistDetails(string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrentCarts))
                 return AccessDeniedView();

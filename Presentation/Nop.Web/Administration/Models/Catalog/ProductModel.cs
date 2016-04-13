@@ -37,7 +37,7 @@ namespace Nop.Admin.Models.Catalog
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
-        public override int Id { get; set; }
+        public override string Id { get; set; }
 
         //picture thumbnail
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
@@ -50,7 +50,7 @@ namespace Nop.Admin.Models.Catalog
 
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
-        public int AssociatedToProductId { get; set; }
+        public string AssociatedToProductId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
         public string AssociatedToProductName { get; set; }
 
@@ -58,7 +58,7 @@ namespace Nop.Admin.Models.Catalog
         public bool VisibleIndividually { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
-        public int ProductTemplateId { get; set; }
+        public string ProductTemplateId { get; set; }
         public IList<SelectListItem> AvailableProductTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
@@ -78,7 +78,7 @@ namespace Nop.Admin.Models.Catalog
         public string AdminComment { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
@@ -145,7 +145,7 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Download")]
         [UIHint("Download")]
-        public int DownloadId { get; set; }
+        public string DownloadId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.UnlimitedDownloads")]
         public bool UnlimitedDownloads { get; set; }
@@ -165,7 +165,7 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.SampleDownload")]
         [UIHint("Download")]
-        public int SampleDownloadId { get; set; }
+        public string SampleDownloadId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.HasUserAgreement")]
         public bool HasUserAgreement { get; set; }
@@ -208,14 +208,14 @@ namespace Nop.Admin.Models.Catalog
         public decimal AdditionalShippingCharge { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DeliveryDate")]
-        public int DeliveryDateId { get; set; }
+        public string DeliveryDateId { get; set; }
         public IList<SelectListItem> AvailableDeliveryDates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.TaxCategory")]
-        public int TaxCategoryId { get; set; }
+        public string TaxCategoryId { get; set; }
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices")]
@@ -228,7 +228,7 @@ namespace Nop.Admin.Models.Catalog
         public bool UseMultipleWarehouses { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Warehouse")]
-        public int WarehouseId { get; set; }
+        public string WarehouseId { get; set; }
         public IList<SelectListItem> AvailableWarehouses { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
@@ -320,12 +320,12 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceAmount")]
         public decimal BasepriceAmount { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceUnit")]
-        public int BasepriceUnitId { get; set; }
+        public string BasepriceUnitId { get; set; }
         public IList<SelectListItem> AvailableBasepriceUnits { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseAmount")]
         public decimal BasepriceBaseAmount { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseUnit")]
-        public int BasepriceBaseUnitId { get; set; }
+        public string BasepriceBaseUnitId { get; set; }
         public IList<SelectListItem> AvailableBasepriceBaseUnits { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNew")]
@@ -387,14 +387,14 @@ namespace Nop.Admin.Models.Catalog
         public bool SubjectToAcl { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        public string[] SelectedCustomerRoleIds { get; set; }
 
         //Store mapping
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
 
         //vendor
@@ -417,7 +417,7 @@ namespace Nop.Admin.Models.Catalog
 
         //discounts
         public List<DiscountModel> AvailableDiscounts { get; set; }
-        public int[] SelectedDiscountIds { get; set; }
+        public string[] SelectedDiscountIds { get; set; }
 
 
 
@@ -450,13 +450,13 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
+            public string SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
+            public string SearchVendorId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
@@ -479,13 +479,13 @@ namespace Nop.Admin.Models.Catalog
             }
             
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
-            public int SpecificationAttributeId { get; set; }
+            public string SpecificationAttributeId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")]
             public int AttributeTypeId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
-            public int SpecificationAttributeOptionId { get; set; }
+            public string SpecificationAttributeOptionId { get; set; }
 
             [AllowHtml]
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
@@ -506,11 +506,11 @@ namespace Nop.Admin.Models.Catalog
         
         public partial class ProductPictureModel : BaseNopEntityModel
         {
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             [UIHint("Picture")]
             [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
-            public int PictureId { get; set; }
+            public string PictureId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
             public string PictureUrl { get; set; }
@@ -532,9 +532,9 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
             public string Category { get; set; }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
-            public int CategoryId { get; set; }
+            public string CategoryId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")]
             public bool IsFeaturedProduct { get; set; }
@@ -548,9 +548,9 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
             public string Manufacturer { get; set; }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
-            public int ManufacturerId { get; set; }
+            public string ManufacturerId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")]
             public bool IsFeaturedProduct { get; set; }
@@ -561,8 +561,8 @@ namespace Nop.Admin.Models.Catalog
 
         public partial class RelatedProductModel : BaseNopEntityModel
         {
-            public int ProductId1 { get; set; }
-            public int ProductId2 { get; set; }
+            public string ProductId1 { get; set; }
+            public string ProductId2 { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
             public string Product2Name { get; set; }
@@ -585,13 +585,13 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
+            public string SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
+            public string SearchVendorId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
@@ -601,9 +601,9 @@ namespace Nop.Admin.Models.Catalog
             public IList<SelectListItem> AvailableVendors { get; set; }
             public IList<SelectListItem> AvailableProductTypes { get; set; }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
-            public int[] SelectedProductIds { get; set; }
+            public string[] SelectedProductIds { get; set; }
 
             //vendor
             public bool IsLoggedInAsVendor { get; set; }
@@ -631,13 +631,13 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
+            public string SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
+            public string SearchVendorId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
@@ -647,9 +647,9 @@ namespace Nop.Admin.Models.Catalog
             public IList<SelectListItem> AvailableVendors { get; set; }
             public IList<SelectListItem> AvailableProductTypes { get; set; }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
-            public int[] SelectedProductIds { get; set; }
+            public string[] SelectedProductIds { get; set; }
 
             //vendor
             public bool IsLoggedInAsVendor { get; set; }
@@ -657,7 +657,7 @@ namespace Nop.Admin.Models.Catalog
 
         public partial class CrossSellProductModel : BaseNopEntityModel
         {
-            public int ProductId2 { get; set; }
+            public string ProductId2 { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
             public string Product2Name { get; set; }
@@ -677,13 +677,13 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
+            public string SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
+            public string SearchVendorId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
@@ -693,9 +693,9 @@ namespace Nop.Admin.Models.Catalog
             public IList<SelectListItem> AvailableVendors { get; set; }
             public IList<SelectListItem> AvailableProductTypes { get; set; }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
-            public int[] SelectedProductIds { get; set; }
+            public string[] SelectedProductIds { get; set; }
 
             //vendor
             public bool IsLoggedInAsVendor { get; set; }
@@ -703,14 +703,14 @@ namespace Nop.Admin.Models.Catalog
 
         public partial class TierPriceModel : BaseNopEntityModel
         {
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
-            public int CustomerRoleId { get; set; }
+            public string CustomerRoleId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
             public string CustomerRole { get; set; }
 
 
-            public int StoreId { get; set; }
+            public string StoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
             public string Store { get; set; }
 
@@ -724,7 +724,7 @@ namespace Nop.Admin.Models.Catalog
         public partial class ProductWarehouseInventoryModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
-            public int WarehouseId { get; set; }
+            public string WarehouseId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
             public string WarehouseName { get; set; }
 
@@ -744,9 +744,9 @@ namespace Nop.Admin.Models.Catalog
 
         public partial class ProductAttributeMappingModel : BaseNopEntityModel
         {
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
-            public int ProductAttributeId { get; set; }
+            public string ProductAttributeId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
             public string ProductAttribute { get; set; }
 
@@ -799,11 +799,11 @@ namespace Nop.Admin.Models.Catalog
         }
         public partial class ProductAttributeValueListModel : BaseNopModel
         {
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             public string ProductName { get; set; }
 
-            public int ProductAttributeMappingId { get; set; }
+            public string ProductAttributeMappingId { get; set; }
 
             public string ProductAttributeName { get; set; }
         }
@@ -816,8 +816,8 @@ namespace Nop.Admin.Models.Catalog
                 Locales = new List<ProductAttributeValueLocalizedModel>();
             }
 
-            public int ProductAttributeMappingId { get; set; }
-            public int ProductId { get; set; }
+            public string ProductAttributeMappingId { get; set; }
+            public string ProductId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")]
             public int AttributeValueTypeId { get; set; }
@@ -825,7 +825,7 @@ namespace Nop.Admin.Models.Catalog
             public string AttributeValueTypeName { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")]
-            public int AssociatedProductId { get; set; }
+            public string AssociatedProductId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")]
             public string AssociatedProductName { get; set; }
 
@@ -840,7 +840,7 @@ namespace Nop.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture")]
             [UIHint("Picture")]
-            public int ImageSquaresPictureId { get; set; }
+            public string ImageSquaresPictureId { get; set; }
             public bool DisplayImageSquaresPicture { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")]
@@ -868,7 +868,7 @@ namespace Nop.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
-            public int PictureId { get; set; }
+            public string PictureId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
             public string PictureThumbnailUrl { get; set; }
 
@@ -892,13 +892,13 @@ namespace Nop.Admin.Models.Catalog
                 [AllowHtml]
                 public string SearchProductName { get; set; }
                 [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-                public int SearchCategoryId { get; set; }
+                public string SearchCategoryId { get; set; }
                 [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-                public int SearchManufacturerId { get; set; }
+                public string SearchManufacturerId { get; set; }
                 [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-                public int SearchStoreId { get; set; }
+                public string SearchStoreId { get; set; }
                 [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-                public int SearchVendorId { get; set; }
+                public string SearchVendorId { get; set; }
                 [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
                 public int SearchProductTypeId { get; set; }
 
@@ -912,7 +912,7 @@ namespace Nop.Admin.Models.Catalog
                 public bool IsLoggedInAsVendor { get; set; }
 
 
-                public int AssociatedToProductId { get; set; }
+                public string AssociatedToProductId { get; set; }
             }
 
 
@@ -928,13 +928,13 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.CreatedOn")]
             public DateTime CreatedOn { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.Customer")]
-            public int CustomerId { get; set; }
+            public string CustomerId { get; set; }
             public string CustomerEmail { get; set; }
         }
 
         public partial class ProductAttributeValueLocalizedModel : ILocalizedModelLocal
         {
-            public int LanguageId { get; set; }
+            public string LanguageId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
             [AllowHtml]
@@ -942,7 +942,7 @@ namespace Nop.Admin.Models.Catalog
         }
         public partial class ProductAttributeCombinationModel : BaseNopEntityModel
         {
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")]
             [AllowHtml]
@@ -980,7 +980,7 @@ namespace Nop.Admin.Models.Catalog
 
     public partial class ProductLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         [AllowHtml]

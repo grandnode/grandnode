@@ -7,12 +7,13 @@ namespace Nop.Core.Domain.Orders
     /// Represents an order note
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class OrderNote : BaseEntity
+    public partial class OrderNote : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public int OrderId { get; set; }
+        [BsonIgnore]
+        public string OrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the note
@@ -22,7 +23,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the attached file (download) identifier
         /// </summary>
-        public int DownloadId { get; set; }
+        public string DownloadId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a customer can see a note
@@ -34,10 +35,6 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
-        /// <summary>
-        /// Gets the order
-        /// </summary>
-        //public virtual Order Order { get; set; }
     }
 
 }

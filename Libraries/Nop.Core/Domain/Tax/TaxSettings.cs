@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Tax
         /// <summary>
         /// Gets or sets default address used for tax calculation
         /// </summary>
-        public int DefaultTaxAddressId { get; set; }
+        public string DefaultTaxAddressId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display tax suffix
@@ -73,7 +73,7 @@ namespace Nop.Core.Domain.Tax
         /// <summary>
         /// Gets or sets a value indicating the shipping tax class identifier
         /// </summary>
-        public int ShippingTaxClassId { get; set; }
+        public string ShippingTaxClassId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether payment method additional fee is taxable
@@ -88,7 +88,7 @@ namespace Nop.Core.Domain.Tax
         /// <summary>
         /// Gets or sets a value indicating the payment method additional fee tax class identifier
         /// </summary>
-        public int PaymentMethodAdditionalFeeTaxClassId { get; set; }
+        public string PaymentMethodAdditionalFeeTaxClassId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether EU VAT (Eupore Union Value Added Tax) is enabled
@@ -98,7 +98,7 @@ namespace Nop.Core.Domain.Tax
         /// <summary>
         /// Gets or sets a shop country identifier
         /// </summary>
-        public int EuVatShopCountryId { get; set; }
+        public string EuVatShopCountryId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this store will exempt eligible VAT-registered customers from VAT

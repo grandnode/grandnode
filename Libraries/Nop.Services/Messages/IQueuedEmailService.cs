@@ -30,14 +30,14 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>
         /// <returns>Queued email</returns>
-        QueuedEmail GetQueuedEmailById(int queuedEmailId);
+        QueuedEmail GetQueuedEmailById(string queuedEmailId);
 
         /// <summary>
         /// Get queued emails by identifiers
         /// </summary>
         /// <param name="queuedEmailIds">queued email identifiers</param>
         /// <returns>Queued emails</returns>
-        IList<QueuedEmail> GetQueuedEmailsByIds(int[] queuedEmailIds);
+        IList<QueuedEmail> GetQueuedEmailsByIds(string[] queuedEmailIds);
 
         /// <summary>
         /// Search queued emails

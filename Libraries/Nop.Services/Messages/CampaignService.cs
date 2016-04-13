@@ -97,11 +97,8 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="campaignId">Campaign identifier</param>
         /// <returns>Campaign</returns>
-        public virtual Campaign GetCampaignById(int campaignId)
+        public virtual Campaign GetCampaignById(string campaignId)
         {
-            if (campaignId == 0)
-                return null;
-
             return _campaignRepository.GetById(campaignId);
 
         }

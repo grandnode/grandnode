@@ -13,21 +13,21 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the order item identifier
         /// </summary>
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
         /// <summary>
         /// Gets or sets the order item identifier
         /// </summary>
-        public int OrderItemId { get; set; }
+        public string OrderItemId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity

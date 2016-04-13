@@ -378,7 +378,7 @@ namespace Nop.Admin.Controllers
             model.AvailableVendors.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.Vendor.None"),
-                Value = "0"
+                Value = ""
             });
             var vendors = _vendorService.GetAllVendors(showHidden: true);
             foreach (var vendor in vendors)
@@ -501,10 +501,8 @@ namespace Nop.Admin.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                    attribute, ctrlAttributes);
                             }
                         }
                         break;
@@ -515,10 +513,9 @@ namespace Nop.Admin.Controllers
                             {
                                 foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
+                                    if (!String.IsNullOrEmpty(item))
                                         attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, item);
                                 }
                             }
                         }
@@ -533,7 +530,7 @@ namespace Nop.Admin.Controllers
                                 .ToList())
                             {
                                 attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, selectedAttributeId);
                             }
                         }
                         break;
@@ -609,7 +606,7 @@ namespace Nop.Admin.Controllers
                     //newsletter subscriptions
                     if (!String.IsNullOrEmpty(customer.Email))
                     {
-                        var newsletterSubscriptionStoreIds = new List<int>();
+                        var newsletterSubscriptionStoreIds = new List<string>();
                         foreach (var store in allStores)
                         {
                             var newsletterSubscription = _newsLetterSubscriptionService
@@ -631,8 +628,8 @@ namespace Nop.Admin.Controllers
                     model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
                     model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
                     model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                    model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                    model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                    model.CountryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
+                    model.StateProvinceId = customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId);
                     model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
                     model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
                 }
@@ -672,7 +669,7 @@ namespace Nop.Admin.Controllers
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
                 foreach (var c in _countryService.GetAllCountries(showHidden: true))
                 {
                     model.AvailableCountries.Add(new SelectListItem
@@ -689,7 +686,7 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "" });
 
                         foreach (var s in states)
                         {
@@ -703,7 +700,7 @@ namespace Nop.Admin.Controllers
                         model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
-                            Value = "0"
+                            Value = ""
                         });
                     }
                 }
@@ -816,18 +813,18 @@ namespace Nop.Admin.Controllers
             model.Address.FaxEnabled = _addressSettings.FaxEnabled;
             model.Address.FaxRequired = _addressSettings.FaxRequired;
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
             foreach (var c in _countryService.GetAllCountries(showHidden: true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
-            var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true).ToList() : new List<StateProvince>();
+            var states = !String.IsNullOrEmpty(model.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
             //customer attribute services
             model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
         }
@@ -863,7 +860,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         public ActionResult CustomerList(DataSourceRequest command, CustomerListModel model,
-            [ModelBinder(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds, int[] searchCustomerTagIds)
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] string[] searchCustomerRoleIds, string[] searchCustomerTagIds)
         {
             //we use own own binder for searchCustomerRoleIds property 
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1049,16 +1046,16 @@ namespace Nop.Admin.Controllers
 
                 //ensure that a customer with a vendor associated is not in "Administrators" role
                 //otherwise, he won't be have access to the other functionality in admin area
-                if (customer.IsAdmin() && customer.VendorId > 0)
+                if (customer.IsAdmin() && !String.IsNullOrEmpty(customer.VendorId))
                 {
-                    customer.VendorId = 0;
+                    customer.VendorId = "";
                     _customerService.UpdateCustomerVendor(customer);
                     ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                 }
 
                 //ensure that a customer in the Vendors role has a vendor account associated.
                 //otherwise, he will have access to ALL products
-                if (customer.IsVendor() && customer.VendorId == 0)
+                if (customer.IsVendor() && !String.IsNullOrEmpty(customer.VendorId))
                 {
                     var vendorRole = customer
                         .CustomerRoles
@@ -1085,7 +1082,7 @@ namespace Nop.Admin.Controllers
 
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1281,16 +1278,16 @@ namespace Nop.Admin.Controllers
 
                     //ensure that a customer with a vendor associated is not in "Administrators" role
                     //otherwise, he won't have access to the other functionality in admin area
-                    if (customer.IsAdmin() && customer.VendorId > 0)
+                    if (customer.IsAdmin() && !String.IsNullOrEmpty(customer.VendorId))
                     {
-                        customer.VendorId = 0;
+                        customer.VendorId = "";
                         _customerService.UpdateCustomerinAdminPanel(customer);
                         ErrorNotification(_localizationService.GetResource("Admin.Customers.Customers.AdminCouldNotbeVendor"));
                     }
 
                     //ensure that a customer in the Vendors role has a vendor account associated.
                     //otherwise, he will have access to ALL products
-                    if (customer.IsVendor() && customer.VendorId == 0)
+                    if (customer.IsVendor() && !String.IsNullOrEmpty(customer.VendorId))
                     {
                         var vendorRole = customer
                             .CustomerRoles
@@ -1406,7 +1403,7 @@ namespace Nop.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
             
-            customer.AffiliateId = 0;
+            customer.AffiliateId = "";
             _customerService.UpdateAffiliate(customer);
             //_customerService.UpdateCustomer(customer);
 
@@ -1414,7 +1411,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1451,7 +1448,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("impersonate")]
-        public ActionResult Impersonate(int id)
+        public ActionResult Impersonate(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.AllowCustomerImpersonation))
                 return AccessDeniedView();
@@ -1470,7 +1467,7 @@ namespace Nop.Admin.Controllers
             }
 
 
-            _genericAttributeService.SaveAttribute<int?>(_workContext.CurrentCustomer,
+            _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);
 
             return RedirectToAction("Index", "Home", new { area = "" });
@@ -1619,7 +1616,7 @@ namespace Nop.Admin.Controllers
         #region Reward points history
 
         [HttpPost]
-        public ActionResult RewardPointsHistorySelect(int customerId)
+        public ActionResult RewardPointsHistorySelect(string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1651,7 +1648,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult RewardPointsHistoryAdd(int customerId, int storeId, int addRewardPointsValue, string addRewardPointsMessage)
+        public ActionResult RewardPointsHistoryAdd(string customerId, string storeId, int addRewardPointsValue, string addRewardPointsMessage)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1671,7 +1668,7 @@ namespace Nop.Admin.Controllers
         #region Addresses
 
         [HttpPost]
-        public ActionResult AddressesSelect(int customerId, DataSourceRequest command)
+        public ActionResult AddressesSelect(string customerId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1718,7 +1715,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddressDelete(int id, int customerId)
+        public ActionResult AddressDelete(string id, string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1737,7 +1734,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
         
-        public ActionResult AddressCreate(int customerId)
+        public ActionResult AddressCreate(string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1778,8 +1775,6 @@ namespace Nop.Admin.Controllers
                 var address = model.Address.ToEntity();
                 address.CustomAttributes = customAttributes;
                 address.CreatedOnUtc = DateTime.UtcNow;
-                address.Id = customer.Addresses.Count > 0 ? customer.Addresses.Max(x => x.Id) + 1 : 1;
-                address._id = ObjectId.GenerateNewId().ToString();
                 customer.Addresses.Add(address);
                 _customerService.UpdateCustomerinAdminPanel(customer);
 
@@ -1792,7 +1787,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult AddressEdit(int addressId, int customerId)
+        public ActionResult AddressEdit(string addressId, string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1858,7 +1853,7 @@ namespace Nop.Admin.Controllers
         #region Orders
         
         [HttpPost]
-        public ActionResult OrderList(int customerId, DataSourceRequest command)
+        public ActionResult OrderList(string customerId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1874,6 +1869,7 @@ namespace Nop.Admin.Controllers
                         var orderModel = new CustomerModel.OrderModel
                         {
                             Id = order.Id, 
+                            OrderNumber = order.OrderNumber,
                             OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                             PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                             ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -1903,20 +1899,20 @@ namespace Nop.Admin.Controllers
             //customers by number of orders
             model.BestCustomersByNumberOfOrders = new BestCustomersReportModel();
             model.BestCustomersByNumberOfOrders.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.BestCustomersByNumberOfOrders.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByNumberOfOrders.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             model.BestCustomersByNumberOfOrders.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.BestCustomersByNumberOfOrders.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByNumberOfOrders.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //customers by order total
             model.BestCustomersByOrderTotal = new BestCustomersReportModel();
             model.BestCustomersByOrderTotal.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.BestCustomersByOrderTotal.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByOrderTotal.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             model.BestCustomersByOrderTotal.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.BestCustomersByOrderTotal.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByOrderTotal.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             model.BestCustomersByOrderTotal.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.BestCustomersByOrderTotal.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByOrderTotal.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             
             return View(model);
         }
@@ -2033,7 +2029,7 @@ namespace Nop.Admin.Controllers
         #region Current shopping cart/ wishlist
 
         [HttpPost]
-        public ActionResult GetCartList(int customerId, int cartTypeId)
+        public ActionResult GetCartList(string customerId, int cartTypeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
@@ -2073,12 +2069,12 @@ namespace Nop.Admin.Controllers
         #region Activity log and message contact form
 
         [HttpPost]
-        public ActionResult ListActivityLog(DataSourceRequest command, int customerId)
+        public ActionResult ListActivityLog(DataSourceRequest command, string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
-            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, 0, command.Page - 1, command.PageSize);
+            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, "", command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = activityLog.Select(x =>
@@ -2100,20 +2096,20 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ContactFormList(DataSourceRequest command, int customerId)
+        public ActionResult ContactFormList(DataSourceRequest command, string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageContactForm))
                 return AccessDeniedView();
 
 
-            int vendorId = 0;
+            string vendorId = "";
             if (_workContext.CurrentVendor != null)
             {
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
             var contactform = _contactUsService.GetAllContactUs(
-                storeId: 0,
+                storeId: "",
                 vendorId: vendorId,
                 customerId: customerId,
                 pageIndex: command.Page - 1,
@@ -2145,13 +2141,13 @@ namespace Nop.Admin.Controllers
         #region Back in stock subscriptions
 
         [HttpPost]
-        public ActionResult BackInStockSubscriptionList(DataSourceRequest command, int customerId)
+        public ActionResult BackInStockSubscriptionList(DataSourceRequest command, string customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
             var subscriptions = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customerId,
-                0, command.Page - 1, command.PageSize);
+                "", command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = subscriptions.Select(x =>
@@ -2221,7 +2217,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = selectedIds
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
+                    .Select(x => x)
                     .ToArray();
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
@@ -2271,7 +2267,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = selectedIds
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
+                    .Select(x => x)
                     .ToArray();
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }

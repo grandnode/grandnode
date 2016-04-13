@@ -9,7 +9,7 @@ namespace Nop.Admin.Models.Polls
     [Validator(typeof(PollAnswerValidator))]
     public partial class PollAnswerModel : BaseNopEntityModel
     {
-        public int PollId { get; set; }
+        public string PollId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Answers.Fields.Name")]
         [AllowHtml]

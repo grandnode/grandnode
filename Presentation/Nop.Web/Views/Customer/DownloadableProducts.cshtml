@@ -47,7 +47,7 @@
                             var item = Model.Items[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                                 <td class="order">
-                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderId</a>
+                                    <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderNumber</a>
                                 </td>
                                 <td class="date">
                                     @item.CreatedOn.ToString("d")
@@ -62,7 +62,7 @@
                                     }
                                 </td>
                                 <td class="download">
-                                    @if (item.DownloadId > 0)
+                                    @if (!String.IsNullOrEmpty(item.DownloadId))
                                     {
                                         <div>
                                             <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
@@ -74,7 +74,7 @@
                                             @T("DownloadableProducts.Fields.Download.NA")
                                         </div>
                                     }
-                                    @if (item.LicenseId > 0)
+                                    @if (!String.IsNullOrEmpty(item.LicenseId))
                                     {
                                         <div>
                                             <a href="@Url.RouteUrl("GetLicense", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>

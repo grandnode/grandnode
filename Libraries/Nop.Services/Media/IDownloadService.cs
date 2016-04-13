@@ -14,7 +14,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
         /// <returns>Download</returns>
-        Download GetDownloadById(int downloadId);
+        Download GetDownloadById(string downloadId);
 
         /// <summary>
         /// Gets a download by GUID

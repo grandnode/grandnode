@@ -39,7 +39,7 @@ namespace Nop.Admin.Models.Common
 
     public partial class AddressAttributeLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.Name")]
         [AllowHtml]

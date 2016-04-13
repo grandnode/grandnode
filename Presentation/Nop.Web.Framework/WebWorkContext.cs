@@ -208,10 +208,10 @@ namespace Nop.Web.Framework
                 //impersonate user if required (currently used for 'phone order' support)
                 if (customer != null && !customer.Deleted && customer.Active)
                 {
-                    var impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
-                    if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
+                    var impersonatedCustomerId = customer.GetAttribute<string>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
+                    if (!String.IsNullOrEmpty(impersonatedCustomerId))
                     {
-                        var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
+                        var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId);
                         if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
                         {
                             //set impersonated customer
@@ -330,7 +330,7 @@ namespace Nop.Web.Framework
                 if (detectedLanguage != null)
                 {
                     //the language is detected. now we need to save it
-                    if (this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id) != detectedLanguage.Id)
+                    if (this.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id) != detectedLanguage.Id)
                     {
                         _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageId,
                             detectedLanguage.Id, _storeContext.CurrentStore.Id);
@@ -339,7 +339,7 @@ namespace Nop.Web.Framework
 
                 var allLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
                 //find current customer language
-                var languageId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
+                var languageId = this.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
                 var language = allLanguages.FirstOrDefault(x => x.Id == languageId);
                 if (language == null)
                 {
@@ -359,7 +359,7 @@ namespace Nop.Web.Framework
             }
             set
             {
-                var languageId = value != null ? value.Id : 0;
+                var languageId = value != null ? value.Id : "";
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.LanguageId,
                     languageId, _storeContext.CurrentStore.Id);
@@ -393,7 +393,7 @@ namespace Nop.Web.Framework
 
                 var allCurrencies = _currencyService.GetAllCurrencies(storeId: _storeContext.CurrentStore.Id);
                 //find a currency previously selected by a customer
-                var currencyId = this.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId, _storeContext.CurrentStore.Id);
+                var currencyId = this.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CurrencyId, _storeContext.CurrentStore.Id);
                 var currency = allCurrencies.FirstOrDefault(x => x.Id == currencyId);
                 if (currency == null)
                 {
@@ -418,7 +418,7 @@ namespace Nop.Web.Framework
             }
             set
             {
-                var currencyId = value != null ? value.Id : 0;
+                var currencyId = value != null ? value.Id : "";
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.CurrencyId,
                     currencyId, _storeContext.CurrentStore.Id);

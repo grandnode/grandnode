@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 {
     <table class="adminContent">
         <tr>
@@ -53,7 +53,7 @@
                                         fields: {
                                             ProductName: {editable: false, type: "string" },
                                             DisplayOrder: {editable: true, type: "number" },
-                                            Id: {editable: false, type: "number" }
+                                            Id: { editable: false, type: "string" }
                                         }
                                     }
                                 },

@@ -52,11 +52,8 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="searchTermId">Search term identifier</param>
         /// <returns>Search term</returns>
-        public virtual SearchTerm GetSearchTermById(int searchTermId)
+        public virtual SearchTerm GetSearchTermById(string searchTermId)
         {
-            if (searchTermId == 0)
-                return null;
-
             return _searchTermRepository.GetById(searchTermId);
         }
 
@@ -66,7 +63,7 @@ namespace Nop.Services.Common
         /// <param name="keyword">Search term keyword</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Search term</returns>
-        public virtual SearchTerm GetSearchTermByKeyword(string keyword, int storeId)
+        public virtual SearchTerm GetSearchTermByKeyword(string keyword, string storeId)
         {
             if (String.IsNullOrEmpty(keyword))
                 return null;

@@ -73,6 +73,7 @@
     <Compile Include="MongoDBDataProviderManager.cs" />
     <Compile Include="MongoDBRepository.cs" />
     <Compile Include="MongoDBDataProvider.cs" />
+    <Compile Include="MongoDbStringSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EfStartUpTask.cs" />
   </ItemGroup>

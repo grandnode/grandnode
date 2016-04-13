@@ -77,7 +77,7 @@ namespace Nop.Core.Domain.Messages
     /// </summary>
     /// <typeparam name="T">Entity type</typeparam>
     /// <typeparam name="U"></typeparam>
-    public class EntityTokensAddedEvent<T, U> where T : BaseEntity
+    public class EntityTokensAddedEvent<T, U> where T : ParentEntity
     {
         private readonly T _entity;
         private readonly IList<U> _tokens;

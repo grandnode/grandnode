@@ -19,7 +19,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="searchTermId">Search term identifier</param>
         /// <returns>Search term</returns>
-        SearchTerm GetSearchTermById(int searchTermId);
+        SearchTerm GetSearchTermById(string searchTermId);
 
         /// <summary>
         /// Gets a search term record by keyword
@@ -27,7 +27,7 @@ namespace Nop.Services.Common
         /// <param name="keyword">Search term keyword</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Search term</returns>
-        SearchTerm GetSearchTermByKeyword(string keyword, int storeId);
+        SearchTerm GetSearchTermByKeyword(string keyword, string storeId);
 
         /// <summary>
         /// Gets a search term statistics

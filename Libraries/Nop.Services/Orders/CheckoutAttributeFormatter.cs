@@ -144,10 +144,7 @@ namespace Nop.Services.Orders
                     }
                     else
                     {
-                        int attributeValueId;
-                        if (int.TryParse(valueStr, out attributeValueId))
-                        {
-                            var attributeValue = attribute.CheckoutAttributeValues.Where(x => x.Id == attributeValueId).FirstOrDefault(); //checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
+                            var attributeValue = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
                             if (attributeValue != null)
                             {
                                 formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
@@ -165,7 +162,6 @@ namespace Nop.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
-                        }
                     }
 
                     if (!String.IsNullOrEmpty(formattedAttribute))

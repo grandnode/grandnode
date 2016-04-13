@@ -102,7 +102,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            var blogPosts = _blogService.GetAllBlogPosts(0, 0, null, null, command.Page - 1, command.PageSize, true);
+            var blogPosts = _blogService.GetAllBlogPosts("", "", null, null, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = blogPosts.Select(x =>
@@ -152,7 +152,7 @@ namespace Nop.Admin.Controllers
                 blogPost.StartDateUtc = model.StartDate;
                 blogPost.EndDateUtc = model.EndDate;
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
-                blogPost.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                blogPost.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _blogService.InsertBlogPost(blogPost);
                 
                 //search engine name
@@ -173,7 +173,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-		public ActionResult Edit(int id)
+		public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -208,7 +208,7 @@ namespace Nop.Admin.Controllers
                 blogPost = model.ToEntity(blogPost);
                 blogPost.StartDateUtc = model.StartDate;
                 blogPost.EndDateUtc = model.EndDate;
-                blogPost.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                blogPost.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
                 _blogService.UpdateBlogPost(blogPost);
 
@@ -238,7 +238,7 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Delete(int id)
+		public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
@@ -268,22 +268,22 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Comments(int? filterByBlogPostId, DataSourceRequest command)
+        public ActionResult Comments(string filterByBlogPostId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
             IList<BlogComment> comments;
-            if (filterByBlogPostId.HasValue)
+            if (!String.IsNullOrEmpty(filterByBlogPostId))
             {
                 //filter comments by blog
-                var blogPost = _blogService.GetBlogPostById(filterByBlogPostId.Value);
+                var blogPost = _blogService.GetBlogPostById(filterByBlogPostId);
                 comments = _blogService.GetBlogCommentsByBlogPostId(blogPost.Id);
             }
             else
             {
                 //load all blog comments
-                comments = _blogService.GetAllComments(0);
+                comments = _blogService.GetAllComments("");
             }
 
             var gridModel = new DataSourceResult
@@ -306,7 +306,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult CommentDelete(int id)
+        public ActionResult CommentDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();

@@ -66,7 +66,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             model.IncludingTax = googleAnalyticsSettings.IncludingTax;
 
             model.ActiveStoreScopeConfiguration = storeScope;
-            if (storeScope > 0)
+            if (!String.IsNullOrEmpty(storeScope))
             {
                 model.GoogleId_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.GoogleId, storeScope);
                 model.TrackingScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.TrackingScript, storeScope);
@@ -95,29 +95,29 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.GoogleId_OverrideForStore || storeScope == 0)
+            if (model.GoogleId_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(googleAnalyticsSettings, x => x.GoogleId, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.GoogleId, storeScope);
             
-            if (model.TrackingScript_OverrideForStore || storeScope == 0)
+            if (model.TrackingScript_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(googleAnalyticsSettings, x => x.TrackingScript, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.TrackingScript, storeScope);
             
-            if (model.EcommerceScript_OverrideForStore || storeScope == 0)
+            if (model.EcommerceScript_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(googleAnalyticsSettings, x => x.EcommerceScript, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.EcommerceScript, storeScope);
             
-            if (model.EcommerceDetailScript_OverrideForStore || storeScope == 0)
+            if (model.EcommerceDetailScript_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
 
-            if (model.IncludingTax_OverrideForStore || storeScope == 0)
+            if (model.IncludingTax_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
             
             //now clear settings cache
@@ -244,8 +244,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 var orderShipping = googleAnalyticsSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{CITY}", order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{STATEPROVINCE}", order.BillingAddress == null || order.BillingAddress.StateProvinceId == 0 ? "" : FixIllegalJavaScriptChars(EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).Name));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{COUNTRY}", order.BillingAddress == null || order.BillingAddress.CountryId == 0 ? "" : FixIllegalJavaScriptChars(EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).Name));
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{STATEPROVINCE}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? "" : FixIllegalJavaScriptChars(EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).Name));
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{COUNTRY}", order.BillingAddress == null || String.IsNullOrEmpty(order.BillingAddress.CountryId) ? "" : FixIllegalJavaScriptChars(EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).Name));
 
                 var sb = new StringBuilder();
                 foreach (var item in order.OrderItems)

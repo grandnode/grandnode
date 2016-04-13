@@ -338,7 +338,7 @@
                 @Html.NopLabelFor(model => model.CustomerActionConditionTypeId)
             </td>
             <td class="adminData">
-                @if (Model.Id != 0)
+                @if (!String.IsNullOrEmpty(Model.Id))
                 {
                     @Html.DropDownListFor(model => model.CustomerActionConditionTypeId, Model.CustomerActionConditionType, new { @disabled = "disabled" })
                 }

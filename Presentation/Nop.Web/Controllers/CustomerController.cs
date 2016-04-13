@@ -333,8 +333,8 @@ namespace Nop.Web.Controllers
                 model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
                 model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
                 model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                model.CountryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
+                model.StateProvinceId = customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId);
                 model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
                 model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
 
@@ -555,10 +555,8 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
+                                    attribute, ctrlAttributes);
                             }
                         }
                         break;
@@ -569,10 +567,9 @@ namespace Nop.Web.Controllers
                             {
                                 foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                        int selectedAttributeId = int.Parse(item);
-                                        if (selectedAttributeId > 0)
+                                        if (!String.IsNullOrEmpty(item))
                                             attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                                attribute, selectedAttributeId.ToString());
+                                                attribute, item);
                                 }
                             }
                         }
@@ -587,7 +584,7 @@ namespace Nop.Web.Controllers
                                 .ToList())
                             {
                                 attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, selectedAttributeId);
                             }
                         }
                         break;
@@ -671,7 +668,7 @@ namespace Nop.Web.Controllers
                             _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
 
                             //activity log
-                            _customerActivityService.InsertActivity("PublicStore.Login", 0, _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
+                            _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
 
                             if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                                 return RedirectToRoute("HomePage");
@@ -725,7 +722,7 @@ namespace Nop.Web.Controllers
             }
 
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.Logout", 0, _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
+            _customerActivityService.InsertActivity("PublicStore.Logout", "", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
             //standard logout 
             _authenticationService.SignOut();
 
@@ -1013,11 +1010,6 @@ namespace Nop.Web.Controllers
                                 newsletter.Active = true;
                                 _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
                             }
-                            //else
-                            //{
-                                //When registering, not checking the newsletter check box should not take an existing email address off of the subscription list.
-                                //_newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
-                            //}
                         }
                         else
                         {
@@ -1053,19 +1045,17 @@ namespace Nop.Web.Controllers
                         LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName),
                         Email = customer.Email,
                         Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company),
-                        CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId) > 0 ? 
-                            (int)customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId) : 0,
-                        StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId) > 0 ?
-                            (int)customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId) : 0,
+                        CountryId = !String.IsNullOrEmpty(customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId)) ? 
+                            customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId) : "",
+                        StateProvinceId = !String.IsNullOrEmpty(customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId))?
+                            customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId) : "",
                         City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City),
                         Address1 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress),
                         Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2),
                         ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode),
                         PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone),
                         FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax),
-                        CreatedOnUtc = customer.CreatedOnUtc,
-                        Id = customer.Addresses.Count > 0 ? customer.Addresses.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString()
+                        CreatedOnUtc = customer.CreatedOnUtc,                                                
                     };
                     if (this._addressService.IsAddressValid(defaultAddress))
                     {
@@ -1237,7 +1227,7 @@ namespace Nop.Web.Controllers
             model.HideRewardPoints = !_rewardPointsSettings.Enabled;
             model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
             model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
-                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, 0, null, 0, 1).Count == 0;
+                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, "", null, 0, 1).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
             
@@ -1422,7 +1412,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult RemoveExternalAssociation(int id)
+        public ActionResult RemoveExternalAssociation(string id)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -1462,8 +1452,7 @@ namespace Nop.Web.Controllers
 
             var model = new CustomerAddressListModel();
             var addresses = customer.Addresses
-                //enabled for the current store
-                .Where(a => a.CountryId == 0 || 
+                .Where(a => a.CountryId == "" || 
                 _storeMappingService.Authorize(_countryService.GetCountryById(a.CountryId))
                 )
                 .ToList();
@@ -1486,7 +1475,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult AddressDelete(int addressId)
+        public ActionResult AddressDelete(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -1552,8 +1541,6 @@ namespace Nop.Web.Controllers
                 var address = model.Address.ToEntity();
                 address.CustomAttributes = customAttributes;
                 address.CreatedOnUtc = DateTime.UtcNow;
-                address.Id = customer.Addresses.Count > 0 ? customer.Addresses.Max(x => x.Id) + 1 : 1;
-                address._id = ObjectId.GenerateNewId().ToString();
                 customer.Addresses.Add(address);
                 address.CustomerId = customer.Id;
 
@@ -1577,7 +1564,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult AddressEdit(int addressId)
+        public ActionResult AddressEdit(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -1605,7 +1592,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
-        public ActionResult AddressEdit(CustomerAddressEditModel model, int addressId, FormCollection form)
+        public ActionResult AddressEdit(CustomerAddressEditModel model, string addressId, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -1667,11 +1654,12 @@ namespace Nop.Web.Controllers
                 null, null, null, true);
             foreach (var item in items)
             {
-
+                var order = _orderService.GetOrderById(item.OrderId);
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
                 {
                     OrderItemGuid = item.OrderItemGuid,
                     OrderId = item.OrderId,
+                    OrderNumber = order.OrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc),
                     ProductName = item.Product.GetLocalized(x => x.Name),
                     ProductSeName = item.Product.GetSeName(),
@@ -1684,7 +1672,7 @@ namespace Nop.Web.Controllers
                     itemModel.DownloadId = item.Product.DownloadId;
 
                 if (_downloadService.IsLicenseDownloadAllowed(item))
-                    itemModel.LicenseId = item.LicenseDownloadId.HasValue ? item.LicenseDownloadId.Value : 0;
+                    itemModel.LicenseId = !String.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
             }
 
             return View(model);
@@ -1768,7 +1756,7 @@ namespace Nop.Web.Controllers
 
             var model = new CustomerAvatarModel();
             model.AvatarUrl = _pictureService.GetPictureUrl(
-                customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
                 _mediaSettings.AvatarPictureSize,
                 false);
             return View(model);
@@ -1791,7 +1779,7 @@ namespace Nop.Web.Controllers
             {
                 try
                 {
-                    var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId));
+                    var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId));
                     if ((uploadedFile != null) && (!String.IsNullOrEmpty(uploadedFile.FileName)))
                     {
                         int avatarMaxSize = _customerSettings.AvatarMaximumSizeBytes;
@@ -1805,7 +1793,7 @@ namespace Nop.Web.Controllers
                             customerAvatar = _pictureService.InsertPicture(customerPictureBinary, uploadedFile.ContentType, null);
                     }
 
-                    int customerAvatarId = 0;
+                    string customerAvatarId = "";
                     if (customerAvatar != null)
                         customerAvatarId = customerAvatar.Id;
 
@@ -1813,7 +1801,7 @@ namespace Nop.Web.Controllers
                     _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
 
                     model.AvatarUrl = _pictureService.GetPictureUrl(
-                        customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                        customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
                         _mediaSettings.AvatarPictureSize,
                         false);
                     return View(model);
@@ -1827,7 +1815,7 @@ namespace Nop.Web.Controllers
 
             //If we got this far, something failed, redisplay form
             model.AvatarUrl = _pictureService.GetPictureUrl(
-                customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
                 _mediaSettings.AvatarPictureSize,
                 false);
             return View(model);
@@ -1846,7 +1834,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId));
+            var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId));
             if (customerAvatar != null)
                 _pictureService.DeletePicture(customerAvatar);
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AvatarPictureId, 0);

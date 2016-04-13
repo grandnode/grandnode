@@ -62,7 +62,7 @@
                                         Ratio: { editable: true, type: "number" },
                                         DisplayOrder: { editable: true, type: "number" },
                                         IsPrimaryWeight: { editable: false, type: "boolean" },
-                                        Id: { editable: false, type: "number" }
+                                        Id: { editable: false, type: "string" }
                                     }
                                 }
                             },
@@ -130,7 +130,7 @@
                             field: "Id",
                             title: "@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")",
                             width: 150,
-                            template: '<a onclick="markAsPrimaryWeight(#=Id#)" class="k-button">@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")</a>'
+                            template: '<a onclick="markAsPrimaryWeight(\'#=Id#\')" class="k-button">@T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight")</a>'
                         }, {
                             command: [
                             {

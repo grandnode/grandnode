@@ -123,7 +123,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
 
-            var payments = _orderService.SearchRecurringPayments(0, 0, 0, null, command.Page - 1, command.PageSize, true);
+            var payments = _orderService.SearchRecurringPayments("", "", "", null, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = payments.Select(x =>
@@ -139,7 +139,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
@@ -186,7 +186,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
@@ -207,7 +207,7 @@ namespace Nop.Admin.Controllers
         #region History
 
         [HttpPost]
-        public ActionResult HistoryList(int recurringPaymentId, DataSourceRequest command)
+        public ActionResult HistoryList(string recurringPaymentId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
@@ -235,7 +235,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("processnextpayment")]
-        public ActionResult ProcessNextPayment(int id)
+        public ActionResult ProcessNextPayment(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();
@@ -274,7 +274,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("cancelpayment")]
-        public ActionResult CancelRecurringPayment(int id)
+        public ActionResult CancelRecurringPayment(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageRecurringPayments))
                 return AccessDeniedView();

@@ -17,7 +17,7 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <returns>A path of generated file</returns>
-        string PrintOrderToPdf(Order order, int languageId);
+        string PrintOrderToPdf(Order order, string languageId);
 
         /// <summary>
         /// Print orders to PDF
@@ -25,7 +25,7 @@ namespace Nop.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        void PrintOrdersToPdf(Stream stream, IList<Order> orders, int languageId = 0);
+        void PrintOrdersToPdf(Stream stream, IList<Order> orders, string languageId = "");
 
         /// <summary>
         /// Print packaging slips to PDF
@@ -33,7 +33,7 @@ namespace Nop.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="shipments">Shipments</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, int languageId = 0);
+        void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, string languageId = "");
 
         
         /// <summary>

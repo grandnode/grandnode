@@ -37,8 +37,8 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
-            int[] customerRoleIds = null, int[] customerTagIds = null, string email = null, string username = null,
+            DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "",
+            string[] customerRoleIds = null, string[] customerTagIds = null, string email = null, string username = null,
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
@@ -60,7 +60,7 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
-            int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue);
+            string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Delete a customer
@@ -73,14 +73,14 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>A customer</returns>
-        Customer GetCustomerById(int customerId);
+        Customer GetCustomerById(string customerId);
 
         /// <summary>
         /// Get customers by identifiers
         /// </summary>
         /// <param name="customerIds">Customer identifiers</param>
         /// <returns>Customers</returns>
-        IList<Customer> GetCustomersByIds(int[] customerIds);
+        IList<Customer> GetCustomersByIds(string[] customerIds);
 
         /// <summary>
         /// Gets a customer by GUID
@@ -146,7 +146,7 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         void UpdateCustomerPassword(Customer customer);
 
-        void UpdateFreeShipping(int customerId, bool freeShipping);
+        void UpdateFreeShipping(string customerId, bool freeShipping);
 
         /// <summary>
         /// Updates the customer
@@ -168,37 +168,37 @@ namespace Nop.Services.Customers
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateHasForumTopic(int customerId);
+        void UpdateHasForumTopic(string customerId);
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateHasForumPost(int customerId);
+        void UpdateHasForumPost(string customerId);
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateHasOrders(int customerId);
+        void UpdateHasOrders(string customerId);
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateHasBlogComments(int customerId);
+        void UpdateHasBlogComments(string customerId);
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateHasProductReview(int customerId);
+        void UpdateHasProductReview(string customerId);
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateHasProductReviewH(int customerId);
+        void UpdateHasProductReviewH(string customerId);
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateHasPoolVoting(int customerId);
+        void UpdateHasPoolVoting(string customerId);
         
 
         /// <summary>
@@ -217,17 +217,17 @@ namespace Nop.Services.Customers
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateCustomerLastPurchaseDate(int customerId, DateTime date);
+        void UpdateCustomerLastPurchaseDate(string customerId, DateTime date);
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateCustomerLastUpdateCartDate(int customerId, DateTime date);
+        void UpdateCustomerLastUpdateCartDate(string customerId, DateTime date);
         /// <summary>
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateCustomerLastUpdateWishList(int customerId, DateTime date);
+        void UpdateCustomerLastUpdateWishList(string customerId, DateTime date);
         /// <summary>
         /// Updates the customer in admin panel
         /// </summary>
@@ -243,7 +243,7 @@ namespace Nop.Services.Customers
         /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
         /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
         /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
-        void ResetCheckoutData(Customer customer, int storeId,
+        void ResetCheckoutData(Customer customer, string storeId,
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true);
@@ -284,7 +284,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>Customer role</returns>
-        CustomerRole GetCustomerRoleById(int customerRoleId);
+        CustomerRole GetCustomerRoleById(string customerRoleId);
 
         /// <summary>
         /// Gets a customer role
@@ -305,7 +305,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRoleId">Customer role id</param>
         /// <returns>Customer role products</returns>
-        IList<CustomerRoleProduct> GetCustomerRoleProducts(int customerRoleId);
+        IList<CustomerRoleProduct> GetCustomerRoleProducts(string customerRoleId);
 
         /// <summary>
         /// Gets customer roles products for customer role
@@ -313,14 +313,14 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleId">Customer role id</param>
         /// <param name="productId">Product id</param>
         /// <returns>Customer role product</returns>
-        CustomerRoleProduct GetCustomerRoleProduct(int customerRoleId, int productId);
+        CustomerRoleProduct GetCustomerRoleProduct(string customerRoleId, string productId);
 
         /// <summary>
         /// Gets customer roles product
         /// </summary>
         /// <param name="Id">id</param>
         /// <returns>Customer role product</returns>
-        CustomerRoleProduct GetCustomerRoleProductById(int id);
+        CustomerRoleProduct GetCustomerRoleProductById(string id);
 
 
         /// <summary>
@@ -359,7 +359,7 @@ namespace Nop.Services.Customers
         void UpdateAddress(Address address);
         void UpdateBillingAddress(Address address);
         void UpdateShippingAddress(Address address);
-        void RemoveShippingAddress(int customerId);
+        void RemoveShippingAddress(string customerId);
 
         #endregion
 

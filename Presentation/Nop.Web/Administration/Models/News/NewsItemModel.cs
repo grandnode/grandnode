@@ -21,7 +21,7 @@ namespace Nop.Admin.Models.News
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
         [AllowHtml]
@@ -32,7 +32,7 @@ namespace Nop.Admin.Models.News
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
         [AllowHtml]
@@ -87,7 +87,7 @@ namespace Nop.Admin.Models.News
         public bool SubjectToAcl { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        public string[] SelectedCustomerRoleIds { get; set; }
 
     }
 }

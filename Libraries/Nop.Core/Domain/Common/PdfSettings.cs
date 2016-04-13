@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// PDF logo picture identifier
         /// </summary>
-        public int LogoPictureId { get; set; }
+        public string LogoPictureId { get; set; }
 
         /// <summary>
         /// Gets or sets whether letter page size is enabled

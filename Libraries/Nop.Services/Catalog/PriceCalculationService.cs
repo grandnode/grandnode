@@ -68,7 +68,7 @@ namespace Nop.Services.Catalog
         {
             public decimal Price { get; set; }
             public decimal AppliedDiscountAmount { get; set; }
-            public int AppliedDiscountId { get; set; }
+            public string AppliedDiscountId { get; set; }
         }
         #endregion
 

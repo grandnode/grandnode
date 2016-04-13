@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 { 
     <table class="adminContent">
         <tr>
@@ -20,7 +20,7 @@
                                         data: addAntiForgeryToken
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("CrossSellProductDelete", "Product"))",
+                                        url: "@Html.Raw(Url.Action("CrossSellProductDelete", "Product", new { productId = Model.Id }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -34,7 +34,6 @@
                                         id: "Id",
                                         fields: {
                                             Product2Name: { editable: false, type: "string" },
-                                            ProductId2: { editable: false, type: "number" }
                                         }
                                     }
                                 },

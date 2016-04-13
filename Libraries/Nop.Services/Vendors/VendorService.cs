@@ -45,11 +45,8 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
         /// <returns>Vendor</returns>
-        public virtual Vendor GetVendorById(int vendorId)
+        public virtual Vendor GetVendorById(string vendorId)
         {
-            if (vendorId == 0)
-                return null;
-
             return _vendorRepository.GetById(vendorId);
         }
 
@@ -126,9 +123,9 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorNoteId">The vendor note identifier</param>
         /// <returns>Vendor note</returns>
-        public virtual VendorNote GetVendorNoteById(int vendorId, int vendorNoteId)
+        public virtual VendorNote GetVendorNoteById(string vendorId, string vendorNoteId)
         {
-            if (vendorNoteId == 0)
+            if (String.IsNullOrEmpty(vendorNoteId))
                 return null;
             var vendor = _vendorRepository.GetById(vendorId);
             if(vendor == null)
@@ -144,7 +141,7 @@ namespace Nop.Services.Vendors
 
             var updatebuilder = Builders<Vendor>.Update;
             var update = updatebuilder.AddToSet(p => p.VendorNotes, vendorNote);
-            _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("Id", vendorNote.VendorId), update);
+            _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
 
             //event notification
             _eventPublisher.EntityInserted(vendorNote);
@@ -161,7 +158,7 @@ namespace Nop.Services.Vendors
 
             var updatebuilder = Builders<Vendor>.Update;
             var update = updatebuilder.Pull(p => p.VendorNotes, vendorNote);
-            _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("Id", vendorNote.VendorId), update);
+            _vendorRepository.Collection.UpdateOneAsync(new BsonDocument("_id", vendorNote.VendorId), update);
 
             //event notification
             _eventPublisher.EntityDeleted(vendorNote);

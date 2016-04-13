@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a specification attribute option
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class SpecificationAttributeOption : BaseEntity, ILocalizedEntity
+    public partial class SpecificationAttributeOption : SubBaseEntity, ILocalizedEntity
     {
         public SpecificationAttributeOption()
         {
@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
-        public int SpecificationAttributeId { get; set; }
+        public string SpecificationAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the name

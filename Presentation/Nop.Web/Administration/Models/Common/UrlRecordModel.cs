@@ -11,7 +11,7 @@ namespace Nop.Admin.Models.Common
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.System.SeNames.EntityId")]
-        public int EntityId { get; set; }
+        public string EntityId { get; set; }
 
         [NopResourceDisplayName("Admin.System.SeNames.EntityName")]
         public string EntityName { get; set; }

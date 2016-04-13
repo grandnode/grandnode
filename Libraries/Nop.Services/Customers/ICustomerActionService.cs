@@ -13,7 +13,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="id">Customer action identifier</param>
         /// <returns>Customer Action</returns>
-        CustomerAction GetCustomerActionById(int id);
+        CustomerAction GetCustomerActionById(string id);
 
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace Nop.Services.Customers
         /// <param name="customerTag">Customer tag</param>
         void UpdateCustomerAction(CustomerAction customerAction);
 
-        CustomerActionConditionType GetCustomerActionConditionTypeById(int id);
+        //CustomerActionConditionType GetCustomerActionConditionTypeById(string id);
         IList<CustomerActionType> GetCustomerActionType();
-        CustomerActionType GetCustomerActionTypeById(int id);
+        CustomerActionType GetCustomerActionTypeById(string id);
 
         void UpdateCustomerActionType(CustomerActionType customerActionType);
 

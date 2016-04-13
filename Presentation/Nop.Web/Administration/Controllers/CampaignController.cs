@@ -77,7 +77,7 @@ namespace Nop.Admin.Controllers
             model.AvailableStores.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Common.All"),
-                Value = "0"
+                Value = ""
             });
             var stores = _storeService.GetAllStores();
             foreach (var store in stores)
@@ -158,7 +158,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-		public ActionResult Edit(int id)
+		public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();
@@ -279,7 +279,7 @@ namespace Nop.Admin.Controllers
 
                 //subscribers of certain store?
                 var store = _storeService.GetStoreById(campaign.StoreId);
-                var storeId = store != null ? store.Id : 0;
+                var storeId = store != null ? store.Id : "";
                 var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId,
                     isActive: true);
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
@@ -296,7 +296,7 @@ namespace Nop.Admin.Controllers
         }
 
 		[HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
                 return AccessDeniedView();

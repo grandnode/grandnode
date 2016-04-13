@@ -18,7 +18,7 @@ namespace Nop.Core.Domain.Directory
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the name

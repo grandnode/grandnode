@@ -14,18 +14,18 @@ namespace Nop.Web.Models.Order
             AvailableReturnActions = new List<ReturnRequestActionModel>();
         }
 
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
 
         public IList<OrderItemModel> Items { get; set; }
 
         [AllowHtml]
         [NopResourceDisplayName("ReturnRequests.ReturnReason")]
-        public int ReturnRequestReasonId { get; set; }
+        public string ReturnRequestReasonId { get; set; }
         public IList<ReturnRequestReasonModel> AvailableReturnReasons { get; set; }
 
         [AllowHtml]
         [NopResourceDisplayName("ReturnRequests.ReturnAction")]
-        public int ReturnRequestActionId { get; set; }
+        public string ReturnRequestActionId { get; set; }
         public IList<ReturnRequestActionModel> AvailableReturnActions { get; set; }
 
         [AllowHtml]
@@ -38,7 +38,7 @@ namespace Nop.Web.Models.Order
 
         public partial class OrderItemModel : BaseNopEntityModel
         {
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             public string ProductName { get; set; }
 

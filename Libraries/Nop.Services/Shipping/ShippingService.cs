@@ -18,6 +18,8 @@ using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Services.Directory;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Nop.Services.Shipping
 {
@@ -40,6 +42,11 @@ namespace Nop.Services.Shipping
         /// </summary>
         private const string WAREHOUSES_PATTERN_KEY = "Nop.warehouse.";
 
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+
         #endregion
 
         #region Fields
@@ -60,6 +67,8 @@ namespace Nop.Services.Shipping
         private readonly IEventPublisher _eventPublisher;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly IRepository<Product> _productRepository;
+
 
         #endregion
 
@@ -99,7 +108,8 @@ namespace Nop.Services.Shipping
             IStoreContext storeContext,
             IEventPublisher eventPublisher,
             ShoppingCartSettings shoppingCartSettings,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IRepository<Product> productRepository)
         {
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
@@ -117,6 +127,7 @@ namespace Nop.Services.Shipping
             this._eventPublisher = eventPublisher;
             this._shoppingCartSettings = shoppingCartSettings;
             this._cacheManager = cacheManager;
+            this._productRepository = productRepository;
         }
 
         #endregion
@@ -130,7 +141,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        public virtual IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(int storeId = 0)
+        public virtual IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(string storeId = "")
         {
             return LoadAllShippingRateComputationMethods(storeId)
                    .Where(provider => _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
@@ -156,7 +167,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(int storeId = 0)
+        public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(string storeId = "")
         {
             return _pluginFinder.GetPlugins<IShippingRateComputationMethod>(storeId: storeId).ToList();
         }
@@ -186,11 +197,8 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <returns>Shipping method</returns>
-        public virtual ShippingMethod GetShippingMethodById(int shippingMethodId)
+        public virtual ShippingMethod GetShippingMethodById(string shippingMethodId)
         {
-            if (shippingMethodId == 0)
-                return null;
-
             return _shippingMethodRepository.GetById(shippingMethodId);
         }
         
@@ -199,12 +207,12 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="filterByCountryId">The country indentifier to filter by</param>
         /// <returns>Shipping methods</returns>
-        public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
+        public virtual IList<ShippingMethod> GetAllShippingMethods(string filterByCountryId = "")
         {
-            if (filterByCountryId.HasValue && filterByCountryId.Value > 0)
+            if (!String.IsNullOrEmpty(filterByCountryId))
             {
                 var query1 = from sm in _shippingMethodRepository.Table
-                             where sm.RestrictedCountries.Any(c=>c.Id == filterByCountryId.Value)
+                             where sm.RestrictedCountries.Any(c=>c.Id == filterByCountryId)
                              select sm.Id;
                 var cc = query1.ToList();
                 var query2 = from sm in _shippingMethodRepository.Table
@@ -268,7 +276,14 @@ namespace Nop.Services.Shipping
             if (deliveryDate == null)
                 throw new ArgumentNullException("deliveryDate");
 
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.DeliveryDateId, deliveryDate.Id);
+            var update = Builders<Product>.Update
+                .Set(x => x.DeliveryDateId, "");
+            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+
             _deliveryDateRepository.Delete(deliveryDate);
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(deliveryDate);
@@ -279,11 +294,8 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="deliveryDateId">The delivery date identifier</param>
         /// <returns>Delivery date</returns>
-        public virtual DeliveryDate GetDeliveryDateById(int deliveryDateId)
+        public virtual DeliveryDate GetDeliveryDateById(string deliveryDateId)
         {
-            if (deliveryDateId == 0)
-                return null;
-
             return _deliveryDateRepository.GetById(deliveryDateId);
         }
 
@@ -343,10 +355,21 @@ namespace Nop.Services.Shipping
             if (warehouse == null)
                 throw new ArgumentNullException("warehouse");
 
+            var builder = Builders<Product>.Update;
+            var updatefilter = builder.PullFilter(x => x.ProductWarehouseInventory, y => y.WarehouseId == warehouse.Id);
+            var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+
+            var builder2 = Builders<Product>.Filter;
+            var filter2 = builder2.Eq(x => x.WarehouseId, warehouse.Id);
+            var update2 = Builders<Product>.Update
+                .Set(x => x.WarehouseId, "");
+            var result2 = _productRepository.Collection.UpdateManyAsync(filter2, update2).Result;
+
             _warehouseRepository.Delete(warehouse);
 
             //clear cache
             _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(warehouse);
@@ -357,11 +380,8 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="warehouseId">The warehouse identifier</param>
         /// <returns>Warehouse</returns>
-        public virtual Warehouse GetWarehouseById(int warehouseId)
+        public virtual Warehouse GetWarehouseById(string warehouseId)
         {
-            if (warehouseId == 0)
-                return null;
-
             string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
             return _cacheManager.Get(key, () => _warehouseRepository.GetById(warehouseId));
         }
@@ -685,7 +705,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         /// <returns>Shipment packages (requests)</returns>
         public virtual IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart,
-            Address shippingAddress, int storeId, out bool shippingFromMultipleLocations)
+            Address shippingAddress, string storeId, out bool shippingFromMultipleLocations)
         {
             //if we always ship from the default shipping origin, then there's only one request
             //if we ship from warehouses ("ShippingSettings.UseWarehouseLocation" enabled),
@@ -694,7 +714,7 @@ namespace Nop.Services.Shipping
 
             //key - warehouse identifier (0 - default shipping origin)
             //value - request
-            var requests = new Dictionary<int, GetShippingOptionRequest>();
+            var requests = new Dictionary<string, GetShippingOptionRequest>();
 
             //a list of requests with products which should be shipped separately
             var separateRequests = new List<GetShippingOptionRequest>();
@@ -730,7 +750,7 @@ namespace Nop.Services.Shipping
                         warehouse = GetWarehouseById(product.WarehouseId);
                     }
                 }
-                int warehouseId = warehouse != null ? warehouse.Id : 0;
+                string warehouseId = warehouse != null ? warehouse.Id : "";
 
                 if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
                 {
@@ -808,7 +828,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping options</returns>
         public virtual GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart,
             Address shippingAddress, string allowedShippingRateComputationMethodSystemName = "", 
-            int storeId = 0)
+            string storeId = "")
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");

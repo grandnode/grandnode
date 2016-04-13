@@ -101,8 +101,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
 
                     });
 
@@ -112,8 +110,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "TextPrompt",
                         LocaleValue = local.TextPrompt,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
             }
@@ -135,8 +131,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
             }
             return localized;
@@ -152,7 +146,7 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
         }
@@ -213,7 +207,7 @@ namespace Nop.Admin.Controllers
             model.ConditionModel = new ConditionModel()
             {
                 EnableCondition = !string.IsNullOrEmpty(checkoutAttribute.ConditionAttributeXml),
-                SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : 0,
+                SelectedAttributeId = selectedAttribute != null ? selectedAttribute.Id : "",
                 ConditionAttributes = _checkoutAttributeService.GetAllCheckoutAttributes()
                     //ignore this attribute and non-combinable attributes
                     .Where(x => x.Id != checkoutAttribute.Id && x.CanBeUsedAsCondition())
@@ -354,9 +348,9 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var checkoutAttribute = model.ToEntity();
-                checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
+                checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 checkoutAttribute.Locales = UpdateAttributeLocales(checkoutAttribute, model);
-                checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _checkoutAttributeService.InsertCheckoutAttribute(checkoutAttribute);
                
                 //activity log
@@ -379,7 +373,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -423,9 +417,9 @@ namespace Nop.Admin.Controllers
             {
                 checkoutAttribute = model.ToEntity(checkoutAttribute);
                 SaveConditionAttributes(checkoutAttribute, model);
-                checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
+                checkoutAttribute.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 checkoutAttribute.Locales = UpdateAttributeLocales(checkoutAttribute, model);
-                checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                checkoutAttribute.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _checkoutAttributeService.UpdateCheckoutAttribute(checkoutAttribute);
                
                 //activity log
@@ -455,7 +449,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -476,7 +470,7 @@ namespace Nop.Admin.Controllers
 
         //list
         [HttpPost]
-        public ActionResult ValueList(int checkoutAttributeId, DataSourceRequest command)
+        public ActionResult ValueList(string checkoutAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -501,7 +495,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult ValueCreatePopup(int checkoutAttributeId)
+        public ActionResult ValueCreatePopup(string checkoutAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -562,8 +556,6 @@ namespace Nop.Admin.Controllers
                     WeightAdjustment = model.WeightAdjustment,
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
-                    Id = checkoutAttribute.CheckoutAttributeValues.Count > 0 ? checkoutAttribute.CheckoutAttributeValues.Max(x=>x.Id)+1:1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 };
                 cav.Locales = UpdateValueLocales(cav, model);
                 checkoutAttribute.CheckoutAttributeValues.Add(cav);
@@ -581,7 +573,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult ValueEditPopup(int id, int checkoutAttributeId)
+        public ActionResult ValueEditPopup(string id, string checkoutAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -669,7 +661,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult ValueDelete(int id, int checkoutAttributeId)
+        public ActionResult ValueDelete(string id, string checkoutAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();

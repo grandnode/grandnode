@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.News
     /// Represents a news comment
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class NewsComment : BaseEntity
+    public partial class NewsComment : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the comment title
@@ -23,11 +23,11 @@ namespace Nop.Core.Domain.News
         /// <summary>
         /// Gets or sets the news item identifier
         /// </summary>
-        public int NewsItemId { get; set; }
+        public string NewsItemId { get; set; }
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

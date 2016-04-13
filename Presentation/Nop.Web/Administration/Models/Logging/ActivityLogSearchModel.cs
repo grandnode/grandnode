@@ -22,7 +22,7 @@ namespace Nop.Admin.Models.Logging
         public DateTime? CreatedOnTo { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")]
-        public int ActivityLogTypeId { get; set; }
+        public string ActivityLogTypeId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")]
         public IList<SelectListItem> ActivityLogType { get; set; }

@@ -666,7 +666,7 @@ namespace Nop.Web.Controllers
                         }
 
                         //"image square" picture (with with "image squares" attribute type only)
-                        if (attributeValue.ImageSquaresPictureId > 0)
+                        if (!String.IsNullOrEmpty(attributeValue.ImageSquaresPictureId))
                         {
                                 var productAttributeImageSquarePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_MODEL_KEY,
                                 attributeValue.ImageSquaresPictureId,
@@ -688,7 +688,7 @@ namespace Nop.Web.Controllers
                         }
 
                         //picture of a product attribute value
-                        if (attributeValue.PictureId > 0)
+                        if (!String.IsNullOrEmpty(attributeValue.PictureId))
                         {
                             var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
                                 attributeValue.PictureId,
@@ -908,7 +908,7 @@ namespace Nop.Web.Controllers
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
 
-            var productReviews = _productService.GetAllProductReviews(0, true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : 0, product.Id).OrderBy(pr => pr.CreatedOnUtc);
+            var productReviews = _productService.GetAllProductReviews("", true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : "", product.Id).OrderBy(pr => pr.CreatedOnUtc);
             foreach (var pr in productReviews)
             {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(pr.CustomerId);
@@ -941,7 +941,7 @@ namespace Nop.Web.Controllers
         #region Product details page
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductDetails(int productId, int updatecartitemid = 0)
+        public ActionResult ProductDetails(string productId, string updatecartitemid = "")
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -980,7 +980,7 @@ namespace Nop.Web.Controllers
 
             //update existing shopping cart item?
             ShoppingCartItem updatecartitem = null;
-            if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
+            if (_shoppingCartSettings.AllowCartItemEditing && !String.IsNullOrEmpty(updatecartitemid))
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .LimitPerStore(_storeContext.CurrentStore.Id)
@@ -1011,7 +1011,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
+        public ActionResult RelatedProducts(string productId, int? productThumbPictureSize)
         {
             //load and cache report
             var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
@@ -1034,7 +1034,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ProductsAlsoPurchased(int productId, int? productThumbPictureSize)
+        public ActionResult ProductsAlsoPurchased(string productId, int? productThumbPictureSize)
         {
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
@@ -1268,7 +1268,7 @@ namespace Nop.Web.Controllers
         #region Product reviews
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductReviews(int productId)
+        public ActionResult ProductReviews(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published || !product.AllowCustomerReviews)
@@ -1288,7 +1288,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("add-review")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
+        public ActionResult ProductReviewsAdd(string productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published || !product.AllowCustomerReviews)
@@ -1315,7 +1315,6 @@ namespace Nop.Web.Controllers
 
                 var productReview = new ProductReview
                 {
-                    _id = ObjectId.GenerateNewId().ToString(),
                     ProductId = product.Id,
                     StoreId = _storeContext.CurrentStore.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -1368,7 +1367,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult SetProductReviewHelpfulness(int productReviewId, int productId, bool washelpful)
+        public ActionResult SetProductReviewHelpfulness(string productReviewId, string productId, bool washelpful)
         {
             var product = _productService.GetProductById(productId);
             var productReview = _productService.GetProductReviewById(productReviewId);
@@ -1440,7 +1439,7 @@ namespace Nop.Web.Controllers
         #region Email a friend
         
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductEmailAFriend(int productId)
+        public ActionResult ProductEmailAFriend(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published || !_catalogSettings.EmailAFriendEnabled)
@@ -1508,7 +1507,7 @@ namespace Nop.Web.Controllers
         #region Comparing products
 
         [HttpPost]
-        public ActionResult AddProductToCompareList(int productId)
+        public ActionResult AddProductToCompareList(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published)
@@ -1539,7 +1538,7 @@ namespace Nop.Web.Controllers
             });
         }
 
-        public ActionResult RemoveProductFromCompareList(int productId)
+        public ActionResult RemoveProductFromCompareList(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)

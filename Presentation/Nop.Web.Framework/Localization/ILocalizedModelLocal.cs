@@ -2,6 +2,6 @@
 {
     public interface ILocalizedModelLocal
     {
-        int LanguageId { get; set; }
+        string LanguageId { get; set; }
     }
 }

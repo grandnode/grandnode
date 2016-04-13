@@ -37,7 +37,7 @@
 
        <div class="order-overview">
            <div class="order-number">
-               <strong>@T("Order.Order#")@Model.Id</strong>
+               <strong>@T("Order.Order#")@Model.OrderNumber</strong>
            </div>
            <div class="order-date">
                @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
@@ -308,38 +308,6 @@
                </div>
                <div class="table-wrapper">
                    <table class="cart">
-                       @*<colgroup>
-                           @if (Model.ShowSku)
-                           {
-                               <col width="1" />
-                           }
-                           <col />
-                           <col width="1" />
-                           <col width="1" />
-                           <col width="1" />
-                       </colgroup>
-                       <thead>
-                           <tr>
-                               @if (Model.ShowSku)
-                               {
-                                   <th class="sku">
-                                       @T("Order.Product(s).SKU")
-                                   </th>
-                               }
-                               <th class="name">
-                                   @T("Order.Product(s).Name")
-                               </th>
-                               <th class="price">
-                                   @T("Order.Product(s).Price")
-                               </th>
-                               <th class="quantity">
-                                   @T("Order.Product(s).Quantity")
-                               </th>
-                               <th class="total">
-                                   @T("Order.Product(s).Total")
-                               </th>
-                           </tr>
-                       </thead>*@
                        <tbody>
                            @foreach (var item in Model.Items)
                            {
@@ -372,13 +340,13 @@
                                                @Html.Raw(item.RentalInfo)
                                            </div>
                                        }
-                                       @if (item.DownloadId > 0)
+                                       @if (!String.IsNullOrEmpty(item.DownloadId))
                                        {
                                            <div class="download">
                                                <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
                                            </div>
                                        }
-                                       @if (item.LicenseId > 0)
+                                       @if (!String.IsNullOrEmpty(item.LicenseId))
                                        {
                                            <div class="download license">
                                                <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
@@ -598,7 +566,7 @@
                                <tr>
                                    <td class="shipment-id">
                                         <label>@T("Order.Shipments.ID"):</label>
-                                        <span>@item.Id.ToString()</span>
+                                        <span>@item.ShipmentNumber.ToString()</span>
                                    </td>
                                    <td class="tracking-number">
                                         <label>@T("Order.Shipments.TrackingNumber"):</label>

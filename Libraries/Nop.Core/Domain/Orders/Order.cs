@@ -70,14 +70,19 @@ namespace Nop.Core.Domain.Orders
         public Guid OrderGuid { get; set; }
 
         /// <summary>
+        /// Gets or sets the order identifier
+        /// </summary>
+        public int OrderNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a customer chose "pick up in store" shipping option
@@ -220,12 +225,12 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the customer language identifier
         /// </summary>
-        public int CustomerLanguageId { get; set; }
+        public string CustomerLanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public int AffiliateId { get; set; }
+        public string AffiliateId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer IP address

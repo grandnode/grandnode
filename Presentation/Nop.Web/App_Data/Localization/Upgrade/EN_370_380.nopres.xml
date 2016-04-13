@@ -1134,4 +1134,8 @@
   <LocaleResource Name="activitylog.editcustomerreminderlevel">
     <Value>Edit Customer Reminder Level</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.Deleted">
+    <Value>The customer action has been deleted successfully.</Value>
+  </LocaleResource>
+
 </Language>

@@ -71,10 +71,7 @@ namespace Nop.Services.Customers
         private readonly IRepository<ForumPost> _forumPostRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
         private readonly IRepository<BlogComment> _blogCommentRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
-        private readonly IRepository<PollVotingRecord> _pollVotingRecordRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
-        private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IDataProvider _dataProvider;
         private readonly ICacheManager _cacheManager;
@@ -94,10 +91,7 @@ namespace Nop.Services.Customers
             IRepository<ForumPost> forumPostRepository,
             IRepository<ForumTopic> forumTopicRepository,
             IRepository<BlogComment> blogCommentRepository,
-            IRepository<NewsComment> newsCommentRepository,
-            IRepository<PollVotingRecord> pollVotingRecordRepository,
             IRepository<ProductReview> productReviewRepository,
-            IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
             IGenericAttributeService genericAttributeService,
             IDataProvider dataProvider,
             IEventPublisher eventPublisher, 
@@ -112,10 +106,7 @@ namespace Nop.Services.Customers
             this._forumPostRepository = forumPostRepository;
             this._forumTopicRepository = forumTopicRepository;
             this._blogCommentRepository = blogCommentRepository;
-            this._newsCommentRepository = newsCommentRepository;
-            this._pollVotingRecordRepository = pollVotingRecordRepository;
             this._productReviewRepository = productReviewRepository;
-            this._productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
             this._genericAttributeService = genericAttributeService;
             this._dataProvider = dataProvider;
             this._eventPublisher = eventPublisher;
@@ -152,8 +143,8 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         public virtual IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
-            DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
-            int[] customerRoleIds = null, int[] customerTagIds = null, string email = null, string username = null,
+            DateTime? createdToUtc = null, string affiliateId = "", string vendorId = "",
+            string[] customerRoleIds = null, string[] customerTagIds = null, string email = null, string username = null,
             string firstName = null, string lastName = null,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
@@ -165,9 +156,9 @@ namespace Nop.Services.Customers
                 query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
-            if (affiliateId > 0)
+            if (!String.IsNullOrEmpty(affiliateId))
                 query = query.Where(c => affiliateId == c.AffiliateId);
-            if (vendorId > 0)
+            if (!String.IsNullOrEmpty(vendorId))
                 query = query.Where(c => vendorId == c.VendorId);
             query = query.Where(c => !c.Deleted);
             if (customerRoleIds != null && customerRoleIds.Length > 0)
@@ -252,7 +243,7 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         public virtual IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
-            int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
+            string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _customerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);
@@ -295,11 +286,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>A customer</returns>
-        public virtual Customer GetCustomerById(int customerId)
-        {
-            if (customerId == 0)
-                return null;
-            
+        public virtual Customer GetCustomerById(string customerId)
+        {            
             return _customerRepository.GetById(customerId);
         }
 
@@ -308,7 +296,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerIds">Customer identifiers</param>
         /// <returns>Customers</returns>
-        public virtual IList<Customer> GetCustomersByIds(int[] customerIds)
+        public virtual IList<Customer> GetCustomersByIds(string[] customerIds)
         {
             if (customerIds == null || customerIds.Length == 0)
                 return new List<Customer>();
@@ -319,7 +307,7 @@ namespace Nop.Services.Customers
             var customers = query.ToList();
             //sort by passed identifiers
             var sortedCustomers = new List<Customer>();
-            foreach (int id in customerIds)
+            foreach (string id in customerIds)
             {
                 var customer = customers.Find(x => x.Id == id);
                 if (customer != null)
@@ -579,10 +567,8 @@ namespace Nop.Services.Customers
 
         }
 
-        public virtual void UpdateFreeShipping(int customerId, bool freeShipping)
+        public virtual void UpdateFreeShipping(string customerId, bool freeShipping)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
@@ -623,70 +609,56 @@ namespace Nop.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
         
-        public virtual void UpdateHasForumTopic(int customerId)
+        public virtual void UpdateHasForumTopic(string customerId)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.IsHasForumTopic, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasForumPost(int customerId)
+        public virtual void UpdateHasForumPost(string customerId)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.IsHasForumPost, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasOrders(int customerId)
+        public virtual void UpdateHasOrders(string customerId)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.IsHasOrders, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasBlogComments(int customerId)
+        public virtual void UpdateHasBlogComments(string customerId)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.IsHasBlogComments, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasProductReview(int customerId)
+        public virtual void UpdateHasProductReview(string customerId)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.IsHasProductReview, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasProductReviewH(int customerId)
+        public virtual void UpdateHasProductReviewH(string customerId)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.IsHasProductReviewH, true);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateHasPoolVoting(int customerId)
+        public virtual void UpdateHasPoolVoting(string customerId)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
@@ -694,23 +666,16 @@ namespace Nop.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
 
-        public virtual void UpdateCustomerLastPurchaseDate(int customerId, DateTime date)
+        public virtual void UpdateCustomerLastPurchaseDate(string customerId, DateTime date)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
-
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
                 .Set(x => x.LastPurchaseDateUtc, date);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
-
         }
-        public virtual void UpdateCustomerLastUpdateCartDate(int customerId, DateTime date)
+        public virtual void UpdateCustomerLastUpdateCartDate(string customerId, DateTime date)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
-
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
@@ -718,11 +683,8 @@ namespace Nop.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }
-        public virtual void UpdateCustomerLastUpdateWishList(int customerId, DateTime date)
+        public virtual void UpdateCustomerLastUpdateWishList(string customerId, DateTime date)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customer");
-
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
@@ -740,7 +702,7 @@ namespace Nop.Services.Customers
         /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
         /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
         /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
-        public virtual void ResetCheckoutData(Customer customer, int storeId,
+        public virtual void ResetCheckoutData(Customer customer, string storeId,
             bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true)
@@ -887,11 +849,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRoleId">Customer role identifier</param>
         /// <returns>Customer role</returns>
-        public virtual CustomerRole GetCustomerRoleById(int customerRoleId)
+        public virtual CustomerRole GetCustomerRoleById(string customerRoleId)
         {
-            if (customerRoleId == 0)
-                return null;
-
             return _customerRoleRepository.GetById(customerRoleId);
         }
 
@@ -988,7 +947,7 @@ namespace Nop.Services.Customers
 
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.Pull(p => p.CustomerRoles, customerRole);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerRole.CustomerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerRole.CustomerId), update);
 
         }
 
@@ -999,7 +958,7 @@ namespace Nop.Services.Customers
 
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.CustomerRoles, customerRole);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerRole.CustomerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerRole.CustomerId), update);
 
         }
 
@@ -1075,7 +1034,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerRoleId">Customer role id</param>
         /// <returns>Customer role products</returns>
-        public virtual IList<CustomerRoleProduct> GetCustomerRoleProducts(int customerRoleId)
+        public virtual IList<CustomerRoleProduct> GetCustomerRoleProducts(string customerRoleId)
         {
             string key = string.Format(CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleId);
             return _cacheManager.Get(key, () =>
@@ -1095,7 +1054,7 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleId">Customer role id</param>
         /// <param name="productId">Product id</param>
         /// <returns>Customer role product</returns>
-        public virtual CustomerRoleProduct GetCustomerRoleProduct(int customerRoleId, int productId)
+        public virtual CustomerRoleProduct GetCustomerRoleProduct(string customerRoleId, string productId)
         {
             var query = from cr in _customerRoleProductRepository.Table
                         orderby cr.DisplayOrder
@@ -1110,7 +1069,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="Id">id</param>
         /// <returns>Customer role product</returns>
-        public virtual CustomerRoleProduct GetCustomerRoleProductById(int id)
+        public virtual CustomerRoleProduct GetCustomerRoleProductById(string id)
         {
             var query = from cr in _customerRoleProductRepository.Table
                         orderby cr.DisplayOrder
@@ -1132,7 +1091,7 @@ namespace Nop.Services.Customers
 
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.Pull(p => p.Addresses, address);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", address.CustomerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", address.CustomerId), update);
 
         }
 
@@ -1143,7 +1102,7 @@ namespace Nop.Services.Customers
 
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.Addresses, address);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", address.CustomerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", address.CustomerId), update);
 
             //event notification
             _eventPublisher.EntityInserted(address);
@@ -1203,11 +1162,8 @@ namespace Nop.Services.Customers
 
         }
 
-        public virtual void RemoveShippingAddress(int customerId)
+        public virtual void RemoveShippingAddress(string customerId)
         {
-            if (customerId == 0)
-                throw new ArgumentNullException("customerId");
-
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);
             var update = Builders<Customer>.Update
@@ -1227,7 +1183,9 @@ namespace Nop.Services.Customers
 
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.Pull(p => p.ShoppingCartItems, shoppingCartItem);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", shoppingCartItem.CustomerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", shoppingCartItem.CustomerId), update);
+
+            //event notification
             _eventPublisher.EntityDeleted(shoppingCartItem);
 
             if (shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -1244,7 +1202,7 @@ namespace Nop.Services.Customers
 
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.ShoppingCartItems, shoppingCartItem);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", shoppingCartItem.CustomerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", shoppingCartItem.CustomerId), update);
 
             //event notification
             _eventPublisher.EntityInserted(shoppingCartItem);

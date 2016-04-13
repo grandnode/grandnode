@@ -12,12 +12,12 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address
@@ -53,12 +53,12 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the email account identifier
         /// </summary>
-        public int EmailAccountId { get; set; }
+        public string EmailAccountId { get; set; }
 
         /// <summary>
         /// Gets or sets the vendor identifier
         /// </summary>
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
 
     }
 }

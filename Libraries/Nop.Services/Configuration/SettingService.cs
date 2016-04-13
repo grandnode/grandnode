@@ -61,10 +61,10 @@ namespace Nop.Services.Configuration
         //[Serializable]
         public class SettingForCaching
         {
-            public int Id { get; set; }
+            public string Id { get; set; }
             public string Name { get; set; }
             public string Value { get; set; }
-            public int StoreId { get; set; }
+            public string StoreId { get; set; }
         }
 
         #endregion
@@ -184,11 +184,8 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <param name="settingId">Setting identifier</param>
         /// <returns>Setting</returns>
-        public virtual Setting GetSettingById(int settingId)
+        public virtual Setting GetSettingById(string settingId)
         {
-            if (settingId == 0)
-                return null;
-
             return _settingRepository.GetById(settingId);
         }
 
@@ -199,7 +196,7 @@ namespace Nop.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting</returns>
-        public virtual Setting GetSetting(string key, int storeId = 0, bool loadSharedValueIfNotFound = false)
+        public virtual Setting GetSetting(string key, string storeId = "", bool loadSharedValueIfNotFound = false)
         {
             if (String.IsNullOrEmpty(key))
                 return null;
@@ -212,8 +209,8 @@ namespace Nop.Services.Configuration
                 var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
 
                 //load shared value?
-                if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
-                    setting = settingsByKey.FirstOrDefault(x => x.StoreId == 0);
+                if (setting == null && !String.IsNullOrEmpty(storeId) && loadSharedValueIfNotFound)
+                    setting = settingsByKey.FirstOrDefault(x => x.StoreId == "");
 
                 if (setting != null)
                     return GetSettingById(setting.Id);
@@ -232,7 +229,7 @@ namespace Nop.Services.Configuration
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting value</returns>
         public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T), 
-            int storeId = 0, bool loadSharedValueIfNotFound = false)
+            string storeId = "", bool loadSharedValueIfNotFound = false)
         {
             if (String.IsNullOrEmpty(key))
                 return defaultValue;
@@ -245,8 +242,8 @@ namespace Nop.Services.Configuration
                 var setting = settingsByKey.FirstOrDefault(x => x.StoreId == storeId);
 
                 //load shared value?
-                if (setting == null && storeId > 0 && loadSharedValueIfNotFound)
-                    setting = settingsByKey.FirstOrDefault(x => x.StoreId == 0);
+                if (setting == null && !String.IsNullOrEmpty(storeId) && loadSharedValueIfNotFound)
+                    setting = settingsByKey.FirstOrDefault(x => x.StoreId == "");
 
                 if (setting != null)
                     return CommonHelper.To<T>(setting.Value);
@@ -263,7 +260,7 @@ namespace Nop.Services.Configuration
         /// <param name="value">Value</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        public virtual void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
+        public virtual void SetSetting<T>(string key, T value, string storeId = "", bool clearCache = true)
         {
             if (key == null)
                 throw new ArgumentNullException("key");
@@ -316,7 +313,7 @@ namespace Nop.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <returns>true -setting exists; false - does not exist</returns>
         public virtual bool SettingExists<T, TPropType>(T settings, 
-            Expression<Func<T, TPropType>> keySelector, int storeId = 0) 
+            Expression<Func<T, TPropType>> keySelector, string storeId = "") 
             where T : ISettings, new()
         {
             string key = settings.GetSettingKey(keySelector);
@@ -330,7 +327,7 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store identifier for which settigns should be loaded</param>
-        public virtual T LoadSetting<T>(int storeId = 0) where T : ISettings, new()
+        public virtual T LoadSetting<T>(string storeId = "") where T : ISettings, new()
         {
             var settings = Activator.CreateInstance<T>();
 
@@ -367,7 +364,7 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store identifier</param>
         /// <param name="settings">Setting instance</param>
-        public virtual void SaveSetting<T>(T settings, int storeId = 0) where T : ISettings, new()
+        public virtual void SaveSetting<T>(T settings, string storeId = "") where T : ISettings, new()
         {
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -405,7 +402,7 @@ namespace Nop.Services.Configuration
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         public virtual void SaveSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
-            int storeId = 0, bool clearCache = true) where T : ISettings, new()
+            string storeId = "", bool clearCache = true) where T : ISettings, new()
         {
             var member = keySelector.Body as MemberExpression;
             if (member == null)
@@ -459,7 +456,7 @@ namespace Nop.Services.Configuration
         /// <param name="keySelector">Key selector</param>
         /// <param name="storeId">Store ID</param>
         public virtual void DeleteSetting<T, TPropType>(T settings,
-            Expression<Func<T, TPropType>> keySelector, int storeId = 0) where T : ISettings, new()
+            Expression<Func<T, TPropType>> keySelector, string storeId = "") where T : ISettings, new()
         {
             string key = settings.GetSettingKey(keySelector);
             key = key.Trim().ToLowerInvariant();

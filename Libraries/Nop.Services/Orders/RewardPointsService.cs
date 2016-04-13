@@ -56,20 +56,10 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer Id</param>
         /// <returns>PointsBalance</returns>
 
-        public int GetRewardPointsBalance(int customerId, int storeId)
+        public int GetRewardPointsBalance(string customerId, string storeId)
         {
-            //int result = 0;
-            //var lastRph = _rphRepository.Table
-            //        .Where(x=>x.CustomerId == customerId)
-            //        .OrderByDescending(rph => rph.CreatedOnUtc)
-            //        .ThenByDescending(rph => rph.Id)
-            //        .FirstOrDefault();
-            //if (lastRph != null)
-            //    result = lastRph.PointsBalance;
-            //return result;
-
             var query = _rphRepository.Table;
-            if (customerId > 0)
+            if (!String.IsNullOrEmpty(customerId))
                 query = query.Where(rph => rph.CustomerId == customerId);
             if (!_rewardPointsSettings.PointsAccumulatedForAllStores)
                 query = query.Where(rph => rph.StoreId == storeId);
@@ -90,8 +80,8 @@ namespace Nop.Services.Orders
         /// <param name="usedAmount">Used amount</param>
         /// <returns>RewardPointsHistory</returns>
 
-        public RewardPointsHistory AddRewardPointsHistory(int customerId, int points, int storeId,  string message = "",
-           int usedWithOrderId = 0, decimal usedAmount = 0M)
+        public RewardPointsHistory AddRewardPointsHistory(string customerId, int points, string storeId,  string message = "",
+           string usedWithOrderId = "", decimal usedAmount = 0M)
         {
 
             var rewardPointsHistory = new RewardPointsHistory
@@ -102,6 +92,7 @@ namespace Nop.Services.Orders
                 PointsBalance = GetRewardPointsBalance(customerId, storeId) + points,
                 UsedAmount = usedAmount,
                 Message = message,
+                StoreId = storeId,
                 CreatedOnUtc = DateTime.UtcNow
             };
             _rphRepository.Insert(rewardPointsHistory);
@@ -112,16 +103,10 @@ namespace Nop.Services.Orders
             return rewardPointsHistory;
         }
 
-        public IList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, bool showHidden = false)
+        public IList<RewardPointsHistory> GetRewardPointsHistory(string customerId = "", bool showHidden = false)
         {
-            //var query = _rewardPointsHistory.Table
-            //        .Where(x => x.CustomerId == customerId)
-            //        .OrderByDescending(rph => rph.CreatedOnUtc)
-            //        .ThenByDescending(rph => rph.Id);
-
-            //return query.ToList();
             var query = _rphRepository.Table;
-            if (customerId > 0)
+            if (String.IsNullOrEmpty(customerId))
                 query = query.Where(rph => rph.CustomerId == customerId);
             if (!showHidden && !_rewardPointsSettings.PointsAccumulatedForAllStores)
             {

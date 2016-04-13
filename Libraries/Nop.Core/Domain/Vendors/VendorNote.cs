@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 namespace Nop.Core.Domain.Vendors
 {
     [BsonIgnoreExtraElements]
-    public partial class VendorNote : BaseEntity
+    public partial class VendorNote : SubBaseEntity
     {
 
         /// <summary>
         /// Gets or sets the vendor identifier
         /// </summary>
-        public int VendorId { get; set; }
+        [BsonIgnore]
+        public string VendorId { get; set; }
         /// <summary>
         /// Gets or sets the note
         /// </summary>

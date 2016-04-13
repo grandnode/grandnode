@@ -141,7 +141,7 @@
 
     function additionalData() {
         var data = {
-            AffliateId: @(Model.AffliateId),
+            AffliateId: '@(Model.AffliateId)',
             StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
             EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
             OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),

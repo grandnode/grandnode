@@ -25,7 +25,6 @@ namespace Nop.Services.Customers
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
-        private readonly IRepository<CustomerActionConditionType> _customerActionConditionTypeRepository;
         private readonly IRepository<Banner> _bannerRepository;
         private readonly IRepository<BannerActive> _bannerActiveRepository;
         private readonly IRepository<ActivityLog> _activityLogRepository;
@@ -48,7 +47,6 @@ namespace Nop.Services.Customers
         public CustomerActionEventService(IRepository<CustomerAction> customerActionRepository,
             IRepository<CustomerActionType> customerActionTypeRepository,
             IRepository<CustomerActionHistory> customerActionHistoryRepository,
-            IRepository<CustomerActionConditionType> customerActionConditionTypeRepository,
             IRepository<Banner> bannerRepository,
             IRepository<BannerActive> bannerActiveRepository,
             IRepository<ActivityLog> activityLogRepository,
@@ -67,7 +65,6 @@ namespace Nop.Services.Customers
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
-            this._customerActionConditionTypeRepository = customerActionConditionTypeRepository;
             this._customerActionHistoryRepository = customerActionHistoryRepository;
             this._bannerRepository = bannerRepository;
             this._bannerActiveRepository = bannerActiveRepository;
@@ -91,7 +88,7 @@ namespace Nop.Services.Customers
         #region Utilities
 
         #region Action
-        protected bool UsedAction(int actionId, int customerId)
+        protected bool UsedAction(string actionId, string customerId)
         {
             var query = from u in _customerActionHistoryRepository.Table
                         where u.CustomerId == customerId && u.CustomerActionId == actionId
@@ -102,15 +99,17 @@ namespace Nop.Services.Customers
             return false;
         }
 
-        protected void SaveActionToCustomer(int actionId, int customerId)
+        protected void SaveActionToCustomer(string actionId, string customerId)
         {
             _customerActionHistoryRepository.Insert(new CustomerActionHistory() { CustomerId = customerId, CustomerActionId = actionId });
         }
         #endregion
 
         #region Condition
-        protected bool Condition(CustomerAction action, Product product, string attributesXml, int customerId, string currentUrl, string previousUrl)
+        protected bool Condition(CustomerAction action, Product product, string attributesXml, string customerId, string currentUrl, string previousUrl)
         {
+            var _cat = _customerActionTypeRepository.Table.AsQueryable().ToList();
+
             bool cond = false;
             foreach (var item in action.Conditions)
             {
@@ -155,7 +154,7 @@ namespace Nop.Services.Customers
                 #endregion
 
                 #region Action type viewed
-                if (action.ActionTypeId == (int)CustomerActionTypeEnum.Viewed)
+                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "Viewed").Id) 
                 {
                     cond = false;
                     if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.Category)
@@ -266,7 +265,7 @@ namespace Nop.Services.Customers
 
             return cond;
         }
-        protected bool ConditionCategory(CustomerAction.ActionCondition condition, ICollection<int> categorties)
+        protected bool ConditionCategory(CustomerAction.ActionCondition condition, ICollection<string> categorties)
         {
             bool cond = true;
             if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
@@ -297,7 +296,7 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionManufacturer(CustomerAction.ActionCondition condition, ICollection<int> manufacturers)
+        protected bool ConditionManufacturer(CustomerAction.ActionCondition condition, ICollection<string> manufacturers)
         {
             bool cond = true;
 
@@ -313,12 +312,12 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionProducts(CustomerAction.ActionCondition condition, int productId)
+        protected bool ConditionProducts(CustomerAction.ActionCondition condition, string productId)
         {
             return condition.Products.Contains(productId);
         }
 
-        protected bool ConditionProducts(CustomerAction.ActionCondition condition, ICollection<int> products)
+        protected bool ConditionProducts(CustomerAction.ActionCondition condition, ICollection<string> products)
         {
             bool cond = true;
             if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
@@ -344,7 +343,7 @@ namespace Nop.Services.Customers
                     var attributeValuesStr = _productAttributeParser.ParseValues(AttributesXml, attr.Id);
                     foreach (var attrV in attributeValuesStr)
                     {
-                        var attrsv = attr.ProductAttributeValues.Where(x => x.Id == Convert.ToInt32(attrV)).FirstOrDefault();
+                        var attrsv = attr.ProductAttributeValues.Where(x => x.Id == attrV).FirstOrDefault();
                         if (attrsv != null)
                             if (condition.ProductAttribute.Where(x => x.ProductAttributeId == attr.ProductAttributeId && x.Name == attrsv.Name).Count() > 0)
                             {
@@ -367,7 +366,7 @@ namespace Nop.Services.Customers
                             var attributeValuesStr = _productAttributeParser.ParseValues(AttributesXml, attr.Id);
                             foreach (var attrV in attributeValuesStr)
                             {
-                                var attrsv = attr.ProductAttributeValues.Where(x => x.Id == Convert.ToInt32(attrV)).FirstOrDefault();
+                                var attrsv = attr.ProductAttributeValues.Where(x => x.Id == attrV).FirstOrDefault();
                                 if (attrsv != null)
                                 {
                                     if (attrsv.Name == itemPA.Name)
@@ -419,12 +418,12 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionVendors(CustomerAction.ActionCondition condition, int vendorId)
+        protected bool ConditionVendors(CustomerAction.ActionCondition condition, string vendorId)
         {
             return condition.Vendors.Contains(vendorId);
         }
 
-        protected bool ConditionCustomerRole(CustomerAction.ActionCondition condition, int customerId)
+        protected bool ConditionCustomerRole(CustomerAction.ActionCondition condition, string customerId)
         {
             bool cond = false;
             var customer = _customerService.GetCustomerById(customerId);
@@ -443,7 +442,7 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionCustomerTag(CustomerAction.ActionCondition condition, int customerId)
+        protected bool ConditionCustomerTag(CustomerAction.ActionCondition condition, string customerId)
         {
             bool cond = false;
             var customer = _customerService.GetCustomerById(customerId);
@@ -462,7 +461,7 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionCustomerRegister(CustomerAction.ActionCondition condition, int customerId)
+        protected bool ConditionCustomerRegister(CustomerAction.ActionCondition condition, string customerId)
         {
             bool cond = false;
             var customer = _customerService.GetCustomerById(customerId);
@@ -489,7 +488,7 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionCustomerAttribute(CustomerAction.ActionCondition condition, int customerId)
+        protected bool ConditionCustomerAttribute(CustomerAction.ActionCondition condition, string customerId)
         {
             bool cond = false;
             var customer = _customerService.GetCustomerById(customerId);
@@ -509,7 +508,7 @@ namespace Nop.Services.Customers
                                 var _fields = item.RegisterField.Split(':');
                                 if (_fields.Count() > 1)
                                 {
-                                    if (selectedValues.Where(x => x.CustomerAttributeId == Convert.ToInt32(_fields.FirstOrDefault()) && x.Id == Convert.ToInt32(_fields.LastOrDefault())).Count() == 0)
+                                    if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() == 0)
                                         cond = false;
                                 }
                                 else
@@ -532,7 +531,7 @@ namespace Nop.Services.Customers
                                 var _fields = item.RegisterField.Split(':');
                                 if(_fields.Count() > 1)
                                 {
-                                    if (selectedValues.Where(x => x.CustomerAttributeId==Convert.ToInt32( _fields.FirstOrDefault()) && x.Id == Convert.ToInt32(_fields.LastOrDefault())).Count() > 0)
+                                    if (selectedValues.Where(x => x.CustomerAttributeId== _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() > 0)
                                         cond = true;
                                 }
                             }
@@ -546,7 +545,7 @@ namespace Nop.Services.Customers
         #endregion
 
         #region Reaction
-        protected void Reaction(CustomerAction action, int customerId, ShoppingCartItem cartItem, Order order)
+        protected void Reaction(CustomerAction action, string customerId, ShoppingCartItem cartItem, Order order)
         {
             if (action.ReactionType == CustomerReactionTypeEnum.Banner)
             {
@@ -554,23 +553,25 @@ namespace Nop.Services.Customers
                 PrepareBanner(action, banner, customerId);
             }
 
+            var _cat = _customerActionTypeRepository.Table.AsQueryable().ToList();
+
             if (action.ReactionType == CustomerReactionTypeEnum.Email)
             {
-                if (action.ActionTypeId == (int)CustomerActionTypeEnum.AddToCart)
+                if (action.ActionTypeId == _cat.FirstOrDefault(x=>x.SystemKeyword== "AddToCart").Id) //(int)CustomerActionTypeEnum.AddToCart)
                 {
                     if(cartItem!=null)
                         _workflowMessageService.SendCustomerActionEvent_AddToCart_Notification(action, cartItem,
                             _workContext.WorkingLanguage.Id, customerId);
                 }
 
-                if (action.ActionTypeId == (int)CustomerActionTypeEnum.AddOrder)
+                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id) //(int)CustomerActionTypeEnum.AddOrder)
                 {
                     if(order!=null)
                         _workflowMessageService.SendCustomerActionEvent_AddToOrder_Notification(action, order,
                             _workContext.WorkingLanguage.Id);
                 }
 
-                if (action.ActionTypeId != (int)CustomerActionTypeEnum.AddOrder && action.ActionTypeId != (int)CustomerActionTypeEnum.AddToCart)
+                if (action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id && action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id) //(int)CustomerActionTypeEnum.AddOrder && action.ActionTypeId != (int)CustomerActionTypeEnum.AddToCart)
                 {
                     _workflowMessageService.SendCustomerActionEvent_Notification(action, 
                         _workContext.WorkingLanguage.Id, customerId);
@@ -590,7 +591,7 @@ namespace Nop.Services.Customers
             SaveActionToCustomer(action.Id, customerId);
 
         }
-        protected void PrepareBanner(CustomerAction action, Banner banner, int customerId)
+        protected void PrepareBanner(CustomerAction action, Banner banner, string customerId)
         {
             var banneractive = new BannerActive()
             {
@@ -603,7 +604,7 @@ namespace Nop.Services.Customers
             _bannerActiveRepository.Insert(banneractive);
         }
 
-        protected void AssignToCustomerRole(CustomerAction action, int customerId)
+        protected void AssignToCustomerRole(CustomerAction action, string customerId)
         {
             var customer = _customerService.GetCustomerById(customerId);
             if(customer.CustomerRoles.Where(x=>x.Id == action.CustomerRoleId).Count() == 0)
@@ -617,7 +618,7 @@ namespace Nop.Services.Customers
             }
         }
 
-        protected void AssignToCustomerTag(CustomerAction action, int customerId)
+        protected void AssignToCustomerTag(CustomerAction action, string customerId)
         {
             var customer = _customerService.GetCustomerById(customerId);
             if (customer.CustomerTags.Where(x => x == action.CustomerTagId).Count() == 0)
@@ -685,7 +686,7 @@ namespace Nop.Services.Customers
             }
         }
 
-        public virtual void Url(int customerId, string currentUrl, string previousUrl)
+        public virtual void Url(string customerId, string currentUrl, string previousUrl)
         {
             var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
             if (actionType.Enabled)
@@ -710,7 +711,7 @@ namespace Nop.Services.Customers
             }
         }
 
-        public virtual void Viewed(int customerId, string currentUrl, string previousUrl)
+        public virtual void Viewed(string customerId, string currentUrl, string previousUrl)
         {
             var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
             if (actionType.Enabled)
@@ -734,7 +735,7 @@ namespace Nop.Services.Customers
 
             }
         }
-        public virtual void Registration(int customerId)
+        public virtual void Registration(string customerId)
         {
             var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
             if (actionType.Enabled)

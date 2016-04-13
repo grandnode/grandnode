@@ -80,7 +80,7 @@ namespace Nop.Admin.Controllers
             var model = new GiftCardListModel();
             model.ActivatedList.Add(new SelectListItem
             {
-                Value = "0",
+                Value = "",
                 Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.All")
             });
             model.ActivatedList.Add(new SelectListItem
@@ -162,7 +162,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -173,7 +173,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = giftCard.ToModel();
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.OrderId : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -191,7 +191,7 @@ namespace Nop.Admin.Controllers
 
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.OrderId : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -237,7 +237,7 @@ namespace Nop.Admin.Controllers
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
             model = giftCard.ToModel();
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? (int?)giftCard.PurchasedWithOrderItem.OrderId : null;
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.OrderId : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -250,7 +250,7 @@ namespace Nop.Admin.Controllers
                 if (!CommonHelper.IsValidEmail(giftCard.SenderEmail))
                     throw new NopException("Sender email is not valid");
 
-                var languageId = 0;
+                var languageId = "";
                 var order = giftCard.PurchasedWithOrderItem != null ? EngineContext.Current.Resolve<IOrderService>().GetOrderById(giftCard.PurchasedWithOrderItem.OrderId) : null;
                 if (order != null)
                 {
@@ -281,7 +281,7 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();
@@ -302,7 +302,7 @@ namespace Nop.Admin.Controllers
         
         //Gif card usage history
         [HttpPost]
-        public ActionResult UsageHistoryList(int giftCardId, DataSourceRequest command)
+        public ActionResult UsageHistoryList(string giftCardId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageGiftCards))
                 return AccessDeniedView();

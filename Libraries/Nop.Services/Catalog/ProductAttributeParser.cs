@@ -34,9 +34,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected product attribute mapping identifiers</returns>
-        protected virtual IList<int> ParseProductAttributeMappingIds(string attributesXml)
+        protected virtual IList<string> ParseProductAttributeMappingIds(string attributesXml)
         {
-            var ids = new List<int>();
+            var ids = new List<string>();
             if (String.IsNullOrEmpty(attributesXml))
                 return ids;
 
@@ -51,11 +51,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
-                        {
-                            ids.Add(id);
-                        }
+                        ids.Add(str1);
                     }
                 }
             }
@@ -75,11 +71,12 @@ namespace Nop.Services.Catalog
         {
             var result = new List<ProductAttributeMapping>();
             var ids = ParseProductAttributeMappingIds(attributesXml);
-            foreach (int id in ids)
+            foreach (string id in ids)
             {
                 var attribute = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();  //_productAttributeService.GetProductAttributeMappingById(id);
                 if (attribute != null)
                 {
+                    attribute.ProductId = product.Id;
                     result.Add(attribute);
                 }
             }
@@ -105,16 +102,15 @@ namespace Nop.Services.Catalog
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int id;
-                        if (int.TryParse(valueStr, out id))
-                        {
-                            if (attribute.ProductAttributeValues.Where(x => x.Id == id).Count() > 0)
+                            if (attribute.ProductAttributeValues.Where(x => x.Id == valueStr).Count() > 0)
                             {
-                                var value = attribute.ProductAttributeValues.Where(x => x.Id == id).FirstOrDefault(); //_productAttributeService.GetProductAttributeValueById(id);
+                                var value = attribute.ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); //_productAttributeService.GetProductAttributeValueById(id);
                                 if (value != null)
+                                {
+                                    value.ProductId = product.Id;
                                     values.Add(value);
+                                }
                             }
-                        }
                     }
                 }
             }
@@ -127,7 +123,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
         /// <returns>Product attribute values</returns>
-        public virtual IList<string> ParseValues(string attributesXml, int productAttributeMappingId)
+        public virtual IList<string> ParseValues(string attributesXml, string productAttributeMappingId)
         {
             var selectedValues = new List<string>();
             try
@@ -141,10 +137,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 =node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
-                        {
-                            if (id == productAttributeMappingId)
+                            if (str1 == productAttributeMappingId)
                             {
                                 var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
                                 foreach (XmlNode node2 in nodeList2)
@@ -153,7 +146,6 @@ namespace Nop.Services.Catalog
                                     selectedValues.Add(value);
                                 }
                             }
-                        }
                     }
                 }
             }
@@ -196,15 +188,11 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 =node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
-                        {
-                            if (id == productAttributeMapping.Id)
+                            if (str1 == productAttributeMapping.Id)
                             {
                                 attributeElement = (XmlElement)node1;
                                 break;
                             }
-                        }
                     }
                 }
 
@@ -262,14 +250,10 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (str1 == productAttributeMapping.Id)
                         {
-                            if (id == productAttributeMapping.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
+                            attributeElement = (XmlElement)node1;
+                            break;
                         }
                     }
                 }

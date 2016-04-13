@@ -19,8 +19,8 @@ namespace Nop.Core.Domain.Catalog
 
         public Category()
         {
-            CustomerRoles = new List<int>();
-            Stores = new List<int>();
+            CustomerRoles = new List<string>();
+            Stores = new List<string>();
             Locales = new List<LocalizedProperty>();
         }
         /// <summary>
@@ -36,7 +36,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value of used category template identifier
         /// </summary>
-        public int CategoryTemplateId { get; set; }
+        public string CategoryTemplateId { get; set; }
 
         /// <summary>
         /// Gets or sets the meta keywords
@@ -56,12 +56,12 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the parent category identifier
         /// </summary>
-        public int ParentCategoryId { get; set; }
+        public string ParentCategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the picture identifier
         /// </summary>
-        public int PictureId { get; set; }
+        public string PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the page size
@@ -97,13 +97,13 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
-        public IList<int> CustomerRoles { get; set; }
+        public IList<string> CustomerRoles { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-        public IList<int> Stores { get; set; }
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the name

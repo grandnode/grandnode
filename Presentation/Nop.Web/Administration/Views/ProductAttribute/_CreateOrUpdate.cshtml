@@ -20,7 +20,7 @@
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.ProductAttributes.Info")
         </li>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
         <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
@@ -33,7 +33,7 @@
     <div>
         @TabInfo()
     </div>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
             @TabUsedByProducts()
@@ -177,7 +177,7 @@
 }
 @helper TabPredefinedValues()
 {
-    if (Model.Id > 0)
+    if (!String.IsNullOrEmpty(Model.Id))
     {
         <p>
             @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
@@ -214,7 +214,7 @@
                                             id: "Id",
                                             fields: {
                                                 Product2Name: { editable: false, type: "string" },
-                                                ProductId2: { editable: false, type: "number" }
+                                                ProductId2: { editable: false, type: "string" }
                                             }
                                         }
                                     },

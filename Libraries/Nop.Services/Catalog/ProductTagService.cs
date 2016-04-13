@@ -97,7 +97,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Dictionary of "product tag ID : product count"</returns>
-        private Dictionary<int, int> GetProductCount(int storeId)
+        private Dictionary<string, int> GetProductCount(string storeId)
         {
             string key = string.Format(PRODUCTTAG_COUNT_KEY, storeId);
             return _cacheManager.Get(key, () =>
@@ -105,7 +105,7 @@ namespace Nop.Services.Catalog
                 var query = from pt in _productTagRepository.Table
                             select pt;
 
-                var dictionary = new Dictionary<int, int>();
+                var dictionary = new Dictionary<string, int>();
                 foreach (var item in query.ToList())
                     dictionary.Add(item.Id, item.Count);
                 return dictionary;
@@ -156,11 +156,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Product tag</returns>
-        public virtual ProductTag GetProductTagById(int productTagId)
+        public virtual ProductTag GetProductTagById(string productTagId)
         {
-            if (productTagId == 0)
-                return null;
-
             return _productTagRepository.GetById(productTagId);
         }
 
@@ -229,7 +226,7 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Number of products</returns>
-        public virtual int GetProductCount(int productTagId, int storeId)
+        public virtual int GetProductCount(string productTagId, string storeId)
         {
             var dictionary = GetProductCount(storeId);
             if (dictionary.ContainsKey(productTagId))

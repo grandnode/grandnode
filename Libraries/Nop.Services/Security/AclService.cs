@@ -93,9 +93,9 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="aclRecordId">ACL record identifier</param>
         /// <returns>ACL record</returns>
-        public virtual AclRecord GetAclRecordById(int aclRecordId)
+        public virtual AclRecord GetAclRecordById(string aclRecordId)
         {
-            if (aclRecordId == 0)
+            if (String.IsNullOrEmpty(aclRecordId))
                 return null;
 
             return _aclRecordRepository.GetById(aclRecordId);
@@ -112,7 +112,7 @@ namespace Nop.Services.Security
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            int entityId = entity.Id;
+            string entityId = entity.Id;
             string entityName = typeof(T).Name;
 
             var query = from ur in _aclRecordRepository.Table
@@ -148,15 +148,15 @@ namespace Nop.Services.Security
         /// <typeparam name="T">Type</typeparam>
         /// <param name="customerRoleId">Customer role id</param>
         /// <param name="entity">Entity</param>
-        public virtual void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported
+        public virtual void InsertAclRecord<T>(T entity, string customerRoleId) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            if (customerRoleId == 0)
+            if (String.IsNullOrEmpty(customerRoleId))
                 throw new ArgumentOutOfRangeException("customerRoleId");
 
-            int entityId = entity.Id;
+            string entityId = entity.Id;
             string entityName = typeof(T).Name;
 
             var aclRecord = new AclRecord

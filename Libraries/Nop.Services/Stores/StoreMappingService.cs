@@ -72,12 +72,12 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Wntity</param>
         /// <returns>Store identifiers</returns>
-        public virtual int[] GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported
+        public virtual string[] GetStoresIdsWithAccess<T>(T entity) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            int entityId = entity.Id;
+            string entityId = entity.Id;
             string entityName = typeof(T).Name;
 
             string key = string.Format(STOREMAPPING_BY_ENTITYID_NAME_KEY, entityId, entityName);
@@ -105,12 +105,12 @@ namespace Nop.Services.Stores
         /// <param name="entity">Entity</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
+        public virtual bool Authorize<T>(T entity, string storeId) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 return false;
 
-            if (storeId == 0)
+            if (String.IsNullOrEmpty(storeId))
                 //return true if no store specified/found
                 return true;
 

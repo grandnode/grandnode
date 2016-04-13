@@ -15,7 +15,7 @@ namespace Nop.Admin.Models.Directory
         {
             Locales = new List<StateProvinceLocalizedModel>();
         }
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
         [AllowHtml]
@@ -36,7 +36,7 @@ namespace Nop.Admin.Models.Directory
 
     public partial class StateProvinceLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
         [AllowHtml]

@@ -190,7 +190,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryExchangeRateCurrency(int id)
+        public ActionResult MarkAsPrimaryExchangeRateCurrency(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -202,7 +202,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryStoreCurrency(int id)
+        public ActionResult MarkAsPrimaryStoreCurrency(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -244,7 +244,7 @@ namespace Nop.Admin.Controllers
                 currency.CreatedOnUtc = DateTime.UtcNow;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 currency.Locales = UpdateLocales(currency, model);
-                currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
                 _currencyService.InsertCurrency(currency);
 
@@ -260,7 +260,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
         
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -308,7 +308,7 @@ namespace Nop.Admin.Controllers
                 currency = model.ToEntity(currency);
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 currency.Locales = UpdateLocales(currency, model);
-                currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                currency.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _currencyService.UpdateCurrency(currency);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
@@ -333,7 +333,7 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();

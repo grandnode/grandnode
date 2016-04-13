@@ -21,7 +21,7 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>
         /// <returns>Blog post</returns>
-        BlogPost GetBlogPostById(int blogPostId);
+        BlogPost GetBlogPostById(string blogPostId);
 
         /// <summary>
         /// Gets all blog posts
@@ -34,7 +34,7 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        IPagedList<BlogPost> GetAllBlogPosts(int storeId = 0, int languageId = 0,
+        IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", string languageId = "",
             DateTime? dateFrom = null, DateTime? dateTo = null, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null);
 
@@ -48,8 +48,8 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        IPagedList<BlogPost> GetAllBlogPostsByTag(int storeId = 0,
-            int languageId = 0, string tag = "",
+        IPagedList<BlogPost> GetAllBlogPostsByTag(string storeId = "",
+            string languageId = "", string tag = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Nop.Services.Blogs
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
-        IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false);
+        IList<BlogPostTag> GetAllBlogPostTags(string storeId, string languageId, bool showHidden = false);
 
         /// <summary>
         /// Inserts an blog post
@@ -84,23 +84,23 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <returns>Comments</returns>
-        IList<BlogComment> GetAllComments(int customerId);
+        IList<BlogComment> GetAllComments(string customerId);
 
         /// <summary>
         /// Gets a blog comment
         /// </summary>
         /// <param name="blogCommentId">Blog comment identifier</param>
         /// <returns>Blog comment</returns>
-        BlogComment GetBlogCommentById(int blogCommentId);
+        BlogComment GetBlogCommentById(string blogCommentId);
 
         /// <summary>
         /// Get blog comments by identifiers
         /// </summary>
         /// <param name="commentIds">Blog comment identifiers</param>
         /// <returns>Blog comments</returns>
-        IList<BlogComment> GetBlogCommentsByIds(int[] commentIds);
+        IList<BlogComment> GetBlogCommentsByIds(string[] commentIds);
 
-        IList<BlogComment> GetBlogCommentsByBlogPostId(int blogPostId);
+        IList<BlogComment> GetBlogCommentsByBlogPostId(string blogPostId);
         void DeleteBlogComment(BlogComment blogComment);
 
     }

@@ -55,7 +55,7 @@
         <td class="adminData">
             @Html.PasswordFor(model => model.Password)
             @Html.ValidationMessageFor(model => model.Password)
-            @if (Model.Id > 0)
+            @if (!String.IsNullOrEmpty(Model.Id))
             {
                 <input type="submit" name="changepassword" class="k-button" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
             }
@@ -79,7 +79,7 @@
             @Html.ValidationMessageFor(model => model.UseDefaultCredentials)
         </td>
     </tr>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <tr>
             <td colspan="2">

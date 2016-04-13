@@ -40,13 +40,17 @@ namespace Nop.Services.Catalog
         /// </remarks>
         private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
 
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+
         #endregion
 
         #region Fields
 
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
-        private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -63,13 +67,11 @@ namespace Nop.Services.Catalog
         /// <param name="eventPublisher">Event published</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
-            IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<Product> productRepository,
             IEventPublisher eventPublisher)
         {
             _cacheManager = cacheManager;
             _specificationAttributeRepository = specificationAttributeRepository;
-            _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             _eventPublisher = eventPublisher;
             _productRepository = productRepository;
         }
@@ -85,11 +87,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="specificationAttributeId">The specification attribute identifier</param>
         /// <returns>Specification attribute</returns>
-        public virtual SpecificationAttribute GetSpecificationAttributeById(int specificationAttributeId)
+        public virtual SpecificationAttribute GetSpecificationAttributeById(string specificationAttributeId)
         {
-            if (specificationAttributeId == 0)
-                return null;
-
             return _specificationAttributeRepository.GetById(specificationAttributeId);
         }
 
@@ -124,6 +123,7 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Delete(specificationAttribute);
 
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
@@ -178,47 +178,27 @@ namespace Nop.Services.Catalog
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException("specificationAttributeOption");
 
-            _specificationAttributeOptionRepository.Delete(specificationAttributeOption);
+            var builder = Builders<Product>.Update;
+            var updatefilter = builder.PullFilter(x => x.ProductSpecificationAttributes, 
+                y => y.SpecificationAttributeId == specificationAttributeOption.SpecificationAttributeId
+                                                    && y.SpecificationAttributeOptionId == specificationAttributeOption.Id);
+            var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
 
+            var specificationAttribute = GetSpecificationAttributeById(specificationAttributeOption.SpecificationAttributeId);
+            var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == specificationAttributeOption.Id).FirstOrDefault();
+            if (sao == null)
+                throw new ArgumentException("No specification attribute option found with the specified id");
+
+            specificationAttribute.SpecificationAttributeOptions.Remove(sao);
+            UpdateSpecificationAttribute(specificationAttribute);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(specificationAttributeOption);
         }
 
-        /// <summary>
-        /// Inserts a specification attribute option
-        /// </summary>
-        /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public virtual void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
-        {
-            if (specificationAttributeOption == null)
-                throw new ArgumentNullException("specificationAttributeOption");
-
-            _specificationAttributeOptionRepository.Insert(specificationAttributeOption);
-
-            _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-
-            //event notification
-            _eventPublisher.EntityInserted(specificationAttributeOption);
-        }
-
-        /// <summary>
-        /// Updates the specification attribute
-        /// </summary>
-        /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public virtual void UpdateSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
-        {
-            if (specificationAttributeOption == null)
-                throw new ArgumentNullException("specificationAttributeOption");
-
-            _specificationAttributeOptionRepository.Update(specificationAttributeOption);
-
-            _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
-
-            //event notification
-            _eventPublisher.EntityUpdated(specificationAttributeOption);
-        }
 
         #endregion
 
@@ -235,7 +215,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductSpecificationAttributes, productSpecificationAttribute);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productSpecificationAttribute.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
@@ -256,7 +236,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductSpecificationAttributes, productSpecificationAttribute);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productSpecificationAttribute.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
@@ -298,14 +278,13 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier; 0 to load all records</param>
         /// <param name="specificationAttributeOptionId">The specification attribute option identifier; 0 to load all records</param>
         /// <returns>Count</returns>
-        public virtual int GetProductSpecificationAttributeCount(int productId = 0, int specificationAttributeId = 0, int specificationAttributeOptionId = 0)
+        public virtual int GetProductSpecificationAttributeCount(string productId = "", string specificationAttributeId = "", string specificationAttributeOptionId = "")
         {
-            //TO DO
             var query = _productRepository.Table;
 
-            if (productId > 0)
+            if (!String.IsNullOrEmpty(productId))
                 query = query.Where(psa => psa.Id == productId);
-            if (specificationAttributeId > 0)
+            if (!String.IsNullOrEmpty(specificationAttributeId))
                 query = query.Where(psa => psa.ProductSpecificationAttributes.Any(x=>x.SpecificationAttributeId == specificationAttributeId && x.SpecificationAttributeOptionId == specificationAttributeOptionId));
 
             return query.Count();

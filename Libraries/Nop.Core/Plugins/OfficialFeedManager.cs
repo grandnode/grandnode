@@ -40,8 +40,8 @@ namespace Nop.Core.Plugins
                     var name = node.SelectNodes(@"name")[0].InnerText;
                     result.Add(new OfficialFeedCategory
                     {
-                        Id = int.Parse(id),
-                        ParentCategoryId = int.Parse(parentCategoryId),
+                        Id = id,
+                        ParentCategoryId = parentCategoryId,
                         Name = name,
                     });
                 }
@@ -95,7 +95,7 @@ namespace Nop.Core.Plugins
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Plugins</returns>
-        public virtual IPagedList<OfficialFeedPlugin> GetAllPlugins(int categoryId = 0,
+        public virtual IPagedList<OfficialFeedPlugin> GetAllPlugins(string categoryId = "",
             int versionId = 0, int price = 0,
             string searchTerm = "",
             int pageIndex = 0, int pageSize = int.MaxValue)

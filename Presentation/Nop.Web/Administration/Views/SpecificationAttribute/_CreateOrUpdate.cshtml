@@ -92,7 +92,7 @@
     }
 @helper TabOptions()
     { 
-        if (Model.Id > 0)
+        if (!String.IsNullOrEmpty(Model.Id))
         {
             <table class="adminContent">
                 <tr>

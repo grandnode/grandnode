@@ -10,20 +10,12 @@ namespace Nop.Core
     /// Base class for entities
     /// </summary>
     [BsonIgnoreExtraElements]
-    public abstract partial class BaseEntity
+    public abstract partial class BaseEntity: ParentEntity
     {
         public BaseEntity()
         {
             GenericAttributes = new List<GenericAttribute>();
         }
-        /// <summary>
-        /// Gets or sets the entity identifier
-        /// </summary>                
-        [BsonRepresentation(BsonType.ObjectId)]
-        [BsonId]
-        public string _id { get; set; }        
-
-        public int Id { get; set; }
 
         public IList<GenericAttribute> GenericAttributes { get; set; }
 

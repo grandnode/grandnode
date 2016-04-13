@@ -58,7 +58,7 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public virtual Log GetLogById(int logId)
+        public virtual Log GetLogById(string logId)
         {
             return null;
         }
@@ -68,7 +68,7 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
         /// <returns>Log items</returns>
-        public virtual IList<Log> GetLogByIds(int[] logIds)
+        public virtual IList<Log> GetLogByIds(string[] logIds)
         {
             return new List<Log>();
         }

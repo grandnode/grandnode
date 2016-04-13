@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Localization
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the resource name

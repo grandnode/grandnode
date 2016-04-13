@@ -118,7 +118,7 @@ namespace Nop.Services.Localization
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Languages</returns>
-        public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
+        public virtual IList<Language> GetAllLanguages(bool showHidden = false, string storeId = "")
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             var languages = _cacheManager.Get(key, () =>
@@ -132,7 +132,7 @@ namespace Nop.Services.Localization
             });
 
             //store mapping
-            if (storeId > 0)
+            if (!String.IsNullOrWhiteSpace(storeId))
             {
                 languages = languages
                     .Where(l => _storeMappingService.Authorize(l, storeId))
@@ -146,11 +146,8 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Language</returns>
-        public virtual Language GetLanguageById(int languageId)
+        public virtual Language GetLanguageById(string languageId)
         {
-            if (languageId == 0)
-                return null;
-            
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
             return _cacheManager.Get(key, () => _languageRepository.GetById(languageId));
         }

@@ -200,7 +200,7 @@ namespace Nop.Admin.Controllers
 
             var model = new TopicListModel();
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             
@@ -271,15 +271,15 @@ namespace Nop.Admin.Controllers
                 }
 
                 var topic = model.ToEntity();
-                topic.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
-                topic.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                topic.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+                topic.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _topicService.InsertTopic(topic);
                 //search engine name
                 model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
                 topic.Locales = UpdateLocales(topic, model);
                 topic.SeName = model.SeName;
                 _topicService.UpdateTopic(topic);
-                _urlRecordService.SaveSlug(topic, model.SeName, 0);
+                _urlRecordService.SaveSlug(topic, model.SeName, "");
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
                 
                 //activity log
@@ -299,7 +299,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
@@ -350,15 +350,15 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 topic = model.ToEntity(topic);
-                topic.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
-                topic.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
+                topic.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                topic.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 topic.Locales = UpdateLocales(topic, model);
                 model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
                 topic.SeName = model.SeName;
                 _topicService.UpdateTopic(topic);
                 //search engine name
                
-                _urlRecordService.SaveSlug(topic, model.SeName, 0);
+                _urlRecordService.SaveSlug(topic, model.SeName, "");
                 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
 
@@ -389,7 +389,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();

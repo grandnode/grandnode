@@ -7,17 +7,18 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a record to manage product inventory per warehouse
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductWarehouseInventory : BaseEntity
+    public partial class ProductWarehouseInventory : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        [BsonIgnore]
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the warehouse identifier
         /// </summary>
-        public int WarehouseId { get; set; }
+        public string WarehouseId { get; set; }
 
         /// <summary>
         /// Gets or sets the stock quantity

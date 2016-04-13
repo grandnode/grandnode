@@ -46,7 +46,7 @@ namespace Nop.Admin.Controllers
             model.AvailableLanguages.Add(new SelectListItem
             {
                 Text = "---",
-                Value = "0"
+                Value = ""
             });
             var languages = _languageService.GetAllLanguages(true);
             foreach (var language in languages)
@@ -141,7 +141,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();
@@ -196,7 +196,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageStores))
                 return AccessDeniedView();

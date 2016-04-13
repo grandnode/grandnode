@@ -48,6 +48,7 @@
     {
         @RenderCategoryLine(category, 0, false)
     }
+
     @foreach (var topic in Model.Topics)
     {
         <li><a href="@Url.RouteUrl("Topic", new { SeName=topic.SeName })">@topic.Name</a></li>

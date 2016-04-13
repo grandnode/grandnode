@@ -12,7 +12,7 @@ namespace Nop.Admin.Models.Messages
     public partial class QueuedEmailModel: BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Id")]
-        public override int Id { get; set; }
+        public override string Id { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Priority")]
         public string PriorityName { get; set; }

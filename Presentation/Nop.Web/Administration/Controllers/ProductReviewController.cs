@@ -100,7 +100,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ProductReviewListModel();
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var stores = _storeService.GetAllStores().Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
                         foreach (var selectListItem in stores)
                 model.AvailableStores.Add(selectListItem);
@@ -119,7 +119,7 @@ namespace Nop.Admin.Controllers
             DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var productReviews = _productService.GetAllProductReviews(0, null, 
+            var productReviews = _productService.GetAllProductReviews("", null, 
                 createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId, model.SearchProductId);
             var gridModel = new DataSourceResult
             {
@@ -136,7 +136,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -189,7 +189,7 @@ namespace Nop.Admin.Controllers
         
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
                 return AccessDeniedView();
@@ -219,8 +219,8 @@ namespace Nop.Admin.Controllers
             {
                 foreach (var id in selectedIds)
                 {
-                    int idReview = Convert.ToInt32(id.Split(':').First().ToString());
-                    int idProduct = Convert.ToInt32(id.Split(':').Last().ToString());
+                    string idReview = id.Split(':').First().ToString();
+                    string idProduct = id.Split(':').Last().ToString();
                     var product = _productService.GetProductById(idProduct);
                     var productReview = _productService.GetProductReviewById(idReview);
                     if (productReview != null)
@@ -228,10 +228,7 @@ namespace Nop.Admin.Controllers
                         var previousIsApproved = productReview.IsApproved;
                         productReview.IsApproved = true;
                         _productService.UpdateProductReview(productReview);
-                        //_productService.UpdateProduct(product);
-                        //update product totals
                         _productService.UpdateProductReviewTotals(product);
-
 
                         //raise event (only if it wasn't approved before)
                         if (!previousIsApproved)
@@ -253,8 +250,8 @@ namespace Nop.Admin.Controllers
             {
                 foreach (var id in selectedIds)
                 {
-                    int idReview = Convert.ToInt32(id.Split(':').First().ToString());
-                    int idProduct = Convert.ToInt32(id.Split(':').Last().ToString());
+                    string idReview = id.Split(':').First().ToString();
+                    string idProduct = id.Split(':').Last().ToString();
 
                     var product = _productService.GetProductById(idProduct);
                     var productReview = _productService.GetProductReviewById(idReview);

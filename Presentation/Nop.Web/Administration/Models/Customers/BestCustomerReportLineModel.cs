@@ -5,7 +5,7 @@ namespace Nop.Admin.Models.Customers
 {
     public partial class BestCustomerReportLineModel : BaseNopModel
     {
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.Customers.Reports.BestBy.Fields.Customer")]
         public string CustomerName { get; set; }
 

@@ -30,6 +30,7 @@ namespace Nop.Web.Models.Order
             public string PaymentStatus { get; set; }
             public string ShippingStatus { get; set; }
             public DateTime CreatedOn { get; set; }
+            public int OrderNumber { get; set; }
         }
 
         public partial class RecurringOrderModel : BaseNopEntityModel
@@ -39,7 +40,7 @@ namespace Nop.Web.Models.Order
             public string NextPayment { get; set; }
             public int TotalCycles { get; set; }
             public int CyclesRemaining { get; set; }
-            public int InitialOrderId { get; set; }
+            public string InitialOrderId { get; set; }
             public bool CanCancel { get; set; }
         }
 

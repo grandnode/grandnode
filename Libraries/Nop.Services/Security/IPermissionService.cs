@@ -20,7 +20,7 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="permissionId">Permission identifier</param>
         /// <returns>Permission</returns>
-        PermissionRecord GetPermissionRecordById(int permissionId);
+        PermissionRecord GetPermissionRecordById(string permissionId);
 
         /// <summary>
         /// Gets a permission

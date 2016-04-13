@@ -118,11 +118,8 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="permissionId">Permission identifier</param>
         /// <returns>Permission</returns>
-        public virtual PermissionRecord GetPermissionRecordById(int permissionId)
+        public virtual PermissionRecord GetPermissionRecordById(string permissionId)
         {
-            if (permissionId == 0)
-                return null;
-
             return _permissionRecordRepository.GetById(permissionId);
         }
 

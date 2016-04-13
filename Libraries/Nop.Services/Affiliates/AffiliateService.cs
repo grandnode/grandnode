@@ -48,7 +48,7 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Affiliate</returns>
-        public virtual Affiliate GetAffiliateById(int affiliateId)
+        public virtual Affiliate GetAffiliateById(string affiliateId)
         {
             //if (affiliateId == 0)
             //    return null;

@@ -8,13 +8,13 @@ namespace Nop.Admin.Models.News
     public partial class NewsCommentModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.NewsItem")]
-        public int NewsItemId { get; set; }
+        public string NewsItemId { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.NewsItem")]
         [AllowHtml]
         public string NewsItemTitle { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.Customer")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.Customer")]
         public string CustomerInfo { get; set; }
 

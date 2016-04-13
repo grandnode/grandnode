@@ -17,9 +17,9 @@ namespace Nop.Core.Domain.Orders
 
         public CheckoutAttribute()
         {
-            Stores = new List<int>();
+            Stores = new List<string>();
             Locales = new List<LocalizedProperty>();
-            CustomerRoles = new List<int>();
+            CustomerRoles = new List<string>();
         }
         /// <summary>
         /// Gets or sets the name
@@ -49,7 +49,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
-        public int TaxCategoryId { get; set; }
+        public string TaxCategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute control type identifier
@@ -65,7 +65,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-        public IList<int> Stores { get; set; }
+        public IList<string> Stores { get; set; }
 
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
-        public IList<int> CustomerRoles { get; set; }
+        public IList<string> CustomerRoles { get; set; }
 
 
 

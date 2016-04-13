@@ -18,8 +18,8 @@ namespace Nop.Web.Models.Boards
 
         public partial class ForumSubscriptionModel : BaseNopEntityModel
         {
-            public int ForumId { get; set; }
-            public int ForumTopicId { get; set; }
+            public string ForumId { get; set; }
+            public string ForumTopicId { get; set; }
             public bool TopicSubscription { get; set; }
             public string Title { get; set; }
             public string Slug { get; set; }

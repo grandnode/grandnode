@@ -40,7 +40,7 @@ namespace Nop.Admin.Models.Localization
         //default currency
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.DefaultCurrency")]
         [AllowHtml]
-        public int DefaultCurrencyId { get; set; }
+        public string DefaultCurrencyId { get; set; }
         public IList<SelectListItem> AvailableCurrencies { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Published")]
@@ -55,7 +55,7 @@ namespace Nop.Admin.Models.Localization
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
     }
 }

@@ -27,7 +27,7 @@ namespace Nop.Admin.Models.Settings
         public FullTextSettingsModel FullTextSettings { get; set; }
 
 
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
 
         #region Nested classes
@@ -241,7 +241,7 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLogo")]
             [UIHint("Picture")]
-            public int LogoPictureId { get; set; }
+            public string LogoPictureId { get; set; }
             public bool LogoPictureId_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders")]

@@ -18,35 +18,31 @@ namespace Nop.Data
     public partial class MongoDBRepository<T> : IRepository<T> where T : BaseEntity
     {
         #region Fields
-        private static readonly Object _locker = new object();
-        /// <summary>
-        /// Mongo Database
-        /// </summary>
-        private IMongoDatabase database;
 
         /// <summary>
-        /// Gets the the collection
+        /// Gets the collection
         /// </summary>
-        private IMongoCollection<T> collection;
-
-        
-        /// <summary>
-        /// Gets the the collection
-        /// </summary>
+        private IMongoCollection<T> _collection;       
         public IMongoCollection<T>  Collection
         {
             get
             {
-                return collection;
+                return _collection;
             }
         }
+
+        /// <summary>
+        /// Mongo Database
+        /// </summary>
+        private IMongoDatabase _database;
         public IMongoDatabase Database
         {
             get
             {
-                return database;
+                return _database;
             }
         }
+
         #endregion
 
         #region Ctor
@@ -59,16 +55,16 @@ namespace Nop.Data
             string connectionString = DataSettingsHelper.ConnectionString();
             var client = new MongoClient(connectionString);
             var databaseName = new MongoUrl(connectionString).DatabaseName;
-            database = client.GetDatabase(databaseName);
-            collection = database.GetCollection<T>(typeof(T).Name);
+            _database = client.GetDatabase(databaseName);
+            _collection = _database.GetCollection<T>(typeof(T).Name);
         }
 
         public MongoDBRepository(IMongoClient client)
         {
             string connectionString = DataSettingsHelper.ConnectionString();
             var databaseName = new MongoUrl(connectionString).DatabaseName;
-            database = client.GetDatabase(databaseName);
-            collection = database.GetCollection<T>(typeof(T).Name);
+            _database = client.GetDatabase(databaseName);
+            _collection = _database.GetCollection<T>(typeof(T).Name);
         }
 
 
@@ -81,9 +77,9 @@ namespace Nop.Data
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Entity</returns>
-        public virtual T GetById(int id)
+        public virtual T GetById(string id)
         {
-            return this.collection.Find(e => e.Id == id).FirstOrDefaultAsync().Result;
+            return this._collection.Find(e => e.Id == id).FirstOrDefaultAsync().Result;
         }
 
         /// <summary>
@@ -92,28 +88,8 @@ namespace Nop.Data
         /// <param name="entity">Entity</param>
         public virtual T Insert(T entity)
         {
-            lock (_locker)
-            {
-                var newId = ObjectId.GenerateNewId();
-                entity._id = newId.ToString();
-
-                if (entity.Id == 0)
-                {
-                    var resultMax = this.collection.Find(e => true).SortByDescending(x => x.Id).FirstOrDefaultAsync().Result;
-                    entity.Id = resultMax != null ? resultMax.Id + 1 : 1;                    
-                }
-                else
-                {
-                    var result = this.collection.Find(e => e.Id == entity.Id).ToListAsync().Result;
-                    if (result.Count > 0)
-                    {
-                        var resultMax = this.collection.Find(e => true).SortByDescending(x => x.Id).FirstOrDefaultAsync().Result;
-                        entity.Id = resultMax != null ? resultMax.Id + 1 : 1;
-                    }
-                }
-                this.collection.InsertOne(entity);
-                return entity;
-            }
+            this._collection.InsertOne(entity);
+            return entity;
         }
 
         /// <summary>
@@ -132,7 +108,7 @@ namespace Nop.Data
         /// <param name="entity">Entity</param>
         public virtual T Update(T entity)
         {
-            var update = this.collection.ReplaceOneAsync(x=>x._id == entity._id, entity, new UpdateOptions() { IsUpsert = false }).Result;
+            var update = this._collection.ReplaceOneAsync(x=>x.Id == entity.Id, entity, new UpdateOptions() { IsUpsert = false }).Result;
             return entity;
 
         }
@@ -155,7 +131,7 @@ namespace Nop.Data
         /// <param name="entity">Entity</param>
         public virtual void Delete(T entity)
         {
-            this.collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);           
+            this._collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);           
         }
 
         /// <summary>
@@ -166,8 +142,13 @@ namespace Nop.Data
         {
             foreach (T entity in entities)
             {
-                this.collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);
+                this._collection.FindOneAndDeleteAsync(e => e.Id == entity.Id);
             }
+        }
+
+        public virtual IMongoQueryable<T> Table
+        {
+            get { return this._collection.AsQueryable(); }
         }
 
         #endregion
@@ -177,10 +158,6 @@ namespace Nop.Data
         /// <summary>
         /// Gets a table
         /// </summary>
-        public virtual IMongoQueryable<T> Table
-        {
-            get { return this.collection.AsQueryable(); }
-        }
 
         #endregion
 

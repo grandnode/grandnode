@@ -9,7 +9,7 @@ namespace Nop.Web.Models.Common
     [Validator(typeof(ContactVendorValidator))]
     public partial class ContactVendorModel : BaseNopModel
     {
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
         public string VendorName { get; set; }
 
         [AllowHtml]

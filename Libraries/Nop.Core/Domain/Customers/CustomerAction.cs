@@ -25,7 +25,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the action Type
         /// </summary>
-        public int ActionTypeId { get; set; }
+        public string ActionTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the action conditions
@@ -52,13 +52,13 @@ namespace Nop.Core.Domain.Customers
             set { this.ReactionTypeId = (int)value; }
         }
 
-        public int BannerId { get; set; }
+        public string BannerId { get; set; }
 
-        public int MessageTemplateId { get; set; }
+        public string MessageTemplateId { get; set; }
 
-        public int CustomerRoleId { get; set; }
+        public string CustomerRoleId { get; set; }
 
-        public int CustomerTagId { get; set; }
+        public string CustomerTagId { get; set; }
         /// <summary>
         /// Gets or sets the start date 
         /// </summary>
@@ -79,14 +79,14 @@ namespace Nop.Core.Domain.Customers
         }
 
         [BsonIgnoreExtraElements]
-        public partial class ActionCondition
+        public partial class ActionCondition: SubBaseEntity
         {
-            private ICollection<int> _products;
-            private ICollection<int> _categories;
-            private ICollection<int> _manufacturers;
-            private ICollection<int> _vendors;
-            private ICollection<int> _customerRoles;
-            private ICollection<int> _customerTags;
+            private ICollection<string> _products;
+            private ICollection<string> _categories;
+            private ICollection<string> _manufacturers;
+            private ICollection<string> _vendors;
+            private ICollection<string> _customerRoles;
+            private ICollection<string> _customerTags;
             private ICollection<ProductAttributeValue> _productAttribute;
             private ICollection<ProductSpecification> _productSpecification;
             private ICollection<CustomerRegister> _customerRegister;
@@ -94,7 +94,6 @@ namespace Nop.Core.Domain.Customers
             private ICollection<Url> _urlReferrer;
             private ICollection<Url> _urlCurrent;
 
-            public int Id { get; set; }
             public string Name { get; set; }
 
             public int CustomerActionConditionTypeId { get; set; }
@@ -116,37 +115,37 @@ namespace Nop.Core.Domain.Customers
             }
 
 
-            public virtual ICollection<int> Products
+            public virtual ICollection<string> Products
             {
-                get { return _products ?? (_products = new List<int>()); }
+                get { return _products ?? (_products = new List<string>()); }
                 protected set { _products = value; }
             }
 
-            public virtual ICollection<int> Categories
+            public virtual ICollection<string> Categories
             {
-                get { return _categories ?? (_categories = new List<int>()); }
+                get { return _categories ?? (_categories = new List<string>()); }
                 protected set { _categories = value; }
             }
 
-            public virtual ICollection<int> Manufacturers
+            public virtual ICollection<string> Manufacturers
             {
-                get { return _manufacturers ?? (_manufacturers = new List<int>()); }
+                get { return _manufacturers ?? (_manufacturers = new List<string>()); }
                 protected set { _manufacturers = value; }
             }
 
-            public virtual ICollection<int> Vendors
+            public virtual ICollection<string> Vendors
             {
-                get { return _vendors ?? (_vendors = new List<int>()); }
+                get { return _vendors ?? (_vendors = new List<string>()); }
                 protected set { _vendors = value; }
             }
-            public virtual ICollection<int> CustomerRoles
+            public virtual ICollection<string> CustomerRoles
             {
-                get { return _customerRoles ?? (_customerRoles = new List<int>()); }
+                get { return _customerRoles ?? (_customerRoles = new List<string>()); }
                 protected set { _customerRoles = value; }
             }
-            public virtual ICollection<int> CustomerTags
+            public virtual ICollection<string> CustomerTags
             {
-                get { return _customerTags ?? (_customerTags = new List<int>()); }
+                get { return _customerTags ?? (_customerTags = new List<string>()); }
                 protected set { _customerTags = value; }
             }
             public virtual ICollection<ProductAttributeValue> ProductAttribute
@@ -186,31 +185,27 @@ namespace Nop.Core.Domain.Customers
             }
 
             [BsonIgnoreExtraElements]
-            public partial class ProductAttributeValue
+            public partial class ProductAttributeValue: SubBaseEntity
             {
-                public int Id { get; set; }
-                public int ProductAttributeId { get; set; }
+                public string ProductAttributeId { get; set; }
                 public string Name { get; set; }
             }
 
-            public partial class Url
+            public partial class Url : SubBaseEntity
             {
-                public int Id { get; set; }
                 public string Name { get; set; }
             }
 
             [BsonIgnoreExtraElements]
-            public partial class ProductSpecification
+            public partial class ProductSpecification : SubBaseEntity
             {
-                public int Id { get; set; }
-                public int ProductSpecyficationId { get; set; }
-                public int ProductSpecyficationValueId { get; set; }
+                public string ProductSpecyficationId { get; set; }
+                public string ProductSpecyficationValueId { get; set; }
             }
 
             [BsonIgnoreExtraElements]
-            public partial class CustomerRegister
+            public partial class CustomerRegister : SubBaseEntity
             {
-                public int Id { get; set; }
                 public string RegisterField { get; set; }
                 public string RegisterValue { get; set; }
             }

@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Orders
     /// Represents a checkout attribute value
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class CheckoutAttributeValue : BaseEntity, ILocalizedEntity
+    public partial class CheckoutAttributeValue : SubBaseEntity, ILocalizedEntity
     {
         public CheckoutAttributeValue()
         {
@@ -19,7 +19,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the checkout attribute mapping identifier
         /// </summary>
-        public int CheckoutAttributeId { get; set; }
+        public string CheckoutAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the checkout attribute name

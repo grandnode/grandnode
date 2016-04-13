@@ -78,18 +78,15 @@ namespace Nop.Services.Common
                     }
                     else
                     {
-                        int attributeValueId;
-                        if (int.TryParse(valueStr, out attributeValueId))
+                        string attributeValueId = valueStr;
+                        var attributeValue = attribute.AddressAttributeValues.FirstOrDefault(x => x.Id == attributeValueId); //_addressAttributeService.GetAddressAttributeValueById(attributeValueId);
+                        if (attributeValue != null)
                         {
-                            var attributeValue = attribute.AddressAttributeValues.FirstOrDefault(x => x.Id == attributeValueId); //_addressAttributeService.GetAddressAttributeValueById(attributeValueId);
-                            if (attributeValue != null)
-                            {
-                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
-                            }
-                            //encode (if required)
-                            if (htmlEncode)
-                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                         }
+                        //encode (if required)
+                        if (htmlEncode)
+                            formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
                     }
 
                     if (!String.IsNullOrEmpty(formattedAttribute))

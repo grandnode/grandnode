@@ -13,9 +13,12 @@ namespace Nop.Admin.Models.Orders
             this.Items = new List<ShipmentItemModel>();
         }
         [NopResourceDisplayName("Admin.Orders.Shipments.ID")]
-        public override int Id { get; set; }
+        public override string Id { get; set; }
+        public int ShipmentNumber { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.Shipments.OrderID")]
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
+        public int OrderNumber { get; set; }
         [NopResourceDisplayName("Admin.Orders.Shipments.TotalWeight")]
         public string TotalWeight { get; set; }
         [NopResourceDisplayName("Admin.Orders.Shipments.TrackingNumber")]
@@ -48,8 +51,8 @@ namespace Nop.Admin.Models.Orders
                 AvailableWarehouses = new List<WarehouseInfo>();
             }
 
-            public int OrderItemId { get; set; }
-            public int ProductId { get; set; }
+            public string OrderItemId { get; set; }
+            public string ProductId { get; set; }
             [NopResourceDisplayName("Admin.Orders.Shipments.Products.ProductName")]
             public string ProductName { get; set; }
             public string Sku { get; set; }
@@ -77,7 +80,7 @@ namespace Nop.Admin.Models.Orders
             #region Nested Classes
             public class WarehouseInfo : BaseNopModel
             {
-                public int WarehouseId { get; set; }
+                public string WarehouseId { get; set; }
                 public string WarehouseName { get; set; }
                 public int StockQuantity { get; set; }
                 public int ReservedQuantity { get; set; }

@@ -15,7 +15,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(int storeId = 0);
+        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(string storeId = "");
 
         /// <summary>
         /// Load shipping rate computation method by system name
@@ -29,7 +29,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(int storeId = 0);
+        IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods(string storeId = "");
 
 
 
@@ -47,7 +47,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippingMethodId">The shipping method identifier</param>
         /// <returns>Shipping method</returns>
-        ShippingMethod GetShippingMethodById(int shippingMethodId);
+        ShippingMethod GetShippingMethodById(string shippingMethodId);
 
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="filterByCountryId">The country indentifier to filter by</param>
         /// <returns>Shipping methods</returns>
-        IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null);
+        IList<ShippingMethod> GetAllShippingMethods(string filterByCountryId = "");
 
         /// <summary>
         /// Inserts a shipping method
@@ -82,7 +82,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="deliveryDateId">The delivery date identifier</param>
         /// <returns>Delivery date</returns>
-        DeliveryDate GetDeliveryDateById(int deliveryDateId);
+        DeliveryDate GetDeliveryDateById(string deliveryDateId);
 
         /// <summary>
         /// Gets all delivery dates
@@ -114,7 +114,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="warehouseId">The warehouse identifier</param>
         /// <returns>Warehouse</returns>
-        Warehouse GetWarehouseById(int warehouseId);
+        Warehouse GetWarehouseById(string warehouseId);
 
         /// <summary>
         /// Gets all warehouses
@@ -189,7 +189,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipment packages (requests)</returns>
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart,
-            Address shippingAddress, int storeId, out bool shippingFromMultipleLocations);
+            Address shippingAddress, string storeId, out bool shippingFromMultipleLocations);
 
         /// <summary>
         ///  Gets available shipping options
@@ -200,6 +200,6 @@ namespace Nop.Services.Shipping
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping options</returns>
         GetShippingOptionResponse GetShippingOptions(IList<ShoppingCartItem> cart, Address shippingAddress,
-            string allowedShippingRateComputationMethodSystemName = "", int storeId = 0);
+            string allowedShippingRateComputationMethodSystemName = "", string storeId = "");
     }
 }

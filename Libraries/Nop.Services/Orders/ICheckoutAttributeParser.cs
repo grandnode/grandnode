@@ -28,7 +28,7 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute value</returns>
-        IList<string> ParseValues(string attributesXml, int checkoutAttributeId);
+        IList<string> ParseValues(string attributesXml, string checkoutAttributeId);
 
         /// <summary>
         /// Adds an attribute

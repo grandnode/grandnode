@@ -16,7 +16,7 @@ namespace Nop.Core.Domain.Polls
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
@@ -67,9 +67,5 @@ namespace Nop.Core.Domain.Polls
             protected set { _pollAnswers = value; }
         }
         
-        /// <summary>
-        /// Gets or sets the language
-        /// </summary>
-        //public virtual Language Language { get; set; }
     }
 }

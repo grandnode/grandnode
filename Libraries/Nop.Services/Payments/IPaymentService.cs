@@ -15,7 +15,7 @@ namespace Nop.Services.Payments
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        IList<IPaymentMethod> LoadActivePaymentMethods(int? filterByCustomerId = null, int storeId = 0, int filterByCountryId = 0);
+        IList<IPaymentMethod> LoadActivePaymentMethods(string filterByCustomerId = "", string storeId = "", string filterByCountryId = "");
 
         /// <summary>
         /// Load payment provider by system name
@@ -30,21 +30,21 @@ namespace Nop.Services.Payments
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment providers</returns>
-        IList<IPaymentMethod> LoadAllPaymentMethods(int storeId = 0, int filterByCountryId = 0);
+        IList<IPaymentMethod> LoadAllPaymentMethods(string storeId = "", string filterByCountryId = "");
 
         /// <summary>
         /// Gets a list of coutnry identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of country identifiers</returns>
-        IList<int> GetRestictedCountryIds(IPaymentMethod paymentMethod);
+        IList<string> GetRestictedCountryIds(IPaymentMethod paymentMethod);
 
         /// <summary>
         /// Saves a list of coutnry identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">A list of country identifiers</param>
-        void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<int> countryIds);
+        void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<string> countryIds);
 
 
         /// <summary>

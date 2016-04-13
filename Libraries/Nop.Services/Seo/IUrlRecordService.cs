@@ -19,7 +19,7 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="urlRecordId">URL record identifier</param>
         /// <returns>URL record</returns>
-        UrlRecord GetUrlRecordById(int urlRecordId);
+        UrlRecord GetUrlRecordById(string urlRecordId);
 
         /// <summary>
         /// Inserts an URL record
@@ -65,7 +65,7 @@ namespace Nop.Services.Seo
         /// <param name="entityName">Entity name</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Found slug</returns>
-        string GetActiveSlug(int entityId, string entityName, int languageId);
+        string GetActiveSlug(string entityId, string entityName, string languageId);
 
         /// <summary>
         /// Save slug
@@ -74,6 +74,6 @@ namespace Nop.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
-        void SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported;
+        void SaveSlug<T>(T entity, string slug, string languageId) where T : BaseEntity, ISlugSupported;
     }
 }

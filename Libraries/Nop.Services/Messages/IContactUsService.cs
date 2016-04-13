@@ -33,7 +33,7 @@ namespace Nop.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>ContactUs items</returns>
         IPagedList<ContactUs> GetAllContactUs(DateTime? fromUtc = null, DateTime? toUtc = null,
-            string email = "", int vendorId = 0, int customerId = 0, int storeId = 0,
+            string email = "", string vendorId = "", string customerId = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="contactUsId">ContactUs item identifier</param>
         /// <returns>ContactUs item</returns>
-        ContactUs GetContactUsById(int contactUsId);
+        ContactUs GetContactUsById(string contactUsId);
 
         /// <summary>
         /// Inserts a contactus item

@@ -9,7 +9,7 @@ namespace Nop.Core.Domain.Customers
     /// Represents a customer attribute value
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class CustomerAttributeValue : BaseEntity, ILocalizedEntity
+    public partial class CustomerAttributeValue : SubBaseEntity, ILocalizedEntity
     {
         public CustomerAttributeValue()
         {
@@ -18,7 +18,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer attribute identifier
         /// </summary>
-        public int CustomerAttributeId { get; set; }
+        public string CustomerAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the checkout attribute name

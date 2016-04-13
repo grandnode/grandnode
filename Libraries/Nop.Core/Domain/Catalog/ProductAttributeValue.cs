@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a product attribute value
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductAttributeValue : BaseEntity, ILocalizedEntity
+    public partial class ProductAttributeValue : SubBaseEntity, ILocalizedEntity
     {
         public ProductAttributeValue()
         {
@@ -17,12 +17,14 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product attribute mapping identifier
         /// </summary>
-        public int ProductAttributeMappingId { get; set; }
+        [BsonIgnore]
+        public string ProductAttributeMappingId { get; set; }
 
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        [BsonIgnore]
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute value type identifier
@@ -32,7 +34,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the associated product identifier (used only with AttributeValueType.AssociatedToProduct)
         /// </summary>
-        public int AssociatedProductId { get; set; }
+        public string AssociatedProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the product attribute name
@@ -47,7 +49,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the picture ID for image square (used with "Image squares" attribute type)
         /// </summary>
-        public int ImageSquaresPictureId { get; set; }
+        public string ImageSquaresPictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the price adjustment (used only with AttributeValueType.Simple)
@@ -82,7 +84,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the picture (identifier) associated with this value. This picture should replace a product main picture once clicked (selected).
         /// </summary>
-        public int PictureId { get; set; }
+        public string PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales

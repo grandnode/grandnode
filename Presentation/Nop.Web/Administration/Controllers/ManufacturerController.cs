@@ -121,8 +121,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Description",
                         LocaleValue = local.Description,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
                 
                 if (!(String.IsNullOrEmpty(local.MetaDescription)))
@@ -131,8 +129,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "MetaDescription",
                         LocaleValue = local.MetaDescription,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.MetaKeywords)))
@@ -141,8 +137,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "MetaKeywords",
                         LocaleValue = local.MetaKeywords,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.MetaTitle)))
@@ -151,8 +145,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "MetaTitle",
                         LocaleValue = local.MetaTitle,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.Name)))
@@ -161,8 +153,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
                
                 //search engine name
@@ -175,8 +165,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "SeName",
                         LocaleValue = seName,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
             }
             return localized;
@@ -341,8 +329,8 @@ namespace Nop.Admin.Controllers
                 manufacturer.CreatedOnUtc = DateTime.UtcNow;
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
                 
-                manufacturer.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
-                manufacturer.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
+                manufacturer.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                manufacturer.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 //discounts
                 var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
                 foreach (var discount in allDiscounts)
@@ -358,7 +346,7 @@ namespace Nop.Admin.Controllers
                 manufacturer.SeName = model.SeName;
                 _manufacturerService.UpdateManufacturer(manufacturer);
 
-                _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
+                _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
                
                 //update "HasDiscountsApplied" property
                 //_manufacturerService.UpdateHasDiscountsApplied(manufacturer);
@@ -385,7 +373,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -431,12 +419,12 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                int prevPictureId = manufacturer.PictureId;
+                string prevPictureId = manufacturer.PictureId;
                 manufacturer = model.ToEntity(manufacturer);
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
                 manufacturer.Locales = UpdateLocales(manufacturer, model);
-                manufacturer.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
-                manufacturer.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
+                manufacturer.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                manufacturer.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 //discounts
                 var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
                 foreach (var discount in allDiscounts)
@@ -459,12 +447,12 @@ namespace Nop.Admin.Controllers
 
                 _manufacturerService.UpdateManufacturer(manufacturer);
                 //search engine name
-                _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
+                _urlRecordService.SaveSlug(manufacturer, model.SeName, "");
                 
                 //update "HasDiscountsApplied" property
                 //_manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                 //delete an old picture (if deleted or updated)
-                if (prevPictureId > 0 && prevPictureId != manufacturer.PictureId)
+                if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != manufacturer.PictureId)
                 {
                     var prevPicture = _pictureService.GetPictureById(prevPictureId);
                     if (prevPicture != null)
@@ -503,7 +491,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -599,7 +587,7 @@ namespace Nop.Admin.Controllers
         #region Products
 
         [HttpPost]
-        public ActionResult ProductList(DataSourceRequest command, int manufacturerId)
+        public ActionResult ProductList(DataSourceRequest command, string manufacturerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -647,7 +635,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductDelete(int id, int productId)
+        public ActionResult ProductDelete(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
@@ -666,36 +654,36 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ProductAddPopup(int manufacturerId)
+        public ActionResult ProductAddPopup(string manufacturerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
             var model = new ManufacturerModel.AddManufacturerProductModel();
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -706,9 +694,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
             var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -733,7 +725,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (string id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -748,8 +740,6 @@ namespace Nop.Admin.Controllers
                                     ProductId = id,
                                     IsFeaturedProduct = false,
                                     DisplayOrder = 1,
-                                    _id = ObjectId.GenerateNewId().ToString(),
-                                    Id = product.ProductManufacturers.Count > 0 ? product.ProductManufacturers.Max(x => x.Id) + 1 : 1,
                                 });
                         }
                     }
@@ -766,7 +756,7 @@ namespace Nop.Admin.Controllers
         #region Activity log
 
         [HttpPost]
-        public ActionResult ListActivityLog(DataSourceRequest command, int manufacturerId)
+        public ActionResult ListActivityLog(DataSourceRequest command, string manufacturerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return Content("");

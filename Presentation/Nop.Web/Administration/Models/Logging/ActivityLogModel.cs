@@ -9,7 +9,7 @@ namespace Nop.Admin.Models.Logging
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")]
         public string ActivityLogTypeName { get; set; }
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")]
         public string CustomerEmail { get; set; }
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")]
@@ -22,10 +22,10 @@ namespace Nop.Admin.Models.Logging
     {
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityStats.Fields.ActivityLogType")]
         public string ActivityLogTypeName { get; set; }
-        public int ActivityLogTypeId { get; set; }
+        public string ActivityLogTypeId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityStats.Fields.EntityKeyId")]
-        public int EntityKeyId { get; set; }
+        public string EntityKeyId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityStats.Fields.Name")]
         public string Name { get; set; }

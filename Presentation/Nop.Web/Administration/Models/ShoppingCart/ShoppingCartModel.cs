@@ -6,7 +6,7 @@ namespace Nop.Admin.Models.ShoppingCart
     public partial class ShoppingCartModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.CurrentCarts.Customer")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.CurrentCarts.Customer")]
         public string CustomerEmail { get; set; }
 

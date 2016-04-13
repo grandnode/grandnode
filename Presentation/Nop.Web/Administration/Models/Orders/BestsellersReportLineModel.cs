@@ -5,7 +5,7 @@ namespace Nop.Admin.Models.Orders
 {
     public partial class BestsellersReportLineModel : BaseNopModel
     {
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Fields.Name")]
         public string ProductName { get; set; }
 

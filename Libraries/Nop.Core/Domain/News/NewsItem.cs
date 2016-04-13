@@ -18,14 +18,14 @@ namespace Nop.Core.Domain.News
 
         public NewsItem()
         {
-            Stores = new List<int>();
+            Stores = new List<string>();
             Locales = new List<LocalizedProperty>();
-            CustomerRoles = new List<int>();
+            CustomerRoles = new List<string>();
         }
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the news title
@@ -79,7 +79,7 @@ namespace Nop.Core.Domain.News
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-        public IList<int> Stores { get; set; }
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales
@@ -109,7 +109,7 @@ namespace Nop.Core.Domain.News
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
-        public IList<int> CustomerRoles { get; set; }
+        public IList<string> CustomerRoles { get; set; }
 
         /// <summary>
         /// Gets or sets the news comments

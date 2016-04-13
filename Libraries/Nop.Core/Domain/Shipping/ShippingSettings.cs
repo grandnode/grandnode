@@ -69,7 +69,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets shipping origin address
         /// </summary>
-        public int ShippingOriginAddressId { get; set; }
+        public string ShippingOriginAddressId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether we should return valid options if there are any (no matter of the errors returned by other shipping rate compuation methods).

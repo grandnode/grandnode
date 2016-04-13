@@ -24,11 +24,12 @@ namespace Nop.Services.Localization
         /// <returns>Localized property</returns>
         public static string GetLocalized<T>(this T entity,
             Expression<Func<T, string>> keySelector)
-            where T : BaseEntity, ILocalizedEntity
+            where T : ParentEntity, ILocalizedEntity
         {
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             return GetLocalized(entity, keySelector, workContext.WorkingLanguage.Id);
         }
+        
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -40,12 +41,13 @@ namespace Nop.Services.Localization
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
         public static string GetLocalized<T>(this T entity, 
-            Expression<Func<T, string>> keySelector, int languageId, 
+            Expression<Func<T, string>> keySelector, string languageId, 
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true) 
-            where T : BaseEntity, ILocalizedEntity
+            where T : ParentEntity,  ILocalizedEntity
         {
             return GetLocalized<T, string>(entity, keySelector, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
+        
         /// <summary>
         /// Get localized property of an entity
         /// </summary>
@@ -58,9 +60,9 @@ namespace Nop.Services.Localization
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
         public static TPropType GetLocalized<T, TPropType>(this T entity,
-            Expression<Func<T, TPropType>> keySelector, int languageId, 
+            Expression<Func<T, TPropType>> keySelector, string languageId, 
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
-            where T : BaseEntity, ILocalizedEntity
+            where T : ParentEntity, ILocalizedEntity
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
@@ -88,7 +90,7 @@ namespace Nop.Services.Localization
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 
-            if (languageId > 0)
+            if (languageId.Length > 0)
             {
                 //ensure that we have at least two published languages
                 bool loadLocalizedValue = true;
@@ -127,8 +129,7 @@ namespace Nop.Services.Localization
             return result;
         }
 
-
-
+        
         /// <summary>
         /// Get localized property of setting
         /// </summary>
@@ -140,7 +141,7 @@ namespace Nop.Services.Localization
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
         public static string GetLocalizedSetting<T>(this T settings,
-            Expression<Func<T, string>> keySelector, int languageId,
+            Expression<Func<T, string>> keySelector, string languageId,
             bool returnDefaultValue = true, bool ensureTwoPublishedLanguages = true)
             where T : ISettings, new()
         {
@@ -149,39 +150,12 @@ namespace Nop.Services.Localization
             string key = settings.GetSettingKey(keySelector);
 
             //we do not support localized settings per store (overridden store settings)
-            var setting = settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
+            var setting = settingService.GetSetting(key, storeId: "", loadSharedValueIfNotFound: false);
             if (setting == null)
                 return null;
 
             return setting.GetLocalized(x => x.Value, languageId, returnDefaultValue, ensureTwoPublishedLanguages);
         }
-        /// <summary>
-        /// Save localized property of setting
-        /// </summary>
-        /// <typeparam name="T">Entity type</typeparam>
-        /// <param name="settings">Settings</param>
-        /// <param name="keySelector">Key selector</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <param name="value">Localizaed value</param>
-        /// <returns>Localized property</returns>
-        //public static void SaveLocalizedSetting<T>(this T settings,
-        //    Expression<Func<T, string>> keySelector, int languageId,
-        //    string value)
-        //    where T : ISettings, new()
-        //{
-        //    var settingService = EngineContext.Current.Resolve<ISettingService>();
-        //    var localizedEntityService = EngineContext.Current.Resolve<ILocalizedEntityService>();
-
-        //    string key = settings.GetSettingKey(keySelector);
-
-        //    //we do not support localized settings per store (overridden store settings)
-        //    var setting = settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
-        //    if (setting == null)
-        //        return;
-
-        //    localizedEntityService.SaveLocalizedValue(setting, x => x.Value, value, languageId);
-        //}
-
 
         /// <summary>
         /// Get localized value of enum
@@ -207,7 +181,7 @@ namespace Nop.Services.Localization
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized value</returns>
-        public static string GetLocalizedEnum<T>(this T enumValue, ILocalizationService localizationService, int languageId)
+        public static string GetLocalizedEnum<T>(this T enumValue, ILocalizationService localizationService, string languageId)
             where T : struct
         {
             if (localizationService == null)
@@ -255,7 +229,7 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <returns>Localized value</returns>
         public static string GetLocalizedPermissionName(this PermissionRecord permissionRecord, 
-            ILocalizationService localizationService, int languageId)
+            ILocalizationService localizationService, string languageId)
         {
             if (permissionRecord == null)
                 throw new ArgumentNullException("permissionRecord");
@@ -450,7 +424,7 @@ namespace Nop.Services.Localization
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <returns>Localized value</returns>
         public static string GetLocalizedFriendlyName<T>(this T plugin, ILocalizationService localizationService, 
-            int languageId, bool returnDefaultValue = true)
+            string languageId, bool returnDefaultValue = true)
             where T : IPlugin
         {   
             if (localizationService == null)
@@ -483,14 +457,14 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="localizedFriendlyName">Localized friendly name</param>
         public static void SaveLocalizedFriendlyName<T>(this T plugin, 
-            ILocalizationService localizationService, int languageId,
+            ILocalizationService localizationService, string languageId,
             string localizedFriendlyName)
             where T : IPlugin
         {
             if (localizationService == null)
                 throw new ArgumentNullException("localizationService");
 
-            if (languageId == 0)
+            if (String.IsNullOrEmpty(languageId))
                 throw new ArgumentOutOfRangeException("languageId", "Language ID should not be 0");
 
             if (plugin == null)

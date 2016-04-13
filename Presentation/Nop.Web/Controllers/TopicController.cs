@@ -84,7 +84,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult TopicDetails(int topicId)
+        public ActionResult TopicDetails(string topicId)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_ID_KEY,
                 topicId,
@@ -193,7 +193,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult Authenticate(int id, string password)
+        public ActionResult Authenticate(string id, string password)
         {
             var authResult = false;
             var title = string.Empty;

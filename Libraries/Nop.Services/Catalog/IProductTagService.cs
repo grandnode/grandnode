@@ -25,7 +25,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Product tag</returns>
-        ProductTag GetProductTagById(int productTagId);
+        ProductTag GetProductTagById(string productTagId);
         
         /// <summary>
         /// Gets product tag by name
@@ -52,6 +52,6 @@ namespace Nop.Services.Catalog
         /// <param name="productTagId">Product tag identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Number of products</returns>
-        int GetProductCount(int productTagId, int storeId);
+        int GetProductCount(string productTagId, string storeId);
     }
 }

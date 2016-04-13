@@ -13,17 +13,17 @@ namespace Nop.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount identifier
         /// </summary>
-        public int DiscountId { get; set; }
+        public string DiscountId { get; set; }
 
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

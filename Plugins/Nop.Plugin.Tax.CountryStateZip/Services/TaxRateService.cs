@@ -86,11 +86,8 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
-        public virtual TaxRate GetTaxRateById(int taxRateId)
+        public virtual TaxRate GetTaxRateById(string taxRateId)
         {
-            if (taxRateId == 0)
-                return null;
-
            return _taxRateRepository.GetById(taxRateId);
         }
 

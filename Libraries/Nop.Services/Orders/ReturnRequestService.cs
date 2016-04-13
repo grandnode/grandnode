@@ -70,11 +70,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
         /// <returns>Return request</returns>
-        public virtual ReturnRequest GetReturnRequestById(int returnRequestId)
+        public virtual ReturnRequest GetReturnRequestById(string returnRequestId)
         {
-            if (returnRequestId == 0)
-                return null;
-
             return _returnRequestRepository.GetById(returnRequestId);
         }
 
@@ -88,21 +85,21 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
-        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
-            int orderItemId = 0, ReturnRequestStatus? rs = null,
+        public virtual IPagedList<ReturnRequest> SearchReturnRequests(string storeId = "", string customerId = "",
+            string orderItemId = "", ReturnRequestStatus? rs = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _returnRequestRepository.Table;
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(rr => storeId == rr.StoreId);
-            if (customerId > 0)
+            if (!String.IsNullOrEmpty(customerId))
                 query = query.Where(rr => customerId == rr.CustomerId);
             if (rs.HasValue)
             {
                 var returnStatusId = (int)rs.Value;
                 query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
             }
-            if (orderItemId > 0)
+            if (!String.IsNullOrEmpty(orderItemId))
                 query = query.Where(rr => rr.OrderItemId == orderItemId);
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr => rr.Id);
@@ -145,11 +142,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestActionId">Return request action identifier</param>
         /// <returns>Return request action</returns>
-        public virtual ReturnRequestAction GetReturnRequestActionById(int returnRequestActionId)
+        public virtual ReturnRequestAction GetReturnRequestActionById(string returnRequestActionId)
         {
-            if (returnRequestActionId == 0)
-                return null;
-
             return _returnRequestActionRepository.GetById(returnRequestActionId);
         }
 
@@ -232,11 +226,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestReasonId">Return request reaspn identifier</param>
         /// <returns>Return request reaspn</returns>
-        public virtual ReturnRequestReason GetReturnRequestReasonById(int returnRequestReasonId)
+        public virtual ReturnRequestReason GetReturnRequestReasonById(string returnRequestReasonId)
         {
-            if (returnRequestReasonId == 0)
-                return null;
-
             return _returnRequestReasonRepository.GetById(returnRequestReasonId);
         }
 

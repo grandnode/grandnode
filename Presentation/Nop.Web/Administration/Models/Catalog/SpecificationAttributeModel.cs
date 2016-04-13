@@ -30,7 +30,7 @@ namespace Nop.Admin.Models.Catalog
 
     public partial class SpecificationAttributeLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")]
         [AllowHtml]

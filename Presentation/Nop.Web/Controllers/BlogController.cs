@@ -137,7 +137,7 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
                         commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
+                            customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId), 
                             _mediaSettings.AvatarPictureSize, 
                             _customerSettings.DefaultAvatarEnabled,
                             defaultPictureType: PictureType.Avatar);
@@ -220,7 +220,7 @@ namespace Nop.Web.Controllers
             return View("List", model);
         }
 
-        public ActionResult ListRss(int languageId)
+        public ActionResult ListRss(string languageId)
         {
             var feed = new SyndicationFeed(
                                     string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
@@ -243,7 +243,7 @@ namespace Nop.Web.Controllers
             return new RssActionResult { Feed = feed };
         }
 
-        public ActionResult BlogPost(int blogPostId)
+        public ActionResult BlogPost(string blogPostId)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -268,7 +268,7 @@ namespace Nop.Web.Controllers
         [PublicAntiForgery]
         [FormValueRequired("add-comment")]
         [CaptchaValidator]
-        public ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
+        public ActionResult BlogCommentAdd(string blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");

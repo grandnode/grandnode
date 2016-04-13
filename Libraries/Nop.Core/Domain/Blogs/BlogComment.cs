@@ -14,7 +14,7 @@ namespace Nop.Core.Domain.Blogs
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the comment text
@@ -29,7 +29,7 @@ namespace Nop.Core.Domain.Blogs
         /// <summary>
         /// Gets or sets the blog post identifier
         /// </summary>
-        public int BlogPostId { get; set; }
+        public string BlogPostId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

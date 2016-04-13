@@ -60,14 +60,14 @@ namespace Nop.Admin.Models.Stores
         //default language
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultLanguage")]
         [AllowHtml]
-        public int DefaultLanguageId { get; set; }
+        public string DefaultLanguageId { get; set; }
         public IList<SelectListItem> AvailableLanguages { get; set; }
 
     }
 
     public partial class StoreLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
         [AllowHtml]

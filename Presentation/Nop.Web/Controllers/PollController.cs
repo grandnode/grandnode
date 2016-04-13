@@ -90,11 +90,11 @@ namespace Nop.Web.Controllers
                     (poll.StartDateUtc.HasValue && poll.StartDateUtc.Value > DateTime.UtcNow) ||
                     (poll.EndDateUtc.HasValue && poll.EndDateUtc.Value < DateTime.UtcNow))
                     //we do not cache nulls. that's why let's return an empty record (ID = 0)
-                    return new PollModel { Id = 0};
+                    return new PollModel { Id = ""};
 
                 return PreparePollModel(poll, false);
             });
-            if (cachedModel == null || cachedModel.Id == 0)
+            if (cachedModel == null || cachedModel.Id == "")
                 return Content("");
 
             //"AlreadyVoted" property of "PollModel" object depends on the current customer. Let's update it.
@@ -107,7 +107,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Vote(int pollAnswerId, int pollId)
+        public ActionResult Vote(string pollAnswerId, string pollId)
         {
             var poll = _pollService.GetPollById(pollId); //pollAnswer.Poll;
             if (!poll.Published)
@@ -137,8 +137,6 @@ namespace Nop.Web.Controllers
                 pollAnswer.PollVotingRecords.Add(new PollVotingRecord
                 {
                     PollId = pollId,
-                    _id = ObjectId.GenerateNewId().ToString(),
-                    Id = pollAnswer.PollVotingRecords.Count > 0 ? pollAnswer.PollVotingRecords.Max(x=>x.Id)+1 : 1,
                     PollAnswerId = pollAnswer.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
                     CreatedOnUtc = DateTime.UtcNow

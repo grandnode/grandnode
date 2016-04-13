@@ -161,7 +161,7 @@ namespace Nop.Services.Catalog
             var subcategories = GetAllCategoriesByParentCategoryId(category.Id, true);
             foreach (var subcategory in subcategories)
             {
-                subcategory.ParentCategoryId = 0;
+                subcategory.ParentCategoryId = "";
                 UpdateCategory(subcategory);
             }
 
@@ -173,6 +173,9 @@ namespace Nop.Services.Catalog
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(category);
 
         }
 
@@ -236,7 +239,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="includeAllLevels">A value indicating whether we should load all child levels</param>
         /// <returns>Categories</returns>
-        public virtual IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
+        public virtual IList<Category> GetAllCategoriesByParentCategoryId(string parentCategoryId = "",
             bool showHidden = false, bool includeAllLevels = false)
         {
             string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, includeAllLevels);
@@ -319,7 +322,7 @@ namespace Nop.Services.Catalog
         /// Gets all categories by discount id
         /// </summary>
         /// <returns>Categories</returns>
-        public virtual IList<Category> GetAllCategoriesByDiscount(int discountId)
+        public virtual IList<Category> GetAllCategoriesByDiscount(string discountId)
         {
             var query = from c in _categoryRepository.Table
                         where c.AppliedDiscounts.Any(x=>x.Id == discountId)
@@ -334,11 +337,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Category</returns>
-        public virtual Category GetCategoryById(int categoryId)
+        public virtual Category GetCategoryById(string categoryId)
         {
-            if (categoryId == 0)
-                return null;
-            
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
             return _cacheManager.Get(key, () => _categoryRepository.GetById(categoryId));
         }
@@ -378,7 +378,7 @@ namespace Nop.Services.Catalog
             {
                 if (category.Id == parentCategory.Id)
                 {
-                    category.ParentCategoryId = 0;
+                    category.ParentCategoryId = "";
                     break;
                 }
                 parentCategory = GetCategoryById(parentCategory.ParentCategoryId);
@@ -406,7 +406,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductCategories, productCategory);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productCategory.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productCategory.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -415,6 +415,7 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityDeleted(productCategory);
+            
         }
 
         /// <summary>
@@ -425,10 +426,10 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product a category mapping collection</returns>
-        public virtual IPagedList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId,
+        public virtual IPagedList<ProductCategory> GetProductCategoriesByCategoryId(string categoryId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            if (categoryId == 0)
+            if (String.IsNullOrEmpty(categoryId))
                 return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
@@ -461,8 +462,15 @@ namespace Nop.Services.Catalog
                 }
 
                 var query2 = from prod in query
-                             from pm in prod.ProductCategories
-                             select pm;
+                             from pc in prod.ProductCategories
+                             select new SerializeProductCategory
+                             {
+                                 CategoryId = pc.CategoryId,
+                                 DisplayOrder = pc.DisplayOrder,
+                                 Id = pc.Id,
+                                 ProductId = prod.Id,
+                                 IsFeaturedProduct = pc.IsFeaturedProduct,
+                             };
 
                 query2 = from pm in query2
                          where pm.CategoryId == categoryId
@@ -482,9 +490,9 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
         /// <param name="showHidden"> A value indicating whether to show hidden records</param>
         /// <returns> Product category mapping collection</returns>
-        public virtual IList<ProductCategory> GetProductCategoriesByProductId(int productId, int storeId, bool showHidden = false)
+        public virtual IList<ProductCategory> GetProductCategoriesByProductId(string productId, string storeId, bool showHidden = false)
         {
-            if (productId == 0)
+            if (String.IsNullOrEmpty(productId))
                 return new List<ProductCategory>();
 
             string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, storeId);
@@ -492,10 +500,15 @@ namespace Nop.Services.Catalog
             {
                 var query = from pc in _productRepository.Table
                             from c in pc.ProductCategories 
-                            where pc.Id == productId &&
-                                  (showHidden || c.Published)
+                            where pc.Id == productId 
                             orderby pc.DisplayOrder
-                            select c;
+                            select new SerializeProductCategory() {
+                                 CategoryId = c.CategoryId,
+                                 DisplayOrder = c.DisplayOrder,
+                                 Id = c.Id,
+                                 IsFeaturedProduct = c.IsFeaturedProduct,
+                                 ProductId = pc.Id
+                            };
 
                 var allProductCategories = query.ToList();
                 var result = new List<ProductCategory>();
@@ -530,7 +543,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductCategories, productCategory);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productCategory.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productCategory.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -570,5 +583,11 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
+
+        public class SerializeProductCategory: ProductCategory
+        {
+
+        }
+
     }
 }

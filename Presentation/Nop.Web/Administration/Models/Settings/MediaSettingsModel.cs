@@ -5,7 +5,7 @@ namespace Nop.Admin.Models.Settings
 {
     public partial class MediaSettingsModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
 
 

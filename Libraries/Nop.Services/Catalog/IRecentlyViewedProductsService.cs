@@ -19,6 +19,6 @@ namespace Nop.Services.Catalog
         /// Adds a product to a recently viewed products list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        void AddProductToRecentlyViewedList(int productId);
+        void AddProductToRecentlyViewedList(string productId);
     }
 }

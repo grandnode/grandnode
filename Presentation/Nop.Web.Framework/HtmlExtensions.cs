@@ -190,7 +190,7 @@ namespace Nop.Web.Framework
         public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,
-            int activeStoreScopeConfiguration)
+            string activeStoreScopeConfiguration)
         {
             var dataInputIds = new List<string>();
             dataInputIds.Add(helper.FieldIdFor(forInputExpression));
@@ -200,7 +200,7 @@ namespace Nop.Web.Framework
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue1>> forInputExpression1,
             Expression<Func<TModel, TValue2>> forInputExpression2,
-            int activeStoreScopeConfiguration)
+            string activeStoreScopeConfiguration)
         {
             var dataInputIds = new List<string>();
             dataInputIds.Add(helper.FieldIdFor(forInputExpression1));
@@ -212,7 +212,7 @@ namespace Nop.Web.Framework
             Expression<Func<TModel, TValue1>> forInputExpression1,
             Expression<Func<TModel, TValue2>> forInputExpression2,
             Expression<Func<TModel, TValue3>> forInputExpression3,
-            int activeStoreScopeConfiguration)
+            string activeStoreScopeConfiguration)
         {
             var dataInputIds = new List<string>();
             dataInputIds.Add(helper.FieldIdFor(forInputExpression1));
@@ -223,13 +223,13 @@ namespace Nop.Web.Framework
         public static MvcHtmlString OverrideStoreCheckboxFor<TModel>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             string parentContainer,
-            int activeStoreScopeConfiguration)
+            string activeStoreScopeConfiguration)
         {
-            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, parentContainer);
+            return OverrideStoreCheckboxFor(helper, expression, activeStoreScopeConfiguration, parentContainer, null);
         }
         private static MvcHtmlString OverrideStoreCheckboxFor<TModel>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
-            int activeStoreScopeConfiguration,
+            string activeStoreScopeConfiguration = "",
             string parentContainer = null,
             params string[] datainputIds)
         {
@@ -237,7 +237,7 @@ namespace Nop.Web.Framework
                 throw new ArgumentException("Specify at least one selector");
 
             var result = new StringBuilder();
-            if (activeStoreScopeConfiguration > 0)
+            if (!String.IsNullOrEmpty(activeStoreScopeConfiguration))
             {
                 //render only when a certain store is chosen
                 const string cssClass = "multi-store-override-option";

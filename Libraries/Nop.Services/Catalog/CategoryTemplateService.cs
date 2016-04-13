@@ -71,11 +71,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
         /// <returns>Category template</returns>
-        public virtual CategoryTemplate GetCategoryTemplateById(int categoryTemplateId)
+        public virtual CategoryTemplate GetCategoryTemplateById(string categoryTemplateId)
         {
-            if (categoryTemplateId == 0)
-                return null;
-
             return _categoryTemplateRepository.GetById(categoryTemplateId);
         }
 

@@ -77,7 +77,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the download identifier of attached file
         /// </summary>
-        public int AttachedDownloadId { get; set; }
+        public string AttachedDownloadId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of item creation in UTC
@@ -102,7 +102,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the used email account identifier
         /// </summary>
-        public int EmailAccountId { get; set; }
+        public string EmailAccountId { get; set; }
 
 
         /// <summary>

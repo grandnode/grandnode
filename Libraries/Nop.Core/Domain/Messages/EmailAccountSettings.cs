@@ -7,7 +7,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets a store default email account identifier
         /// </summary>
-        public int DefaultEmailAccountId { get; set; }
+        public string DefaultEmailAccountId { get; set; }
 
     }
 

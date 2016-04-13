@@ -121,11 +121,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute</returns>
-        public virtual CustomerAttribute GetCustomerAttributeById(int customerAttributeId)
+        public virtual CustomerAttribute GetCustomerAttributeById(string customerAttributeId)
         {
-            if (customerAttributeId == 0)
-                return null;
-
             string key = string.Format(CUSTOMERATTRIBUTES_BY_ID_KEY, customerAttributeId);
             return _cacheManager.Get(key, () => _customerAttributeRepository.GetById(customerAttributeId));
         }
@@ -177,7 +174,7 @@ namespace Nop.Services.Customers
 
             var updatebuilder = Builders<CustomerAttribute>.Update;
             var update = updatebuilder.Pull(p => p.CustomerAttributeValues, customerAttributeValue);
-            _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerAttributeValue.CustomerAttributeId), update);
+            _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
 
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);
@@ -197,7 +194,7 @@ namespace Nop.Services.Customers
 
             var updatebuilder = Builders<CustomerAttribute>.Update;
             var update = updatebuilder.AddToSet(p => p.CustomerAttributeValues, customerAttributeValue);
-            _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerAttributeValue.CustomerAttributeId), update);
+            _customerAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerAttributeValue.CustomerAttributeId), update);
 
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CUSTOMERATTRIBUTEVALUES_PATTERN_KEY);

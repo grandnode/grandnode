@@ -26,7 +26,7 @@ namespace Nop.Services.Messages
             eventPublisher.Publish(new EmailUnsubscribedEvent(email));
         }
 
-        public static void EntityTokensAdded<T, U>(this IEventPublisher eventPublisher, T entity, System.Collections.Generic.IList<U> tokens) where T : BaseEntity
+        public static void EntityTokensAdded<T, U>(this IEventPublisher eventPublisher, T entity, System.Collections.Generic.IList<U> tokens) where T : ParentEntity
         {
             eventPublisher.Publish(new EntityTokensAddedEvent<T, U>(entity, tokens));
         }

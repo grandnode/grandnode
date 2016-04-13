@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Affiliates
             AvailableShippingStatuses = new List<SelectListItem>();
         }
 
-        public int AffliateId { get; set; }
+        public string AffliateId { get; set; }
 
         [NopResourceDisplayName("Admin.Affiliates.Orders.StartDate")]
         [UIHint("DateNullable")]

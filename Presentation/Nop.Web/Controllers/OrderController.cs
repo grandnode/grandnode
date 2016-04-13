@@ -137,6 +137,7 @@ namespace Nop.Web.Controllers
                 var orderModel = new CustomerOrderListModel.OrderDetailsModel
                 {
                     Id = order.Id,
+                    OrderNumber = order.OrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                     OrderStatusEnum = order.OrderStatus,
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -180,6 +181,7 @@ namespace Nop.Web.Controllers
             var model = new OrderDetailsModel();
 
             model.Id = order.Id;
+            model.OrderNumber = order.OrderNumber;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
@@ -210,6 +212,7 @@ namespace Nop.Web.Controllers
                     var shipmentModel = new OrderDetailsModel.ShipmentBriefModel
                     {
                         Id = shipment.Id,
+                        ShipmentNumber = shipment.ShipmentNumber,
                         TrackingNumber = shipment.TrackingNumber,
                     };
                     if (shipment.ShippedDateUtc.HasValue)
@@ -371,7 +374,7 @@ namespace Nop.Web.Controllers
                 {
                     Id = orderNote.Id,
                     OrderId = orderNote.OrderId,
-                    HasDownload = orderNote.DownloadId > 0,
+                    HasDownload = !String.IsNullOrEmpty(orderNote.DownloadId),
                     Note = orderNote.FormatOrderNoteText(),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
@@ -429,7 +432,7 @@ namespace Nop.Web.Controllers
                 if (_downloadService.IsDownloadAllowed(orderItem))
                     orderItemModel.DownloadId = orderItem.Product.DownloadId;
                 if (_downloadService.IsLicenseDownloadAllowed(orderItem))
-                    orderItemModel.LicenseId = orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0;
+                    orderItemModel.LicenseId = !String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId: "";
             }
 
             return model;
@@ -447,6 +450,7 @@ namespace Nop.Web.Controllers
             var model = new ShipmentDetailsModel();
             
             model.Id = shipment.Id;
+            model.ShipmentNumber = shipment.ShipmentNumber;
             if (shipment.ShippedDateUtc.HasValue)
                 model.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
@@ -549,10 +553,10 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //get recurring payment identifier
-            int recurringPaymentId = 0;
+            string recurringPaymentId = "";
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("cancelRecurringPayment", StringComparison.InvariantCultureIgnoreCase))
-                    recurringPaymentId = Convert.ToInt32(formValue.Substring("cancelRecurringPayment".Length));
+                    recurringPaymentId = formValue.Substring("cancelRecurringPayment".Length);
 
             var recurringPayment = _orderService.GetRecurringPaymentById(recurringPaymentId);
             if (recurringPayment == null)
@@ -615,7 +619,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult Details(int orderId)
+        public ActionResult Details(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -628,7 +632,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Print
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult PrintOrderDetails(int orderId)
+        public ActionResult PrintOrderDetails(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -641,7 +645,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / PDF invoice
-        public ActionResult GetPdfInvoice(int orderId)
+        public ActionResult GetPdfInvoice(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -659,7 +663,7 @@ namespace Nop.Web.Controllers
         }
 
         //My account / Order details page / re-order
-        public ActionResult ReOrder(int orderId)
+        public ActionResult ReOrder(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -673,7 +677,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("Details")]
         [FormValueRequired("repost-payment")]
         [PublicAntiForgery]
-        public ActionResult RePostPayment(int orderId)
+        public ActionResult RePostPayment(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -701,7 +705,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Shipment details page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ShipmentDetails(int shipmentId)
+        public ActionResult ShipmentDetails(string shipmentId)
         {
             var shipment = _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)

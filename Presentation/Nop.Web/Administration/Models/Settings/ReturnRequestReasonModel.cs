@@ -28,7 +28,7 @@ namespace Nop.Admin.Models.Settings
 
     public partial class ReturnRequestReasonLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")]
         [AllowHtml]

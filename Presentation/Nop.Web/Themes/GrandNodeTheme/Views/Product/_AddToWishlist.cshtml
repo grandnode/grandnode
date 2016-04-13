@@ -4,7 +4,7 @@
 @if (!Model.DisableWishlistButton)
 {
     var addToWishlistText = "";
-    if (Model.UpdatedShoppingCartItemId > 0 && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.Wishlist)
+    if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.Wishlist)
     {
         addToWishlistText = T("ShoppingCart.AddToWishlist.Update").Text;
     }

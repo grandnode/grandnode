@@ -170,10 +170,6 @@
                                     template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
                                     width: 50
                                 }, {
-                                    field: "Id",
-                                    title: "ID",
-                                    width: 50
-                                }, {
                                     field: "Email",
                                     title: "@T("Admin.Customers.Customers.Fields.Email")",
                                     width: 200
@@ -181,10 +177,10 @@
                                 @if (Model.UsernamesEnabled)
                                 {
                                     <text>{
-                field: "Username",
-                title: "@T("Admin.Customers.Customers.Fields.Username")",
-                width: 200
-            },</text>
+                                        field: "Username",
+                                        title: "@T("Admin.Customers.Customers.Fields.Username")",
+                                        width: 200
+                                    },</text>
                                 }
                                 {
                                     field: "FullName",

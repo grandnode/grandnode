@@ -105,11 +105,8 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Store</returns>
-        public virtual Store GetStoreById(int storeId)
+        public virtual Store GetStoreById(string storeId)
         {
-            if (storeId == 0)
-                return null;
-            
             string key = string.Format(STORES_BY_ID_KEY, storeId);
             return _cacheManager.Get(key, () => _storeRepository.GetById(storeId));
         }

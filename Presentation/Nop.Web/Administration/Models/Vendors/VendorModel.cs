@@ -37,7 +37,7 @@ namespace Nop.Admin.Models.Vendors
 
         [UIHint("Picture")]
         [NopResourceDisplayName("Admin.Vendors.Fields.Picture")]
-        public int PictureId { get; set; }
+        public string PictureId { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.AdminComment")]
         [AllowHtml]
@@ -100,7 +100,7 @@ namespace Nop.Admin.Models.Vendors
 
         public partial class VendorNote : BaseNopEntityModel
         {
-            public int VendorId { get; set; }
+            public string VendorId { get; set; }
             [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]
             public string Note { get; set; }
             [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.CreatedOn")]
@@ -112,7 +112,7 @@ namespace Nop.Admin.Models.Vendors
 
     public partial class VendorLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.Name")]
         [AllowHtml]

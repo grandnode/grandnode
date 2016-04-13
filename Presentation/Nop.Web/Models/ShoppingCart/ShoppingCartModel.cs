@@ -63,7 +63,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             public PictureModel Picture {get;set;}
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             public string ProductName { get; set; }
 

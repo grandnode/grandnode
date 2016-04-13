@@ -113,7 +113,7 @@ namespace Nop.Web.Models.Catalog
             }
 
             public bool Enabled { get; set; }
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
             public IList<CategorySimpleModel> CategoryBreadcrumb { get; set; }
@@ -125,7 +125,7 @@ namespace Nop.Web.Models.Catalog
             {
                 this.AllowedQuantities = new List<SelectListItem>();
             }
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             //qty
             [NopResourceDisplayName("Products.Qty")]
@@ -151,7 +151,7 @@ namespace Nop.Web.Models.Catalog
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
 
             //updating existing shopping cart or wishlist item?
-            public int UpdatedShoppingCartItemId { get; set; }
+            public string UpdatedShoppingCartItemId { get; set; }
             public ShoppingCartType? UpdateShoppingCartItemType { get; set; }
         }
 
@@ -172,7 +172,7 @@ namespace Nop.Web.Models.Catalog
 
             public bool CallForPrice { get; set; }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             public bool HidePrices { get; set; }
 
@@ -228,9 +228,9 @@ namespace Nop.Web.Models.Catalog
                 Values = new List<ProductAttributeValueModel>();
             }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
-            public int ProductAttributeId { get; set; }
+            public string ProductAttributeId { get; set; }
 
             public string Name { get; set; }
 

@@ -221,7 +221,7 @@ namespace Nop.Services.Orders
 
             public Customer Customer { get; set; }
             public Language CustomerLanguage { get; set; }
-            public int AffiliateId { get; set; }
+            public string AffiliateId { get; set; }
             public TaxDisplayType CustomerTaxDisplayType {get; set; }
             public string CustomerCurrencyCode { get; set; }
             public decimal CustomerCurrencyRate { get; set; }
@@ -297,7 +297,7 @@ namespace Nop.Services.Orders
             //customer currency
             if (!processPaymentRequest.IsRecurringPayment)
             {
-                var currencyTmp = _currencyService.GetCurrencyById(details.Customer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
+                var currencyTmp = _currencyService.GetCurrencyById(details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
                 var customerCurrency = (currencyTmp != null && currencyTmp.Published) ? currencyTmp : _workContext.WorkingCurrency;
                 details.CustomerCurrencyCode = customerCurrency.CurrencyCode;
                 var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
@@ -312,7 +312,7 @@ namespace Nop.Services.Orders
             //customer language
             if (!processPaymentRequest.IsRecurringPayment)
             {
-                details.CustomerLanguage = _languageService.GetLanguageById(details.Customer.GetAttribute<int>(
+                details.CustomerLanguage = _languageService.GetLanguageById(details.Customer.GetAttribute<string>(
                     SystemCustomerAttributeNames.LanguageId, processPaymentRequest.StoreId));
             }
             else
@@ -337,8 +337,7 @@ namespace Nop.Services.Orders
 
                 //clone billing address
                 details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
-                details.BillingAddress.Id = 1;
-                if (details.BillingAddress.CountryId != 0)
+                if (details.BillingAddress.CountryId != "")
                 {
                     var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.BillingAddress.CountryId);
                     if (!country.AllowsBilling)
@@ -352,8 +351,7 @@ namespace Nop.Services.Orders
 
                 //clone billing address
                 details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
-                details.BillingAddress.Id = 1;
-                if (details.BillingAddress.CountryId != 0)
+                if (details.BillingAddress.CountryId != "")
                 {
                     var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.BillingAddress.CountryId);
                     if(!country.AllowsBilling)
@@ -514,8 +512,7 @@ namespace Nop.Services.Orders
 
                         //clone shipping address
                         details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
-                        details.ShippingAddress.Id = 2;
-                        if (details.ShippingAddress.CountryId != 0) 
+                        if (details.ShippingAddress.CountryId != "") 
                         {
                             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.ShippingAddress.CountryId);
                             if(!country.AllowsShipping)
@@ -540,8 +537,7 @@ namespace Nop.Services.Orders
 
                         //clone shipping address
                         details.ShippingAddress = (Address)details.InitialOrder.ShippingAddress.Clone();
-                        details.ShippingAddress.Id = 2;
-                        if (details.ShippingAddress.CountryId != 0)
+                        if (details.ShippingAddress.CountryId != "")
                         {
                             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.ShippingAddress.CountryId);
                             if(!country.AllowsShipping)
@@ -697,8 +693,7 @@ namespace Nop.Services.Orders
                 return;
 
             //add reward points
-            //_rewardPointsService.AddRewardPointsHistory(customer.Id, points, string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id), order.Id, 0);
-            _rewardPointsService.AddRewardPointsHistory(customer.Id, points, order.StoreId, string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
+            _rewardPointsService.AddRewardPointsHistory(customer.Id, points, order.StoreId, string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.OrderNumber));
             order.RewardPointsWereAdded = true;
             //_customerService.UpdateCustomer(customer);
             _orderService.UpdateOrder(order);
@@ -808,8 +803,6 @@ namespace Nop.Services.Orders
             //order notes, notifications
             order.OrderNotes.Add(new OrderNote
                 {
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     Note = string.Format("Order status has been changed to {0}", os.ToString()),
                     DisplayToCustomer = false,
                     OrderId = order.Id,
@@ -824,7 +817,7 @@ namespace Nop.Services.Orders
             {
                 //notification
                 var orderCompletedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
-                    _pdfService.PrintOrderToPdf(order, 0) : null;
+                    _pdfService.PrintOrderToPdf(order, "") : null;
                 var orderCompletedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderCompletedEmail ?
                     "order.pdf" : null;
                 int orderCompletedCustomerNotificationQueuedEmailId = _workflowMessageService
@@ -838,9 +831,6 @@ namespace Nop.Services.Orders
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
-                        Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
-
                     });
                     _orderService.UpdateOrder(order);
                 }
@@ -860,9 +850,6 @@ namespace Nop.Services.Orders
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
-                        Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
-
                     });
                     _orderService.UpdateOrder(order);
                 }
@@ -912,7 +899,7 @@ namespace Nop.Services.Orders
                 //remove this "if" statement if you want to send it in this case
 
                 var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
-                    _pdfService.PrintOrderToPdf(order, 0) : null;
+                    _pdfService.PrintOrderToPdf(order, "") : null;
                 var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
                     "order.pdf" : null;
                 _workflowMessageService.SendOrderPaidCustomerNotification(order, order.CustomerLanguageId,
@@ -942,7 +929,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             //purchased product identifiers
-            var purchasedProductIds = new List<int>();
+            var purchasedProductIds = new List<string>();
             foreach (var orderItem in order.OrderItems)
             {
                 //standard items
@@ -1195,7 +1182,6 @@ namespace Nop.Services.Orders
 
                     var order = new Order
                     {
-                        _id = ObjectId.GenerateNewId().ToString(),
                         StoreId = processPaymentRequest.StoreId,
                         OrderGuid = processPaymentRequest.OrderGuid,
                         CustomerId = details.Customer.Id,
@@ -1297,13 +1283,11 @@ namespace Nop.Services.Orders
                                 DiscountAmountExclTax = discountAmountExclTax,
                                 DownloadCount = 0,
                                 IsDownloadActivated = false,
-                                LicenseDownloadId = 0,
+                                LicenseDownloadId = "",
                                 ItemWeight = itemWeight,
                                 RentalStartDateUtc = sc.RentalStartDateUtc,
                                 RentalEndDateUtc = sc.RentalEndDateUtc,
                                 CreatedOnUtc = DateTime.UtcNow,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                Id = order.OrderItems.Count > 0 ? order.OrderItems.Max(x=>x.Id)+1 : 1,
                             };
                             order.OrderItems.Add(orderItem);
                             _orderService.UpdateOrder(order);
@@ -1382,14 +1366,11 @@ namespace Nop.Services.Orders
                                 DiscountAmountExclTax = orderItem.DiscountAmountExclTax,
                                 DownloadCount = 0,
                                 IsDownloadActivated = false,
-                                LicenseDownloadId = 0,
+                                LicenseDownloadId = "",
                                 ItemWeight = orderItem.ItemWeight,
                                 RentalStartDateUtc = orderItem.RentalStartDateUtc,
                                 RentalEndDateUtc = orderItem.RentalEndDateUtc,
                                 CreatedOnUtc = DateTime.UtcNow,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                Id = order.OrderItems.Count > 0 ? order.OrderItems.Max(x => x.Id) + 1 : 1,
-
                             };
                             order.OrderItems.Add(newOrderItem);
                             _orderService.UpdateOrder(order);
@@ -1528,8 +1509,6 @@ namespace Nop.Services.Orders
                         //this order is placed by a store administrator impersonating a customer
                         order.OrderNotes.Add(new OrderNote
                         {
-                            Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x=>x.Id)+1: 1,
-                            _id = ObjectId.GenerateNewId().ToString(),
                             Note = string.Format("Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
                                 _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
                             DisplayToCustomer = false,
@@ -1545,8 +1524,6 @@ namespace Nop.Services.Orders
                             Note = "Order placed",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
-                            Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                            _id = ObjectId.GenerateNewId().ToString(),
                             OrderId = order.Id,
 
                         });
@@ -1563,8 +1540,6 @@ namespace Nop.Services.Orders
                             Note = string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
-                            Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                            _id = ObjectId.GenerateNewId().ToString(),
                             OrderId = order.Id,
 
                         });
@@ -1584,8 +1559,6 @@ namespace Nop.Services.Orders
                             Note = string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
-                            Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                            _id = ObjectId.GenerateNewId().ToString(),
                             OrderId = order.Id,
 
                         });
@@ -1603,8 +1576,6 @@ namespace Nop.Services.Orders
                                 Note = string.Format("\"Order placed\" email (to vendor) has been queued. Queued email identifier: {0}.", orderPlacedVendorNotificationQueuedEmailId),
                                 DisplayToCustomer = false,
                                 CreatedOnUtc = DateTime.UtcNow,
-                                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 OrderId = order.Id,
                             });
                             _orderService.UpdateOrder(order);
@@ -1621,7 +1592,7 @@ namespace Nop.Services.Orders
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
                         _customerActivityService.InsertActivity(
-                            "PublicStore.PlaceOrder",0,
+                            "PublicStore.PlaceOrder","",
                             _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"),
                             order.Id);
                     }
@@ -1711,6 +1682,7 @@ namespace Nop.Services.Orders
                     foreach (var shipmentItem in shipment.ShipmentItems)
                     {
                         var product = _productService.GetProductById(shipmentItem.ProductId);
+                        shipmentItem.ShipmentId = shipment.Id;
                         _productService.ReverseBookedInventory(product, shipmentItem);
                     }
                 }
@@ -1728,8 +1700,6 @@ namespace Nop.Services.Orders
                 Note = "Order has been deleted",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
 
             });
@@ -1845,8 +1815,6 @@ namespace Nop.Services.Orders
                         Note = "Recurring payment has been cancelled",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
-                        Id = initialOrder.OrderNotes.Count > 0 ? initialOrder.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         OrderId = initialOrder.Id,
 
                     });
@@ -1882,8 +1850,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("Unable to cancel recurring payment. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = initialOrder.OrderNotes.Count > 0 ? initialOrder.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = initialOrder.Id,
 
                 });
@@ -1976,8 +1942,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("Shipment# {0} has been sent", shipment.Id),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
 
             });
@@ -1994,8 +1958,6 @@ namespace Nop.Services.Orders
                         Note = string.Format("\"Shipped\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
-                        Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         OrderId = order.Id,
 
                     });
@@ -2043,8 +2005,6 @@ namespace Nop.Services.Orders
                 Note = string.Format("Shipment# {0} has been delivered", shipment.Id),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
 
             });
@@ -2061,8 +2021,6 @@ namespace Nop.Services.Orders
                         Note = string.Format("\"Delivered\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
-                        Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         OrderId = order.Id,
                     });
                     _orderService.UpdateOrder(order);
@@ -2116,8 +2074,6 @@ namespace Nop.Services.Orders
                 Note = "Order has been cancelled",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
 
             });
@@ -2142,6 +2098,7 @@ namespace Nop.Services.Orders
                 foreach (var shipmentItem in shipment.ShipmentItems)
                 {
                     var product = _productService.GetProductById(shipmentItem.ProductId);
+                    shipmentItem.ShipmentId = shipment.Id;
                     _productService.ReverseBookedInventory(product, shipmentItem);
                 }
             }
@@ -2192,8 +2149,6 @@ namespace Nop.Services.Orders
                 Note = "Order has been marked as authorized",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
             });
             _orderService.UpdateOrder(order);
@@ -2264,8 +2219,6 @@ namespace Nop.Services.Orders
                         Note = "Order has been captured",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
-                        Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         OrderId = order.Id,
 
                     });
@@ -2303,8 +2256,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("Unable to capture order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
 
                 });
@@ -2360,8 +2311,6 @@ namespace Nop.Services.Orders
                 Note = "Order has been marked as paid",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
 
             });
@@ -2438,8 +2387,6 @@ namespace Nop.Services.Orders
                         Note = string.Format("Order has been refunded. Amount = {0}", request.AmountToRefund),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
-                        Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         OrderId = order.Id,
 
                     });
@@ -2457,8 +2404,6 @@ namespace Nop.Services.Orders
                             Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
-                            Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                            _id = ObjectId.GenerateNewId().ToString(),
                             OrderId = order.Id,
 
                         });
@@ -2474,8 +2419,6 @@ namespace Nop.Services.Orders
                             Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
-                            Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                            _id = ObjectId.GenerateNewId().ToString(),
                             OrderId = order.Id,
 
                         });
@@ -2510,8 +2453,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("Unable to refund order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
 
                 });
@@ -2576,8 +2517,6 @@ namespace Nop.Services.Orders
                 Note = string.Format("Order has been marked as refunded. Amount = {0}", amountToRefund),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
 
             });
@@ -2595,8 +2534,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -2612,8 +2549,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -2697,8 +2632,6 @@ namespace Nop.Services.Orders
                         Note = string.Format("Order has been partially refunded. Amount = {0}", amountToRefund),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
-                        Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         OrderId = order.Id,
                     });
                     _orderService.UpdateOrder(order);
@@ -2728,8 +2661,6 @@ namespace Nop.Services.Orders
                             Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
-                            Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                            _id = ObjectId.GenerateNewId().ToString(),
                             OrderId = order.Id,
                         });
                         _orderService.UpdateOrder(order);
@@ -2762,8 +2693,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("Unable to partially refund order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -2835,8 +2764,6 @@ namespace Nop.Services.Orders
                 Note = string.Format("Order has been marked as partially refunded. Amount = {0}", amountToRefund),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
             });
             _orderService.UpdateOrder(order);
@@ -2853,8 +2780,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
             }
@@ -2867,8 +2792,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -2935,8 +2858,6 @@ namespace Nop.Services.Orders
                         Note = "Order has been voided",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
-                        Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         OrderId = order.Id,
                     });
                     _orderService.UpdateOrder(order);
@@ -2968,8 +2889,6 @@ namespace Nop.Services.Orders
                     Note = string.Format("Unable to voiding order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -3025,8 +2944,6 @@ namespace Nop.Services.Orders
                 Note = "Order has been marked as voided",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
             });
             _orderService.UpdateOrder(order);

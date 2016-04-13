@@ -22,8 +22,8 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
-            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(string customerId,
+            string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue);
         
         /// <summary>
         /// Gets all subscriptions
@@ -33,8 +33,8 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productId,
-            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(string productId,
+            string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets all subscriptions
@@ -43,14 +43,14 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        BackInStockSubscription FindSubscription(int customerId, int productId, int storeId);
+        BackInStockSubscription FindSubscription(string customerId, string productId, string storeId);
 
         /// <summary>
         /// Gets a subscription
         /// </summary>
         /// <param name="subscriptionId">Subscription identifier</param>
         /// <returns>Subscription</returns>
-        BackInStockSubscription GetSubscriptionById(int subscriptionId);
+        BackInStockSubscription GetSubscriptionById(string subscriptionId);
 
         /// <summary>
         /// Inserts subscription

@@ -128,7 +128,7 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult Customers(int customerTagId, DataSourceRequest command)
+        public ActionResult Customers(string customerTagId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -176,7 +176,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-		public ActionResult Edit(int id)
+		public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -227,7 +227,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CustomerDelete(int Id, int customerTagId)
+        public ActionResult CustomerDelete(string Id, string customerTagId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -242,7 +242,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();

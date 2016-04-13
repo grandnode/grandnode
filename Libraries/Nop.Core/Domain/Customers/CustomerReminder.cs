@@ -75,17 +75,16 @@ namespace Nop.Core.Domain.Customers
 
 
         [BsonIgnoreExtraElements]
-        public partial class ReminderCondition
+        public partial class ReminderCondition: SubBaseEntity
         {
-            private ICollection<int> _products;
-            private ICollection<int> _categories;
-            private ICollection<int> _manufacturers;
-            private ICollection<int> _customerRoles;
-            private ICollection<int> _customerTags;
+            private ICollection<string> _products;
+            private ICollection<string> _categories;
+            private ICollection<string> _manufacturers;
+            private ICollection<string> _customerRoles;
+            private ICollection<string> _customerTags;
             private ICollection<CustomerRegister> _customerRegister;
             private ICollection<CustomerRegister> _customCustomerAttributes;
 
-            public int Id { get; set; }
             public string Name { get; set; }
 
             public int ConditionTypeId { get; set; }
@@ -107,32 +106,32 @@ namespace Nop.Core.Domain.Customers
             }
 
 
-            public virtual ICollection<int> Products
+            public virtual ICollection<string> Products
             {
-                get { return _products ?? (_products = new List<int>()); }
+                get { return _products ?? (_products = new List<string>()); }
                 protected set { _products = value; }
             }
 
-            public virtual ICollection<int> Categories
+            public virtual ICollection<string> Categories
             {
-                get { return _categories ?? (_categories = new List<int>()); }
+                get { return _categories ?? (_categories = new List<string>()); }
                 protected set { _categories = value; }
             }
 
-            public virtual ICollection<int> Manufacturers
+            public virtual ICollection<string> Manufacturers
             {
-                get { return _manufacturers ?? (_manufacturers = new List<int>()); }
+                get { return _manufacturers ?? (_manufacturers = new List<string>()); }
                 protected set { _manufacturers = value; }
             }
 
-            public virtual ICollection<int> CustomerRoles
+            public virtual ICollection<string> CustomerRoles
             {
-                get { return _customerRoles ?? (_customerRoles = new List<int>()); }
+                get { return _customerRoles ?? (_customerRoles = new List<string>()); }
                 protected set { _customerRoles = value; }
             }
-            public virtual ICollection<int> CustomerTags
+            public virtual ICollection<string> CustomerTags
             {
-                get { return _customerTags ?? (_customerTags = new List<int>()); }
+                get { return _customerTags ?? (_customerTags = new List<string>()); }
                 protected set { _customerTags = value; }
             }
 
@@ -150,9 +149,8 @@ namespace Nop.Core.Domain.Customers
 
 
             [BsonIgnoreExtraElements]
-            public partial class CustomerRegister
+            public partial class CustomerRegister: SubBaseEntity
             {
-                public int Id { get; set; }
                 public string RegisterField { get; set; }
                 public string RegisterValue { get; set; }
             }
@@ -160,14 +158,13 @@ namespace Nop.Core.Domain.Customers
         }
 
         [BsonIgnoreExtraElements]
-        public partial class ReminderLevel
+        public partial class ReminderLevel: SubBaseEntity
         {
-            public int Id { get; set; }
             public string Name { get; set; }
             public int Level { get; set; }
             public int Day { get; set; }
             public int Hour { get; set; }
-            public int EmailAccountId { get; set; }
+            public string EmailAccountId { get; set; }
             public string BccEmailAddresses { get; set; }
             public string Subject { get; set; }
             public string Body { get; set; }

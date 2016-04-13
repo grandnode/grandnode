@@ -10,8 +10,8 @@ namespace Nop.Core.Domain.Customers
     [BsonIgnoreExtraElements]
     public partial class CustomerActionHistory : BaseEntity
     {
-        public int CustomerActionId { get; set; }
-        public int CustomerId { get; set; }
+        public string CustomerActionId { get; set; }
+        public string CustomerId { get; set; }
 
     }
 }

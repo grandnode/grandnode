@@ -82,8 +82,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentException("Product name is required");
 
             //product download & sample download
-            int downloadId = product.DownloadId;
-            int sampleDownloadId = product.SampleDownloadId;
+            string downloadId = product.DownloadId;
+            string sampleDownloadId = product.SampleDownloadId;
             if (product.IsDownload)
             {
                 var download = _downloadService.GetDownloadById(product.DownloadId);
@@ -227,8 +227,76 @@ namespace Nop.Services.Catalog
                 UpdatedOnUtc = DateTime.UtcNow,
                 Locales = product.Locales,
                 CustomerRoles = product.CustomerRoles,
-                Stores = product.Stores
+                Stores = product.Stores,
+                HasTierPrices = product.HasTierPrices,
+                HasDiscountsApplied = product.HasDiscountsApplied,
             };
+
+            // product <-> warehouses mappings
+            foreach (var pwi in product.ProductWarehouseInventory)
+            {
+                productCopy.ProductWarehouseInventory.Add(pwi);
+            }
+
+            // product <-> categories mappings
+            foreach (var productCategory in product.ProductCategories)
+            {
+                productCopy.ProductCategories.Add(productCategory);
+            }
+
+            // product <-> manufacturers mappings
+            foreach (var productManufacturers in product.ProductManufacturers)
+            {
+                productCopy.ProductManufacturers.Add(productManufacturers);
+            }
+
+            // product <-> releated products mappings
+            foreach (var relatedProduct in product.RelatedProducts)
+            {
+                productCopy.RelatedProducts.Add(relatedProduct);
+            }
+
+            //product tags
+            foreach (var productTag in product.ProductTags)
+            {
+                productCopy.ProductTags.Add(productTag);
+            }
+
+            // product <-> attributes mappings
+            foreach (var productAttributeMapping in product.ProductAttributeMappings)
+            {
+                productCopy.ProductAttributeMappings.Add(productAttributeMapping);
+            }
+            //attribute combinations
+            foreach (var combination in product.ProductAttributeCombinations)
+            {
+                productCopy.ProductAttributeCombinations.Add(combination);
+            }
+
+            foreach (var csProduct in product.CrossSellProduct)
+            {
+                productCopy.CrossSellProduct.Add(csProduct);
+            }
+
+            // product specifications
+            foreach (var productSpecificationAttribute in product.ProductSpecificationAttributes)
+            {
+                productCopy.ProductSpecificationAttributes.Add(productSpecificationAttribute);
+            }
+
+            //tier prices
+            foreach (var tierPrice in product.TierPrices)
+            {
+                productCopy.TierPrices.Add(tierPrice);
+            }
+
+            // product <-> discounts mapping
+            foreach (var discount in product.AppliedDiscounts)
+            {
+                productCopy.AppliedDiscounts.Add(discount);
+                
+            }
+
 
             //validate search engine name
             _productService.InsertProduct(productCopy);
@@ -237,22 +305,14 @@ namespace Nop.Services.Catalog
             string seName = productCopy.ValidateSeName("", productCopy.Name, true);
             productCopy.SeName = seName;
             _productService.UpdateProduct(productCopy);
-            _urlRecordService.SaveSlug(productCopy, seName, 0);
+            _urlRecordService.SaveSlug(productCopy, seName, "");
 
             var languages = _languageService.GetAllLanguages(true);
-
-            //product tags
-            foreach (var productTag in product.ProductTags)
-            {
-                productCopy.ProductTags.Add(productTag);
-                productTag.ProductId = productCopy.Id;
-                _productService.InsertProductTag(productTag);
-            }
 
             //product pictures
             //variable to store original and new picture identifiers
             int id = 1;
-            var originalNewPictureIdentifiers = new Dictionary<int, int>();
+            var originalNewPictureIdentifiers = new Dictionary<string, string>();
             if (copyImages)
             {
                 foreach (var productPicture in product.ProductPictures)
@@ -267,8 +327,6 @@ namespace Nop.Services.Catalog
 
                     _productService.InsertProductPicture(new ProductPicture
                     {
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = id,
                         ProductId = productCopy.Id,
                         PictureId = pictureCopy.Id,
                         DisplayOrder = productPicture.DisplayOrder
@@ -278,257 +336,6 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            // product <-> warehouses mappings
-            foreach (var pwi in product.ProductWarehouseInventory)
-            {
-                var pwiCopy = new ProductWarehouseInventory
-                {
-                    Id = productCopy.ProductWarehouseInventory.Count > 0 ? productCopy.ProductWarehouseInventory.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
-                    ProductId = productCopy.Id,
-                    WarehouseId = pwi.WarehouseId,
-                    StockQuantity = pwi.StockQuantity,
-                    ReservedQuantity = 0,
-                };
-                productCopy.ProductWarehouseInventory.Add(pwiCopy);
-                _productService.InsertProductWarehouseInventory(pwiCopy);
-            }
-
-            // product <-> categories mappings
-            foreach (var productCategory in product.ProductCategories)
-            {
-                var productCategoryCopy = new ProductCategory
-                {
-                    Id = productCopy.ProductCategories.Count > 0 ? productCopy.ProductCategories.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
-                    ProductId = productCopy.Id,
-                    CategoryId = productCategory.CategoryId,
-                    IsFeaturedProduct = productCategory.IsFeaturedProduct,
-                    DisplayOrder = productCategory.DisplayOrder
-                };
-                productCopy.ProductCategories.Add(productCategoryCopy);
-                _categoryService.InsertProductCategory(productCategoryCopy);
-            }
-
-            // product <-> manufacturers mappings
-            foreach (var productManufacturers in product.ProductManufacturers)
-            {
-                var productManufacturerCopy = new ProductManufacturer
-                {
-                    Id = productCopy.ProductManufacturers.Count > 0 ? productCopy.ProductManufacturers.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
-                    ProductId = productCopy.Id,
-                    ManufacturerId = productManufacturers.ManufacturerId,
-                    IsFeaturedProduct = productManufacturers.IsFeaturedProduct,
-                    DisplayOrder = productManufacturers.DisplayOrder
-                };
-                productCopy.ProductManufacturers.Add(productManufacturerCopy);
-                _manufacturerService.InsertProductManufacturer(productManufacturerCopy);
-            }
-
-            // product <-> releated products mappings
-            foreach (var relatedProduct in product.RelatedProducts)
-            {
-                var copyrelatedProduct = (
-                    new RelatedProduct
-                    {
-                        Id = relatedProduct.Id,
-                        _id = relatedProduct._id,
-                        ProductId1 = productCopy.Id,
-                        ProductId2 = relatedProduct.ProductId2,
-                        DisplayOrder = relatedProduct.DisplayOrder
-                    });
-                _productService.InsertRelatedProduct(copyrelatedProduct);
-            }
-
-            id = 1;
-            // product <-> cross sells mappings
-            foreach (var csProduct in product.CrossSellProduct) //_productService.GetCrossSellProductsByProductId1(product.Id, true))
-            {
-                _productService.InsertCrossSellProduct(
-                    new CrossSellProduct
-                    {
-                        Id = id,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        ProductId1 = productCopy.Id,
-                        ProductId2 = csProduct,
-                    });
-                id++;
-            }
-
-            // product specifications
-            foreach (var productSpecificationAttribute in product.ProductSpecificationAttributes)
-            {
-                var psaCopy = new ProductSpecificationAttribute
-                {
-                    Id = productSpecificationAttribute.Id,
-                    _id = productSpecificationAttribute._id,
-                    ProductId = productCopy.Id,
-                    AttributeTypeId = productSpecificationAttribute.AttributeTypeId,
-                    SpecificationAttributeOptionId = productSpecificationAttribute.SpecificationAttributeOptionId,
-                    CustomValue = productSpecificationAttribute.CustomValue,
-                    AllowFiltering = productSpecificationAttribute.AllowFiltering,
-                    ShowOnProductPage = productSpecificationAttribute.ShowOnProductPage,
-                    DisplayOrder = productSpecificationAttribute.DisplayOrder
-                };
-                _specificationAttributeService.InsertProductSpecificationAttribute(psaCopy);
-            }
-
-
-
-            // product <-> attributes mappings
-            
-            //var associatedAttributes = new Dictionary<int, int>();
-            //var associatedAttributeValues = new Dictionary<int, int>();
-
-            foreach (var productAttributeMapping in product.ProductAttributeMappings) 
-            {
-                var productAttributeMappingCopy = new ProductAttributeMapping
-                {
-                    Id = productAttributeMapping.Id,
-                    _id = productAttributeMapping._id,
-                    ProductId = productCopy.Id,
-                    ProductAttributeId = productAttributeMapping.ProductAttributeId,
-                    TextPrompt = productAttributeMapping.TextPrompt,
-                    IsRequired = productAttributeMapping.IsRequired,
-                    AttributeControlTypeId = productAttributeMapping.AttributeControlTypeId,
-                    DisplayOrder = productAttributeMapping.DisplayOrder,
-                    ValidationMinLength = productAttributeMapping.ValidationMinLength,
-                    ValidationMaxLength = productAttributeMapping.ValidationMaxLength,
-                    ValidationFileAllowedExtensions = productAttributeMapping.ValidationFileAllowedExtensions,
-                    ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
-                    DefaultValue = productAttributeMapping.DefaultValue,
-                    //UNDONE copy ConditionAttributeXml (we should replace attribute IDs with new values)
-                };
-                _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
-
-                //save associated value (used for combinations copying)
-                //associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
-
-                // product attribute values
-                var productAttributeValues = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMapping.Id).FirstOrDefault().ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
-                foreach (var productAttributeValue in productAttributeValues)
-                {
-                    int attributeValuePictureId = 0;
-                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId))
-                    {
-                        attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
-                    }
-                    var attributeValueCopy = new ProductAttributeValue
-                    {
-                        Id = productAttributeValue.Id,
-                        _id = productAttributeValue._id,
-                        ProductId = productCopy.Id,
-                        ProductAttributeMappingId = productAttributeMappingCopy.Id,
-                        AttributeValueTypeId = productAttributeValue.AttributeValueTypeId,
-                        AssociatedProductId = productAttributeValue.AssociatedProductId,
-                        Name = productAttributeValue.Name,
-                        ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
-                        PriceAdjustment = productAttributeValue.PriceAdjustment,
-                        WeightAdjustment = productAttributeValue.WeightAdjustment,
-                        Cost = productAttributeValue.Cost,
-                        Quantity = productAttributeValue.Quantity,
-                        IsPreSelected = productAttributeValue.IsPreSelected,
-                        DisplayOrder = productAttributeValue.DisplayOrder,
-                        PictureId = attributeValuePictureId,
-                        Locales = productAttributeMappingCopy.Locales
-                    };
-                    _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
-
-                }
-            }
-
-            //attribute combinations
-            foreach (var combination in product.ProductAttributeCombinations)
-            {
-                //generate new AttributesXml according to new value IDs
-                string newAttributesXml = "";
-                var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(product, combination.AttributesXml);
-                foreach (var oldAttribute in parsedProductAttributes)
-                {
-                    var newAttribute = product.ProductAttributeMappings.Where(x => x.Id == oldAttribute.Id).FirstOrDefault(); //_productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
-                    if (newAttribute != null)
-                    {
-                        var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
-                        foreach (var oldAttributeValueStr in oldAttributeValuesStr)
-                        {
-                            if (newAttribute.ShouldHaveValues())
-                            {
-                                //attribute values
-                                int oldAttributeValue = int.Parse(oldAttributeValueStr);
-                                var newAttributeValue = newAttribute.ProductAttributeValues.Where(x => x.Id == oldAttributeValue).FirstOrDefault(); //_productAttributeService.GetProductAttributeValueById(associatedAttributeValues[oldAttributeValue]);
-                                if (newAttributeValue != null)
-                                {
-                                    newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                        newAttribute, newAttributeValue.Id.ToString());
-                                }
-                            }
-                            else
-                            {
-                                //just a text
-                                newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                    newAttribute, oldAttributeValueStr);
-                            }
-                        }
-                    }
-                }
-                var combinationCopy = new ProductAttributeCombination
-                {
-                    ProductId = productCopy.Id,
-                    AttributesXml = newAttributesXml,
-                    StockQuantity = combination.StockQuantity,
-                    AllowOutOfStockOrders = combination.AllowOutOfStockOrders,
-                    Sku = combination.Sku,
-                    ManufacturerPartNumber = combination.ManufacturerPartNumber,
-                    Gtin = combination.Gtin,
-                    OverriddenPrice = combination.OverriddenPrice,
-                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow,
-                    Id = combination.Id, //productCopy.ProductAttributeCombinations.Count > 0 ? productCopy.ProductAttributeCombinations.Max(x=>x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString()
-                };
-                _productAttributeService.InsertProductAttributeCombination(combinationCopy);
-            }
-            //tier prices
-            foreach (var tierPrice in product.TierPrices)
-            {
-                _productService.InsertTierPrice(
-                    new TierPrice
-                    {
-                        ProductId = productCopy.Id,
-                        StoreId = tierPrice.StoreId,
-                        CustomerRoleId = tierPrice.CustomerRoleId,
-                        Quantity = tierPrice.Quantity,
-                        Price = tierPrice.Price,
-                        Id = tierPrice.Id,
-                        _id = tierPrice._id
-                    });
-            }
-
-            // product <-> discounts mapping
-            foreach (var discount in product.AppliedDiscounts)
-            {
-                productCopy.AppliedDiscounts.Add(discount);
-                _productService.InsertDiscount(discount, productCopy.Id);
-            }
-
-
-            //update "HasTierPrices" and "HasDiscountsApplied" properties
-            _productService.UpdateHasTierPricesProperty(productCopy.Id);
-            _productService.UpdateHasDiscountsApplied(productCopy.Id);
-
-
-            //associated products
-            if (copyAssociatedProducts)
-            {
-                var associatedProducts = _productService.GetAssociatedProducts(product.Id, showHidden: true);
-                foreach (var associatedProduct in associatedProducts)
-                {
-                    var associatedProductCopy = CopyProduct(associatedProduct, string.Format("Copy of {0}", associatedProduct.Name),
-                        isPublished, copyImages, false);
-                    associatedProductCopy.ParentGroupedProductId = productCopy.Id;
-                    _productService.UpdateProduct(productCopy);
-                }
-            }
 
             return productCopy;
         }

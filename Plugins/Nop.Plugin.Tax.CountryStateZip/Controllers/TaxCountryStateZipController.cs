@@ -59,7 +59,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 
             var model = new TaxRateListModel();
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "" });
             var stores = _storeService.GetAllStores();
             foreach (var s in stores)
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
@@ -71,7 +71,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //states
-            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
+            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "" });
             var defaultCountry = countries.FirstOrDefault();
             if (defaultCountry != null)
             {
@@ -147,7 +147,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult RateDelete(int id)
+        public ActionResult RateDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");

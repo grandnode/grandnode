@@ -29,7 +29,7 @@
                         var alt = Model[i];
                         <text>
                         {
-                            Id: @(alt.Id),
+                            Id: "@(alt.Id)",
                             Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(alt.Name)))",
                             Enabled: @(alt.Enabled.ToString().ToLowerInvariant())
                         }
@@ -48,7 +48,7 @@
                                 schema: {
                                     model: {
                                         fields: {
-                                            Id: { type: "number" },
+                                            Id: { type: "string" },
                                             Name: { type: "string" },
                                             Enabled: { type: "boolean" }
                                         }

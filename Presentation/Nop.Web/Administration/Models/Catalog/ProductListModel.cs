@@ -22,17 +22,17 @@ namespace Nop.Admin.Models.Catalog
         [AllowHtml]
         public string SearchProductName { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-        public int SearchCategoryId { get; set; }
+        public string SearchCategoryId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchIncludeSubCategories")]
         public bool SearchIncludeSubCategories { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-        public int SearchManufacturerId { get; set; }
+        public string SearchManufacturerId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-        public int SearchStoreId { get; set; }
+        public string SearchStoreId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-        public int SearchVendorId { get; set; }
+        public string SearchVendorId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchWarehouse")]
-        public int SearchWarehouseId { get; set; }
+        public string SearchWarehouseId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
         public int SearchProductTypeId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchPublished")]

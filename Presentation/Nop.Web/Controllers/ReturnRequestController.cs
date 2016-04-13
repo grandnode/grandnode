@@ -192,7 +192,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ReturnRequest(int orderId)
+        public ActionResult ReturnRequest(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -209,7 +209,7 @@ namespace Nop.Web.Controllers
         [HttpPost, ActionName("ReturnRequest")]
         [ValidateInput(false)]
         [PublicAntiForgery]
-        public ActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, FormCollection form)
+        public ActionResult ReturnRequestSubmit(string orderId, SubmitReturnRequestModel model, FormCollection form)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)

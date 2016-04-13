@@ -66,7 +66,7 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Limit to store (identifier)
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         #endregion
 

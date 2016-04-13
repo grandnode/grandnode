@@ -296,7 +296,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             else
             {
                 //pass order total
-                builder.AppendFormat("&item_name=Order Number {0}", postProcessPaymentRequest.Order.Id);
+                builder.AppendFormat("&item_name=Order Number {0}", postProcessPaymentRequest.Order.OrderNumber);
                 var orderTotal = Math.Round(postProcessPaymentRequest.Order.OrderTotal, 2);
                 builder.AppendFormat("&amount={0}", orderTotal.ToString("0.00", CultureInfo.InvariantCulture));
             }
@@ -304,7 +304,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             builder.AppendFormat("&custom={0}", postProcessPaymentRequest.Order.OrderGuid);
             builder.AppendFormat("&charset={0}", "utf-8");
             builder.Append(string.Format("&no_note=1&currency_code={0}", HttpUtility.UrlEncode(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode)));
-            builder.AppendFormat("&invoice={0}", postProcessPaymentRequest.Order.Id);
+            builder.AppendFormat("&invoice={0}", postProcessPaymentRequest.Order.OrderNumber);
             builder.AppendFormat("&rm=2", new object[0]);
             if (postProcessPaymentRequest.Order.ShippingStatus != ShippingStatus.ShippingNotRequired)
                 builder.AppendFormat("&no_shipping=2", new object[0]);
@@ -333,25 +333,15 @@ namespace Nop.Plugin.Payments.PayPalStandard
             builder.AppendFormat("&address1={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Address1));
             builder.AppendFormat("&address2={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.Address2));
             builder.AppendFormat("&city={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.City));
-            //if (!String.IsNullOrEmpty(postProcessPaymentRequest.Order.BillingAddress.PhoneNumber))
-            //{
-            //    //strip out all non-digit characters from phone number;
-            //    string billingPhoneNumber = System.Text.RegularExpressions.Regex.Replace(postProcessPaymentRequest.Order.BillingAddress.PhoneNumber, @"\D", string.Empty);
-            //    if (billingPhoneNumber.Length >= 10)
-            //    {
-            //        builder.AppendFormat("&night_phone_a={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(0, 3)));
-            //        builder.AppendFormat("&night_phone_b={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(3, 3)));
-            //        builder.AppendFormat("&night_phone_c={0}", HttpUtility.UrlEncode(billingPhoneNumber.Substring(6, 4)));
-            //    }
-            //}
-            if (postProcessPaymentRequest.Order.BillingAddress.StateProvinceId != 0)
+
+            if (!String.IsNullOrEmpty(postProcessPaymentRequest.Order.BillingAddress.StateProvinceId))
             {
                 var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(postProcessPaymentRequest.Order.BillingAddress.StateProvinceId);
                 builder.AppendFormat("&state={0}", HttpUtility.UrlEncode(state.Abbreviation));
             }
             else
                 builder.AppendFormat("&state={0}", "");
-            if (postProcessPaymentRequest.Order.BillingAddress.CountryId != 0)
+            if (!String.IsNullOrEmpty(postProcessPaymentRequest.Order.BillingAddress.CountryId))
             {
                 var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(postProcessPaymentRequest.Order.BillingAddress.CountryId);
                 builder.AppendFormat("&country={0}", HttpUtility.UrlEncode(country.TwoLetterIsoCode));

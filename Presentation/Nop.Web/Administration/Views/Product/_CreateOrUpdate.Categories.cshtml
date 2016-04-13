@@ -1,7 +1,7 @@
 ﻿@model ProductModel
 
 
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 {
     if (Model.AvailableCategories.Count > 0)
     {
@@ -46,10 +46,10 @@
                                 id: "Id",
                                 fields: {
                                     Category: { editable: true, type: "string" },
-                                    CategoryId: { editable: true, type: "number" },
+                                    CategoryId: { editable: true, type: "string" },
                                     IsFeaturedProduct: { editable: true, type: "boolean" },
                                     DisplayOrder: { editable: true, type: "number" },
-                                    Id: { editable: false, type: "number" }
+                                    Id: { editable: false, type: "string" }
                                 }
                             }
                         },
@@ -140,7 +140,7 @@
                     var categoryItem = Model.AvailableCategories[i];
                     <text>
                         {
-                            Id: @(categoryItem.Value),
+                            Id: '@(categoryItem.Value)',
                             Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(categoryItem.Text)))"
                         }
                         </text>

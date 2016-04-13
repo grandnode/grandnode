@@ -71,11 +71,8 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>Topic template</returns>
-        public virtual TopicTemplate GetTopicTemplateById(int topicTemplateId)
+        public virtual TopicTemplate GetTopicTemplateById(string topicTemplateId)
         {
-            if (topicTemplateId == 0)
-                return null;
-
             return _topicTemplateRepository.GetById(topicTemplateId);
         }
 

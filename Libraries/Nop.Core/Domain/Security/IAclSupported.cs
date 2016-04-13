@@ -11,6 +11,6 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         bool SubjectToAcl { get; set; }
-        IList<int> CustomerRoles { get; set; }
+        IList<string> CustomerRoles { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets the address attribute identifier
         /// </summary>
-        public int AddressAttributeId { get; set; }
+        public string AddressAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the checkout attribute name

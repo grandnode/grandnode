@@ -31,7 +31,7 @@ namespace Nop.Admin.Models.Shipping
 
     public partial class DeliveryDateLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")]
         [AllowHtml]

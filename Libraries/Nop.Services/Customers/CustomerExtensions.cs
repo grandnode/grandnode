@@ -265,7 +265,7 @@ namespace Nop.Services.Customers
         /// <param name="customer">Customer</param>
         /// <param name="showHidden">A value indicating whether to load hidden records</param>
         /// <returns>Customer role identifiers</returns>
-        public static int[] GetCustomerRoleIds(this Customer customer, bool showHidden = false)
+        public static string[] GetCustomerRoleIds(this Customer customer, bool showHidden = false)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");

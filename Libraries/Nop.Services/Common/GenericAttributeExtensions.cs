@@ -21,7 +21,7 @@ namespace Nop.Services.Common
         /// <param name="key">Key</param>
         /// <param name="storeId">Load a value specific for a certain store; pass 0 to load a value shared for all stores</param>
         /// <returns>Attribute</returns>
-        public static TPropType GetAttribute<TPropType>(this BaseEntity entity, string key, int storeId = 0)
+        public static TPropType GetAttribute<TPropType>(this BaseEntity entity, string key, string storeId = "")
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");

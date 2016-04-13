@@ -12,6 +12,6 @@ namespace Nop.Web.Models.Common
 
         public IList<CurrencyModel> AvailableCurrencies { get; set; }
 
-        public int CurrentCurrencyId { get; set; }
+        public string CurrentCurrencyId { get; set; }
     }
 }

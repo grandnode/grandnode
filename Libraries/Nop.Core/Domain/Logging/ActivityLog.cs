@@ -13,12 +13,12 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the activity log type identifier
         /// </summary>
-        public int ActivityLogTypeId { get; set; }
+        public string ActivityLogTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address
@@ -28,7 +28,7 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the entity key identifier
         /// </summary>
-        public int EntityKeyId { get; set; }
+        public string EntityKeyId { get; set; }
         /// <summary>
         /// Gets or sets the activity comment
         /// </summary>
@@ -51,8 +51,8 @@ namespace Nop.Core.Domain.Logging
     /// </summary>
     public class ActivityStats
     {
-        public int ActivityLogTypeId { get; set; }
-        public int EntityKeyId { get; set; }
+        public string ActivityLogTypeId { get; set; }
+        public string EntityKeyId { get; set; }
         public int Count { get; set; }
     }
 

@@ -112,18 +112,18 @@ namespace Nop.Admin.Controllers
                 model.Address.FaxEnabled = true;
 
                 //address
-                model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
                 foreach (var c in _countryService.GetAllCountries(showHidden: true))
                     model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (affiliate != null && c.Id == affiliate.Address.CountryId) });
 
-                var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, showHidden: true).ToList() : new List<StateProvince>();
+                var states = !String.IsNullOrEmpty(model.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
                 if (states.Count > 0)
                 {
                     foreach (var s in states)
                         model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (affiliate != null && s.Id == affiliate.Address.StateProvinceId) });
                 }
                 else
-                    model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
             }
         }
         
@@ -198,8 +198,6 @@ namespace Nop.Admin.Controllers
                 var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
                 affiliate.Address = model.Address.ToEntity();
-                affiliate.Address.Id = 1;
-                affiliate.Address._id = ObjectId.GenerateNewId().ToString();
                 affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
                 //some validation
                 _affiliateService.InsertAffiliate(affiliate);
@@ -216,7 +214,7 @@ namespace Nop.Admin.Controllers
 
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -270,7 +268,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
@@ -286,28 +284,28 @@ namespace Nop.Admin.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult AffiliatedOrderList(int affiliateId)
+        public ActionResult AffiliatedOrderList(string affiliateId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return Content("");
 
-            if (affiliateId == 0)
-                throw new Exception("Affliate ID cannot be 0");
+            if (String.IsNullOrEmpty(affiliateId))
+                throw new Exception("Affliate ID cannot be empty");
 
             var model = new AffiliatedOrderListModel();
             model.AffliateId = affiliateId;
 
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return PartialView(model);
         }
@@ -361,7 +359,7 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult AffiliatedCustomerList(int affiliateId, DataSourceRequest command)
+        public ActionResult AffiliatedCustomerList(string affiliateId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();

@@ -26,7 +26,7 @@ namespace Nop.Admin.Models.Messages
         public string SearchEmail { get; set; }
 
         [NopResourceDisplayName("Admin.System.ContactForm.List.Store")]
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
     }

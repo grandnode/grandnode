@@ -38,7 +38,7 @@
         <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex()) id="tab-applied-to-manufacturers">
             @T("Admin.Promotions.Discounts.AppliedToManufacturers")
         </li>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
                 @T("Admin.Promotions.Discounts.History")
@@ -60,7 +60,7 @@
     <div>
         @TabAppliedToManufacturers()
     </div>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
             @TabHistory()
@@ -279,7 +279,7 @@
 }
 @helper TabRequirements()
 {
-        if (Model.Id > 0)
+        if (!String.IsNullOrEmpty(Model.Id))
         {
         
     <script type="text/javascript">
@@ -297,7 +297,7 @@
                //adding requirement event
                $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
   
-                   var discountId = @Model.Id;
+                   var discountId = '@Model.Id';
                    
                    var postData = {
                        discountRequirementId: newRequirementId,
@@ -342,7 +342,7 @@
             function loadNewRequirementBox() {
                 //load URL
                 var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
-                var discountId = @Model.Id;
+                var discountId = '@Model.Id';
                 if (ruleSystemName != '') {
                     $.ajax({
                         cache:false,
@@ -368,9 +368,8 @@
                     @for (int i = 0; i < Model.DiscountRequirementMetaInfos.Count; i++)
                     {
                         var drmi = Model.DiscountRequirementMetaInfos[i];
-                        <text>{ discountRequirementId: @(drmi.DiscountRequirementId), ruleName: "@(drmi.RuleName)", url:  "@(Html.Raw(drmi.ConfigurationUrl))" } </text> if (i != Model.DiscountRequirementMetaInfos.Count - 1)
+                        <text>{ discountRequirementId: "@(drmi.DiscountRequirementId)", ruleName: "@(drmi.RuleName)", url:  "@(Html.Raw(drmi.ConfigurationUrl))" } </text> if (i != Model.DiscountRequirementMetaInfos.Count - 1)
                                                                                                                                                                          {<text>, </text>}
-
                     }
                ];
            
@@ -391,7 +390,7 @@
 
            //delete requirement rule
            function deleteRequirement(discountRequirementId) {           
-               var discountId = @Model.Id;
+               var discountId = '@Model.Id';
                
                var postData = {
                    discountRequirementId: discountRequirementId,
@@ -434,7 +433,7 @@
                 <div>@T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType"): <strong>{{= ruleName }}</strong></div>
                 <div id="editrequirementplaceholder{{= discountRequirementId }}" style="float:left;"></div>
                 <div style="float:right;">
-                    <input type="button" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement({{= discountRequirementId }})" class="k-button" value="@T("Admin.Promotions.Discounts.Requirements.Remove")" />
+                    <input type="button" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement('{{= discountRequirementId }}')" class="k-button" value="@T("Admin.Promotions.Discounts.Requirements.Remove")" />
                 </div>
                 <table class="adminContent">
                     <tr class="adminSeparator">
@@ -478,7 +477,7 @@
 }
 @helper TabAppliedToProducts()
 {
-    if (Model.Id > 0)
+    if (!String.IsNullOrEmpty(Model.Id))
     {
         <table class="adminContent">
             <tr>
@@ -513,7 +512,7 @@
                                             id: "ProductId",
                                             fields: {
                                                 ProductName: {editable: false, type: "string" },
-                                                ProductId: {editable: false, type: "number" }
+                                                ProductId: {editable: false, type: "string" }
                                             }
                                         }
                                     },
@@ -584,7 +583,7 @@
 }
 @helper TabAppliedToCategories()
 {
-    if (Model.Id > 0)
+    if (!String.IsNullOrEmpty(Model.Id))
     {
         <table class="adminContent">
             <tr>
@@ -619,7 +618,7 @@
                                             id: "CategoryId",
                                             fields: {
                                                 CategoryName: {editable: false, type: "string" },
-                                                CategoryId: {editable: false, type: "number" }
+                                                CategoryId: {editable: false, type: "string" }
                                             }
                                         }
                                     },
@@ -690,7 +689,7 @@
 }
 @helper TabAppliedToManufacturers()
 {
-    if (Model.Id > 0)
+    if (!String.IsNullOrEmpty(Model.Id))
     {
         <table class="adminContent">
             <tr>
@@ -725,7 +724,7 @@
                                             id: "ManufacturerId",
                                             fields: {
                                                 ManufacturerName: {editable: false, type: "string" },
-                                                ManufacturerId: {editable: false, type: "number" }
+                                                ManufacturerId: {editable: false, type: "string" }
                                             }
                                         }
                                     },

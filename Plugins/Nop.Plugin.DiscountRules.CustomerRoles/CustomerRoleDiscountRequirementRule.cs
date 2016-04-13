@@ -34,9 +34,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
                 return result;
 
 
-            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}-{1}", request.DiscountId, request.DiscountRequirementId));
+            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}-{1}", request.DiscountId, request.DiscountRequirementId));
 
-            if (restrictedToCustomerRoleId == 0)
+            if (String.IsNullOrEmpty(restrictedToCustomerRoleId))
                 return result;
 
             foreach (var customerRole in request.Customer.CustomerRoles.Where(cr => cr.Active).ToList())
@@ -56,12 +56,12 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         /// <param name="discountId">Discount identifier</param>
         /// <param name="discountRequirementId">Discount requirement identifier (if editing)</param>
         /// <returns>URL</returns>
-        public string GetConfigurationUrl(int discountId, int? discountRequirementId)
+        public string GetConfigurationUrl(string discountId, string discountRequirementId)
         {
             //configured in RouteProvider.cs
             string result = "Plugins/DiscountRulesCustomerRoles/Configure/?discountId=" + discountId;
-            if (discountRequirementId.HasValue)
-                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+            if (!String.IsNullOrEmpty(discountRequirementId))
+                result += string.Format("&discountRequirementId={0}", discountRequirementId);
             return result;
         }
 

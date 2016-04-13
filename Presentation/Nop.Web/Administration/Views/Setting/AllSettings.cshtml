@@ -74,8 +74,8 @@
                                         Name: { editable: true, type: "string" },
                                         Value: { editable: true, type: "string" },
                                         Store: { editable: true, type: "string" },
-                                        StoreId: { editable: true, type: "number" },
-                                        Id: { editable: false, type: "number" }
+                                        StoreId: { editable: true, type: "string" },
+                                        Id: { editable: false, type: "string" }
                                     }
                                 }
                             },
@@ -156,7 +156,7 @@
                 //local datasource
                 var allStores = [
                     {
-                        Id : 0,
+                        Id : " ",
                         Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
                     }
                     @{
@@ -167,7 +167,7 @@
                     {
                         <text>
                         , {
-                            Id: @(store.Id),
+                            Id: "@(store.Id)",
                             Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
                         }
                         </text>
@@ -178,8 +178,8 @@
                     $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
                         .appendTo(container)
                         .kendoDropDownList({
-                            autoBind: false,
-                            dataSource: allStores
+                            dataSource: allStores,                            
+                            autoBind: false,                            
                         });
                 }
             </script>

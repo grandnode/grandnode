@@ -28,7 +28,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="bannerId">Banner identifier</param>
         /// <returns>Banner</returns>
-        Banner GetBannerById(int bannerId);
+        Banner GetBannerById(string bannerId);
 
         /// <summary>
         /// Gets all banner
@@ -40,8 +40,8 @@ namespace Nop.Services.Messages
         /// Gets active banner for customer
         /// </summary>
         /// <returns>BannerActive</returns>
-        BannerActive GetActiveBannerByCustomerId(int customerId);
-        void MoveBannerToArchive(int id, int customerId);
+        BannerActive GetActiveBannerByCustomerId(string customerId);
+        void MoveBannerToArchive(string id, string customerId);
 
     }
 }

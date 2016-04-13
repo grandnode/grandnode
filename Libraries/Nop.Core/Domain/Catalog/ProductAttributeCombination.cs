@@ -6,12 +6,13 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a product attribute combination
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductAttributeCombination : BaseEntity
+    public partial class ProductAttributeCombination : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        [BsonIgnoreAttribute]
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the attributes

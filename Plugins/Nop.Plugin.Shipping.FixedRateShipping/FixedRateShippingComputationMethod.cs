@@ -33,7 +33,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
         
         #region Utilities
 
-        private decimal GetRate(int shippingMethodId)
+        private decimal GetRate(string shippingMethodId)
         {
             string key = string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId);
             var rate = this._settingService.GetSettingByKey<decimal>(key);
@@ -61,7 +61,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
                 return response;
             }
 
-            int? restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.CountryId != 0) ? getShippingOptionRequest.ShippingAddress.CountryId : 0;
+            string restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId)) ? getShippingOptionRequest.ShippingAddress.CountryId : "";
             var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId);
             foreach (var shippingMethod in shippingMethods)
             {
@@ -85,7 +85,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             if (getShippingOptionRequest == null)
                 throw new ArgumentNullException("getShippingOptionRequest");
 
-            int? restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && getShippingOptionRequest.ShippingAddress.CountryId != 0) ? getShippingOptionRequest.ShippingAddress.CountryId : 0;
+            string restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId)) ? getShippingOptionRequest.ShippingAddress.CountryId : "";
             var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId);
             
             var rates = new List<decimal>();

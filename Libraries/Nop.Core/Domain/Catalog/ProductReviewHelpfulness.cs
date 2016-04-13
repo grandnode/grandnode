@@ -6,12 +6,12 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a product review helpfulness
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductReviewHelpfulness : BaseEntity
+    public partial class ProductReviewHelpfulness : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product review identifier
         /// </summary>
-        public int ProductReviewId { get; set; }
+        public string ProductReviewId { get; set; }
 
         /// <summary>
         /// A value indicating whether a review a helpful
@@ -21,7 +21,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
     }
 }

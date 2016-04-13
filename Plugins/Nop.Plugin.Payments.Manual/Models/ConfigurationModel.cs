@@ -6,7 +6,7 @@ namespace Nop.Plugin.Payments.Manual.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.Manual.Fields.AdditionalFeePercentage")]
         public bool AdditionalFeePercentage { get; set; }

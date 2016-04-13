@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Localization
         private ICollection<LocaleStringResource> _localeStringResources;
         public Language()
         {
-            Stores = new List<int>();
+            Stores = new List<string>();
         }
 
         /// <summary>
@@ -45,12 +45,12 @@ namespace Nop.Core.Domain.Localization
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-        public IList<int> Stores { get; set; }
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier of the default currency for this language; 0 is set when we use the default currency display order
         /// </summary>
-        public int DefaultCurrencyId { get; set; }
+        public string DefaultCurrencyId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the language is published

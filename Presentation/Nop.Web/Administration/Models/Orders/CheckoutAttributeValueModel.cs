@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Orders
             Locales = new List<CheckoutAttributeValueLocalizedModel>();
         }
 
-        public int CheckoutAttributeId { get; set; }
+        public string CheckoutAttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")]
         [AllowHtml]
@@ -47,7 +47,7 @@ namespace Nop.Admin.Models.Orders
 
     public partial class CheckoutAttributeValueLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")]
         [AllowHtml]

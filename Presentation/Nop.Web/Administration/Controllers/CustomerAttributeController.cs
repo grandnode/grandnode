@@ -162,7 +162,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -215,7 +215,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -233,7 +233,7 @@ namespace Nop.Admin.Controllers
 
         //list
         [HttpPost]
-        public ActionResult ValueList(int customerAttributeId, DataSourceRequest command)
+        public ActionResult ValueList(string customerAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -255,7 +255,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult ValueCreatePopup(int customerAttributeId)
+        public ActionResult ValueCreatePopup(string customerAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -287,8 +287,6 @@ namespace Nop.Admin.Controllers
             {
                 var cav = new CustomerAttributeValue
                 {
-                    Id = customerAttribute.CustomerAttributeValues.Count > 0 ? customerAttribute.CustomerAttributeValues.Max(x=>x.Id) + 1: 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     CustomerAttributeId = model.CustomerAttributeId,
                     Name = model.Name,
                     IsPreSelected = model.IsPreSelected,
@@ -309,7 +307,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult ValueEditPopup(int id, int customerAttributeId)
+        public ActionResult ValueEditPopup(string id, string customerAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();

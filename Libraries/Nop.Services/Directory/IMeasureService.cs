@@ -19,7 +19,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="measureDimensionId">Measure dimension identifier</param>
         /// <returns>Measure dimension</returns>
-        MeasureDimension GetMeasureDimensionById(int measureDimensionId);
+        MeasureDimension GetMeasureDimensionById(string measureDimensionId);
 
         /// <summary>
         /// Gets a measure dimension by system keyword
@@ -87,7 +87,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="measureWeightId">Measure weight identifier</param>
         /// <returns>Measure weight</returns>
-        MeasureWeight GetMeasureWeightById(int measureWeightId);
+        MeasureWeight GetMeasureWeightById(string measureWeightId);
 
         /// <summary>
         /// Gets a measure weight by system keyword

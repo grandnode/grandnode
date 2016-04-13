@@ -18,6 +18,6 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets the address identifier of the warehouse
         /// </summary>
-        public int AddressId { get; set; }
+        public string AddressId { get; set; }
     }
 }

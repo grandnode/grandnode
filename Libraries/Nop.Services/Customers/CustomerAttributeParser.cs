@@ -28,9 +28,9 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected customer attribute identifiers</returns>
-        protected virtual IList<int> ParseCustomerAttributeIds(string attributesXml)
+        protected virtual IList<string> ParseCustomerAttributeIds(string attributesXml)
         {
-            var ids = new List<int>();
+            var ids = new List<string>();
             if (String.IsNullOrEmpty(attributesXml))
                 return ids;
 
@@ -44,11 +44,7 @@ namespace Nop.Services.Customers
                     if (node.Attributes != null && node.Attributes["ID"] != null)
                     {
                         string str1 = node.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
-                        {
-                            ids.Add(id);
-                        }
+                        ids.Add(str1);
                     }
                 }
             }
@@ -68,7 +64,7 @@ namespace Nop.Services.Customers
         {
             var result = new List<CustomerAttribute>();
             var ids = ParseCustomerAttributeIds(attributesXml);
-            foreach (int id in ids)
+            foreach (string id in ids)
             {
                 var attribute = _customerAttributeService.GetCustomerAttributeById(id);
                 if (attribute != null)
@@ -98,13 +94,9 @@ namespace Nop.Services.Customers
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int id;
-                        if (int.TryParse(valueStr, out id))
-                        {
-                            var value = attribute.CustomerAttributeValues.FirstOrDefault(x => x.Id == id); //_customerAttributeService.GetCustomerAttributeValueById(id);
-                            if (value != null)
-                                values.Add(value);
-                        }
+                        var value = attribute.CustomerAttributeValues.FirstOrDefault(x => x.Id == valueStr); //_customerAttributeService.GetCustomerAttributeValueById(id);
+                        if (value != null)
+                            values.Add(value);
                     }
                 }
             }
@@ -117,7 +109,7 @@ namespace Nop.Services.Customers
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute value</returns>
-        public virtual IList<string> ParseValues(string attributesXml, int customerAttributeId)
+        public virtual IList<string> ParseValues(string attributesXml, string customerAttributeId)
         {
             var selectedCustomerAttributeValues = new List<string>();
             try
@@ -131,10 +123,7 @@ namespace Nop.Services.Customers
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
-                        {
-                            if (id == customerAttributeId)
+                            if (str1 == customerAttributeId)
                             {
                                 var nodeList2 = node1.SelectNodes(@"CustomerAttributeValue/Value");
                                 foreach (XmlNode node2 in nodeList2)
@@ -143,7 +132,6 @@ namespace Nop.Services.Customers
                                     selectedCustomerAttributeValues.Add(value);
                                 }
                             }
-                        }
                     }
                 }
             }
@@ -186,15 +174,11 @@ namespace Nop.Services.Customers
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
-                        {
-                            if (id == ca.Id)
+                            if (str1 == ca.Id)
                             {
                                 attributeElement = (XmlElement)node1;
                                 break;
                             }
-                        }
                     }
                 }
 

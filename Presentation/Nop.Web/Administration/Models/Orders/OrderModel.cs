@@ -25,7 +25,11 @@ namespace Nop.Admin.Models.Orders
 
         //identifiers
         [NopResourceDisplayName("Admin.Orders.Fields.ID")]
-        public override int Id { get; set; }
+        public override string Id { get; set; }
+
+        [NopResourceDisplayName("Admin.Orders.Fields.ID")]
+        public int OrderNumber { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.Fields.OrderGuid")]
         public Guid OrderGuid { get; set; }
 
@@ -35,7 +39,7 @@ namespace Nop.Admin.Models.Orders
 
         //customer info
         [NopResourceDisplayName("Admin.Orders.Fields.Customer")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Customer")]
         public string CustomerInfo { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CustomerEmail")]
@@ -48,7 +52,7 @@ namespace Nop.Admin.Models.Orders
         public Dictionary<string, object> CustomValues { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.Fields.Affiliate")]
-        public int AffiliateId { get; set; }
+        public string AffiliateId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.Affiliate")]
         public string AffiliateName { get; set; }
 
@@ -121,7 +125,7 @@ namespace Nop.Admin.Models.Orders
 
         //associated recurring payment id
         [NopResourceDisplayName("Admin.Orders.Fields.RecurringPayment")]
-        public int RecurringPaymentId { get; set; }
+        public string RecurringPaymentId { get; set; }
 
         //order status
         [NopResourceDisplayName("Admin.Orders.Fields.OrderStatus")]
@@ -206,7 +210,7 @@ namespace Nop.Admin.Models.Orders
         public bool AddOrderNoteHasDownload { get; set; }
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
         [UIHint("Download")]
-        public int AddOrderNoteDownloadId { get; set; }
+        public string AddOrderNoteDownloadId { get; set; }
 
         //refund info
         [NopResourceDisplayName("Admin.Orders.Fields.PartialRefund.AmountToRefund")]
@@ -231,10 +235,10 @@ namespace Nop.Admin.Models.Orders
         {
             public OrderItemModel()
             {
-                ReturnRequestIds = new List<int>();
-                PurchasedGiftCardIds = new List<int>();
+                ReturnRequestIds = new List<string>();
+                PurchasedGiftCardIds = new List<string>();
             }
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string VendorName { get; set; }
             public string Sku { get; set; }
@@ -261,8 +265,8 @@ namespace Nop.Admin.Models.Orders
             public string AttributeInfo { get; set; }
             public string RecurringInfo { get; set; }
             public string RentalInfo { get; set; }
-            public IList<int> ReturnRequestIds { get; set; }
-            public IList<int> PurchasedGiftCardIds { get; set; }
+            public IList<string> ReturnRequestIds { get; set; }
+            public IList<string> PurchasedGiftCardIds { get; set; }
 
             public bool IsDownload { get; set; }
             public int DownloadCount { get; set; }
@@ -286,13 +290,13 @@ namespace Nop.Admin.Models.Orders
 
         public partial class OrderNote : BaseNopEntityModel
         {
-            public int OrderId { get; set; }
+            public string OrderId { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")]
             public bool DisplayToCustomer { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Note")]
             public string Note { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
-            public int DownloadId { get; set; }
+            public string DownloadId { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.Download")]
             public Guid DownloadGuid { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.CreatedOn")]
@@ -301,12 +305,12 @@ namespace Nop.Admin.Models.Orders
 
         public partial class UploadLicenseModel : BaseNopModel
         {
-            public int OrderId { get; set; }
+            public string OrderId { get; set; }
 
-            public int OrderItemId { get; set; }
+            public string OrderItemId { get; set; }
 
             [UIHint("Download")]
-            public int LicenseDownloadId { get; set; }
+            public string LicenseDownloadId { get; set; }
 
         }
 
@@ -323,9 +327,9 @@ namespace Nop.Admin.Models.Orders
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
@@ -333,7 +337,7 @@ namespace Nop.Admin.Models.Orders
             public IList<SelectListItem> AvailableManufacturers { get; set; }
             public IList<SelectListItem> AvailableProductTypes { get; set; }
 
-            public int OrderId { get; set; }
+            public string OrderId { get; set; }
 
             #region Nested classes
             
@@ -357,9 +361,9 @@ namespace Nop.Admin.Models.Orders
                     Warnings = new List<string>();
                 }
 
-                public int ProductId { get; set; }
+                public string ProductId { get; set; }
 
-                public int OrderId { get; set; }
+                public string OrderId { get; set; }
 
                 public ProductType ProductType { get; set; }
 
@@ -396,7 +400,7 @@ namespace Nop.Admin.Models.Orders
                     Values = new List<ProductAttributeValueModel>();
                 }
 
-                public int ProductAttributeId { get; set; }
+                public string ProductAttributeId { get; set; }
 
                 public string Name { get; set; }
 
@@ -444,7 +448,7 @@ namespace Nop.Admin.Models.Orders
 
         public partial class UsedDiscountModel:BaseNopModel
         {
-            public int DiscountId { get; set; }
+            public string DiscountId { get; set; }
             public string DiscountName { get; set; }
         }
 

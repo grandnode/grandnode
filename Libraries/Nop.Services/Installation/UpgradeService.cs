@@ -160,7 +160,7 @@ namespace Nop.Services.Installation
                 {
                     EntityId = topic.Id,
                     EntityName = "Topic",
-                    LanguageId = 0,
+                    LanguageId = "",
                     IsActive = true,
                     Slug = seName
                 });

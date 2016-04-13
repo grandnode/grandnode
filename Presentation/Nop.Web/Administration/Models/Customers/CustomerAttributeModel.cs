@@ -39,7 +39,7 @@ namespace Nop.Admin.Models.Customers
 
     public partial class CustomerAttributeLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
         [AllowHtml]

@@ -11,7 +11,7 @@ namespace Nop.Admin.Models.Catalog
     public partial class ProductReviewModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Product")]
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Product")]
         public string ProductName { get; set; }
 
@@ -26,7 +26,7 @@ namespace Nop.Admin.Models.Catalog
         public string StoreName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Customer")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Customer")]
         public string CustomerInfo { get; set; }
 

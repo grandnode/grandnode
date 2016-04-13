@@ -10,22 +10,22 @@ namespace Nop.Plugin.Tax.CountryStateZip.Domain
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
-        public int TaxCategoryId { get; set; }
+        public string TaxCategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the state/province identifier
         /// </summary>
-        public int StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
 
         /// <summary>
         /// Gets or sets the zip

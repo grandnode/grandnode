@@ -137,7 +137,7 @@
                                         </div>
                                     }
                                     <div class="topic-starter">
-                                        @if (topic.CustomerId > 0)
+                                        @if (!String.IsNullOrEmpty(topic.CustomerId))
                                         {
                                             <label>@T("Forum.Author"):</label>
                                             if (topic.AllowViewingProfiles)

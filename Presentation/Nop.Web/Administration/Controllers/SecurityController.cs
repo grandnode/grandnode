@@ -87,9 +87,8 @@ namespace Nop.Admin.Controllers
                 foreach (var cr in customerRoles)
                 {
                     bool allowed = pr.CustomerRoles.Count(x => x == cr.Id) > 0;
-                    //bool allowed = cr.PermissionRecords.Where(x => x.Id == pr.Id).Count() > 0;
                     if (!model.Allowed.ContainsKey(pr.SystemName))
-                        model.Allowed[pr.SystemName] = new Dictionary<int, bool>();
+                        model.Allowed[pr.SystemName] = new Dictionary<string, bool>();
                     model.Allowed[pr.SystemName][cr.Id] = allowed;
                 }
 
@@ -117,10 +116,8 @@ namespace Nop.Admin.Controllers
                     bool allow = permissionRecordSystemNamesToRestrict.Contains(pr.SystemName);
                     if (allow)
                     {
-                        //cr.PermissionRecords.Add(pr);
-                        //_customerService.UpdateCustomerRole(cr);
-
-                        if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) == 0)
+                        
+                        if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) == null)
                         {
                             pr.CustomerRoles.Add(cr.Id);
                             _permissionService.UpdatePermissionRecord(pr);
@@ -128,16 +125,13 @@ namespace Nop.Admin.Controllers
                     }
                     else
                     {
-                        //cr.PermissionRecords.Remove(pr);
-                        //_customerService.UpdateCustomerRole(cr);
-                        if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) != 0)
+                        if (pr.CustomerRoles.FirstOrDefault(x => x == cr.Id) != null)
                         {
                             pr.CustomerRoles.Remove(cr.Id);
                             _permissionService.UpdatePermissionRecord(pr);
                         }
                     }
                 }
-                //_customerService.UpdateCustomerRole(cr);
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.ACL.Updated"));

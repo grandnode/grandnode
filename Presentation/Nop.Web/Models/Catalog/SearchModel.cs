@@ -31,19 +31,19 @@ namespace Nop.Web.Models.Catalog
         /// Category ID
         /// </summary>
         [NopResourceDisplayName("Search.Category")]
-        public int cid { get; set; }
+        public string cid { get; set; }
         [NopResourceDisplayName("Search.IncludeSubCategories")]
         public bool isc { get; set; }
         /// <summary>
         /// Manufacturer ID
         /// </summary>
         [NopResourceDisplayName("Search.Manufacturer")]
-        public int mid { get; set; }
+        public string mid { get; set; }
         /// <summary>
         /// Vendor ID
         /// </summary>
         [NopResourceDisplayName("Search.Vendor")]
-        public int vid { get; set; }
+        public string vid { get; set; }
         /// <summary>
         /// Price - From 
         /// </summary>

@@ -28,7 +28,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
         /// <returns>Email account</returns>
-        EmailAccount GetEmailAccountById(int emailAccountId);
+        EmailAccount GetEmailAccountById(string emailAccountId);
 
         /// <summary>
         /// Gets all email accounts

@@ -127,7 +127,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-		public ActionResult Edit(int id)
+		public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBanners))
                 return AccessDeniedView();
@@ -174,7 +174,7 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBanners))
                 return AccessDeniedView();

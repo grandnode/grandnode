@@ -55,7 +55,7 @@ namespace Nop.Admin.Controllers
 
             var model = new ContactFormListModel();
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
@@ -74,7 +74,7 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.SearchEndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SearchEndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            int vendorId = 0; 
+            string vendorId = ""; 
             if (_workContext.CurrentVendor != null)
             {
                 vendorId = _workContext.CurrentVendor.Id;
@@ -108,7 +108,7 @@ namespace Nop.Admin.Controllers
 			};
 		}
 
-		public ActionResult Details(int id)
+		public ActionResult Details(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageContactForm))
                 return AccessDeniedView();
@@ -127,7 +127,7 @@ namespace Nop.Admin.Controllers
 		}
 
 	    [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageContactForm))
                 return AccessDeniedView();

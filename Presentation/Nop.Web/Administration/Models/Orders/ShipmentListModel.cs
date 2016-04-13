@@ -30,7 +30,7 @@ namespace Nop.Admin.Models.Orders
         
         public IList<SelectListItem> AvailableCountries { get; set; }
         [NopResourceDisplayName("Admin.Orders.Shipments.List.Country")]
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
 
         public IList<SelectListItem> AvailableStates { get; set; }
         [NopResourceDisplayName("Admin.Orders.Shipments.List.StateProvince")]
@@ -45,7 +45,7 @@ namespace Nop.Admin.Models.Orders
 
 
         [NopResourceDisplayName("Admin.Orders.Shipments.List.Warehouse")]
-        public int WarehouseId { get; set; }
+        public string WarehouseId { get; set; }
         public IList<SelectListItem> AvailableWarehouses { get; set; }
     }
 }

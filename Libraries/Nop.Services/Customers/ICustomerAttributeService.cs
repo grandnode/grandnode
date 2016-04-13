@@ -25,7 +25,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute</returns>
-        CustomerAttribute GetCustomerAttributeById(int customerAttributeId);
+        CustomerAttribute GetCustomerAttributeById(string customerAttributeId);
 
         /// <summary>
         /// Inserts a customer attribute

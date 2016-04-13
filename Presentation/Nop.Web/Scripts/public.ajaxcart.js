@@ -45,8 +45,7 @@ var AjaxCart = {
         if (this.loadWaiting != false) {
             return;
         }
-        this.setLoadWaiting(true);
-
+        this.setLoadWaiting(true);        
         $.ajax({
             cache: false,
             url: urladd,

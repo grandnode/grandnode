@@ -3,12 +3,12 @@ namespace Nop.Web.Models.Boards
 {
     public partial class LastPostModel
     {
-        public int Id { get; set; }
-        public int ForumTopicId { get; set; }
+        public string Id { get; set; }
+        public string ForumTopicId { get; set; }
         public string ForumTopicSeName { get; set; }
         public string ForumTopicSubject { get; set; }
         
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public bool AllowViewingProfiles { get; set; }
         public string CustomerName { get; set; }
         public bool IsCustomerGuest { get; set; }

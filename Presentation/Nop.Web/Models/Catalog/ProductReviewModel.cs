@@ -9,7 +9,7 @@ namespace Nop.Web.Models.Catalog
 {
     public partial class ProductReviewOverviewModel : BaseNopModel
     {
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         public int RatingSum { get; set; }
 
@@ -26,7 +26,7 @@ namespace Nop.Web.Models.Catalog
             Items = new List<ProductReviewModel>();
             AddProductReview = new AddProductReviewModel();
         }
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         public string ProductName { get; set; }
 
@@ -38,7 +38,7 @@ namespace Nop.Web.Models.Catalog
 
     public partial class ProductReviewModel : BaseNopEntityModel
     {
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         public string CustomerName { get; set; }
 
@@ -58,8 +58,8 @@ namespace Nop.Web.Models.Catalog
 
     public partial class ProductReviewHelpfulnessModel : BaseNopModel
     {
-        public int ProductReviewId { get; set; }
-        public int ProductId { get; set; }
+        public string ProductReviewId { get; set; }
+        public string ProductId { get; set; }
 
         public int HelpfulYesTotal { get; set; }
 

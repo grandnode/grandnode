@@ -105,9 +105,9 @@ namespace Nop.Services.Discounts
         [Serializable]
         public class DiscountRequirementForCaching
         {
-            public int Id { get; set; }
+            public string Id { get; set; }
             public string SystemName { get; set; }
-            public int DiscountId { get; set; }
+            public string DiscountId { get; set; }
         }
 
         #endregion
@@ -202,11 +202,8 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountId">Discount identifier</param>
         /// <returns>Discount</returns>
-        public virtual Discount GetDiscountById(int discountId)
+        public virtual Discount GetDiscountById(string discountId)
         {
-            if (discountId == 0)
-                return null;
-
             string key = string.Format(DISCOUNTS_BY_ID_KEY, discountId);
             return _cacheManager.Get(key, () => _discountRepository.GetById(discountId));
         }
@@ -290,12 +287,6 @@ namespace Nop.Services.Discounts
             foreach(var req in discount.DiscountRequirements)
             {
                 req.DiscountId = discount.Id;
-                if (req.Id == 0)
-                {
-                    req.Id = discount.DiscountRequirements.Count > 0 ? discount.DiscountRequirements.Max(x => x.Id) + 1 : 1;
-                }
-                if (req._id.ToString() == "000000000000000000000000")
-                    req._id = ObjectId.GenerateNewId().ToString();
             }
 
             _discountRepository.Update(discount);
@@ -562,11 +553,8 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountUsageHistoryId">Discount usage history record identifier</param>
         /// <returns>Discount usage history</returns>
-        public virtual DiscountUsageHistory GetDiscountUsageHistoryById(int discountUsageHistoryId)
+        public virtual DiscountUsageHistory GetDiscountUsageHistoryById(string discountUsageHistoryId)
         {
-            if (discountUsageHistoryId == 0)
-                return null;
-
             return _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
         }
 
@@ -579,18 +567,18 @@ namespace Nop.Services.Discounts
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
-        public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId = null,
-            int? customerId = null, int? orderId = null, 
+        public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(string discountId = "",
+            string customerId = "", string orderId = "", 
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _discountUsageHistoryRepository.Table;
 
-            if (discountId.HasValue && discountId.Value > 0)
-                query = query.Where(duh => duh.DiscountId == discountId.Value);
-            if (customerId.HasValue && customerId.Value > 0)
-                query = query.Where(duh => duh.OrderId != 0 && duh.CustomerId == customerId.Value);
-            if (orderId.HasValue && orderId.Value > 0)
-                query = query.Where(duh => duh.OrderId == orderId.Value);
+            if (!String.IsNullOrEmpty(discountId))
+                query = query.Where(duh => duh.DiscountId == discountId);
+            if (!String.IsNullOrEmpty(customerId))
+                query = query.Where(duh => duh.CustomerId == customerId);
+            if (!String.IsNullOrEmpty(orderId))
+                query = query.Where(duh => duh.OrderId == orderId);
             query = query.OrderByDescending(c => c.CreatedOnUtc);
             return new PagedList<DiscountUsageHistory>(query, pageIndex, pageSize);
         }

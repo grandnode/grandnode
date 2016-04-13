@@ -33,7 +33,7 @@ namespace Nop.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the page URL

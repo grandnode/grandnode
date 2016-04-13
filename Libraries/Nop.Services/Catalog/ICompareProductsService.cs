@@ -23,12 +23,12 @@ namespace Nop.Services.Catalog
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        void RemoveProductFromCompareList(int productId);
+        void RemoveProductFromCompareList(string productId);
 
         /// <summary>
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        void AddProductToCompareList(int productId);
+        void AddProductToCompareList(string productId);
     }
 }

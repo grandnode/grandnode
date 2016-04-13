@@ -87,8 +87,8 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
 
         //just copy this method from CatalogController (removed some redundant code)
         [NonAction]
-        protected IList<CategoryModel> PrepareCategorySimpleModels(int rootCategoryId,
-            IList<int> loadSubCategoriesForIds, bool validateIncludeInTopMenu)
+        protected IList<CategoryModel> PrepareCategorySimpleModels(string rootCategoryId,
+            IList<string> loadSubCategoriesForIds, bool validateIncludeInTopMenu)
         {
             var result = new List<CategoryModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -422,12 +422,12 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0, null, true).ToList());
+            var model = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels("", null, true).ToList());
 
             return PartialView("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/CategoryNavigation.cshtml", model);
         }
 
-        public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
+        public ActionResult Category(string categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null )
@@ -491,8 +491,8 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 })
                 .ToList();
 
-            var categoryIds = new List<int>();
-            if (categoryId > 0)
+            var categoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(categoryId))
             {
                 categoryIds.Add(categoryId);
             }

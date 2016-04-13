@@ -28,8 +28,8 @@ namespace Nop.Services.Common
         public static Address FindAddress(this List<Address> source,
             string firstName, string lastName, string phoneNumber,
             string email, string faxNumber, string company, string address1,
-            string address2, string city, int? stateProvinceId,
-            string zipPostalCode, int? countryId, string customAttributes)
+            string address2, string city, string stateProvinceId,
+            string zipPostalCode, string countryId, string customAttributes)
         {
             return source.Find(a => ((String.IsNullOrEmpty(a.FirstName) && String.IsNullOrEmpty(firstName)) || a.FirstName == firstName) &&
                 ((String.IsNullOrEmpty(a.LastName) && String.IsNullOrEmpty(lastName)) || a.LastName == lastName) &&
@@ -40,11 +40,9 @@ namespace Nop.Services.Common
                 ((String.IsNullOrEmpty(a.Address1) && String.IsNullOrEmpty(address1)) || a.Address1 == address1) &&
                 ((String.IsNullOrEmpty(a.Address2) && String.IsNullOrEmpty(address2)) || a.Address2 == address2) &&
                 ((String.IsNullOrEmpty(a.City) && String.IsNullOrEmpty(city)) || a.City == city) &&
-                ((a.StateProvinceId == 0 && stateProvinceId==0) || a.StateProvinceId == stateProvinceId) &&
+                ((String.IsNullOrEmpty(a.StateProvinceId) && String.IsNullOrEmpty(stateProvinceId)) || a.StateProvinceId == stateProvinceId) &&
                 ((String.IsNullOrEmpty(a.ZipPostalCode) && String.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-                ((a.CountryId == 0 && countryId == 0) || a.CountryId == countryId) &&
-                //actually we should parse custom address attibutes (in case if "Display order" is changed) and then compare
-                //bu we simplify this process and simply compare their values in XML
+                ((String.IsNullOrEmpty(a.CountryId) && String.IsNullOrEmpty(countryId)) || a.CountryId == countryId) &&
                 ((String.IsNullOrEmpty(a.CustomAttributes) && String.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
         }
 

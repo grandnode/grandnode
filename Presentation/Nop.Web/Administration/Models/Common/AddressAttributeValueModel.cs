@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Common
             Locales = new List<AddressAttributeValueLocalizedModel>();
         }
 
-        public int AddressAttributeId { get; set; }
+        public string AddressAttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.Name")]
         [AllowHtml]
@@ -34,7 +34,7 @@ namespace Nop.Admin.Models.Common
 
     public partial class AddressAttributeValueLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.Name")]
         [AllowHtml]

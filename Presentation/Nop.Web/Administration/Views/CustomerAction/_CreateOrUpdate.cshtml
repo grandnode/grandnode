@@ -2,6 +2,13 @@
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 
+@{
+    var validationSummary = Html.ValidationSummary(false);
+    if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+    {
+        <div class="message-error">@validationSummary</div>
+    }
+}
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -186,13 +193,13 @@
     <table class="adminContent">
         <tr>
             <td>
-                @if (Model.Id == 0)
+                @if (String.IsNullOrEmpty(Model.Id))
                 {
                     @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
                 }
             </td>
         </tr>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <tr>
             <td>

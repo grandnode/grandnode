@@ -200,8 +200,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "SeName",
                         LocaleValue = seName,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.Name)))
@@ -210,8 +208,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.ShortDescription)))
@@ -220,8 +216,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "ShortDescription",
                         LocaleValue = local.ShortDescription,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.FullDescription)))
@@ -230,8 +224,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "FullDescription",
                         LocaleValue = local.FullDescription,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.MetaDescription)))
@@ -240,8 +232,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "MetaDescription",
                         LocaleValue = local.MetaDescription,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.MetaKeywords)))
@@ -250,8 +240,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "MetaKeywords",
                         LocaleValue = local.MetaKeywords,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.MetaTitle)))
@@ -260,8 +248,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "MetaTitle",
                         LocaleValue = local.MetaTitle,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
 
@@ -282,8 +268,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
             }
             return localized;
@@ -301,8 +285,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
             }
             return localized;
@@ -624,7 +606,7 @@ namespace Nop.Admin.Controllers
             model.AvailableVendors.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Vendor.None"),
-                Value = "0"
+                Value = ""
             });
             var vendors = _vendorService.GetAllVendors(showHidden: true);
             foreach (var vendor in vendors)
@@ -640,7 +622,7 @@ namespace Nop.Admin.Controllers
             model.AvailableDeliveryDates.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.DeliveryDate.None"),
-                Value = "0"
+                Value = ""
             });
             var deliveryDates = _shippingService.GetAllDeliveryDates();
             foreach (var deliveryDate in deliveryDates)
@@ -657,7 +639,7 @@ namespace Nop.Admin.Controllers
             model.AvailableWarehouses.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None"),
-                Value = "0"
+                Value = ""
             });
             foreach (var warehouse in warehouses)
             {
@@ -706,7 +688,7 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
 
@@ -752,9 +734,9 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
+        protected virtual List<string> GetChildCategoryIds(string parentCategoryId)
         {
-            var categoriesIds = new List<int>();
+            var categoriesIds = new List<string>();
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, true);
             foreach (var category in categories)
             {
@@ -801,18 +783,19 @@ namespace Nop.Admin.Controllers
                 foreach (string formKey in this.Request.Form.AllKeys)
                     if (formKey.Equals(string.Format("warehouse_used_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int tmp;
-                        int.TryParse(this.Request.Form[formKey], out tmp);
-                        used = tmp == warehouse.Id;
+                        used = this.Request.Form[formKey] == warehouse.Id;
                         break;
                     }
 
                 var existingPwI = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
+                
                 if (existingPwI != null)
                 {
+                    existingPwI.ProductId = product.Id;
                     if (used)
                     {
                         //update existing record
+                        
                         existingPwI.StockQuantity = stockQuantity;
                         existingPwI.ReservedQuantity = reservedQuantity;
                         _productService.UpdateProductWarehouseInventory(existingPwI);
@@ -830,8 +813,6 @@ namespace Nop.Admin.Controllers
                         //no need to insert a record for qty 0
                         existingPwI = new ProductWarehouseInventory
                         {
-                            Id = product.ProductWarehouseInventory.Count > 0 ? product.ProductWarehouseInventory.Max(x => x.Id) + 1 : 1,
-                            _id = ObjectId.GenerateNewId().ToString(),
                             WarehouseId = warehouse.Id,
                             ProductId = product.Id,
                             StockQuantity = stockQuantity,
@@ -869,40 +850,40 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //warehouses
-            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var wh in _shippingService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = wh.Name, Value = wh.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //"published" property
             //0 - all (according to "ShowHidden" parameter)
             //1 - published only
             //2 - unpublished only
-            model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.All"), Value = "0" });
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.All"), Value = "" });
             model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.PublishedOnly"), Value = "1" });
             model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly"), Value = "2" });
 
@@ -921,9 +902,12 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
-            var categoryIds = new List<int> { model.SearchCategoryId };
+            var categoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                categoryIds.Add(model.SearchCategoryId);
+
             //include subcategories
-            if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
+            if (model.SearchIncludeSubCategories && !String.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
 
             //0 - all (according to "ShowHidden" parameter)
@@ -1029,8 +1013,8 @@ namespace Nop.Admin.Controllers
                 var product = model.ToEntity();
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
-                product.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
-                product.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
+                product.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                product.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
 
                 _productService.InsertProduct(product);
 
@@ -1040,7 +1024,7 @@ namespace Nop.Admin.Controllers
 
                 //_productService.UpdateProduct(product);
                 //search engine name
-                _urlRecordService.SaveSlug(product, model.SeName, 0);
+                _urlRecordService.SaveSlug(product, model.SeName, "");
                 //tags
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
@@ -1073,7 +1057,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit product
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1133,21 +1117,21 @@ namespace Nop.Admin.Controllers
                     model.ShowOnHomePage = product.ShowOnHomePage;
                 }
                 var prevStockQuantity = product.GetTotalStockQuantity();
-                int prevDownloadId = product.DownloadId;
-                int prevSampleDownloadId = product.SampleDownloadId;
+                string prevDownloadId = product.DownloadId;
+                string prevSampleDownloadId = product.SampleDownloadId;
 
                 //product
                 product = model.ToEntity(product);
                 product.UpdatedOnUtc = DateTime.UtcNow;
-                product.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
-                product.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
+                product.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                product.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
                 product.SeName = model.SeName;
                 product.Locales = UpdateLocales(product, model);
 
                 //_productService.UpdateProduct(product);
                 //search engine name
-                _urlRecordService.SaveSlug(product, model.SeName, 0);
+                _urlRecordService.SaveSlug(product, model.SeName, "");
                 //tags
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
                 //warehouses
@@ -1190,14 +1174,14 @@ namespace Nop.Admin.Controllers
                     _backInStockSubscriptionService.SendNotificationsToSubscribers(product);
                 }
                 //delete an old "download" file (if deleted or updated)
-                if (prevDownloadId > 0 && prevDownloadId != product.DownloadId)
+                if (!String.IsNullOrEmpty(prevDownloadId) && prevDownloadId != product.DownloadId)
                 {
                     var prevDownload = _downloadService.GetDownloadById(prevDownloadId);
                     if (prevDownload != null)
                         _downloadService.DeleteDownload(prevDownload);
                 }
                 //delete an old "sample download" file (if deleted or updated)
-                if (prevSampleDownloadId > 0 && prevSampleDownloadId != product.SampleDownloadId)
+                if (!String.IsNullOrEmpty(prevSampleDownloadId) && prevSampleDownloadId != product.SampleDownloadId)
                 {
                     var prevSampleDownload = _downloadService.GetDownloadById(prevSampleDownloadId);
                     if (prevSampleDownload != null)
@@ -1228,7 +1212,7 @@ namespace Nop.Admin.Controllers
 
         //delete product
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1252,7 +1236,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteSelected(ICollection<int> selectedIds)
+        public ActionResult DeleteSelected(ICollection<string> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1319,7 +1303,7 @@ namespace Nop.Admin.Controllers
 
             if (!String.IsNullOrWhiteSpace(productIds))
             {
-                var ids = new List<int>();
+                var ids = new List<string>();
                 var rangeArray = productIds
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
@@ -1327,9 +1311,7 @@ namespace Nop.Admin.Controllers
 
                 foreach (string str1 in rangeArray)
                 {
-                    int tmp1;
-                    if (int.TryParse(str1, out tmp1))
-                        ids.Add(tmp1);
+                    ids.Add(str1);
                 }
 
                 var products = _productService.GetProductsByIds(ids.ToArray());
@@ -1354,29 +1336,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
 
             ViewBag.productIdsInput = productIdsInput;
@@ -1397,8 +1379,12 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -1420,7 +1406,7 @@ namespace Nop.Admin.Controllers
         #region Product categories
 
         [HttpPost]
-        public ActionResult ProductCategoryList(DataSourceRequest command, int productId)
+        public ActionResult ProductCategoryList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1441,7 +1427,7 @@ namespace Nop.Admin.Controllers
                 {
                     Id = x.Id,
                     Category = _categoryService.GetCategoryById(x.CategoryId).GetFormattedBreadCrumb(_categoryService),
-                    ProductId = x.ProductId,
+                    ProductId = product.Id,
                     CategoryId = x.CategoryId,
                     IsFeaturedProduct = x.IsFeaturedProduct,
                     DisplayOrder = x.DisplayOrder
@@ -1485,8 +1471,6 @@ namespace Nop.Admin.Controllers
                     ProductId = productId,
                     CategoryId = categoryId,
                     DisplayOrder = model.DisplayOrder,
-                    Id = product.ProductCategories.Count > 0 ? product.ProductCategories.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 };
                 //a vendor cannot edit "IsFeaturedProduct" property
                 if (_workContext.CurrentVendor == null)
@@ -1521,6 +1505,7 @@ namespace Nop.Admin.Controllers
 
             productCategory.CategoryId = model.CategoryId;
             productCategory.DisplayOrder = model.DisplayOrder;
+            productCategory.ProductId = model.ProductId;
             //a vendor cannot edit "IsFeaturedProduct" property
             if (_workContext.CurrentVendor == null)
             {
@@ -1532,7 +1517,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductCategoryDelete(int id, int productId)
+        public ActionResult ProductCategoryDelete(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1541,6 +1526,7 @@ namespace Nop.Admin.Controllers
             var productCategory = product.ProductCategories.Where(x => x.Id == id).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
+            productCategory.ProductId = productId;
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1561,7 +1547,7 @@ namespace Nop.Admin.Controllers
         #region Product manufacturers
 
         [HttpPost]
-        public ActionResult ProductManufacturerList(DataSourceRequest command, int productId)
+        public ActionResult ProductManufacturerList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1583,7 +1569,7 @@ namespace Nop.Admin.Controllers
                 {
                     Id = x.Id,
                     Manufacturer = _manufacturerService.GetManufacturerById(x.ManufacturerId).Name,
-                    ProductId = x.ProductId,
+                    ProductId = product.Id,
                     ManufacturerId = x.ManufacturerId,
                     IsFeaturedProduct = x.IsFeaturedProduct,
                     DisplayOrder = x.DisplayOrder
@@ -1605,9 +1591,8 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var productId = model.ProductId;
             var manufacturerId = model.ManufacturerId;
-            var product = _productService.GetProductById(productId);
+            var product = _productService.GetProductById(model.ProductId);
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -1623,11 +1608,9 @@ namespace Nop.Admin.Controllers
             {
                 var productManufacturer = new ProductManufacturer
                 {
-                    ProductId = productId,
+                    ProductId = model.ProductId,
                     ManufacturerId = manufacturerId,
                     DisplayOrder = model.DisplayOrder,
-                    _id = ObjectId.GenerateNewId().ToString(),
-                    Id = product.ProductManufacturers.Count > 0 ? product.ProductManufacturers.Max(x => x.Id) + 1 : 1,
                 };
                 //a vendor cannot edit "IsFeaturedProduct" property
                 if (_workContext.CurrentVendor == null)
@@ -1661,6 +1644,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
+            productManufacturer.ProductId = product.Id;
             productManufacturer.ManufacturerId = model.ManufacturerId;
             productManufacturer.DisplayOrder = model.DisplayOrder;
             //a vendor cannot edit "IsFeaturedProduct" property
@@ -1674,7 +1658,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductManufacturerDelete(int id, int productId)
+        public ActionResult ProductManufacturerDelete(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1683,7 +1667,7 @@ namespace Nop.Admin.Controllers
             var productManufacturer = product.ProductManufacturers.Where(x => x.Id == id).FirstOrDefault();
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
-
+            productManufacturer.ProductId = productId;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -1703,7 +1687,7 @@ namespace Nop.Admin.Controllers
         #region Related products
 
         [HttpPost]
-        public ActionResult RelatedProductList(DataSourceRequest command, int productId)
+        public ActionResult RelatedProductList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1763,7 +1747,7 @@ namespace Nop.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-
+            relatedProduct.ProductId1 = model.ProductId1;
             relatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateRelatedProduct(relatedProduct);
 
@@ -1790,13 +1774,13 @@ namespace Nop.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
-
+            relatedProduct.ProductId1 = model.ProductId1;
             _productService.DeleteRelatedProduct(relatedProduct);
 
             return new NullJsonResult();
         }
 
-        public ActionResult RelatedProductAddPopup(int productId)
+        public ActionResult RelatedProductAddPopup(string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1806,29 +1790,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -1845,8 +1829,12 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -1874,7 +1862,7 @@ namespace Nop.Admin.Controllers
             {
                 var productId1 = _productService.GetProductById(model.ProductId);
 
-                foreach (int id in model.SelectedProductIds)
+                foreach (string id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -1893,8 +1881,6 @@ namespace Nop.Admin.Controllers
                                     ProductId1 = model.ProductId,
                                     ProductId2 = id,
                                     DisplayOrder = 1,
-                                    _id = ObjectId.GenerateNewId().ToString(),
-                                    Id = productId1.RelatedProducts.Count > 0 ? productId1.RelatedProducts.Max(x => x.Id) + 1 : 1
                                 };
                                 productId1.RelatedProducts.Add(related);
                                 _productService.InsertRelatedProduct(related);
@@ -1916,7 +1902,7 @@ namespace Nop.Admin.Controllers
         #region Cross-sell products
 
         [HttpPost]
-        public ActionResult CrossSellProductList(DataSourceRequest command, int productId)
+        public ActionResult CrossSellProductList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1932,13 +1918,11 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            var crossSellProducts = product.CrossSellProduct; //_productService.GetCrossSellProductsByProductId1(productId, true);
+            var crossSellProducts = product.CrossSellProduct; 
             var crossSellProductsModel = crossSellProducts
                 .Select(x => new ProductModel.CrossSellProductModel
                 {
                     Id = x,
-                    //ProductId1 = x.ProductId1,
-                    ProductId2 = productId,
                     Product2Name = _productService.GetProductById(x).Name,
                 })
                 .ToList();
@@ -1953,18 +1937,16 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CrossSellProductDelete(int id, int productId2)
+        public ActionResult CrossSellProductDelete(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var product = _productService.GetProductById(productId2);
+            var product = _productService.GetProductById(productId);
 
             var crossSellProduct = product.CrossSellProduct.Where(x => x == id).FirstOrDefault();  //_productService.GetCrossSellProductById(id);
-            if (crossSellProduct == 0)
+            if (String.IsNullOrEmpty(crossSellProduct))
                 throw new ArgumentException("No cross-sell product found with the specified id");
-
-            //var productId = crossSellProduct.ProductId1;
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -1977,7 +1959,7 @@ namespace Nop.Admin.Controllers
 
             CrossSellProduct crosssell = new CrossSellProduct()
             {
-                ProductId1 = productId2,
+                ProductId1 = productId,
                 ProductId2 = crossSellProduct
             };
 
@@ -1986,7 +1968,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult CrossSellProductAddPopup(int productId)
+        public ActionResult CrossSellProductAddPopup(string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1996,29 +1978,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -2034,9 +2016,12 @@ namespace Nop.Admin.Controllers
             {
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
 
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -2062,7 +2047,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (string id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -2099,7 +2084,7 @@ namespace Nop.Admin.Controllers
         #region Associated products
 
         [HttpPost]
-        public ActionResult AssociatedProductList(DataSourceRequest command, int productId)
+        public ActionResult AssociatedProductList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2115,7 +2100,7 @@ namespace Nop.Admin.Controllers
             }
 
             //a vendor should have access only to his products
-            var vendorId = 0;
+            var vendorId = "";
             if (_workContext.CurrentVendor != null)
             {
                 vendorId = _workContext.CurrentVendor.Id;
@@ -2165,7 +2150,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AssociatedProductDelete(int id)
+        public ActionResult AssociatedProductDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2178,13 +2163,13 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            product.ParentGroupedProductId = 0;
+            product.ParentGroupedProductId = "";
             _productService.UpdateAssociatedProduct(product);
 
             return new NullJsonResult();
         }
 
-        public ActionResult AssociatedProductAddPopup(int productId)
+        public ActionResult AssociatedProductAddPopup(string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2194,29 +2179,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -2232,9 +2217,12 @@ namespace Nop.Admin.Controllers
             {
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
 
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -2271,7 +2259,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (string id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -2299,14 +2287,14 @@ namespace Nop.Admin.Controllers
         #region Product pictures
 
         [ValidateInput(false)]
-        public ActionResult ProductPictureAdd(int pictureId, int displayOrder,
+        public ActionResult ProductPictureAdd(string pictureId, int displayOrder,
             string overrideAltAttribute, string overrideTitleAttribute,
-            int productId)
+            string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            if (pictureId == 0)
+            if (String.IsNullOrEmpty(pictureId))
                 throw new ArgumentException();
 
             var product = _productService.GetProductById(productId);
@@ -2330,8 +2318,6 @@ namespace Nop.Admin.Controllers
 
             _productService.InsertProductPicture(new ProductPicture
             {
-                Id = product.ProductPictures.Count > 0 ? product.ProductPictures.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 PictureId = pictureId,
                 ProductId = productId,
                 DisplayOrder = displayOrder,
@@ -2349,7 +2335,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductPictureList(DataSourceRequest command, int productId)
+        public ActionResult ProductPictureList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2374,7 +2360,7 @@ namespace Nop.Admin.Controllers
                     var m = new ProductModel.ProductPictureModel
                     {
                         Id = x.Id,
-                        ProductId = x.ProductId,
+                        ProductId = product.Id,
                         PictureId = x.PictureId,
                         PictureUrl = _pictureService.GetPictureUrl(picture),
                         OverrideAltAttribute = picture.AltAttribute,
@@ -2405,7 +2391,7 @@ namespace Nop.Admin.Controllers
             var productPicture = product.ProductPictures.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
-
+            productPicture.ProductId = product.Id;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
@@ -2451,6 +2437,7 @@ namespace Nop.Admin.Controllers
             var productPicture = product.ProductPictures.Where(x => x.Id == model.Id).FirstOrDefault();
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
+            productPicture.ProductId = product.Id;
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
@@ -2476,9 +2463,9 @@ namespace Nop.Admin.Controllers
         #region Product specification attributes
 
         [ValidateInput(false)]
-        public ActionResult ProductSpecificationAttributeAdd(int attributeTypeId, int specificationAttributeId, int specificationAttributeOptionId,
+        public ActionResult ProductSpecificationAttributeAdd(int attributeTypeId, string specificationAttributeId, string specificationAttributeOptionId,
             string customValue, bool allowFiltering, bool showOnProductPage,
-            int displayOrder, int productId)
+            int displayOrder, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2510,19 +2497,16 @@ namespace Nop.Admin.Controllers
                 AllowFiltering = allowFiltering,
                 ShowOnProductPage = showOnProductPage,
                 DisplayOrder = displayOrder,
-                _id = ObjectId.GenerateNewId().ToString(),
-                Id = product.ProductSpecificationAttributes.Count > 0 ? product.ProductSpecificationAttributes.Max(x => x.Id) + 1 : 1
             };
 
             _specificationAttributeService.InsertProductSpecificationAttribute(psa);
             product.ProductSpecificationAttributes.Add(psa);
-            //_productService.UpdateProduct(product);
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult ProductSpecAttrList(DataSourceRequest command, int productId)
+        public ActionResult ProductSpecAttrList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2611,6 +2595,7 @@ namespace Nop.Admin.Controllers
             //psa.AllowFiltering = model.AllowFiltering;
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;
+            psa.ProductId = model.ProductId;
             _specificationAttributeService.UpdateProductSpecificationAttribute(psa);
             //_productService.UpdateProduct(product);
 
@@ -2618,7 +2603,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductSpecAttrDelete(int id, int ProductSpecificationId, int productId)
+        public ActionResult ProductSpecAttrDelete(string id, string ProductSpecificationId, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2636,9 +2621,10 @@ namespace Nop.Admin.Controllers
                     return Content("This is not your product");
                 }
             }
+            psa.ProductId = product.Id;
             product.ProductSpecificationAttributes.Remove(psa);
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
-            //_productService.UpdateProduct(product);
+
 
             return new NullJsonResult();
         }
@@ -2663,12 +2649,12 @@ namespace Nop.Admin.Controllers
 
             var tags = _productTagService.GetAllProductTags()
                 //order by product count
-                .OrderByDescending(x => _productTagService.GetProductCount(x.Id, 0))
+                .OrderByDescending(x => _productTagService.GetProductCount(x.Id, ""))
                 .Select(x => new ProductTagModel
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    ProductCount = _productTagService.GetProductCount(x.Id, 0)
+                    ProductCount = _productTagService.GetProductCount(x.Id, "")
                 })
                 .ToList();
 
@@ -2682,7 +2668,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductTagDelete(int id)
+        public ActionResult ProductTagDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2696,7 +2682,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult EditProductTag(int id)
+        public ActionResult EditProductTag(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductTags))
                 return AccessDeniedView();
@@ -2710,7 +2696,7 @@ namespace Nop.Admin.Controllers
             {
                 Id = productTag.Id,
                 Name = productTag.Name,
-                ProductCount = _productTagService.GetProductCount(productTag.Id, 0)
+                ProductCount = _productTagService.GetProductCount(productTag.Id, "")
             };
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -2753,7 +2739,7 @@ namespace Nop.Admin.Controllers
         #region Purchased with order
 
         [HttpPost]
-        public ActionResult PurchasedWithOrders(DataSourceRequest command, int productId)
+        public ActionResult PurchasedWithOrders(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2809,9 +2795,12 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
-            var categoryIds = new List<int> { model.SearchCategoryId };
+            var categoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                categoryIds.Add(model.SearchCategoryId);
+
             //include subcategories
-            if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
+            if (model.SearchIncludeSubCategories && !String.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
 
             //0 - all (according to "ShowHidden" parameter)
@@ -2866,9 +2855,12 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
-            var categoryIds = new List<int> { model.SearchCategoryId };
+            var categoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                categoryIds.Add(model.SearchCategoryId);
+
             //include subcategories
-            if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
+            if (model.SearchIncludeSubCategories && !String.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
 
             //0 - all (according to "ShowHidden" parameter)
@@ -2915,7 +2907,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = selectedIds
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
+                    .Select(x => x)
                     .ToArray();
                 products.AddRange(_productService.GetProductsByIds(ids));
             }
@@ -2943,9 +2935,12 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
-            var categoryIds = new List<int> { model.SearchCategoryId };
+            var categoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                categoryIds.Add(model.SearchCategoryId);
+
             //include subcategories
-            if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
+            if (model.SearchIncludeSubCategories && !String.IsNullOrEmpty(model.SearchCategoryId))
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
 
             //0 - all (according to "ShowHidden" parameter)
@@ -2991,7 +2986,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = selectedIds
                     .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
+                    .Select(x => x)
                     .ToArray();
                 products.AddRange(_productService.GetProductsByIds(ids));
             }
@@ -3055,7 +3050,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            int vendorId = 0;
+            string vendorId = "";
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
@@ -3113,19 +3108,19 @@ namespace Nop.Admin.Controllers
 
             var model = new BulkEditListModel();
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -3136,12 +3131,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            int vendorId = 0;
+            string vendorId = "";
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var products = _productService.SearchProducts(categoryIds: new List<int> { model.SearchCategoryId },
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
+            var products = _productService.SearchProducts(categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 vendorId: vendorId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
@@ -3252,7 +3251,7 @@ namespace Nop.Admin.Controllers
         #region Tier prices
 
         [HttpPost]
-        public ActionResult TierPriceList(DataSourceRequest command, int productId)
+        public ActionResult TierPriceList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3272,7 +3271,7 @@ namespace Nop.Admin.Controllers
                 .Select(x =>
                 {
                     string storeName;
-                    if (x.StoreId > 0)
+                    if (!String.IsNullOrEmpty(x.StoreId))
                     {
                         var store = _storeService.GetStoreById(x.StoreId);
                         storeName = store != null ? store.Name : "Deleted";
@@ -3286,9 +3285,9 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         StoreId = x.StoreId,
                         Store = storeName,
-                        CustomerRole = x.CustomerRoleId > 0 ? _customerService.GetCustomerRoleById(x.CustomerRoleId).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
-                        ProductId = x.ProductId,
-                        CustomerRoleId = x.CustomerRoleId > 0 ? x.CustomerRoleId : 0,
+                        CustomerRole = !String.IsNullOrEmpty(x.CustomerRoleId) ? _customerService.GetCustomerRoleById(x.CustomerRoleId).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
+                        ProductId = product.Id,
+                        CustomerRoleId = !String.IsNullOrEmpty(x.CustomerRoleId) ? x.CustomerRoleId : "",
                         Quantity = x.Quantity,
                         Price = x.Price
                     };
@@ -3318,15 +3317,23 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
+            if (!String.IsNullOrEmpty(model.CustomerRoleId))
+                model.CustomerRoleId = model.CustomerRoleId.Trim();
+            else
+                model.CustomerRoleId = "";
+
+            if (!String.IsNullOrEmpty(model.StoreId))
+                model.StoreId = model.StoreId.Trim();
+            else
+                model.StoreId = "";
+
             var tierPrice = new TierPrice
             {
                 ProductId = model.ProductId,
                 StoreId = model.StoreId,
-                CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : 0,
+                CustomerRoleId = model.CustomerRoleId,
                 Quantity = model.Quantity,
                 Price = model.Price,
-                _id = ObjectId.GenerateNewId().ToString(),
-                Id = product.TierPrices.Count > 0 ? product.TierPrices.Max(x => x.Id) + 1 : 1,
             };
             _productService.InsertTierPrice(tierPrice);
 
@@ -3355,8 +3362,19 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
+            if (!String.IsNullOrEmpty(model.CustomerRoleId))
+                model.CustomerRoleId = model.CustomerRoleId.Trim();
+            else
+                model.CustomerRoleId = "";
+
+            if (!String.IsNullOrEmpty(model.StoreId))
+                model.StoreId = model.StoreId.Trim();
+            else
+                model.StoreId = "";
+
+            tierPrice.ProductId = product.Id;
             tierPrice.StoreId = model.StoreId;
-            tierPrice.CustomerRoleId = model.CustomerRoleId > 0 ? model.CustomerRoleId : 0;
+            tierPrice.CustomerRoleId = model.CustomerRoleId;
             tierPrice.Quantity = model.Quantity;
             tierPrice.Price = model.Price;
             _productService.UpdateTierPrice(tierPrice);
@@ -3365,7 +3383,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult TierPriceDelete(int id, int productId)
+        public ActionResult TierPriceDelete(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3377,7 +3395,7 @@ namespace Nop.Admin.Controllers
             var tierPrice = product.TierPrices.Where(x => x.Id == id).FirstOrDefault();
             if (tierPrice == null)
                 throw new ArgumentException("No tier price found with the specified id");
-
+            tierPrice.ProductId = product.Id;
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
@@ -3396,7 +3414,7 @@ namespace Nop.Admin.Controllers
         #region Product attributes
 
         [HttpPost]
-        public ActionResult ProductAttributeMappingList(DataSourceRequest command, int productId)
+        public ActionResult ProductAttributeMappingList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3416,7 +3434,7 @@ namespace Nop.Admin.Controllers
                     var attributeModel = new ProductModel.ProductAttributeMappingModel
                     {
                         Id = x.Id,
-                        ProductId = x.ProductId,
+                        ProductId = product.Id,
                         ProductAttribute = _productAttributeService.GetProductAttributeById(x.ProductAttributeId).Name,
                         ProductAttributeId = x.ProductAttributeId,
                         TextPrompt = x.TextPrompt,
@@ -3517,8 +3535,6 @@ namespace Nop.Admin.Controllers
                 IsRequired = model.IsRequired,
                 AttributeControlTypeId = model.AttributeControlTypeId,
                 DisplayOrder = model.DisplayOrder,
-                _id = ObjectId.GenerateNewId().ToString(),
-                Id = product.ProductAttributeMappings.Count > 0 ? product.ProductAttributeMappings.Max(x => x.Id) + 1 : 1,
             };
 
 
@@ -3536,8 +3552,6 @@ namespace Nop.Admin.Controllers
                     Cost = predefinedValue.Cost,
                     IsPreSelected = predefinedValue.IsPreSelected,
                     DisplayOrder = predefinedValue.DisplayOrder,
-                    Id = predefinedValue.Id,
-                    _id = predefinedValue._id,
                     ProductId = model.ProductId,
                 };
                 //pav.Locales = UpdateLocales(pav, model);
@@ -3580,6 +3594,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
+            productAttributeMapping.ProductId = model.ProductId;
             productAttributeMapping.ProductAttributeId = model.ProductAttributeId;
             productAttributeMapping.TextPrompt = model.TextPrompt;
             productAttributeMapping.IsRequired = model.IsRequired;
@@ -3591,7 +3606,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeMappingDelete(int id, int productId)
+        public ActionResult ProductAttributeMappingDelete(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3604,8 +3619,7 @@ namespace Nop.Admin.Controllers
             if (productAttributeMapping == null)
                 throw new ArgumentException("No product attribute mapping found with the specified id");
 
-
-
+            productAttributeMapping.ProductId = productId;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
@@ -3616,7 +3630,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult ProductAttributeValidationRulesPopup(int id, int productId)
+        public ActionResult ProductAttributeValidationRulesPopup(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3672,6 +3686,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                productAttributeMapping.ProductId = model.ProductId;
                 productAttributeMapping.ValidationMinLength = model.ValidationMinLength;
                 productAttributeMapping.ValidationMaxLength = model.ValidationMaxLength;
                 productAttributeMapping.ValidationFileAllowedExtensions = model.ValidationFileAllowedExtensions;
@@ -3696,7 +3711,7 @@ namespace Nop.Admin.Controllers
 
         #region Product attributes. Condition
 
-        public ActionResult ProductAttributeConditionPopup(string btnId, int productId, string formId, int productAttributeMappingId)
+        public ActionResult ProductAttributeConditionPopup(string btnId, string productId, string formId, string productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3846,20 +3861,8 @@ namespace Nop.Admin.Controllers
                                 var ctrlAttributes = form[controlId];
                                 if (!String.IsNullOrEmpty(ctrlAttributes))
                                 {
-                                    int selectedAttributeId = int.Parse(ctrlAttributes);
-                                    if (selectedAttributeId > 0)
-                                    {
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
-                                    }
-                                    else
-                                    {
-                                        //for conditions we should empty values save even when nothing is selected
-                                        //otherwise "attributesXml" will be empty
-                                        //hence we won't be able to find a selected attribute
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, "");
-                                    }
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, ctrlAttributes);
                                 }
                                 else
                                 {
@@ -3879,11 +3882,10 @@ namespace Nop.Admin.Controllers
                                     bool anyValueSelected = false;
                                     foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                     {
-                                        int selectedAttributeId = int.Parse(item);
-                                        if (selectedAttributeId > 0)
+                                        if (!String.IsNullOrEmpty(item))
                                         {
                                             attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                                attribute, selectedAttributeId.ToString());
+                                                attribute, item);
                                             anyValueSelected = true;
                                         }
                                     }
@@ -3917,6 +3919,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
             }
+            productAttributeMapping.ProductId = model.ProductId;
             productAttributeMapping.ConditionAttributeXml = attributesXml;
             _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
 
@@ -3932,7 +3935,7 @@ namespace Nop.Admin.Controllers
         #region Product attribute values
 
         //list
-        public ActionResult EditAttributeValues(int productAttributeMappingId, int productId)
+        public ActionResult EditAttributeValues(string productAttributeMappingId, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3954,16 +3957,16 @@ namespace Nop.Admin.Controllers
             var model = new ProductModel.ProductAttributeValueListModel
             {
                 ProductName = product.Name,
-                ProductId = productAttributeMapping.ProductId,
+                ProductId = product.Id,
                 ProductAttributeName = productAttribute.Name,
-                ProductAttributeMappingId = productAttributeMapping.Id,
+                ProductAttributeMappingId = productAttributeMappingId,
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueList(int productAttributeMappingId, int productId, DataSourceRequest command)
+        public ActionResult ProductAttributeValueList(string productAttributeMappingId, string productId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3995,7 +3998,7 @@ namespace Nop.Admin.Controllers
                     var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
                     if (String.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1, true);
+                        pictureThumbnailUrl = _pictureService.GetPictureUrl("", 1, true);
                     return new ProductModel.ProductAttributeValueModel
                     {
                         Id = x.Id,
@@ -4027,7 +4030,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult ProductAttributeValueCreatePopup(int productAttributeMappingId, int productId)
+        public ActionResult ProductAttributeValueCreatePopup(string productAttributeMappingId, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4066,7 +4069,7 @@ namespace Nop.Admin.Controllers
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
-                    ProductId = x.ProductId,
+                    ProductId = product.Id,
                     PictureId = x.PictureId,
                     PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
@@ -4113,7 +4116,7 @@ namespace Nop.Admin.Controllers
             }
 
             //ensure a picture is uploaded
-            if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && model.ImageSquaresPictureId == 0)
+            if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && String.IsNullOrEmpty(model.ImageSquaresPictureId))
             {
                 ModelState.AddModelError("", "Image is required");
             }
@@ -4136,8 +4139,6 @@ namespace Nop.Admin.Controllers
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
                     PictureId = model.PictureId,
-                    Id = productAttributeMapping.ProductAttributeValues.Count > 0 ? productAttributeMapping.ProductAttributeValues.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString()
                 };
                 pav.Locales = UpdateLocales(pav, model);
 
@@ -4156,7 +4157,7 @@ namespace Nop.Admin.Controllers
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
-                    ProductId = x.ProductId,
+                    ProductId = product.Id,
                     PictureId = x.PictureId,
                     PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
@@ -4170,7 +4171,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult ProductAttributeValueEditPopup(int id, int productId, int productAttributeMappingId)
+        public ActionResult ProductAttributeValueEditPopup(string id, string productId, string productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4228,7 +4229,7 @@ namespace Nop.Admin.Controllers
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
-                    ProductId = x.ProductId,
+                    ProductId = product.Id,
                     PictureId = x.PictureId,
                     PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
@@ -4239,7 +4240,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueEditPopup(int productId, string btnId, string formId, ProductModel.ProductAttributeValueModel model)
+        public ActionResult ProductAttributeValueEditPopup(string productId, string btnId, string formId, ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4274,7 +4275,7 @@ namespace Nop.Admin.Controllers
             }
 
             //ensure a picture is uploaded
-            if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && model.ImageSquaresPictureId == 0)
+            if (productAttributeMapping.AttributeControlType == AttributeControlType.ImageSquares && String.IsNullOrEmpty(model.ImageSquaresPictureId))
             {
                 ModelState.AddModelError("", "Image is required");
             }
@@ -4312,7 +4313,7 @@ namespace Nop.Admin.Controllers
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
-                    ProductId = x.ProductId,
+                    ProductId = product.Id,
                     PictureId = x.PictureId,
                     PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
@@ -4327,20 +4328,21 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult ProductAttributeValueDelete(int id, int ProductId, int productAttributeMappingId)
+        public ActionResult ProductAttributeValueDelete(string Id, string pam, string productId) 
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var product = _productService.GetProductById(ProductId);
+            var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var pav = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMappingId).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == id).FirstOrDefault(); //_productAttributeService.GetProductAttributeValueById(id);
+            var pav = product.ProductAttributeMappings.Where(x => x.Id == pam).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == Id).FirstOrDefault();
             if (pav == null)
                 throw new ArgumentException("No product attribute value found with the specified id");
 
-
+            pav.ProductAttributeMappingId = pam;
+            pav.ProductId = productId;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
@@ -4364,29 +4366,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -4404,8 +4406,12 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -4454,7 +4460,7 @@ namespace Nop.Admin.Controllers
         #region Product attribute combinations
 
         [HttpPost]
-        public ActionResult ProductAttributeCombinationList(DataSourceRequest command, int productId)
+        public ActionResult ProductAttributeCombinationList(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4474,8 +4480,8 @@ namespace Nop.Admin.Controllers
                     var pacModel = new ProductModel.ProductAttributeCombinationModel
                     {
                         Id = x.Id,
-                        ProductId = x.ProductId,
-                        AttributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(x.ProductId), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
+                        ProductId = product.Id,
+                        AttributesXml = _productAttributeFormatter.FormatAttributes(_productService.GetProductById(product.Id), x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
                         StockQuantity = x.StockQuantity,
                         AllowOutOfStockOrders = x.AllowOutOfStockOrders,
                         Sku = x.Sku,
@@ -4486,7 +4492,7 @@ namespace Nop.Admin.Controllers
                     };
                     //warnings
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                        ShoppingCartType.ShoppingCart, _productService.GetProductById(x.ProductId), 1, x.AttributesXml, true);
+                        ShoppingCartType.ShoppingCart, _productService.GetProductById(product.Id), 1, x.AttributesXml, true);
                     for (int i = 0; i < warnings.Count; i++)
                     {
                         pacModel.Warnings += warnings[i];
@@ -4526,7 +4532,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
-
+            combination.ProductId = model.ProductId;
             combination.StockQuantity = model.StockQuantity;
             combination.AllowOutOfStockOrders = model.AllowOutOfStockOrders;
             combination.Sku = model.Sku;
@@ -4547,7 +4553,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeCombinationDelete(int id, int productId)
+        public ActionResult ProductAttributeCombinationDelete(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4564,6 +4570,8 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
+            combination.ProductId = productId;
+
             _productAttributeService.DeleteProductAttributeCombination(combination);
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
@@ -4577,7 +4585,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId)
+        public ActionResult AddAttributeCombinationPopup(string btnId, string formId, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4600,7 +4608,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId,
+        public ActionResult AddAttributeCombinationPopup(string btnId, string formId, string productId,
             AddProductAttributeCombinationModel model, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -4631,6 +4639,7 @@ namespace Nop.Admin.Controllers
             foreach (var attribute in attributes)
             {
                 //string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                attribute.ProductId = productId;
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
@@ -4642,10 +4651,8 @@ namespace Nop.Admin.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, ctrlAttributes);
                             }
                         }
                         break;
@@ -4656,10 +4663,9 @@ namespace Nop.Admin.Controllers
                             {
                                 foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
+                                    if (!String.IsNullOrEmpty(item))
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, item);
                                 }
                             }
                         }
@@ -4674,7 +4680,7 @@ namespace Nop.Admin.Controllers
                                 .ToList())
                             {
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString());
+                                    attribute, selectedAttributeId);
                             }
                         }
                         break;
@@ -4754,6 +4760,7 @@ namespace Nop.Admin.Controllers
             //validate conditional attributes (if specified)
             foreach (var attribute in attributes)
             {
+                attribute.ProductId = productId;
                 var conditionMet = _productAttributeParser.IsConditionMet(product, attribute, attributesXml);
                 if (conditionMet.HasValue && !conditionMet.Value)
                 {
@@ -4784,8 +4791,6 @@ namespace Nop.Admin.Controllers
                     Gtin = model.Gtin,
                     OverriddenPrice = model.OverriddenPrice,
                     NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow,
-                    Id = product.ProductAttributeCombinations.Count > 0 ? product.ProductAttributeCombinations.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString()
                 };
                 _productAttributeService.InsertProductAttributeCombination(combination);
 
@@ -4807,7 +4812,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult GenerateAllAttributeCombinations(int productId)
+        public ActionResult GenerateAllAttributeCombinations(string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4849,8 +4854,6 @@ namespace Nop.Admin.Controllers
                     Gtin = null,
                     OverriddenPrice = null,
                     NotifyAdminForQuantityBelow = 1,
-                    Id = id,
-                    _id = ObjectId.GenerateNewId().ToString()
                 };
                 _productAttributeService.InsertProductAttributeCombination(combination);
                 id++;
@@ -4872,7 +4875,7 @@ namespace Nop.Admin.Controllers
         #region Activity log
 
         [HttpPost]
-        public ActionResult ListActivityLog(DataSourceRequest command, int productId)
+        public ActionResult ListActivityLog(DataSourceRequest command, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return Content("");

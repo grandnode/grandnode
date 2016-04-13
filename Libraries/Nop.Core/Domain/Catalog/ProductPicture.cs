@@ -8,17 +8,18 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a product picture mapping
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductPicture : BaseEntity
+    public partial class ProductPicture : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        [BsonIgnoreAttribute]
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the picture identifier
         /// </summary>
-        public int PictureId { get; set; }
+        public string PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the display order

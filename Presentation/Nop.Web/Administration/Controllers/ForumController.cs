@@ -66,7 +66,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ForumList(int forumGroupId)
+        public ActionResult ForumList(string forumGroupId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
@@ -168,7 +168,7 @@ namespace Nop.Admin.Controllers
 
         #region Edit
 
-        public ActionResult EditForumGroup(int id)
+        public ActionResult EditForumGroup(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
@@ -207,7 +207,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult EditForum(int id)
+        public ActionResult EditForum(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
@@ -261,7 +261,7 @@ namespace Nop.Admin.Controllers
         #region Delete
 
         [HttpPost]
-        public ActionResult DeleteForumGroup(int id)
+        public ActionResult DeleteForumGroup(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();
@@ -278,7 +278,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteForum(int id)
+        public ActionResult DeleteForum(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageForums))
                 return AccessDeniedView();

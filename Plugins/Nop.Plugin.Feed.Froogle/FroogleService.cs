@@ -171,17 +171,17 @@ namespace Nop.Plugin.Feed.Froogle
             };
             
             //language
-            var languageId = 0;
+            var languageId = "";
             var languages = _languageService.GetAllLanguages(storeId: store.Id);
             //if we have only one language, let's use it
             if (languages.Count == 1)
             {
                 //let's use the first one
                 var language = languages.FirstOrDefault();
-                languageId = language != null ? language.Id : 0;
+                languageId = language != null ? language.Id : "";
             }
             //otherwise, use the current one
-            if (languageId == 0)
+            if (String.IsNullOrEmpty(languageId))
                 languageId = _workContext.WorkingLanguage.Id;
 
             //we load all google products here using one SQL request (performance optimization)

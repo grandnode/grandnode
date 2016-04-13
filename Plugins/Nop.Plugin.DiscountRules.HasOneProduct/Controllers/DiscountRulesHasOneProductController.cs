@@ -57,7 +57,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             this._productService = productService;
         }
 
-        public ActionResult Configure(int discountId, int? discountRequirementId)
+        public ActionResult Configure(string discountId, string discountRequirementId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -66,29 +66,29 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
-            if (discountRequirementId.HasValue)
+            if (!String.IsNullOrEmpty(discountRequirementId))
             {
-                var discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId.Value);
+                var discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId);
                 if (discountRequirement == null)
                     return Content("Failed to load requirement.");
             }
 
-            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}-{1}", discount.Id, discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}-{1}", discount.Id, !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : ""));
 
             var model = new RequirementModel();
-            model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
+            model.RequirementId = !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : "";
             model.DiscountId = discountId;
             model.Products = restrictedProductIds;
 
             //add a prefix
-            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesHasOneProduct{0}-{1}", discount.Id, discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
+            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesHasOneProduct{0}-{1}", discount.Id, !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : "");
 
             return View("~/Plugins/DiscountRules.HasOneProduct/Views/DiscountRulesHasOneProduct/Configure.cshtml", model);
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult Configure(int discountId, int? discountRequirementId, string productIds)
+        public ActionResult Configure(string discountId, string discountRequirementId, string productIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -98,8 +98,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
                 throw new ArgumentException("Discount could not be loaded");
 
             DiscountRequirement discountRequirement = null;
-            if (discountRequirementId.HasValue)
-                discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId.Value);
+            if (!String.IsNullOrEmpty(discountRequirementId))
+                discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId);
 
             if (discountRequirement != null)
             {
@@ -131,13 +131,13 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
@@ -147,13 +147,13 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
 
             ViewBag.productIdsInput = productIdsInput;
@@ -175,8 +175,12 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -210,7 +214,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
 
             if (!String.IsNullOrWhiteSpace(productIds))
             {
-                var ids = new List<int>();
+                var ids = new List<string>();
                 var rangeArray = productIds
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
@@ -230,9 +234,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
                     if (str2.Contains(":"))
                         str2 = str2.Substring(0, str2.IndexOf(":"));
 
-                    int tmp1;
-                    if (int.TryParse(str2, out tmp1))
-                        ids.Add(tmp1);
+                    ids.Add(str2);
                 }
 
                 var products = _productService.GetProductsByIds(ids.ToArray());

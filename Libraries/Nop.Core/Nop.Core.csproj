@@ -111,6 +111,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Customers\CustomerReminderHistory.cs" />
+    <Compile Include="Domain\Messages\BannerArchive.cs" />
+    <Compile Include="ParentEntity.cs" />
+    <Compile Include="SubBaseEntity.cs" />
     <Compile Include="Caching\IRedisConnectionWrapper.cs" />
     <Compile Include="Caching\RedisCacheManager.cs" />
     <Compile Include="Caching\RedisConnectionWrapper.cs" />
@@ -130,7 +134,6 @@
     <Compile Include="Domain\Customers\CustomerReminderEnum.cs" />
     <Compile Include="Domain\Customers\CustomerReminder.cs" />
     <Compile Include="Domain\Customers\CustomerActionHistory.cs" />
-    <Compile Include="Domain\Customers\CustomerActionConditionType.cs" />
     <Compile Include="Domain\Customers\CustomerActionType.cs" />
     <Compile Include="Domain\Customers\CustomerActionEnum.cs" />
     <Compile Include="Domain\Customers\CustomerRoleProducts.cs" />
@@ -167,7 +170,6 @@
     <Compile Include="Domain\Customers\CustomerExtensions.cs" />
     <Compile Include="Domain\Stores\StoreExtensions.cs" />
     <Compile Include="Domain\Stores\IStoreMappingSupported.cs" />
-    <Compile Include="Domain\Stores\StoreMapping.cs" />
     <Compile Include="Domain\Stores\Store.cs" />
     <Compile Include="Domain\Orders\GiftCardExtensions.cs" />
     <Compile Include="Domain\Security\AclRecord.cs" />

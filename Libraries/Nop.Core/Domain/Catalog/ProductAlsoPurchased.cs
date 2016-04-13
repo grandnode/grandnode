@@ -15,7 +15,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets product id
         /// </summary>
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of Purchased
@@ -30,17 +30,17 @@ namespace Nop.Core.Domain.Catalog
     }
 
     [BsonIgnoreExtraElements]
-    public class Purchase : BaseEntity
+    public class Purchase : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the create date order 
@@ -55,7 +55,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
     }
 }

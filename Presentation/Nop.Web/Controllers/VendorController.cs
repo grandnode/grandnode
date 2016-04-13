@@ -11,6 +11,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
+using System;
 
 namespace Nop.Web.Controllers
 {
@@ -69,7 +70,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var model = new ApplyVendorModel();
-            if (_workContext.CurrentCustomer.VendorId > 0)
+            if (!String.IsNullOrEmpty(_workContext.CurrentCustomer.VendorId))
             {
                 //already applied for vendor account
                 model.DisableFormInput = true;
@@ -114,7 +115,7 @@ namespace Nop.Web.Controllers
                 _vendorService.InsertVendor(vendor);
                 //search engine name (the same as vendor name)
                 var seName = vendor.ValidateSeName(vendor.Name, vendor.Name, true);
-                _urlRecordService.SaveSlug(vendor, seName, 0);
+                _urlRecordService.SaveSlug(vendor, seName, "");
 
                 //associate to the current customer
                 //but a store owner will have to manually add this customer role to "Vendors" role

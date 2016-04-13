@@ -152,11 +152,8 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        public virtual Log GetLogById(int logId)
+        public virtual Log GetLogById(string logId)
         {
-            if (logId == 0)
-                return null;
-
             return _logRepository.GetById(logId);
         }
 
@@ -165,7 +162,7 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
         /// <returns>Log items</returns>
-        public virtual IList<Log> GetLogByIds(int[] logIds)
+        public virtual IList<Log> GetLogByIds(string[] logIds)
         {
             if (logIds == null || logIds.Length == 0)
                 return new List<Log>();
@@ -177,7 +174,7 @@ namespace Nop.Services.Logging
             var logItems = query.ToList();
             //sort by passed identifiers
             var sortedLogItems = new List<Log>();
-            foreach (int id in logIds)
+            foreach (string id in logIds)
             {
                 var log = logItems.Find(x => x.Id == id);
                 if (log != null)
@@ -210,7 +207,7 @@ namespace Nop.Services.Logging
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
                 IpAddress = _webHelper.GetCurrentIpAddress(),
-                CustomerId = customer!=null ? customer.Id : 0,
+                CustomerId = customer!=null ? customer.Id : "",
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedOnUtc = DateTime.UtcNow

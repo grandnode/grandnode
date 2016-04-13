@@ -6,17 +6,18 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a related product
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class RelatedProduct : BaseEntity
+    public partial class RelatedProduct : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the first product identifier
         /// </summary>
-        public int ProductId1 { get; set; }
+        [BsonIgnore]
+        public string ProductId1 { get; set; }
 
         /// <summary>
         /// Gets or sets the second product identifier
         /// </summary>
-        public int ProductId2 { get; set; }
+        public string ProductId2 { get; set; }
         /// <summary>
         /// Gets or sets the display order
         /// </summary>

@@ -31,7 +31,12 @@ namespace Nop.Core.Domain.Customers
         OneOfThem = 0,
         AllOfThem = 1,
     }
-
+    public enum CustomerReminderHistoryStatusEnum
+    {
+        Started = 10,
+        CompletedReminder = 20,
+        CompletedOrdered = 30,
+    }
 
 
 }

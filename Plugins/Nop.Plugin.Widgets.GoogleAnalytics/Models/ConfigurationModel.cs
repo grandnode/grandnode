@@ -6,7 +6,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
         
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.GoogleId")]
         [AllowHtml]

@@ -43,7 +43,7 @@ namespace Nop.Services.Media
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        string GetPictureUrl(int pictureId, 
+        string GetPictureUrl(string pictureId, 
             int targetSize = 0,
             bool showDefaultPicture = true, 
             string storeLocation = null, 
@@ -78,7 +78,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
         /// <returns>Picture</returns>
-        Picture GetPictureById(int pictureId);
+        Picture GetPictureById(string pictureId);
 
         /// <summary>
         /// Deletes a picture
@@ -93,14 +93,6 @@ namespace Nop.Services.Media
         /// <param name="pageSize">Items on each page</param>
         /// <returns>Paged list of pictures</returns>
         IPagedList<Picture> GetPictures(int pageIndex = 0, int pageSize = int.MaxValue);
-
-        /// <summary>
-        /// Gets pictures by product identifier
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="recordsToReturn">Number of records to return. 0 if you want to get all items</param>
-        /// <returns>Pictures</returns>
-        //IList<Picture> GetPicturesByProductId(int productId, int recordsToReturn = 0);
 
         /// <summary>
         /// Inserts a picture
@@ -129,7 +121,7 @@ namespace Nop.Services.Media
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
+        Picture UpdatePicture(string pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true);
 
@@ -139,7 +131,7 @@ namespace Nop.Services.Media
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="seoFilename">The SEO filename</param>
         /// <returns>Picture</returns>
-        Picture SetSeoFilename(int pictureId, string seoFilename);
+        Picture SetSeoFilename(string pictureId, string seoFilename);
 
         /// <summary>
         /// Validates input picture dimensions

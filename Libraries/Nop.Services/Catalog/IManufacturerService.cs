@@ -33,7 +33,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
-        Manufacturer GetManufacturerById(int manufacturerId);
+        Manufacturer GetManufacturerById(string manufacturerId);
 
         /// <summary>
         /// Inserts a manufacturer
@@ -61,29 +61,15 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        IPagedList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId,
+        IPagedList<ProductManufacturer> GetProductManufacturersByManufacturerId(string manufacturerId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
-
-        /// <summary>
-        /// Gets a product manufacturer mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product manufacturer mapping collection</returns>
-        //IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false);
 
         /// <summary>
         /// Gets a product manufacturer mapping 
         /// </summary>
         /// <param name="discountId">Discount id mapping identifier</param>
         /// <returns>Product manufacturer mapping</returns>
-        IList<Manufacturer> GetAllManufacturersByDiscount(int discountId);
-        /// <summary>
-        /// Gets a product manufacturer mapping 
-        /// </summary>
-        /// <param name="productManufacturerId">Product manufacturer mapping identifier</param>
-        /// <returns>Product manufacturer mapping</returns>
-        //ProductManufacturer GetProductManufacturerById(int productManufacturerId);
+        IList<Manufacturer> GetAllManufacturersByDiscount(string discountId);
 
         /// <summary>
         /// Inserts a product manufacturer mapping

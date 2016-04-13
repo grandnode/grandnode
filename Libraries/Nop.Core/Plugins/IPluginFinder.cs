@@ -13,7 +13,7 @@ namespace Nop.Core.Plugins
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
         /// <param name="storeId">Store identifier to check</param>
         /// <returns>true - available; false - no</returns>
-        bool AuthenticateStore(PluginDescriptor pluginDescriptor, int storeId);
+        bool AuthenticateStore(PluginDescriptor pluginDescriptor, string storeId);
 
         /// <summary>
         /// Gets plugin groups
@@ -30,7 +30,7 @@ namespace Nop.Core.Plugins
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
         IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            int storeId = 0, string group = null) where T : class, IPlugin;
+            string storeId = "", string group = null) where T : class, IPlugin;
 
         /// <summary>
         /// Get plugin descriptors
@@ -40,7 +40,7 @@ namespace Nop.Core.Plugins
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            int storeId = 0, string group = null);
+            string storeId = "", string group = null);
 
         /// <summary>
         /// Get plugin descriptors
@@ -51,7 +51,7 @@ namespace Nop.Core.Plugins
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            int storeId = 0, string group = null) where T : class, IPlugin;
+            string storeId = "", string group = null) where T : class, IPlugin;
 
         /// <summary>
         /// Get a plugin descriptor by its system name

@@ -47,7 +47,7 @@ namespace Nop.Admin.Models.Customers
         public string CustomerTags { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Vendor")]
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
 
         //form fields & properties
@@ -96,12 +96,12 @@ namespace Nop.Admin.Models.Customers
 
         public bool CountryEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Country")]
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
 
         public bool StateProvinceEnabled { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.StateProvince")]
-        public int StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
 
         public bool PhoneEnabled { get; set; }
@@ -134,7 +134,7 @@ namespace Nop.Admin.Models.Customers
         public bool Active { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
-        public int AffiliateId { get; set; }
+        public string AffiliateId { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
         public string AffiliateName { get; set; }
 
@@ -188,13 +188,13 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
         public string CustomerRoleNames { get; set; }
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        public string[] SelectedCustomerRoleIds { get; set; }
 
         //newsletter subscriptions (per store)
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
         public List<StoreModel> AvailableNewsletterSubscriptionStores { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
-        public int[] SelectedNewsletterSubscriptionStoreIds { get; set; }
+        public string[] SelectedNewsletterSubscriptionStoreIds { get; set; }
 
 
 
@@ -212,7 +212,7 @@ namespace Nop.Admin.Models.Customers
         public string AddRewardPointsMessage { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
-        public int AddRewardPointsStoreId { get; set; }
+        public string AddRewardPointsStoreId { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
         public IList<SelectListItem> RewardPointsAvailableStores { get; set; }
 
@@ -297,7 +297,9 @@ namespace Nop.Admin.Models.Customers
         public partial class OrderModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.ID")]
-            public override int Id { get; set; }
+            public override string Id { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.Orders.ID")]
+            public int OrderNumber { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
@@ -333,7 +335,7 @@ namespace Nop.Admin.Models.Customers
             [NopResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.Store")]
             public string StoreName { get; set; }
             [NopResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.Product")]
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
             [NopResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.Product")]
             public string ProductName { get; set; }
             [NopResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn")]

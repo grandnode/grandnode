@@ -21,17 +21,17 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Viewed
         /// </summary>
-        void Viewed(int customerId, string currentUrl, string previousUrl);
+        void Viewed(string customerId, string currentUrl, string previousUrl);
 
         /// <summary>
         /// Run action url
         /// </summary>
-        void Url(int customerId, string currentUrl, string previousUrl);
+        void Url(string customerId, string currentUrl, string previousUrl);
 
 
         /// <summary>
         /// Run action url
         /// </summary>
-        void Registration(int customerId);
+        void Registration(string customerId);
     }
 }

@@ -13,7 +13,7 @@ namespace Nop.Services.Polls
         /// </summary>
         /// <param name="pollId">The poll identifier</param>
         /// <returns>Poll</returns>
-        Poll GetPollById(int pollId);
+        Poll GetPollById(string pollId);
 
         /// <summary>
         /// Gets a poll
@@ -21,7 +21,7 @@ namespace Nop.Services.Polls
         /// <param name="systemKeyword">The poll system keyword</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <returns>Poll</returns>
-        Poll GetPollBySystemKeyword(string systemKeyword, int languageId);
+        Poll GetPollBySystemKeyword(string systemKeyword, string languageId);
         
         /// <summary>
         /// Gets polls
@@ -32,7 +32,7 @@ namespace Nop.Services.Polls
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Polls</returns>
-        IPagedList<Poll> GetPolls(int languageId = 0, bool loadShownOnHomePageOnly = false,
+        IPagedList<Poll> GetPolls(string languageId = "", bool loadShownOnHomePageOnly = false,
              int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
@@ -53,18 +53,6 @@ namespace Nop.Services.Polls
         /// <param name="poll">Poll</param>
         void UpdatePoll(Poll poll);
         
-        /// <summary>
-        /// Gets a poll answer
-        /// </summary>
-        /// <param name="pollAnswerId">Poll answer identifier</param>
-        /// <returns>Poll answer</returns>
-        //PollAnswer GetPollAnswerById(int pollAnswerId);
-        
-        /// <summary>
-        /// Deletes a poll answer
-        /// </summary>
-        /// <param name="pollAnswer">Poll answer</param>
-        //void DeletePollAnswer(PollAnswer pollAnswer);
 
         /// <summary>
         /// Gets a value indicating whether customer already vited for this poll
@@ -72,6 +60,6 @@ namespace Nop.Services.Polls
         /// <param name="pollId">Poll identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Result</returns>
-        bool AlreadyVoted(int pollId, int customerId);
+        bool AlreadyVoted(string pollId, string customerId);
     }
 }

@@ -177,7 +177,7 @@ namespace Nop.Web.Controllers
             if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
             {
                 var privateMessages = _forumservice.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
-                    0, customer.Id, false, null, false, string.Empty, 0, 1);
+                    "", customer.Id, false, null, false, string.Empty, 0, 1);
 
                 if (privateMessages.TotalCount > 0)
                 {
@@ -236,7 +236,7 @@ namespace Nop.Web.Controllers
         [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult SetLanguage(int langid, string returnUrl = "")
+        public ActionResult SetLanguage(string langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
             if (language != null && language.Published)
@@ -308,7 +308,7 @@ namespace Nop.Web.Controllers
         }
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult SetCurrency(int customerCurrency, string returnUrl = "")
+        public ActionResult SetCurrency(string customerCurrency, string returnUrl = "")
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
@@ -563,7 +563,7 @@ namespace Nop.Web.Controllers
                 model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
 
                 //activity log
-                _customerActivityService.InsertActivity("PublicStore.ContactUs", 0, _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
+                _customerActivityService.InsertActivity("PublicStore.ContactUs", "", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
 
                 //store in database
                 if(_commonSettings.StoreInDatabaseContactUsForm)
@@ -573,7 +573,7 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = DateTime.UtcNow,
                         CustomerId = _workContext.CurrentCustomer.Id,
                         StoreId = _storeContext.CurrentStore.Id,
-                        VendorId = 0,
+                        VendorId = "",
                         Email = email,
                         FullName = fullName,
                         Subject = subject,
@@ -592,7 +592,7 @@ namespace Nop.Web.Controllers
         }
         //contact vendor page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ContactVendor(int vendorId)
+        public ActionResult ContactVendor(string vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("HomePage");
@@ -1084,7 +1084,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult RemoveBanner(int Id)
+        public ActionResult RemoveBanner(string Id)
         {
             _bannerService.MoveBannerToArchive(Id, _workContext.CurrentCustomer.Id);
             return Json (JsonRequestBehavior.AllowGet);

@@ -13,22 +13,22 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the forum topic identifier
         /// </summary>
-        public int TopicId { get; set; }
+        public string TopicId { get; set; }
 
         /// <summary>
         /// Gets or sets the forum identifier
         /// </summary>
-        public int ForumId { get; set; }
+        public string ForumId { get; set; }
 
         /// <summary>
         /// Gets or sets the forum group identifier
         /// </summary>
-        public int ForumGroupId { get; set; }
+        public string ForumGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the text

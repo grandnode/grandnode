@@ -19,14 +19,21 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderId">The order identifier</param>
         /// <returns>Order</returns>
-        Order GetOrderById(int orderId);
+        Order GetOrderById(string orderId);
+
+        /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="orderNumber">The order number</param>
+        /// <returns>Order</returns>
+        Order GetOrderByNumber(int orderNumber);
 
         /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
         /// <returns>Order</returns>
-        IList<Order> GetOrdersByIds(int[] orderIds);
+        IList<Order> GetOrdersByIds(string[] orderIds);
 
         /// <summary>
         /// Gets an order
@@ -63,10 +70,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
-        IPagedList<Order> SearchOrders(int storeId = 0,
-            int vendorId = 0, int customerId = 0,
-            int productId = 0, int affiliateId = 0, int warehouseId = 0,
-            int billingCountryId = 0, string paymentMethodSystemName = null,
+        IPagedList<Order> SearchOrders(string storeId = "",
+            string vendorId = "", string customerId = "",
+            string productId = "", string affiliateId = "", string warehouseId = "",
+            string billingCountryId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderNotes = null, string orderGuid = null,
@@ -105,13 +112,6 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets an order item
         /// </summary>
-        /// <param name="orderItemId">Order item identifier</param>
-        /// <returns>Order item</returns>
-        //OrderItem GetOrderItemById(int orderItemId);
-
-        /// <summary>
-        /// Gets an order item
-        /// </summary>
         /// <param name="orderItemGuid">Order item identifier</param>
         /// <returns>Order item</returns>
         OrderItem GetOrderItemByGuid(Guid orderItemGuid);
@@ -128,8 +128,8 @@ namespace Nop.Services.Orders
         /// <param name="ss">Order shipment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Order items</returns>
-        IList<OrderItem> GetAllOrderItems(int? orderId,
-           int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc,
+        IList<OrderItem> GetAllOrderItems(string orderId,
+           string customerId, DateTime? createdFromUtc, DateTime? createdToUtc,
            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
            bool loadDownloableProductsOnly = false);
 
@@ -164,7 +164,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPaymentId">The recurring payment identifier</param>
         /// <returns>Recurring payment</returns>
-        RecurringPayment GetRecurringPaymentById(int recurringPaymentId);
+        RecurringPayment GetRecurringPaymentById(string recurringPaymentId);
 
         /// <summary>
         /// Inserts a recurring payment
@@ -189,42 +189,11 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payments</returns>
-        IPagedList<RecurringPayment> SearchRecurringPayments(int storeId = 0,
-            int customerId = 0, int initialOrderId = 0, OrderStatus? initialOrderStatus = null,
+        IPagedList<RecurringPayment> SearchRecurringPayments(string storeId = "",
+            string customerId = "", string initialOrderId = "", OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         #endregion
-
-        //#region Return requests
-
-        ///// <summary>
-        ///// Deletes a return request
-        ///// </summary>
-        ///// <param name="returnRequest">Return request</param>
-        //void DeleteReturnRequest(ReturnRequest returnRequest);
-
-        ///// <summary>
-        ///// Gets a return request
-        ///// </summary>
-        ///// <param name="returnRequestId">Return request identifier</param>
-        ///// <returns>Return request</returns>
-        //ReturnRequest GetReturnRequestById(int returnRequestId);
-        
-        ///// <summary>
-        ///// Search return requests
-        ///// </summary>
-        ///// <param name="storeId">Store identifier; 0 to load all entries</param>
-        ///// <param name="customerId">Customer identifier; 0 to load all entries</param>
-        ///// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
-        ///// <param name="rs">Return request status; null to load all entries</param>
-        ///// <param name="pageIndex">Page index</param>
-        ///// <param name="pageSize">Page size</param>
-        ///// <returns>Return requests</returns>
-        //IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
-        //    int orderId = 0, int orderItemId = 0, ReturnRequestStatus? rs = null, 
-        //    int pageIndex = 0, int pageSize = int.MaxValue);
-
-        //#endregion
 
     }
 }

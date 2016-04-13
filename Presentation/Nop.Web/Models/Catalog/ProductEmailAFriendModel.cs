@@ -9,7 +9,7 @@ namespace Nop.Web.Models.Catalog
     [Validator(typeof(ProductEmailAFriendValidator))]
     public partial class ProductEmailAFriendModel : BaseNopModel
     {
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         public string ProductName { get; set; }
 

@@ -119,7 +119,7 @@
     }
 @helper TabValues()
     { 
-        if (Model.Id > 0)
+        if (!String.IsNullOrEmpty(Model.Id))
         {
             /*TODO display the following warning if values are not supported by selected attribute control type
              'Values are not required for this attribute control type'

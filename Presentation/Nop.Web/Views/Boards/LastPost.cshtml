@@ -1,6 +1,6 @@
 ﻿@model LastPostModel
 @using Nop.Web.Models.Boards;
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 {
     <div class="date">
         @Model.PostCreatedOnStr

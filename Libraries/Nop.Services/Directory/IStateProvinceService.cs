@@ -19,7 +19,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="stateProvinceId">The state/province identifier</param>
         /// <returns>State/province</returns>
-        StateProvince GetStateProvinceById(int stateProvinceId);
+        StateProvince GetStateProvinceById(string stateProvinceId);
 
         /// <summary>
         /// Gets a state/province 
@@ -35,7 +35,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort states by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>States</returns>
-        IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false);
+        IList<StateProvince> GetStateProvincesByCountryId(string countryId, string languageId = "", bool showHidden = false);
 
         /// <summary>
         /// Gets all states/provinces

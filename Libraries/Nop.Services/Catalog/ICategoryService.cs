@@ -33,7 +33,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="includeAllLevels">A value indicating whether we should load all child levels</param>
         /// <returns>Categories</returns>
-        IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
+        IList<Category> GetAllCategoriesByParentCategoryId(string parentCategoryId = "",
             bool showHidden = false, bool includeAllLevels = false);
 
         /// <summary>
@@ -47,14 +47,14 @@ namespace Nop.Services.Catalog
         /// Gets all categories by discount id
         /// </summary>
         /// <returns>Categories</returns>
-        IList<Category> GetAllCategoriesByDiscount(int discountId);
+        IList<Category> GetAllCategoriesByDiscount(string discountId);
 
         /// <summary>
         /// Gets a category
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Category</returns>
-        Category GetCategoryById(int categoryId);
+        Category GetCategoryById(string categoryId);
 
         /// <summary>
         /// Inserts category
@@ -82,16 +82,9 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product a category mapping collection</returns>
-        IPagedList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId,
+        IPagedList<ProductCategory> GetProductCategoriesByCategoryId(string categoryId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
-        /// <summary>
-        /// Gets a product category mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product category mapping collection</returns>
-        //IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false);
         /// <summary>
         /// Gets a product category mapping collection
         /// </summary>
@@ -99,7 +92,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
         /// <param name="showHidden"> A value indicating whether to show hidden records</param>
         /// <returns> Product category mapping collection</returns>
-        IList<ProductCategory> GetProductCategoriesByProductId(int productId, int storeId, bool showHidden = false);
+        IList<ProductCategory> GetProductCategoriesByProductId(string productId, string storeId, bool showHidden = false);
 
         /// <summary>
         /// Inserts a product category mapping

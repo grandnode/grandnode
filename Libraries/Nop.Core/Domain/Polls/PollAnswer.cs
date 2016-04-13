@@ -7,14 +7,14 @@ namespace Nop.Core.Domain.Polls
     /// Represents a poll answer
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class PollAnswer : BaseEntity
+    public partial class PollAnswer : SubBaseEntity
     {
         private ICollection<PollVotingRecord> _pollVotingRecords;
 
         /// <summary>
         /// Gets or sets the poll identifier
         /// </summary>
-        public int PollId { get; set; }
+        public string PollId { get; set; }
 
         /// <summary>
         /// Gets or sets the poll answer name

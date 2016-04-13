@@ -18,7 +18,7 @@ namespace Nop.Admin.Models.Messages
         public string SearchEmail { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SearchStore")]
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive")]

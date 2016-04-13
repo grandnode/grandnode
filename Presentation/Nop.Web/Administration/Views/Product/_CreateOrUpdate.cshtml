@@ -62,7 +62,7 @@
             @T("Admin.Catalog.Products.ActivityLog")
         </li>
 
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.PurchasedWithOrders")
@@ -111,7 +111,7 @@
     <div>
         @TabAssociatedProducts()
     </div>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
             @TabActivityLog()

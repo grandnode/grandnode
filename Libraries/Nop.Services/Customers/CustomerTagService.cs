@@ -57,7 +57,7 @@ namespace Nop.Services.Customers
         /// Gets all customer for tag id
         /// </summary>
         /// <returns>Customers</returns>
-        public virtual IPagedList<Customer> GetCustomersByTag(int customerTagId = 0, int pageIndex = 0, int pageSize = 2147483647)
+        public virtual IPagedList<Customer> GetCustomersByTag(string customerTagId = "", int pageIndex = 0, int pageSize = 2147483647)
         {
             var query = from c in _customerRepository.Table
                         where c.CustomerTags.Contains(customerTagId)
@@ -100,11 +100,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerTagId">Customer tag identifier</param>
         /// <returns>Customer tag</returns>
-        public virtual CustomerTag GetCustomerTagById(int customerTagId)
+        public virtual CustomerTag GetCustomerTagById(string customerTagId)
         {
-            if (customerTagId == 0)
-                return null;
-
             return _customerTagRepository.GetById(customerTagId);
         }
 
@@ -153,21 +150,21 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Insert tag to a customer
         /// </summary>
-        public virtual void InsertTagToCustomer(int customerTagId, int customerId)
+        public virtual void InsertTagToCustomer(string customerTagId, string customerId)
         {
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.CustomerTags, customerTagId);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
         }
 
         /// <summary>
         /// Delete tag from a customer
         /// </summary>
-        public virtual void DeleteTagFromCustomer(int customerTagId, int customerId)
+        public virtual void DeleteTagFromCustomer(string customerTagId, string customerId)
         {
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.Pull(p => p.CustomerTags, customerTagId);
-            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("Id", customerId), update);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
         }
 
         /// <summary>
@@ -190,7 +187,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customerTagId">Customer tag identifier</param>
         /// <returns>Number of customers</returns>
-        public virtual int GetCustomerCount(int customerTagId)
+        public virtual int GetCustomerCount(string customerTagId)
         {
             var query = _customerRepository.Table.Where(x => x.CustomerTags.Contains(customerTagId)).GroupBy(p => p, (k, s) => new { Count = s.Count() }).ToList();
             if (query.Count > 0)

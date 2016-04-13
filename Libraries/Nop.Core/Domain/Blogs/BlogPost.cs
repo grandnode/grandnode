@@ -15,13 +15,13 @@ namespace Nop.Core.Domain.Blogs
     {
         public BlogPost()
         {
-            Stores = new List<int>();
+            Stores = new List<string>();
             Locales = new List<LocalizedProperty>();
         }
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the blog post title
@@ -85,7 +85,7 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public virtual bool LimitedToStores { get; set; }
-        public IList<int> Stores { get; set; }
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales

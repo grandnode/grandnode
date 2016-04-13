@@ -16,9 +16,9 @@ namespace Nop.Web.Models.Boards
 
         public bool IsEdit { get; set; }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public int ForumId { get; set; }
+        public string ForumId { get; set; }
         public string ForumName { get; set; }
         public string ForumSeName { get; set; }
 

@@ -53,17 +53,17 @@ namespace Nop.Web.Controllers
             this._mediaSettings = mediaSettings;
         }
 
-        public ActionResult Index(int? id, int? page)
+        public ActionResult Index(string id, int? page)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
                 return RedirectToRoute("HomePage");
             }
 
-            var customerId = 0;
-            if (id.HasValue)
+            var customerId ="";
+            if (!String.IsNullOrEmpty(id))
             {
-                customerId = id.Value;
+                customerId = id;
             }
 
             var customer = _customerService.GetCustomerById(customerId);
@@ -98,7 +98,7 @@ namespace Nop.Web.Controllers
 
         //profile info tab
         [ChildActionOnly]
-        public ActionResult Info(int customerProfileId)
+        public ActionResult Info(string customerProfileId)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
@@ -111,7 +111,7 @@ namespace Nop.Web.Controllers
             if (_customerSettings.AllowCustomersToUploadAvatars)
             {
                 avatarUrl =_pictureService.GetPictureUrl(
-                 customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                 customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
                  _mediaSettings.AvatarPictureSize,
                  _customerSettings.DefaultAvatarEnabled,
                  defaultPictureType: PictureType.Avatar);
@@ -124,7 +124,7 @@ namespace Nop.Web.Controllers
             {
                 locationEnabled = true;
 
-                var countryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                var countryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
                 var country = _countryService.GetCountryById(countryId);
                 if (country != null)
                 {
@@ -191,7 +191,7 @@ namespace Nop.Web.Controllers
 
         //latest posts tab
         [ChildActionOnly]
-        public ActionResult Posts(int customerProfileId, int page)
+        public ActionResult Posts(string customerProfileId, int page)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
@@ -206,7 +206,7 @@ namespace Nop.Web.Controllers
 
             var pageSize = _forumSettings.LatestCustomerPostsPageSize;
 
-            var list = _forumService.GetAllPosts(0, customer.Id, string.Empty, false, page, pageSize);
+            var list = _forumService.GetAllPosts("", customer.Id, string.Empty, false, page, pageSize);
 
             var latestPosts = new List<PostsModel>();
 

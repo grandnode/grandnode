@@ -119,7 +119,7 @@ namespace Nop.Admin.Controllers
 
             var model = new NewsItemListModel();
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
@@ -132,7 +132,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            var news = _newsService.GetAllNews(0, model.SearchStoreId, command.Page - 1, command.PageSize, true);
+            var news = _newsService.GetAllNews("", model.SearchStoreId, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = news.Select(x =>
@@ -183,8 +183,8 @@ namespace Nop.Admin.Controllers
                 newsItem.StartDateUtc = model.StartDate;
                 newsItem.EndDateUtc = model.EndDate;
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
-                newsItem.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
-                newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                newsItem.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+                newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _newsService.InsertNews(newsItem);
 
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
@@ -206,7 +206,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
@@ -243,8 +243,8 @@ namespace Nop.Admin.Controllers
                 newsItem = model.ToEntity(newsItem);
                 newsItem.StartDateUtc = model.StartDate;
                 newsItem.EndDateUtc = model.EndDate;
-                newsItem.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<int>();
-                newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                newsItem.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
+                newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 newsItem.SeName = seName;
                 _newsService.UpdateNews(newsItem);
@@ -275,7 +275,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
@@ -305,22 +305,22 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Comments(int? filterByNewsItemId, DataSourceRequest command)
+        public ActionResult Comments(string filterByNewsItemId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
             IList<NewsComment> comments;
-            if (filterByNewsItemId.HasValue)
+            if (!String.IsNullOrEmpty(filterByNewsItemId))
             {
                 //filter comments by news item
-                var newsItem = _newsService.GetNewsById(filterByNewsItemId.Value);
+                var newsItem = _newsService.GetNewsById(filterByNewsItemId);
                 comments = newsItem.NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
             }
             else
             {
                 //load all news comments
-                comments = _newsService.GetAllComments(0);
+                comments = _newsService.GetAllComments("");
             }
 
             var gridModel = new DataSourceResult

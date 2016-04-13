@@ -13,7 +13,6 @@ namespace Nop.Services.Customers
 
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
-        private readonly IRepository<CustomerActionConditionType> _customerActionConditionTypeRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -22,12 +21,10 @@ namespace Nop.Services.Customers
 
         public CustomerActionService(IRepository<CustomerAction> customerActionRepository,
             IRepository<CustomerActionType> customerActionTypeRepository,
-            IRepository<CustomerActionConditionType> customerActionConditionTypeRepository,
             IEventPublisher eventPublisher)
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
-            this._customerActionConditionTypeRepository = customerActionConditionTypeRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -41,10 +38,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="id">Customer action identifier</param>
         /// <returns>Customer Action</returns>
-        public virtual CustomerAction GetCustomerActionById(int id)
+        public virtual CustomerAction GetCustomerActionById(string id)
         {
-            if (id == 0)
-                return null;
             return _customerActionRepository.GetById(id);
         }
 
@@ -109,22 +104,14 @@ namespace Nop.Services.Customers
         #endregion
 
         #region Condition Type
-        public virtual CustomerActionConditionType GetCustomerActionConditionTypeById(int id)
-        {
-            if (id == 0)
-                return null;
-            return _customerActionConditionTypeRepository.GetById(id);
-        }
 
         public virtual IList<CustomerActionType> GetCustomerActionType()
         {
             var query = _customerActionTypeRepository.Table;
             return query.ToList();
         }
-        public virtual CustomerActionType GetCustomerActionTypeById(int id)
+        public virtual CustomerActionType GetCustomerActionTypeById(string id)
         {
-            if (id == 0)
-                return null;
             return _customerActionTypeRepository.GetById(id);
         }
 

@@ -21,7 +21,7 @@ namespace Nop.Services.Security
         /// </summary>
         /// <param name="aclRecordId">ACL record identifier</param>
         /// <returns>ACL record</returns>
-        AclRecord GetAclRecordById(int aclRecordId);
+        AclRecord GetAclRecordById(string aclRecordId);
         
         /// <summary>
         /// Gets ACL records
@@ -43,7 +43,7 @@ namespace Nop.Services.Security
         /// <typeparam name="T">Type</typeparam>
         /// <param name="customerRoleId">Customer role id</param>
         /// <param name="entity">Entity</param>
-        void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported;
+        void InsertAclRecord<T>(T entity, string customerRoleId) where T : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Updates the ACL record

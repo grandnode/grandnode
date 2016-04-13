@@ -199,11 +199,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Manufacturer</returns>
-        public virtual Manufacturer GetManufacturerById(int manufacturerId)
+        public virtual Manufacturer GetManufacturerById(string manufacturerId)
         {
-            if (manufacturerId == 0)
-                return null;
-            
             string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
             return _cacheManager.Get(key, () => _manufacturerRepository.GetById(manufacturerId));
         }
@@ -258,7 +255,7 @@ namespace Nop.Services.Catalog
             //_productManufacturerRepository.Delete(productManufacturer);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductManufacturers, productManufacturer);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productManufacturer.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -277,12 +274,9 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
-        public virtual IPagedList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId,
+        public virtual IPagedList<ProductManufacturer> GetProductManufacturersByManufacturerId(string manufacturerId,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            if (manufacturerId == 0)
-                return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);
-
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
@@ -313,7 +307,14 @@ namespace Nop.Services.Catalog
 
                 var query2 = from prod in query
                              from pm in prod.ProductManufacturers
-                             select pm;
+                             select new SerializeProductManufacturer
+                                {
+                                    Id = pm.Id,
+                                    ProductId = prod.Id,
+                                    DisplayOrder = pm.DisplayOrder,
+                                    IsFeaturedProduct = pm.IsFeaturedProduct,
+                                    ManufacturerId = pm.ManufacturerId    
+                                };
 
                 query2 = from pm in query2
                          where pm.ManufacturerId == manufacturerId
@@ -331,11 +332,8 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
-        public virtual IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false)
+        public virtual IList<ProductManufacturer> GetProductManufacturersByProductId(string productId, bool showHidden = false)
         {
-            if (productId == 0)
-                return new List<ProductManufacturer>();
-
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
@@ -369,9 +367,18 @@ namespace Nop.Services.Catalog
                 }
                 var query2 = from p in query
                              from pm in p.ProductManufacturers
-                             select pm;
+                             select new SerializeProductManufacturer
+                             {
+                                 Id = pm.Id,
+                                 ProductId = p.Id,
+                                 DisplayOrder = pm.DisplayOrder,
+                                 IsFeaturedProduct = pm.IsFeaturedProduct,
+                                 ManufacturerId = pm.ManufacturerId
+                             };
 
-                var productManufacturers = query2.ToList();
+
+                List<ProductManufacturer> productManufacturers = new List<ProductManufacturer>();
+                productManufacturers.AddRange(query2.ToList());
                 return productManufacturers;
             });
         }
@@ -381,7 +388,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="discountId">Discount id mapping identifier</param>
         /// <returns>Product manufacturer mapping</returns>
-        public virtual IList<Manufacturer> GetAllManufacturersByDiscount(int discountId)
+        public virtual IList<Manufacturer> GetAllManufacturersByDiscount(string discountId)
         {
             var query = from c in _manufacturerRepository.Table
                         where c.AppliedDiscounts.Any(x=>x.Id == discountId)
@@ -404,7 +411,7 @@ namespace Nop.Services.Catalog
             //_productManufacturerRepository.Insert(productManufacturer);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductManufacturers, productManufacturer);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productManufacturer.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productManufacturer.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -446,5 +453,8 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
+
+        public class SerializeProductManufacturer : ProductManufacturer { }
+
     }
 }

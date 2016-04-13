@@ -6,7 +6,7 @@ namespace Nop.Admin.Models.Settings
 {
     public partial class ShippingSettingsModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.AllowPickUpInStore")]
         public bool AllowPickUpInStore { get; set; }

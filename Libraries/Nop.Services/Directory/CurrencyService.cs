@@ -115,11 +115,8 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="currencyId">Currency identifier</param>
         /// <returns>Currency</returns>
-        public virtual Currency GetCurrencyById(int currencyId)
+        public virtual Currency GetCurrencyById(string currencyId)
         {
-            if (currencyId == 0)
-                return null;
-            
             string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
             return _cacheManager.Get(key, () => _currencyRepository.GetById(currencyId));
         }
@@ -142,7 +139,7 @@ namespace Nop.Services.Directory
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Currencies</returns>
-        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, int storeId = 0)
+        public virtual IList<Currency> GetAllCurrencies(bool showHidden = false, string storeId = "")
         {
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
             var currencies = _cacheManager.Get(key, () =>
@@ -156,7 +153,7 @@ namespace Nop.Services.Directory
             });
 
             //store mapping
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
             {
                 currencies = currencies
                     .Where(c => _storeMappingService.Authorize(c, storeId))

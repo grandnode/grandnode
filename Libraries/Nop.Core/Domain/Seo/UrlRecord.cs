@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Seo
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public int EntityId { get; set; }
+        public string EntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity name
@@ -28,6 +28,6 @@ namespace Nop.Core.Domain.Seo
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Nop.Admin.Models.Orders
         public int GiftCardTypeId { get; set; }
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.Order")]
-        public int? PurchasedWithOrderId { get; set; }
+        public string PurchasedWithOrderId { get; set; }
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.Amount")]
         public decimal Amount { get; set; }
@@ -65,7 +65,7 @@ namespace Nop.Admin.Models.Orders
             public string UsedValue { get; set; }
 
             [NopResourceDisplayName("Admin.GiftCards.History.Order")]
-            public int OrderId { get; set; }
+            public string OrderId { get; set; }
 
             [NopResourceDisplayName("Admin.GiftCards.History.CreatedOn")]
             public DateTime CreatedOn { get; set; }

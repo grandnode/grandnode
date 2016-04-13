@@ -49,7 +49,7 @@ namespace Nop.Web.Controllers
         #region Methods
 
         // Product details page > back in stock subscribe
-        public ActionResult SubscribePopup(int productId)
+        public ActionResult SubscribePopup(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -77,7 +77,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("SubscribePopup")]
-        public ActionResult SubscribePopupPOST(int productId)
+        public ActionResult SubscribePopupPOST(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null )
@@ -188,14 +188,10 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("biss", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("biss", "").Trim();
-                    int subscriptionId;
-                    if (Int32.TryParse(id, out subscriptionId))
+                    var subscription = _backInStockSubscriptionService.GetSubscriptionById(id);
+                    if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
                     {
-                        var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
-                        if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
-                        {
-                            _backInStockSubscriptionService.DeleteSubscription(subscription);
-                        }
+                       _backInStockSubscriptionService.DeleteSubscription(subscription);
                     }
                 }
             }

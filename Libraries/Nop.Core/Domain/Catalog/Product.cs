@@ -26,13 +26,13 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<TierPrice> _tierPrices;
         private ICollection<Discount> _appliedDiscounts;
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
-        private ICollection<int> _crossSellProduct;
+        private ICollection<string> _crossSellProduct;
         private ICollection<RelatedProduct> _relatedProduct;
         public Product()
         {
-            CustomerRoles = new List<int>();
+            CustomerRoles = new List<string>();
             Locales = new List<LocalizedProperty>();
-            Stores = new List<int>();
+            Stores = new List<string>();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the parent product identifier. It's used to identify associated products (only with "grouped" products)
         /// </summary>
-        public int ParentGroupedProductId { get; set; }
+        public string ParentGroupedProductId { get; set; }
         /// <summary>
         /// Gets or sets the values indicating whether this product is visible in catalog or search results.
         /// It's used when this product is associated to some "grouped" one
@@ -76,12 +76,12 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value of used product template identifier
         /// </summary>
-        public int ProductTemplateId { get; set; }
+        public string ProductTemplateId { get; set; }
 
         /// <summary>
         /// Gets or sets a vendor identifier
         /// </summary>
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the product on home page
@@ -126,13 +126,13 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
-        public IList<int> CustomerRoles { get; set; }
+        public IList<string> CustomerRoles { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-        public IList<int> Stores { get; set; }
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the SKU
@@ -180,7 +180,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the download identifier
         /// </summary>
-        public int DownloadId { get; set; }
+        public string DownloadId { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this downloadable product can be downloaded unlimited number of times
         /// </summary>
@@ -204,7 +204,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the sample download identifier
         /// </summary>
-        public int SampleDownloadId { get; set; }
+        public string SampleDownloadId { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the product has user agreement
         /// </summary>
@@ -263,7 +263,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a delivery date identifier
         /// </summary>
-        public int DeliveryDateId { get; set; }
+        public string DeliveryDateId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product is marked as tax exempt
@@ -272,7 +272,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
-        public int TaxCategoryId { get; set; }
+        public string TaxCategoryId { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether the product is telecommunications or broadcasting or electronic services
         /// </summary>
@@ -289,7 +289,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a warehouse identifier
         /// </summary>
-        public int WarehouseId { get; set; }
+        public string WarehouseId { get; set; }
         /// <summary>
         /// Gets or sets the stock quantity
         /// </summary>
@@ -410,7 +410,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a unit of product for PAngV (MeasureWeight entity)
         /// </summary>
-        public int BasepriceUnitId { get; set; }
+        public string BasepriceUnitId { get; set; }
         /// <summary>
         /// Gets or sets a reference amount for PAngV
         /// </summary>
@@ -418,7 +418,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a reference unit for PAngV (MeasureWeight entity)
         /// </summary>
-        public int BasepriceBaseUnitId { get; set; }
+        public string BasepriceBaseUnitId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this product is marked as new
@@ -737,9 +737,9 @@ namespace Nop.Core.Domain.Catalog
             protected set { _productWarehouseInventory = value; }
         }
 
-        public virtual ICollection<int> CrossSellProduct
+        public virtual ICollection<string> CrossSellProduct
         {
-            get { return _crossSellProduct ?? (_crossSellProduct = new List<int>()); }
+            get { return _crossSellProduct ?? (_crossSellProduct = new List<string>()); }
             protected set { _crossSellProduct = value; }
         }
 

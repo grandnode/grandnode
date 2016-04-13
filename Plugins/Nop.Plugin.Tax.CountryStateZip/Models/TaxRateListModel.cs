@@ -17,15 +17,15 @@ namespace Nop.Plugin.Tax.CountryStateZip.Models
         }
 
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Store")]
-        public int AddStoreId { get; set; }
+        public string AddStoreId { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Country")]
-        public int AddCountryId { get; set; }
+        public string AddCountryId { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.StateProvince")]
-        public int AddStateProvinceId { get; set; }
+        public string AddStateProvinceId { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Zip")]
         public string AddZip { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.TaxCategory")]
-        public int AddTaxCategoryId { get; set; }
+        public string AddTaxCategoryId { get; set; }
         [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Percentage")]
         public decimal AddPercentage { get; set; }
 

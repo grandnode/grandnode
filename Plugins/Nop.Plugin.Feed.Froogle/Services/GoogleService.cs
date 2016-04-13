@@ -57,19 +57,13 @@ namespace Nop.Plugin.Feed.Froogle.Services
             return records;
         }
 
-        public virtual GoogleProductRecord GetById(int googleProductRecordId)
+        public virtual GoogleProductRecord GetById(string googleProductRecordId)
         {
-            if (googleProductRecordId == 0)
-                return null;
-
             return _gpRepository.GetById(googleProductRecordId);
         }
 
-        public virtual GoogleProductRecord GetByProductId(int productId)
+        public virtual GoogleProductRecord GetByProductId(string productId)
         {
-            if (productId == 0)
-                return null;
-
             var query = from gp in _gpRepository.Table
                         where gp.ProductId == productId
                         orderby gp.Id

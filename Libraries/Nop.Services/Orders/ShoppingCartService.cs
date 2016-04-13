@@ -180,7 +180,7 @@ namespace Nop.Services.Orders
         /// <returns>Warnings</returns>
         public virtual IList<string> GetRequiredProductWarnings(Customer customer,
             ShoppingCartType shoppingCartType, Product product,
-            int storeId, bool automaticallyAddRequiredProductsIfEnabled)
+            string storeId, bool automaticallyAddRequiredProductsIfEnabled)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -468,7 +468,7 @@ namespace Nop.Services.Orders
             }
             foreach (var attribute in attributes1)
             {
-                if (attribute.ProductId != 0)
+                if (!String.IsNullOrEmpty(attribute.ProductId))
                 {
                     if (attribute.ProductId != product.Id)
                     {
@@ -760,7 +760,7 @@ namespace Nop.Services.Orders
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, int storeId,
+            Product product, string storeId,
             string attributesXml, decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
@@ -1024,7 +1024,7 @@ namespace Nop.Services.Orders
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> AddToCart(Customer customer, Product product,
-            ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
+            ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true)
@@ -1143,8 +1143,6 @@ namespace Nop.Services.Orders
                         IsTaxExempt = product.IsTaxExempt,
                         IsGiftCard = product.IsGiftCard,
                         ShoppingCartTypeId = (int)shoppingCartType,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = customer.ShoppingCartItems.Count > 0 ? customer.ShoppingCartItems.Max(x=>x.Id)+1:1,
                         CreatedOnUtc = now,
                         UpdatedOnUtc = now
                     };
@@ -1177,7 +1175,7 @@ namespace Nop.Services.Orders
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> UpdateShoppingCartItem(Customer customer,
-            int shoppingCartItemId, string attributesXml,
+            string shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null, 
             int quantity = 1, bool resetCheckoutData = true)
@@ -1221,7 +1219,7 @@ namespace Nop.Services.Orders
                         _customerService.UpdateShoppingCartItem(shoppingCartItem);
 
                         //event notification
-                        //_eventPublisher.EntityUpdated(shoppingCartItem);
+                        _eventPublisher.EntityUpdated(shoppingCartItem);
                     }
                 }
                 else

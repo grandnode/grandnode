@@ -307,7 +307,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
+        protected virtual List<string> GetChildCategoryIds(string parentCategoryId)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
                 parentCategoryId, 
@@ -315,7 +315,7 @@ namespace Nop.Web.Controllers
                 _storeContext.CurrentStore.Id);
             return _cacheManager.Get(cacheKey, () =>
             {
-                var categoriesIds = new List<int>();
+                var categoriesIds = new List<string>();
                 var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
                 foreach (var category in categories)
                 {
@@ -334,23 +334,13 @@ namespace Nop.Web.Controllers
         /// <param name="allCategories">All available categories; pass null to load them internally</param>
         /// <returns>Category models</returns>
         [NonAction]
-        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
+        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(string rootCategoryId,
             bool loadSubCategories = true,IList<Category> allCategories = null)
         {
             var result = new List<CategorySimpleModel>();
 
-            //little hack for performance optimization.
-            //we know that this method is used to load top and left menu for categories.
-            //it'll load all categories anyway.
-            //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
-            //so we load all categories at once
-            //if you don't like this implementation if you can uncomment the line below (old behavior) and comment several next lines (before foreach)
-            //var categories = _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId);
             if (allCategories == null)
             {
-                //load categories if null passed
-                //we implemeneted it this way for performance optimization - recursive iterations (below)
-                //this way all categories are loaded only once
                 allCategories = _categoryService.GetAllCategories();
             }
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
@@ -373,7 +363,7 @@ namespace Nop.Web.Controllers
                         category.Id);
                     categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
                     {
-                        var categoryIds = new List<int>();
+                        var categoryIds = new List<string>();
                         categoryIds.Add(category.Id);
                         //include subcategories
                         if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
@@ -415,7 +405,7 @@ namespace Nop.Web.Controllers
         #region Categories
         
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
+        public ActionResult Category(string categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null)
@@ -543,7 +533,7 @@ namespace Nop.Web.Controllers
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
                     featuredProducts = _productService.SearchProducts(
-                       categoryIds: new List<int> { category.Id },
+                       categoryIds: new List<string> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
@@ -555,7 +545,7 @@ namespace Nop.Web.Controllers
                     //cache indicates that the category has featured products
                     //let's load them
                     featuredProducts = _productService.SearchProducts(
-                       categoryIds: new List<int> { category.Id },
+                       categoryIds: new List<string> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
@@ -567,7 +557,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            var categoryIds = new List<int>();
+            var categoryIds = new List<string>();
             categoryIds.Add(category.Id);
             if (_catalogSettings.ShowProductsFromSubcategories)
             {
@@ -618,16 +608,16 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
+        public ActionResult CategoryNavigation(string currentCategoryId, string currentProductId)
         {
             //get active category
-            int activeCategoryId = 0;
-            if (currentCategoryId > 0)
+            string activeCategoryId = "";
+            if (!String.IsNullOrEmpty(currentCategoryId))
             {
                 //category details page
                 activeCategoryId = currentCategoryId;
             }
-            else if (currentProductId > 0)
+            else if (!String.IsNullOrEmpty(currentProductId))
             {
                 //product details page
                 var productCategories = _productService.GetProductById(currentProductId).ProductCategories; //_categoryService.GetProductCategoriesByProductId(currentProductId);
@@ -639,7 +629,7 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0).ToList());
+            var cachedModel = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels("").ToList());
 
             var model = new CategoryNavigationModel
             {
@@ -658,7 +648,7 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
-            var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () => PrepareCategorySimpleModels(0));
+            var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () => PrepareCategorySimpleModels(""));
 
             //top menu topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
@@ -734,7 +724,7 @@ namespace Nop.Web.Controllers
         #region Manufacturers
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
+        public ActionResult Manufacturer(string manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
@@ -899,7 +889,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ManufacturerNavigation(int currentManufacturerId)
+        public ActionResult ManufacturerNavigation(string currentManufacturerId)
         {
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
@@ -944,7 +934,7 @@ namespace Nop.Web.Controllers
         #region Vendors
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Vendor(int vendorId, CatalogPagingFilteringModel command)
+        public ActionResult Vendor(string vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null || vendor.Deleted || !vendor.Active)
@@ -1120,7 +1110,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
+        public ActionResult ProductsByTag(string productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
             if (productTag == null)
@@ -1312,17 +1302,17 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    var categoryIds = new List<int>();
-                    int manufacturerId = 0;
+                    var categoryIds = new List<string>();
+                    string manufacturerId = "";
                     decimal? minPriceConverted = null;
                     decimal? maxPriceConverted = null;
                     bool searchInDescriptions = false;
-                    int vendorId = 0;
+                    string vendorId = "";
                     if (model.adv)
                     {
                         //advanced search
                         var categoryId = model.cid;
-                        if (categoryId > 0)
+                        if (!String.IsNullOrEmpty(categoryId))
                         {
                             categoryIds.Add(categoryId);
                             if (model.isc)

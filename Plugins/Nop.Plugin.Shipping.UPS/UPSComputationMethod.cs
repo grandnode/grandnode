@@ -733,7 +733,7 @@ namespace Nop.Plugin.Shipping.UPS
                 return response;
             }
 
-            if (getShippingOptionRequest.ShippingAddress.CountryId == 0)
+            if (String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId))
             {
                 response.AddError("Shipping country is not set");
                 return response;

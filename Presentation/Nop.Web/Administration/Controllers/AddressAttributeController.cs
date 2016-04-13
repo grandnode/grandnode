@@ -136,7 +136,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -201,7 +201,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -219,7 +219,7 @@ namespace Nop.Admin.Controllers
 
         //list
         [HttpPost]
-        public ActionResult ValueList(int addressAttributeId, DataSourceRequest command)
+        public ActionResult ValueList(string addressAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -241,7 +241,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult ValueCreatePopup(int addressAttributeId)
+        public ActionResult ValueCreatePopup(string addressAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -273,8 +273,6 @@ namespace Nop.Admin.Controllers
             {
                 var cav = new AddressAttributeValue
                 {
-                    Id = addressAttribute.AddressAttributeValues.Count > 0 ? addressAttribute.AddressAttributeValues.Max(x=>x.Id) + 1: 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     AddressAttributeId = model.AddressAttributeId,
                     Name = model.Name,
                     IsPreSelected = model.IsPreSelected,
@@ -307,7 +305,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult ValueEditPopup(int id, int addressAttributeId)
+        public ActionResult ValueEditPopup(string id, string addressAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();

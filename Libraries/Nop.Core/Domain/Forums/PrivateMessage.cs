@@ -13,17 +13,17 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier who sent the message
         /// </summary>
-        public int FromCustomerId { get; set; }
+        public string FromCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier who should receive the message
         /// </summary>
-        public int ToCustomerId { get; set; }
+        public string ToCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the subject

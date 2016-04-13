@@ -84,17 +84,17 @@ namespace Nop.Admin.Models.Discounts
 
         public partial class DiscountRequirementMetaInfo : BaseNopModel
         {
-            public int DiscountRequirementId { get; set; }
+            public string DiscountRequirementId { get; set; }
             public string RuleName { get; set; }
             public string ConfigurationUrl { get; set; }
         }
 
         public partial class DiscountUsageHistoryModel : BaseNopEntityModel
         {
-            public int DiscountId { get; set; }
+            public string DiscountId { get; set; }
 
             [NopResourceDisplayName("Admin.Promotions.Discounts.History.Order")]
-            public int OrderId { get; set; }
+            public string OrderId { get; set; }
 
             [NopResourceDisplayName("Admin.Promotions.Discounts.History.OrderTotal")]
             public string OrderTotal { get; set; }
@@ -105,7 +105,7 @@ namespace Nop.Admin.Models.Discounts
 
         public partial class AppliedToCategoryModel : BaseNopModel
         {
-            public int CategoryId { get; set; }
+            public string CategoryId { get; set; }
 
             public string CategoryName { get; set; }
         }
@@ -115,15 +115,15 @@ namespace Nop.Admin.Models.Discounts
             [AllowHtml]
             public string SearchCategoryName { get; set; }
 
-            public int DiscountId { get; set; }
+            public string DiscountId { get; set; }
 
-            public int[] SelectedCategoryIds { get; set; }
+            public string[] SelectedCategoryIds { get; set; }
         }
 
 
         public partial class AppliedToManufacturerModel : BaseNopModel
         {
-            public int ManufacturerId { get; set; }
+            public string ManufacturerId { get; set; }
 
             public string ManufacturerName { get; set; }
         }
@@ -133,15 +133,15 @@ namespace Nop.Admin.Models.Discounts
             [AllowHtml]
             public string SearchManufacturerName { get; set; }
 
-            public int DiscountId { get; set; }
+            public string DiscountId { get; set; }
 
-            public int[] SelectedManufacturerIds { get; set; }
+            public string[] SelectedManufacturerIds { get; set; }
         }
 
 
         public partial class AppliedToProductModel : BaseNopModel
         {
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             public string ProductName { get; set; }
         }
@@ -160,13 +160,13 @@ namespace Nop.Admin.Models.Discounts
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
+            public string SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
+            public string SearchVendorId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
@@ -176,9 +176,9 @@ namespace Nop.Admin.Models.Discounts
             public IList<SelectListItem> AvailableVendors { get; set; }
             public IList<SelectListItem> AvailableProductTypes { get; set; }
 
-            public int DiscountId { get; set; }
+            public string DiscountId { get; set; }
 
-            public int[] SelectedProductIds { get; set; }
+            public string[] SelectedProductIds { get; set; }
         }
 
         #endregion

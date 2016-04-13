@@ -53,8 +53,8 @@ namespace Nop.Web.Controllers
             string cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
-                var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
-                var states = _stateProvinceService.GetStateProvincesByCountryId(country != null ? country.Id : 0, _workContext.WorkingLanguage.Id).ToList();
+                var country = _countryService.GetCountryById(countryId);
+                var states = _stateProvinceService.GetStateProvincesByCountryId(country != null ? country.Id : "", _workContext.WorkingLanguage.Id).ToList();
                 var result = (from s in states
                               select new { id = s.Id, name = s.GetLocalized(x => x.Name) })
                               .ToList();
@@ -65,11 +65,11 @@ namespace Nop.Web.Controllers
                     //country is not selected ("choose country" item)
                     if (addSelectStateItem)
                     {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Address.SelectState") });
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Address.SelectState") });
                     }
                     else
                     {
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Address.OtherNonUS") });
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Address.OtherNonUS") });
                     }
                 }
                 else
@@ -78,14 +78,14 @@ namespace Nop.Web.Controllers
                     if (result.Count == 0)
                     {
                         //country does not have states
-                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Address.OtherNonUS") });
+                        result.Insert(0, new { id = "", name = _localizationService.GetResource("Address.OtherNonUS") });
                     }
                     else
                     {
                         //country has some states
                         if (addSelectStateItem)
                         {
-                            result.Insert(0, new { id = 0, name = _localizationService.GetResource("Address.SelectState") });
+                            result.Insert(0, new { id = "", name = _localizationService.GetResource("Address.SelectState") });
                         }
                     }
                 }

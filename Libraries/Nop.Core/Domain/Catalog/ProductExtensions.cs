@@ -14,23 +14,21 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>A list of required product IDs</returns>
-        public static int[] ParseRequiredProductIds(this Product product)
+        public static string[] ParseRequiredProductIds(this Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             if (String.IsNullOrEmpty(product.RequiredProductIds))
-                return new int[0];
+                return new string[0];
 
-            var ids = new List<int>();
+            var ids = new List<string>();
 
             foreach (var idStr in product.RequiredProductIds
                 .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim()))
             {
-                int id;
-                if (int.TryParse(idStr, out id))
-                    ids.Add(id);
+                ids.Add(idStr);                    
             }
 
             return ids.ToArray();

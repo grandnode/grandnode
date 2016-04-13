@@ -158,10 +158,10 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="mimeType">MIME type</param>
         /// <returns>Picture binary</returns>
-        protected virtual byte[] LoadPictureFromFile(int pictureId, string mimeType)
+        protected virtual byte[] LoadPictureFromFile(string pictureId, string mimeType)
         {
             string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);
+            string fileName = string.Format("{0}_0.{1}", pictureId, lastPart);
             var filePath = GetPictureLocalPath(fileName);
             if (!File.Exists(filePath))
                 return new byte[0];
@@ -174,10 +174,10 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
-        protected virtual void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
+        protected virtual void SavePictureInFile(string pictureId, byte[] pictureBinary, string mimeType)
         {
             string lastPart = GetFileExtensionFromMimeType(mimeType);
-            string fileName = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);
+            string fileName = string.Format("{0}_0.{1}", pictureId, lastPart);
             File.WriteAllBytes(GetPictureLocalPath(fileName), pictureBinary);
         }
 
@@ -191,7 +191,7 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException("picture");
 
             string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
-            string fileName = string.Format("{0}_0.{1}", picture.Id.ToString("0000000"), lastPart);
+            string fileName = string.Format("{0}_0.{1}", picture.Id, lastPart);
             string filePath = GetPictureLocalPath(fileName);
             if (File.Exists(filePath))
             {
@@ -205,7 +205,7 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected virtual void DeletePictureThumbs(Picture picture)
         {
-            string filter = string.Format("{0}*.*", picture.Id.ToString("0000000"));
+            string filter = string.Format("{0}*.*", picture.Id);
             var thumbDirectoryPath = CommonHelper.MapPath("~/content/images/thumbs");
             string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (string currentFileName in currentFiles)
@@ -422,7 +422,7 @@ namespace Nop.Services.Media
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        public virtual string GetPictureUrl(int pictureId,
+        public virtual string GetPictureUrl(string pictureId,
             int targetSize = 0,
             bool showDefaultPicture = true, 
             string storeLocation = null, 
@@ -482,8 +482,8 @@ namespace Nop.Services.Media
                 if (targetSize == 0)
                 {
                     thumbFileName = !String.IsNullOrEmpty(seoFileName) ?
-                        string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), seoFileName, lastPart) :
-                        string.Format("{0}.{1}", picture.Id.ToString("0000000"), lastPart);
+                        string.Format("{0}_{1}.{2}", picture.Id, seoFileName, lastPart) :
+                        string.Format("{0}.{1}", picture.Id, lastPart);
                     var thumbFilePath = GetThumbLocalPath(thumbFileName);
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
@@ -493,8 +493,8 @@ namespace Nop.Services.Media
                 else
                 {
                     thumbFileName = !String.IsNullOrEmpty(seoFileName) ?
-                        string.Format("{0}_{1}_{2}.{3}", picture.Id.ToString("0000000"), seoFileName, targetSize, lastPart) :
-                        string.Format("{0}_{1}.{2}", picture.Id.ToString("0000000"), targetSize, lastPart);
+                        string.Format("{0}_{1}_{2}.{3}", picture.Id, seoFileName, targetSize, lastPart) :
+                        string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
                     var thumbFilePath = GetThumbLocalPath(thumbFileName);
                     if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
@@ -563,11 +563,8 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
         /// <returns>Picture</returns>
-        public virtual Picture GetPictureById(int pictureId)
+        public virtual Picture GetPictureById(string pictureId)
         {
-            if (pictureId == 0)
-                return null;
-
             return _pictureRepository.GetById(pictureId);
         }
 
@@ -665,7 +662,7 @@ namespace Nop.Services.Media
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        public virtual Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
+        public virtual Picture UpdatePicture(string pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
             bool isNew = true, bool validateBinary = true)
         {
@@ -709,7 +706,7 @@ namespace Nop.Services.Media
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="seoFilename">The SEO filename</param>
         /// <returns>Picture</returns>
-        public virtual Picture SetSeoFilename(int pictureId, string seoFilename)
+        public virtual Picture SetSeoFilename(string pictureId, string seoFilename)
         {
             var picture = GetPictureById(pictureId);
             if (picture == null)
@@ -795,18 +792,7 @@ namespace Nop.Services.Media
                         {
                             var pictureBinary = LoadPictureBinary(picture, !value);
 
-                            //we used the code below before. but it's too slow
-                            //let's do it manually (uncommented code) - copy some logic from "UpdatePicture" method
-                            /*just update a picture (all required logic is in "UpdatePicture" method)
-                            we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown when "moving" pictures
-                            UpdatePicture(picture.Id,
-                                          pictureBinary,
-                                          picture.MimeType,
-                                          picture.SeoFilename,
-                                          true,
-                                          false);*/
                             if (value)
-                                //delete from file system. now it's in the database
                                 DeletePictureOnFileSystem(picture);
                             else
                                 //now on file system

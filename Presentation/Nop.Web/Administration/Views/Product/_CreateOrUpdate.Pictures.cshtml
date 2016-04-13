@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 {
     <div>
         <div id="productpictures-grid"></div>
@@ -130,7 +130,7 @@
                     displayOrder: displayOrder,
                     overrideAltAttribute: overrideAltAttribute,
                     overrideTitleAttribute: overrideTitleAttribute,
-                    productId: @Model.Id
+                    productId: '@Model.Id'
                 };
                 addAntiForgeryToken(postData);
 

@@ -72,7 +72,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             model.TransactModeValues = payPalDirectPaymentSettings.TransactMode.ToSelectList();
 
             model.ActiveStoreScopeConfiguration = storeScope;
-            if (storeScope > 0)
+            if (!String.IsNullOrEmpty(storeScope))
             {
                 model.UseSandbox_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope);
                 model.TransactModeId_OverrideForStore = _settingService.SettingExists(payPalDirectPaymentSettings, x => x.TransactMode, storeScope);
@@ -110,39 +110,39 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.UseSandbox_OverrideForStore || storeScope == 0)
+            if (model.UseSandbox_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.UseSandbox, storeScope);
 
-            if (model.TransactModeId_OverrideForStore || storeScope == 0)
+            if (model.TransactModeId_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.TransactMode, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.TransactMode, storeScope);
 
-            if (model.ApiAccountName_OverrideForStore || storeScope == 0)
+            if (model.ApiAccountName_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.ApiAccountName, storeScope);
 
-            if (model.ApiAccountPassword_OverrideForStore || storeScope == 0)
+            if (model.ApiAccountPassword_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.ApiAccountPassword, storeScope);
 
-            if (model.Signature_OverrideForStore || storeScope == 0)
+            if (model.Signature_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.Signature, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.Signature, storeScope);
 
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
+            if (model.AdditionalFee_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.AdditionalFee, storeScope);
 
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
+            if (model.AdditionalFeePercentage_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(payPalDirectPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
 
             //now clear settings cache
@@ -334,7 +334,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                             var initialOrder = _orderService.GetOrderByGuid(orderNumberGuid);
                             if (initialOrder != null)
                             {
-                                var recurringPayments = _orderService.SearchRecurringPayments(0, 0, initialOrder.Id, null, 0 , int.MaxValue);
+                                var recurringPayments = _orderService.SearchRecurringPayments("", "", initialOrder.Id, null, 0 , int.MaxValue);
                                 foreach (var rp in recurringPayments)
                                 {
                                     switch (newPaymentStatus)
@@ -423,7 +423,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                             else
                                             {
                                                 //not valid
-                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.OrderNumber);
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
@@ -454,7 +454,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                             else
                                             {
                                                 //not valid
-                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.OrderNumber);
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note

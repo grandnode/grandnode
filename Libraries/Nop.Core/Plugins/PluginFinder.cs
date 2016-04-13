@@ -85,13 +85,13 @@ namespace Nop.Core.Plugins
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
         /// <param name="storeId">Store identifier to check</param>
         /// <returns>true - available; false - no</returns>
-        public virtual bool AuthenticateStore(PluginDescriptor pluginDescriptor, int storeId)
+        public virtual bool AuthenticateStore(PluginDescriptor pluginDescriptor, string storeId)
         {
             if (pluginDescriptor == null)
                 throw new ArgumentNullException("pluginDescriptor");
 
             //no validation required
-            if (storeId == 0)
+            if (String.IsNullOrEmpty(storeId))
                 return true;
 
             if (pluginDescriptor.LimitedToStores.Count == 0)
@@ -118,7 +118,7 @@ namespace Nop.Core.Plugins
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
         public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, 
-            int storeId = 0, string group = null) where T : class, IPlugin
+            string storeId = "", string group = null) where T : class, IPlugin
         {
             return GetPluginDescriptors<T>(loadMode, storeId, group).Select(p => p.Instance<T>());
         }
@@ -131,7 +131,7 @@ namespace Nop.Core.Plugins
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            int storeId = 0, string group = null)
+            string storeId = "", string group = null)
         {
             //ensure plugins are loaded
             EnsurePluginsAreLoaded();
@@ -148,7 +148,7 @@ namespace Nop.Core.Plugins
         /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
-            int storeId = 0, string group = null) 
+            string storeId = "", string group = null) 
             where T : class, IPlugin
         {
             return GetPluginDescriptors(loadMode, storeId, group)

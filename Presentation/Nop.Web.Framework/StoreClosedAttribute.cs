@@ -70,8 +70,8 @@ namespace Nop.Web.Framework
                     .Where(t => t.AccessibleWhenStoreClosed)
                     .Select(t => t.Id)
                     .ToList();
-                var requestedTopicId = filterContext.RouteData.Values["topicId"] as int?;
-                if (requestedTopicId.HasValue && allowedTopicIds.Contains(requestedTopicId.Value))
+                var requestedTopicId = filterContext.RouteData.Values["topicId"].ToString();
+                if (!String.IsNullOrEmpty(requestedTopicId) && allowedTopicIds.Contains(requestedTopicId))
                     return;
             }
 

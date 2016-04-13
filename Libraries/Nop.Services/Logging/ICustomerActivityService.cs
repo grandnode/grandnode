@@ -40,7 +40,7 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <returns>Activity log type item</returns>
-        ActivityLogType GetActivityTypeById(int activityLogTypeId);
+        ActivityLogType GetActivityTypeById(string activityLogTypeId);
         
         /// <summary>
         /// Inserts an activity log item
@@ -49,7 +49,7 @@ namespace Nop.Services.Logging
         /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        ActivityLog InsertActivity(string systemKeyword, int entityKeyId, string comment, params object[] commentParams);
+        ActivityLog InsertActivity(string systemKeyword, string entityKeyId, string comment, params object[] commentParams);
 
         /// <summary>
         /// Inserts an activity log item
@@ -59,7 +59,7 @@ namespace Nop.Services.Logging
         /// <param name="customer">The customer</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        ActivityLog InsertActivity(string systemKeyword, int entityKeyId,
+        ActivityLog InsertActivity(string systemKeyword, string entityKeyId,
             string comment, Customer customer, params object[] commentParams);
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int? customerId = null, int activityLogTypeId = 0,
+            DateTime? createdOnTo = null, string customerId = "", string activityLogTypeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Stats Activity log items</returns>
         IPagedList<ActivityStats> GetStatsActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int activityLogTypeId = 0,
+            DateTime? createdOnTo = null, string activityLogTypeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         IPagedList<ActivityLog> GetCategoryActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int categoryId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+            DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets manufacturer activity log items
@@ -117,7 +117,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         IPagedList<ActivityLog> GetManufacturerActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int manufacturerId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+            DateTime? createdOnTo = null, string manufacturerId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets product activity log items
@@ -129,14 +129,14 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         IPagedList<ActivityLog> GetProductActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int productId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+            DateTime? createdOnTo = null, string productId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets an activity log item
         /// </summary>
         /// <param name="activityLogId">Activity log identifier</param>
         /// <returns>Activity log item</returns>
-        ActivityLog GetActivityById(int activityLogId);
+        ActivityLog GetActivityById(string activityLogId);
 
         /// <summary>
         /// Clears activity log

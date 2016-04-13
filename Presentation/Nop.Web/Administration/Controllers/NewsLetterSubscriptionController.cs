@@ -61,14 +61,14 @@ namespace Nop.Admin.Controllers
             var model = new NewsLetterSubscriptionListModel();
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //active
             model.ActiveList.Add(new SelectListItem
             {
-                Value = "0",
+                Value = "",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
             });
             model.ActiveList.Add(new SelectListItem
@@ -83,7 +83,7 @@ namespace Nop.Admin.Controllers
             });
 
             //customer roles
-            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var cr in _customerService.GetAllCustomerRoles(true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString() });
 
@@ -141,7 +141,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SubscriptionDelete(int id)
+        public ActionResult SubscriptionDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();

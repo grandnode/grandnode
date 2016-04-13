@@ -60,11 +60,11 @@ namespace Nop.Admin.Models.Plugins
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
     }
     public partial class PluginLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.FriendlyName")]
         [AllowHtml]

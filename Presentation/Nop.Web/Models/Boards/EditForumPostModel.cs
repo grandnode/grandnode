@@ -8,8 +8,8 @@ namespace Nop.Web.Models.Boards
     [Validator(typeof(EditForumPostValidator))]
     public partial class EditForumPostModel
     {
-        public int Id { get; set; }
-        public int ForumTopicId { get; set; }
+        public string Id { get; set; }
+        public string ForumTopicId { get; set; }
 
         public bool IsEdit { get; set; }
 

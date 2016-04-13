@@ -17,7 +17,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the associated order item identifier
         /// </summary>
-        public int PurchasedWithOrderItemId { get; set; }
+        public string PurchasedWithOrderItemId { get; set; }
 
         /// <summary>
         /// Gets or sets the gift card type identifier

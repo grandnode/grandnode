@@ -20,7 +20,7 @@ namespace Nop.Services.Catalog
         /// <param name="parentId">Parent category identifier</param>
         /// <param name="ignoreCategoriesWithoutExistingParent">A value indicating whether categories without parent category in provided category list (source) should be ignored</param>
         /// <returns>Sorted categories</returns>
-        public static IList<Category> SortCategoriesForTree(this IList<Category> source, int parentId = 0, bool ignoreCategoriesWithoutExistingParent = false)
+        public static IList<Category> SortCategoriesForTree(this IList<Category> source, string parentId = "", bool ignoreCategoriesWithoutExistingParent = false)
         {
             if (source == null)
                 throw new ArgumentNullException("source");
@@ -50,7 +50,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryId">Category identifier</param>
         /// <returns>A ProductCategory that has the specified values; otherwise null</returns>
         public static ProductCategory FindProductCategory(this IList<ProductCategory> source,
-            int productId, int categoryId)
+            string productId, string categoryId)
         {
             foreach (var productCategory in source)
                 if (productCategory.ProductId == productId && productCategory.CategoryId == categoryId)
@@ -70,7 +70,7 @@ namespace Nop.Services.Catalog
         /// <returns>Formatted breadcrumb</returns>
         public static string GetFormattedBreadCrumb(this Category category,
             ICategoryService categoryService,
-            string separator = ">>", int languageId = 0)
+            string separator = ">>", string languageId = "")
         {
             string result = string.Empty;
 
@@ -97,7 +97,7 @@ namespace Nop.Services.Catalog
         /// <returns>Formatted breadcrumb</returns>
         public static string GetFormattedBreadCrumb(this Category category,
             IList<Category> allCategories,
-            string separator = ">>", int languageId = 0)
+            string separator = ">>", string languageId = "")
         {
             string result = string.Empty;
 
@@ -134,7 +134,7 @@ namespace Nop.Services.Catalog
             var result = new List<Category>();
 
             //used to prevent circular references
-            var alreadyProcessedCategoryIds = new List<int>();
+            var alreadyProcessedCategoryIds = new List<string>();
 
             while (category != null && //not null                
                 (showHidden || category.Published) && //published
@@ -173,7 +173,7 @@ namespace Nop.Services.Catalog
             var result = new List<Category>();
 
             //used to prevent circular references
-            var alreadyProcessedCategoryIds = new List<int>();
+            var alreadyProcessedCategoryIds = new List<string>();
 
             while (category != null && //not null                
                 (showHidden || category.Published) && //published

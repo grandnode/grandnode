@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Country identifier; null for unknow country
         /// </summary>
-        public int? CountryId { get; set; }
+        public string CountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the number of orders

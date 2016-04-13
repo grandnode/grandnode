@@ -7,6 +7,7 @@ using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
+using System;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 {
@@ -54,7 +55,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             model.ShippableProductRequired = checkMoneyOrderPaymentSettings.ShippableProductRequired;
 
             model.ActiveStoreScopeConfiguration = storeScope;
-            if (storeScope > 0)
+            if (!String.IsNullOrEmpty(storeScope))
             {
                 model.DescriptionText_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope);
                 model.AdditionalFee_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope);
@@ -86,24 +87,24 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.DescriptionText_OverrideForStore || storeScope == 0)
+            if (model.DescriptionText_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope);
 
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
+            if (model.AdditionalFee_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope);
 
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
+            if (model.AdditionalFeePercentage_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
 
-            if (model.ShippableProductRequired_OverrideForStore || storeScope == 0)
+            if (model.ShippableProductRequired_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
 
             //now clear settings cache

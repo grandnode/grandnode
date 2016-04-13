@@ -79,16 +79,16 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="storeService">Store service</param>
         /// <param name="workContext">Work context</param>
         /// <returns>Store ID; 0 if we are in a shared mode</returns>
-        public virtual int GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
+        public virtual string GetActiveStoreScopeConfiguration(IStoreService storeService, IWorkContext workContext)
         {
             //ensure that we have 2 (or more) stores
             if (storeService.GetAllStores().Count < 2)
-                return 0;
+                return "";
 
 
-            var storeId = workContext.CurrentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
+            var storeId = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
             var store = storeService.GetStoreById(storeId);
-            return store != null ? store.Id : 0;
+            return store != null ? store.Id : "";
         }
 
 
@@ -176,7 +176,7 @@ namespace Nop.Web.Framework.Controllers
         /// <param name="languageService">Language service</param>
         /// <param name="locales">Locales</param>
         /// <param name="configure">Configure action</param>
-        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, int> configure) where TLocalizedModelLocal : ILocalizedModelLocal
+        protected virtual void AddLocales<TLocalizedModelLocal>(ILanguageService languageService, IList<TLocalizedModelLocal> locales, Action<TLocalizedModelLocal, string> configure) where TLocalizedModelLocal : ILocalizedModelLocal
         {
             foreach (var language in languageService.GetAllLanguages(true))
             {

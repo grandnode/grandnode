@@ -36,7 +36,7 @@ namespace Nop.Admin.Models.Catalog
         public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.CategoryTemplate")]
-        public int CategoryTemplateId { get; set; }
+        public string CategoryTemplateId { get; set; }
         public IList<SelectListItem> AvailableCategoryTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
@@ -56,11 +56,11 @@ namespace Nop.Admin.Models.Catalog
         public string SeName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Parent")]
-        public int ParentCategoryId { get; set; }
+        public string ParentCategoryId { get; set; }
 
         [UIHint("Picture")]
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Picture")]
-        public int PictureId { get; set; }
+        public string PictureId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.PageSize")]
         public int PageSize { get; set; }
@@ -99,14 +99,14 @@ namespace Nop.Admin.Models.Catalog
         public bool SubjectToAcl { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        public string[] SelectedCustomerRoleIds { get; set; }
 
         //Store mapping
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
 
         public IList<SelectListItem> AvailableCategories { get; set; }
@@ -114,16 +114,16 @@ namespace Nop.Admin.Models.Catalog
 
         //discounts
         public List<DiscountModel> AvailableDiscounts { get; set; }
-        public int[] SelectedDiscountIds { get; set; }
+        public string[] SelectedDiscountIds { get; set; }
 
 
         #region Nested classes
 
         public partial class CategoryProductModel : BaseNopEntityModel
         {
-            public int CategoryId { get; set; }
+            public string CategoryId { get; set; }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Product")]
             public string ProductName { get; set; }
@@ -150,13 +150,13 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
+            public string SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
+            public string SearchVendorId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
@@ -166,9 +166,9 @@ namespace Nop.Admin.Models.Catalog
             public IList<SelectListItem> AvailableVendors { get; set; }
             public IList<SelectListItem> AvailableProductTypes { get; set; }
 
-            public int CategoryId { get; set; }
+            public string CategoryId { get; set; }
 
-            public int[] SelectedProductIds { get; set; }
+            public string[] SelectedProductIds { get; set; }
         }
 
         public partial class ActivityLogModel : BaseNopEntityModel
@@ -180,7 +180,7 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Categories.ActivityLog.CreatedOn")]
             public DateTime CreatedOn { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Categories.ActivityLog.Customer")]
-            public int CustomerId { get; set; }
+            public string CustomerId { get; set; }
             public string CustomerEmail { get; set; }
         }
 
@@ -190,7 +190,7 @@ namespace Nop.Admin.Models.Catalog
 
     public partial class CategoryLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
         [AllowHtml]

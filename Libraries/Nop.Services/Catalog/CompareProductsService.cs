@@ -51,9 +51,9 @@ namespace Nop.Services.Catalog
         /// Gets a "compare products" identifier list
         /// </summary>
         /// <returns>"compare products" identifier list</returns>
-        protected virtual List<int> GetComparedProductIds()
+        protected virtual List<string> GetComparedProductIds()
         {
-            var productIds = new List<int>();
+            var productIds = new List<string>();
             HttpCookie compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
             if (compareCookie == null)
                 return productIds;
@@ -62,9 +62,8 @@ namespace Nop.Services.Catalog
                 return productIds;
             foreach (string productId in values)
             {
-                int prodId = int.Parse(productId);
-                if (!productIds.Contains(prodId))
-                    productIds.Add(prodId);
+                if (!productIds.Contains(productId))
+                    productIds.Add(productId);
             }
 
             return productIds;
@@ -96,7 +95,7 @@ namespace Nop.Services.Catalog
         {
             var products = new List<Product>();
             var productIds = GetComparedProductIds();
-            foreach (int productId in productIds)
+            foreach (string productId in productIds)
             {
                 var product = _productService.GetProductById(productId);
                 if (product != null && product.Published)
@@ -109,10 +108,10 @@ namespace Nop.Services.Catalog
         /// Removes a product from a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual void RemoveProductFromCompareList(int productId)
+        public virtual void RemoveProductFromCompareList(string productId)
         {
             var oldProductIds = GetComparedProductIds();
-            var newProductIds = new List<int>();
+            var newProductIds = new List<string>();
             newProductIds.AddRange(oldProductIds);
             newProductIds.Remove(productId);
 
@@ -120,7 +119,7 @@ namespace Nop.Services.Catalog
             if (compareCookie == null)
                 return;
             compareCookie.Values.Clear();
-            foreach (int newProductId in newProductIds)
+            foreach (string newProductId in newProductIds)
                 compareCookie.Values.Add("CompareProductIds", newProductId.ToString());
             compareCookie.Expires = DateTime.Now.AddDays(10.0);
             _httpContext.Response.Cookies.Set(compareCookie);
@@ -130,12 +129,12 @@ namespace Nop.Services.Catalog
         /// Adds a product to a "compare products" list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual void AddProductToCompareList(int productId)
+        public virtual void AddProductToCompareList(string productId)
         {
             var oldProductIds = GetComparedProductIds();
-            var newProductIds = new List<int>();
+            var newProductIds = new List<string>();
             newProductIds.Add(productId);
-            foreach (int oldProductId in oldProductIds)
+            foreach (string oldProductId in oldProductIds)
                 if (oldProductId != productId)
                     newProductIds.Add(oldProductId);
 
@@ -147,7 +146,7 @@ namespace Nop.Services.Catalog
             }
             compareCookie.Values.Clear();
             int i = 1;
-            foreach (int newProductId in newProductIds)
+            foreach (string newProductId in newProductIds)
             {
                 compareCookie.Values.Add("CompareProductIds", newProductId.ToString());
                 if (i == _catalogSettings.CompareProductsNumber)

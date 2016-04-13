@@ -4,8 +4,8 @@ namespace Nop.Web.Models.Boards
 {
     public partial class ForumPostModel
     {
-        public int Id { get; set; }
-        public int ForumTopicId { get; set; }
+        public string Id { get; set; }
+        public string ForumTopicId { get; set; }
         public string ForumTopicSeName { get; set; }
 
         public string FormattedText { get; set; }
@@ -13,7 +13,7 @@ namespace Nop.Web.Models.Boards
         public bool IsCurrentCustomerAllowedToEditPost { get; set; }
         public bool IsCurrentCustomerAllowedToDeletePost { get; set; }
         
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public bool AllowViewingProfiles { get; set; }
         public string CustomerAvatarUrl { get; set; }
         public string CustomerName { get; set; }

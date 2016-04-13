@@ -382,7 +382,7 @@
         {
             case AttributeControlType.DropdownList:
                 {
-                    pictureAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}('{2}',{3});}});\n", controlId, pictureAdjustmentFuncName, controlId, attribute.ProductId);
+                    pictureAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}('{2}','{3}');}});\n", controlId, pictureAdjustmentFuncName, controlId, attribute.ProductId);
 
                     foreach (var pictureSize in pictureSizes)
                     {
@@ -425,7 +425,7 @@
                 {
                     foreach (var attributeValue in attribute.Values)
                     {
-                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, attributeValue.Id, pictureAdjustmentFuncName, controlId, attributeValue.Id, attribute.ProductId);
+                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}','{5}');}});\n", controlId, attributeValue.Id, pictureAdjustmentFuncName, controlId, attributeValue.Id, attribute.ProductId);
                         foreach (var pictureSize in pictureSizes)
                         {
                             var pictureUrl = attributeValue.PictureModel.ImageUrl;
@@ -447,7 +447,7 @@
                 {
                     foreach (var attributeValue in attribute.Values)
                     {
-                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, attributeValue.Id, pictureAdjustmentFuncName, controlId, attributeValue.Id, attribute.ProductId);
+                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}','{5}');}});\n", controlId, attributeValue.Id, pictureAdjustmentFuncName, controlId, attributeValue.Id, attribute.ProductId);
                         foreach (var pictureSize in pictureSizes)
                         {
                             var pictureUrl = attributeValue.PictureModel.ImageUrl;

@@ -35,7 +35,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId);
+        NewsLetterSubscription GetNewsLetterSubscriptionById(string newsLetterSubscriptionId);
 
         /// <summary>
         /// Gets a newsletter subscription by newsletter subscription GUID
@@ -50,7 +50,7 @@ namespace Nop.Services.Messages
         /// <param name="email">The newsletter subscription email</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, int storeId);
+        NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, string storeId);
 
         /// <summary>
         /// Gets the newsletter subscription list
@@ -63,6 +63,6 @@ namespace Nop.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
         IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
-            int storeId = 0, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue);
+            string storeId = "", bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue);
     }
 }

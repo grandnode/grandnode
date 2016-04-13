@@ -101,11 +101,11 @@ namespace Nop.Web.Extensions
                 model.Email = address.Email;
                 model.Company = address.Company;
                 model.CountryId = address.CountryId;
-                model.CountryName = address.CountryId != 0
+                model.CountryName = !String.IsNullOrEmpty(address.CountryId)
                     ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(address.CountryId).GetLocalized(x => x.Name) 
                     : null;
                 model.StateProvinceId = address.StateProvinceId;
-                model.StateProvinceName = address.StateProvinceId != 0 
+                model.StateProvinceName = !String.IsNullOrEmpty(address.StateProvinceId)
                     ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(address.StateProvinceId).GetLocalized(x => x.Name)
                     : null;
                 model.City = address.City;
@@ -159,7 +159,7 @@ namespace Nop.Web.Extensions
                         throw new ArgumentNullException("stateProvinceService");
                     var languageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
                     var states = stateProvinceService
-                        .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 0, languageId)
+                        .GetStateProvincesByCountryId(!String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "", languageId)
                         .ToList();
                     if (states.Count > 0)
                     {
@@ -346,13 +346,12 @@ namespace Nop.Web.Extensions
                 if (model.FaxNumber != null)
                     model.FaxNumber = model.FaxNumber.Trim();
             }
-            destination.Id = model.Id;
             destination.FirstName = model.FirstName;
             destination.LastName = model.LastName;
             destination.Email = model.Email;
             destination.Company = model.Company;
-            destination.CountryId = model.CountryId.HasValue ? model.CountryId.Value : 0;
-            destination.StateProvinceId = model.StateProvinceId.HasValue ? model.StateProvinceId.Value : 0;
+            destination.CountryId = !String.IsNullOrEmpty(model.CountryId) ? model.CountryId : "";
+            destination.StateProvinceId = !String.IsNullOrEmpty(model.StateProvinceId) ? model.StateProvinceId : "";
             destination.City = model.City;
             destination.Address1 = model.Address1;
             destination.Address2 = model.Address2;

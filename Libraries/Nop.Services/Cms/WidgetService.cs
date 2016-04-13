@@ -41,7 +41,7 @@ namespace Nop.Services.Cms
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Widgets</returns>
-        public virtual IList<IWidgetPlugin> LoadActiveWidgets(int storeId = 0)
+        public virtual IList<IWidgetPlugin> LoadActiveWidgets(string storeId = "")
         {
             return LoadAllWidgets(storeId)
                    .Where(x => _widgetSettings.ActiveWidgetSystemNames.Contains(x.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
@@ -54,7 +54,7 @@ namespace Nop.Services.Cms
         /// <param name="widgetZone">Widget zone</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Widgets</returns>
-        public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string  widgetZone, int storeId = 0)
+        public virtual IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string  widgetZone, string storeId = "")
         {
             if (String.IsNullOrWhiteSpace(widgetZone))
                 return new List<IWidgetPlugin>();
@@ -83,7 +83,7 @@ namespace Nop.Services.Cms
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Widgets</returns>
-        public virtual IList<IWidgetPlugin> LoadAllWidgets(int storeId = 0)
+        public virtual IList<IWidgetPlugin> LoadAllWidgets(string storeId = "")
         {
             return _pluginFinder.GetPlugins<IWidgetPlugin>(storeId: storeId).ToList();
         }

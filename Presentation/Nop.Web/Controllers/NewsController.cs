@@ -131,7 +131,7 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
                         commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
+                            customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId), 
                             _mediaSettings.AvatarPictureSize, 
                             _customerSettings.DefaultAvatarEnabled,
                             defaultPictureType:PictureType.Avatar);
@@ -204,7 +204,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ListRss(int languageId)
+        public ActionResult ListRss(string languageId)
         {
             var feed = new SyndicationFeed(
                                     string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
@@ -227,7 +227,7 @@ namespace Nop.Web.Controllers
             return new RssActionResult { Feed = feed };
         }
 
-        public ActionResult NewsItem(int newsItemId)
+        public ActionResult NewsItem(string newsItemId)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -251,7 +251,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("add-comment")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
+        public ActionResult NewsCommentAdd(string newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -276,8 +276,6 @@ namespace Nop.Web.Controllers
                 var comment = new NewsComment
                 {
                     NewsItemId = newsItem.Id,
-                    _id = ObjectId.GenerateNewId().ToString(),
-                    Id = newsItem.NewsComments.Count > 0 ? newsItem.NewsComments.Max(x=>x.Id)+1:1,
                     CustomerId = _workContext.CurrentCustomer.Id,
                     CommentTitle = model.AddNewComment.CommentTitle,
                     CommentText = model.AddNewComment.CommentText,

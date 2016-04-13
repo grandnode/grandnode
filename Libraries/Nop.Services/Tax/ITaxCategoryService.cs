@@ -25,7 +25,7 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <returns>Tax category</returns>
-        TaxCategory GetTaxCategoryById(int taxCategoryId);
+        TaxCategory GetTaxCategoryById(string taxCategoryId);
 
         /// <summary>
         /// Inserts a tax category

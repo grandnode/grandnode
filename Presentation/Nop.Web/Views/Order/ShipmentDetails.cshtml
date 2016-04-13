@@ -7,14 +7,14 @@
 }
 <div class="page shipment-details-page">
     <div class="page-title">
-        <h1>@string.Format(T("Order.Shipments.Information").Text, Model.Id)</h1>
+        <h1>@string.Format(T("Order.Shipments.Information").Text, Model.ShipmentNumber)</h1>
     </div>
     <div class="page-body">
 
         <div class="shipment-details-area">
             <ul class="shipping-details">
                 <li class="title">
-                    @T("Order.Shipments.Order#")@Model.Order.Id
+                    @T("Order.Shipments.Order#")@Model.Order.OrderNumber
                 </li>
                 <li class="shipping-method">
                     @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod

@@ -19,7 +19,7 @@ namespace Nop.Services.Tasks
         /// </summary>
         /// <param name="taskId">Task identifier</param>
         /// <returns>Task</returns>
-        ScheduleTask GetTaskById(int taskId);
+        ScheduleTask GetTaskById(string taskId);
 
         /// <summary>
         /// Gets a task by its type

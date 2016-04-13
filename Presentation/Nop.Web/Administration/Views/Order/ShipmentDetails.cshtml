@@ -49,7 +49,7 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
+            @T("Admin.Orders.Shipments.ViewDetails") - @Model.ShipmentNumber @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
         </div>
         <div class="options">
             <a href="@Url.Action("PdfPackagingSlip", new { shipmentId = Model.Id })" class="k-button">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
@@ -63,7 +63,7 @@
                 @Html.NopLabelFor(model => model.OrderId)
             </td>
             <td class="adminData">
-                <a href="@Url.Action("Edit", "Order", new {Id = Model.OrderId})">@Model.OrderId - @T("Admin.Common.View")</a>
+                <a href="@Url.Action("Edit", "Order", new {Id = Model.OrderId})">@Model.OrderNumber - @T("Admin.Common.View")</a>
             </td>
         </tr>
         <tr>

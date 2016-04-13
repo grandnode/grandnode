@@ -42,7 +42,7 @@ namespace Nop.Web.Models.Order
         public AddressModel BillingAddress { get; set; }
 
         public string VatNumber { get; set; }
-
+        public int OrderNumber { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentMethodStatus { get; set; }
         public bool CanRePostProcessPayment { get; set; }
@@ -79,7 +79,7 @@ namespace Nop.Web.Models.Order
         {
             public Guid OrderItemGuid { get; set; }
             public string Sku { get; set; }
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
             public string UnitPrice { get; set; }
@@ -89,8 +89,8 @@ namespace Nop.Web.Models.Order
             public string RentalInfo { get; set; }
 
             //downloadable product properties
-            public int DownloadId { get; set; }
-            public int LicenseId { get; set; }
+            public string DownloadId { get; set; }
+            public string LicenseId { get; set; }
         }
 
         public partial class TaxRate : BaseNopModel
@@ -110,12 +110,13 @@ namespace Nop.Web.Models.Order
             public bool HasDownload { get; set; }
             public string Note { get; set; }
             public DateTime CreatedOn { get; set; }
-            public int OrderId { get; set; }
+            public string OrderId { get; set; }
         }
 
         public partial class ShipmentBriefModel : BaseNopEntityModel
         {
             public string TrackingNumber { get; set; }
+            public int ShipmentNumber { get; set; }
             public DateTime? ShippedDate { get; set; }
             public DateTime? DeliveryDate { get; set; }
         }

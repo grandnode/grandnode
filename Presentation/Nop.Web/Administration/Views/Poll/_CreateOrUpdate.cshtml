@@ -133,7 +133,7 @@
 }
 @helper TabAnswers()
 {
-if (Model.Id > 0)
+if (!String.IsNullOrEmpty(Model.Id))
 {
         <table class="adminContent">
             <tr>
@@ -181,7 +181,7 @@ if (Model.Id > 0)
                                             Name: { editable: true, type: "string" },
                                             NumberOfVotes: { editable: false, type: "number" },
                                             DisplayOrder: { editable: true, type: "number" },
-                                            Id: { editable: false, type: "number" }
+                                            Id: { editable: false, type: "string" }
                                         }
                                     }
                                 },

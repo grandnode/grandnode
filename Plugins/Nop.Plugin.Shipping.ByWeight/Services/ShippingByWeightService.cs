@@ -59,9 +59,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             });
         }
 
-        public virtual ShippingByWeightRecord FindRecord(int shippingMethodId,
-            int storeId, int warehouseId, 
-            int countryId, int stateProvinceId, string zip, decimal weight)
+        public virtual ShippingByWeightRecord FindRecord(string shippingMethodId,
+            string storeId, string warehouseId, 
+            string countryId, string stateProvinceId, string zip, decimal weight)
         {
             if (zip == null)
                 zip = string.Empty;
@@ -79,7 +79,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                     matchedByStore.Add(sbw);
             if (matchedByStore.Count == 0)
                 foreach (var sbw in existingRates)
-                    if (sbw.StoreId == 0)
+                    if (String.IsNullOrEmpty(sbw.StoreId))
                         matchedByStore.Add(sbw);
 
             //filter by warehouse
@@ -89,7 +89,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                     matchedByWarehouse.Add(sbw);
             if (matchedByWarehouse.Count == 0)
                 foreach (var sbw in matchedByStore)
-                    if (sbw.WarehouseId == 0)
+                    if (String.IsNullOrEmpty(sbw.WarehouseId))
                         matchedByWarehouse.Add(sbw);
 
             //filter by country
@@ -99,7 +99,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                     matchedByCountry.Add(sbw);
             if (matchedByCountry.Count == 0)
                 foreach (var sbw in matchedByWarehouse)
-                    if (sbw.CountryId == 0)
+                    if (String.IsNullOrEmpty(sbw.CountryId))
                         matchedByCountry.Add(sbw);
 
             //filter by state/province
@@ -109,7 +109,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                     matchedByStateProvince.Add(sbw);
             if (matchedByStateProvince.Count == 0)
                 foreach (var sbw in matchedByCountry)
-                    if (sbw.StateProvinceId == 0)
+                    if (String.IsNullOrEmpty(sbw.StateProvinceId))
                         matchedByStateProvince.Add(sbw);
 
 
@@ -128,9 +128,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             return matchedByZip.FirstOrDefault();
         }
 
-        public virtual ShippingByWeightRecord GetById(int shippingByWeightRecordId)
+        public virtual ShippingByWeightRecord GetById(string shippingByWeightRecordId)
         {
-            if (shippingByWeightRecordId == 0)
+            if (String.IsNullOrEmpty(shippingByWeightRecordId))
                 return null;
 
             return _sbwRepository.GetById(shippingByWeightRecordId);

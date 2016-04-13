@@ -160,13 +160,10 @@ namespace Nop.Services.Catalog
                         else
                         {
                             //attributes with values
-                            int attributeValueId;
-                            if (int.TryParse(valueStr, out attributeValueId))
-                            {
                                 if (product.ProductAttributeMappings.Where(x => x.ProductAttributeId == attributes[i].ProductAttributeId).FirstOrDefault() != null)
                                 {
 
-                                    var attributeValue = product.ProductAttributeMappings.Where(x => x.ProductAttributeId == attributes[i].ProductAttributeId).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == attributeValueId).FirstOrDefault(); //_productAttributeService.GetProductAttributeValueById(attributeValueId);
+                                    var attributeValue = product.ProductAttributeMappings.Where(x => x.ProductAttributeId == attributes[i].ProductAttributeId).FirstOrDefault().ProductAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); 
                                     if (attributeValue != null)
                                     {
                                         formattedAttribute = string.Format("{0}: {1}", productAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
@@ -201,7 +198,6 @@ namespace Nop.Services.Catalog
                                             }
                                         }
                                     }
-                                }
 
                                 //encode (if required)
                                 if (htmlEncode)

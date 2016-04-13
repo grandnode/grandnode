@@ -6,17 +6,18 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a product manufacturer mapping
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductManufacturer : BaseEntity
+    public partial class ProductManufacturer : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        [BsonIgnore]
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the manufacturer identifier
         /// </summary>
-        public int ManufacturerId { get; set; }
+        public string ManufacturerId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product is featured

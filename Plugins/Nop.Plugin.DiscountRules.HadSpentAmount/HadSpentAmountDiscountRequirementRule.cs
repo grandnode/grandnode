@@ -71,12 +71,12 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount
         /// <param name="discountId">Discount identifier</param>
         /// <param name="discountRequirementId">Discount requirement identifier (if editing)</param>
         /// <returns>URL</returns>
-        public string GetConfigurationUrl(int discountId, int? discountRequirementId)
+        public string GetConfigurationUrl(string discountId, string discountRequirementId)
         {
             //configured in RouteProvider.cs
             string result = "Plugins/DiscountRulesHadSpentAmount/Configure/?discountId=" + discountId;
-            if (discountRequirementId.HasValue)
-                result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
+            if (!String.IsNullOrEmpty(discountRequirementId))
+                result += string.Format("&discountRequirementId={0}", discountRequirementId);
             return result;
         }
 

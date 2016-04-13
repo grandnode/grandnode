@@ -844,17 +844,20 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
         }
-
+        
         //categories
         public void HandleEvent(EntityInserted<Category> eventMessage)
         {
+            
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
+            
         }
         public void HandleEvent(EntityUpdated<Category> eventMessage)
         {
@@ -864,6 +867,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
@@ -875,11 +879,13 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
         }
 
         //product categories
+        
         public void HandleEvent(EntityInserted<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
@@ -901,7 +907,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY);
         }
-
+        
         //products
         public void HandleEvent(EntityInserted<Product> eventMessage)
         {
@@ -940,6 +946,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //related products
+        
         public void HandleEvent(EntityInserted<RelatedProduct> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
@@ -952,7 +959,7 @@ namespace Nop.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
         }
-
+        
         //specification attributes
         public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
         {
@@ -966,6 +973,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
 
         //specification attribute options
+        
         public void HandleEvent(EntityUpdated<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
@@ -993,12 +1001,13 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
-
+        
         //Product attributes
         public void HandleEvent(EntityDeleted<ProductAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
         }
+        
         //Product attributes
         public void HandleEvent(EntityInserted<ProductAttributeMapping> eventMessage)
         {
@@ -1014,7 +1023,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY);
         }
-
+        
         //Topics
         public void HandleEvent(EntityInserted<Topic> eventMessage)
         {
@@ -1109,7 +1118,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
-
+        
         //Polls
         public void HandleEvent(EntityInserted<Poll> eventMessage)
         {
@@ -1256,12 +1265,12 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
         }
 
-        //shopping cart items
+        //shopping cart items        
         public void HandleEvent(EntityUpdated<ShoppingCartItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
-
+        
         //product reviews
         public void HandleEvent(EntityDeleted<ProductReview> eventMessage)
         {

@@ -4,7 +4,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Models
 {
     public class FixedShippingRateModel
     {
-        public int ShippingMethodId { get; set; }
+        public string ShippingMethodId { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName")]
         public string ShippingMethodName { get; set; }

@@ -18,12 +18,12 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets a store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets a customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets an order unique identifier. Used when order is not saved yet (payment gateways that do not redirect a customer to a third-party URL)
@@ -86,7 +86,7 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets an initial (parent) order identifier if order is recurring
         /// </summary>
-        public int InitialOrderId { get; set; }
+        public string InitialOrderId { get; set; }
         
         /// <summary>
         /// Gets or sets the cycle length

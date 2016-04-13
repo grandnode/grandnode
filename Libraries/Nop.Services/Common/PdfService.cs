@@ -161,7 +161,7 @@ namespace Nop.Services.Common
         /// <param name="order">Order</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
         /// <returns>A path of generated file</returns>
-        public virtual string PrintOrderToPdf(Order order, int languageId)
+        public virtual string PrintOrderToPdf(Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -183,7 +183,7 @@ namespace Nop.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        public virtual void PrintOrdersToPdf(Stream stream, IList<Order> orders, int languageId = 0)
+        public virtual void PrintOrdersToPdf(Stream stream, IList<Order> orders, string languageId = "")
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -222,7 +222,7 @@ namespace Nop.Services.Common
                 var pdfSettingsByStore = _settingContext.LoadSetting<PdfSettings>(order.StoreId);
 
 
-                var lang = _languageService.GetLanguageById(languageId == 0 ? order.CustomerLanguageId : languageId);
+                var lang = _languageService.GetLanguageById(languageId == "" ? order.CustomerLanguageId : languageId);
                 if (lang == null || !lang.Published)
                     lang = _workContext.WorkingLanguage;
 
@@ -242,7 +242,7 @@ namespace Nop.Services.Common
                 var anchor = new Anchor(store.Url.Trim(new [] { '/' }), font);
                 anchor.Reference = store.Url;
 
-                var cellHeader = new PdfPCell(new Phrase(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.Id), titleFont));
+                var cellHeader = new PdfPCell(new Phrase(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.OrderNumber), titleFont));
                 cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
                 cellHeader.Phrase.Add(new Phrase(anchor));
                 cellHeader.Phrase.Add(new Phrase(Environment.NewLine));
@@ -308,12 +308,12 @@ namespace Nop.Services.Common
                 if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
                 {
                     var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId);
-                    billingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.BillingAddress.City, order.BillingAddress.StateProvinceId != 0 ? state.GetLocalized(x => x.Name, lang.Id) : "", order.BillingAddress.ZipPostalCode), font));
+                    billingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.BillingAddress.City, order.BillingAddress.StateProvinceId != "" ? state.GetLocalized(x => x.Name, lang.Id) : "", order.BillingAddress.ZipPostalCode), font));
                 }
-                if (_addressSettings.CountryEnabled && order.BillingAddress.CountryId != 0)
+                if (_addressSettings.CountryEnabled && order.BillingAddress.CountryId != "")
                 {
                     var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId);
-                    billingAddress.AddCell(new Paragraph("   " + String.Format("{0}", order.BillingAddress.CountryId != 0 ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
+                    billingAddress.AddCell(new Paragraph("   " + String.Format("{0}", order.BillingAddress.CountryId != "" ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
                 }
                 //VAT number
                 if (!String.IsNullOrEmpty(order.VatNumber))
@@ -382,12 +382,12 @@ namespace Nop.Services.Common
                         if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
                         {
                             var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId);
-                            shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvinceId != 0 ? state.GetLocalized(x => x.Name, lang.Id) : "", order.ShippingAddress.ZipPostalCode), font));
+                            shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvinceId != "" ? state.GetLocalized(x => x.Name, lang.Id) : "", order.ShippingAddress.ZipPostalCode), font));
                         }
-                        if (_addressSettings.CountryEnabled && order.ShippingAddress.CountryId != 0)
+                        if (_addressSettings.CountryEnabled && order.ShippingAddress.CountryId != "")
                         {
                             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId);
-                            shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}", order.ShippingAddress.CountryId != 0 ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
+                            shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}", order.ShippingAddress.CountryId != "" ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
                         }
                         //custom attributes
                         var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
@@ -955,7 +955,7 @@ namespace Nop.Services.Common
         /// <param name="stream">Stream</param>
         /// <param name="shipments">Shipments</param>
         /// <param name="languageId">Language identifier; 0 to use a language used when placing an order</param>
-        public virtual void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, int languageId = 0)
+        public virtual void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, string languageId = "")
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -994,7 +994,7 @@ namespace Nop.Services.Common
                 
                 var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(shipment.OrderId);
 
-                if (languageId == 0)
+                if (String.IsNullOrEmpty(languageId))
                 {
                     lang = _languageService.GetLanguageById(order.CustomerLanguageId);
                     if (lang == null || !lang.Published)
@@ -1007,8 +1007,8 @@ namespace Nop.Services.Common
                 addressTable.DefaultCell.Border = Rectangle.NO_BORDER;
                 addressTable.WidthPercentage = 100f;
 
-                addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Shipment", lang.Id), shipment.Id), titleFont));
-                addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Order", lang.Id), order.Id), titleFont));
+                addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Shipment", lang.Id), shipment.ShipmentNumber), titleFont));
+                addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Order", lang.Id), order.OrderNumber), titleFont));
 
                 if (!order.PickUpInStore)
                 {
@@ -1033,12 +1033,12 @@ namespace Nop.Services.Common
                                     order.ShippingAddress.Address2), font));
 
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
-                        addressTable.AddCell(new Paragraph(String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvinceId != 0
+                        addressTable.AddCell(new Paragraph(String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvinceId != ""
                                         ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId).GetLocalized(x => x.Name, lang.Id)
                                         : "", order.ShippingAddress.ZipPostalCode), font));
 
-                    if (_addressSettings.CountryEnabled && order.ShippingAddress.CountryId != 0)
-                        addressTable.AddCell(new Paragraph(String.Format("{0}", order.ShippingAddress.CountryId != 0
+                    if (_addressSettings.CountryEnabled && order.ShippingAddress.CountryId != "")
+                        addressTable.AddCell(new Paragraph(String.Format("{0}", order.ShippingAddress.CountryId != ""
                                         ? EngineContext.Current.Resolve <ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name, lang.Id)
                                         : ""), font));
 

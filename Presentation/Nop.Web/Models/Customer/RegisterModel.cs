@@ -111,13 +111,13 @@ namespace Nop.Web.Models.Customer
         public bool CountryEnabled { get; set; }
         public bool CountryRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.Country")]
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
 
         public bool StateProvinceEnabled { get; set; }
         public bool StateProvinceRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.StateProvince")]
-        public int StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
 
         public bool PhoneEnabled { get; set; }

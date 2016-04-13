@@ -60,8 +60,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
             }
             return localized;
@@ -79,8 +77,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
             }
             return localized;
@@ -157,7 +153,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -216,7 +212,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -241,7 +237,7 @@ namespace Nop.Admin.Controllers
 
         //list
         [HttpPost]
-        public ActionResult OptionList(int specificationAttributeId, DataSourceRequest command)
+        public ActionResult OptionList(string specificationAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -254,12 +250,7 @@ namespace Nop.Admin.Controllers
                         var model = x.ToModel();
                         //in order to save performance to do not check whether a product is deleted, etc
                         model.NumberOfAssociatedProducts = _specificationAttributeService
-                            .GetProductSpecificationAttributeCount(0, x.SpecificationAttributeId, x.Id);
-                        //locales
-                        //AddLocales(_languageService, model.Locales, (locale, languageId) =>
-                        //{
-                        //    locale.Name = x.GetLocalized(y => y.Name, languageId, false, false);
-                        //});
+                            .GetProductSpecificationAttributeCount("", x.SpecificationAttributeId, x.Id);
                         return model;
                     }),
                 Total = options.Count()
@@ -269,7 +260,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult OptionCreatePopup(int specificationAttributeId)
+        public ActionResult OptionCreatePopup(string specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -299,8 +290,6 @@ namespace Nop.Admin.Controllers
                 if (!model.EnableColorSquaresRgb)
                    sao.ColorSquaresRgb = null;
 
-                sao.Id = specificationAttribute.SpecificationAttributeOptions.Count > 0 ? specificationAttribute.SpecificationAttributeOptions.Max(x => x.Id) + 1 : 1;
-                sao._id = ObjectId.GenerateNewId().ToString();
                 sao.Locales = UpdateOptionLocales(sao, model);
                 specificationAttribute.SpecificationAttributeOptions.Add(sao);
                 _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);                
@@ -316,7 +305,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult OptionEditPopup(int id, int specificationAttributeId)
+        public ActionResult OptionEditPopup(string id, string specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -371,7 +360,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult OptionDelete(int id, int specificationAttributeId)
+        public ActionResult OptionDelete(string id, string specificationAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -379,9 +368,8 @@ namespace Nop.Admin.Controllers
             var sao = specificationAttribute.SpecificationAttributeOptions.Where(x => x.Id == id).FirstOrDefault();
             if (sao == null)
                 throw new ArgumentException("No specification attribute option found with the specified id");
-
-            specificationAttribute.SpecificationAttributeOptions.Remove(sao);
-            _specificationAttributeService.UpdateSpecificationAttribute(specificationAttribute);
+            
+            _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 
             return new NullJsonResult();
         }
@@ -395,7 +383,7 @@ namespace Nop.Admin.Controllers
             if (String.IsNullOrEmpty(attributeId))
                 throw new ArgumentNullException("attributeId");
 
-            var options = _specificationAttributeService.GetSpecificationAttributeById(Convert.ToInt32(attributeId)).SpecificationAttributeOptions;
+            var options = _specificationAttributeService.GetSpecificationAttributeById(attributeId).SpecificationAttributeOptions;
             var result = (from o in options
                           select new { id = o.Id, name = o.Name }).ToList();
             return Json(result, JsonRequestBehavior.AllowGet);

@@ -7,12 +7,12 @@ namespace Nop.Plugin.Widgets.NivoSlider.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
 
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Picture")]
         [UIHint("Picture")]
-        public int Picture1Id { get; set; }
+        public string Picture1Id { get; set; }
         public bool Picture1Id_OverrideForStore { get; set; }
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Text")]
         [AllowHtml]
@@ -25,7 +25,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Models
 
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Picture")]
         [UIHint("Picture")]
-        public int Picture2Id { get; set; }
+        public string Picture2Id { get; set; }
         public bool Picture2Id_OverrideForStore { get; set; }
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Text")]
         [AllowHtml]
@@ -38,7 +38,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Models
 
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Picture")]
         [UIHint("Picture")]
-        public int Picture3Id { get; set; }
+        public string Picture3Id { get; set; }
         public bool Picture3Id_OverrideForStore { get; set; }
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Text")]
         [AllowHtml]
@@ -51,7 +51,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Models
 
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Picture")]
         [UIHint("Picture")]
-        public int Picture4Id { get; set; }
+        public string Picture4Id { get; set; }
         public bool Picture4Id_OverrideForStore { get; set; }
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Text")]
         [AllowHtml]
@@ -64,7 +64,7 @@ namespace Nop.Plugin.Widgets.NivoSlider.Models
 
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Picture")]
         [UIHint("Picture")]
-        public int Picture5Id { get; set; }
+        public string Picture5Id { get; set; }
         public bool Picture5Id_OverrideForStore { get; set; }
         [NopResourceDisplayName("Plugins.Widgets.NivoSlider.Text")]
         [AllowHtml]

@@ -11,7 +11,7 @@ namespace Nop.Core.Plugins
         public PluginDescriptor()
         {
             this.SupportedVersions = new List<string>();
-            this.LimitedToStores = new List<int>();
+            this.LimitedToStores = new List<string>();
         }
 
 
@@ -81,7 +81,7 @@ namespace Nop.Core.Plugins
         /// <summary>
         /// Gets or sets the list of store identifiers in which this plugin is available. If empty, then this plugin is available in all stores
         /// </summary>
-        public virtual IList<int> LimitedToStores { get; set; }
+        public virtual IList<string> LimitedToStores { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating whether plugin is installed

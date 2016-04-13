@@ -13,7 +13,7 @@
     stores.Insert(0, new SelectListItem
     {
         Text = T("Admin.Configuration.Settings.StoreScope.AllStores").Text,
-        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = 0 }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = " " }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
         Selected = 0.Equals(Model.StoreId)
     });
 }
@@ -22,7 +22,7 @@
         <span class="title">@T("Admin.Configuration.Settings.StoreScope")</span>
         @Html.DropDownList("store-scope-configuration", stores, new { onchange = "setLocation(this.value);" })
     </div>
-    @if (Model.StoreId > 0)
+    @if (!String.IsNullOrEmpty(Model.StoreId))
     {
         <div class="check-all">
             <input type="checkbox" style="vertical-align: text-top" onclick="checkAllOverriddenStoreValue(this)">

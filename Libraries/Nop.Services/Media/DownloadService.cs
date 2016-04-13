@@ -47,9 +47,9 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="downloadId">Download identifier</param>
         /// <returns>Download</returns>
-        public virtual Download GetDownloadById(int downloadId)
+        public virtual Download GetDownloadById(string downloadId)
         {
-            if (downloadId == 0)
+            if (String.IsNullOrEmpty(downloadId))
                 return null;
 
             var _download = _downloadRepository.GetById(downloadId);
@@ -215,8 +215,7 @@ namespace Nop.Services.Media
                 return false;
 
             return IsDownloadAllowed(orderItem) &&
-                orderItem.LicenseDownloadId.HasValue &&
-                orderItem.LicenseDownloadId > 0;
+                !String.IsNullOrEmpty(orderItem.LicenseDownloadId);
         }
 
         #endregion

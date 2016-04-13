@@ -47,7 +47,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             model.TransactModeValues = manualPaymentSettings.TransactMode.ToSelectList();
 
             model.ActiveStoreScopeConfiguration = storeScope;
-            if (storeScope > 0)
+            if (!String.IsNullOrEmpty(storeScope))
             {
                 model.TransactModeId_OverrideForStore = _settingService.SettingExists(manualPaymentSettings, x => x.TransactMode, storeScope);
                 model.AdditionalFee_OverrideForStore = _settingService.SettingExists(manualPaymentSettings, x => x.AdditionalFee, storeScope);
@@ -78,19 +78,19 @@ namespace Nop.Plugin.Payments.Manual.Controllers
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
 
-            if (model.TransactModeId_OverrideForStore || storeScope == 0)
+            if (model.TransactModeId_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(manualPaymentSettings, x => x.TransactMode, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(manualPaymentSettings, x => x.TransactMode, storeScope);
 
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
+            if (model.AdditionalFee_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(manualPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(manualPaymentSettings, x => x.AdditionalFee, storeScope);
 
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
+            if (model.AdditionalFeePercentage_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(manualPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
 
             //now clear settings cache

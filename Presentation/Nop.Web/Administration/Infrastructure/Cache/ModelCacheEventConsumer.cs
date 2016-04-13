@@ -30,7 +30,7 @@ namespace Nop.Admin.Infrastructure.Cache
         public const string SPEC_ATTRIBUTES_MODEL_KEY = "Nop.pres.admin.product.specs";
         public const string SPEC_ATTRIBUTES_PATTERN_KEY = "Nop.pres.admin.product.specs";
 
-
+        
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()

@@ -5,17 +5,17 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Represents a gift card usage history entry
     /// </summary>
-    public partial class GiftCardUsageHistory : BaseEntity
+    public partial class GiftCardUsageHistory : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the gift card identifier
         /// </summary>
-        public int GiftCardId { get; set; }
+        public string GiftCardId { get; set; }
 
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public int UsedWithOrderId { get; set; }
+        public string UsedWithOrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the used value (amount)

@@ -28,7 +28,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets product id
         /// </summary>
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales

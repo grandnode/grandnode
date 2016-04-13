@@ -28,7 +28,7 @@ namespace Nop.Services.Common
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="addressAttributeId">Address attribute identifier</param>
         /// <returns>Address attribute value</returns>
-        IList<string> ParseValues(string attributesXml, int addressAttributeId);
+        IList<string> ParseValues(string attributesXml, string addressAttributeId);
 
         /// <summary>
         /// Adds an attribute

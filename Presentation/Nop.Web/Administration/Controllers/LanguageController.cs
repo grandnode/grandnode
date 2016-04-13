@@ -98,7 +98,7 @@ namespace Nop.Admin.Controllers
             model.AvailableCurrencies.Add(new SelectListItem
                 {
                     Text = "---",
-                    Value = "0"
+                    Value = ""
                 });
             var currencies = _currencyService.GetAllCurrencies(true);
             foreach (var currency in currencies)
@@ -172,7 +172,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var language = model.ToEntity();
-                language.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                language.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _languageService.InsertLanguage(language);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
@@ -191,7 +191,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-		public ActionResult Edit(int id)
+		public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -239,7 +239,7 @@ namespace Nop.Admin.Controllers
 
                 //update
                 language = model.ToEntity(language);
-                language.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                language.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
 
                 _languageService.UpdateLanguage(language);
 
@@ -268,7 +268,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -302,7 +302,7 @@ namespace Nop.Admin.Controllers
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
-		public ActionResult Resources(int languageId, DataSourceRequest command,
+		public ActionResult Resources(string languageId, DataSourceRequest command,
             Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
@@ -368,7 +368,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResourceAdd(int languageId, [Bind(Exclude = "Id")] LanguageResourceModel model)
+        public ActionResult ResourceAdd(string languageId, [Bind(Exclude = "Id")] LanguageResourceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -400,7 +400,7 @@ namespace Nop.Admin.Controllers
         }
         
         [HttpPost]
-        public ActionResult ResourceDelete(int id)
+        public ActionResult ResourceDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -417,7 +417,7 @@ namespace Nop.Admin.Controllers
         
         #region Export / Import
 
-        public ActionResult ExportXml(int id)
+        public ActionResult ExportXml(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -440,7 +440,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ImportXml(int id, FormCollection form)
+        public ActionResult ImportXml(string id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();

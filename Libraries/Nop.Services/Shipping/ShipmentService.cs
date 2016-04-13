@@ -73,8 +73,8 @@ namespace Nop.Services.Shipping
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Shipments</returns>
-        public virtual IPagedList<Shipment> GetAllShipments(int vendorId = 0, int warehouseId = 0,
-            int shippingCountryId = 0,
+        public virtual IPagedList<Shipment> GetAllShipments(string vendorId = "", string warehouseId = "",
+            string shippingCountryId = "",
             int shippingStateId = 0,
             string shippingCity = null,
             string trackingNumber = null,
@@ -84,46 +84,18 @@ namespace Nop.Services.Shipping
         {
 
             var builder = Builders<Shipment>.Filter;
-            var filter = builder.Where(s => s.OrderId != 0);
+            var filter = builder.Where(s => s.OrderId != "");
 
             //var query = _shipmentRepository.Table;
             if (!String.IsNullOrEmpty(trackingNumber))
                 filter = filter & builder.Where(s => s.TrackingNumber.Contains(trackingNumber));
-            /*
-            if (shippingCountryId > 0)
-                query = query.Where(s => s.Order.ShippingAddress.CountryId == shippingCountryId);
-            if (shippingStateId > 0)
-                query = query.Where(s => s.Order.ShippingAddress.StateProvinceId == shippingStateId);
-            if (!String.IsNullOrWhiteSpace(shippingCity))
-                query = query.Where(s => s.Order.ShippingAddress.City.Contains(shippingCity));
-            */
+
             if (loadNotShipped)
                 filter = filter & builder.Where(s => !s.ShippedDateUtc.HasValue);
             if (createdFromUtc.HasValue)
                 filter = filter & builder.Where(s => createdFromUtc.Value <= s.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 filter = filter & builder.Where(s => createdToUtc.Value >= s.CreatedOnUtc);
-            /*
-            if (vendorId > 0)
-            {
-                var queryVendorOrderItems = from orderItem in _orderItemRepository.Table
-                                             where orderItem.Product.VendorId == vendorId
-                                             select orderItem.Id;
-
-                query = from s in query
-                        where queryVendorOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
-                        select s;
-            }
-            
-            if (warehouseId > 0)
-            {
-                query = from s in query
-                        where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
-                        select s;
-            }
-            */
-            //query = query.OrderByDescending(s => s.CreatedOnUtc);
-
             var builderSort = Builders<Shipment>.Sort.Descending(x => x.CreatedOnUtc);
 
             var query = _shipmentRepository.Collection;
@@ -138,7 +110,7 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentIds">Shipment identifiers</param>
         /// <returns>Shipments</returns>
-        public virtual IList<Shipment> GetShipmentsByIds(int[] shipmentIds)
+        public virtual IList<Shipment> GetShipmentsByIds(string[] shipmentIds)
         {
             if (shipmentIds == null || shipmentIds.Length == 0)
                 return new List<Shipment>();
@@ -149,7 +121,7 @@ namespace Nop.Services.Shipping
             var shipments = query.ToList();
             //sort by passed identifiers
             var sortedOrders = new List<Shipment>();
-            foreach (int id in shipmentIds)
+            foreach (string id in shipmentIds)
             {
                 var shipment = shipments.Find(x => x.Id == id);
                 if (shipment != null)
@@ -159,7 +131,7 @@ namespace Nop.Services.Shipping
         }
 
 
-        public virtual IList<Shipment> GetShipmentsByOrder(int orderId)
+        public virtual IList<Shipment> GetShipmentsByOrder(string orderId)
         {
             return _shipmentRepository.Collection.Find(x => x.OrderId == orderId).ToListAsync().Result;
         }
@@ -169,11 +141,8 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentId">Shipment identifier</param>
         /// <returns>Shipment</returns>
-        public virtual Shipment GetShipmentById(int shipmentId)
+        public virtual Shipment GetShipmentById(string shipmentId)
         {
-            if (shipmentId == 0)
-                return null;
-
             return _shipmentRepository.GetById(shipmentId);
         }
 
@@ -185,7 +154,8 @@ namespace Nop.Services.Shipping
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
-
+            var shipmentExists = _shipmentRepository.Table.FirstOrDefault();
+            shipment.ShipmentNumber = shipmentExists != null ? _shipmentRepository.Table.Max(x=>x.ShipmentNumber) + 1 : 1;
             _shipmentRepository.Insert(shipment);
 
             //event notification
@@ -215,7 +185,7 @@ namespace Nop.Services.Shipping
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
         /// <returns>Quantity</returns>
-        public virtual int GetQuantityInShipments(Product product, int warehouseId,
+        public virtual int GetQuantityInShipments(Product product, string warehouseId,
             bool ignoreShipped, bool ignoreDelivered)
         {
             if (product == null)
@@ -228,7 +198,7 @@ namespace Nop.Services.Shipping
                 return 0;
 
             var query = _shipmentRepository.Table;
-            if (warehouseId > 0)
+            if (!String.IsNullOrEmpty(warehouseId))
                 query = query.Where(si => si.ShipmentItems.Any(x=>x.WarehouseId == warehouseId));
             if (ignoreShipped)
                 query = query.Where(si => !si.ShippedDateUtc.HasValue);

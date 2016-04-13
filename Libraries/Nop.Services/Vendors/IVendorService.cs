@@ -13,7 +13,7 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendorId">Vendor identifier</param>
         /// <returns>Vendor</returns>
-        Vendor GetVendorById(int vendorId);
+        Vendor GetVendorById(string vendorId);
 
         /// <summary>
         /// Delete a vendor
@@ -50,7 +50,7 @@ namespace Nop.Services.Vendors
         /// <param name="vendorId">The vendor identifier</param>
         /// <param name="vendorNoteId">The vendor note identifier</param>
         /// <returns>Vendor note</returns>
-        VendorNote GetVendorNoteById(int vendorId,int vendorNoteId);
+        VendorNote GetVendorNoteById(string vendorId,string vendorNoteId);
 
         /// <summary>
         /// Insert a vendor note

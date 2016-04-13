@@ -30,6 +30,6 @@ namespace Nop.Services.Messages
              string replyToAddress = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
             string attachmentFilePath = null, string attachmentFileName = null,
-            int attachedDownloadId = 0);
+            string attachedDownloadId = "");
     }
 }

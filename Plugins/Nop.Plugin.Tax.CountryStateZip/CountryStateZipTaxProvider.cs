@@ -68,10 +68,10 @@ namespace Nop.Plugin.Tax.CountryStateZip
                 .ToList()
                 );
 
-            int storeId = _storeContext.CurrentStore.Id;
-            int taxCategoryId = calculateTaxRequest.TaxCategoryId;
-            int countryId = calculateTaxRequest.Address.CountryId;
-            int stateProvinceId = calculateTaxRequest.Address.StateProvinceId;
+            string storeId = _storeContext.CurrentStore.Id;
+            string taxCategoryId = calculateTaxRequest.TaxCategoryId;
+            string countryId = calculateTaxRequest.Address.CountryId;
+            string stateProvinceId = calculateTaxRequest.Address.StateProvinceId;
             string zip = calculateTaxRequest.Address.ZipPostalCode;
 
 
@@ -95,7 +95,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
             //not found? use the default ones (ID == 0)
             if (matchedByStore.Count == 0)
                 foreach (var taxRate in existingRates)
-                    if (taxRate.StoreId == 0)
+                    if (!String.IsNullOrEmpty(taxRate.StoreId))
                         matchedByStore.Add(taxRate);
 
 
@@ -108,7 +108,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
             //not found? use the default ones (ID == 0)
             if (matchedByStateProvince.Count == 0)
                 foreach (var taxRate in matchedByStore)
-                    if (taxRate.StateProvinceId == 0)
+                    if (String.IsNullOrEmpty(taxRate.StateProvinceId))
                         matchedByStateProvince.Add(taxRate);
 
 

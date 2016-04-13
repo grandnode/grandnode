@@ -27,7 +27,7 @@ namespace Nop.Admin.Models.Catalog
 
     public partial class ProductTagLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
         [AllowHtml]

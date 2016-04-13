@@ -4,7 +4,7 @@ namespace Nop.Web.Models.Catalog
 {
     public partial class ProductSpecificationModel : BaseNopModel
     {
-        public int SpecificationAttributeId { get; set; }
+        public string SpecificationAttributeId { get; set; }
 
         public string SpecificationAttributeName { get; set; }
 

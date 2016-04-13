@@ -19,10 +19,10 @@ namespace Nop.Admin.Models.Catalog
         public string SearchProductName { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchCategory")]
-        public int SearchCategoryId { get; set; }
+        public string SearchCategoryId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchManufacturer")]
-        public int SearchManufacturerId { get; set; }
+        public string SearchManufacturerId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
         public int SearchProductTypeId { get; set; }
         public IList<SelectListItem> AvailableProductTypes { get; set; }

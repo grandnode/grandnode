@@ -4,13 +4,13 @@
 <table class="adminContent">
     <tr>
         <td>
-            @if (Model.Id == 0)
+            @if (String.IsNullOrEmpty(Model.Id))
             {
                 @T("Admin.Customers.CustomerReminder.Condition.SaveBeforeEdit")
             }
         </td>
     </tr>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <tr>
             <td>
@@ -58,7 +58,7 @@
                                     CustomerAttributeId: { editable: true, type: "string" },
                                     CustomerAttributeName: { editable: true, type: "string" },
                                     CustomerAttributeValue: { editable: true, type: "string" },
-                                    Id: { editable: false, type: "number" }
+                                    Id: { editable: false, type: "string" }
                                 }
                             }
                         },

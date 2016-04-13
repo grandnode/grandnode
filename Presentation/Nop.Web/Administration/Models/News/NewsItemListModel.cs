@@ -13,7 +13,7 @@ namespace Nop.Admin.Models.News
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.List.SearchStore")]
-        public int SearchStoreId { get; set; }
+        public string SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
     }
 }

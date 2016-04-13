@@ -80,7 +80,7 @@ namespace Nop.Services.Logging
         [Serializable]
         public class ActivityLogTypeForCaching
         {
-            public int Id { get; set; }
+            public string Id { get; set; }
             public string SystemKeyword { get; set; }
             public string Name { get; set; }
             public bool Enabled { get; set; }
@@ -178,11 +178,8 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <returns>Activity log type item</returns>
-        public virtual ActivityLogType GetActivityTypeById(int activityLogTypeId)
+        public virtual ActivityLogType GetActivityTypeById(string activityLogTypeId)
         {
-            if (activityLogTypeId == 0)
-                return null;
-
             return _activityLogTypeRepository.GetById(activityLogTypeId);
         }
 
@@ -193,7 +190,7 @@ namespace Nop.Services.Logging
         /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, int entityKeyId,
+        public virtual ActivityLog InsertActivity(string systemKeyword, string entityKeyId,
             string comment, params object[] commentParams)
         {
             return InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer, commentParams);
@@ -208,7 +205,7 @@ namespace Nop.Services.Logging
         /// <param name="customer">The customer</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, int entityKeyId,
+        public virtual ActivityLog InsertActivity(string systemKeyword, string entityKeyId,
             string comment, Customer customer, params object[] commentParams)
         {
             if (customer == null)
@@ -230,8 +227,7 @@ namespace Nop.Services.Logging
             activity.EntityKeyId = entityKeyId;
             activity.Comment = comment;
             activity.CreatedOnUtc = DateTime.UtcNow;
-            activity.ActivityLogType = new ActivityLogType();
-            activity.ActivityLogType.Id = activityType.Id;
+            activity.ActivityLogType = new ActivityLogType();            
             activity.ActivityLogType.Name = activityType.Name;
             activity.ActivityLogType.SystemKeyword = activityType.SystemKeyword;
             activity.IpAddress = _webHelper.GetCurrentIpAddress();
@@ -263,7 +259,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         public virtual IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int? customerId = null, int activityLogTypeId = 0,
+            DateTime? createdOnTo = null, string customerId = "", string activityLogTypeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
@@ -271,10 +267,10 @@ namespace Nop.Services.Logging
                 query = query.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
             if (createdOnTo.HasValue)
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
-            if (activityLogTypeId > 0)
+            if (!String.IsNullOrEmpty(activityLogTypeId))
                 query = query.Where(al => activityLogTypeId == al.ActivityLogTypeId);
-            if (customerId.HasValue)
-                query = query.Where(al => customerId.Value == al.CustomerId);
+            if (!String.IsNullOrEmpty(customerId))
+                query = query.Where(al => customerId == al.CustomerId);
 
             query = query.OrderByDescending(al => al.CreatedOnUtc);
 
@@ -292,7 +288,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         public virtual IPagedList<ActivityStats> GetStatsActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null,int activityLogTypeId = 0,
+            DateTime? createdOnTo = null,string activityLogTypeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
 
@@ -302,7 +298,7 @@ namespace Nop.Services.Logging
                 filter = filter & builder.Where(al => createdOnFrom.Value <= al.CreatedOnUtc);
             if (createdOnTo.HasValue)
                 filter = filter & builder.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
-            if (activityLogTypeId > 0)
+            if (!String.IsNullOrEmpty(activityLogTypeId))
                 filter = filter & builder.Where(al => activityLogTypeId == al.ActivityLogTypeId);
 
             var query = _activityLogRepository.Collection
@@ -336,7 +332,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         public virtual IPagedList<ActivityLog> GetCategoryActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int categoryId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+            DateTime? createdOnTo = null, string categoryId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
             if (createdOnFrom.HasValue)
@@ -365,7 +361,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         public virtual IPagedList<ActivityLog> GetManufacturerActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int manufacturerId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+            DateTime? createdOnTo = null, string manufacturerId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
             if (createdOnFrom.HasValue)
@@ -394,7 +390,7 @@ namespace Nop.Services.Logging
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
         public virtual IPagedList<ActivityLog> GetProductActivities(DateTime? createdOnFrom = null,
-            DateTime? createdOnTo = null, int productId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+            DateTime? createdOnTo = null, string productId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
             if (createdOnFrom.HasValue)
@@ -418,11 +414,8 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="activityLogId">Activity log identifier</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog GetActivityById(int activityLogId)
+        public virtual ActivityLog GetActivityById(string activityLogId)
         {
-            if (activityLogId == 0)
-                return null;
-
             return _activityLogRepository.GetById(activityLogId);
         }
 

@@ -518,7 +518,7 @@ namespace Nop.Admin.Controllers
                 .ToList();
             return PartialView(model);
         }
-        public ActionResult SetLanguage(int langid, string returnUrl = "")
+        public ActionResult SetLanguage(string langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
             if (language != null)
@@ -593,7 +593,7 @@ namespace Nop.Admin.Controllers
                 {
                     //language
                     string languageName;
-                    if (x.LanguageId == 0)
+                    if (String.IsNullOrEmpty(x.LanguageId))
                     {
                         languageName = _localizationService.GetResource("Admin.System.SeNames.Language.Standard");
                     }
@@ -649,7 +649,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         [HttpPost]
-        public ActionResult DeleteSelectedSeNames(ICollection<int> selectedIds)
+        public ActionResult DeleteSelectedSeNames(ICollection<string> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();

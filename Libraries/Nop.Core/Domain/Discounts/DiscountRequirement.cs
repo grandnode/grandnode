@@ -6,12 +6,12 @@ namespace Nop.Core.Domain.Discounts
     /// Represents a discount requirement
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class DiscountRequirement : BaseEntity
+    public partial class DiscountRequirement : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the discount identifier
         /// </summary>
-        public int DiscountId { get; set; }
+        public string DiscountId { get; set; }
         
         /// <summary>
         /// Gets or sets the discount requirement rule system name

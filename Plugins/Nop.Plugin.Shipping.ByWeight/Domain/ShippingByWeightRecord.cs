@@ -10,22 +10,22 @@ namespace Nop.Plugin.Shipping.ByWeight.Domain
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the warehouse identifier
         /// </summary>
-        public int WarehouseId { get; set; }
+        public string WarehouseId { get; set; }
 
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the state/province identifier
         /// </summary>
-        public int StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
 
         /// <summary>
         /// Gets or sets the zip
@@ -35,7 +35,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Domain
         /// <summary>
         /// Gets or sets the shipping method identifier
         /// </summary>
-        public int ShippingMethodId { get; set; }
+        public string ShippingMethodId { get; set; }
 
         /// <summary>
         /// Gets or sets the "from" value

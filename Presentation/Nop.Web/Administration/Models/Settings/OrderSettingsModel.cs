@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Settings
             GiftCards_Deactivated_OrderStatuses = new List<SelectListItem>();
         }
 
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.IsReOrderAllowed")]

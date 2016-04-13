@@ -20,7 +20,7 @@ namespace Nop.Admin.Models.Plugins
         [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Version")]
         public int SearchVersionId { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Category")]
-        public int SearchCategoryId { get; set; }
+        public string SearchCategoryId { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Price")]
         public int SearchPriceId { get; set; }
 

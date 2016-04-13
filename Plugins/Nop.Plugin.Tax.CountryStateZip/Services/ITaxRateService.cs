@@ -25,7 +25,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
         /// </summary>
         /// <param name="taxRateId">Tax rate identifier</param>
         /// <returns>Tax rate</returns>
-        TaxRate GetTaxRateById(int taxRateId);
+        TaxRate GetTaxRateById(string taxRateId);
 
         /// <summary>
         /// Inserts a tax rate

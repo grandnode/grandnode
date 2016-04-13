@@ -18,7 +18,7 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <returns>Filtered tier prices</returns>
         public static IList<TierPrice> FilterByStore(this IList<TierPrice> source,
-            int storeId)
+            string storeId)
         {
             if (source == null)
                 throw new ArgumentNullException("source");
@@ -27,7 +27,7 @@ namespace Nop.Services.Catalog
             foreach (var tierPrice in source)
             {
                 //check store requirement
-                if (tierPrice.StoreId > 0 && tierPrice.StoreId != storeId)
+                if (!String.IsNullOrEmpty(tierPrice.StoreId) && tierPrice.StoreId != storeId)
                     continue;
 
                 result.Add(tierPrice);
@@ -52,7 +52,7 @@ namespace Nop.Services.Catalog
             foreach (var tierPrice in source)
             {
                 //check customer role requirement
-                if (tierPrice.CustomerRoleId != 0)
+                if (!String.IsNullOrEmpty(tierPrice.CustomerRoleId))
                 {
                     if (customer == null)
                         continue;

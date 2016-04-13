@@ -12,7 +12,7 @@ namespace Nop.Web.Models.Common
 
         public IList<LanguageModel> AvailableLanguages { get; set; }
 
-        public int CurrentLanguageId { get; set; }
+        public string CurrentLanguageId { get; set; }
 
         public bool UseImages { get; set; }
     }

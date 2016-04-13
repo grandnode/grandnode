@@ -92,7 +92,7 @@ namespace Nop.Services.Tax
             //get country specified during registration?
             if (country == null && _customerSettings.CountryEnabled)
             {
-                var countryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                var countryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
                 country = _countryService.GetCountryById(countryId);
             }
 
@@ -132,14 +132,14 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <returns>Package for tax calculation</returns>
         protected virtual CalculateTaxRequest CreateCalculateTaxRequest(Product product, 
-            int taxCategoryId, Customer customer)
+            string taxCategoryId, Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var calculateTaxRequest = new CalculateTaxRequest();
             calculateTaxRequest.Customer = customer;
-            if (taxCategoryId > 0)
+            if (!String.IsNullOrEmpty(taxCategoryId))
             {
                 calculateTaxRequest.TaxCategoryId = taxCategoryId;
             }
@@ -233,7 +233,7 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <param name="taxRate">Calculated tax rate</param>
         /// <param name="isTaxable">A value indicating whether a request is taxable</param>
-        protected virtual void GetTaxRate(Product product, int taxCategoryId, 
+        protected virtual void GetTaxRate(Product product, string taxCategoryId, 
             Customer customer, out decimal taxRate, out bool isTaxable)
         {
             taxRate = decimal.Zero;
@@ -357,7 +357,7 @@ namespace Nop.Services.Tax
             bool includingTax, Customer customer, out decimal taxRate)
         {
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
-            int taxCategoryId = 0;
+            string taxCategoryId = "";
             return GetProductPrice(product, taxCategoryId, price, includingTax, 
                 customer, priceIncludesTax, out taxRate);
         }
@@ -373,7 +373,7 @@ namespace Nop.Services.Tax
         /// <param name="priceIncludesTax">A value indicating whether price already includes tax</param>
         /// <param name="taxRate">Tax rate</param>
         /// <returns>Price</returns>
-        public virtual decimal GetProductPrice(Product product, int taxCategoryId,
+        public virtual decimal GetProductPrice(Product product, string taxCategoryId,
             decimal price, bool includingTax, Customer customer,
             bool priceIncludesTax, out decimal taxRate)
         {
@@ -479,7 +479,7 @@ namespace Nop.Services.Tax
             {
                 return price;
             }
-            int taxClassId = _taxSettings.ShippingTaxClassId;
+            string taxClassId = _taxSettings.ShippingTaxClassId;
             bool priceIncludesTax = _taxSettings.ShippingPriceIncludesTax;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
@@ -531,7 +531,7 @@ namespace Nop.Services.Tax
             {
                 return price;
             }
-            int taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
+            string taxClassId = _taxSettings.PaymentMethodAdditionalFeeTaxClassId;
             bool priceIncludesTax = _taxSettings.PaymentMethodAdditionalFeeIncludesTax;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
@@ -601,7 +601,7 @@ namespace Nop.Services.Tax
             }
 
             bool priceIncludesTax = _taxSettings.PricesIncludeTax;
-            int taxClassId = checkoutAttribute.TaxCategoryId;
+            string taxClassId = checkoutAttribute.TaxCategoryId;
             return GetProductPrice(null, taxClassId, price, includingTax, customer,
                 priceIncludesTax, out taxRate);
         }
@@ -792,7 +792,7 @@ namespace Nop.Services.Tax
             if (!_taxSettings.EuVatEnabled)
                 return false;
 
-            if (address == null || address.CountryId == 0 || customer == null)
+            if (address == null || String.IsNullOrEmpty(address.CountryId) || customer == null)
                 return false;
 
             var country = _countryService.GetCountryById(address.CountryId);

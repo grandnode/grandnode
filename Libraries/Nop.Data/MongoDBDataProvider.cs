@@ -8,6 +8,7 @@ using System.Web.Hosting;
 using Nop.Core.Data;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Bson.Serialization.Conventions;
 
 namespace Nop.Data
 {
@@ -31,10 +32,11 @@ namespace Nop.Data
         /// </summary>
         public virtual void SetDatabaseInitializer()
         {
+            //BsonSerializer.RegisterSerializer<decimal>(new DecimalSerializer().WithRepresentation(BsonType.Double));
             BsonSerializer.RegisterSerializer(typeof(DateTime),
-             new DateTimeSerializer(DateTimeKind.Unspecified));
+             new DateTimeSerializer(DateTimeKind.Utc));
         }
-        
+
         #endregion
     }
 }

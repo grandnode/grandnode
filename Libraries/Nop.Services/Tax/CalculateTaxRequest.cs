@@ -21,6 +21,6 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets or sets a tax category identifier
         /// </summary>
-        public int TaxCategoryId { get; set; }
+        public string TaxCategoryId { get; set; }
     }
 }

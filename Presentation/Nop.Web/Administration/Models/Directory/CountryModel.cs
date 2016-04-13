@@ -60,12 +60,12 @@ namespace Nop.Admin.Models.Directory
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
     }
 
     public partial class CountryLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
         [AllowHtml]

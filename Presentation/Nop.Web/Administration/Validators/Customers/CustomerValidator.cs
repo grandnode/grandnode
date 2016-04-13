@@ -5,6 +5,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
+using System;
 
 namespace Nop.Admin.Validators.Customers
 {
@@ -18,7 +19,7 @@ namespace Nop.Admin.Validators.Customers
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
             {
                 RuleFor(x => x.CountryId)
-                    .NotEqual(0)
+                    .NotEqual("")
                     .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"));
             }
             if (customerSettings.CountryEnabled &&
@@ -32,7 +33,7 @@ namespace Nop.Admin.Validators.Customers
                     if (hasStates)
                     {
                         //if yes, then ensure that a state is selected
-                        if (x.StateProvinceId == 0)
+                        if (String.IsNullOrEmpty(x.StateProvinceId))
                         {
                             return new ValidationFailure("StateProvinceId", localizationService.GetResource("Account.Fields.StateProvince.Required"));
                         }

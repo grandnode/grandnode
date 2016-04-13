@@ -23,7 +23,7 @@ namespace Nop.Admin.Models.Logging
         public string IpAddress { get; set; }
 
         [NopResourceDisplayName("Admin.System.Log.Fields.Customer")]
-        public int? CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.System.Log.Fields.Customer")]
         public string CustomerEmail { get; set; }
 

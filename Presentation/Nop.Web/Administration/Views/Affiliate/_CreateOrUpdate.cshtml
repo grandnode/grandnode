@@ -19,7 +19,7 @@
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Affiliates.Info")
         </li>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
                 @T("Admin.Affiliates.Customers")
@@ -32,7 +32,7 @@
     <div>
         @TabInfo()
     </div>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
             @TabCustomers()
@@ -59,7 +59,7 @@
 @helper TabInfo()
 {
     <table class="adminContent">
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <tr>
                 <td class="adminTitle">

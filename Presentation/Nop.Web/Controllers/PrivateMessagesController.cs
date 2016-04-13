@@ -117,7 +117,7 @@ namespace Nop.Web.Controllers
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
             var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
-                0, _workContext.CurrentCustomer.Id, null, null, false, string.Empty, page, pageSize);
+                "", _workContext.CurrentCustomer.Id, null, null, false, string.Empty, page, pageSize);
 
             var inbox = new List<PrivateMessageModel>();
 
@@ -173,7 +173,7 @@ namespace Nop.Web.Controllers
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
             var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id, 
-                _workContext.CurrentCustomer.Id, 0, null, false, null, string.Empty, page, pageSize);
+                _workContext.CurrentCustomer.Id, "", null, false, null, string.Empty, page, pageSize);
 
             var sentItems = new List<PrivateMessageModel>();
 
@@ -229,17 +229,13 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    int privateMessageId;
-                    if (Int32.TryParse(id, out privateMessageId))
+                    var pm = _forumService.GetPrivateMessageById(id);
+                    if (pm != null)
                     {
-                        var pm = _forumService.GetPrivateMessageById(privateMessageId);
-                        if (pm != null)
+                        if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
                         {
-                            if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
-                            {
-                                pm.IsDeletedByRecipient = true;
-                                _forumService.UpdatePrivateMessage(pm);
-                            }
+                            pm.IsDeletedByRecipient = true;
+                            _forumService.UpdatePrivateMessage(pm);
                         }
                     }
                 }
@@ -258,17 +254,13 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("pm", "").Trim();
-                    int privateMessageId;
-                    if (Int32.TryParse(id, out privateMessageId))
+                    var pm = _forumService.GetPrivateMessageById(id);
+                    if (pm != null)
                     {
-                        var pm = _forumService.GetPrivateMessageById(privateMessageId);
-                        if (pm != null)
+                        if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
                         {
-                            if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
-                            {
-                                pm.IsRead = false;
-                                _forumService.UpdatePrivateMessage(pm);
-                            }
+                            pm.IsRead = false;
+                            _forumService.UpdatePrivateMessage(pm);
                         }
                     }
                 }
@@ -288,17 +280,13 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("si", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("si", "").Trim();
-                    int privateMessageId;
-                    if (Int32.TryParse(id, out privateMessageId))
+                    PrivateMessage pm = _forumService.GetPrivateMessageById(id);
+                    if (pm != null)
                     {
-                        PrivateMessage pm = _forumService.GetPrivateMessageById(privateMessageId);
-                        if (pm != null)
+                        if (pm.FromCustomerId == _workContext.CurrentCustomer.Id)
                         {
-                            if (pm.FromCustomerId == _workContext.CurrentCustomer.Id)
-                            {
-                                pm.IsDeletedByAuthor = true;
-                                _forumService.UpdatePrivateMessage(pm);
-                            }
+                            pm.IsDeletedByAuthor = true;
+                            _forumService.UpdatePrivateMessage(pm);
                         }
                     }
                 }
@@ -307,7 +295,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("PrivateMessages", new {tab = "sent"});
         }
 
-        public ActionResult SendPM(int toCustomerId, int? replyToMessageId)
+        public ActionResult SendPM(string toCustomerId, string replyToMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -331,9 +319,9 @@ namespace Nop.Web.Controllers
             model.CustomerToName = customerTo.FormatUserName();
             model.AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest();
 
-            if (replyToMessageId.HasValue)
+            if (!String.IsNullOrEmpty(replyToMessageId))
             {
-                var replyToPM = _forumService.GetPrivateMessageById(replyToMessageId.Value);
+                var replyToPM = _forumService.GetPrivateMessageById(replyToMessageId);
                 if (replyToPM == null)
                 {
                     return RedirectToRoute("PrivateMessages");
@@ -429,7 +417,7 @@ namespace Nop.Web.Controllers
                     _forumService.InsertPrivateMessage(privateMessage);
 
                     //activity log
-                    _customerActivityService.InsertActivity("PublicStore.SendPM", 0, _localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email);
+                    _customerActivityService.InsertActivity("PublicStore.SendPM", "", _localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email);
 
                     return RedirectToRoute("PrivateMessages", new { tab = "sent" });
                 }
@@ -442,7 +430,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ViewPM(int privateMessageId)
+        public ActionResult ViewPM(string privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -495,7 +483,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult DeletePM(int privateMessageId)
+        public ActionResult DeletePM(string privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {

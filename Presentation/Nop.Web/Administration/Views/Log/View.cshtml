@@ -55,7 +55,7 @@
                 @Html.NopLabelFor(model => model.CustomerId):
             </td>
             <td class="adminData">
-                @if (Model.CustomerId.HasValue)
+                @if (!String.IsNullOrEmpty(Model.CustomerId))
                 {
                     @Html.ActionLink(!String.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text, "Edit", "Customer", new { id = Model.CustomerId }, new { })
                 }

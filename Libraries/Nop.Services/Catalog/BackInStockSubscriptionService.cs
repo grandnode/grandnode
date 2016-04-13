@@ -70,15 +70,15 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
-            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(string customerId,
+            string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _backInStockSubscriptionRepository.Table;
 
             //customer
             query = query.Where(biss => biss.CustomerId == customerId);
             //store
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(biss => biss.StoreId == storeId);
             //product
             //query = query.Where(biss => !biss.Product.Deleted);
@@ -95,17 +95,16 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productId,
-            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
+        public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(string productId,
+            string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _backInStockSubscriptionRepository.Table;
             //product
             query = query.Where(biss => biss.ProductId == productId);
             //store
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(biss => biss.StoreId == storeId);
-            //customer
-            //query = query.Where(biss => !biss.Customer.Deleted && biss.Customer.Active);
+
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
             return new PagedList<BackInStockSubscription>(query, pageIndex, pageSize);
         }
@@ -117,7 +116,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        public virtual BackInStockSubscription FindSubscription(int customerId, int productId, int storeId)
+        public virtual BackInStockSubscription FindSubscription(string customerId, string productId, string storeId)
         {
             var query = from biss in _backInStockSubscriptionRepository.Table
                         orderby biss.CreatedOnUtc descending
@@ -135,11 +134,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="subscriptionId">Subscription identifier</param>
         /// <returns>Subscription</returns>
-        public virtual BackInStockSubscription GetSubscriptionById(int subscriptionId)
+        public virtual BackInStockSubscription GetSubscriptionById(string subscriptionId)
         {
-            if (subscriptionId == 0)
-                return null;
-
             var subscription = _backInStockSubscriptionRepository.GetById(subscriptionId);
             return subscription;
         }
@@ -192,7 +188,7 @@ namespace Nop.Services.Catalog
                 //ensure that customer is registered (simple and fast way)
                 if (CommonHelper.IsValidEmail(customer.Email))
                 {
-                    var customerLanguageId = customer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId, subscription.StoreId);
+                    var customerLanguageId = customer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId, subscription.StoreId);
                     _workflowMessageService.SendBackInStockNotification(subscription, customerLanguageId);
                     result++;
                 }

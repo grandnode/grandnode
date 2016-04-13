@@ -16,11 +16,11 @@ namespace Nop.Admin.Models.Catalog
         public bool EnableCondition { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.Attributes")]
-        public int SelectedProductAttributeId { get; set; }
+        public string SelectedProductAttributeId { get; set; }
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
 
-        public int ProductAttributeMappingId { get; set; }
-        public int ProductId { get; set; }
+        public string ProductAttributeMappingId { get; set; }
+        public string ProductId { get; set; }
 
         #region Nested classes
 
@@ -31,7 +31,7 @@ namespace Nop.Admin.Models.Catalog
                 Values = new List<ProductAttributeValueModel>();
             }
 
-            public int ProductAttributeId { get; set; }
+            public string ProductAttributeId { get; set; }
 
             public string Name { get; set; }
 

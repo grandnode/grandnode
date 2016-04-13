@@ -2,7 +2,7 @@
 
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 {
     <table class="adminContent">
         <tr>

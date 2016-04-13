@@ -35,7 +35,7 @@ namespace Nop.Web.Models.Boards
 
         public List<SelectListItem> WithinList { get; set; }
 
-        public int ForumIdSelected { get; set; }
+        public string ForumIdSelected { get; set; }
 
         public int WithinSelected { get; set; }
 

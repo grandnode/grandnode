@@ -93,6 +93,11 @@ namespace Nop.Services.Catalog
         /// </remarks>
         private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
 
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+
         #endregion
 
         #region Fields
@@ -140,10 +145,15 @@ namespace Nop.Services.Catalog
             if (productAttribute == null)
                 throw new ArgumentNullException("productAttribute");
 
+            var builder = Builders<Product>.Update;
+            var updatefilter = builder.PullFilter(x => x.ProductAttributeMappings, y => y.ProductAttributeId == productAttribute.Id);
+            var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+
             _productAttributeRepository.Delete(productAttribute);
 
             //cache
 
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
@@ -177,11 +187,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeId">Product attribute identifier</param>
         /// <returns>Product attribute </returns>
-        public virtual ProductAttribute GetProductAttributeById(int productAttributeId)
+        public virtual ProductAttribute GetProductAttributeById(string productAttributeId)
         {
-            if (productAttributeId == 0)
-                return null;
-
             string key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
             return _cacheManager.Get(key, () => _productAttributeRepository.GetById(productAttributeId));
         }
@@ -245,7 +252,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.PullFilter(p => p.ProductAttributeMappings, y=>y.Id == productAttributeMapping.Id);
-            _productRepository.Collection.UpdateManyAsync(new BsonDocument("Id", productAttributeMapping.ProductId), update);
+            _productRepository.Collection.UpdateManyAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
@@ -266,7 +273,7 @@ namespace Nop.Services.Catalog
             //_productAttributeMappingRepository.Insert(productAttributeMapping);
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductAttributeMappings, productAttributeMapping);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", productAttributeMapping.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
@@ -439,7 +446,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productAttributeId">The product attribute identifier</param>
         /// <returns>Product attribute mapping collection</returns>
-        public virtual IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(int productAttributeId)
+        public virtual IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(string productAttributeId)
         {
             var query = from ppa in _productAttributeRepository.Table
                         where ppa.Id == productAttributeId
@@ -467,7 +474,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductAttributeCombinations, combination);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", combination.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", combination.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));
@@ -487,7 +494,7 @@ namespace Nop.Services.Catalog
 
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.AddToSet(p => p.ProductAttributeCombinations, combination);
-            _productRepository.Collection.UpdateOneAsync(new BsonDocument("Id", combination.ProductId), update);
+            _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", combination.ProductId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, combination.ProductId));

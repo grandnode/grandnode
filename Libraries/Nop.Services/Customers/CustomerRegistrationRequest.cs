@@ -21,7 +21,7 @@ namespace Nop.Services.Customers
         public CustomerRegistrationRequest(Customer customer, string email, string username,
             string password,
             PasswordFormat passwordFormat,
-            int storeId,
+            string storeId,
             bool isApproved = true)
         {
             this.Customer = customer;
@@ -56,7 +56,7 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         /// <summary>
         /// Is approved
         /// </summary>

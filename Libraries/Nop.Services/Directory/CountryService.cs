@@ -38,7 +38,6 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly IRepository<Country> _countryRepository;
-        //private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
@@ -59,14 +58,12 @@ namespace Nop.Services.Directory
         /// <param name="eventPublisher">Event published</param>
         public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository,
-            //IRepository<StoreMapping> storeMappingRepository,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._countryRepository = countryRepository;
-            //this._storeMappingRepository = storeMappingRepository;
             this._storeContext = storeContext;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
@@ -99,7 +96,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
+        public virtual IList<Country> GetAllCountries(string languageId = "", bool showHidden = false)
         {
             string key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
 
@@ -124,7 +121,7 @@ namespace Nop.Services.Directory
                 }
 
                 var countries = query.ToList();
-                if (languageId > 0)
+                if (String.IsNullOrEmpty(languageId))
                 {
                     //we should sort countries by localized names when they have the same display order
                     countries = countries
@@ -142,7 +139,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountriesForBilling(int languageId = 0, bool showHidden = false)
+        public virtual IList<Country> GetAllCountriesForBilling(string languageId = "", bool showHidden = false)
         {
             return GetAllCountries(languageId, showHidden).Where(c => c.AllowsBilling).ToList();
         }
@@ -153,7 +150,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountriesForShipping(int languageId = 0, bool showHidden = false)
+        public virtual IList<Country> GetAllCountriesForShipping(string languageId = "", bool showHidden = false)
         {
             return GetAllCountries(languageId, showHidden).Where(c => c.AllowsShipping).ToList();
         }
@@ -163,9 +160,9 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Country</returns>
-        public virtual Country GetCountryById(int countryId)
+        public virtual Country GetCountryById(string countryId)
         {
-            if (countryId == 0)
+            if (String.IsNullOrEmpty(countryId))
                 return null;
 
             return _countryRepository.GetById(countryId);
@@ -176,7 +173,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="countryIds">Country identifiers</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetCountriesByIds(int[] countryIds)
+        public virtual IList<Country> GetCountriesByIds(string[] countryIds)
         {
             if (countryIds == null || countryIds.Length == 0)
                 return new List<Country>();
@@ -187,7 +184,7 @@ namespace Nop.Services.Directory
             var countries = query.ToList();
             //sort by passed identifiers
             var sortedCountries = new List<Country>();
-            foreach (int id in countryIds)
+            foreach (string id in countryIds)
             {
                 var country = countries.Find(x => x.Id == id);
                 if (country != null)

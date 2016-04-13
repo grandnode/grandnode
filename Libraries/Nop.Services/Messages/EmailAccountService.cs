@@ -114,11 +114,8 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="emailAccountId">The email account identifier</param>
         /// <returns>Email account</returns>
-        public virtual EmailAccount GetEmailAccountById(int emailAccountId)
+        public virtual EmailAccount GetEmailAccountById(string emailAccountId)
         {
-            if (emailAccountId == 0)
-                return null;
-
             return _emailAccountRepository.GetById(emailAccountId);
         }
 

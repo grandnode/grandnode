@@ -64,7 +64,7 @@ namespace Nop.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        public virtual IList<OrderByCountryReportLine> GetCountryReport(int storeId, OrderStatus? os,
+        public virtual IList<OrderByCountryReportLine> GetCountryReport(string storeId, OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc)
         {
             int? orderStatusId = null;
@@ -82,7 +82,7 @@ namespace Nop.Services.Orders
             var query = _orderRepository.Table;
 
             query = query.Where(o => !o.Deleted);
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(o => o.StoreId == storeId);
             if (orderStatusId.HasValue)
                 query = query.Where(o => o.OrderStatusId == orderStatusId.Value);
@@ -134,9 +134,9 @@ namespace Nop.Services.Orders
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
-            int vendorId = 0, int billingCountryId = 0, 
-            int orderId = 0, string paymentMethodSystemName = null,
+        public virtual OrderAverageReportLine GetOrderAverageReportLine(string storeId = "",
+            string vendorId = "", string billingCountryId = "", 
+            string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string billingLastName = "", bool ignoreCancelledOrders = false)
@@ -156,19 +156,19 @@ namespace Nop.Services.Orders
             var builder = Builders<Order>.Filter;
 
             var filter = builder.Where(o => !o.Deleted);
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 filter = filter & builder.Where(o => o.StoreId == storeId);
 
-            if (orderId > 0)
+            if (!String.IsNullOrEmpty(orderId))
                 filter = filter & builder.Where(o => o.StoreId == storeId);
 
-            if (vendorId > 0)
+            if (!String.IsNullOrEmpty(vendorId))
             {
                 filter = filter & builder
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
-            if (billingCountryId > 0)
+            if (!String.IsNullOrEmpty(billingCountryId))
                 filter = filter & builder.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
 
             if (ignoreCancelledOrders)
@@ -230,7 +230,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLineSummary OrderAverageReport(int storeId, OrderStatus os)
+        public virtual OrderAverageReportLineSummary OrderAverageReport(string storeId, OrderStatus os)
         {
             var item = new OrderAverageReportLineSummary();
             item.OrderStatus = os;
@@ -311,11 +311,11 @@ namespace Nop.Services.Orders
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
         public virtual IPagedList<BestsellersReportLine> BestSellersReport(
-            int categoryId = 0, int manufacturerId = 0,
-            int storeId = 0, int vendorId = 0,
+            string categoryId = "", string manufacturerId = "",
+            string storeId = "", string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            int billingCountryId = 0,
+            string billingCountryId = "",
             int orderBy = 1,
             int pageIndex = 0, int pageSize = int.MaxValue, 
             bool showHidden = false)
@@ -337,16 +337,16 @@ namespace Nop.Services.Orders
             var builder = Builders<Order>.Filter;
 
             var filter = builder.Where(o => !o.Deleted);
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 filter = filter & builder.Where(o => o.StoreId == storeId);
             
-            if (vendorId > 0)
+            if (!String.IsNullOrEmpty(vendorId))
             {
                 filter = filter & builder
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
-            if (billingCountryId > 0)
+            if (!String.IsNullOrEmpty(billingCountryId))
                 filter = filter & builder.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
            
            
@@ -360,9 +360,9 @@ namespace Nop.Services.Orders
                 filter = filter & builder.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 filter = filter & builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-            if(manufacturerId > 0)
+            if(!String.IsNullOrEmpty(manufacturerId))
                 filter = filter & builder.Where( o=> o.OrderItems.Any(x => x.Product.ProductManufacturers.Any(pm => pm.ManufacturerId == manufacturerId)));
-            if (categoryId > 0)
+            if (!String.IsNullOrEmpty(categoryId))
                 filter = filter & builder.Where(o => o.OrderItems.Any(x => x.Product.ProductCategories.Any(pc => pc.CategoryId == categoryId)));
 
             var query = _orderRepository.Collection
@@ -401,12 +401,9 @@ namespace Nop.Services.Orders
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
+        public virtual string[] GetAlsoPurchasedProductsIds(string storeId, string productId,
             int recordsToReturn = 5, bool showHidden = false)
         {
-            if (productId == 0)
-                throw new ArgumentException("Product ID is not specified");
-
             var query = _productAlsoPurchasedRepository.Collection.Find(x => x.ProductId == productId).FirstOrDefaultAsync().Result;
 
             if (query != null)
@@ -423,7 +420,7 @@ namespace Nop.Services.Orders
                     product = product.Take(recordsToReturn);
 
                 var report = product.ToList();
-                var ids = new List<int>();
+                var ids = new List<string>();
                 foreach (var reportLine in report)
                     ids.Add(reportLine.ProductId);
 
@@ -442,7 +439,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        public virtual IPagedList<Product> ProductsNeverSold(int vendorId = 0,
+        public virtual IPagedList<Product> ProductsNeverSold(string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
@@ -465,7 +462,7 @@ namespace Nop.Services.Orders
                          where (!query.Contains(p.Id)) &&
                              //include only simple products
                                (p.ProductTypeId == simpleProductTypeId) &&                               
-                               (vendorId == 0 || p.VendorId == vendorId) &&
+                               (vendorId == "" || p.VendorId == vendorId) &&
                                (showHidden || p.Published)
                          select p;
 
@@ -490,8 +487,8 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0,
-            int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
+        public virtual decimal ProfitReport(string storeId = "", string vendorId = "",
+            string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string billingLastName = "")
@@ -511,17 +508,17 @@ namespace Nop.Services.Orders
             var query = _orderRepository.Table;
 
             query = query.Where(o => !o.Deleted);
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(o => o.StoreId == storeId);
-            if (orderId > 0)
+            if (!String.IsNullOrEmpty(orderId))
                 query = query.Where(o => o.Id == orderId);
-            if (vendorId > 0)
+            if (!String.IsNullOrEmpty(vendorId))
             {
                 query = query
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
-            if (billingCountryId > 0)
+            if (!String.IsNullOrEmpty(billingCountryId))
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             
             if (!String.IsNullOrEmpty(paymentMethodSystemName))

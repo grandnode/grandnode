@@ -5,7 +5,7 @@ namespace Nop.Web.Models.Blogs
 {
     public partial class BlogCommentModel : BaseNopEntityModel
     {
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         public string CustomerName { get; set; }
 

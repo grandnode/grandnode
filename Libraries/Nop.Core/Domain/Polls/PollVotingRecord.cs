@@ -8,36 +8,27 @@ namespace Nop.Core.Domain.Polls
     /// Represents a poll voting record
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class PollVotingRecord : BaseEntity
+    public partial class PollVotingRecord : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the poll answer identifier
         /// </summary>
-        public int PollAnswerId { get; set; }
+        public string PollAnswerId { get; set; }
 
         /// <summary>
         /// Gets or sets the poll identifier
         /// </summary>
-        public int PollId { get; set; }
+        public string PollId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
-        /// <summary>
-        /// Gets or sets the customer
-        /// </summary>
-        //public virtual Customer Customer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the poll answer
-        /// </summary>
-        //public virtual PollAnswer PollAnswer { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Plugins.Payment.PurchaseOrder.AdditionalFee")]
         public decimal AdditionalFee { get; set; }

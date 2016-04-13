@@ -9,7 +9,7 @@ namespace Nop.Admin.Models.Messages
 {
     public partial class ContactFormModel: BaseNopEntityModel
     {
-        public override int Id { get; set; }
+        public override string Id { get; set; }
 
         [NopResourceDisplayName("Admin.System.ContactForm.Fields.Store")]
         public string Store { get; set; }

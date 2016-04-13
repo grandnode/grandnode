@@ -152,7 +152,7 @@
                 @Html.ValidationMessageFor(model => model.DisplayOrder)
             </td>
         </tr>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <tr>
                 <td class="adminTitle">

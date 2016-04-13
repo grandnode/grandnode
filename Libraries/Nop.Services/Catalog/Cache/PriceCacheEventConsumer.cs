@@ -35,6 +35,7 @@ namespace Nop.Services.Catalog.Cache
         IConsumer<EntityInserted<ProductManufacturer>>,
         IConsumer<EntityUpdated<ProductManufacturer>>,
         IConsumer<EntityDeleted<ProductManufacturer>>,
+        
         //products
         IConsumer<EntityInserted<Product>>,
         IConsumer<EntityUpdated<Product>>,

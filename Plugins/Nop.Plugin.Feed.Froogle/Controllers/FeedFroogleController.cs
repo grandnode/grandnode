@@ -73,7 +73,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             model.PricesConsiderPromotions = _froogleSettings.PricesConsiderPromotions;
             //stores
             model.StoreId = _froogleSettings.StoreId;
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             //currencies

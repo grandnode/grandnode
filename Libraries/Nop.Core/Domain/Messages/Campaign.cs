@@ -27,7 +27,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the store identifier  which subscribers it will be sent to; set 0 for all newsletter subscribers
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time of instance creation

@@ -11,12 +11,12 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets or sets the appropriate discount requirement ID (identifier)
         /// </summary>
-        public int DiscountRequirementId { get; set; }
+        public string DiscountRequirementId { get; set; }
 
         /// <summary>
         /// Gets or sets the discount ID (identifier)
         /// </summary>
-        public int DiscountId { get; set; }
+        public string DiscountId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer

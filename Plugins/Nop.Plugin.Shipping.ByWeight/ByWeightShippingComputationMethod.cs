@@ -48,8 +48,8 @@ namespace Nop.Plugin.Shipping.ByWeight
 
         #region Utilities
         
-        private decimal? GetRate(decimal subTotal, decimal weight, int shippingMethodId,
-            int storeId, int warehouseId, int countryId, int stateProvinceId, string zip)
+        private decimal? GetRate(decimal subTotal, decimal weight, string shippingMethodId,
+            string storeId, string warehouseId, string countryId, string stateProvinceId, string zip)
         {
             var shippingByWeightRecord = _shippingByWeightService.FindRecord(shippingMethodId,
                 storeId, warehouseId, countryId, stateProvinceId, zip, weight);
@@ -110,11 +110,11 @@ namespace Nop.Plugin.Shipping.ByWeight
             }
 
             var storeId = getShippingOptionRequest.StoreId;
-            if (storeId == 0)
+            if (String.IsNullOrEmpty(storeId))
                 storeId = _storeContext.CurrentStore.Id;
-            int countryId = getShippingOptionRequest.ShippingAddress.CountryId;
-            int stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId;
-            int warehouseId = getShippingOptionRequest.WarehouseFrom != null ? getShippingOptionRequest.WarehouseFrom.Id : 0;
+            string countryId = getShippingOptionRequest.ShippingAddress.CountryId;
+            string stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId;
+            string warehouseId = getShippingOptionRequest.WarehouseFrom != null ? getShippingOptionRequest.WarehouseFrom.Id : "";
             string zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             decimal subTotal = decimal.Zero;
             foreach (var packageItem in getShippingOptionRequest.Items)

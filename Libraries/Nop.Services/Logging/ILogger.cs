@@ -48,14 +48,14 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logId">Log item identifier</param>
         /// <returns>Log item</returns>
-        Log GetLogById(int logId);
+        Log GetLogById(string logId);
 
         /// <summary>
         /// Get log items by identifiers
         /// </summary>
         /// <param name="logIds">Log item identifiers</param>
         /// <returns>Log items</returns>
-        IList<Log> GetLogByIds(int[] logIds);
+        IList<Log> GetLogByIds(string[] logIds);
 
         /// <summary>
         /// Inserts a log item

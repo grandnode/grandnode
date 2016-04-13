@@ -10,7 +10,7 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public int EntityId { get; set; }
+        public string EntityId { get; set; }
 
         /// <summary>
         /// Gets or sets the entity name
@@ -20,7 +20,7 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets the customer role identifier
         /// </summary>
-        public int CustomerRoleId { get; set; }
+        public string CustomerRoleId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer role

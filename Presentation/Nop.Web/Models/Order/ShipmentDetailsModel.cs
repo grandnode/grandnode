@@ -11,7 +11,7 @@ namespace Nop.Web.Models.Order
             ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
             Items = new List<ShipmentItemModel>();
         }
-
+        public int ShipmentNumber { get; set; }
         public string TrackingNumber { get; set; }
         public string TrackingNumberUrl { get; set; }
         public DateTime? ShippedDate { get; set; }
@@ -27,7 +27,7 @@ namespace Nop.Web.Models.Order
         public partial class ShipmentItemModel : BaseNopEntityModel
         {
             public string Sku { get; set; }
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
             public string AttributeInfo { get; set; }

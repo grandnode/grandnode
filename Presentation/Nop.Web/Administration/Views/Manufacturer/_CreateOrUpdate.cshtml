@@ -304,7 +304,7 @@
 }
 @helper TabProducts()
 {
-if (Model.Id > 0)
+if (!String.IsNullOrEmpty(Model.Id))
 {
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
@@ -349,7 +349,7 @@ if (Model.Id > 0)
                                                     ProductName: {editable: false, type: "string" },
                                                     IsFeaturedProduct: {editable: true, type: "boolean" },
                                                     DisplayOrder: {editable: true, type: "number" },
-                                                    ProductId: {editable: false, type: "number" }
+                                                    ProductId: {editable: false, type: "string" }
                                                 }
                                             }
                                         },

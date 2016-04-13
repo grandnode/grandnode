@@ -20,7 +20,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the customer Id
         /// </summary>
         [BsonIgnoreAttribute]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the customer role is marked as free shiping
@@ -51,7 +51,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a product identifier that is required by this customer role. 
         /// A customer is added to this customer role once a specified product is purchased.
         /// </summary>
-        public int PurchasedWithProductId { get; set; }
+        public string PurchasedWithProductId { get; set; }
         
     }
 

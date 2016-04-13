@@ -398,8 +398,8 @@ namespace Nop.Web.Extensions
                 {
                     return new ProductReviewOverviewModel
                     {
-                        RatingSum = productService.RatingSumProduct(product.Id, catalogSettings.ShowProductReviewsPerStore ? storeContext.CurrentStore.Id: 0),
-                        TotalReviews = productService.TotalReviewsProduct(product.Id, catalogSettings.ShowProductReviewsPerStore ? storeContext.CurrentStore.Id: 0),
+                        RatingSum = productService.RatingSumProduct(product.Id, catalogSettings.ShowProductReviewsPerStore ? storeContext.CurrentStore.Id: ""),
+                        TotalReviews = productService.TotalReviewsProduct(product.Id, catalogSettings.ShowProductReviewsPerStore ? storeContext.CurrentStore.Id: ""),
                     };
                 });
             }

@@ -23,7 +23,7 @@ namespace Nop.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <returns>Result</returns>
-        IList<OrderByCountryReportLine> GetCountryReport(int storeId = 0, OrderStatus? os = null,
+        IList<OrderByCountryReportLine> GetCountryReport(string storeId = "", OrderStatus? os = null,
             PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null);
 
@@ -45,8 +45,8 @@ namespace Nop.Services.Orders
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0, int vendorId = 0,
-            int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
+        OrderAverageReportLine GetOrderAverageReportLine(string storeId = "", string vendorId = "",
+            string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string billingLastName = "",
@@ -59,7 +59,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="os">Order status</param>
         /// <returns>Result</returns>
-        OrderAverageReportLineSummary OrderAverageReport(int storeId, OrderStatus os);
+        OrderAverageReportLineSummary OrderAverageReport(string storeId, OrderStatus os);
         
         /// <summary>
         /// Get best sellers report
@@ -80,11 +80,11 @@ namespace Nop.Services.Orders
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
         IPagedList<BestsellersReportLine> BestSellersReport(
-            int categoryId = 0, int manufacturerId = 0, 
-            int storeId = 0, int vendorId = 0,
+            string categoryId = "", string manufacturerId = "", 
+            string storeId = "", string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            int billingCountryId = 0,
+            string billingCountryId = "",
             int orderBy = 1,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false);
@@ -97,7 +97,7 @@ namespace Nop.Services.Orders
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
+        string[] GetAlsoPurchasedProductsIds(string storeId, string productId,
             int recordsToReturn = 5, bool showHidden = false);
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        IPagedList<Product> ProductsNeverSold(int vendorId = 0,
+        IPagedList<Product> ProductsNeverSold(string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
@@ -130,8 +130,8 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        decimal ProfitReport(int storeId = 0, int vendorId = 0,
-            int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
+        decimal ProfitReport(string storeId = "", string vendorId = "",
+            string billingCountryId = "", string orderId = "", string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string billingLastName = "");

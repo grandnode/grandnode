@@ -15,7 +15,7 @@ namespace Nop.Core.Domain.Customers
         private ICollection<CustomerRole> _customerRoles;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<Address> _addresses;
-        private ICollection<int> _customerTags;
+        private ICollection<string> _customerTags;
 
         /// <summary>
         /// Ctor
@@ -80,12 +80,12 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
-        public int AffiliateId { get; set; }
+        public string AffiliateId { get; set; }
 
         /// <summary>
         /// Gets or sets the vendor identifier with which this customer is associated (maganer)
         /// </summary>
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this customer has some products in the shopping cart
@@ -232,9 +232,9 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer tags
         /// </summary>
-        public virtual ICollection<int> CustomerTags
+        public virtual ICollection<string> CustomerTags
         {
-            get { return _customerTags ?? (_customerTags = new List<int>()); }
+            get { return _customerTags ?? (_customerTags = new List<string>()); }
             protected set { _customerTags = value; }
         }
         #endregion

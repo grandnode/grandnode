@@ -154,7 +154,7 @@ namespace Nop.Services.Forums
             if (forumTopic == null)
                 throw new ArgumentNullException("forumTopic");
 
-            var forumPosts = forumService.GetAllPosts(forumTopic.Id, 0, string.Empty, 0, 1);
+            var forumPosts = forumService.GetAllPosts(forumTopic.Id, "", string.Empty, 0, 1);
             if (forumPosts.Count > 0)
                 return forumPosts[0];
 

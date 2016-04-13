@@ -63,7 +63,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
-            var polls = _pollService.GetPolls(0, false, command.Page - 1, command.PageSize, true);
+            var polls = _pollService.GetPolls("", false, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = polls.Select(x =>
@@ -118,7 +118,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -171,7 +171,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -192,7 +192,7 @@ namespace Nop.Admin.Controllers
         #region Poll answer
 
         [HttpPost]
-        public ActionResult PollAnswers(int pollId, DataSourceRequest command)
+        public ActionResult PollAnswers(string pollId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -234,8 +234,6 @@ namespace Nop.Admin.Controllers
             var pollAnswer = poll.PollAnswers.FirstOrDefault(x=>x.Id == model.Id);
             if (pollAnswer == null)
                 throw new ArgumentException("No poll answer found with the specified id");
-            pollAnswer._id = ObjectId.GenerateNewId().ToString();
-            pollAnswer.Id = poll.PollAnswers.Count > 0 ? poll.PollAnswers.Max(x => x.Id) + 1 : 1;
             pollAnswer.Name = model.Name;
             pollAnswer.DisplayOrder = model.DisplayOrder;
             _pollService.UpdatePoll(poll);
@@ -244,7 +242,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult PollAnswerAdd(int pollId, [Bind(Exclude = "Id")] PollAnswerModel model)
+        public ActionResult PollAnswerAdd(string pollId, [Bind(Exclude = "Id")] PollAnswerModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
@@ -260,8 +258,6 @@ namespace Nop.Admin.Controllers
 
             poll.PollAnswers.Add(new PollAnswer 
             {
-                _id = ObjectId.GenerateNewId().ToString(),
-                Id = poll.PollAnswers.Count > 0 ? poll.PollAnswers.Max(x => x.Id) + 1 : 1,
                 Name = model.Name,
                 PollId = pollId,
                 DisplayOrder = model.DisplayOrder

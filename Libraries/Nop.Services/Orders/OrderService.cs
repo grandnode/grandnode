@@ -73,20 +73,28 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderId">The order identifier</param>
         /// <returns>Order</returns>
-        public virtual Order GetOrderById(int orderId)
+        public virtual Order GetOrderById(string orderId)
         {
-            if (orderId == 0)
-                return null;
-
             return _orderRepository.GetById(orderId);
         }
+
+        /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="orderNumber">The order number</param>
+        /// <returns>Order</returns>
+        public virtual Order GetOrderByNumber(int orderNumber)
+        {
+            return _orderRepository.Table.FirstOrDefault(x=>x.OrderNumber == orderNumber);
+        }
+
 
         /// <summary>
         /// Get orders by identifiers
         /// </summary>
         /// <param name="orderIds">Order identifiers</param>
         /// <returns>Order</returns>
-        public virtual IList<Order> GetOrdersByIds(int[] orderIds)
+        public virtual IList<Order> GetOrdersByIds(string[] orderIds)
         {
             if (orderIds == null || orderIds.Length == 0)
                 return new List<Order>();
@@ -97,7 +105,7 @@ namespace Nop.Services.Orders
             var orders = query.ToList();
             //sort by passed identifiers
             var sortedOrders = new List<Order>();
-            foreach (int id in orderIds)
+            foreach (string id in orderIds)
             {
                 var order = orders.Find(x => x.Id == id);
                 if (order != null)
@@ -162,10 +170,10 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
-        public virtual IPagedList<Order> SearchOrders(int storeId = 0,
-            int vendorId = 0, int customerId = 0,
-            int productId = 0, int affiliateId = 0, int warehouseId = 0,
-            int billingCountryId = 0, string paymentMethodSystemName = null,
+        public virtual IPagedList<Order> SearchOrders(string storeId = "",
+            string vendorId = "", string customerId = "",
+            string productId = "", string affiliateId = "", string warehouseId = "",
+            string billingCountryId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string billingLastName = "", string orderNotes = null, string orderGuid = null,
@@ -184,23 +192,23 @@ namespace Nop.Services.Orders
                 shippingStatusId = (int)ss.Value;
 
             var query = _orderRepository.Table;
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(o => o.StoreId == storeId);
-            if (vendorId > 0)
+            if (!String.IsNullOrEmpty(vendorId))
             {
                 query = query
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
-            if (customerId > 0)
+            if (!String.IsNullOrEmpty(customerId))
                 query = query.Where(o => o.CustomerId == customerId);
-            if (productId > 0)
+            if (!String.IsNullOrEmpty(productId))
             {
                 query = query
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.Product.Id == productId));
             }
-            if (warehouseId > 0)
+            if (!String.IsNullOrEmpty(warehouseId))
             {
                 var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
                 query = query
@@ -219,11 +227,11 @@ namespace Nop.Services.Orders
                         orderItem.Product.WarehouseId == warehouseId))
                         );
             }
-            if (billingCountryId > 0)
+            if (!String.IsNullOrEmpty(billingCountryId))
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             if (!String.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
-            if (affiliateId > 0)
+            if (!String.IsNullOrEmpty(affiliateId))
                 query = query.Where(o => o.AffiliateId == affiliateId);
             if (createdFromUtc.HasValue)
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
@@ -268,6 +276,10 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
+            var orderExists = _orderRepository.Table.FirstOrDefault();
+            var orderNumber = orderExists!=null ? _orderRepository.Table.Max(x=>x.OrderNumber)+1 : 1;
+            order.OrderNumber = orderNumber;
+
             _orderRepository.Insert(order);
 
             //event notification
@@ -298,10 +310,8 @@ namespace Nop.Services.Orders
                 {
                     var purchase = new Purchase()
                     {
-                        Id = product.Purchased.Count > 0 ? product.Purchased.Max(x => x.Id) + 1 : 1,
                         OrderId = order.Id,
                         CreatedOrderOnUtc = order.CreatedOnUtc,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         Quantity = it.Quantity,
                         StoreId = order.StoreId,
                         ProductId = it.ProductId
@@ -309,12 +319,11 @@ namespace Nop.Services.Orders
 
                     var updatebuilder = Builders<ProductAlsoPurchased>.Update;
                     var update = updatebuilder.AddToSet(p => p.Purchased, purchase);
-                    _productAlsoPurchasedRepository.Collection.UpdateOneAsync(new BsonDocument("Id", product.Id), update);
+                    _productAlsoPurchasedRepository.Collection.UpdateOneAsync(new BsonDocument("_id", product.Id), update);
                 }
 
             }
-            //event notification
-            //_eventPublisher.EntityInserted(product);
+
         }
 
         /// <summary>
@@ -393,8 +402,8 @@ namespace Nop.Services.Orders
         /// <param name="ss">Order shipment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
         /// <returns>Orders</returns>
-        public virtual IList<OrderItem> GetAllOrderItems(int? orderId,
-            int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc,
+        public virtual IList<OrderItem> GetAllOrderItems(string orderId,
+            string customerId, DateTime? createdFromUtc, DateTime? createdToUtc,
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
             bool loadDownloableProductsOnly)
         {
@@ -414,11 +423,11 @@ namespace Nop.Services.Orders
 
             var filter = builder.Where(x => true);
 
-            if (orderId.HasValue)
-                filter = filter & builder.Where(o => o.Id == orderId.Value);
+            if (!String.IsNullOrEmpty(orderId))
+                filter = filter & builder.Where(o => o.Id == orderId);
 
-            if (customerId.HasValue)
-                filter = filter & builder.Where(o => o.CustomerId == customerId.Value);
+            if (!String.IsNullOrEmpty(customerId))
+                filter = filter & builder.Where(o => o.CustomerId == customerId);
 
             if (orderStatusId.HasValue)
                 filter = filter & builder.Where(o => o.OrderStatusId == orderStatusId.Value);
@@ -451,23 +460,6 @@ namespace Nop.Services.Orders
                 else
                     items.Add(item.OrderItems);
             }
-            //var query = from o in _orderRepository.Collection.AsQueryable()
-            //            where (!orderId.HasValue || orderId.Value == 0 || orderId == o.Id) &&
-            //            (customerId == o.CustomerId) && !o.Deleted
-            //            //(!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
-            //            //(!createdToUtc.HasValue || createdToUtc.Value >= o.CreatedOnUtc) &&
-            //            //(!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
-            //            //(!paymentStatusId.HasValue || paymentStatusId.Value == o.PaymentStatusId) &&
-            //            //(!shippingStatusId.HasValue || shippingStatusId.Value == o.ShippingStatusId) &&
-            //            //(!loadDownloableProductsOnly || p.IsDownload) &&
-
-            //            from orderItem in o.OrderItems
-            //            //join p in _productRepository.Table on orderItem.ProductId equals p.Id
-
-            //            orderby o.CreatedOnUtc descending, orderItem.Id
-            //            select orderItem;
-
-            //var orderItems = query.ToList();
             return items;
         }
 
@@ -482,7 +474,7 @@ namespace Nop.Services.Orders
 
             var updatebuilder = Builders<Order>.Update;
             var updatefilter = updatebuilder.PullFilter(x => x.OrderItems, y => y.Id == orderItem.Id);
-            var result = _orderRepository.Collection.UpdateOneAsync(new BsonDocument("Id", orderItem.OrderId), updatefilter).Result;
+            var result = _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderItem.OrderId), updatefilter).Result;
 
             var updateproduct = Builders<ProductAlsoPurchased>.Update;
             var updatefilterproduct = updateproduct.PullFilter(x => x.Purchased, y => y.OrderId == orderItem.OrderId && y.ProductId == orderItem.ProductId);
@@ -507,7 +499,7 @@ namespace Nop.Services.Orders
 
             var updatebuilder = Builders<Order>.Update;
             var update = updatebuilder.Pull(p => p.OrderNotes, orderNote);
-            _orderRepository.Collection.UpdateOneAsync(new BsonDocument("Id", orderNote.OrderId), update);
+            _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderNote.OrderId), update);
 
             //event notification
             _eventPublisher.EntityDeleted(orderNote);
@@ -535,11 +527,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="recurringPaymentId">The recurring payment identifier</param>
         /// <returns>Recurring payment</returns>
-        public virtual RecurringPayment GetRecurringPaymentById(int recurringPaymentId)
+        public virtual RecurringPayment GetRecurringPaymentById(string recurringPaymentId)
         {
-            if (recurringPaymentId == 0)
-                return null;
-
            return _recurringPaymentRepository.GetById(recurringPaymentId);
         }
 
@@ -584,8 +573,8 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payments</returns>
-        public virtual IPagedList<RecurringPayment> SearchRecurringPayments(int storeId = 0,
-            int customerId = 0, int initialOrderId = 0, OrderStatus? initialOrderStatus = null,
+        public virtual IPagedList<RecurringPayment> SearchRecurringPayments(string storeId = "",
+            string customerId = "", string initialOrderId = "", OrderStatus? initialOrderStatus = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             int? initialOrderStatusId = null;
@@ -596,10 +585,9 @@ namespace Nop.Services.Orders
                          where
                          (!rp.Deleted) &&
                          (showHidden || rp.IsActive) &&
-                         (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
-                         (storeId == 0 || rp.InitialOrder.StoreId == storeId) &&
-                         (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) //&&
-                         //(!initialOrderStatusId.HasValue || initialOrderStatusId.Value == 0 || rp.InitialOrder.OrderStatusId == initialOrderStatusId.Value)
+                         (customerId == "" || rp.InitialOrder.CustomerId == customerId) &&
+                         (storeId == "" || rp.InitialOrder.StoreId == storeId) &&
+                         (initialOrderId == "" || rp.InitialOrder.Id == initialOrderId) 
                          select rp.Id;
             var cc = query1.ToList();
             var query2 = from rp in _recurringPaymentRepository.Table
@@ -612,74 +600,6 @@ namespace Nop.Services.Orders
         }
 
         #endregion
-
-        //#region Return requests
-
-        ///// <summary>
-        ///// Deletes a return request
-        ///// </summary>
-        ///// <param name="returnRequest">Return request</param>
-        //public virtual void DeleteReturnRequest(ReturnRequest returnRequest)
-        //{
-        //    if (returnRequest == null)
-        //        throw new ArgumentNullException("returnRequest");
-
-        //    _returnRequestRepository.Delete(returnRequest);
-
-        //    //event notification
-        //    _eventPublisher.EntityDeleted(returnRequest);
-        //}
-
-        ///// <summary>
-        ///// Gets a return request
-        ///// </summary>
-        ///// <param name="returnRequestId">Return request identifier</param>
-        ///// <returns>Return request</returns>
-        //public virtual ReturnRequest GetReturnRequestById(int returnRequestId)
-        //{
-        //    if (returnRequestId == 0)
-        //        return null;
-
-        //    return _returnRequestRepository.GetById(returnRequestId);
-        //}
-
-        ///// <summary>
-        ///// Search return requests
-        ///// </summary>
-        ///// <param name="storeId">Store identifier; 0 to load all entries</param>
-        ///// <param name="customerId">Customer identifier; null to load all entries</param>
-        ///// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
-        ///// <param name="rs">Return request status; null to load all entries</param>
-        ///// <param name="pageIndex">Page index</param>
-        ///// <param name="pageSize">Page size</param>
-        ///// <returns>Return requests</returns>
-        //public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
-        //    int orderId = 0,  int orderItemId = 0, ReturnRequestStatus? rs = null,
-        //    int pageIndex = 0, int pageSize = int.MaxValue)
-        //{
-        //    var query = _returnRequestRepository.Table;
-
-        //    if (orderId > 0)
-        //        query = query.Where(rr => orderId == rr.OrderId);
-        //    if (storeId > 0)
-        //        query = query.Where(rr => storeId == rr.StoreId);
-        //    if (customerId > 0)
-        //        query = query.Where(rr => customerId == rr.CustomerId);
-        //    if (rs.HasValue)
-        //    {
-        //        var returnStatusId = (int)rs.Value;
-        //        query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
-        //    }
-        //    if (orderItemId > 0)
-        //        query = query.Where(rr => rr.OrderItemId == orderItemId);
-
-        //    query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
-
-        //    var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize);
-        //    return returnRequests;
-        //}
-
-        //#endregion
 
         #endregion
 

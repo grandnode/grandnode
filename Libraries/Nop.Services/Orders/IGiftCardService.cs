@@ -22,7 +22,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="giftCardId">Gift card identifier</param>
         /// <returns>Gift card entry</returns>
-        GiftCard GetGiftCardById(int giftCardId);
+        GiftCard GetGiftCardById(string giftCardId);
 
         /// <summary>
         /// Gets all gift cards
@@ -36,7 +36,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId = null,
+        IPagedList<GiftCard> GetAllGiftCards(string purchasedWithOrderId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             bool? isGiftCardActivated = null, string giftCardCouponCode = null,
             string recipientName = null,
@@ -46,7 +46,7 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets all gift cards usage history for orderId
         /// </summary>
-        IList<GiftCardUsageHistory> GetAllGiftCardUsageHistory(int orderId = 0);
+        IList<GiftCardUsageHistory> GetAllGiftCardUsageHistory(string orderId = "");
 
         /// <summary>
         /// Inserts a gift card
@@ -65,7 +65,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="purchasedWithOrderItemId">Purchased with order item identifier</param>
         /// <returns>Gift card entries</returns>
-        IList<GiftCard> GetGiftCardsByPurchasedWithOrderItemId(int purchasedWithOrderItemId);
+        IList<GiftCard> GetGiftCardsByPurchasedWithOrderItemId(string purchasedWithOrderItemId);
         
         /// <summary>
         /// Get active gift cards that are applied by a customer

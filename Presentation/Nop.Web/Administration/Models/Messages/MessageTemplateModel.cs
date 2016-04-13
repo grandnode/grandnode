@@ -54,10 +54,10 @@ namespace Nop.Admin.Models.Messages
         public bool HasAttachedDownload { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload")]
         [UIHint("Download")]
-        public int AttachedDownloadId { get; set; }
+        public string AttachedDownloadId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount")]
-        public int EmailAccountId { get; set; }
+        public string EmailAccountId { get; set; }
         public IList<EmailAccountModel> AvailableEmailAccounts { get; set; }
 
         //Store mapping
@@ -65,7 +65,7 @@ namespace Nop.Admin.Models.Messages
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
         //comma-separated list of stores used on the list page
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")]
         public string ListOfStores { get; set; }
@@ -77,7 +77,7 @@ namespace Nop.Admin.Models.Messages
 
     public partial class MessageTemplateLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.BccEmailAddresses")]
         [AllowHtml]
@@ -92,6 +92,6 @@ namespace Nop.Admin.Models.Messages
         public string Body { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount")]
-        public int EmailAccountId { get; set; }
+        public string EmailAccountId { get; set; }
     }
 }

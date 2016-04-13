@@ -6,12 +6,13 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a product specification attribute
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductSpecificationAttribute : BaseEntity
+    public partial class ProductSpecificationAttribute : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        [BsonIgnore]
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the attribute type ID
@@ -21,12 +22,12 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the specification attribute Id
         /// </summary>
-        public int SpecificationAttributeId { get; set; }
+        public string SpecificationAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
-        public int SpecificationAttributeOptionId { get; set; }
+        public string SpecificationAttributeOptionId { get; set; }
 
         /// <summary>
         /// Gets or sets the custom value

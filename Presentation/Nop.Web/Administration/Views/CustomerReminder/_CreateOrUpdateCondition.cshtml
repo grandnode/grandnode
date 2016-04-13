@@ -194,7 +194,7 @@
                 @Html.NopLabelFor(model => model.ConditionTypeId)
             </td>
             <td class="adminData">
-                @if (Model.Id != 0)
+                @if (!String.IsNullOrEmpty(Model.Id))
                 {
                     @Html.DropDownListFor(model => model.ConditionTypeId, Model.ConditionType, new { @disabled = "disabled" })
                 }

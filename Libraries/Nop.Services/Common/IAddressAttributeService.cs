@@ -25,7 +25,7 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="addressAttributeId">Address attribute identifier</param>
         /// <returns>Address attribute</returns>
-        AddressAttribute GetAddressAttributeById(int addressAttributeId);
+        AddressAttribute GetAddressAttributeById(string addressAttributeId);
 
         /// <summary>
         /// Inserts an address attribute

@@ -25,7 +25,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTemplateId">Product template identifier</param>
         /// <returns>Product template</returns>
-        ProductTemplate GetProductTemplateById(int productTemplateId);
+        ProductTemplate GetProductTemplateById(string productTemplateId);
 
         /// <summary>
         /// Inserts product template

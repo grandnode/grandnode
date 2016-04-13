@@ -31,10 +31,8 @@ namespace Nop.Admin.Extensions
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
+                                    attribute, ctrlAttributes);
                             }
                         }
                         break;
@@ -45,10 +43,9 @@ namespace Nop.Admin.Extensions
                             {
                                 foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
+                                    if (!String.IsNullOrEmpty(item))
                                         attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, item);
                                 }
                             }
                         }
@@ -63,7 +60,7 @@ namespace Nop.Admin.Extensions
                                 .ToList())
                             {
                                 attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, selectedAttributeId);
                             }
                         }
                         break;

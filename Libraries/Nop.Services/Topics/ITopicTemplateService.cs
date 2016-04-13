@@ -25,7 +25,7 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="topicTemplateId">Topic template identifier</param>
         /// <returns>Topic template</returns>
-        TopicTemplate GetTopicTemplateById(int topicTemplateId);
+        TopicTemplate GetTopicTemplateById(string topicTemplateId);
 
         /// <summary>
         /// Inserts topic template

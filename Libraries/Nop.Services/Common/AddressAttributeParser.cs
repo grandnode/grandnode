@@ -28,9 +28,9 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected address attribute identifiers</returns>
-        protected virtual IList<int> ParseAddressAttributeIds(string attributesXml)
+        protected virtual IList<string> ParseAddressAttributeIds(string attributesXml)
         {
-            var ids = new List<int>();
+            var ids = new List<string>();
             if (String.IsNullOrEmpty(attributesXml))
                 return ids;
 
@@ -44,11 +44,7 @@ namespace Nop.Services.Common
                     if (node.Attributes != null && node.Attributes["ID"] != null)
                     {
                         string str1 = node.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
-                        {
-                            ids.Add(id);
-                        }
+                        ids.Add(str1);
                     }
                 }
             }
@@ -68,7 +64,7 @@ namespace Nop.Services.Common
         {
             var result = new List<AddressAttribute>();
             var ids = ParseAddressAttributeIds(attributesXml);
-            foreach (int id in ids)
+            foreach (string id in ids)
             {
                 var attribute = _addressAttributeService.GetAddressAttributeById(id);
                 if (attribute != null)
@@ -98,13 +94,9 @@ namespace Nop.Services.Common
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int id;
-                        if (int.TryParse(valueStr, out id))
-                        {
-                            var value = attribute.AddressAttributeValues.FirstOrDefault(x => x.Id == id); //_addressAttributeService.GetAddressAttributeValueById(id);
-                            if (value != null)
-                                values.Add(value);
-                        }
+                        var value = attribute.AddressAttributeValues.FirstOrDefault(x => x.Id == valueStr); 
+                        if (value != null)
+                            values.Add(value);
                     }
                 }
             }
@@ -117,7 +109,7 @@ namespace Nop.Services.Common
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="addressAttributeId">Address attribute identifier</param>
         /// <returns>Address attribute value</returns>
-        public virtual IList<string> ParseValues(string attributesXml, int addressAttributeId)
+        public virtual IList<string> ParseValues(string attributesXml, string addressAttributeId)
         {
             var selectedAddressAttributeValues = new List<string>();
             try
@@ -131,17 +123,13 @@ namespace Nop.Services.Common
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (str1 == addressAttributeId)
                         {
-                            if (id == addressAttributeId)
+                            var nodeList2 = node1.SelectNodes(@"AddressAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
                             {
-                                var nodeList2 = node1.SelectNodes(@"AddressAttributeValue/Value");
-                                foreach (XmlNode node2 in nodeList2)
-                                {
-                                    string value = node2.InnerText.Trim();
-                                    selectedAddressAttributeValues.Add(value);
-                                }
+                                string value = node2.InnerText.Trim();
+                                selectedAddressAttributeValues.Add(value);
                             }
                         }
                     }
@@ -186,14 +174,10 @@ namespace Nop.Services.Common
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (str1 == attribute.Id)
                         {
-                            if (id == attribute.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
+                            attributeElement = (XmlElement)node1;
+                            break;
                         }
                     }
                 }

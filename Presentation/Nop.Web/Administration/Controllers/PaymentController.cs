@@ -170,7 +170,7 @@ namespace Nop.Admin.Controllers
                 {
                     bool resticted = restictedCountries.Contains(c.Id);
                     if (!model.Resticted.ContainsKey(pm.PluginDescriptor.SystemName))
-                        model.Resticted[pm.PluginDescriptor.SystemName] = new Dictionary<int, bool>();
+                        model.Resticted[pm.PluginDescriptor.SystemName] = new Dictionary<string, bool>();
                     model.Resticted[pm.PluginDescriptor.SystemName][c.Id] = resticted;
                 }
             }
@@ -191,9 +191,9 @@ namespace Nop.Admin.Controllers
             {
                 string formKey = "restrict_" + pm.PluginDescriptor.SystemName;
                 var countryIdsToRestrict = (form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
-                    .Select(x => Convert.ToInt32(x)).ToList();
+                    .Select(x => x).ToList();
 
-                var newCountryIds = new List<int>();
+                var newCountryIds = new List<string>();
                 foreach (var c in countries)
                 {
                     if (countryIdsToRestrict.Contains(c.Id))

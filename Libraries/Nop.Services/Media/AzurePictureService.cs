@@ -76,7 +76,7 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture</param>
         protected override void DeletePictureThumbs(Picture picture)
         {
-            string filter = string.Format("{0}", picture.Id.ToString("0000000"));
+            string filter = string.Format("{0}", picture.Id);
             var files = container_thumb.ListBlobs(prefix: filter, useFlatBlobListing: false);
             foreach (var ff in files)
             {

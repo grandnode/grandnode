@@ -246,7 +246,7 @@ namespace Nop.Admin.Controllers
 	            return AccessDeniedView();
 
 	        var loadMode = (LoadPluginsMode) model.SearchLoadModeId;
-            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, 0, model.SearchGroup).ToList();
+            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, "", model.SearchGroup).ToList();
 	        var gridModel = new DataSourceResult
             {
                 Data = pluginDescriptors.Select(x => PreparePluginModel(x, false, false))
@@ -543,7 +543,7 @@ namespace Nop.Admin.Controllers
 
             var model = new OfficialFeedListModel();
             //versions
-            model.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var version in _officialFeedManager.GetVersions())
                 model.AvailableVersions.Add(new SelectListItem{ Text = version.Name, Value = version.Id.ToString()});
             //pre-select current version
@@ -557,11 +557,11 @@ namespace Nop.Admin.Controllers
 
             //categories
             var categories = _officialFeedManager.GetCategories();
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var category in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = GetCategoryBreadCrumbName(category, categories), Value = category.Id.ToString() });
             //prices
-            model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Free"), Value = "10" });
             model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial"), Value = "20" });
             return View(model);

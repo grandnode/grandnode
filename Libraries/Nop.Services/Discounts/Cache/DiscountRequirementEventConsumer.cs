@@ -12,11 +12,12 @@ namespace Nop.Services.Discounts.Cache
     public partial class DiscountRequirementEventConsumer :
         //discounts
         IConsumer<EntityUpdated<Discount>>,
-        IConsumer<EntityDeleted<Discount>>,
+        IConsumer<EntityDeleted<Discount>>
+
         //discount requirements
-        IConsumer<EntityInserted<DiscountRequirement>>,
-        IConsumer<EntityUpdated<DiscountRequirement>>,
-        IConsumer<EntityDeleted<DiscountRequirement>>
+        //IConsumer<EntityInserted<DiscountRequirement>>,
+        //IConsumer<EntityUpdated<DiscountRequirement>>,
+        //IConsumer<EntityDeleted<DiscountRequirement>>
     {
         /// <summary>
         /// Key for discount requirement of a certain discount
@@ -46,6 +47,7 @@ namespace Nop.Services.Discounts.Cache
         }
 
         //discount requirements
+        /*
         public void HandleEvent(EntityInserted<DiscountRequirement> eventMessage)
         {
             _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
@@ -58,5 +60,6 @@ namespace Nop.Services.Discounts.Cache
         {
             _cacheManager.RemoveByPattern(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
+        */
     }
 }

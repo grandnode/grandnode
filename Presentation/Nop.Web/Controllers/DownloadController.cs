@@ -34,7 +34,7 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
         
-        public ActionResult Sample(int productId)
+        public ActionResult Sample(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -134,7 +134,7 @@ namespace Nop.Web.Controllers
                     return new HttpUnauthorizedResult();
             }
 
-            var download = _downloadService.GetDownloadById(orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0);
+            var download = _downloadService.GetDownloadById(!String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "");
             if (download == null)
                 return Content("Download is not available any more.");
             
@@ -170,7 +170,7 @@ namespace Nop.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public ActionResult GetOrderNoteFile(int orderId, int orderNoteId)
+        public ActionResult GetOrderNoteFile(string orderId, string orderNoteId)
         {
             var order = _orderService.GetOrderById(orderId);
 

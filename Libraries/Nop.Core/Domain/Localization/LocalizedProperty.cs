@@ -6,12 +6,12 @@ namespace Nop.Core.Domain.Localization
     /// Represents a localized property
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class LocalizedProperty : BaseEntity
+    public partial class LocalizedProperty : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the locale key

@@ -29,7 +29,7 @@ namespace Nop.Core.Plugins
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Plugins</returns>
-        IPagedList<OfficialFeedPlugin> GetAllPlugins(int categoryId = 0,
+        IPagedList<OfficialFeedPlugin> GetAllPlugins(string categoryId = "",
             int versionId = 0, int price = 0,
             string searchTerm = "",
             int pageIndex = 0, int pageSize = int.MaxValue);

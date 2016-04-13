@@ -109,7 +109,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult CategoryTemplateDelete(int id)
+        public ActionResult CategoryTemplateDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -192,7 +192,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ManufacturerTemplateDelete(int id)
+        public ActionResult ManufacturerTemplateDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -278,7 +278,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductTemplateDelete(int id)
+        public ActionResult ProductTemplateDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -361,7 +361,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult TopicTemplateDelete(int id)
+        public ActionResult TopicTemplateDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();

@@ -104,7 +104,7 @@ namespace Nop.Services.ExportImport
         /// <param name="name">The name of the object</param>
         /// <param name="picId">Image identifier, may be null</param>
         /// <returns>The image or null if the image has not changed</returns>
-        protected virtual Picture LoadPicture(string picturePath, string name, int? picId = null)
+        protected virtual Picture LoadPicture(string picturePath, string name, string picId = "")
         {
             if (String.IsNullOrEmpty(picturePath) || !File.Exists(picturePath))
                 return null;
@@ -112,10 +112,10 @@ namespace Nop.Services.ExportImport
             var mimeType = GetMimeTypeFromFilePath(picturePath);
             var newPictureBinary = File.ReadAllBytes(picturePath);
             var pictureAlreadyExists = false;
-            if (picId != null)
+            if (!String.IsNullOrEmpty(picId))
             {
                 //compare with existing product pictures
-                var existingPicture = _pictureService.GetPictureById(picId.Value);
+                var existingPicture = _pictureService.GetPictureById(picId);
 
                 var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
                 //picture binary after validation (like in database)
@@ -277,13 +277,13 @@ namespace Nop.Services.ExportImport
                         product.CreatedOnUtc = DateTime.UtcNow;
 
                     product.ProductTypeId = manager.GetProperty("ProductTypeId").IntValue;
-                    product.ParentGroupedProductId = manager.GetProperty("ParentGroupedProductId").IntValue;
+                    product.ParentGroupedProductId = manager.GetProperty("ParentGroupedProductId").StringValue;
                     product.VisibleIndividually = manager.GetProperty("VisibleIndividually").BooleanValue;
                     product.Name = manager.GetProperty("Name").StringValue;
                     product.ShortDescription = manager.GetProperty("ShortDescription").StringValue;
                     product.FullDescription = manager.GetProperty("FullDescription").StringValue;
-                    product.VendorId = manager.GetProperty("VendorId").IntValue;
-                    product.ProductTemplateId = manager.GetProperty("ProductTemplateId").IntValue;
+                    product.VendorId = manager.GetProperty("VendorId").StringValue;
+                    product.ProductTemplateId = manager.GetProperty("ProductTemplateId").StringValue;
                     product.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
                     product.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
                     product.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
@@ -301,12 +301,12 @@ namespace Nop.Services.ExportImport
                     product.RequiredProductIds = manager.GetProperty("RequiredProductIds").StringValue;
                     product.AutomaticallyAddRequiredProducts = manager.GetProperty("AutomaticallyAddRequiredProducts").BooleanValue;
                     product.IsDownload = manager.GetProperty("IsDownload").BooleanValue;
-                    product.DownloadId = manager.GetProperty("DownloadId").IntValue;
+                    product.DownloadId = manager.GetProperty("DownloadId").StringValue;
                     product.UnlimitedDownloads = manager.GetProperty("UnlimitedDownloads").BooleanValue;
                     product.MaxNumberOfDownloads = manager.GetProperty("MaxNumberOfDownloads").IntValue;
                     product.DownloadActivationTypeId = manager.GetProperty("DownloadActivationTypeId").IntValue;
                     product.HasSampleDownload = manager.GetProperty("HasSampleDownload").BooleanValue;
-                    product.SampleDownloadId = manager.GetProperty("SampleDownloadId").IntValue;
+                    product.SampleDownloadId = manager.GetProperty("SampleDownloadId").StringValue;
                     product.HasUserAgreement = manager.GetProperty("HasUserAgreement").BooleanValue;
                     product.UserAgreementText = manager.GetProperty("UserAgreementText").StringValue;
                     product.IsRecurring = manager.GetProperty("IsRecurring").BooleanValue;
@@ -320,13 +320,13 @@ namespace Nop.Services.ExportImport
                     product.IsFreeShipping = manager.GetProperty("IsFreeShipping").BooleanValue;
                     product.ShipSeparately = manager.GetProperty("ShipSeparately").BooleanValue;
                     product.AdditionalShippingCharge = manager.GetProperty("AdditionalShippingCharge").DecimalValue;
-                    product.DeliveryDateId = manager.GetProperty("DeliveryDateId").IntValue;
+                    product.DeliveryDateId = manager.GetProperty("DeliveryDateId").StringValue;
                     product.IsTaxExempt = manager.GetProperty("IsTaxExempt").BooleanValue;
-                    product.TaxCategoryId = manager.GetProperty("TaxCategoryId").IntValue;
+                    product.TaxCategoryId = manager.GetProperty("TaxCategoryId").StringValue;
                     product.IsTelecommunicationsOrBroadcastingOrElectronicServices = manager.GetProperty("IsTelecommunicationsOrBroadcastingOrElectronicServices").BooleanValue;
                     product.ManageInventoryMethodId = manager.GetProperty("ManageInventoryMethodId").IntValue;
                     product.UseMultipleWarehouses = manager.GetProperty("UseMultipleWarehouses").BooleanValue;
-                    product.WarehouseId = manager.GetProperty("WarehouseId").IntValue;
+                    product.WarehouseId = manager.GetProperty("WarehouseId").StringValue;
                     product.StockQuantity = manager.GetProperty("StockQuantity").IntValue;
                     product.DisplayStockAvailability = manager.GetProperty("DisplayStockAvailability").BooleanValue;
                     product.DisplayStockQuantity = manager.GetProperty("DisplayStockQuantity").BooleanValue;
@@ -355,9 +355,9 @@ namespace Nop.Services.ExportImport
                     product.MaximumCustomerEnteredPrice = manager.GetProperty("MaximumCustomerEnteredPrice").DecimalValue;
                     product.BasepriceEnabled = manager.GetProperty("BasepriceEnabled").BooleanValue;
                     product.BasepriceAmount = manager.GetProperty("BasepriceAmount").DecimalValue;
-                    product.BasepriceUnitId = manager.GetProperty("BasepriceUnitId").IntValue;
+                    product.BasepriceUnitId = manager.GetProperty("BasepriceUnitId").StringValue;
                     product.BasepriceBaseAmount = manager.GetProperty("BasepriceBaseAmount").DecimalValue;
-                    product.BasepriceBaseUnitId = manager.GetProperty("BasepriceBaseUnitId").IntValue;
+                    product.BasepriceBaseUnitId = manager.GetProperty("BasepriceBaseUnitId").StringValue;
                     product.MarkAsNew = manager.GetProperty("MarkAsNew").BooleanValue;
                     product.MarkAsNewStartDateTimeUtc = manager.GetProperty("MarkAsNewStartDateTimeUtc").DateTimeNullable;
                     product.MarkAsNewEndDateTimeUtc = manager.GetProperty("MarkAsNewEndDateTimeUtc").DateTimeNullable;
@@ -385,16 +385,16 @@ namespace Nop.Services.ExportImport
                     }
 
                     //search engine name
-                    _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
+                    _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), "");
                     var _seName = product.ValidateSeName(seName, product.Name, true);
                     //search engine name
-                    _urlRecordService.SaveSlug(product, _seName, 0);
+                    _urlRecordService.SaveSlug(product, _seName, "");
                     product.SeName = _seName;
                     _productService.UpdateProduct(product);
                     //category mappings
                     if (!String.IsNullOrEmpty(categoryIds))
                     {
-                        foreach (var id in categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        foreach (var id in categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()))
                         {
                             if (product.ProductCategories.FirstOrDefault(x => x.CategoryId == id) == null)
                             {
@@ -404,8 +404,6 @@ namespace Nop.Services.ExportImport
                                 {
                                     var productCategory = new ProductCategory
                                     {
-                                        _id = ObjectId.GenerateNewId().ToString(),
-                                        Id = product.ProductCategories.Count > 0 ? product.ProductCategories.Max(x => x.Id) + 1 : 1,
                                         ProductId = product.Id,
                                         CategoryId = category.Id,
                                         IsFeaturedProduct = false,
@@ -420,7 +418,7 @@ namespace Nop.Services.ExportImport
                     //manufacturer mappings
                     if (!String.IsNullOrEmpty(manufacturerIds))
                     {
-                        foreach (var id in manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        foreach (var id in manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()))
                         {
                             if (product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == id) == null)
                             {
@@ -430,8 +428,6 @@ namespace Nop.Services.ExportImport
                                 {
                                     var productManufacturer = new ProductManufacturer
                                     {
-                                        _id = ObjectId.GenerateNewId().ToString(),
-                                        Id = product.ProductManufacturers.Count > 0 ? product.ProductManufacturers.Max(x => x.Id) + 1 : 1,
                                         ProductId = product.Id,
                                         ManufacturerId = manufacturer.Id,
                                         IsFeaturedProduct = false,
@@ -476,13 +472,10 @@ namespace Nop.Services.ExportImport
                             var picture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.Name));
                             var productPicture = new ProductPicture
                             {
-                                Id = product.ProductPictures.Count > 0 ? product.ProductPictures.Max(x => x.Id) + 1 : 1,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 PictureId = picture.Id,
                                 ProductId = product.Id,
                                 DisplayOrder = 1,
                             };
-                            //product.ProductPictures.Add(;
                             _productService.InsertProductPicture(productPicture);
                         }
                     }
@@ -518,7 +511,7 @@ namespace Nop.Services.ExportImport
 
                     var email = "";
                     bool isActive = true;
-                    int storeId = _storeContext.CurrentStore.Id;
+                    string storeId = _storeContext.CurrentStore.Id;
                     //parse
                     if (tmp.Length == 1)
                     {
@@ -536,7 +529,7 @@ namespace Nop.Services.ExportImport
                         //"email" and "active" and "storeId" fields specified
                         email = tmp[0].Trim();
                         isActive = Boolean.Parse(tmp[1].Trim());
-                        storeId = Int32.Parse(tmp[2].Trim());
+                        storeId = tmp[2].Trim();
                     }
                     else
                         throw new NopException("Wrong file format");
@@ -680,7 +673,7 @@ namespace Nop.Services.ExportImport
 
                     manager.ReadFromXlsx(worksheet, iRow);
 
-                    var manufacturer = _manufacturerService.GetManufacturerById(manager.GetProperty("Id").IntValue);
+                    var manufacturer = _manufacturerService.GetManufacturerById(manager.GetProperty("Id").StringValue);
 
                     var isNew = manufacturer == null;
 
@@ -691,13 +684,13 @@ namespace Nop.Services.ExportImport
 
                     manufacturer.Name = manager.GetProperty("Name").StringValue;
                     manufacturer.Description = manager.GetProperty("Description").StringValue;
-                    manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").IntValue;
+                    manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").StringValue;
                     manufacturer.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
                     manufacturer.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
                     manufacturer.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
                     var _seName = manager.GetProperty("SeName").StringValue;
                     var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
-                        isNew ? null : (int?)manufacturer.PictureId);
+                        isNew ? "" : manufacturer.PictureId);
                     manufacturer.PageSize = manager.GetProperty("PageSize").IntValue;
                     manufacturer.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
                     manufacturer.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
@@ -718,7 +711,7 @@ namespace Nop.Services.ExportImport
                     _seName = manufacturer.ValidateSeName(_seName, manufacturer.Name, true);
                     manufacturer.SeName = _seName;
                     _manufacturerService.UpdateManufacturer(manufacturer);
-                    _urlRecordService.SaveSlug(manufacturer, manufacturer.SeName, 0);
+                    _urlRecordService.SaveSlug(manufacturer, manufacturer.SeName, "");
 
                     iRow++;
                 }
@@ -775,7 +768,7 @@ namespace Nop.Services.ExportImport
 
                     manager.ReadFromXlsx(worksheet, iRow);
 
-                    var category = _categoryService.GetCategoryById(manager.GetProperty("Id").IntValue);
+                    var category = _categoryService.GetCategoryById(manager.GetProperty("Id").StringValue);
 
                     var isNew = category == null;
 
@@ -786,13 +779,13 @@ namespace Nop.Services.ExportImport
 
                     category.Name = manager.GetProperty("Name").StringValue;
                     category.Description = manager.GetProperty("Description").StringValue;
-                    category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").IntValue;
+                    category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").StringValue;
                     category.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
                     category.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
                     category.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
                     var _seName = manager.GetProperty("SeName").StringValue;
-                    category.ParentCategoryId = manager.GetProperty("ParentCategoryId").IntValue;
-                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?)category.PictureId);
+                    category.ParentCategoryId = manager.GetProperty("ParentCategoryId").StringValue;
+                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? "" : category.PictureId);
                     category.PageSize = manager.GetProperty("PageSize").IntValue;
                     category.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
                     category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
@@ -816,7 +809,7 @@ namespace Nop.Services.ExportImport
                     category.SeName = _seName;
                     _categoryService.UpdateCategory(category);
 
-                    _urlRecordService.SaveSlug(category, _seName, 0);
+                    _urlRecordService.SaveSlug(category, _seName, "");
 
 
                     iRow++;

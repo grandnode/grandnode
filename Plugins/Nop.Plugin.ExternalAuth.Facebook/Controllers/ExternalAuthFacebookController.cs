@@ -11,6 +11,7 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using System;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
 {
@@ -66,7 +67,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             model.ClientSecret = facebookExternalAuthSettings.ClientSecret;
 
             model.ActiveStoreScopeConfiguration = storeScope;
-            if (storeScope > 0)
+            if (!String.IsNullOrEmpty(storeScope))
             {
                 model.ClientKeyIdentifier_OverrideForStore = _settingService.SettingExists(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, storeScope);
                 model.ClientSecret_OverrideForStore = _settingService.SettingExists(facebookExternalAuthSettings, x => x.ClientSecret, storeScope);
@@ -97,14 +98,14 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.ClientKeyIdentifier_OverrideForStore || storeScope == 0)
+            if (model.ClientKeyIdentifier_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(facebookExternalAuthSettings, x => x.ClientKeyIdentifier, storeScope);
 
-            if (model.ClientSecret_OverrideForStore || storeScope == 0)
+            if (model.ClientSecret_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(facebookExternalAuthSettings, x => x.ClientSecret, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(facebookExternalAuthSettings, x => x.ClientSecret, storeScope);
 
             //now clear settings cache

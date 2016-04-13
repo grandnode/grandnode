@@ -1,7 +1,7 @@
 ﻿@model ProductDetailsModel.AddToCartModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
-@if (Model.UpdatedShoppingCartItemId > 0)
+@if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId))
 {
     @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
 }
@@ -53,7 +53,7 @@
                 }
                 @{
                     var addToCartText = "";
-                    if (Model.UpdatedShoppingCartItemId > 0 && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+                    if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
                     {
                         addToCartText = T("ShoppingCart.AddToCart.Update").Text;
                     }

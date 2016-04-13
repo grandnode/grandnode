@@ -12,7 +12,7 @@ namespace Nop.Admin.Models.Polls
     public partial class PollModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
         [AllowHtml]

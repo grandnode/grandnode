@@ -19,8 +19,7 @@
     <table class="adminContent">
         <tr>
             <td>
-                <div id="productattributevalues-grid"></div>
-
+                <div id="productattributevalues-grid"></div>                
                 <script>
                     $(document).ready(function () {
                         $("#productattributevalues-grid").kendoGrid({
@@ -34,7 +33,7 @@
                                         data: addAntiForgeryToken
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("ProductAttributeValueDelete", "Product"))",
+                                        url: "@Html.Raw(Url.Action("ProductAttributeValueDelete", "Product", new { pam = Model.ProductAttributeMappingId, productId = Model.ProductId }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -47,8 +46,7 @@
                                     model: {
                                         id: "Id",
                                         fields: {
-                                            Product2Name: { editable: false, type: "string" },
-                                            ProductId2: { editable: false, type: "number" }
+                                            id: { editable: false, type: "string" },
                                         }
                                     }
                                 },

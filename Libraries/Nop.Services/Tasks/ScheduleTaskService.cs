@@ -47,11 +47,8 @@ namespace Nop.Services.Tasks
         /// </summary>
         /// <param name="taskId">Task identifier</param>
         /// <returns>Task</returns>
-        public virtual ScheduleTask GetTaskById(int taskId)
+        public virtual ScheduleTask GetTaskById(string taskId)
         {
-            if (taskId == 0)
-                return null;
-
             return _taskRepository.GetById(taskId);
         }
 

@@ -28,7 +28,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="campaignId">Campaign identifier</param>
         /// <returns>Campaign</returns>
-        Campaign GetCampaignById(int campaignId);
+        Campaign GetCampaignById(string campaignId);
 
         /// <summary>
         /// Gets all campaigns

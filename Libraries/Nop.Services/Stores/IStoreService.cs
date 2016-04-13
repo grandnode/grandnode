@@ -25,7 +25,7 @@ namespace Nop.Services.Stores
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Store</returns>
-        Store GetStoreById(int storeId);
+        Store GetStoreById(string storeId);
 
         /// <summary>
         /// Inserts a store

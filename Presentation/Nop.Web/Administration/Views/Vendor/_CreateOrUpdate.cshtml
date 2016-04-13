@@ -23,7 +23,7 @@
         <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
             @T("Admin.Common.SEO")
         </li>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
                 @T("Admin.Vendors.VendorNotes")
@@ -36,7 +36,7 @@
     <div>
         @TabSeo()
     </div>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
             @TabVendorNotes()
@@ -141,7 +141,7 @@
                 @Html.ValidationMessageFor(model => model.Email)
             </td>
         </tr>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <tr>
                 <td class="adminTitle">
@@ -428,7 +428,7 @@
 
             var postData = {
                 message: vendorNoteMessage,
-                vendorId: @Model.Id
+                vendorId: '@Model.Id'
             };
             addAntiForgeryToken(postData);
 

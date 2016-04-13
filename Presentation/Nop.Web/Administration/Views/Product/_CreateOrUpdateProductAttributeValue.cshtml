@@ -188,7 +188,7 @@
                 <li style="float: left; width: 110px;">
                     <p style="float: left; padding-top: 20px;">
                         <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="0" id="id_image_0"
-                                @if (Model.PictureId == 0)
+                                @if (!String.IsNullOrEmpty(Model.PictureId))
                                 {
                                     <text>checked="checked"</text>
                                 }>

@@ -9,7 +9,7 @@ namespace Nop.Web.Models.Boards
             this.ForumPostModels = new List<ForumPostModel>();
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Subject { get; set; }
         public string SeName { get; set; }
 

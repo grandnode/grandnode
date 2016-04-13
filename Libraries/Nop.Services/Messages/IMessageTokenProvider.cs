@@ -16,11 +16,11 @@ namespace Nop.Services.Messages
     {
         void AddStoreTokens(IList<Token> tokens, Store store, EmailAccount emailAccount);
 
-        void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0);
+        void AddOrderTokens(IList<Token> tokens, Order order, string languageId, string vendorId = "");
 
         void AddOrderRefundedTokens(IList<Token> tokens, Order order, decimal refundedAmount);
 
-        void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId);
+        void AddShipmentTokens(IList<Token> tokens, Shipment shipment, string languageId);
 
         void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote);
 
@@ -32,6 +32,8 @@ namespace Nop.Services.Messages
 
         void AddCustomerTokens(IList<Token> tokens, Customer customer);
 
+        void AddShoppingCartTokens(IList<Token> tokens, Customer customer);
+
         void AddVendorTokens(IList<Token> tokens, Vendor vendor);
 
         void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription);
@@ -42,14 +44,14 @@ namespace Nop.Services.Messages
 
         void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment);
 
-        void AddProductTokens(IList<Token> tokens, Product product, int languageId);
+        void AddProductTokens(IList<Token> tokens, Product product, string languageId);
 
-        void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, int languageId);
+        void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination, string languageId);
 
         void AddForumTokens(IList<Token> tokens, Forum forum);
 
         void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic,
-            int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null);
+            int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "");
 
         void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost);
 

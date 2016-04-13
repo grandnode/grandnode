@@ -6,17 +6,18 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a product category mapping
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductCategory : BaseEntity
+    public partial class ProductCategory : SubBaseEntity
     {
+
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
-
+        [BsonIgnore]
+        public string ProductId { get; set; }
         /// <summary>
         /// Gets or sets the category identifier
         /// </summary>
-        public int CategoryId { get; set; }
+        public string CategoryId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product is featured
@@ -27,11 +28,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets the published category
-        /// </summary>
-        public bool Published { get; set; }
 
     }
 

@@ -36,7 +36,7 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        public virtual IList<IExternalAuthenticationMethod> LoadActiveExternalAuthenticationMethods(int storeId = 0)
+        public virtual IList<IExternalAuthenticationMethod> LoadActiveExternalAuthenticationMethods(string storeId = "")
         {
             return LoadAllExternalAuthenticationMethods(storeId)
                    .Where(provider => _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
@@ -62,7 +62,7 @@ namespace Nop.Services.Authentication.External
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>External authentication methods</returns>
-        public virtual IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(int storeId = 0)
+        public virtual IList<IExternalAuthenticationMethod> LoadAllExternalAuthenticationMethods(string storeId = "")
         {
             return _pluginFinder
                 .GetPlugins<IExternalAuthenticationMethod>(storeId: storeId)

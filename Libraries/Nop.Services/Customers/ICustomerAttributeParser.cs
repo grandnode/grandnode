@@ -28,7 +28,7 @@ namespace Nop.Services.Customers
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute value</returns>
-        IList<string> ParseValues(string attributesXml, int customerAttributeId);
+        IList<string> ParseValues(string attributesXml, string customerAttributeId);
 
         /// <summary>
         /// Adds an attribute

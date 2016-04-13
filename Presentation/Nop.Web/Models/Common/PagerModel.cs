@@ -403,7 +403,7 @@ namespace Nop.Web.Models.Common
     /// </summary>
     public partial class RouteValues : IRouteValues
     {
-        public int id { get; set; }
+        public string id { get; set; }
         public string slug { get; set; }
         public int page { get; set; }
     }

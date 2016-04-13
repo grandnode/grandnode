@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a product attribute mapping
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class ProductAttributeMapping : BaseEntity, ILocalizedEntity
+    public partial class ProductAttributeMapping : SubBaseEntity, ILocalizedEntity
     {
         private ICollection<ProductAttributeValue> _productAttributeValues;
 
@@ -19,12 +19,13 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        [BsonIgnore]
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the product attribute identifier
         /// </summary>
-        public int ProductAttributeId { get; set; }
+        public string ProductAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets a value a text prompt

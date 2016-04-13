@@ -120,12 +120,12 @@ namespace Nop.Services.Seo
         [Serializable]
         public class UrlRecordForCaching
         {
-            public int Id { get; set; }
-            public int EntityId { get; set; }
+            public string Id { get; set; }
+            public string EntityId { get; set; }
             public string EntityName { get; set; }
             public string Slug { get; set; }
             public bool IsActive { get; set; }
-            public int LanguageId { get; set; }
+            public string LanguageId { get; set; }
         }
 
         #endregion
@@ -152,11 +152,8 @@ namespace Nop.Services.Seo
         /// </summary>
         /// <param name="urlRecordId">URL record identifier</param>
         /// <returns>URL record</returns>
-        public virtual UrlRecord GetUrlRecordById(int urlRecordId)
+        public virtual UrlRecord GetUrlRecordById(string urlRecordId)
         {
-            if (urlRecordId == 0)
-                return null;
-
             return _urlRecordRepository.GetById(urlRecordId);
         }
 
@@ -270,7 +267,7 @@ namespace Nop.Services.Seo
         /// <param name="entityName">Entity name</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Found slug</returns>
-        public virtual string GetActiveSlug(int entityId, string entityName, int languageId)
+        public virtual string GetActiveSlug(string entityId, string entityName, string languageId)
         {
             if (_localizationSettings.LoadAllUrlRecordsOnStartup)
             {
@@ -324,12 +321,12 @@ namespace Nop.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
-        public virtual void SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported
+        public virtual void SaveSlug<T>(T entity, string slug, string languageId) where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            int entityId = entity.Id;
+            string entityId = entity.Id;
             string entityName = typeof(T).Name;
 
             var query = from ur in _urlRecordRepository.Table

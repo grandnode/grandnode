@@ -8307,7 +8307,10 @@
  <LocaleResource Name="admin.customers.customeraction.conditions.addnew">
    <Value>Add new condition</Value>
  </LocaleResource>
- <LocaleResource Name="admin.customers.customeraction.editcustomeraction">
+  <LocaleResource Name="admin.customers.customeraction.Deleted">
+    <Value>The customer action has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.editcustomeraction">
   <Value>Edit action</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.editcustomeractioncondition">

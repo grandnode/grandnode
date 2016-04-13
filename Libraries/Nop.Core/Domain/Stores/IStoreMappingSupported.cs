@@ -11,6 +11,6 @@ namespace Nop.Core.Domain.Stores
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         bool LimitedToStores { get; set; }
-        IList<int> Stores { get; set; }
+        IList<string> Stores { get; set; }
     }
 }

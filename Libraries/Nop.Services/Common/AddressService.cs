@@ -74,31 +74,13 @@ namespace Nop.Services.Common
         #region Methods
 
         /// <summary>
-        /// Deletes an address
-        /// </summary>
-        /// <param name="address">Address</param>
-        //public virtual void DeleteAddress(Address address)
-        //{
-        //    if (address == null)
-        //        throw new ArgumentNullException("address");
-
-        //    _addressRepository.Delete(address);
-
-        //    //cache
-        //    _cacheManager.RemoveByPattern(ADDRESSES_PATTERN_KEY);
-
-        //    //event notification
-        //    _eventPublisher.EntityDeleted(address);
-        //}
-
-        /// <summary>
         /// Gets total number of addresses by country identifier
         /// </summary>
         /// <param name="countryId">Country identifier</param>
         /// <returns>Number of addresses</returns>
-        public virtual int GetAddressTotalByCountryId(int countryId)
+        public virtual int GetAddressTotalByCountryId(string countryId)
         {
-            if (countryId == 0)
+            if (String.IsNullOrEmpty(countryId))
                 return 0;
 
             var query = from a in _addressRepository.Table
@@ -112,9 +94,9 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="stateProvinceId">State/province identifier</param>
         /// <returns>Number of addresses</returns>
-        public virtual int GetAddressTotalByStateProvinceId(int stateProvinceId)
+        public virtual int GetAddressTotalByStateProvinceId(string stateProvinceId)
         {
-            if (stateProvinceId == 0)
+            if (String.IsNullOrEmpty(stateProvinceId))
                 return 0;
 
             var query = from a in _addressRepository.Table
@@ -128,9 +110,9 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="addressId">Address identifier</param>
         /// <returns>Address</returns>
-        public virtual Address GetAddressByIdSettings(int addressId)
+        public virtual Address GetAddressByIdSettings(string addressId)
         {
-            if (addressId == 0)
+            if (String.IsNullOrEmpty(addressId))
                 return null;
 
             string key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
@@ -147,13 +129,6 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException("address");
             
             address.CreatedOnUtc = DateTime.UtcNow;
-
-            //some validation
-            //if (address.CountryId == 0)
-            //    address.CountryId = 0;
-            //if (address.StateProvinceId == 0)
-            //    address.StateProvinceId = null;
-
             _addressRepository.Insert(address);
 
             //cache
@@ -171,12 +146,6 @@ namespace Nop.Services.Common
         {
             if (address == null)
                 throw new ArgumentNullException("address");
-
-            //some validation
-            //if (address.CountryId == 0)
-            //    address.CountryId = null;
-            //if (address.StateProvinceId == 0)
-            //    address.StateProvinceId = null;
 
             _addressRepository.Update(address);
 
@@ -229,7 +198,7 @@ namespace Nop.Services.Common
 
             if (_addressSettings.CountryEnabled)
             {
-                if (address.CountryId == 0)
+                if (String.IsNullOrEmpty(address.CountryId))
                     return false;
 
                 var country = _countryService.GetCountryById(address.CountryId);
@@ -241,7 +210,7 @@ namespace Nop.Services.Common
                     var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id);
                     if (states.Count > 0)
                     {
-                        if (address.StateProvinceId == 0)
+                        if (String.IsNullOrEmpty(address.StateProvinceId))
                             return false;
 
                         var state = states.FirstOrDefault(x => x.Id == address.StateProvinceId);

@@ -7,7 +7,7 @@ namespace Nop.Plugin.Feed.Froogle.Domain
     /// </summary>
     public partial class GoogleProductRecord : BaseEntity
     {
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         public string Taxonomy { get; set; }
 
         /// <summary>

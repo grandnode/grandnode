@@ -30,7 +30,7 @@ namespace Nop.Web.Models.Common
         public bool DisplayTaxShippingInfoFooter { get; set; }
         public bool HidePoweredByGrandNode { get; set; }
 
-        public int WorkingLanguageId { get; set; }
+        public string WorkingLanguageId { get; set; }
 
         public IList<FooterTopicModel> Topics { get; set; }
 

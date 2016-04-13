@@ -39,11 +39,8 @@ namespace Nop.Services.Polls
         /// </summary>
         /// <param name="pollId">The poll identifier</param>
         /// <returns>Poll</returns>
-        public virtual Poll GetPollById(int pollId)
+        public virtual Poll GetPollById(string pollId)
         {
-            if (pollId == 0)
-                return null;
-
             return _pollRepository.GetById(pollId);
         }
 
@@ -53,7 +50,7 @@ namespace Nop.Services.Polls
         /// <param name="systemKeyword">The poll system keyword</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <returns>Poll</returns>
-        public virtual Poll GetPollBySystemKeyword(string systemKeyword, int languageId)
+        public virtual Poll GetPollBySystemKeyword(string systemKeyword, string languageId)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return null;
@@ -74,7 +71,7 @@ namespace Nop.Services.Polls
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Polls</returns>
-        public virtual IPagedList<Poll> GetPolls(int languageId = 0, bool loadShownOnHomePageOnly = false,
+        public virtual IPagedList<Poll> GetPolls(string languageId = "", bool loadShownOnHomePageOnly = false,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _pollRepository.Table;
@@ -90,7 +87,7 @@ namespace Nop.Services.Polls
             {
                 query = query.Where(p => p.ShowOnHomePage);
             }
-            if (languageId > 0)
+            if (!String.IsNullOrEmpty(languageId))
             {
                 query = query.Where(p => p.LanguageId == languageId);
             }
@@ -153,9 +150,9 @@ namespace Nop.Services.Polls
         /// <param name="pollId">Poll identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Result</returns>
-        public virtual bool AlreadyVoted(int pollId, int customerId)
+        public virtual bool AlreadyVoted(string pollId, string customerId)
         {
-            if (pollId == 0 || customerId == 0)
+            if (String.IsNullOrEmpty(pollId) || String.IsNullOrEmpty(customerId))
                 return false;
 
             var builder = Builders<Poll>.Filter;

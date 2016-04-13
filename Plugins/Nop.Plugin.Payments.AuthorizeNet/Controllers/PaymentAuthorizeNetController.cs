@@ -50,7 +50,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             model.TransactModeValues = authorizeNetPaymentSettings.TransactMode.ToSelectList();
 
             model.ActiveStoreScopeConfiguration = storeScope;
-            if (storeScope > 0)
+            if (!String.IsNullOrEmpty(storeScope))
             {
                 model.UseSandbox_OverrideForStore = _settingService.SettingExists(authorizeNetPaymentSettings, x => x.UseSandbox, storeScope);
                 model.TransactModeId_OverrideForStore = _settingService.SettingExists(authorizeNetPaymentSettings, x => x.TransactMode, storeScope);
@@ -86,34 +86,34 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
-            if (model.UseSandbox_OverrideForStore || storeScope == 0)
+            if (model.UseSandbox_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.UseSandbox, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.UseSandbox, storeScope);
 
-            if (model.TransactModeId_OverrideForStore || storeScope == 0)
+            if (model.TransactModeId_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.TransactMode, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.TransactMode, storeScope);
 
-            if (model.TransactionKey_OverrideForStore || storeScope == 0)
+            if (model.TransactionKey_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.TransactionKey, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.TransactionKey, storeScope);
 
-            if (model.LoginId_OverrideForStore || storeScope == 0)
+            if (model.LoginId_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.LoginId, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.LoginId, storeScope);
 
-            if (model.AdditionalFee_OverrideForStore || storeScope == 0)
+            if (model.AdditionalFee_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.AdditionalFee, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.AdditionalFee, storeScope);
 
-            if (model.AdditionalFeePercentage_OverrideForStore || storeScope == 0)
+            if (model.AdditionalFeePercentage_OverrideForStore || String.IsNullOrEmpty(storeScope))
                 _settingService.SaveSetting(authorizeNetPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
-            else if (storeScope > 0)
+            else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(authorizeNetPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
 
             //now clear settings cache

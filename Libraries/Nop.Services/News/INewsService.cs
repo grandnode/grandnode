@@ -20,7 +20,7 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="newsId">The news identifier</param>
         /// <returns>News</returns>
-        NewsItem GetNewsById(int newsId);
+        NewsItem GetNewsById(string newsId);
 
         /// <summary>
         /// Gets all news
@@ -31,7 +31,7 @@ namespace Nop.Services.News
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>News items</returns>
-        IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
+        IPagedList<NewsItem> GetAllNews(string languageId = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false);
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <returns>Comments</returns>
-        IList<NewsComment> GetAllComments(int customerId);
+        IList<NewsComment> GetAllComments(string customerId);
 
         
         

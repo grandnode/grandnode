@@ -63,8 +63,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x=>x.Id)+1:1,
                     });
 
                 if (!(String.IsNullOrEmpty(local.Description)))
@@ -73,8 +71,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Description",
                         LocaleValue = local.Description,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
 
             }
@@ -95,8 +91,6 @@ namespace Nop.Admin.Controllers
                         LanguageId = local.LanguageId,
                         LocaleKey = "Name",
                         LocaleValue = local.Name,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        Id = localized.Count > 0 ? localized.Max(x => x.Id) + 1 : 1,
                     });
             }
             return localized;
@@ -175,7 +169,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -233,7 +227,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -258,7 +252,7 @@ namespace Nop.Admin.Controllers
 
         //used by products
         [HttpPost]
-        public ActionResult UsedByProducts(DataSourceRequest command, int productAttributeId)
+        public ActionResult UsedByProducts(DataSourceRequest command, string productAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -289,7 +283,7 @@ namespace Nop.Admin.Controllers
         #region Predefined values
 
         [HttpPost]
-        public ActionResult PredefinedProductAttributeValueList(int productAttributeId, DataSourceRequest command)
+        public ActionResult PredefinedProductAttributeValueList(string productAttributeId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -320,7 +314,7 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult PredefinedProductAttributeValueCreatePopup(int productAttributeId)
+        public ActionResult PredefinedProductAttributeValueCreatePopup(string productAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -359,8 +353,6 @@ namespace Nop.Admin.Controllers
                     Cost = model.Cost,
                     IsPreSelected = model.IsPreSelected,
                     DisplayOrder = model.DisplayOrder,
-                    _id = ObjectId.GenerateNewId().ToString(),
-                    Id = productAttribute.PredefinedProductAttributeValues.Count > 0 ? productAttribute.PredefinedProductAttributeValues.Max(x=>x.Id)+1:1,
                 };
                 ppav.Locales = UpdateLocales(ppav, model);
                 productAttribute.PredefinedProductAttributeValues.Add(ppav);
@@ -377,7 +369,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult PredefinedProductAttributeValueEditPopup(int id, int productAttributeId)
+        public ActionResult PredefinedProductAttributeValueEditPopup(string id, string productAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();
@@ -438,7 +430,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult PredefinedProductAttributeValueDelete(int id, int productAttributeId)
+        public ActionResult PredefinedProductAttributeValueDelete(string id, string productAttributeId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
                 return AccessDeniedView();

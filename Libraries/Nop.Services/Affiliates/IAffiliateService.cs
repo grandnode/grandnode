@@ -14,7 +14,7 @@ namespace Nop.Services.Affiliates
         /// </summary>
         /// <param name="affiliateId">Affiliate identifier</param>
         /// <returns>Affiliate</returns>
-        Affiliate GetAffiliateById(int affiliateId);
+        Affiliate GetAffiliateById(string affiliateId);
 
         /// <summary>
         /// Gets an affiliate by friendly url name

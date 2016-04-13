@@ -46,7 +46,7 @@
                         cache: false,
                         type: "POST",
                         url: "@(Url.RouteUrl("PollVote"))",
-                        data: { "pollAnswerId": pollAnswerId, "pollId": @(Model.Id) },
+                        data: { "pollAnswerId": pollAnswerId, "pollId": '@(Model.Id)' },
                         success: function (data) {
                             voteProgress.hide();
 

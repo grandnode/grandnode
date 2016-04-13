@@ -17,7 +17,7 @@ namespace Nop.Admin.Models.Forums
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.ForumGroupId")]
-        public int ForumGroupId { get; set; }
+        public string ForumGroupId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.Name")]
         [AllowHtml]

@@ -6,7 +6,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }

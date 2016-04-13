@@ -8,8 +8,8 @@
     $(document).ready(function () {
         $('#saveHasAllProductsrequirement@(Model.RequirementId)').click(function () {
             var productIds = $("#@Html.FieldIdFor(model => model.Products)").val();
-            var discountId = @Model.DiscountId;
-            var requirementId = @Model.RequirementId;
+            var discountId = '@Model.DiscountId';
+            var requirementId = '@Model.RequirementId';
                 
             var postData = {
                 discountId: discountId, 
@@ -26,7 +26,7 @@
                 success: function (data) {
                     $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
                     //notify parent if it's a new requirement
-                    @if (Model.RequirementId == 0)
+                    @if (String.IsNullOrEmpty(Model.RequirementId))
                     {
                         <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
                     }

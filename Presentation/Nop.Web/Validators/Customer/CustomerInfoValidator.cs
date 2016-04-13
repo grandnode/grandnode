@@ -30,7 +30,7 @@ namespace Nop.Web.Validators.Customer
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
             {
                 RuleFor(x => x.CountryId)
-                    .NotEqual(0)
+                    .NotEqual("")
                     .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"));
             }
             if (customerSettings.CountryEnabled &&
@@ -44,7 +44,7 @@ namespace Nop.Web.Validators.Customer
                     if (hasStates)
                     {
                         //if yes, then ensure that a state is selected
-                        if (x.StateProvinceId == 0)
+                        if (String.IsNullOrEmpty(x.StateProvinceId))
                         {
                             return new ValidationFailure("StateProvinceId", localizationService.GetResource("Account.Fields.StateProvince.Required"));
                         }

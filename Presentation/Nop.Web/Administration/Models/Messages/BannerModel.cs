@@ -30,7 +30,7 @@ namespace Nop.Admin.Models.Messages
 
     public partial class BannerLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Banners.Fields.Name")]
         public string Name { get; set; }

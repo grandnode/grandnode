@@ -31,28 +31,28 @@ namespace Nop.Services.Catalog
         /// Gets recommended products for customer roles
         /// </summary>
         /// <returns>Products</returns>
-        IList<Product> GetRecommendedProducts(int[] customerRoleIds);
+        IList<Product> GetRecommendedProducts(string[] customerRoleIds);
 
         /// <summary>
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Product</returns>
-        Product GetProductById(int productId);
+        Product GetProductById(string productId);
         
         /// <summary>
         /// Gets products by identifier
         /// </summary>
         /// <param name="productIds">Product identifiers</param>
         /// <returns>Products</returns>
-        IList<Product> GetProductsByIds(int[] productIds);
+        IList<Product> GetProductsByIds(string[] productIds);
 
         /// <summary>
         /// Gets products by discount
         /// </summary>
         /// <param name="discountId">Product identifiers</param>
         /// <returns>Products</returns>
-        IList<Product> GetProductsByDiscount(int discountId);
+        IList<Product> GetProductsByDiscount(string discountId);
 
         /// <summary>
         /// Inserts a product
@@ -77,7 +77,7 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">Category identifiers</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <returns>Product number</returns>
-        int GetCategoryProductNumber(IList<int> categoryIds = null, int storeId = 0);
+        int GetCategoryProductNumber(IList<string> categoryIds = null, string storeId = "");
 
         /// <summary>
         /// Search products
@@ -112,23 +112,23 @@ namespace Nop.Services.Catalog
         IPagedList<Product> SearchProducts(
             int pageIndex = 0,
             int pageSize = int.MaxValue,
-            IList<int> categoryIds = null,
-            int manufacturerId = 0,
-            int storeId = 0,
-            int vendorId = 0,
-            int warehouseId = 0,
+            IList<string> categoryIds = null,
+            string manufacturerId = "",
+            string storeId = "",
+            string vendorId = "",
+            string warehouseId = "",
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
             bool markedAsNewOnly = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            int productTagId = 0,
+            string productTagId = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
             bool searchProductTags = false,
-            int languageId = 0,
+            string languageId = "",
             IList<string> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
@@ -171,23 +171,23 @@ namespace Nop.Services.Catalog
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
             int pageSize = int.MaxValue,
-            IList<int> categoryIds = null,
-            int manufacturerId = 0,
-            int storeId = 0,
-            int vendorId = 0,
-            int warehouseId = 0,
+            IList<string> categoryIds = null,
+            string manufacturerId = "",
+            string storeId = "",
+            string vendorId = "",
+            string warehouseId = "",
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
             bool markedAsNewOnly = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
-            int productTagId = 0,
+            string productTagId = "",
             string keywords = null,
             bool searchDescriptions = false,
             bool searchSku = true,
             bool searchProductTags = false, 
-            int languageId = 0,
+            string languageId = "",
             IList<string> filteredSpecs = null, 
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false,
@@ -200,7 +200,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Products</returns>
-        IPagedList<Product> GetProductsByProductAtributeId(int productAttributeId,
+        IPagedList<Product> GetProductsByProductAtributeId(string productAttributeId,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -211,8 +211,8 @@ namespace Nop.Services.Catalog
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        IList<Product> GetAssociatedProducts(int parentGroupedProductId,
-            int storeId = 0, int vendorId = 0, bool showHidden = false);
+        IList<Product> GetAssociatedProducts(string parentGroupedProductId,
+            string storeId = "", string vendorId = "", bool showHidden = false);
 
         /// <summary>
         /// Update product review totals
@@ -243,7 +243,7 @@ namespace Nop.Services.Catalog
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="products">Low stock products</param>
         /// <param name="combinations">Low stock attribute combinations</param>
-        void GetLowStockProducts(int vendorId,
+        void GetLowStockProducts(string vendorId,
             out IList<Product> products,
             out IList<ProductAttributeCombination> combinations);
 
@@ -258,13 +258,13 @@ namespace Nop.Services.Catalog
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
-        void UpdateHasTierPricesProperty(int productId);
+        void UpdateHasTierPricesProperty(string productId);
 
         /// <summary>
         /// Update HasDiscountsApplied property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
-        void UpdateHasDiscountsApplied(int productId);
+        void UpdateHasDiscountsApplied(string productId);
 
         #endregion
 
@@ -298,7 +298,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        void BookReservedInventory(Product product, int warehouseId, int quantity);
+        void BookReservedInventory(Product product, string warehouseId, int quantity);
 
         /// <summary>
         /// Reverse booked inventory (if acceptable)
@@ -317,21 +317,6 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
         void DeleteRelatedProduct(RelatedProduct relatedProduct);
-
-        /// <summary>
-        /// Gets related products by product identifier
-        /// </summary>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Related products</returns>
-        //IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1, bool showHidden = false);
-
-        /// <summary>
-        /// Gets a related product
-        /// </summary>
-        /// <param name="relatedProductId">Related product identifier</param>
-        /// <returns>Related product</returns>
-        //RelatedProduct GetRelatedProductById(int relatedProductId);
 
         /// <summary>
         /// Inserts a related product
@@ -356,32 +341,11 @@ namespace Nop.Services.Catalog
         void DeleteCrossSellProduct(CrossSellProduct crossSellProduct);
 
         /// <summary>
-        /// Gets cross-sell products by product identifier
-        /// </summary>
-        /// <param name="productId1">The first product identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Cross-sell products</returns>
-        //IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false);
-
-        /// <summary>
-        /// Gets a cross-sell product
-        /// </summary>
-        /// <param name="crossSellProductId">Cross-sell product identifier</param>
-        /// <returns>Cross-sell product</returns>
-        //CrossSellProduct GetCrossSellProductById(int crossSellProductId);
-
-        /// <summary>
         /// Inserts a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
         void InsertCrossSellProduct(CrossSellProduct crossSellProduct);
 
-        /// <summary>
-        /// Updates a cross-sell product
-        /// </summary>
-        /// <param name="crossSellProduct">Cross-sell product</param>
-        //void UpdateCrossSellProduct(CrossSellProduct crossSellProduct);
-        
         /// <summary>
         /// Gets a cross-sells
         /// </summary>
@@ -399,13 +363,6 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
         void DeleteTierPrice(TierPrice tierPrice);
-
-        /// <summary>
-        /// Gets a tier price
-        /// </summary>
-        /// <param name="tierPriceId">Tier price identifier</param>
-        /// <returns>Tier price</returns>
-        //TierPrice GetTierPriceById(int tierPriceId);
 
         /// <summary>
         /// Inserts a tier price
@@ -447,20 +404,6 @@ namespace Nop.Services.Catalog
         void DeleteProductPicture(ProductPicture productPicture);
 
         /// <summary>
-        /// Gets a product pictures by product identifier
-        /// </summary>
-        /// <param name="productId">The product identifier</param>
-        /// <returns>Product pictures</returns>
-        //IList<ProductPicture> GetProductPicturesByProductId(int productId);
-
-        /// <summary>
-        /// Gets a product picture
-        /// </summary>
-        /// <param name="productPictureId">Product picture identifier</param>
-        /// <returns>Product picture</returns>
-        //ProductPicture GetProductPictureById(int productPictureId);
-
-        /// <summary>
         /// Inserts a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
@@ -487,9 +430,9 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="productId">Product identifier; 0 to load all records</param>
         /// <returns>Reviews</returns>
-        IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
+        IList<ProductReview> GetAllProductReviews(string customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null, int storeId = 0, int productId = 0);
+            string message = null, string storeId = "", string productId = "");
 
         /// <summary>
         /// Get rating sum for product
@@ -497,7 +440,7 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier, 0 to load all records</param> 
         /// <returns>Sum</returns>
-        int RatingSumProduct(int productId, int storeId);
+        int RatingSumProduct(string productId, string storeId);
 
         /// <summary>
         /// Total reviews for product
@@ -505,14 +448,14 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier, 0 to load all records</param> 
         /// <returns>Sum</returns>
-        int TotalReviewsProduct(int productId, int storeId);
+        int TotalReviewsProduct(string productId, string storeId);
 
         /// <summary>
         /// Gets product review
         /// </summary>
         /// <param name="productReviewId">Product review identifier</param>
         /// <returns>Product review</returns>
-        ProductReview GetProductReviewById(int productReviewId);
+        ProductReview GetProductReviewById(string productReviewId);
 
         /// <summary>
         /// Deletes a product review
@@ -543,8 +486,8 @@ namespace Nop.Services.Catalog
         /// <param name="pwi">ProductWarehouseInventory</param>
         void UpdateProductWarehouseInventory(ProductWarehouseInventory pwi);
 
-        void InsertDiscount(Discount discount, int productId);
-        void DeleteDiscount(Discount discount, int productId);
+        void InsertDiscount(Discount discount, string productId);
+        void DeleteDiscount(Discount discount, string productId);
         #endregion
     }
 }

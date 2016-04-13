@@ -25,7 +25,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryTemplateId">Category template identifier</param>
         /// <returns>Category template</returns>
-        CategoryTemplate GetCategoryTemplateById(int categoryTemplateId);
+        CategoryTemplate GetCategoryTemplateById(string categoryTemplateId);
 
         /// <summary>
         /// Inserts category template

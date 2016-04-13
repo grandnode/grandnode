@@ -6,7 +6,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
         [NopResourceDisplayName("Plugins.Payments.AuthorizeNet.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }

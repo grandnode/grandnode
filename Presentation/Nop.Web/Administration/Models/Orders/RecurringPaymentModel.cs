@@ -7,7 +7,7 @@ namespace Nop.Admin.Models.Orders
     public partial class RecurringPaymentModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.ID")]
-        public override int Id { get; set; }
+        public override string Id { get; set; }
 
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.CycleLength")]
         public int CycleLength { get; set; }
@@ -34,10 +34,10 @@ namespace Nop.Admin.Models.Orders
         public int CyclesRemaining { get; set; }
 
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.InitialOrder")]
-        public int InitialOrderId { get; set; }
+        public string InitialOrderId { get; set; }
 
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.Customer")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.Customer")]
         public string CustomerEmail { get; set; }
 
@@ -52,9 +52,9 @@ namespace Nop.Admin.Models.Orders
         public partial class RecurringPaymentHistoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.RecurringPayments.History.Order")]
-            public int OrderId { get; set; }
+            public string OrderId { get; set; }
 
-            public int RecurringPaymentId { get; set; }
+            public string RecurringPaymentId { get; set; }
 
             [NopResourceDisplayName("Admin.RecurringPayments.History.OrderStatus")]
             public string OrderStatus { get; set; }

@@ -18,15 +18,16 @@ namespace Nop.Web.Models.Customer
         {
             public Guid OrderItemGuid { get; set; }
 
-            public int OrderId { get; set; }
+            public string OrderId { get; set; }
+            public int OrderNumber { get; set; }
 
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
             public string ProductAttributes { get; set; }
 
-            public int DownloadId { get; set; }
-            public int LicenseId { get; set; }
+            public string DownloadId { get; set; }
+            public string LicenseId { get; set; }
 
             public DateTime CreatedOn { get; set; }
         }

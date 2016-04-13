@@ -17,22 +17,22 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
         }
 
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Store")]
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Store")]
         public string StoreName { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Warehouse")]
-        public int WarehouseId { get; set; }
+        public string WarehouseId { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Warehouse")]
         public string WarehouseName { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
         public string CountryName { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.StateProvince")]
-        public int StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.StateProvince")]
         public string StateProvinceName { get; set; }
 
@@ -40,7 +40,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
         public string Zip { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingMethod")]
-        public int ShippingMethodId { get; set; }
+        public string ShippingMethodId { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingMethod")]
         public string ShippingMethodName { get; set; }
 

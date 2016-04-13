@@ -60,7 +60,7 @@ namespace Nop.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>ContactUs items</returns>
         public virtual IPagedList<ContactUs> GetAllContactUs(DateTime? fromUtc = null, DateTime? toUtc = null,
-            string email = "", int vendorId = 0, int customerId = 0, int storeId = 0,
+            string email = "", string vendorId = "", string customerId = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var builder = Builders<ContactUs>.Filter;
@@ -70,11 +70,11 @@ namespace Nop.Services.Messages
                 filter = filter & builder.Where(l => fromUtc.Value <= l.CreatedOnUtc);
             if (toUtc.HasValue)
                 filter = filter & builder.Where(l => toUtc.Value >= l.CreatedOnUtc);
-            if (vendorId > 0)
+            if (!String.IsNullOrEmpty(vendorId))
                 filter = filter & builder.Where(l => vendorId == l.VendorId);
-            if (customerId > 0)
+            if (!String.IsNullOrEmpty(customerId))
                 filter = filter & builder.Where(l => customerId == l.CustomerId);
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 filter = filter & builder.Where(l => storeId == l.StoreId);
 
             if (!String.IsNullOrEmpty(email))
@@ -94,14 +94,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="contactUsId">ContactUs item identifier</param>
         /// <returns>ContactUs item</returns>
-        public virtual ContactUs GetContactUsById(int contactUsId)
+        public virtual ContactUs GetContactUsById(string contactUsId)
         {
-            if (contactUsId == 0)
-                return null;
-
             return _contactusRepository.GetById(contactUsId);
-
-
         }
 
         /// <summary>

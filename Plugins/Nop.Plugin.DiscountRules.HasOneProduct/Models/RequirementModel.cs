@@ -10,9 +10,9 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Models
         [NopResourceDisplayName("Plugins.DiscountRules.HasOneProduct.Fields.Products")]
         public string Products { get; set; }
 
-        public int DiscountId { get; set; }
+        public string DiscountId { get; set; }
 
-        public int RequirementId { get; set; }
+        public string RequirementId { get; set; }
 
         #region Nested classes
 
@@ -31,13 +31,13 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Models
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
+            public string SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
+            public string SearchVendorId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 

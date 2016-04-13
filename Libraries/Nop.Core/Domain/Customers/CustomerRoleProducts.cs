@@ -14,12 +14,12 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer role id
         /// </summary>
-        public int CustomerRoleId { get; set; }
+        public string CustomerRoleId { get; set; }
 
         /// <summary>
         /// Gets or sets the product Id
         /// </summary>
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the display order

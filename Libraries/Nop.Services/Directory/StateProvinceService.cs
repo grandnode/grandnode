@@ -78,9 +78,9 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="stateProvinceId">The state/province identifier</param>
         /// <returns>State/province</returns>
-        public virtual StateProvince GetStateProvinceById(int stateProvinceId)
+        public virtual StateProvince GetStateProvinceById(string stateProvinceId)
         {
-            if (stateProvinceId == 0)
+            if (String.IsNullOrEmpty(stateProvinceId))
                 return null;
 
             return _stateProvinceRepository.GetById(stateProvinceId);
@@ -107,7 +107,7 @@ namespace Nop.Services.Directory
         /// <param name="languageId">Language identifier. It's used to sort states by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>States</returns>
-        public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
+        public virtual IList<StateProvince> GetStateProvincesByCountryId(string countryId, string languageId = "", bool showHidden = false)
         {
             string key = string.Format(STATEPROVINCES_ALL_KEY, countryId, languageId, showHidden);
             return _cacheManager.Get(key, () =>
@@ -119,7 +119,7 @@ namespace Nop.Services.Directory
                             select sp;
                 var stateProvinces = query.ToList();
 
-                if (languageId > 0)
+                if (!String.IsNullOrEmpty(languageId))
                 {
                     //we should sort states by localized names when they have the same display order
                     stateProvinces = stateProvinces

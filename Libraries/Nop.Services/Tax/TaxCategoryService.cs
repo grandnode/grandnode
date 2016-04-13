@@ -5,6 +5,8 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Events;
+using MongoDB.Driver;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Tax
 {
@@ -31,6 +33,12 @@ namespace Nop.Services.Tax
         /// </summary>
         private const string TAXCATEGORIES_PATTERN_KEY = "Nop.taxcategory.";
 
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+
+
         #endregion
 
         #region Fields
@@ -38,6 +46,7 @@ namespace Nop.Services.Tax
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
+        private readonly IRepository<Product> _productRepository;
 
         #endregion
 
@@ -51,11 +60,12 @@ namespace Nop.Services.Tax
         /// <param name="eventPublisher">Event published</param>
         public TaxCategoryService(ICacheManager cacheManager,
             IRepository<TaxCategory> taxCategoryRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher, IRepository<Product> productRepository)
         {
             _cacheManager = cacheManager;
             _taxCategoryRepository = taxCategoryRepository;
             _eventPublisher = eventPublisher;
+            _productRepository = productRepository;
         }
 
         #endregion
@@ -71,9 +81,16 @@ namespace Nop.Services.Tax
             if (taxCategory == null)
                 throw new ArgumentNullException("taxCategory");
 
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.TaxCategoryId, taxCategory.Id);
+            var update = Builders<Product>.Update
+                .Set(x => x.TaxCategoryId, "");
+            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+
             _taxCategoryRepository.Delete(taxCategory);
 
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(taxCategory);
@@ -101,11 +118,8 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <returns>Tax category</returns>
-        public virtual TaxCategory GetTaxCategoryById(int taxCategoryId)
+        public virtual TaxCategory GetTaxCategoryById(string taxCategoryId)
         {
-            if (taxCategoryId == 0)
-                return null;
-            
             string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
             return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
         }

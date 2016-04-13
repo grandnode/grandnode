@@ -1,5 +1,5 @@
 ﻿@model ProductModel
-@if (Model.Id > 0)
+@if (!String.IsNullOrEmpty(Model.Id))
 {
     if (Model.AvailableManufacturers.Count > 0)
     {
@@ -44,11 +44,10 @@
                                     id: "Id",
                                     fields: {
                                         Manufacturer: { editable: true, type: "string" },
-                                        //ProductId: { editable: false, type: "number" },
-                                        ManufacturerId: { editable: true, type: "number" },
+                                        ManufacturerId: { editable: true, type: "string" },
                                         IsFeaturedProduct: { editable: true, type: "boolean" },
                                         DisplayOrder: { editable: true, type: "number" },
-                                        Id: { editable: false, type: "number" }
+                                        Id: { editable: false, type: "string" }
                                     }
                                 }
                             },
@@ -139,7 +138,7 @@
                         var manufacturerItem = Model.AvailableManufacturers[i];
                         <text>
                         {
-                            Id: @(manufacturerItem.Value),
+                            Id: '@(manufacturerItem.Value)',
                             Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(manufacturerItem.Text)))"
                         }
                         </text>

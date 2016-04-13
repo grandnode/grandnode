@@ -30,7 +30,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
         /// <returns>Product attribute values</returns>
-        IList<string> ParseValues(string attributesXml, int productAttributeMappingId);
+        IList<string> ParseValues(string attributesXml, string productAttributeMappingId);
 
         /// <summary>
         /// Adds an attribute

@@ -418,7 +418,7 @@ namespace Nop.Web.Controllers
                 if (model.EstimateShipping.Enabled)
                 {
                     //countries
-                    int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.CountryId : model.EstimateShipping.CountryId;
+                    string defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.CountryId : model.EstimateShipping.CountryId;
                     model.EstimateShipping.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                     foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
                         model.EstimateShipping.AvailableCountries.Add(new SelectListItem
@@ -428,8 +428,8 @@ namespace Nop.Web.Controllers
                             Selected = c.Id == defaultEstimateCountryId
                         });
                     //states
-                    int? defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId : model.EstimateShipping.StateProvinceId;
-                    var states = defaultEstimateCountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value, _workContext.WorkingLanguage.Id).ToList() : new List<StateProvince>();
+                    string defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId : model.EstimateShipping.StateProvinceId;
+                    var states = !String.IsNullOrEmpty(defaultEstimateCountryId) ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId, _workContext.WorkingLanguage.Id).ToList() : new List<StateProvince>();
                     if (states.Count > 0)
                         foreach (var s in states)
                             model.EstimateShipping.AvailableStates.Add(new SelectListItem
@@ -1089,10 +1089,9 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
+                                        attribute, ctrlAttributes);
+
                             }
                         }
                         break;
@@ -1103,10 +1102,7 @@ namespace Nop.Web.Controllers
                             {
                                 foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml, attribute, cblAttributes);
                                 }
                             }
                         }
@@ -1210,10 +1206,8 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, ctrlAttributes);
                             }
                         }
                         break;
@@ -1224,10 +1218,9 @@ namespace Nop.Web.Controllers
                             {
                                 foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
+                                    if (!String.IsNullOrEmpty(item))
                                         attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                            attribute, item);
                                 }
                             }
                         }
@@ -1242,7 +1235,7 @@ namespace Nop.Web.Controllers
                                 .ToList())
                             {
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId.ToString());
+                                    attribute, selectedAttributeId);
                             }
                         }
                         break;
@@ -1388,7 +1381,7 @@ namespace Nop.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
-        public ActionResult AddProductToCart_Catalog(int productId, int shoppingCartTypeId,
+        public ActionResult AddProductToCart_Catalog(string productId, int shoppingCartTypeId,
             int quantity, bool forceredirection = false)
         {
             var cartType = (ShoppingCartType)shoppingCartTypeId;
@@ -1572,7 +1565,7 @@ namespace Nop.Web.Controllers
         //currently we use this method on the product details pages
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AddProductToCart_Details(int productId, int shoppingCartTypeId, FormCollection form)
+        public ActionResult AddProductToCart_Details(string productId, int shoppingCartTypeId, FormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -1594,30 +1587,21 @@ namespace Nop.Web.Controllers
             }
 
             #region Update existing shopping cart item?
-            int updatecartitemid = 0;
+            string updatecartitemid = "";
             foreach (string formKey in form.AllKeys)
                 if (formKey.Equals(string.Format("addtocart_{0}.UpdatedShoppingCartItemId", productId), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    int.TryParse(form[formKey], out updatecartitemid);
+                    updatecartitemid = form[formKey];
                     break;
                 }
             ShoppingCartItem updatecartitem = null;
-            if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
+            if (_shoppingCartSettings.AllowCartItemEditing && !String.IsNullOrEmpty(updatecartitemid))
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
                     .Where(x => x.ShoppingCartTypeId == shoppingCartTypeId)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
-                //not found? let's ignore it. in this case we'll add a new item
-                //if (updatecartitem == null)
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        message = "No shopping cart item found to update"
-                //    });
-                //}
 
                 //is it this product?
                 if (updatecartitem != null && product.Id != updatecartitem.ProductId)
@@ -1801,7 +1785,7 @@ namespace Nop.Web.Controllers
         //currently we use this method on the product details pages
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions, FormCollection form)
+        public ActionResult ProductDetails_AttributeChange(string productId, bool validateAttributeConditions, FormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -1843,8 +1827,8 @@ namespace Nop.Web.Controllers
             var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser);
 
             //conditional attributes
-            var enabledAttributeMappingIds = new List<int>();
-            var disabledAttributeMappingIds = new List<int>();
+            var enabledAttributeMappingIds = new List<string>();
+            var disabledAttributeMappingIds = new List<string>();
             if (validateAttributeConditions)
             {
                 var attributes = product.ProductAttributeMappings;
@@ -1886,8 +1870,8 @@ namespace Nop.Web.Controllers
             var attributeXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes,
                 _storeContext.CurrentStore.Id);
 
-            var enabledAttributeIds = new List<int>();
-            var disabledAttributeIds = new List<int>();
+            var enabledAttributeIds = new List<string>();
+            var disabledAttributeIds = new List<string>();
             var attributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in attributes)
             {
@@ -1909,7 +1893,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadFileProductAttribute(int attributeId, int productId)
+        public ActionResult UploadFileProductAttribute(string attributeId, string productId)
         {
             var product = _productService.GetProductById(productId);
             var attribute = product.ProductAttributeMappings.Where(x => x.Id == attributeId).FirstOrDefault(); //_productAttributeService.GetProductAttributeMappingById(attributeId);
@@ -1994,7 +1978,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadFileCheckoutAttribute(int attributeId)
+        public ActionResult UploadFileCheckoutAttribute(string attributeId)
         {
             var attribute = _checkoutAttributeService.GetCheckoutAttributeById(attributeId);
             if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
@@ -2121,10 +2105,10 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x).ToList() : new List<string>();
 
             //current warnings <cart item identifier, warnings>
-            var innerWarnings = new Dictionary<int, IList<string>>();
+            var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
@@ -2252,6 +2236,7 @@ namespace Nop.Web.Controllers
                     {
                         //valid
                         _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, discountcouponcode);
+                        _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
                         model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
                         model.DiscountBox.IsApplied = true;
                     }
@@ -2364,10 +2349,8 @@ namespace Nop.Web.Controllers
             {
                 var address = new Address
                 {
-                    CountryId = shippingModel.CountryId.HasValue ? shippingModel.CountryId.Value : 0,
-                    //CountryId = shippingModel.CountryId.HasValue ? _countryService.GetCountryById(shippingModel.CountryId.Value) : null,
-                    StateProvinceId  = shippingModel.StateProvinceId.HasValue ? shippingModel.StateProvinceId.Value : 0,
-                    //StateProvince = shippingModel.StateProvinceId.HasValue ? _stateProvinceService.GetStateProvinceById(shippingModel.StateProvinceId.Value) : null,
+                    CountryId = !String.IsNullOrEmpty(shippingModel.CountryId) ? shippingModel.CountryId : "",
+                    StateProvinceId  = !String.IsNullOrEmpty(shippingModel.StateProvinceId)? shippingModel.StateProvinceId : "",
                     ZipPostalCode = shippingModel.ZipPostalCode,
                 };
                 GetShippingOptionResponse getShippingOptionResponse = _shippingService
@@ -2463,10 +2446,10 @@ namespace Nop.Web.Controllers
             var model = new ShoppingCartModel();
 
             //get gift card identifier
-            int giftCardId = 0;
+            string giftCardId = "";
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("removegiftcard-", StringComparison.InvariantCultureIgnoreCase))
-                    giftCardId = Convert.ToInt32(formValue.Substring("removegiftcard-".Length));
+                    giftCardId = formValue.Substring("removegiftcard-".Length);
             var gc = _giftCardService.GetGiftCardById(giftCardId);
             if (gc != null)
             {
@@ -2534,12 +2517,12 @@ namespace Nop.Web.Controllers
 
             var allIdsToRemove = form["removefromcart"] != null 
                 ? form["removefromcart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(int.Parse)
+                .Select(x=>x)
                 .ToList() 
-                : new List<int>();
+                : new List<string>();
 
             //current warnings <cart item identifier, warnings>
-            var innerWarnings = new Dictionary<int, IList<string>>();
+            var innerWarnings = new Dictionary<string, IList<string>>();
             foreach (var sci in cart)
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
@@ -2615,9 +2598,9 @@ namespace Nop.Web.Controllers
             var numberOfAddedItems = 0;
             var allIdsToAdd = form["addtocart"] != null 
                 ? form["addtocart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(int.Parse)
+                .Select(x=>x)
                 .ToList() 
-                : new List<int>();
+                : new List<string>();
             foreach (var sci in pageCart)
             {
                 if (allIdsToAdd.Contains(sci.Id))

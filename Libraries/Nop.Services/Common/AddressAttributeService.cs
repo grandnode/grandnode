@@ -124,9 +124,9 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="addressAttributeId">Address attribute identifier</param>
         /// <returns>Address attribute</returns>
-        public virtual AddressAttribute GetAddressAttributeById(int addressAttributeId)
+        public virtual AddressAttribute GetAddressAttributeById(string addressAttributeId)
         {
-            if (addressAttributeId == 0)
+            if (String.IsNullOrEmpty(addressAttributeId))
                 return null;
 
             string key = string.Format(ADDRESSATTRIBUTES_BY_ID_KEY, addressAttributeId);
@@ -180,7 +180,7 @@ namespace Nop.Services.Common
 
             var updatebuilder = Builders<AddressAttribute>.Update;
             var update = updatebuilder.Pull(p => p.AddressAttributeValues, addressAttributeValue);
-            _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("Id", addressAttributeValue.AddressAttributeId), update);
+            _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", addressAttributeValue.AddressAttributeId), update);
 
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);
@@ -200,7 +200,7 @@ namespace Nop.Services.Common
 
             var updatebuilder = Builders<AddressAttribute>.Update;
             var update = updatebuilder.AddToSet(p => p.AddressAttributeValues, addressAttributeValue);
-            _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("Id", addressAttributeValue.AddressAttributeId), update);
+            _addressAttributeRepository.Collection.UpdateOneAsync(new BsonDocument("_id", addressAttributeValue.AddressAttributeId), update);
 
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(ADDRESSATTRIBUTEVALUES_PATTERN_KEY);

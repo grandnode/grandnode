@@ -24,7 +24,7 @@ namespace Nop.Services.Shipping
         }
 
         public static bool CountryRestrictionExists(this ShippingMethod shippingMethod,
-            int countryId)
+            string countryId)
         {
             if (shippingMethod == null)
                 throw new ArgumentNullException("shippingMethod");

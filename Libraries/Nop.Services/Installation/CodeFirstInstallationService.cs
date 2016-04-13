@@ -121,7 +121,8 @@ namespace Nop.Services.Installation
         private readonly IRepository<ContactUs> _contactUsRepository;
         private readonly IRepository<CustomerAction> _customerAction;
         private readonly IRepository<CustomerActionType> _customerActionType;
-        private readonly IRepository<CustomerActionConditionType> _customerActionConditionType;
+        private readonly IRepository<Banner> _banner;
+        private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
@@ -205,7 +206,8 @@ namespace Nop.Services.Installation
             IRepository<ContactUs> contactUsRepository,
             IRepository<CustomerAction> customerAction,
             IRepository<CustomerActionType> customerActionType,
-            IRepository<CustomerActionConditionType> customerActionConditionType,
+            IRepository<Banner> banner,
+            IRepository<CustomerReminder> customerReminder,
             IGenericAttributeService genericAttributeService,
             ICustomerActionService customerActionService,
             IWebHelper webHelper)
@@ -284,8 +286,9 @@ namespace Nop.Services.Installation
             this._returnRequestActionRepository = returnRequestActionRepository;
             this._customerAction = customerAction;
             this._customerActionType = customerActionType;
-            this._customerActionConditionType = customerActionConditionType;
+            this._customerReminder = customerReminder;
             this._customerActionService = customerActionService;
+            this._banner = banner;
         }
 
         #endregion
@@ -604,8 +607,6 @@ namespace Nop.Services.Installation
         {
             var cUsa = new Country
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "United States",
                 AllowsBilling = true,
                 AllowsShipping = true,
@@ -622,7 +623,7 @@ namespace Nop.Services.Installation
 
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "AA (Armed Forces Americas)",
                 Abbreviation = "AA",
                 Published = true,
@@ -630,7 +631,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "AE (Armed Forces Europe)",
                 Abbreviation = "AE",
                 Published = true,
@@ -638,7 +639,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Alabama",
                 Abbreviation = "AL",
                 Published = true,
@@ -646,7 +647,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Alaska",
                 Abbreviation = "AK",
                 Published = true,
@@ -654,7 +655,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "American Samoa",
                 Abbreviation = "AS",
                 Published = true,
@@ -662,7 +663,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "AP (Armed Forces Pacific)",
                 Abbreviation = "AP",
                 Published = true,
@@ -670,7 +671,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Arizona",
                 Abbreviation = "AZ",
                 Published = true,
@@ -678,7 +679,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Arkansas",
                 Abbreviation = "AR",
                 Published = true,
@@ -686,7 +687,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "California",
                 Abbreviation = "CA",
                 Published = true,
@@ -694,7 +695,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Colorado",
                 Abbreviation = "CO",
                 Published = true,
@@ -702,7 +703,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Connecticut",
                 Abbreviation = "CT",
                 Published = true,
@@ -710,7 +711,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Delaware",
                 Abbreviation = "DE",
                 Published = true,
@@ -718,7 +719,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "District of Columbia",
                 Abbreviation = "DC",
                 Published = true,
@@ -726,7 +727,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Federated States of Micronesia",
                 Abbreviation = "FM",
                 Published = true,
@@ -734,7 +735,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Florida",
                 Abbreviation = "FL",
                 Published = true,
@@ -742,7 +743,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Georgia",
                 Abbreviation = "GA",
                 Published = true,
@@ -750,7 +751,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Guam",
                 Abbreviation = "GU",
                 Published = true,
@@ -758,7 +759,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Hawaii",
                 Abbreviation = "HI",
                 Published = true,
@@ -766,7 +767,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Idaho",
                 Abbreviation = "ID",
                 Published = true,
@@ -774,7 +775,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Illinois",
                 Abbreviation = "IL",
                 Published = true,
@@ -782,7 +783,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Indiana",
                 Abbreviation = "IN",
                 Published = true,
@@ -790,7 +791,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Iowa",
                 Abbreviation = "IA",
                 Published = true,
@@ -798,7 +799,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Kansas",
                 Abbreviation = "KS",
                 Published = true,
@@ -806,7 +807,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Kentucky",
                 Abbreviation = "KY",
                 Published = true,
@@ -814,7 +815,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Louisiana",
                 Abbreviation = "LA",
                 Published = true,
@@ -822,7 +823,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Maine",
                 Abbreviation = "ME",
                 Published = true,
@@ -830,7 +831,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Marshall Islands",
                 Abbreviation = "MH",
                 Published = true,
@@ -838,7 +839,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Maryland",
                 Abbreviation = "MD",
                 Published = true,
@@ -846,7 +847,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Massachusetts",
                 Abbreviation = "MA",
                 Published = true,
@@ -854,7 +855,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Michigan",
                 Abbreviation = "MI",
                 Published = true,
@@ -862,7 +863,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Minnesota",
                 Abbreviation = "MN",
                 Published = true,
@@ -870,7 +871,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Mississippi",
                 Abbreviation = "MS",
                 Published = true,
@@ -878,7 +879,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Missouri",
                 Abbreviation = "MO",
                 Published = true,
@@ -886,7 +887,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Montana",
                 Abbreviation = "MT",
                 Published = true,
@@ -894,7 +895,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Nebraska",
                 Abbreviation = "NE",
                 Published = true,
@@ -902,7 +903,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Nevada",
                 Abbreviation = "NV",
                 Published = true,
@@ -910,7 +911,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "New Hampshire",
                 Abbreviation = "NH",
                 Published = true,
@@ -918,7 +919,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "New Jersey",
                 Abbreviation = "NJ",
                 Published = true,
@@ -926,7 +927,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "New Mexico",
                 Abbreviation = "NM",
                 Published = true,
@@ -934,7 +935,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "New York",
                 Abbreviation = "NY",
                 Published = true,
@@ -942,7 +943,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "North Carolina",
                 Abbreviation = "NC",
                 Published = true,
@@ -950,7 +951,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "North Dakota",
                 Abbreviation = "ND",
                 Published = true,
@@ -958,7 +959,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Northern Mariana Islands",
                 Abbreviation = "MP",
                 Published = true,
@@ -966,7 +967,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Ohio",
                 Abbreviation = "OH",
                 Published = true,
@@ -974,7 +975,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Oklahoma",
                 Abbreviation = "OK",
                 Published = true,
@@ -982,7 +983,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Oregon",
                 Abbreviation = "OR",
                 Published = true,
@@ -990,7 +991,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Palau",
                 Abbreviation = "PW",
                 Published = true,
@@ -998,7 +999,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Pennsylvania",
                 Abbreviation = "PA",
                 Published = true,
@@ -1006,7 +1007,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Puerto Rico",
                 Abbreviation = "PR",
                 Published = true,
@@ -1014,7 +1015,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Rhode Island",
                 Abbreviation = "RI",
                 Published = true,
@@ -1022,7 +1023,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "South Carolina",
                 Abbreviation = "SC",
                 Published = true,
@@ -1030,7 +1031,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "South Dakota",
                 Abbreviation = "SD",
                 Published = true,
@@ -1038,7 +1039,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Tennessee",
                 Abbreviation = "TN",
                 Published = true,
@@ -1046,7 +1047,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Texas",
                 Abbreviation = "TX",
                 Published = true,
@@ -1054,7 +1055,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Utah",
                 Abbreviation = "UT",
                 Published = true,
@@ -1062,7 +1063,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Vermont",
                 Abbreviation = "VT",
                 Published = true,
@@ -1070,7 +1071,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Virgin Islands",
                 Abbreviation = "VI",
                 Published = true,
@@ -1078,7 +1079,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Virginia",
                 Abbreviation = "VA",
                 Published = true,
@@ -1086,7 +1087,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Washington",
                 Abbreviation = "WA",
                 Published = true,
@@ -1094,7 +1095,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "West Virginia",
                 Abbreviation = "WV",
                 Published = true,
@@ -1102,7 +1103,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Wisconsin",
                 Abbreviation = "WI",
                 Published = true,
@@ -1110,7 +1111,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 1,
+                CountryId = cUsa.Id,
                 Name = "Wyoming",
                 Abbreviation = "WY",
                 Published = true,
@@ -1118,8 +1119,6 @@ namespace Nop.Services.Installation
             });
             var cCanada = new Country
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Canada",
                 AllowsBilling = true,
                 AllowsShipping = true,
@@ -1134,7 +1133,7 @@ namespace Nop.Services.Installation
 
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Alberta",
                 Abbreviation = "AB",
                 Published = true,
@@ -1142,7 +1141,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "British Columbia",
                 Abbreviation = "BC",
                 Published = true,
@@ -1150,7 +1149,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Manitoba",
                 Abbreviation = "MB",
                 Published = true,
@@ -1158,7 +1157,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "New Brunswick",
                 Abbreviation = "NB",
                 Published = true,
@@ -1166,7 +1165,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Newfoundland and Labrador",
                 Abbreviation = "NL",
                 Published = true,
@@ -1174,7 +1173,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Northwest Territories",
                 Abbreviation = "NT",
                 Published = true,
@@ -1182,7 +1181,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Nova Scotia",
                 Abbreviation = "NS",
                 Published = true,
@@ -1190,7 +1189,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Nunavut",
                 Abbreviation = "NU",
                 Published = true,
@@ -1198,7 +1197,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Ontario",
                 Abbreviation = "ON",
                 Published = true,
@@ -1206,7 +1205,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Prince Edward Island",
                 Abbreviation = "PE",
                 Published = true,
@@ -1214,7 +1213,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Quebec",
                 Abbreviation = "QC",
                 Published = true,
@@ -1222,7 +1221,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Saskatchewan",
                 Abbreviation = "SK",
                 Published = true,
@@ -1230,7 +1229,7 @@ namespace Nop.Services.Installation
             });
             states.Add(new StateProvince
             {
-                CountryId = 2,
+                CountryId = cCanada.Id,
                 Name = "Yukon Territory",
                 Abbreviation = "YT",
                 Published = true,
@@ -4118,8 +4117,6 @@ namespace Nop.Services.Installation
         {
             var crAdministrators = new CustomerRole
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Administrators",
                 Active = true,
                 IsSystemRole = true,
@@ -4129,8 +4126,6 @@ namespace Nop.Services.Installation
 
             var crForumModerators = new CustomerRole
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Forum Moderators",
                 Active = true,
                 IsSystemRole = true,
@@ -4140,8 +4135,6 @@ namespace Nop.Services.Installation
 
             var crRegistered = new CustomerRole
             {
-                Id = 3,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Registered",
                 Active = true,
                 IsSystemRole = true,
@@ -4151,8 +4144,6 @@ namespace Nop.Services.Installation
 
             var crGuests = new CustomerRole
             {
-                Id = 4,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Guests",
                 Active = true,
                 IsSystemRole = true,
@@ -4162,8 +4153,6 @@ namespace Nop.Services.Installation
 
             var crVendors = new CustomerRole
             {
-                Id = 5,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Vendors",
                 Active = true,
                 IsSystemRole = true,
@@ -4187,8 +4176,6 @@ namespace Nop.Services.Installation
             };
             var defaultAdminUserAddress = new Address
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 FirstName = "John",
                 LastName = "Smith",
                 PhoneNumber = "12345678",
@@ -4210,6 +4197,7 @@ namespace Nop.Services.Installation
             adminUser.CustomerRoles.Add(crForumModerators);
             adminUser.CustomerRoles.Add(crRegistered);
             _customerRepository.Insert(adminUser);
+
             //set default customer name
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.FirstName, "John");
             _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
@@ -4251,76 +4239,10 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCustomerAction()
         {
-            var customerActionConditionType = new List<CustomerActionConditionType>()
-            {
-                new CustomerActionConditionType()
-                {
-                    Id = 1,
-                    Name = "Product"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 2,
-                    Name = "Category"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 3,
-                    Name = "Manufacturer"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 4,
-                    Name = "Vendor"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 5,
-                    Name = "Product attribute"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 6,
-                    Name = "Product specification"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 7,
-                    Name = "Customer role"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 8,
-                    Name = "Customer tag"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 9,
-                    Name = "Customer register field"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 10,
-                    Name = "Custom Customer Attribute"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 11,
-                    Name = "URL Referrer"
-                },
-                new CustomerActionConditionType()
-                {
-                    Id = 12,
-                    Name = "Url Current"
-                }
-            };
-            _customerActionConditionType.Insert(customerActionConditionType);
-
             var customerActionType = new List<CustomerActionType>()
             {
                 new CustomerActionType()
                 {
-                    Id = 1,
                     Name = "Add to cart",
                     SystemKeyword = "AddToCart",
                     Enabled = false,
@@ -4328,7 +4250,6 @@ namespace Nop.Services.Installation
                 },
                 new CustomerActionType()
                 {
-                    Id = 2,
                     Name = "Add order",
                     SystemKeyword = "AddOrder",
                     Enabled = false,
@@ -4336,7 +4257,6 @@ namespace Nop.Services.Installation
                 },
                 new CustomerActionType()
                 {
-                    Id = 3,
                     Name = "Viewed",
                     SystemKeyword = "Viewed",
                     Enabled = false,
@@ -4344,7 +4264,6 @@ namespace Nop.Services.Installation
                 },
                 new CustomerActionType()
                 {
-                    Id = 4,
                     Name = "Url",
                     SystemKeyword = "Url",
                     Enabled = false,
@@ -4352,7 +4271,6 @@ namespace Nop.Services.Installation
                 },
                 new CustomerActionType()
                 {
-                    Id = 5,
                     Name = "Customer Registration",
                     SystemKeyword = "Registration",
                     Enabled = false,
@@ -4830,7 +4748,7 @@ namespace Nop.Services.Installation
                 {
                     EntityId = topic.Id,
                     EntityName = "Topic",
-                    LanguageId = 0,
+                    LanguageId = "",
                     IsActive = true,
                     Slug = seName
                 });
@@ -4845,7 +4763,7 @@ namespace Nop.Services.Installation
             var settingService = EngineContext.Current.Resolve<ISettingService>();
             settingService.SaveSetting(new PdfSettings
             {
-                LogoPictureId = 0,
+                LogoPictureId = "",
                 LetterPageSizeEnabled = false,
                 RenderOrderNotes = true,
                 FontFileName = "FreeSerif.ttf",
@@ -5048,6 +4966,7 @@ namespace Nop.Services.Installation
                 PhoneEnabled = false,
                 FaxEnabled = false,
                 AcceptPrivacyPolicyEnabled = false,
+                CartNoOlderThanXDays = 30,
                 NewsletterEnabled = true,
                 NewsletterTickedByDefault = true,
                 HideNewsletterBlock = false,
@@ -5243,7 +5162,7 @@ namespace Nop.Services.Installation
                 TaxBasedOn = TaxBasedOn.BillingAddress,
                 TaxDisplayType = TaxDisplayType.ExcludingTax,
                 ActiveTaxProviderSystemName = "Tax.FixedRate",
-                DefaultTaxAddressId = 0,
+                DefaultTaxAddressId = "",
                 DisplayTaxSuffix = false,
                 DisplayTaxRates = false,
                 PricesIncludeTax = false,
@@ -5253,12 +5172,12 @@ namespace Nop.Services.Installation
                 HideTaxInOrderSummary = false,
                 ShippingIsTaxable = false,
                 ShippingPriceIncludesTax = false,
-                ShippingTaxClassId = 0,
+                ShippingTaxClassId = "",
                 PaymentMethodAdditionalFeeIsTaxable = false,
                 PaymentMethodAdditionalFeeIncludesTax = false,
-                PaymentMethodAdditionalFeeTaxClassId = 0,
+                PaymentMethodAdditionalFeeTaxClassId = "",
                 EuVatEnabled = false,
-                EuVatShopCountryId = 0,
+                EuVatShopCountryId = "",
                 EuVatAllowVatExemption = true,
                 EuVatUseWebService = false,
                 EuVatAssumeValid = false,
@@ -5353,183 +5272,150 @@ namespace Nop.Services.Installation
         {
             var ca1 = new CheckoutAttribute
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Gift wrapping",
                 IsRequired = true,
                 ShippableProductRequired = true,
                 AttributeControlType = AttributeControlType.DropdownList,
                 DisplayOrder = 1,
             };
+            _checkoutAttributeRepository.Insert(ca1);
             ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "No",
                 PriceAdjustment = 0,
                 DisplayOrder = 1,
                 IsPreSelected = true,
-                CheckoutAttributeId = 1,
+                CheckoutAttributeId = ca1.Id,
             });
+
             ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Yes",
                 PriceAdjustment = 10,
                 DisplayOrder = 2,
-                CheckoutAttributeId = 1,
+                CheckoutAttributeId = ca1.Id,
             });
-            var checkoutAttributes = new List<CheckoutAttribute>
-                                {
-                                    ca1,
-                                };
-            _checkoutAttributeRepository.Insert(checkoutAttributes);
+            _checkoutAttributeRepository.Update(ca1);
         }
 
         protected virtual void InstallSpecificationAttributes()
         {
             var sa1 = new SpecificationAttribute
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Screensize",
                 DisplayOrder = 1,
             };
+            _specificationAttributeRepository.Insert(sa1);
+
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
 
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "13.0''",
                 DisplayOrder = 2,
-                SpecificationAttributeId = 1,
+                SpecificationAttributeId = sa1.Id,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "13.3''",
                 DisplayOrder = 3,
-                SpecificationAttributeId = 1,
+                SpecificationAttributeId = sa1.Id,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 3,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "14.0''",
                 DisplayOrder = 4,
-                SpecificationAttributeId = 1,
+                SpecificationAttributeId = sa1.Id,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 4,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "15.0''",
                 DisplayOrder = 4,
-                SpecificationAttributeId = 1,
+                SpecificationAttributeId = sa1.Id,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 5,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "15.6''",
                 DisplayOrder = 5,
-                SpecificationAttributeId = 1,
+                SpecificationAttributeId = sa1.Id,
             });
+            _specificationAttributeRepository.Update(sa1);
+
             var sa2 = new SpecificationAttribute
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "CPU Type",
                 DisplayOrder = 2,
             };
+            _specificationAttributeRepository.Insert(sa2);
+
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Intel Core i5",
                 DisplayOrder = 1,
-                SpecificationAttributeId = 2,
+                SpecificationAttributeId = sa1.Id,
             });
+
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Intel Core i7",
                 DisplayOrder = 2,
-                SpecificationAttributeId = 2,
+                SpecificationAttributeId = sa2.Id,
             });
+            _specificationAttributeRepository.Update(sa2);
+
             var sa3 = new SpecificationAttribute
             {
-                Id = 3,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Memory",
                 DisplayOrder = 3,
             };
+            _specificationAttributeRepository.Insert(sa3);
+
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "4 GB",
                 DisplayOrder = 1,
-                SpecificationAttributeId = 3,
+                SpecificationAttributeId = sa3.Id,
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "8 GB",
                 DisplayOrder = 2,
-                SpecificationAttributeId = 3,
+                SpecificationAttributeId = sa3.Id,
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 3,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "16 GB",
                 DisplayOrder = 3,
-                SpecificationAttributeId = 3,
+                SpecificationAttributeId = sa3.Id,
             });
+            _specificationAttributeRepository.Update(sa3);
+
             var sa4 = new SpecificationAttribute
             {
-                Id = 4,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "Hardrive",
                 DisplayOrder = 5,
             };
+            _specificationAttributeRepository.Insert(sa4);
+
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "128 GB",
                 DisplayOrder = 7,
-                SpecificationAttributeId = 4,
+                SpecificationAttributeId = sa4.Id,
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "500 GB",
                 DisplayOrder = 4,
-                SpecificationAttributeId = 4,
+                SpecificationAttributeId = sa4.Id,
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Id = 3,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Name = "1 TB",
                 DisplayOrder = 3,
-                SpecificationAttributeId = 4,
+                SpecificationAttributeId = sa4.Id,
             });
-            var specificationAttributes = new List<SpecificationAttribute>
-                                {
-                                    sa1,
-                                    sa2,
-                                    sa3,
-                                    sa4
-                                };
-            _specificationAttributeRepository.Insert(specificationAttributes);
+            _specificationAttributeRepository.Update(sa4);
+
         }
 
         protected virtual void InstallProductAttributes()
@@ -5590,12 +5476,12 @@ namespace Nop.Services.Installation
             var allCategories = new List<Category>();
             var categoryComputers = new Category
             {
-                Id = 1,
                 Name = "Computers",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
+                ParentCategoryId = "",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5607,7 +5493,6 @@ namespace Nop.Services.Installation
 
             var categoryDesktops = new Category
             {
-                Id = 2,
                 Name = "Desktops",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5626,7 +5511,6 @@ namespace Nop.Services.Installation
 
             var categoryNotebooks = new Category
             {
-                Id = 3,
                 Name = "Notebooks",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5644,7 +5528,6 @@ namespace Nop.Services.Installation
 
             var categorySoftware = new Category
             {
-                Id = 4,
                 Name = "Software",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5662,10 +5545,10 @@ namespace Nop.Services.Installation
 
             var categoryElectronics = new Category
             {
-                Id = 5,
                 Name = "Electronics",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
+                ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics")).Id,
@@ -5680,7 +5563,6 @@ namespace Nop.Services.Installation
 
             var categoryCameraPhoto = new Category
             {
-                Id = 6,
                 Name = "Camera & photo",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5699,7 +5581,6 @@ namespace Nop.Services.Installation
 
             var categoryCellPhones = new Category
             {
-                Id = 7,
                 Name = "Cell phones",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5717,7 +5598,6 @@ namespace Nop.Services.Installation
 
             var categoryOthers = new Category
             {
-                Id = 8,
                 Name = "Others",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5736,10 +5616,10 @@ namespace Nop.Services.Installation
 
             var categoryApparel = new Category
             {
-                Id = 9,
                 Name = "Apparel",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
+                ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel")).Id,
@@ -5754,7 +5634,6 @@ namespace Nop.Services.Installation
 
             var categoryShoes = new Category
             {
-                Id = 10,
                 Name = "Shoes",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5773,7 +5652,6 @@ namespace Nop.Services.Installation
 
             var categoryClothing = new Category
             {
-                Id = 11,
                 Name = "Clothing",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5791,7 +5669,6 @@ namespace Nop.Services.Installation
 
             var categoryAccessories = new Category
             {
-                Id = 12,
                 Name = "Accessories",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5810,10 +5687,10 @@ namespace Nop.Services.Installation
 
             var categoryDigitalDownloads = new Category
             {
-                Id = 13,
                 Name = "Digital downloads",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
+                ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads")).Id,
@@ -5828,12 +5705,12 @@ namespace Nop.Services.Installation
 
             var categoryBooks = new Category
             {
-                Id = 14,
                 Name = "Books",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 MetaKeywords = "Books, Dictionary, Textbooks",
                 MetaDescription = "Books category description",
                 PageSize = 6,
+                ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book")).Id,
@@ -5848,10 +5725,10 @@ namespace Nop.Services.Installation
 
             var categoryJewelry = new Category
             {
-                Id = 15,
                 Name = "Jewelry",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
+                ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry")).Id,
@@ -5866,10 +5743,10 @@ namespace Nop.Services.Installation
 
             var categoryGiftCards = new Category
             {
-                Id = 16,
                 Name = "Gift Cards",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 6,
+                ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Gift Cards")).Id,
@@ -5890,7 +5767,7 @@ namespace Nop.Services.Installation
                 {
                     EntityId = category.Id,
                     EntityName = "Category",
-                    LanguageId = 0,
+                    LanguageId = "",
                     IsActive = true,
                     Slug = category.SeName,
                 });
@@ -5911,7 +5788,6 @@ namespace Nop.Services.Installation
             var allManufacturers = new List<Manufacturer>();
             var manufacturerAsus = new Manufacturer
             {
-                Id = 1,
                 Name = "Apple",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5929,7 +5805,6 @@ namespace Nop.Services.Installation
 
             var manufacturerHp = new Manufacturer
             {
-                Id = 2,
                 Name = "HP",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5947,7 +5822,6 @@ namespace Nop.Services.Installation
 
             var manufacturerNike = new Manufacturer
             {
-                Id = 3,
                 Name = "Nike",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 6,
@@ -5970,7 +5844,7 @@ namespace Nop.Services.Installation
                 {
                     EntityId = manufacturer.Id,
                     EntityName = "Manufacturer",
-                    LanguageId = 0,
+                    LanguageId = "",
                     IsActive = true,
                     Slug = manufacturer.SeName
                 });
@@ -6018,15 +5892,12 @@ namespace Nop.Services.Installation
 
             var productBuildComputer = new Product
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Build your own computer",
                 ShortDescription = "Build it",
                 FullDescription = "<p>Fight back against cluttered workspaces with the stylish IBM zBC12 All-in-One desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The black IBM zBC12 has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "build-your-own-computer",
                 AllowCustomerReviews = true,
                 Price = 1200M,
                 IsShipEnabled = true,
@@ -6053,43 +5924,29 @@ namespace Nop.Services.Installation
                 {
                     new ProductAttributeMapping
                     {
-                        Id = 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Processor").Id,
                         AttributeControlType = AttributeControlType.DropdownList,
-                        ProductId = 1,
                         IsRequired = true,
                         ProductAttributeValues =
                         {
                             new ProductAttributeValue
                             {
-                                Id = 1,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "2.2 GHz Intel Pentium Dual-Core E2200",
                                 DisplayOrder = 1,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 1
                             },
                             new ProductAttributeValue
                             {
-                                Id = 2,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "2.5 GHz Intel Pentium Dual-Core E2200",
                                 IsPreSelected = true,
                                 PriceAdjustment = 15,
                                 DisplayOrder = 2,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 1
                             }
                         }
                     },
                     new ProductAttributeMapping
                     {
-                        Id = 2,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        ProductId = 1,
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "RAM").Id,
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
@@ -6097,43 +5954,28 @@ namespace Nop.Services.Installation
                         {
                             new ProductAttributeValue
                             {
-                                Id = 1,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "2 GB",
                                 DisplayOrder = 1,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 2
                             },
                             new ProductAttributeValue
                             {
-                                Id = 2,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "4GB",
                                 PriceAdjustment = 20,
                                 DisplayOrder = 2,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 2
                             },
                             new ProductAttributeValue
                             {
-                                Id = 3,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "8GB",
                                 PriceAdjustment = 60,
                                 DisplayOrder = 3,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 2
                             }
                         }
                     },
                     new ProductAttributeMapping
                     {
-                        Id = 3,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        ProductId = 1,
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "HDD").Id,
                         AttributeControlType = AttributeControlType.RadioList,
                         IsRequired = true,
@@ -6141,32 +5983,21 @@ namespace Nop.Services.Installation
                         {
                             new ProductAttributeValue
                             {
-                                Id = 1,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "320 GB",
                                 DisplayOrder = 1,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 3
                             },
                             new ProductAttributeValue
                             {
-                                Id = 2,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "400 GB",
                                 PriceAdjustment = 100,
                                 DisplayOrder = 2,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 3
                             }
                         }
                     },
                     new ProductAttributeMapping
                     {
-                        Id = 4,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        ProductId = 1,
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "OS").Id,
                         AttributeControlType = AttributeControlType.RadioList,
                         IsRequired = true,
@@ -6174,71 +6005,48 @@ namespace Nop.Services.Installation
                         {
                             new ProductAttributeValue
                             {
-                                Id = 1,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Vista Home",
                                 PriceAdjustment = 50,
                                 IsPreSelected = true,
                                 DisplayOrder = 1,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 4
                             },
                             new ProductAttributeValue
                             {
-                                Id = 2,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Vista Premium",
                                 PriceAdjustment = 60,
                                 DisplayOrder = 2,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 4
                             }
                         }
                     },
                     new ProductAttributeMapping
                     {
-                        Id = 5,
-                        ProductId = 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Software").Id,
                         AttributeControlType = AttributeControlType.Checkboxes,
                         ProductAttributeValues =
                         {
                             new ProductAttributeValue
                             {
-                                Id = 1,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Microsoft Office",
                                 PriceAdjustment = 50,
                                 IsPreSelected = true,
                                 DisplayOrder = 1,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 5
                             },
                             new ProductAttributeValue
                             {
-                                Id = 2,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Acrobat Reader",
                                 PriceAdjustment = 10,
                                 DisplayOrder = 2,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 5
                             },
                             new ProductAttributeValue
                             {
-                                Id = 3,
-                                _id = ObjectId.GenerateNewId().ToString(),
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Total Commander",
                                 PriceAdjustment = 5,
                                 DisplayOrder = 2,
-                                ProductId = 1,
-                                ProductAttributeMappingId = 5
                             }
                         }
                     }
@@ -6247,11 +6055,8 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Id = 1,
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
                         DisplayOrder = 1,
-                        ProductId = 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -6264,16 +6069,12 @@ namespace Nop.Services.Installation
 
             var productpicture1 = new ProductPicture
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductId = productBuildComputer.Id,
                 PictureId = Picture1.Id,
                 DisplayOrder = 1
             };
             var productpicture2 = new ProductPicture
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductId = productBuildComputer.Id,
                 PictureId = Picture2.Id,
                 DisplayOrder = 1
@@ -6284,15 +6085,12 @@ namespace Nop.Services.Installation
 
             var productDigitalStorm = new Product
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Digital Storm VANQUISH 3 Custom Performance PC",
                 ShortDescription = "Digital Storm Vanquish 3 Desktop PC",
                 FullDescription = "<p>Blow the doors off today?s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "compaq-presario-sr1519x-pentium-4-desktop-pc-with-cdrw",
                 AllowCustomerReviews = true,
                 Price = 1259M,
                 IsShipEnabled = true,
@@ -6319,34 +6117,25 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
                         DisplayOrder = 1,
-                        ProductId = 2,
-                        Id = 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
             allProducts.Add(productDigitalStorm);
             productDigitalStorm.ProductPictures.Add(new ProductPicture
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name)).Id,
                 DisplayOrder = 1,
-                ProductId = 2,
             });
             _productRepository.Insert(productDigitalStorm);
 
             var productLenovoIdeaCentre = new Product
             {
-                Id = 3,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo IdeaCentre 600 All-in-One PC",
                 ShortDescription = "",
                 FullDescription = "<p>The A600 features a 21.5in screen, DVD or optional Blu-Ray drive, support for the full beans 1920 x 1080 HD, Dolby Home Cinema certification and an optional hybrid analogue/digital TV tuner.</p><p>Connectivity is handled by 802.11a/b/g - 802.11n is optional - and an ethernet port. You also get four USB ports, a Firewire slot, a six-in-one card reader and a 1.3- or two-megapixel webcam.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "hp-iq506-touchsmart-desktop-pc",
                 AllowCustomerReviews = true,
                 Price = 500M,
                 IsShipEnabled = true,
@@ -6371,22 +6160,16 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Id = 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Desktops").Id,
                         DisplayOrder = 1,
-                        ProductId = 3,
                     }
                 }
             };
             allProducts.Add(productLenovoIdeaCentre);
             productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)).Id,
                 DisplayOrder = 1,
-                ProductId = 3,
             });
             _productRepository.Insert(productLenovoIdeaCentre);
 
@@ -6396,8 +6179,6 @@ namespace Nop.Services.Installation
 
             var productAppleMacBookPro = new Product
             {
-                Id = 4,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Apple MacBook Pro 13-inch",
@@ -6431,31 +6212,22 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Id = 1,
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                         DisplayOrder = 1,
-                        ProductId = 4,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductManufacturers =
                 {
                     new ProductManufacturer
                     {
-                        Id = 1,
                         ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
                         DisplayOrder = 2,
-                        ProductId = 4,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductSpecificationAttributes =
                 {
                     new ProductSpecificationAttribute
                     {
-                        Id = 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        ProductId = 4,
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 1,
@@ -6464,9 +6236,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 2,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        ProductId = 4,
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 2,
@@ -6475,9 +6244,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 3,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        ProductId = 4,
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 3,
@@ -6489,15 +6255,11 @@ namespace Nop.Services.Installation
             allProducts.Add(productAppleMacBookPro);
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
                 DisplayOrder = 1,
             });
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
                 DisplayOrder = 2,
             });
@@ -6506,15 +6268,12 @@ namespace Nop.Services.Installation
 
             var productAsusN551JK = new Product
             {
-                Id = 5,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Asus N551JK-XO076H Laptop",
                 ShortDescription = "Laptop Asus N551JK Intel Core i7-4710HQ 2.5 GHz, RAM 16GB, HDD 1TB, Video NVidia GTX 850M 4GB, BluRay, 15.6, Full HD, Win 8.1",
                 FullDescription = "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JX?s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpower® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "asus-eee-pc-900ha-89-inch-netbook-black",
                 AllowCustomerReviews = true,
                 Price = 1500M,
                 IsShipEnabled = true,
@@ -6539,9 +6298,6 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Id = 1,
-                        _id = ObjectId.GenerateNewId().ToString(),
-                        ProductId = 5,
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                         DisplayOrder = 1,
                     }
@@ -6550,9 +6306,6 @@ namespace Nop.Services.Installation
                 {
                      new ProductSpecificationAttribute
                     {
-                        Id = 1,
-                        ProductId = 5,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 1,
@@ -6561,9 +6314,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 2,
-                        ProductId = 5,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 2,
@@ -6572,9 +6322,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 3,
-                        ProductId = 5,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 3,
@@ -6583,9 +6330,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 4,
-                        ProductId = 5,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 4,
@@ -6598,9 +6342,6 @@ namespace Nop.Services.Installation
             productAsusN551JK.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name)).Id,
-                Id = 1,
-                ProductId = 5,
-                _id = ObjectId.GenerateNewId().ToString(),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAsusN551JK);
@@ -6608,15 +6349,12 @@ namespace Nop.Services.Installation
 
             var productSamsungSeries = new Product
             {
-                Id = 6,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Samsung Series 9 NP900X4C Premium Ultrabook",
                 ShortDescription = "Samsung Series 9 NP900X4C-A06US 15-Inch Ultrabook (1.70 GHz Intel Core i5-3317U Processor, 8GB DDR3, 128GB SSD, Windows 8) Ash Black",
                 FullDescription = "<p>Designed with mobility in mind, Samsung's durable, ultra premium, lightweight Series 9 laptop (model NP900X4C-A01US) offers mobile professionals and power users a sophisticated laptop equally suited for work and entertainment. Featuring a minimalist look that is both simple and sophisticated, its polished aluminum uni-body design offers an iconic look and feel that pushes the envelope with an edge just 0.58 inches thin. This Series 9 laptop also includes a brilliant 15-inch SuperBright Plus display with HD+ technology, 128 GB Solid State Drive (SSD), 8 GB of system memory, and up to 10 hours of battery life.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "hp-pavilion-artist-edition-dv2890nr-141-inch-laptop",
                 AllowCustomerReviews = true,
                 Price = 1590M,
                 IsShipEnabled = true,
@@ -6635,16 +6373,12 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                //ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        Id = 1,
-                        ProductId = 6,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                         DisplayOrder = 1,
                     }
@@ -6653,9 +6387,6 @@ namespace Nop.Services.Installation
                 {
                     new ProductSpecificationAttribute
                     {
-                        Id = 1,
-                        ProductId = 6,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 1,
@@ -6664,9 +6395,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 2,
-                        ProductId = 6,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 2,
@@ -6675,9 +6403,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 3,
-                        ProductId = 6,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 3,
@@ -6686,9 +6411,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 4,
-                        ProductId = 6,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 4,
@@ -6702,27 +6424,17 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 6,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productSamsungSeries);
 
-
-
-
-
             var productHpSpectre = new Product
             {
-                Id = 7,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Spectre XT Pro UltraBook",
                 ShortDescription = "HP Spectre XT Pro UltraBook / Intel Core i5-2467M / 13.3 / 4GB / 128GB / Windows 7 Professional / Laptop",
                 FullDescription = "<p>Introducing HP ENVY Spectre XT, the Ultrabook designed for those who want style without sacrificing substance. It's sleek. It's thin. And with Intel. Corer i5 processor and premium materials, it's designed to go anywhere from the bistro to the boardroom, it's unlike anything you've ever seen from HP.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "hp-pavilion-elite-m9150f-desktop-pc",
                 AllowCustomerReviews = true,
                 Price = 1350M,
                 IsShipEnabled = true,
@@ -6749,18 +6461,12 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 7,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductManufacturers =
                 {
                     new ProductManufacturer
                     {
-                        Id = 1,
-                        ProductId = 7,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
                         DisplayOrder = 3,
                     }
@@ -6769,9 +6475,6 @@ namespace Nop.Services.Installation
                 {
                     new ProductSpecificationAttribute
                     {
-                        Id = 1,
-                        ProductId = 7,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 1,
@@ -6780,9 +6483,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 2,
-                        ProductId = 7,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 2,
@@ -6791,9 +6491,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 3,
-                        ProductId = 7,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 3,
@@ -6802,9 +6499,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 4,
-                        ProductId = 7,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 4,
@@ -6818,33 +6512,23 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 7,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
                 DisplayOrder = 2,
-                Id = 2,
-                ProductId = 7,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productHpSpectre);
 
 
-
             var productHpEnvy = new Product
             {
-                Id = 8,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Envy 6-1180ca 15.6-Inch Sleekbook",
                 ShortDescription = "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation Intel® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
                 FullDescription = "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br><br><b>Features</b><br><br>- Windows 8 or other operating systems available<br><br><b>Top performance. Stylish design. Take notice.</b><br><br>- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br>- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br><br><b>More entertaining. More gaming. More fun.</b><br><br>- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br>- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br>- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br><br><b>Only from HP.</b><br><br>- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br>- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br>- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br><br><b>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "hp-pavilion-g60-230us-160-inch-laptop",
                 AllowCustomerReviews = true,
                 Price = 1460M,
                 IsShipEnabled = true,
@@ -6871,9 +6555,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 8,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductManufacturers =
@@ -6882,18 +6563,12 @@ namespace Nop.Services.Installation
                     {
                         ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "HP").Id,
                         DisplayOrder = 4,
-                        Id = 1,
-                        ProductId = 8,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductSpecificationAttributes =
                 {
                     new ProductSpecificationAttribute
                     {
-                        Id = 1,
-                        ProductId = 8,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 1,
@@ -6902,9 +6577,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 2,
-                        ProductId = 8,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 2,
@@ -6913,9 +6585,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 3,
-                        ProductId = 8,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 3,
@@ -6924,9 +6593,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 4,
-                        ProductId = 8,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 4,
@@ -6940,24 +6606,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 8,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productHpEnvy);
 
 
             var productLenovoThinkpad = new Product
             {
-                Id = 9,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo Thinkpad X1 Carbon Laptop",
                 ShortDescription = "Lenovo Thinkpad X1 Carbon Touch Intel Core i7 14 Ultrabook",
                 FullDescription = "<p>The X1 Carbon brings a new level of quality to the ThinkPad legacy of high standards and innovation. It starts with the durable, carbon fiber-reinforced roll cage, making for the best Ultrabook construction available, and adds a host of other new features on top of the old favorites. Because for 20 years, we haven't stopped innovating. And you shouldn't stop benefiting from that.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "toshiba-satellite-a305-s6908-154-inch-laptop",
                 AllowCustomerReviews = true,
                 Price = 1360M,
                 IsShipEnabled = true,
@@ -6984,18 +6644,12 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Notebooks").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 9,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductSpecificationAttributes =
                 {
                    new ProductSpecificationAttribute
                     {
-                        Id = 1,
-                        ProductId = 9,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = false,
                         ShowOnProductPage = true,
                         DisplayOrder = 1,
@@ -7004,9 +6658,6 @@ namespace Nop.Services.Installation
                     },
                     new ProductSpecificationAttribute
                     {
-                        Id = 2,
-                        ProductId = 9,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         AllowFiltering = true,
                         ShowOnProductPage = true,
                         DisplayOrder = 2,
@@ -7020,9 +6671,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 9,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productLenovoThinkpad);
 
@@ -7033,15 +6681,12 @@ namespace Nop.Services.Installation
 
             var productAdobePhotoshop = new Product
             {
-                Id = 10,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Adobe Photoshop CS4",
                 ShortDescription = "Easily find and view all your photos",
                 FullDescription = "<p>Adobe Photoshop CS4 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop CS4 so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "adobe-photoshop-elements-7",
                 AllowCustomerReviews = true,
                 Price = 75M,
                 IsShipEnabled = true,
@@ -7068,9 +6713,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 10,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7079,24 +6721,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 10,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productAdobePhotoshop);
 
 
             var productWindows8Pro = new Product
             {
-                Id = 11,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Windows 8 Pro",
                 ShortDescription = "Windows 8 is a Microsoft operating system that was released in 2012 as part of the company's Windows NT OS family. ",
                 FullDescription = "<p>Windows 8 Pro is comparable to Windows 7 Professional and Ultimate and is targeted towards enthusiasts and business users; it includes all the features of Windows 8. Additional features include the ability to receive Remote Desktop connections, the ability to participate in a Windows Server domain, Encrypting File System, Hyper-V, and Virtual Hard Disk Booting, Group Policy as well as BitLocker and BitLocker To Go. Windows Media Center functionality is available only for Windows 8 Pro as a separate software package.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "corel-paint-shop-pro-photo-x2",
                 AllowCustomerReviews = true,
                 Price = 65M,
                 IsShipEnabled = true,
@@ -7123,9 +6759,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 11,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7134,27 +6767,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 11,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productWindows8Pro);
 
 
-
-
-
             var productSoundForge = new Product
             {
-                Id = 12,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Sound Forge Pro 11",
                 ShortDescription = "Advanced audio waveform editor.",
                 FullDescription = "<p>Sound Forge? Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "major-league-baseball-2k9",
                 AllowCustomerReviews = true,
                 Price = 54.99M,
                 IsShipEnabled = true,
@@ -7181,9 +6805,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Software").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 12,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7192,9 +6813,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 12,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productSoundForge);
 
@@ -7207,15 +6825,12 @@ namespace Nop.Services.Installation
             //this one is a grouped product with two associated ones
             var productNikonD5500DSLR = new Product
             {
-                Id = 13,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.GroupedProduct,
                 VisibleIndividually = true,
                 Name = "Nikon D5500 DSLR",
                 ShortDescription = "Slim, lightweight Nikon D5500 packs a vari-angle touchscreen",
                 FullDescription = "Nikon has announced its latest DSLR, the D5500. A lightweight, compact DX-format camera with a 24.2MP sensor, it?s the first of its type to offer a vari-angle touchscreen. The D5500 replaces the D5300 in Nikon?s range, and while it offers much the same features the company says it?s a much slimmer and lighter prospect. There?s a deep grip for easier handling and built-in Wi-Fi that lets you transfer and share shots via your phone or tablet.",
                 ProductTemplateId = productTemplateGrouped.Id,
-                //SeName = "canon-digital-slr-camera",
                 AllowCustomerReviews = true,
                 Published = true,
                 Price = 670M,
@@ -7242,9 +6857,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 13,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7253,29 +6865,20 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 13,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
                 DisplayOrder = 2,
-                Id = 2,
-                ProductId = 13,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productNikonD5500DSLR);
             var productNikonD5500DSLR_associated_1 = new Product
             {
-                Id = 14,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = false, //hide this products
                 ParentGroupedProductId = productNikonD5500DSLR.Id,
                 Name = "Nikon D5500 DSLR - Black",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "canon-digital-slr-camera-black",
                 AllowCustomerReviews = true,
                 Published = true,
                 Price = 670M,
@@ -7302,22 +6905,15 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 14,
-                _id = ObjectId.GenerateNewId().ToString(),
-
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_1);
             var productNikonD5500DSLR_associated_2 = new Product
             {
-                Id = 15,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = false, //hide this products
+                VisibleIndividually = false, 
                 ParentGroupedProductId = productNikonD5500DSLR.Id,
                 Name = "Nikon D5500 DSLR - Red",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "canon-digital-slr-camera-silver",
                 AllowCustomerReviews = true,
                 Published = true,
                 Price = 630M,
@@ -7344,25 +6940,17 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 15,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_2);
 
-
-
             var productLeica = new Product
             {
-                Id = 16,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Leica T Mirrorless Digital Camera",
                 ShortDescription = "Leica T (Typ 701) Silver",
                 FullDescription = "<p>The new Leica T offers a minimalist design that's crafted from a single block of aluminum.  Made in Germany and assembled by hand, this 16.3 effective mega pixel camera is easy to use.  With a massive 3.7 TFT LCD intuitive touch screen control, the user is able to configure and save their own menu system.  The Leica T has outstanding image quality and also has 16GB of built in memory.  This is Leica's first system camera to use Wi-Fi.  Add the T-App to your portable iOS device and be able to transfer and share your images (free download from the Apple App Store)</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "canon-vixia-hf100-camcorder",
                 AllowCustomerReviews = true,
                 Price = 530M,
                 IsShipEnabled = true,
@@ -7389,9 +6977,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
                         DisplayOrder = 3,
-                        Id = 1,
-                        ProductId = 16,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7400,24 +6985,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 16,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productLeica);
 
 
             var productAppleICam = new Product
             {
-                Id = 17,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Apple iCam",
                 ShortDescription = "Photography becomes smart",
                 FullDescription = "<p>A few months ago we featured the amazing WVIL camera, by many considered the future of digital photography. This is another very good looking concept, iCam is the vision of Italian designer Antonio DeRosa, the idea is to have a device that attaches to the iPhone 5, which then allows the user to have a camera with interchangeable lenses. The device would also feature a front-touch screen and a projector. Would be great if apple picked up on this and made it reality.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "panasonic-hdc-sdt750k-high-definition-3d-camcorder",
                 AllowCustomerReviews = true,
                 Price = 1300M,
                 IsShipEnabled = true,
@@ -7444,9 +7023,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Camera & photo").Id,
                         DisplayOrder = 2,
-                        Id = 1,
-                        ProductId = 17,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductManufacturers =
@@ -7455,9 +7031,6 @@ namespace Nop.Services.Installation
                     {
                         ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Apple").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 17,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7466,9 +7039,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 17,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productAppleICam);
 
@@ -7478,8 +7048,6 @@ namespace Nop.Services.Installation
 
             var productHtcOne = new Product
             {
-                Id = 18,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HTC One M8 Android L 5.0 Lollipop",
@@ -7514,9 +7082,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 18,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7525,24 +7090,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 18,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productHtcOne);
 
 
             var productHtcOneMini = new Product
             {
-                Id = 19,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HTC One Mini Blue",
                 ShortDescription = "HTC One and HTC One Mini now available in bright blue hue",
                 FullDescription = "<p>HTC One mini smartphone with 4.30-inch 720x1280 display powered by 1.4GHz processor alongside 1GB RAM and 4-Ultrapixel rear camera.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "samsung-rugby-a837-phone-black-att",
                 AllowCustomerReviews = true,
                 Price = 100M,
                 IsShipEnabled = true,
@@ -7569,9 +7128,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 19,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7580,33 +7136,23 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 19,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
                 DisplayOrder = 2,
-                Id = 2,
-                ProductId = 19,
-                _id = ObjectId.GenerateNewId().ToString(),
-
             });
             _productRepository.Insert(productHtcOneMini);
 
 
             var productNokiaLumia = new Product
             {
-                Id = 20,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nokia Lumia 1020",
                 ShortDescription = "Nokia Lumia 1020 4G Cell Phone (Unlocked)",
                 FullDescription = "<p>Capture special moments for friends and family with this Nokia Lumia 1020 32GB WHITE cell phone that features an easy-to-use 41.0MP rear-facing camera and a 1.2MP front-facing camera. The AMOLED touch screen offers 768 x 1280 resolution for crisp visuals.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "sony-dcr-sr85-1mp-60gb-hard-drive-handycam-camcorder",
                 AllowCustomerReviews = true,
                 Price = 349M,
                 IsShipEnabled = true,
@@ -7633,9 +7179,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Cell phones").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 20,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7644,9 +7187,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 20,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productNokiaLumia);
 
@@ -7659,15 +7199,12 @@ namespace Nop.Services.Installation
 
             var productBeatsPill = new Product
             {
-                Id = 21,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Beats Pill 2.0 Wireless Speaker",
                 ShortDescription = "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
                 FullDescription = "<p<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills? together for twice the sound with Beats Bond?</li></ul></p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "acer-aspire-one-89-mini-notebook-case-black",
                 AllowCustomerReviews = true,
                 Price = 79.99M,
                 IsShipEnabled = true,
@@ -7696,26 +7233,16 @@ namespace Nop.Services.Installation
                     {
                         Quantity = 2,
                         Price = 19,
-                        Id = 1,
-                        ProductId = 21,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     },
                     new TierPrice
                     {
                         Quantity = 5,
                         Price = 17,
-                        Id = 2,
-                        ProductId = 21,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     },
                     new TierPrice
                     {
                         Quantity = 10,
                         Price = 15,
-                        Id = 3,
-                        ProductId = 21,
-                        _id = ObjectId.GenerateNewId().ToString(),
-
                     }
                 },
                 HasTierPrices = true,
@@ -7725,9 +7252,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 21,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7736,31 +7260,23 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 21,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
                 DisplayOrder = 2,
-                Id = 2,
-                ProductId = 21,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productBeatsPill);
 
 
             var productUniversalTabletCover = new Product
             {
-                Id = 22,
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Universal 7-8 Inch Tablet Cover",
                 ShortDescription = "Universal protection for 7-inch & 8-inch tablets",
                 FullDescription = "<p>Made of durable polyurethane, our Universal Cover is slim, lightweight, and strong, with protective corners that stretch to hold most 7 and 8-inch tablets securely. This tough case helps protects your tablet from bumps, scuffs, and dings.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "apc-back-ups-rs-800va-ups-800-va-ups-battery-lead-acid-br800blk",
                 AllowCustomerReviews = true,
                 Price = 39M,
                 IsShipEnabled = true,
@@ -7787,9 +7303,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 22,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7798,24 +7311,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 22,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productUniversalTabletCover);
 
 
             var productPortableSoundSpeakers = new Product
             {
-                Id = 23,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Portable Sound Speakers",
                 ShortDescription = "Universall portable sound speakers",
                 FullDescription = "<p>Your phone cut the cord, now it's time for you to set your music free and buy a Bluetooth speaker. Thankfully, there's one suited for everyone out there.</p><p>Some Bluetooth speakers excel at packing in as much functionality as the unit can handle while keeping the price down. Other speakers shuck excess functionality in favor of premium build materials instead. Whatever path you choose to go down, you'll be greeted with many options to suit your personal tastes.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "microsoft-bluetooth-notebook-mouse-5000-macwindows",
                 AllowCustomerReviews = true,
                 Price = 37M,
                 IsShipEnabled = true,
@@ -7842,9 +7349,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Others").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 23,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -7853,9 +7357,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 23,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productPortableSoundSpeakers);
 
@@ -7867,15 +7368,12 @@ namespace Nop.Services.Installation
 
             var productNikeFloral = new Product
             {
-                Id = 24,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike Floral Roshe Customized Running Shoes",
                 ShortDescription = "When you ran across these shoes, you will immediately fell in love and needed a pair of these customized beauties.",
                 FullDescription = "<p>Each Rosh Run is personalized and exclusive, handmade in our workshop Custom. Run Your Rosh creations born from the hand of an artist specialized in sneakers, more than 10 years of experience.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "adidas-womens-supernova-csh-7-running-shoe",
                 AllowCustomerReviews = true,
                 Price = 40M,
                 IsShipEnabled = true,
@@ -7900,9 +7398,6 @@ namespace Nop.Services.Installation
                 {
                     new ProductAttributeMapping
                     {
-                        Id = 1,
-                        ProductId = 24,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Size").Id,
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
@@ -7913,48 +7408,29 @@ namespace Nop.Services.Installation
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "8",
                                 DisplayOrder = 1,
-                                Id = 1,
-                                ProductId = 24,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "9",
                                 DisplayOrder = 2,
-                                Id = 2,
-                                ProductId = 24,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "10",
                                 DisplayOrder = 3,
-                                Id = 3,
-                                ProductId = 24,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "11",
                                 DisplayOrder = 4,
-                                Id = 4,
-                                ProductId = 24,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1
                             }
                         }
                     },
                     new ProductAttributeMapping
                     {
-                        Id = 2,
-                        ProductId = 24,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Color").Id,
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
@@ -7965,20 +7441,12 @@ namespace Nop.Services.Installation
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "White/Blue",
                                 DisplayOrder = 1,
-                                Id = 1,
-                                ProductId = 24,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 2,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "White/Black",
                                 DisplayOrder = 2,
-                                Id = 2,
-                                ProductId = 24,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 2,
                             },
                         }
                     }
@@ -7989,9 +7457,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 24,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductManufacturers =
@@ -8000,9 +7465,6 @@ namespace Nop.Services.Installation
                     {
                         ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
                         DisplayOrder = 2,
-                        Id = 1,
-                        ProductId = 24,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8011,32 +7473,23 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 24,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
                 DisplayOrder = 2,
-                Id = 2,
-                ProductId = 24,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productNikeFloral);
 
 
             var productAdidas = new Product
             {
-                Id = 25,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "adidas Consortium Campus 80s Running Shoes",
                 ShortDescription = "adidas Consortium Campus 80s Primeknit Light Maroon/Running Shoes",
                 FullDescription = "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "etnies-mens-digit-sneaker",
                 AllowCustomerReviews = true,
                 Price = 27.56M,
                 IsShipEnabled = true,
@@ -8055,16 +7508,12 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                //ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductAttributeMappings =
                 {
                     new ProductAttributeMapping
                     {
-                        Id = 1,
-                        ProductId = 25,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Size").Id,
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
@@ -8075,48 +7524,29 @@ namespace Nop.Services.Installation
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "8",
                                 DisplayOrder = 1,
-                                Id = 1,
-                                ProductId = 25,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "9",
                                 DisplayOrder = 2,
-                                Id = 2,
-                                ProductId = 25,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 2,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "10",
                                 DisplayOrder = 3,
-                                Id = 3,
-                                ProductId = 25,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 2,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "11",
                                 DisplayOrder = 4,
-                                Id = 4,
-                                ProductId = 25,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 2
                             }
                         }
                     },
                     new ProductAttributeMapping
                     {
-                        Id = 3,
-                        ProductId = 25,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Color").Id,
                         AttributeControlType = AttributeControlType.ColorSquares,
                         IsRequired = true,
@@ -8129,10 +7559,6 @@ namespace Nop.Services.Installation
                                 IsPreSelected = true,
                                 ColorSquaresRgb = "#663030",
                                 DisplayOrder = 1,
-                                Id = 1,
-                                ProductId = 25,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 3
                             },
                             new ProductAttributeValue
                             {
@@ -8140,10 +7566,6 @@ namespace Nop.Services.Installation
                                 Name = "Blue",
                                 ColorSquaresRgb = "#363656",
                                 DisplayOrder = 2,
-                                Id = 2,
-                                ProductId = 25,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 3,
                             },
                             new ProductAttributeValue
                             {
@@ -8151,10 +7573,6 @@ namespace Nop.Services.Installation
                                 Name = "Silver",
                                 ColorSquaresRgb = "#c5c5d5",
                                 DisplayOrder = 3,
-                                 Id = 3,
-                                ProductId = 25,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 3,
                            }
                         }
                     }
@@ -8165,9 +7583,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 25,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8176,25 +7591,16 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 25,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 2,
-                Id = 2,
-                ProductId = 25,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 3,
-                Id = 3,
-                ProductId = 25,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
 
 
@@ -8208,19 +7614,14 @@ namespace Nop.Services.Installation
             _productRepository.Update(productAdidas);
 
 
-
-
             var productNikeZoom = new Product
             {
-                Id = 26,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
                 ShortDescription = "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
                 FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "v-blue-juniors-cuffed-denim-short-with-rhinestones",
                 AllowCustomerReviews = true,
                 Price = 30M,
                 IsShipEnabled = true,
@@ -8247,9 +7648,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Shoes").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 26,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductManufacturers =
@@ -8258,9 +7656,6 @@ namespace Nop.Services.Installation
                     {
                         ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
                         DisplayOrder = 2,
-                        Id = 1,
-                        ProductId = 26,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8269,9 +7664,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 26,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productNikeZoom);
 
@@ -8282,15 +7674,12 @@ namespace Nop.Services.Installation
 
             var productNikeTailwind = new Product
             {
-                Id = 27,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike Tailwind Loose Short-Sleeve Running Shirt",
                 ShortDescription = "",
                 FullDescription = "<p>Boost your adrenaline with the Nike® Women's Tailwind Running Shirt. The lightweight, slouchy fit is great for layering, and moisture-wicking fabrics keep you feeling at your best. This tee has a notched hem for an enhanced range of motion, while flat seams with reinforcement tape lessen discomfort and irritation over longer distances. Put your keys and card in the side zip pocket and take off in your Nike® running t-shirt.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "50s-rockabilly-polka-dot-top-jr-plus-size",
                 AllowCustomerReviews = true,
                 Published = true,
                 Price = 15M,
@@ -8315,9 +7704,6 @@ namespace Nop.Services.Installation
                 {
                     new ProductAttributeMapping
                     {
-                        Id = 1,
-                        ProductId = 27,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Size").Id,
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
@@ -8328,20 +7714,12 @@ namespace Nop.Services.Installation
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Small",
                                 DisplayOrder = 1,
-                                Id = 1,
-                                ProductId = 27,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "1X",
                                 DisplayOrder = 2,
-                                Id = 2,
-                                ProductId = 27,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
 
                             new ProductAttributeValue
@@ -8349,40 +7727,24 @@ namespace Nop.Services.Installation
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "2X",
                                 DisplayOrder = 3,
-                                Id = 3,
-                                ProductId = 27,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "3X",
                                 DisplayOrder = 4,
-                                Id = 4,
-                                ProductId = 27,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "4X",
                                 DisplayOrder = 5,
-                                Id = 5,
-                                ProductId = 27,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "5X",
                                 DisplayOrder = 6,
-                                Id = 6,
-                                ProductId = 27,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             }
                         }
                     }
@@ -8393,9 +7755,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 27,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductManufacturers =
@@ -8404,9 +7763,6 @@ namespace Nop.Services.Installation
                     {
                         ManufacturerId = _manufacturerRepository.Table.Single(c => c.Name == "Nike").Id,
                         DisplayOrder = 2,
-                        Id = 1,
-                        ProductId = 27,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8415,26 +7771,17 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 27,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productNikeTailwind);
 
-
-
-
             var productOversizedWomenTShirt = new Product
             {
-                Id = 28,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Oversized Women T-Shirt",
                 ShortDescription = "",
                 FullDescription = "<p>This oversized women t-Shirt needs minimum ironing. It is a great product at a great value!</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "arrow-mens-wrinkle-free-pinpoint-solid-long-sleeve",
                 AllowCustomerReviews = true,
                 Price = 24M,
                 IsShipEnabled = true,
@@ -8461,25 +7808,16 @@ namespace Nop.Services.Installation
                     {
                         Quantity = 3,
                         Price = 21,
-                        Id = 1,
-                        ProductId = 28,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     },
                     new TierPrice
                     {
                         Quantity = 7,
                         Price = 19,
-                        Id = 2,
-                        ProductId = 28,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     },
                     new TierPrice
                     {
                         Quantity = 10,
                         Price = 16,
-                        Id = 3,
-                        ProductId = 28,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 HasTierPrices = true,
@@ -8489,9 +7827,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 28,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8500,24 +7835,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 28,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productOversizedWomenTShirt);
 
 
             var productCustomTShirt = new Product
             {
-                Id = 29,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Custom T-Shirt",
                 ShortDescription = "T-Shirt - Add Your Content",
                 FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "custom-t-shirt",
                 AllowCustomerReviews = true,
                 Price = 15M,
                 IsShipEnabled = true,
@@ -8546,9 +7875,6 @@ namespace Nop.Services.Installation
                         TextPrompt = "Enter your text:",
                         AttributeControlType = AttributeControlType.TextBox,
                         IsRequired = true,
-                        Id = 1,
-                        ProductId = 29,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 ProductCategories =
@@ -8557,9 +7883,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 29,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8568,24 +7891,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 29,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productCustomTShirt);
 
 
             var productLeviJeans = new Product
             {
-                Id = 30,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Levi's 511 Jeans",
                 ShortDescription = "Levi's Faded Black 511 Jeans ",
                 FullDescription = "<p>Between a skinny and straight fit, our 511&trade; slim fit jeans are cut close without being too restricting. Slim throughout the thigh and leg opening for a long and lean look.</p><ul><li>Slouch1y at top; sits below the waist</li><li>Slim through the leg, close at the thigh and straight to the ankle</li><li>Stretch for added comfort</li><li>Classic five-pocket styling</li><li>99% Cotton, 1% Spandex, 11.2 oz. - Imported</li></ul>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "levis-skinny-511-jeans",
                 AllowCustomerReviews = true,
                 Price = 43.5M,
                 OldPrice = 55M,
@@ -8613,25 +7930,16 @@ namespace Nop.Services.Installation
                     {
                         Quantity = 3,
                         Price = 40,
-                        Id = 1,
-                        ProductId = 30,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     },
                     new TierPrice
                     {
                         Quantity = 6,
                         Price = 38,
-                        Id = 2,
-                        ProductId = 30,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     },
                     new TierPrice
                     {
                         Quantity = 10,
                         Price = 35,
-                        Id = 3,
-                        ProductId = 30,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 },
                 HasTierPrices = true,
@@ -8641,9 +7949,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Clothing").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 30,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8653,16 +7958,10 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 30,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
-                Id = 2,
-                ProductId = 30,
-                _id = ObjectId.GenerateNewId().ToString(),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productLeviJeans);
@@ -8675,15 +7974,12 @@ namespace Nop.Services.Installation
 
             var productObeyHat = new Product
             {
-                Id = 31,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Obey Propaganda Hat",
                 ShortDescription = "",
                 FullDescription = "<p>Printed poplin 5 panel camp hat with debossed leather patch and web closure</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "indiana-jones-shapeable-wool-hat",
                 AllowCustomerReviews = true,
                 Price = 30M,
                 IsShipEnabled = true,
@@ -8708,9 +8004,6 @@ namespace Nop.Services.Installation
                 {
                     new ProductAttributeMapping
                     {
-                        Id = 1,
-                        ProductId = 31,
-                        _id = ObjectId.GenerateNewId().ToString(),
                         ProductAttributeId = _productAttributeRepository.Table.Single(x => x.Name == "Size").Id,
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
@@ -8721,40 +8014,24 @@ namespace Nop.Services.Installation
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Small",
                                 DisplayOrder = 1,
-                                Id = 1,
-                                ProductId = 31,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Medium",
                                 DisplayOrder = 2,
-                                Id = 2,
-                                ProductId = 31,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Large",
                                 DisplayOrder = 3,
-                                Id = 3,
-                                ProductId = 31,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "X-Large",
                                 DisplayOrder = 4,
-                                Id = 4,
-                                ProductId = 31,
-                                _id = ObjectId.GenerateNewId().ToString(),
-                                ProductAttributeMappingId = 1,
                             }
                         }
                     }
@@ -8765,9 +8042,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 31,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8776,9 +8050,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 31,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productObeyHat);
 
@@ -8786,15 +8057,12 @@ namespace Nop.Services.Installation
 
             var productBelt = new Product
             {
-                Id = 32,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Reversible Horseferry Check Belt",
                 ShortDescription = "Reversible belt in Horseferry check with smooth leather trim",
                 FullDescription = "<p>Reversible belt in Horseferry check with smooth leather trim</p><p>Leather lining, polished metal buckle</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "nike-golf-casual-belt",
                 AllowCustomerReviews = true,
                 Price = 45M,
                 IsShipEnabled = true,
@@ -8821,9 +8089,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 32,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8832,9 +8097,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 32,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productBelt);
 
@@ -8842,15 +8104,12 @@ namespace Nop.Services.Installation
 
             var productSunglasses = new Product
             {
-                Id = 33,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Ray Ban Aviator Sunglasses",
                 ShortDescription = "Aviator sunglasses are one of the first widely popularized styles of modern day sunwear.",
                 FullDescription = "<p>Since 1937, Ray-Ban can genuinely claim the title as the world's leading sunglasses and optical eyewear brand. Combining the best of fashion and sports performance, the Ray-Ban line of Sunglasses delivers a truly classic style that will have you looking great today and for years to come.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "ray-ban-aviator-sunglasses-rb-3025",
                 AllowCustomerReviews = true,
                 Price = 25M,
                 IsShipEnabled = true,
@@ -8877,9 +8136,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Accessories").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 33,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8888,9 +8144,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 33,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productSunglasses);
 
@@ -8901,7 +8154,6 @@ namespace Nop.Services.Installation
 
             var downloadNightVision1 = new Download
             {
-                Id = 1,
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
@@ -8912,7 +8164,6 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadNightVision1);
             var downloadNightVision2 = new Download
             {
-                Id = 2,
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
@@ -8923,15 +8174,12 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadNightVision2);
             var productNightVision = new Product
             {
-                Id = 34,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Night Visions",
                 ShortDescription = "Night Visions is the debut studio album by American rock band Imagine Dragons.",
                 FullDescription = "<p>Original Release Date: September 4, 2012</p><p>Release Date: September 4, 2012</p><p>Genre - Alternative rock, indie rock, electronic rock</p><p>Label - Interscope/KIDinaKORNER</p><p>Copyright: (C) 2011 Interscope Records</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "poker-face",
                 AllowCustomerReviews = true,
                 Price = 2.8M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
@@ -8960,9 +8208,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 34,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -8971,9 +8216,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 34,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productNightVision);
 
@@ -8981,7 +8223,6 @@ namespace Nop.Services.Installation
 
             var downloadIfYouWait1 = new Download
             {
-                Id = 3,
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
@@ -8992,7 +8233,6 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadIfYouWait1);
             var downloadIfYouWait2 = new Download
             {
-                Id = 4,
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
@@ -9003,15 +8243,12 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadIfYouWait2);
             var productIfYouWait = new Product
             {
-                Id = 35,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "If You Wait",
                 ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
                 FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "single-ladies-put-a-ring-on-it",
                 AllowCustomerReviews = true,
                 Price = 3M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
@@ -9040,10 +8277,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 35,
-                        _id = ObjectId.GenerateNewId().ToString(),
-
                     }
                 }
             };
@@ -9053,16 +8286,12 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 35,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productIfYouWait);
 
 
             var downloadScienceAndFaith = new Download
             {
-                Id = 5,
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
@@ -9073,15 +8302,12 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadScienceAndFaith);
             var productScienceAndFaith = new Product
             {
-                Id = 36,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Science & Faith",
                 ShortDescription = "Science & Faith is the second studio album by Irish pop rock band The Script.",
                 FullDescription = "<p># Original Release Date: September 10, 2010<br /># Label: RCA, Epic/Phonogenic(America)<br /># Copyright: 2010 RCA Records.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "the-battle-of-los-angeles",
                 AllowCustomerReviews = true,
                 Price = 3M,
                 TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
@@ -9108,9 +8334,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Digital downloads").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 36,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9119,9 +8342,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 36,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productScienceAndFaith);
 
@@ -9133,15 +8353,12 @@ namespace Nop.Services.Installation
 
             var productFahrenheit = new Product
             {
-                Id = 37,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Fahrenheit 451 by Ray Bradbury",
                 ShortDescription = "Fahrenheit 451 is a dystopian novel by Ray Bradbury published in 1953. It is regarded as one of his best works.",
                 FullDescription = "<p>The novel presents a future American society where books are outlawed and firemen burn any that are found. The title refers to the temperature that Bradbury understood to be the autoignition point of paper.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "best-grilling-recipes",
                 AllowCustomerReviews = true,
                 Price = 27M,
                 OldPrice = 30M,
@@ -9170,9 +8387,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 37,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9181,9 +8395,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 37,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productFahrenheit);
 
@@ -9191,15 +8402,12 @@ namespace Nop.Services.Installation
 
             var productFirstPrizePies = new Product
             {
-                Id = 38,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "First Prize Pies",
                 ShortDescription = "Allison Kave made pies as a hobby, until one day her boyfriend convinced her to enter a Brooklyn pie-making contest. She won. In fact, her pies were such a hit that she turned pro.",
                 FullDescription = "<p>First Prize Pies, a boutique, made-to-order pie business that originated on New York's Lower East Side, has become synonymous with tempting and unusual confections. For the home baker who is passionate about seasonal ingredients and loves a creative approach to recipes, First Prize Pies serves up 52 weeks of seasonal and eclectic pastries in an interesting pie-a-week format. Clear instructions, technical tips and creative encouragement guide novice bakers as well as pie mavens. With its nostalgia-evoking photos of homemade pies fresh out of the oven, First Prize Pies will be as giftable as it is practical.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "eatingwell-in-season",
                 AllowCustomerReviews = true,
                 Price = 51M,
                 OldPrice = 67M,
@@ -9227,9 +8435,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 38,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9238,29 +8443,17 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 38,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productFirstPrizePies);
 
-
-
-
-
-
-
             var productPrideAndPrejudice = new Product
             {
-                Id = 39,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Pride and Prejudice",
                 ShortDescription = "Pride and Prejudice is a novel of manners by Jane Austen, first published in 1813.",
                 FullDescription = "<p>Set in England in the early 19th century, Pride and Prejudice tells the story of Mr and Mrs Bennet's five unmarried daughters after the rich and eligible Mr Bingley and his status-conscious friend, Mr Darcy, have moved into their neighbourhood. While Bingley takes an immediate liking to the eldest Bennet daughter, Jane, Darcy has difficulty adapting to local society and repeatedly clashes with the second-eldest Bennet daughter, Elizabeth.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "the-best-skillet-recipes",
                 AllowCustomerReviews = true,
                 Price = 24M,
                 OldPrice = 35M,
@@ -9288,9 +8481,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Books").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 39,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9299,9 +8489,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 39,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productPrideAndPrejudice);
 
@@ -9311,19 +8498,14 @@ namespace Nop.Services.Installation
 
             #region Jewelry
 
-
-
             var productElegantGemstoneNecklace = new Product
             {
-                Id = 40,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Elegant Gemstone Necklace",
                 ShortDescription = "Classic and elegant gemstone necklace now available in our store",
                 FullDescription = "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "diamond-pave-earrings",
                 AllowCustomerReviews = true,
                 Price = 569M,
                 IsShipEnabled = true,
@@ -9351,9 +8533,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 40,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9362,25 +8541,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 40,
-                _id = ObjectId.GenerateNewId().ToString(),
-
             });
             _productRepository.Insert(productElegantGemstoneNecklace);
 
 
             var productFlowerGirlBracelet = new Product
             {
-                Id = 41,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Flower Girl Bracelet",
                 ShortDescription = "Personalised Flower Braceled",
                 FullDescription = "<p>This is a great gift for your flower girl to wear on your wedding day. A delicate bracelet that is made with silver plated soldered cable chain, gives this bracelet a dainty look for young wrist. A Swarovski heart, shown in Rose, hangs off a silver plated flower. Hanging alongside the heart is a silver plated heart charm with Flower Girl engraved on both sides. This is a great style for the younger flower girl.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "diamond-tennis-bracelet",
                 AllowCustomerReviews = true,
                 Price = 360M,
                 IsShipEnabled = true,
@@ -9408,9 +8580,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 41,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9419,24 +8588,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 41,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productFlowerGirlBracelet);
 
 
             var productEngagementRing = new Product
             {
-                Id = 42,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Vintage Style Engagement Ring",
                 ShortDescription = "1.24 Carat (ctw) in 14K White Gold (Certified)",
                 FullDescription = "<p>Dazzle her with this gleaming 14 karat white gold vintage proposal. A ravishing collection of 11 decadent diamonds come together to invigorate a superbly ornate gold shank. Total diamond weight on this antique style engagement ring equals 1 1/4 carat (ctw). Item includes diamond certificate.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "vintage-style-three-stone-diamond-engagement-ring",
                 AllowCustomerReviews = true,
                 Price = 2100M,
                 IsShipEnabled = true,
@@ -9463,9 +8626,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Jewelry").Id,
                         DisplayOrder = 1,
-                        Id = 1,
-                        ProductId = 42,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9474,9 +8634,6 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 42,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(productEngagementRing);
 
@@ -9489,15 +8646,12 @@ namespace Nop.Services.Installation
 
             var product25GiftCard = new Product
             {
-                Id = 43,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$25 Virtual Gift Card",
                 ShortDescription = "$25 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "25-virtual-gift-card",
                 AllowCustomerReviews = true,
                 Price = 25M,
                 IsGiftCard = true,
@@ -9518,9 +8672,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
                         DisplayOrder = 2,
-                        Id = 1,
-                        ProductId = 43,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9529,24 +8680,18 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 43,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(product25GiftCard);
 
 
             var product50GiftCard = new Product
             {
-                Id = 44,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$50 Physical Gift Card",
                 ShortDescription = "$50 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "50-physical-gift-card",
                 AllowCustomerReviews = true,
                 Price = 50M,
                 IsGiftCard = true,
@@ -9574,9 +8719,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
                         DisplayOrder = 3,
-                        Id = 1,
-                        ProductId = 44,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9584,9 +8726,6 @@ namespace Nop.Services.Installation
             product50GiftCard.ProductPictures.Add(new ProductPicture
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name)).Id,
-                Id = 1,
-                ProductId = 44,
-                _id = ObjectId.GenerateNewId().ToString(),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product50GiftCard);
@@ -9594,15 +8733,12 @@ namespace Nop.Services.Installation
 
             var product100GiftCard = new Product
             {
-                Id = 45,
-                _id = ObjectId.GenerateNewId().ToString(),
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$100 Physical Gift Card",
                 ShortDescription = "$100 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "100-physical-gift-card",
                 AllowCustomerReviews = true,
                 Price = 100M,
                 IsGiftCard = true,
@@ -9628,9 +8764,6 @@ namespace Nop.Services.Installation
                     {
                         CategoryId = _categoryRepository.Table.Single(c => c.Name == "Gift Cards").Id,
                         DisplayOrder = 4,
-                        Id = 1,
-                        ProductId = 45,
-                        _id = ObjectId.GenerateNewId().ToString(),
                     }
                 }
             };
@@ -9639,15 +8772,11 @@ namespace Nop.Services.Installation
             {
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name)).Id,
                 DisplayOrder = 1,
-                Id = 1,
-                ProductId = 45,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             _productRepository.Insert(product100GiftCard);
 
             #endregion
-
-            //_productRepository.Insert(allProducts);
+            
             //search engine names
             foreach (var product in allProducts)
             {
@@ -9656,7 +8785,7 @@ namespace Nop.Services.Installation
                 {
                     EntityId = product.Id,
                     EntityName = "Product",
-                    LanguageId = 0,
+                    LanguageId = "",
                     IsActive = true,
                     Slug = product.SeName,
                 });
@@ -9669,15 +8798,11 @@ namespace Nop.Services.Installation
 
             //related products
 
-            //var relatedProducts = new List<RelatedProduct>
-            //{
             productFlowerGirlBracelet.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productFlowerGirlBracelet.Id,
                     ProductId2 = productEngagementRing.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productFlowerGirlBracelet.RelatedProducts.Add(
@@ -9685,8 +8810,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productFlowerGirlBracelet.Id,
                     ProductId2 = productElegantGemstoneNecklace.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productEngagementRing.RelatedProducts.Add(
@@ -9694,8 +8817,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productEngagementRing.Id,
                     ProductId2 = productFlowerGirlBracelet.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productEngagementRing.RelatedProducts.Add(
@@ -9703,8 +8824,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productEngagementRing.Id,
                     ProductId2 = productElegantGemstoneNecklace.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productElegantGemstoneNecklace.RelatedProducts.Add(
@@ -9712,8 +8831,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productElegantGemstoneNecklace.Id,
                     ProductId2 = productFlowerGirlBracelet.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productElegantGemstoneNecklace.RelatedProducts.Add(
@@ -9721,8 +8838,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productElegantGemstoneNecklace.Id,
                     ProductId2 = productEngagementRing.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productIfYouWait.RelatedProducts.Add(
@@ -9730,8 +8845,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productIfYouWait.Id,
                     ProductId2 = productNightVision.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productIfYouWait.RelatedProducts.Add(
@@ -9739,8 +8852,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productIfYouWait.Id,
                     ProductId2 = productScienceAndFaith.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productNightVision.RelatedProducts.Add(
@@ -9748,8 +8859,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productNightVision.Id,
                     ProductId2 = productIfYouWait.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productNightVision.RelatedProducts.Add(
@@ -9757,8 +8866,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productNightVision.Id,
                     ProductId2 = productScienceAndFaith.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productPrideAndPrejudice.RelatedProducts.Add(
@@ -9766,8 +8873,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productPrideAndPrejudice.Id,
                     ProductId2 = productFirstPrizePies.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productPrideAndPrejudice.RelatedProducts.Add(
@@ -9775,8 +8880,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productPrideAndPrejudice.Id,
                     ProductId2 = productFahrenheit.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productFirstPrizePies.RelatedProducts.Add(
@@ -9784,8 +8887,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productFirstPrizePies.Id,
                     ProductId2 = productPrideAndPrejudice.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productFirstPrizePies.RelatedProducts.Add(
@@ -9793,8 +8894,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productFirstPrizePies.Id,
                     ProductId2 = productFahrenheit.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productFahrenheit.RelatedProducts.Add(
@@ -9802,8 +8901,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productFahrenheit.Id,
                     ProductId2 = productFirstPrizePies.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productFahrenheit.RelatedProducts.Add(
@@ -9811,8 +8908,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productFahrenheit.Id,
                     ProductId2 = productPrideAndPrejudice.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAsusN551JK.RelatedProducts.Add(
@@ -9820,8 +8915,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAsusN551JK.Id,
                     ProductId2 = productLenovoThinkpad.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAsusN551JK.RelatedProducts.Add(
@@ -9829,8 +8922,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAsusN551JK.Id,
                     ProductId2 = productAppleMacBookPro.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAsusN551JK.RelatedProducts.Add(
@@ -9838,8 +8929,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAsusN551JK.Id,
                     ProductId2 = productSamsungSeries.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAsusN551JK.RelatedProducts.Add(
@@ -9847,8 +8936,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAsusN551JK.Id,
                     ProductId2 = productHpSpectre.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
@@ -9856,8 +8943,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLenovoThinkpad.Id,
                     ProductId2 = productAsusN551JK.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
@@ -9865,8 +8950,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLenovoThinkpad.Id,
                     ProductId2 = productAppleMacBookPro.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
@@ -9874,8 +8957,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLenovoThinkpad.Id,
                     ProductId2 = productSamsungSeries.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLenovoThinkpad.RelatedProducts.Add(
@@ -9883,8 +8964,6 @@ namespace Nop.Services.Installation
                  {
                      ProductId1 = productLenovoThinkpad.Id,
                      ProductId2 = productHpEnvy.Id,
-                     Id = 4,
-                     _id = ObjectId.GenerateNewId().ToString(),
                  });
 
             productAppleMacBookPro.RelatedProducts.Add(
@@ -9892,8 +8971,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAppleMacBookPro.Id,
                     ProductId2 = productLenovoThinkpad.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAppleMacBookPro.RelatedProducts.Add(
@@ -9901,8 +8978,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAppleMacBookPro.Id,
                     ProductId2 = productSamsungSeries.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAppleMacBookPro.RelatedProducts.Add(
@@ -9910,8 +8985,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAppleMacBookPro.Id,
                     ProductId2 = productAsusN551JK.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAppleMacBookPro.RelatedProducts.Add(
@@ -9919,8 +8992,6 @@ namespace Nop.Services.Installation
                  {
                      ProductId1 = productAppleMacBookPro.Id,
                      ProductId2 = productHpSpectre.Id,
-                     Id = 4,
-                     _id = ObjectId.GenerateNewId().ToString(),
                  });
 
             productHpSpectre.RelatedProducts.Add(
@@ -9928,8 +8999,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHpSpectre.Id,
                     ProductId2 = productLenovoThinkpad.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHpSpectre.RelatedProducts.Add(
@@ -9937,8 +9006,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHpSpectre.Id,
                     ProductId2 = productSamsungSeries.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHpSpectre.RelatedProducts.Add(
@@ -9946,8 +9013,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHpSpectre.Id,
                     ProductId2 = productAsusN551JK.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHpSpectre.RelatedProducts.Add(
@@ -9955,8 +9020,6 @@ namespace Nop.Services.Installation
                  {
                      ProductId1 = productHpSpectre.Id,
                      ProductId2 = productHpEnvy.Id,
-                     Id = 4,
-                     _id = ObjectId.GenerateNewId().ToString(),
                  });
 
             productHpEnvy.RelatedProducts.Add(
@@ -9964,8 +9027,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHpEnvy.Id,
                     ProductId2 = productAsusN551JK.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHpEnvy.RelatedProducts.Add(
@@ -9973,8 +9034,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHpEnvy.Id,
                     ProductId2 = productAppleMacBookPro.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHpEnvy.RelatedProducts.Add(
@@ -9982,8 +9041,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHpEnvy.Id,
                     ProductId2 = productHpSpectre.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHpEnvy.RelatedProducts.Add(
@@ -9991,24 +9048,18 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHpEnvy.Id,
                     ProductId2 = productSamsungSeries.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productSamsungSeries.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productSamsungSeries.Id,
                     ProductId2 = productAsusN551JK.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productSamsungSeries.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productSamsungSeries.Id,
                     ProductId2 = productAppleMacBookPro.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productSamsungSeries.RelatedProducts.Add(
@@ -10016,24 +9067,18 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productSamsungSeries.Id,
                     ProductId2 = productHpEnvy.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productSamsungSeries.RelatedProducts.Add(
                  new RelatedProduct
                  {
                      ProductId1 = productSamsungSeries.Id,
                      ProductId2 = productHpSpectre.Id,
-                     Id = 4,
-                     _id = ObjectId.GenerateNewId().ToString(),
                  });
             productLeica.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productLeica.Id,
                     ProductId2 = productHtcOneMini.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLeica.RelatedProducts.Add(
@@ -10041,8 +9086,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLeica.Id,
                     ProductId2 = productNikonD5500DSLR.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLeica.RelatedProducts.Add(
@@ -10050,8 +9093,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLeica.Id,
                     ProductId2 = productAppleICam.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLeica.RelatedProducts.Add(
@@ -10059,16 +9100,12 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLeica.Id,
                     ProductId2 = productNokiaLumia.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productHtcOne.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productHtcOne.Id,
                     ProductId2 = productHtcOneMini.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHtcOne.RelatedProducts.Add(
@@ -10076,16 +9113,12 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHtcOne.Id,
                     ProductId2 = productNokiaLumia.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productHtcOne.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productHtcOne.Id,
                     ProductId2 = productBeatsPill.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHtcOne.RelatedProducts.Add(
@@ -10093,8 +9126,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHtcOne.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHtcOneMini.RelatedProducts.Add(
@@ -10102,16 +9133,12 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHtcOneMini.Id,
                     ProductId2 = productHtcOne.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productHtcOneMini.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productHtcOneMini.Id,
                     ProductId2 = productNokiaLumia.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productHtcOneMini.RelatedProducts.Add(
@@ -10119,32 +9146,24 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productHtcOneMini.Id,
                     ProductId2 = productBeatsPill.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productHtcOneMini.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productHtcOneMini.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productNokiaLumia.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productNokiaLumia.Id,
                     ProductId2 = productHtcOne.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productNokiaLumia.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productNokiaLumia.Id,
                     ProductId2 = productHtcOneMini.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productNokiaLumia.RelatedProducts.Add(
@@ -10152,16 +9171,12 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productNokiaLumia.Id,
                     ProductId2 = productBeatsPill.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productNokiaLumia.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productNokiaLumia.Id,
                     ProductId2 = productPortableSoundSpeakers.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAdidas.RelatedProducts.Add(
@@ -10169,8 +9184,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAdidas.Id,
                     ProductId2 = productLeviJeans.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAdidas.RelatedProducts.Add(
@@ -10178,8 +9191,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAdidas.Id,
                     ProductId2 = productNikeFloral.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productAdidas.RelatedProducts.Add(
@@ -10187,32 +9198,24 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productAdidas.Id,
                     ProductId2 = productNikeZoom.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productAdidas.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productAdidas.Id,
                     ProductId2 = productNikeTailwind.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productLeviJeans.Id,
                     ProductId2 = productAdidas.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productLeviJeans.Id,
                     ProductId2 = productNikeFloral.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLeviJeans.RelatedProducts.Add(
@@ -10220,16 +9223,12 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLeviJeans.Id,
                     ProductId2 = productNikeZoom.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productLeviJeans.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productLeviJeans.Id,
                     ProductId2 = productNikeTailwind.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productCustomTShirt.RelatedProducts.Add(
@@ -10237,8 +9236,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productLeviJeans.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productCustomTShirt.RelatedProducts.Add(
@@ -10246,56 +9243,42 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productNikeTailwind.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productCustomTShirt.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productOversizedWomenTShirt.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productCustomTShirt.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productCustomTShirt.Id,
                     ProductId2 = productObeyHat.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productDigitalStorm.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productDigitalStorm.Id,
                     ProductId2 = productBuildComputer.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productDigitalStorm.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productDigitalStorm.Id,
                     ProductId2 = productLenovoIdeaCentre.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productDigitalStorm.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productDigitalStorm.Id,
                     ProductId2 = productLenovoThinkpad.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
             productDigitalStorm.RelatedProducts.Add(
                 new RelatedProduct
                 {
                     ProductId1 = productDigitalStorm.Id,
                     ProductId2 = productAppleMacBookPro.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
@@ -10303,8 +9286,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLenovoIdeaCentre.Id,
                     ProductId2 = productBuildComputer.Id,
-                    Id = 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
@@ -10312,8 +9293,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLenovoIdeaCentre.Id,
                     ProductId2 = productDigitalStorm.Id,
-                    Id = 2,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
@@ -10321,8 +9300,6 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLenovoIdeaCentre.Id,
                     ProductId2 = productLenovoThinkpad.Id,
-                    Id = 3,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
             productLenovoIdeaCentre.RelatedProducts.Add(
@@ -10330,13 +9307,8 @@ namespace Nop.Services.Installation
                 {
                     ProductId1 = productLenovoIdeaCentre.Id,
                     ProductId2 = productAppleMacBookPro.Id,
-                    Id = 4,
-                    _id = ObjectId.GenerateNewId().ToString(),
                 });
 
-            //_productRepository.Update(allProducts);
-            //};
-            //_relatedProductRepository.Insert(relatedProducts);
 
             #endregion
 
@@ -10454,7 +9426,6 @@ namespace Nop.Services.Installation
                 var rating = random.Next(4, 6);
                 var productReview = new ProductReview
                 {
-                    _id = ObjectId.GenerateNewId().ToString(),
                     CustomerId = defaultCustomer.Id,
                     ProductId = product.Id,
                     IsApproved = true,
@@ -10495,7 +9466,7 @@ namespace Nop.Services.Installation
                 Description = "Discuss new products and industry trends",
                 NumTopics = 0,
                 NumPosts = 0,
-                LastPostCustomerId = 0,
+                LastPostCustomerId = "",
                 LastPostTime = null,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -10510,7 +9481,7 @@ namespace Nop.Services.Installation
                 Description = "Discuss the mobile phone market",
                 NumTopics = 0,
                 NumPosts = 0,
-                LastPostCustomerId = 0,
+                LastPostCustomerId = "",
                 LastPostTime = null,
                 DisplayOrder = 10,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -10570,7 +9541,6 @@ namespace Nop.Services.Installation
                                 {
                                     new BlogPost
                                         {
-                                             Id = 1,
                                              AllowComments = true,
                                              LanguageId = defaultLanguage.Id,
                                              Title = "How a blog can help your growing e-Commerce business",
@@ -10581,7 +9551,6 @@ namespace Nop.Services.Installation
                                         },
                                     new BlogPost
                                         {
-                                             Id = 2,
                                              AllowComments = true,
                                              LanguageId = defaultLanguage.Id,
                                              Title = "Why your online store needs a wish list",
@@ -10662,7 +9631,6 @@ namespace Nop.Services.Installation
                                 {
                                     new NewsItem
                                     {
-                                         Id = 1,
                                          AllowComments = true,
                                          LanguageId = defaultLanguage.Id,
                                          Title = "About Grandnode",
@@ -10673,7 +9641,6 @@ namespace Nop.Services.Installation
                                     },
                                     new NewsItem
                                     {
-                                         Id = 2,
                                          AllowComments = true,
                                          LanguageId = defaultLanguage.Id,
                                          Title = "Grandnode new release!",
@@ -10684,7 +9651,6 @@ namespace Nop.Services.Installation
                                     },
                                     new NewsItem
                                     {
-                                         Id = 3,
                                          AllowComments = true,
                                          LanguageId = defaultLanguage.Id,
                                          Title = "New online store is open!",
@@ -10718,7 +9684,6 @@ namespace Nop.Services.Installation
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
             var poll1 = new Poll
             {
-                Id = 1,
                 LanguageId = defaultLanguage.Id,
                 Name = "Do you like Grandnode for MongoDB?",
                 SystemKeyword = "",
@@ -10730,34 +9695,21 @@ namespace Nop.Services.Installation
             {
                 Name = "Excellent",
                 DisplayOrder = 1,
-                PollId = 1,
-                Id = 1,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             poll1.PollAnswers.Add(new PollAnswer
             {
                 Name = "Good",
                 DisplayOrder = 2,
-                PollId = 1,
-                Id = 2,
-                _id = ObjectId.GenerateNewId().ToString(),
             });
             poll1.PollAnswers.Add(new PollAnswer
             {
                 Name = "Poor",
                 DisplayOrder = 3,
-                PollId = 1,
-                Id = 3,
-                _id = ObjectId.GenerateNewId().ToString(),
-
             });
             poll1.PollAnswers.Add(new PollAnswer
             {
                 Name = "Very bad",
                 DisplayOrder = 4,
-                PollId = 1,
-                Id = 4,
-                _id = ObjectId.GenerateNewId().ToString(),
 
             });
             _pollRepository.Insert(poll1);
@@ -11368,12 +10320,11 @@ namespace Nop.Services.Installation
             {
                 new Vendor
                 {
-                    Id = 1,
                     Name = "Vendor 1",
                     Email = "vendor1email@gmail.com",
                     Description = "Some description...",
                     AdminComment = "",
-                    PictureId = 0,
+                    PictureId = "",
                     Active = true,
                     DisplayOrder = 1,
                     PageSize = 6,
@@ -11382,12 +10333,11 @@ namespace Nop.Services.Installation
                 },
                 new Vendor
                 {
-                    Id = 2,
                     Name = "Vendor 2",
                     Email = "vendor2email@gmail.com",
                     Description = "Some description...",
                     AdminComment = "",
-                    PictureId = 0,
+                    PictureId = "",
                     Active = true,
                     DisplayOrder = 2,
                     PageSize = 6,
@@ -11406,7 +10356,7 @@ namespace Nop.Services.Installation
                 {
                     EntityId = vendor.Id,
                     EntityName = "Vendor",
-                    LanguageId = 0,
+                    LanguageId = "",
                     IsActive = true,
                     Slug = seName
                 });
@@ -11480,6 +10430,7 @@ namespace Nop.Services.Installation
             _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId), new CreateIndexOptions() { Name = "Language" });
 
+            //Currency
             _currencyRepository.Collection.Indexes.CreateOneAsync(Builders<Currency>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //customer
@@ -11501,6 +10452,7 @@ namespace Nop.Services.Installation
             _checkoutAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _checkoutAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
 
+            //productAttribute
             _productAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //category
@@ -11517,13 +10469,10 @@ namespace Nop.Services.Installation
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.ShowOnHomePage), new CreateIndexOptions() { Name = "ShowOnHomePage" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name_asc" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Name), new CreateIndexOptions() { Name = "Name_desc" });
-
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_asc" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_desc" });
-
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Price), new CreateIndexOptions() { Name = "Price_asc" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Price), new CreateIndexOptions() { Name = "Price_desc" });
-
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductTags.Id").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "Tags" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "ProductCategories" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "ProductManufacturers" });
@@ -11539,10 +10488,15 @@ namespace Nop.Services.Installation
             _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "ProductId", Unique = true });
 
+            //url record
             _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Slug), new CreateIndexOptions() { Name = "Slug" });
 
+            //email
             _emailAccountRepository.Collection.Indexes.CreateOneAsync(Builders<EmailAccount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _queuedemailRepository.Collection.Indexes.CreateOneAsync(Builders<QueuedEmail>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //message template
             _messageTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<MessageTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //forum
@@ -11555,74 +10509,118 @@ namespace Nop.Services.Installation
             // Country and Stateprovince
             _countryRepository.Collection.Indexes.CreateOneAsync(Builders<Country>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _countryRepository.Collection.Indexes.CreateOneAsync(Builders<Country>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
-
             _stateProvinceRepository.Collection.Indexes.CreateOneAsync(Builders<StateProvince>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _stateProvinceRepository.Collection.Indexes.CreateOneAsync(Builders<StateProvince>.IndexKeys.Ascending(x => x.CountryId).Ascending(x => x.DisplayOrder).Ascending(x => x.Id), new CreateIndexOptions() { Name = "Country" });
 
+            //discount
             _discountRepository.Collection.Indexes.CreateOneAsync(Builders<Discount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
+            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });
+            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
+
+
+            //blog
             _blogPostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _blogcommentRepository.Collection.Indexes.CreateOneAsync(Builders<BlogComment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _blogpostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //topic
             _topicRepository.Collection.Indexes.CreateOneAsync(Builders<Topic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //news
             _newsItemRepository.Collection.Indexes.CreateOneAsync(Builders<NewsItem>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //newsletter
             _newslettersubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
+            //poll
             _pollRepository.Collection.Indexes.CreateOneAsync(Builders<Poll>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
             _shippingMethodRepository.Collection.Indexes.CreateOneAsync(Builders<ShippingMethod>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _deliveryDateRepository.Collection.Indexes.CreateOneAsync(Builders<DeliveryDate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             // Activity log
             _activityLogTypeRepository.Collection.Indexes.CreateOneAsync(Builders<ActivityLogType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _activityLogRepository.Collection.Indexes.CreateOneAsync(Builders<ActivityLog>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-
-            _affiliateRepository.Collection.Indexes.CreateOneAsync(Builders<Affiliate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _blogcommentRepository.Collection.Indexes.CreateOneAsync(Builders<BlogComment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _blogpostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _campaignRepository.Collection.Indexes.CreateOneAsync(Builders<Campaign>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _downloadRepository.Collection.Indexes.CreateOneAsync(Builders<Download>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _giftcardRepository.Collection.Indexes.CreateOneAsync(Builders<GiftCard>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _logRepository.Collection.Indexes.CreateOneAsync(Builders<Log>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //Affiliate
+            _affiliateRepository.Collection.Indexes.CreateOneAsync(Builders<Affiliate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //Campaign
+            _campaignRepository.Collection.Indexes.CreateOneAsync(Builders<Campaign>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //download
+            _downloadRepository.Collection.Indexes.CreateOneAsync(Builders<Download>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //giftcard
+            _giftcardRepository.Collection.Indexes.CreateOneAsync(Builders<GiftCard>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //private message
             _privatemessageRepository.Collection.Indexes.CreateOneAsync(Builders<PrivateMessage>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
+
+            //template
             _categoryTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<CategoryTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _manufacturerTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<ManufacturerTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _topicTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<TopicTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //sheduled
             _scheduleTaskRepository.Collection.Indexes.CreateOneAsync(Builders<ScheduleTask>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _queuedemailRepository.Collection.Indexes.CreateOneAsync(Builders<QueuedEmail>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _returnrequestRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //reward points
             _rewardpointshistoryRepository.Collection.Indexes.CreateOneAsync(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _rewardpointshistoryRepository.Collection.Indexes.CreateOneAsync(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
 
+            //search term
             _searchtermRepository.Collection.Indexes.CreateOneAsync(Builders<SearchTerm>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //setting
             _settingRepository.Collection.Indexes.CreateOneAsync(Builders<Setting>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //shipment
             _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.ShipmentNumber), new CreateIndexOptions() { Name = "ShipmentNumber", Unique = true });
             _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
 
+            //warehouse
             _warehouseRepository.Collection.Indexes.CreateOneAsync(Builders<Warehouse>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
+            //order
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending("OrderItem.ProductId").Ascending(x => x.Deleted), new CreateIndexOptions() { Name = "OrderItemProductId" });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending("OrderItem.ProductId"), new CreateIndexOptions() { Name = "OrderItemProductId" });
 
+            //permision
             _permissionRepository.Collection.Indexes.CreateOneAsync(Builders<PermissionRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //vendor
             _vendorRepository.Collection.Indexes.CreateOneAsync(Builders<Vendor>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
+            //externalauth
             _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
 
-            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
-            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });
-            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
-
+            //return request
             _returnRequestActionRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _returnRequestReasonRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestReason>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _returnrequestRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
+            //contactus
             _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
             _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
             //customer action
             _customerActionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerActionConditionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionConditionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            _banner.Collection.Indexes.CreateOneAsync(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //customer reminder
+            _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
         }
 

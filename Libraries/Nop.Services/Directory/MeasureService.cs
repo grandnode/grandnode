@@ -110,11 +110,8 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="measureDimensionId">Measure dimension identifier</param>
         /// <returns>Measure dimension</returns>
-        public virtual MeasureDimension GetMeasureDimensionById(int measureDimensionId)
+        public virtual MeasureDimension GetMeasureDimensionById(string measureDimensionId)
         {
-            if (measureDimensionId == 0)
-                return null;
-            
             string key = string.Format(MEASUREDIMENSIONS_BY_ID_KEY, measureDimensionId);
             return _cacheManager.Get(key, () => _measureDimensionRepository.GetById(measureDimensionId));
         }
@@ -290,11 +287,8 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="measureWeightId">Measure weight identifier</param>
         /// <returns>Measure weight</returns>
-        public virtual MeasureWeight GetMeasureWeightById(int measureWeightId)
+        public virtual MeasureWeight GetMeasureWeightById(string measureWeightId)
         {
-            if (measureWeightId == 0)
-                return null;
-            
             string key = string.Format(MEASUREWEIGHTS_BY_ID_KEY, measureWeightId);
             return _cacheManager.Get(key, () => _measureWeightRepository.GetById(measureWeightId));
         }

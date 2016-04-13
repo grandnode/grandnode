@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Customers
             Locales = new List<CustomerAttributeValueLocalizedModel>();
         }
 
-        public int CustomerAttributeId { get; set; }
+        public string CustomerAttributeId { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.Name")]
         [AllowHtml]
@@ -34,7 +34,7 @@ namespace Nop.Admin.Models.Customers
 
     public partial class CustomerAttributeValueLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.Name")]
         [AllowHtml]

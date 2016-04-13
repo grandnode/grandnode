@@ -70,7 +70,7 @@ namespace Nop.Services.Messages
         #region Utilities
         
         protected virtual int SendNotification(MessageTemplate messageTemplate, 
-            EmailAccount emailAccount, int languageId, IEnumerable<Token> tokens,
+            EmailAccount emailAccount, string languageId, IEnumerable<Token> tokens,
             string toEmailAddress, string toName,
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null)
@@ -108,10 +108,11 @@ namespace Nop.Services.Messages
             };
 
             _queuedEmailService.InsertQueuedEmail(email);
-            return email.Id;
+            //return email.Id;
+            return 1;
         }
 
-        protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName, int storeId)
+        protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName, string storeId)
         {
             var messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName, storeId);
 
@@ -127,7 +128,7 @@ namespace Nop.Services.Messages
             return messageTemplate;
         }
 
-        protected virtual EmailAccount GetEmailAccountOfMessageTemplate(MessageTemplate messageTemplate, int languageId)
+        protected virtual EmailAccount GetEmailAccountOfMessageTemplate(MessageTemplate messageTemplate, string languageId)
         {
             var emailAccounId = messageTemplate.GetLocalized(mt => mt.EmailAccountId, languageId);
             var emailAccount = _emailAccountService.GetEmailAccountById(emailAccounId);
@@ -139,7 +140,7 @@ namespace Nop.Services.Messages
 
         }
 
-        protected virtual int EnsureLanguageIsActive(int languageId, int storeId)
+        protected virtual string EnsureLanguageIsActive(string languageId, string storeId)
         {
             //load language by specified ID
             var language = _languageService.GetLanguageById(languageId);
@@ -172,7 +173,7 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerRegisteredNotificationMessage(Customer customer, int languageId)
+        public virtual int SendCustomerRegisteredNotificationMessage(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -208,7 +209,7 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerWelcomeMessage(Customer customer, int languageId)
+        public virtual int SendCustomerWelcomeMessage(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -244,7 +245,7 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerEmailValidationMessage(Customer customer, int languageId)
+        public virtual int SendCustomerEmailValidationMessage(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -281,7 +282,7 @@ namespace Nop.Services.Messages
         /// <param name="customer">Customer instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerPasswordRecoveryMessage(Customer customer, int languageId)
+        public virtual int SendCustomerPasswordRecoveryMessage(Customer customer, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -323,7 +324,7 @@ namespace Nop.Services.Messages
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPlacedVendorNotification(Order order, Vendor vendor, int languageId)
+        public virtual int SendOrderPlacedVendorNotification(Order order, Vendor vendor, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -364,7 +365,7 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPlacedStoreOwnerNotification(Order order, int languageId)
+        public virtual int SendOrderPlacedStoreOwnerNotification(Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -401,7 +402,7 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPaidStoreOwnerNotification(Order order, int languageId)
+        public virtual int SendOrderPaidStoreOwnerNotification(Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -441,7 +442,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPaidCustomerNotification(Order order, int languageId,
+        public virtual int SendOrderPaidCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
@@ -483,7 +484,7 @@ namespace Nop.Services.Messages
         /// <param name="vendor">Vendor instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPaidVendorNotification(Order order, Vendor vendor, int languageId)
+        public virtual int SendOrderPaidVendorNotification(Order order, Vendor vendor, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -527,7 +528,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPlacedCustomerNotification(Order order, int languageId,
+        public virtual int SendOrderPlacedCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
@@ -568,7 +569,7 @@ namespace Nop.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendShipmentSentCustomerNotification(Shipment shipment, int languageId)
+        public virtual int SendShipmentSentCustomerNotification(Shipment shipment, string languageId)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
@@ -610,7 +611,7 @@ namespace Nop.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendShipmentDeliveredCustomerNotification(Shipment shipment, int languageId)
+        public virtual int SendShipmentDeliveredCustomerNotification(Shipment shipment, string languageId)
         {
             if (shipment == null)
                 throw new ArgumentNullException("shipment");
@@ -654,7 +655,7 @@ namespace Nop.Services.Messages
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderCompletedCustomerNotification(Order order, int languageId,
+        public virtual int SendOrderCompletedCustomerNotification(Order order, string languageId,
             string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
@@ -696,7 +697,7 @@ namespace Nop.Services.Messages
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderCancelledCustomerNotification(Order order, int languageId)
+        public virtual int SendOrderCancelledCustomerNotification(Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -735,7 +736,7 @@ namespace Nop.Services.Messages
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, int languageId)
+        public virtual int SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -773,7 +774,7 @@ namespace Nop.Services.Messages
         /// <param name="refundedAmount">Amount refunded</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, int languageId)
+        public virtual int SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -813,7 +814,7 @@ namespace Nop.Services.Messages
         /// <param name="orderNote">Order note</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, int languageId)
+        public virtual int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, string languageId)
         {
             if (orderNote == null)
                 throw new ArgumentNullException("orderNote");
@@ -854,7 +855,7 @@ namespace Nop.Services.Messages
         /// <param name="recurringPayment">Recurring payment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, int languageId)
+        public virtual int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, string languageId)
         {
             if (recurringPayment == null)
                 throw new ArgumentNullException("recurringPayment");
@@ -899,7 +900,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
         public virtual int SendNewsLetterSubscriptionActivationMessage(NewsLetterSubscription subscription,
-            int languageId)
+            string languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
@@ -936,7 +937,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Language identifier</param>
         /// <returns>Queued email identifier</returns>
         public virtual int SendNewsLetterSubscriptionDeactivationMessage(NewsLetterSubscription subscription,
-            int languageId)
+            string languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
@@ -980,7 +981,7 @@ namespace Nop.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendProductEmailAFriendMessage(Customer customer, int languageId,
+        public virtual int SendProductEmailAFriendMessage(Customer customer, string languageId,
             Product product, string customerEmail, string friendsEmail, string personalMessage)
         {
             if (customer == null)
@@ -1026,7 +1027,7 @@ namespace Nop.Services.Messages
         /// <param name="friendsEmail">Friend's email</param>
         /// <param name="personalMessage">Personal message</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendWishlistEmailAFriendMessage(Customer customer, int languageId,
+        public virtual int SendWishlistEmailAFriendMessage(Customer customer, string languageId,
              string customerEmail, string friendsEmail, string personalMessage)
         {
             if (customer == null)
@@ -1070,7 +1071,7 @@ namespace Nop.Services.Messages
         /// <param name="orderItem">Order item</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId)
+        public virtual int SendNewReturnRequestStoreOwnerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
@@ -1108,7 +1109,7 @@ namespace Nop.Services.Messages
         /// <param name="orderItem">Order item</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, int languageId)
+        public virtual int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId)
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
@@ -1156,7 +1157,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         public int SendNewForumTopicMessage(Customer customer,
-            ForumTopic forumTopic, Forum forum, int languageId)
+            ForumTopic forumTopic, Forum forum, string languageId)
         {
             if (customer == null)
             {
@@ -1199,7 +1200,7 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         public int SendNewForumPostMessage(Customer customer,
             ForumPost forumPost, ForumTopic forumTopic,
-            Forum forum, int friendlyForumTopicPageIndex, int languageId)
+            Forum forum, int friendlyForumTopicPageIndex, string languageId)
         {
             if (customer == null)
             {
@@ -1243,7 +1244,7 @@ namespace Nop.Services.Messages
         /// <param name="privateMessage">Private message</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public int SendPrivateMessageNotification(PrivateMessage privateMessage, int languageId)
+        public int SendPrivateMessageNotification(PrivateMessage privateMessage, string languageId)
         {
             if (privateMessage == null)
             {
@@ -1287,7 +1288,7 @@ namespace Nop.Services.Messages
         /// <param name="vendor">Vendor</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, int languageId)
+        public virtual int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -1327,7 +1328,7 @@ namespace Nop.Services.Messages
         /// <param name="giftCard">Gift card</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendGiftCardNotification(GiftCard giftCard, int languageId)
+        public virtual int SendGiftCardNotification(GiftCard giftCard, string languageId)
         {
             if (giftCard == null)
                 throw new ArgumentNullException("giftCard");
@@ -1371,7 +1372,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         public virtual int SendProductReviewNotificationMessage(ProductReview productReview,
-            int languageId)
+            string languageId)
         {
             if (productReview == null)
                 throw new ArgumentNullException("productReview");
@@ -1408,7 +1409,7 @@ namespace Nop.Services.Messages
         /// <param name="product">Product</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendQuantityBelowStoreOwnerNotification(Product product,  int languageId)
+        public virtual int SendQuantityBelowStoreOwnerNotification(Product product,  string languageId)
         {
             if (product== null)
                 throw new ArgumentNullException("product");
@@ -1443,7 +1444,7 @@ namespace Nop.Services.Messages
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, int languageId)
+        public virtual int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, string languageId)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");
@@ -1484,7 +1485,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         public virtual int SendNewVatSubmittedStoreOwnerNotification(Customer customer,
-            string vatName, string vatAddress, int languageId)
+            string vatName, string vatAddress, string languageId)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -1522,7 +1523,7 @@ namespace Nop.Services.Messages
         /// <param name="blogComment">Blog comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendBlogCommentNotificationMessage(BlogComment blogComment, int languageId)
+        public virtual int SendBlogCommentNotificationMessage(BlogComment blogComment, string languageId)
         {
             if (blogComment == null)
                 throw new ArgumentNullException("blogComment");
@@ -1560,7 +1561,7 @@ namespace Nop.Services.Messages
         /// <param name="newsComment">News comment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId)
+        public virtual int SendNewsCommentNotificationMessage(NewsComment newsComment, string languageId)
         {
             if (newsComment == null)
                 throw new ArgumentNullException("newsComment");
@@ -1598,7 +1599,7 @@ namespace Nop.Services.Messages
         /// <param name="subscription">Subscription</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendBackInStockNotification(BackInStockSubscription subscription, int languageId)
+        public virtual int SendBackInStockNotification(BackInStockSubscription subscription, string languageId)
         {
             if (subscription == null)
                 throw new ArgumentNullException("subscription");
@@ -1638,8 +1639,8 @@ namespace Nop.Services.Messages
         /// <param name="tokens">Tokens</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendTestEmail(int messageTemplateId, string sendToEmail, 
-            List<Token> tokens, int languageId)
+        public virtual int SendTestEmail(string messageTemplateId, string sendToEmail, 
+            List<Token> tokens, string languageId)
         {
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(messageTemplateId);
             if (messageTemplate == null)
@@ -1668,7 +1669,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, int languageId, int customerId)
+        public virtual int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, string languageId, string customerId)
         {
             if (cartItem == null)
                 throw new ArgumentNullException("cartItem");
@@ -1712,7 +1713,7 @@ namespace Nop.Services.Messages
         /// <param name="Order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, int languageId)
+        public virtual int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1751,7 +1752,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_Notification(CustomerAction action, int languageId, int customerId)
+        public virtual int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, string customerId)
         {
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);

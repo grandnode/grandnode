@@ -5,6 +5,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Common;
+using System;
 
 namespace Nop.Web.Validators.Common
 {
@@ -32,7 +33,7 @@ namespace Nop.Web.Validators.Common
                     .NotNull()
                     .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
                 RuleFor(x => x.CountryId)
-                    .NotEqual(0)
+                    .NotEqual("")
                     .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
             }
             if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
@@ -40,13 +41,13 @@ namespace Nop.Web.Validators.Common
                 Custom(x =>
                 {
                     //does selected country has states?
-                    var countryId = x.CountryId.HasValue ? x.CountryId.Value : 0;
+                    var countryId = !String.IsNullOrEmpty(x.CountryId) ? x.CountryId : "";
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Count > 0;
 
                     if (hasStates)
                     {
                         //if yes, then ensure that state is selected
-                        if (!x.StateProvinceId.HasValue || x.StateProvinceId.Value == 0)
+                        if (String.IsNullOrEmpty(x.StateProvinceId) || x.StateProvinceId == "")
                         {
                             return new ValidationFailure("StateProvinceId", localizationService.GetResource("Address.Fields.StateProvince.Required"));
                         }

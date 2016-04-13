@@ -40,7 +40,7 @@ namespace Nop.Admin.Models.Orders
         public bool IsTaxExempt { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.TaxCategory")]
-        public int TaxCategoryId { get; set; }
+        public string TaxCategoryId { get; set; }
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AttributeControlType")]
@@ -82,14 +82,14 @@ namespace Nop.Admin.Models.Orders
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
         //ACL
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.SubjectToAcl")]
         public bool SubjectToAcl { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        public string[] SelectedCustomerRoleIds { get; set; }
     }
 
     public partial class ConditionModel : BaseNopEntityModel
@@ -98,7 +98,7 @@ namespace Nop.Admin.Models.Orders
         public bool EnableCondition { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes")]
-        public int SelectedAttributeId { get; set; }
+        public string SelectedAttributeId { get; set; }
 
         public IList<AttributeConditionModel> ConditionAttributes { get; set; }
     }
@@ -114,7 +114,7 @@ namespace Nop.Admin.Models.Orders
     }
     public partial class CheckoutAttributeLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name")]
         [AllowHtml]

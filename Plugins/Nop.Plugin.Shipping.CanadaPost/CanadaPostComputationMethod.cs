@@ -291,12 +291,12 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 response.AddError("Shipping address is not set");
                 return response;
             }
-            if (getShippingOptionRequest.ShippingAddress.CountryId == 0)
+            if (String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId))
             {
                 response.AddError("Shipping country is not set");
                 return response;
             }
-            if (getShippingOptionRequest.ShippingAddress.StateProvinceId == 0)
+            if (String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.StateProvinceId))
             {
                 response.AddError("Shipping state is not set");
                 return response;

@@ -21,7 +21,7 @@
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
-                <a href="#" class="delete-topic-button" onclick="deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
+                <a href="#" class="delete-topic-button" onclick="deletetopic('@(Model.Id)')">@T("Forum.DeleteTopic").Text</a>
                 <script type="text/javascript">
                     function deletetopic(topicId) {
                         if (confirm('@T("Common.AreYouSure")')) {

@@ -126,7 +126,7 @@ namespace Nop.Services.Seo
             //categories
             if (_commonSettings.SitemapIncludeCategories)
             {
-                WriteCategories(urlHelper, 0);
+                WriteCategories(urlHelper, "");
             }
             //manufacturers
             if (_commonSettings.SitemapIncludeManufacturers)
@@ -142,7 +142,7 @@ namespace Nop.Services.Seo
             WriteTopics(urlHelper);
         }
 
-        protected virtual void WriteCategories(UrlHelper urlHelper, int parentCategoryId)
+        protected virtual void WriteCategories(UrlHelper urlHelper, string parentCategoryId)
         {
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
             foreach (var category in categories)

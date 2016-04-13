@@ -9,9 +9,9 @@ namespace Nop.Plugin.Feed.Froogle.Services
 
         IList<GoogleProductRecord> GetAll();
 
-        GoogleProductRecord GetById(int googleProductRecordId);
+        GoogleProductRecord GetById(string googleProductRecordId);
 
-        GoogleProductRecord GetByProductId(int productId);
+        GoogleProductRecord GetByProductId(string productId);
 
         void InsertGoogleProductRecord(GoogleProductRecord googleProductRecord);
 

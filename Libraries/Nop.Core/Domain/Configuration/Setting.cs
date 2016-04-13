@@ -14,7 +14,7 @@ namespace Nop.Core.Domain.Configuration
             Locales = new List<LocalizedProperty>();
         }
         
-        public Setting(string name, string value, int storeId = 0) {
+        public Setting(string name, string value, string storeId = "") {
             this.Name = name;
             this.Value = value;
             this.StoreId = storeId;
@@ -33,7 +33,7 @@ namespace Nop.Core.Domain.Configuration
         /// <summary>
         /// Gets or sets the store for which this setting is valid. 0 is set when the setting is for all stores
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales

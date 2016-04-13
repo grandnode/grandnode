@@ -29,7 +29,7 @@ namespace Nop.Web.Models.Polls
     public partial class PollAnswerModel : BaseNopEntityModel
     {
         public string Name { get; set; }
-        public int PollId { get; set; }
+        public string PollId { get; set; }
         public int NumberOfVotes { get; set; }
 
         public double PercentOfTotalVotes { get; set; }

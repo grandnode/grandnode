@@ -13,11 +13,11 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         /// <summary>
         /// Gets or sets the store identifier in which these reward points were awarded or redeemed
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the points redeemed/added
@@ -48,7 +48,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the order for which points were redeemed as a payment
         /// </summary>
         //public virtual Order UsedWithOrder { get; set; }
-        public virtual int UsedWithOrderId { get; set; }
+        public virtual string UsedWithOrderId { get; set; }
 
        
     }

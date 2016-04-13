@@ -23,9 +23,9 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<string> Warnings { get; set; }
         
         [NopResourceDisplayName("ShoppingCart.EstimateShipping.Country")]
-        public int? CountryId { get; set; }
+        public string CountryId { get; set; }
         [NopResourceDisplayName("ShoppingCart.EstimateShipping.StateProvince")]
-        public int? StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
         [NopResourceDisplayName("ShoppingCart.EstimateShipping.ZipPostalCode")]
         public string ZipPostalCode { get; set; }
 

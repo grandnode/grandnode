@@ -154,20 +154,17 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null, 
+        protected virtual CheckoutBillingAddressModel PrepareBillingAddressModel(string selectedCountryId = null, 
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutBillingAddressModel();
             //existing addresses
 
             var addresses = _workContext.CurrentCustomer.Addresses
-                //allow billing
-                .Where(a => a.CountryId == 0 ||
+                .Where(a => a.CountryId == "" ||
                 (_countryService.GetCountryById(a.CountryId)!=null ? _countryService.GetCountryById(a.CountryId).AllowsBilling : false)
-                //a.Country.AllowsBilling
                 )
-                //enabled for the current store
-                .Where(a => a.CountryId == 0 || 
+                .Where(a => a.CountryId == "" || 
                 _storeMappingService.Authorize((_countryService.GetCountryById(a.CountryId))
                 ))
                 .ToList();
@@ -200,7 +197,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null, 
+        protected virtual CheckoutShippingAddressModel PrepareShippingAddressModel(string selectedCountryId = null, 
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel();
@@ -216,12 +213,12 @@ namespace Nop.Web.Controllers
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
                 //allow shipping
-                .Where(a => a.CountryId == 0 ||
+                .Where(a => a.CountryId == "" ||
                 (_countryService.GetCountryById(a.CountryId) != null ? _countryService.GetCountryById(a.CountryId).AllowsShipping : false)
                 //a.Country.AllowsShipping
                 )
                 //enabled for the current store
-                .Where(a => a.CountryId == 0 || 
+                .Where(a => a.CountryId == "" || 
                 _storeMappingService.Authorize(_countryService.GetCountryById(a.CountryId)))
                 .ToList();
             foreach (var address in addresses)
@@ -334,7 +331,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, int filterByCountryId)
+        protected virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, string filterByCountryId)
         {
             var model = new CheckoutPaymentMethodModel();
 
@@ -497,17 +494,16 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
-        public ActionResult Completed(int? orderId)
+        public ActionResult Completed(string orderId)
         {
             //validation
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return new HttpUnauthorizedResult();
 
             Order order = null;
-            if (orderId.HasValue)
+            if (!String.IsNullOrEmpty(orderId))
             {
-                //load order by identifier (if provided)
-                order = _orderService.GetOrderById(orderId.Value);
+                order = _orderService.GetOrderById(orderId);
             }
             if (order == null)
             {
@@ -530,6 +526,7 @@ namespace Nop.Web.Controllers
             var model = new CheckoutCompletedModel
             {
                 OrderId = order.Id,
+                OrderNumber = order.OrderNumber,
                 OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
             };
 
@@ -575,7 +572,7 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
-        public ActionResult SelectBillingAddress(int addressId)
+        public ActionResult SelectBillingAddress(string addressId)
         {
             var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
@@ -629,9 +626,6 @@ namespace Nop.Web.Controllers
                     address = model.NewAddress.ToEntity();
                     address.CustomAttributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
-                    address.Id = _workContext.CurrentCustomer.Addresses.Count > 0 ? _workContext.CurrentCustomer.Addresses.Max(x => x.Id) + 1 : 1;
-                    address._id = ObjectId.GenerateNewId().ToString();
-
                     _workContext.CurrentCustomer.Addresses.Add(address);
                 }
                 _workContext.CurrentCustomer.BillingAddress = address;
@@ -676,7 +670,7 @@ namespace Nop.Web.Controllers
             var model = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
             return View(model);
         }
-        public ActionResult SelectShippingAddress(int addressId)
+        public ActionResult SelectShippingAddress(string addressId)
         {
             var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
@@ -778,8 +772,6 @@ namespace Nop.Web.Controllers
                     address = model.NewAddress.ToEntity();
                     address.CustomAttributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
-                    address.Id = _workContext.CurrentCustomer.Addresses.Count > 0 ? _workContext.CurrentCustomer.Addresses.Max(x => x.Id) + 1 : 1;
-                    address._id = ObjectId.GenerateNewId().ToString();
                     _workContext.CurrentCustomer.Addresses.Add(address);
                     address.CustomerId = _workContext.CurrentCustomer.Id;
                     _customerService.InsertAddress(address);
@@ -942,10 +934,10 @@ namespace Nop.Web.Controllers
             }
 
             //filter by country
-            int filterByCountryId = 0;
+            string filterByCountryId = "";
             if (_addressSettings.CountryEnabled &&
                 _workContext.CurrentCustomer.BillingAddress != null &&
-                _workContext.CurrentCustomer.BillingAddress.CountryId != 0)
+                !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
             {
                 filterByCountryId = _workContext.CurrentCustomer.BillingAddress.CountryId;
             }
@@ -1241,10 +1233,10 @@ namespace Nop.Web.Controllers
             if (isPaymentWorkflowRequired)
             {
                 //filter by country
-                int filterByCountryId = 0;
+                string filterByCountryId = "";
                 if (_addressSettings.CountryEnabled &&
                     _workContext.CurrentCustomer.BillingAddress != null &&
-                    _workContext.CurrentCustomer.BillingAddress.CountryId != 0)
+                    !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
                 {
                     filterByCountryId = _workContext.CurrentCustomer.BillingAddress.CountryId;
                 }
@@ -1386,10 +1378,9 @@ namespace Nop.Web.Controllers
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                     throw new Exception("Anonymous checkout is not allowed");
 
-                int billingAddressId;
-                int.TryParse(form["billing_address_id"], out billingAddressId);
+                string billingAddressId = form["billing_address_id"];
 
-                if (billingAddressId > 0)
+                if (!String.IsNullOrEmpty(billingAddressId))
                 {
                     //existing address
                     var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == billingAddressId);
@@ -1447,12 +1438,6 @@ namespace Nop.Web.Controllers
                         address = model.NewAddress.ToEntity();
                         address.CustomAttributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
-                        //if (address.CountryId.HasValue && address.CountryId.Value > 0)
-                        //{
-                        //    address.Country = _countryService.GetCountryById(address.CountryId.Value);
-                        //}
-                        address.Id = _workContext.CurrentCustomer.Addresses.Count > 0 ? _workContext.CurrentCustomer.Addresses.Max(x => x.Id) + 1 : 1;
-                        address._id = ObjectId.GenerateNewId().ToString();
                         _workContext.CurrentCustomer.Addresses.Add(address);
                         address.CustomerId = _workContext.CurrentCustomer.Id;
                         _customerService.InsertAddress(address);
@@ -1551,10 +1536,9 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
                 }
 
-                int shippingAddressId;
-                int.TryParse(form["shipping_address_id"], out shippingAddressId);
+                string shippingAddressId = form["shipping_address_id"];
 
-                if (shippingAddressId > 0)
+                if (!String.IsNullOrEmpty(shippingAddressId))
                 {
                     //existing address
                     var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == shippingAddressId);
@@ -1618,8 +1602,6 @@ namespace Nop.Web.Controllers
                         //    address.StateProvince = _stateProvinceService.GetStateProvinceById(address.StateProvinceId.Value);
 
                         //other null validations
-                        address.Id = _workContext.CurrentCustomer.Addresses.Count > 0 ? _workContext.CurrentCustomer.Addresses.Max(x => x.Id) + 1 : 1;
-                        address._id = ObjectId.GenerateNewId().ToString();
                         _workContext.CurrentCustomer.Addresses.Add(address);
                         address.CustomerId = _workContext.CurrentCustomer.Id;
                         _customerService.InsertAddress(address);

@@ -110,33 +110,8 @@ namespace Nop.Services.Messages
             //Handle e-mail
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
-            //Get original subscription record
-            //var originalSubscription = _context.LoadOriginalCopy(newsLetterSubscription);
-
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
-            /*
-            //Publish the subscription event 
-            if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
-                (newsLetterSubscription.Active && (originalSubscription.Email != newsLetterSubscription.Email)))
-            {
-                //If the previous entry was false, but this one is true, publish a subscribe.
-                PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
-            }
-            
-            if ((originalSubscription.Active && newsLetterSubscription.Active) && 
-                (originalSubscription.Email != newsLetterSubscription.Email))
-            {
-                //If the two emails are different publish an unsubscribe.
-                PublishSubscriptionEvent(originalSubscription.Email, false, publishSubscriptionEvents);
-            }
-
-            if ((originalSubscription.Active && !newsLetterSubscription.Active))
-            {
-                //If the previous entry was true, but this one is false
-                PublishSubscriptionEvent(originalSubscription.Email, false, publishSubscriptionEvents);
-            }
-            */
             //Publish event
             _eventPublisher.EntityUpdated(newsLetterSubscription);
         }
@@ -164,10 +139,8 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(string newsLetterSubscriptionId)
         {
-            if (newsLetterSubscriptionId == 0) return null;
-
             return _subscriptionRepository.GetById(newsLetterSubscriptionId);
         }
 
@@ -194,7 +167,7 @@ namespace Nop.Services.Messages
         /// <param name="email">The newsletter subscription email</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>NewsLetter subscription</returns>
-        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, int storeId)
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, string storeId)
         {
             if (!CommonHelper.IsValidEmail(email)) 
                 return null;
@@ -220,7 +193,7 @@ namespace Nop.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
         public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
-            int storeId = 0, bool? isActive = null, 
+            string storeId = "", bool? isActive = null, 
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             //do not filter by customer role
@@ -228,7 +201,7 @@ namespace Nop.Services.Messages
 
             if (!String.IsNullOrEmpty(email))
                 query = query.Where(nls => nls.Email.ToLower().Contains(email.ToLower()));
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(nls => nls.StoreId == storeId);
             if (isActive.HasValue)
                 query = query.Where(nls => nls.Active == isActive.Value);

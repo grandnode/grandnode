@@ -31,7 +31,7 @@ namespace Nop.Admin.Models.Customers
         public bool Active { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.ActionTypeId")]
-        public int ActionTypeId { get; set; }
+        public string ActionTypeId { get; set; }
         public IList<SelectListItem> ActionType { get; set; }
         
 
@@ -48,19 +48,19 @@ namespace Nop.Admin.Models.Customers
         }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.Banner")]
-        public int BannerId { get; set; }
+        public string BannerId { get; set; }
         public IList<SelectListItem> Banners { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.MessageTemplate")]
-        public int MessageTemplateId { get; set; }
+        public string MessageTemplateId { get; set; }
         public IList<SelectListItem> MessageTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.CustomerRole")]
-        public int CustomerRoleId { get; set; }
+        public string CustomerRoleId { get; set; }
         public IList<SelectListItem> CustomerRoles { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.CustomerTag")]
-        public int CustomerTagId { get; set; }
+        public string CustomerTagId { get; set; }
         public IList<SelectListItem> CustomerTags { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.StartDateTimeUtc")]

@@ -19,11 +19,11 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public int ProductPictureSize { get; set; }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.Store")]
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.Currency")]
-        public int CurrencyId { get; set; }
+        public string CurrencyId { get; set; }
         public IList<SelectListItem> AvailableCurrencies { get; set; }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.DefaultGoogleCategory")]
@@ -50,7 +50,7 @@ namespace Nop.Plugin.Feed.Froogle.Models
 
         public class GoogleProductModel : BaseNopModel
         {
-            public int ProductId { get; set; }
+            public string ProductId { get; set; }
 
             [NopResourceDisplayName("Plugins.Feed.Froogle.Products.ProductName")]
             public string ProductName { get; set; }

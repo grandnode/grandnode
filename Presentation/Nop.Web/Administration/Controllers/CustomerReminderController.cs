@@ -175,7 +175,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -218,7 +218,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -244,7 +244,7 @@ namespace Nop.Admin.Controllers
         #region Condition
 
         [HttpPost]
-        public ActionResult Conditions(int customerReminderId)
+        public ActionResult Conditions(string customerReminderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -262,7 +262,7 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        public ActionResult AddCondition(int customerReminderId)
+        public ActionResult AddCondition(string customerReminderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -314,7 +314,6 @@ namespace Nop.Admin.Controllers
 
                 var condition = new CustomerReminder.ReminderCondition()
                 {
-                    Id = customerReminder.Conditions.Count > 0 ? customerReminder.Conditions.Max(x => x.Id) + 1 : 1,
                     Name = model.Name,
                     ConditionTypeId = model.ConditionTypeId,
                     ConditionId = model.ConditionId,
@@ -333,7 +332,7 @@ namespace Nop.Admin.Controllers
         }
 
 
-        public ActionResult EditCondition(int customerReminderId, int cid)
+        public ActionResult EditCondition(string customerReminderId, string cid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -360,7 +359,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult EditCondition(int customerReminderId, int cid, CustomerReminderModel.ConditionModel model, bool continueEditing)
+        public ActionResult EditCondition(string customerReminderId, string cid, CustomerReminderModel.ConditionModel model, bool continueEditing)
         {
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
@@ -391,7 +390,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConditionDelete(int Id, int customerReminderId)
+        public ActionResult ConditionDelete(string Id, string customerReminderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -405,7 +404,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConditionDeletePosition(int id, int customerReminderId, int conditionId)
+        public ActionResult ConditionDeletePosition(string id, string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -458,7 +457,7 @@ namespace Nop.Admin.Controllers
         #region Condition Category
 
         [HttpPost]
-        public ActionResult ConditionCategory(int customerReminderId, int conditionId)
+        public ActionResult ConditionCategory(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -477,7 +476,7 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        public ActionResult CategoryAddPopup(int customerReminderId, int conditionId)
+        public ActionResult CategoryAddPopup(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -518,7 +517,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedCategoryIds != null)
             {
-                foreach (int id in model.SelectedCategoryIds)
+                foreach (string id in model.SelectedCategoryIds)
                 {
                     var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
                     if (customerReminder != null)
@@ -547,7 +546,7 @@ namespace Nop.Admin.Controllers
 
         #region Condition Manufacturer
         [HttpPost]
-        public ActionResult ConditionManufacturer(int customerReminderId, int conditionId)
+        public ActionResult ConditionManufacturer(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -566,7 +565,7 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        public ActionResult ManufacturerAddPopup(int customerReminderId, int conditionId)
+        public ActionResult ManufacturerAddPopup(string customerReminderId, string conditionId)
         {
             var model = new CustomerReminderModel.ConditionModel.AddManufacturerConditionModel();
             model.ConditionId = conditionId;
@@ -600,7 +599,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedManufacturerIds != null)
             {
-                foreach (int id in model.SelectedManufacturerIds)
+                foreach (string id in model.SelectedManufacturerIds)
                 {
                     var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
                     if (customerReminder != null)
@@ -630,7 +629,7 @@ namespace Nop.Admin.Controllers
         #region Condition Product
 
         [HttpPost]
-        public ActionResult ConditionProduct(int customerReminderId, int conditionId)
+        public ActionResult ConditionProduct(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -649,7 +648,7 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        public ActionResult ProductAddPopup(int customerReminderId, int conditionId)
+        public ActionResult ProductAddPopup(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -658,29 +657,29 @@ namespace Nop.Admin.Controllers
             model.ConditionId = conditionId;
             model.CustomerReminderId = customerReminderId;
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -691,8 +690,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
 
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -718,7 +721,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (string id in model.SelectedProductIds)
                 {
                     var customerReminder = _customerReminderService.GetCustomerReminderById(model.CustomerReminderId);
                     if (customerReminder != null)
@@ -746,7 +749,7 @@ namespace Nop.Admin.Controllers
         #region Customer Tags
 
         [HttpPost]
-        public ActionResult ConditionCustomerTag(int customerReminderId, int conditionId)
+        public ActionResult ConditionCustomerTag(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -807,7 +810,7 @@ namespace Nop.Admin.Controllers
         #region Condition Customer role
 
         [HttpPost]
-        public ActionResult ConditionCustomerRole(int customerReminderId, int conditionId)
+        public ActionResult ConditionCustomerRole(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -868,7 +871,7 @@ namespace Nop.Admin.Controllers
 
 
         [HttpPost]
-        public ActionResult ConditionCustomerRegister(int customerReminderId, int conditionId)
+        public ActionResult ConditionCustomerRegister(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -906,7 +909,6 @@ namespace Nop.Admin.Controllers
                 {
                     var _cr = new CustomerReminder.ReminderCondition.CustomerRegister()
                     {
-                        Id = condition.CustomerRegistration.Count > 0 ? condition.CustomerRegistration.Max(x => x.Id) + 1 : 1,
                         RegisterField = model.CustomerRegisterName,
                         RegisterValue = model.CustomerRegisterValue,
                     };
@@ -971,13 +973,13 @@ namespace Nop.Admin.Controllers
             var _rf = registerField.Split(':');
             if (_rf.Count() > 1)
             {
-                var ca = _customerAttributeService.GetCustomerAttributeById(Convert.ToInt32(_rf.FirstOrDefault()));
+                var ca = _customerAttributeService.GetCustomerAttributeById(_rf.FirstOrDefault());
                 if (ca != null)
                 {
                     _field = ca.Name;
-                    if (ca.CustomerAttributeValues.FirstOrDefault(x => x.Id == Convert.ToInt32(_rf.LastOrDefault())) != null)
+                    if (ca.CustomerAttributeValues.FirstOrDefault(x => x.Id == _rf.LastOrDefault()) != null)
                     {
-                        _field = ca.Name + "->" + ca.CustomerAttributeValues.FirstOrDefault(x => x.Id == Convert.ToInt32(_rf.LastOrDefault())).Name;
+                        _field = ca.Name + "->" + ca.CustomerAttributeValues.FirstOrDefault(x => x.Id == _rf.LastOrDefault()).Name;
                     }
                 }
 
@@ -987,7 +989,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ConditionCustomCustomerAttribute(int customerReminderId, int conditionId)
+        public ActionResult ConditionCustomCustomerAttribute(string customerReminderId, string conditionId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -1026,7 +1028,6 @@ namespace Nop.Admin.Controllers
                 {
                     var _cr = new CustomerReminder.ReminderCondition.CustomerRegister()
                     {
-                        Id = condition.CustomCustomerAttributes.Count > 0 ? condition.CustomCustomerAttributes.Max(x => x.Id) + 1 : 1,
                         RegisterField = model.CustomerAttributeName,
                         RegisterValue = model.CustomerAttributeValue,
                     };
@@ -1090,7 +1091,7 @@ namespace Nop.Admin.Controllers
         #region Levels
 
         [HttpPost]
-        public ActionResult Levels(int customerReminderId)
+        public ActionResult Levels(string customerReminderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -1108,7 +1109,7 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        public ActionResult AddLevel(int customerReminderId)
+        public ActionResult AddLevel(string customerReminderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -1139,7 +1140,6 @@ namespace Nop.Admin.Controllers
 
                 var level = new CustomerReminder.ReminderLevel()
                 {
-                    Id = customerReminder.Levels.Count > 0 ? customerReminder.Levels.Max(x => x.Id) + 1 : 1,
                     Name = model.Name,
                     Level = model.Level,
                     BccEmailAddresses = model.BccEmailAddresses,
@@ -1160,7 +1160,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult EditLevel(int customerReminderId, int cid)
+        public ActionResult EditLevel(string customerReminderId, string cid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
@@ -1183,7 +1183,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        public ActionResult EditLevel(int customerReminderId, int cid, CustomerReminderModel.ReminderLevelModel model, bool continueEditing)
+        public ActionResult EditLevel(string customerReminderId, string cid, CustomerReminderModel.ReminderLevelModel model, bool continueEditing)
         {
             var customerReminder = _customerReminderService.GetCustomerReminderById(customerReminderId);
             if (customerReminder == null)
@@ -1231,7 +1231,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteLevel(int Id, int customerReminderId)
+        public ActionResult DeleteLevel(string Id, string customerReminderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();

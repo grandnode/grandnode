@@ -8,13 +8,13 @@ namespace Nop.Admin.Models.Blogs
     public partial class BlogCommentModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")]
-        public int BlogPostId { get; set; }
+        public string BlogPostId { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")]
         [AllowHtml]
         public string BlogPostTitle { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
         public string CustomerInfo { get; set; }
 

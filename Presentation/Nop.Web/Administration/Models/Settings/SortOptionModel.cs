@@ -4,8 +4,10 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    public partial class SortOptionModel : BaseNopEntityModel
+    public partial class SortOptionModel
     {
+        public virtual int Id { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SortOptions.Name")]
         [AllowHtml]
         public string Name { get; set; }

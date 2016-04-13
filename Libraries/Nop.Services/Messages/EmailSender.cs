@@ -43,7 +43,7 @@ namespace Nop.Services.Messages
              string replyTo = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
             string attachmentFilePath = null, string attachmentFileName = null,
-            int attachedDownloadId = 0)
+            string attachedDownloadId = "")
         {
             var message = new MailMessage();
             //from, to, reply to
@@ -92,7 +92,7 @@ namespace Nop.Services.Messages
                 message.Attachments.Add(attachment);
             }
             //another attachment?
-            if (attachedDownloadId > 0)
+            if (!String.IsNullOrEmpty(attachedDownloadId))
             {
                 var download = _downloadService.GetDownloadById(attachedDownloadId);
                 if (download != null)
@@ -100,7 +100,7 @@ namespace Nop.Services.Messages
                     //we do not support URLs as attachments
                     if (!download.UseDownloadUrl)
                     {
-                        string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
+                        string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id;
                         fileName += download.Extension;
 
                         

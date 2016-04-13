@@ -34,8 +34,8 @@ namespace Nop.Web.Framework
                 //try to find by ID ("affiliateId" parameter)
                 if (request.QueryString[AFFILIATE_ID_QUERY_PARAMETER_NAME] != null)
                 {
-                    var affiliateId = Convert.ToInt32(request.QueryString[AFFILIATE_ID_QUERY_PARAMETER_NAME]);
-                    if (affiliateId > 0)
+                    var affiliateId = request.QueryString[AFFILIATE_ID_QUERY_PARAMETER_NAME];
+                    if (!String.IsNullOrEmpty(affiliateId))
                     {
                         var affiliateService = EngineContext.Current.Resolve<IAffiliateService>();
                         affiliate = affiliateService.GetAffiliateById(affiliateId);

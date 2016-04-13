@@ -71,7 +71,7 @@
                         },{
                             field: "DownloadId",
                             title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
-                            template: '# if(DownloadId > 0) {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
+                            template: '# if(DownloadId != "") {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
                         },{
                             field: "DisplayToCustomer",
                             title: "@T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")",
@@ -156,7 +156,7 @@
     $(document).ready(function () {
         $('#addOrderNote').click(function () {
             var orderNoteMessage = $("#@Html.FieldIdFor(model => model.AddOrderNoteMessage)").val();
-            var orderNoteDownloadId = 0;
+            var orderNoteDownloadId = '';
             if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
                 orderNoteDownloadId = $("#@Html.FieldIdFor(model => model.AddOrderNoteDownloadId)").val();
             }
@@ -167,7 +167,7 @@
                 DisplayToCustomer: orderNoteDisplayToCustomer,
                 message: orderNoteMessage, 
                 downloadId: orderNoteDownloadId, 
-                orderId: @Model.Id
+                orderId: '@Model.Id'
             };
             addAntiForgeryToken(postData);
 

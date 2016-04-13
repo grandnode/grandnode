@@ -11,7 +11,7 @@ namespace Nop.Admin.Models.Settings
             Stores = new List<StoreModel>();
         }
 
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         public IList<StoreModel> Stores { get; set; }
     }
 }

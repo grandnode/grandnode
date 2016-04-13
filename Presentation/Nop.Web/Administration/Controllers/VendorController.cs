@@ -203,7 +203,7 @@ namespace Nop.Admin.Controllers
                 //update picture seo file name
                 UpdatePictureSeoNames(vendor);
 
-                _urlRecordService.SaveSlug(vendor, model.SeName, 0);
+                _urlRecordService.SaveSlug(vendor, model.SeName, "");
 
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
@@ -216,7 +216,7 @@ namespace Nop.Admin.Controllers
 
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -262,7 +262,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                int prevPictureId = vendor.PictureId;
+                string prevPictureId = vendor.PictureId;
                 vendor = model.ToEntity(vendor);
                 vendor.Locales = UpdateLocales(vendor, model);
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
@@ -270,10 +270,10 @@ namespace Nop.Admin.Controllers
 
                 _vendorService.UpdateVendor(vendor);
                 //search engine name                
-                _urlRecordService.SaveSlug(vendor, model.SeName, 0);
+                _urlRecordService.SaveSlug(vendor, model.SeName, "");
 
                 //delete an old picture (if deleted or updated)
-                if (prevPictureId > 0 && prevPictureId != vendor.PictureId)
+                if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != vendor.PictureId)
                 {
                     var prevPicture = _pictureService.GetPictureById(prevPictureId);
                     if (prevPicture != null)
@@ -311,7 +311,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -325,7 +325,7 @@ namespace Nop.Admin.Controllers
             var associatedCustomers = _customerService.GetAllCustomers(vendorId: vendor.Id);
             foreach (var customer in associatedCustomers)
             {
-                customer.VendorId = 0;
+                customer.VendorId = "";
                 _customerService.UpdateCustomer(customer);
             }
 
@@ -339,7 +339,7 @@ namespace Nop.Admin.Controllers
         #region Vendor notes
 
         [HttpPost]
-        public ActionResult VendorNotesSelect(int vendorId, DataSourceRequest command)
+        public ActionResult VendorNotesSelect(string vendorId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -355,7 +355,7 @@ namespace Nop.Admin.Controllers
                 vendorNoteModels.Add(new VendorModel.VendorNote
                 {
                     Id = vendorNote.Id,
-                    VendorId = vendorNote.VendorId,
+                    VendorId = vendor.Id,
                     Note = vendorNote.FormatVendorNoteText(),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(vendorNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
@@ -371,7 +371,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult VendorNoteAdd(int vendorId, string message)
+        public ActionResult VendorNoteAdd(string vendorId, string message)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -382,8 +382,6 @@ namespace Nop.Admin.Controllers
 
             var vendorNote = new VendorNote
             {
-                Id = vendor.VendorNotes.Count > 0 ? vendor.VendorNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 Note = message,
                 VendorId = vendorId,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -395,7 +393,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult VendorNoteDelete(int id, int vendorId)
+        public ActionResult VendorNoteDelete(string id, string vendorId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
                 return AccessDeniedView();
@@ -407,6 +405,8 @@ namespace Nop.Admin.Controllers
             var vendorNote = vendor.VendorNotes.FirstOrDefault(vn => vn.Id == id);
             if (vendorNote == null)
                 throw new ArgumentException("No vendor note found with the specified id");
+            vendorNote.VendorId = vendor.Id;
+
             _vendorService.DeleteVendorNote(vendorNote);
 
             return new NullJsonResult();

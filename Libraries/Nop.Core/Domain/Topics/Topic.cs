@@ -16,8 +16,8 @@ namespace Nop.Core.Domain.Topics
         public Topic()
         {
             Locales = new List<LocalizedProperty>();
-            Stores = new List<int>();
-            CustomerRoles = new List<int>();
+            Stores = new List<string>();
+            CustomerRoles = new List<string>();
         }
         /// <summary>
         /// Gets or sets the name
@@ -86,7 +86,7 @@ namespace Nop.Core.Domain.Topics
         /// <summary>
         /// Gets or sets a value of used topic template identifier
         /// </summary>
-        public int TopicTemplateId { get; set; }
+        public string TopicTemplateId { get; set; }
 
         /// <summary>
         /// Gets or sets the meta keywords
@@ -107,7 +107,7 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-        public IList<int> Stores { get; set; }
+        public IList<string> Stores { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of locales
@@ -118,7 +118,7 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
-        public IList<int> CustomerRoles { get; set; }
+        public IList<string> CustomerRoles { get; set; }
 
     }
 }

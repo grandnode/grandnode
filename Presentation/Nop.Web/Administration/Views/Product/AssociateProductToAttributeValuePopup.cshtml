@@ -108,7 +108,13 @@
                                 schema: {
                                     data: "Data",
                                     total: "Total",
-                                    errors: "Errors"
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Name: { editable: false, type: "string" },
+                                        }
+                                    }
                                 },
                                 error: function(e) {
                                     display_kendoui_grid_error(e);
@@ -133,7 +139,7 @@
                                 field: "Name",
                                 title: "@T("Admin.Common.Select")",
                                 width: 50,
-                                template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectAssociatedProduct(#=Id#)" class="k-button" />'
+                                template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectAssociatedProduct(\'#=Id#\')" class="k-button" />'
                             },{
                                 field: "Name",
                                 title: "@T("Admin.Catalog.Products.Fields.Name")"
@@ -152,7 +158,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <input type="submit" id="save" name="save" class="k-button" value="@T("Admin.Common.Save")" style="display: none" />
+                <input type="submit" id="save" name="save" class="k-button" value="@T("Admin.Common.Save")" style="display: initial" />
             </td>
         </tr>
     </table>

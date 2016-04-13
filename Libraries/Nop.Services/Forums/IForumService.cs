@@ -21,7 +21,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forum group</returns>
-        ForumGroup GetForumGroupById(int forumGroupId);
+        ForumGroup GetForumGroupById(string forumGroupId);
 
         /// <summary>
         /// Gets all forum groups
@@ -52,14 +52,14 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
         /// <returns>Forum</returns>
-        Forum GetForumById(int forumId);
+        Forum GetForumById(string forumId);
 
         /// <summary>
         /// Gets forums by group identifier
         /// </summary>
         /// <param name="forumGroupId">The forum group identifier</param>
         /// <returns>Forums</returns>
-        IList<Forum> GetAllForumsByGroupId(int forumGroupId);
+        IList<Forum> GetAllForumsByGroupId(string forumGroupId);
 
         /// <summary>
         /// Inserts a forum
@@ -84,7 +84,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <returns>Forum Topic</returns>
-        ForumTopic GetTopicById(int forumTopicId);
+        ForumTopic GetTopicById(string forumTopicId);
 
         /// <summary>
         /// Gets a forum topic
@@ -92,7 +92,7 @@ namespace Nop.Services.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="increaseViews">The value indicating whether to increase forum topic views</param>
         /// <returns>Forum Topic</returns>
-        ForumTopic GetTopicById(int forumTopicId, bool increaseViews);
+        ForumTopic GetTopicById(string forumTopicId, bool increaseViews);
 
         /// <summary>
         /// Gets all forum topics
@@ -105,8 +105,8 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        IPagedList<ForumTopic> GetAllTopics(int forumId = 0,
-            int customerId = 0, string keywords = "", ForumSearchType searchType = ForumSearchType.All,
+        IPagedList<ForumTopic> GetAllTopics(string forumId = "",
+            string customerId = "", string keywords = "", ForumSearchType searchType = ForumSearchType.All,
             int limitDays = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        IPagedList<ForumTopic> GetActiveTopics(int forumId = 0, 
+        IPagedList<ForumTopic> GetActiveTopics(string forumId = "", 
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Nop.Services.Forums
         /// <param name="forumTopicId">The forum topic identifier</param>
         /// <param name="newForumId">New forum identifier</param>
         /// <returns>Moved forum topic</returns>
-        ForumTopic MoveTopic(int forumTopicId, int newForumId);
+        ForumTopic MoveTopic(string forumTopicId, string newForumId);
 
         /// <summary>
         /// Deletes a forum post
@@ -151,7 +151,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPostId">The forum post identifier</param>
         /// <returns>Forum Post</returns>
-        ForumPost GetPostById(int forumPostId);
+        ForumPost GetPostById(string forumPostId);
 
         /// <summary>
         /// Gets all forum posts
@@ -162,8 +162,8 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0,
-            int customerId = 0, string keywords = "", 
+        IPagedList<ForumPost> GetAllPosts(string forumTopicId = "",
+            string customerId = "", string keywords = "", 
             int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
-        IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0, int customerId = 0,
+        IPagedList<ForumPost> GetAllPosts(string forumTopicId = "", string customerId = "",
             string keywords = "", bool ascSort = false, 
             int pageIndex = 0, int pageSize = int.MaxValue);
 
@@ -204,7 +204,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="privateMessageId">The private message identifier</param>
         /// <returns>Private message</returns>
-        PrivateMessage GetPrivateMessageById(int privateMessageId);
+        PrivateMessage GetPrivateMessageById(string privateMessageId);
 
         /// <summary>
         /// Gets private messages
@@ -219,8 +219,8 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Private messages</returns>
-        IPagedList<PrivateMessage> GetAllPrivateMessages(int storeId, int fromCustomerId,
-            int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
+        IPagedList<PrivateMessage> GetAllPrivateMessages(string storeId, string fromCustomerId,
+            string toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
             string keywords, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumSubscriptionId">The forum subscription identifier</param>
         /// <returns>Forum subscription</returns>
-        ForumSubscription GetSubscriptionById(int forumSubscriptionId);
+        ForumSubscription GetSubscriptionById(string forumSubscriptionId);
 
         /// <summary>
         /// Gets forum subscriptions
@@ -257,8 +257,8 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        IPagedList<ForumSubscription> GetAllSubscriptions(int customerId = 0, int forumId = 0,
-            int topicId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
+        IPagedList<ForumSubscription> GetAllSubscriptions(string customerId = "", string forumId = "",
+            string topicId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Inserts a forum subscription
@@ -349,6 +349,6 @@ namespace Nop.Services.Forums
         /// <param name="pageSize">Page size</param>
         /// <param name="postId">Post identifier</param>
         /// <returns>Page index</returns>
-        int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId);
+        int CalculateTopicPageIndex(string forumTopicId, int pageSize, string postId);
     }
 }

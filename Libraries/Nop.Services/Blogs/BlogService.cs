@@ -63,11 +63,8 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPostId">Blog post identifier</param>
         /// <returns>Blog post</returns>
-        public virtual BlogPost GetBlogPostById(int blogPostId)
+        public virtual BlogPost GetBlogPostById(string blogPostId)
         {
-            if (blogPostId == 0)
-                return null;
-
             return _blogPostRepository.GetById(blogPostId);
         }
 
@@ -82,7 +79,7 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        public virtual IPagedList<BlogPost> GetAllBlogPosts(int storeId = 0, int languageId = 0,
+        public virtual IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", string languageId = "",
             DateTime? dateFrom = null, DateTime? dateTo = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null)
         {
@@ -93,7 +90,7 @@ namespace Nop.Services.Blogs
                 query = query.Where(b => dateFrom.Value <= b.CreatedOnUtc);
             if (dateTo.HasValue)
                 query = query.Where(b => dateTo.Value >= b.CreatedOnUtc);
-            if (languageId > 0)
+            if (!String.IsNullOrEmpty(languageId))
                 query = query.Where(b => languageId == b.LanguageId);
             if (!showHidden)
             {
@@ -102,7 +99,7 @@ namespace Nop.Services.Blogs
                 query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= utcNow);
             }
 
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
             {
                 query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
             }
@@ -127,8 +124,8 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        public virtual IPagedList<BlogPost> GetAllBlogPostsByTag(int storeId = 0,
-            int languageId = 0, string tag = "",
+        public virtual IPagedList<BlogPost> GetAllBlogPostsByTag(string storeId = "",
+            string languageId = "", string tag = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             tag = tag.Trim();
@@ -155,7 +152,7 @@ namespace Nop.Services.Blogs
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
-        public virtual IList<BlogPostTag> GetAllBlogPostTags(int storeId, int languageId, bool showHidden = false)
+        public virtual IList<BlogPostTag> GetAllBlogPostTags(string storeId, string languageId, bool showHidden = false)
         {
             var blogPostTags = new List<BlogPostTag>();
 
@@ -233,11 +230,11 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<BlogComment> GetAllComments(int customerId)
+        public virtual IList<BlogComment> GetAllComments(string customerId)
         {
             var query = from c in _blogCommentRepository.Table
                         orderby c.CreatedOnUtc
-                        where (customerId == 0 || c.CustomerId == customerId)
+                        where (customerId == "" || c.CustomerId == customerId)
                         select c;
             var content = query.ToList();
             return content;
@@ -248,15 +245,12 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogCommentId">Blog comment identifier</param>
         /// <returns>Blog comment</returns>
-        public virtual BlogComment GetBlogCommentById(int blogCommentId)
+        public virtual BlogComment GetBlogCommentById(string blogCommentId)
         {
-            if (blogCommentId == 0)
-                return null;
-
             return _blogCommentRepository.GetById(blogCommentId);
         }
 
-        public virtual IList<BlogComment> GetBlogCommentsByBlogPostId(int blogPostId)
+        public virtual IList<BlogComment> GetBlogCommentsByBlogPostId(string blogPostId)
         {
             var query = from c in _blogCommentRepository.Table
                         where c.BlogPostId == blogPostId
@@ -271,7 +265,7 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="commentIds">Blog comment identifiers</param>
         /// <returns>Blog comments</returns>
-        public virtual IList<BlogComment> GetBlogCommentsByIds(int[] commentIds)
+        public virtual IList<BlogComment> GetBlogCommentsByIds(string[] commentIds)
         {
             if (commentIds == null || commentIds.Length == 0)
                 return new List<BlogComment>();
@@ -282,7 +276,7 @@ namespace Nop.Services.Blogs
             var comments = query.ToList();
             //sort by passed identifiers
             var sortedComments = new List<BlogComment>();
-            foreach (int id in commentIds)
+            foreach (string id in commentIds)
             {
                 var comment = comments.Find(x => x.Id == id);
                 if (comment != null)

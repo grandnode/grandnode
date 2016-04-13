@@ -24,7 +24,7 @@ namespace Nop.Core.Data
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Entity</returns>
-        T GetById(int id);
+        T GetById(string id);
 
         /// <summary>
         /// Insert entity

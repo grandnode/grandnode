@@ -90,7 +90,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        protected virtual string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, int? discountRequirementId)
+        protected virtual string GetRequirementUrlInternal(IDiscountRequirementRule discountRequirementRule, Discount discount, string discountRequirementId)
         {   
             if (discountRequirementRule == null)
                 throw new ArgumentNullException("discountRequirementRule");
@@ -150,7 +150,7 @@ namespace Nop.Admin.Controllers
 
             var model = new DiscountListModel();
             model.AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(false).ToList();
-            model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -222,7 +222,7 @@ namespace Nop.Admin.Controllers
         }
 
         //edit
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -321,7 +321,7 @@ namespace Nop.Admin.Controllers
 
         //delete
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -363,7 +363,7 @@ namespace Nop.Admin.Controllers
         #region Discount requirements
 
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult GetDiscountRequirementConfigurationUrl(string systemName, int discountId, int? discountRequirementId)
+        public ActionResult GetDiscountRequirementConfigurationUrl(string systemName, string discountId, string discountRequirementId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -383,7 +383,7 @@ namespace Nop.Admin.Controllers
             return Json(new { url = url }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetDiscountRequirementMetaInfo(int discountRequirementId, int discountId)
+        public ActionResult GetDiscountRequirementMetaInfo(string discountRequirementId, string discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -406,7 +406,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteDiscountRequirement(int discountRequirementId, int discountId)
+        public ActionResult DeleteDiscountRequirement(string discountRequirementId, string discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -420,6 +420,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("Discount requirement could not be loaded");
 
             _discountService.DeleteDiscountRequirement(discountRequirement);
+            discount.DiscountRequirements.Remove(discountRequirement);
             _discountService.UpdateDiscount(discount);
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
@@ -430,7 +431,7 @@ namespace Nop.Admin.Controllers
         #region Applied to products
 
         [HttpPost]
-        public ActionResult ProductList(DataSourceRequest command, int discountId)
+        public ActionResult ProductList(DataSourceRequest command, string discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -453,7 +454,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult ProductDelete(int discountId, int productId)
+        public ActionResult ProductDelete(string discountId, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -478,36 +479,36 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult ProductAddPopup(int discountId)
+        public ActionResult ProductAddPopup(string discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
             var model = new DiscountModel.AddProductToDiscountModel();
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -518,9 +519,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
             var gridModel = new DataSourceResult();
             var products = _productService.SearchProducts(
-                categoryIds: new List<int> { model.SearchCategoryId },
+                categoryIds: searchCategoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -549,7 +554,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedProductIds != null)
             {
-                foreach (int id in model.SelectedProductIds)
+                foreach (string id in model.SelectedProductIds)
                 {
                     var product = _productService.GetProductById(id);
                     if (product != null)
@@ -576,7 +581,7 @@ namespace Nop.Admin.Controllers
         #region Applied to categories
 
         [HttpPost]
-        public ActionResult CategoryList(DataSourceRequest command, int discountId)
+        public ActionResult CategoryList(DataSourceRequest command, string discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -599,7 +604,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult CategoryDelete(int discountId, int categoryId)
+        public ActionResult CategoryDelete(string discountId, string categoryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -666,7 +671,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedCategoryIds != null)
             {
-                foreach (int id in model.SelectedCategoryIds)
+                foreach (string id in model.SelectedCategoryIds)
                 {
                     var category = _categoryService.GetCategoryById(id);
                     if (category != null)
@@ -691,7 +696,7 @@ namespace Nop.Admin.Controllers
         #region Applied to manufacturers
 
         [HttpPost]
-        public ActionResult ManufacturerList(DataSourceRequest command, int discountId)
+        public ActionResult ManufacturerList(DataSourceRequest command, string discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -714,7 +719,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult ManufacturerDelete(int discountId, int manufacturerId)
+        public ActionResult ManufacturerDelete(string discountId, string manufacturerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -732,12 +737,10 @@ namespace Nop.Admin.Controllers
                 manufacturer.AppliedDiscounts.Remove(discount);
 
             _manufacturerService.UpdateManufacturer(manufacturer);
-            //_manufacturerService.UpdateHasDiscountsApplied(manufacturer);
-
             return new NullJsonResult();
         }
 
-        public ActionResult ManufacturerAddPopup(int discountId)
+        public ActionResult ManufacturerAddPopup(string discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -776,7 +779,7 @@ namespace Nop.Admin.Controllers
 
             if (model.SelectedManufacturerIds != null)
             {
-                foreach (int id in model.SelectedManufacturerIds)
+                foreach (string id in model.SelectedManufacturerIds)
                 {
                     var manufacturer = _manufacturerService.GetManufacturerById(id);
                     if (manufacturer != null)
@@ -801,7 +804,7 @@ namespace Nop.Admin.Controllers
         #region Discount usage history
         
         [HttpPost]
-        public ActionResult UsageHistoryList(int discountId, DataSourceRequest command)
+        public ActionResult UsageHistoryList(string discountId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
@@ -833,7 +836,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult UsageHistoryDelete(int discountId, int id)
+        public ActionResult UsageHistoryDelete(string discountId, string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();

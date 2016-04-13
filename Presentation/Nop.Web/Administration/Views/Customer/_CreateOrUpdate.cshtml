@@ -50,7 +50,7 @@
         <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
             @T("Admin.Customers.Customers.CustomerRoles")
         </li>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
                 @T("Admin.Customers.Customers.Orders")
@@ -87,7 +87,7 @@
     <div>
         @TabCustomerRoles()
     </div>
-    @if (Model.Id > 0)
+    @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
             @TabOrders()
@@ -169,7 +169,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
     <table class="adminContent customer-info-tab">
         @if (Model.UsernamesEnabled)
         {
-            if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
+            if (String.IsNullOrEmpty(Model.Id) || Model.AllowUsersToChangeUsernames)
             {
                 <tr>
                     <td class="adminTitle">
@@ -210,7 +210,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
             <td class="adminData">
                 @Html.TextBoxFor(model => model.Password, new { autocomplete = "off", @class = "text-box single-line" })
                 @Html.ValidationMessageFor(model => model.Password)
-                @if (Model.Id > 0)
+                @if (!String.IsNullOrEmpty(Model.Id))
                 {
                     <input type="submit" name="changepassword" class="k-button" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
                 }
@@ -227,7 +227,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
             </td>
         </tr>
 
-        @if (Model.Id > 0 && Model.AssociatedExternalAuthRecords.Count > 0)
+        @if (!String.IsNullOrEmpty(Model.Id) && Model.AssociatedExternalAuthRecords.Count > 0)
         {
             <tr>
                 <td class="adminTitle">
@@ -515,7 +515,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 </td>
             </tr>
         }
-        @if (Model.AffiliateId > 0)
+        @if (!String.IsNullOrEmpty(Model.AffiliateId))
         {
             <tr>
                 <td class="adminTitle">
@@ -572,7 +572,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 @Html.ValidationMessageFor(model => model.Active)
             </td>
         </tr>
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <tr>
                 <td class="adminTitle">
@@ -583,7 +583,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 </td>
             </tr>
         }
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <tr>
                 <td class="adminTitle">
@@ -594,7 +594,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 </td>
             </tr>
         }
-        @if (Model.Id > 0)
+        @if (!String.IsNullOrEmpty(Model.Id))
         {
             <tr>
                 <td class="adminTitle">
@@ -606,7 +606,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
             </tr>
         }
 
-        @if (Model.Id > 0 && !String.IsNullOrEmpty(Model.LastVisitedPage))
+        @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastVisitedPage))
         {
             <tr>
                 <td class="adminTitle">
@@ -617,7 +617,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 </td>
             </tr>
         }
-        @if (Model.Id > 0 && Model.LastPurchaseDate.HasValue)
+        @if (!String.IsNullOrEmpty(Model.Id) && Model.LastPurchaseDate.HasValue)
         {
             <tr>
                 <td class="adminTitle">
@@ -691,7 +691,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                 },
                 scrollable: false,
                 columns: [{
-                    field: "Id",
+                    field: "OrderNumber",
                     title: "@T("Admin.Customers.Customers.Orders.ID")",
                     width: 50
                 }, {
@@ -846,7 +846,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                     addRewardPointsValue: rewardPointsValue,
                     addRewardPointsMessage: rewardPointsMessage,
                     storeId: rewardPointsStoreId,
-                    customerId: @Model.Id
+                    customerId: '@Model.Id'
                 };
                 addAntiForgeryToken(postData);
 

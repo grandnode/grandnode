@@ -24,9 +24,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected checkout attribute identifiers</returns>
-        protected virtual IList<int> ParseCheckoutAttributeIds(string attributesXml)
+        protected virtual IList<string> ParseCheckoutAttributeIds(string attributesXml)
         {
-            var ids = new List<int>();
+            var ids = new List<string>();
             if (String.IsNullOrEmpty(attributesXml))
                 return ids;
 
@@ -40,11 +40,7 @@ namespace Nop.Services.Orders
                     if (node.Attributes != null && node.Attributes["ID"] != null)
                     {
                         string str1 = node.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
-                        {
-                            ids.Add(id);
-                        }
+                        ids.Add(str1);
                     }
                 }
             }
@@ -64,7 +60,7 @@ namespace Nop.Services.Orders
         {
             var result = new List<CheckoutAttribute>();
             var ids = ParseCheckoutAttributeIds(attributesXml);
-            foreach (int id in ids)
+            foreach (string id in ids)
             {
                 var attribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
                 if (attribute != null)
@@ -94,13 +90,9 @@ namespace Nop.Services.Orders
                 {
                     if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int id;
-                        if (int.TryParse(valueStr, out id))
-                        {
-                            var value = attribute.CheckoutAttributeValues.Where(x => x.Id == id).FirstOrDefault(); //_checkoutAttributeService.GetCheckoutAttributeValueById(id);
-                            if (value != null)
-                                values.Add(value);
-                        }
+                        var value = attribute.CheckoutAttributeValues.Where(x => x.Id == valueStr).FirstOrDefault(); //_checkoutAttributeService.GetCheckoutAttributeValueById(id);
+                        if (value != null)
+                            values.Add(value);
                     }
                 }
             }
@@ -113,7 +105,7 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute value</returns>
-        public virtual IList<string> ParseValues(string attributesXml, int checkoutAttributeId)
+        public virtual IList<string> ParseValues(string attributesXml, string checkoutAttributeId)
         {
             var selectedCheckoutAttributeValues = new List<string>();
             try
@@ -127,17 +119,13 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (str1 == checkoutAttributeId)
                         {
-                            if (id == checkoutAttributeId)
+                            var nodeList2 = node1.SelectNodes(@"CheckoutAttributeValue/Value");
+                            foreach (XmlNode node2 in nodeList2)
                             {
-                                var nodeList2 = node1.SelectNodes(@"CheckoutAttributeValue/Value");
-                                foreach (XmlNode node2 in nodeList2)
-                                {
-                                    string value = node2.InnerText.Trim();
-                                    selectedCheckoutAttributeValues.Add(value);
-                                }
+                                string value = node2.InnerText.Trim();
+                                selectedCheckoutAttributeValues.Add(value);
                             }
                         }
                     }
@@ -182,14 +170,10 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (str1 == ca.Id)
                         {
-                            if (id == ca.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
+                            attributeElement = (XmlElement)node1;
+                            break;
                         }
                     }
                 }
@@ -235,7 +219,7 @@ namespace Nop.Services.Orders
             if (!cart.RequiresShipping())
             {
                 //find attribute IDs to remove
-                var checkoutAttributeIdsToRemove = new List<int>();
+                var checkoutAttributeIdsToRemove = new List<string>();
                 var attributes = ParseCheckoutAttributes(attributesXml);
                 foreach (var ca in attributes)
                     if (ca.ShippableProductRequired)
@@ -252,13 +236,9 @@ namespace Nop.Services.Orders
                         if (node.Attributes != null && node.Attributes["ID"] != null)
                         {
                             string str1 = node.Attributes["ID"].InnerText.Trim();
-                            int id;
-                            if (int.TryParse(str1, out id))
+                            if (checkoutAttributeIdsToRemove.Contains(str1))
                             {
-                                if (checkoutAttributeIdsToRemove.Contains(id))
-                                {
-                                    nodesToRemove.Add(node);
-                                }
+                                nodesToRemove.Add(node);
                             }
                         }
                     }
@@ -354,14 +334,10 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id;
-                        if (int.TryParse(str1, out id))
+                        if (str1 == attribute.Id)
                         {
-                            if (id == attribute.Id)
-                            {
-                                attributeElement = (XmlElement)node1;
-                                break;
-                            }
+                            attributeElement = (XmlElement)node1;
+                            break;
                         }
                     }
                 }

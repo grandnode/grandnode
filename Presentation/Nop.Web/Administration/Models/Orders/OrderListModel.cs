@@ -48,19 +48,19 @@ namespace Nop.Admin.Models.Orders
         public string PaymentMethodSystemName { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.Store")]
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.Vendor")]
-        public int VendorId { get; set; }
+        public string VendorId { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.Warehouse")]
-        public int WarehouseId { get; set; }
+        public string WarehouseId { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.Product")]
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.BillingCountry")]
-        public int BillingCountryId { get; set; }
+        public string BillingCountryId { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.OrderNotes")]
         [AllowHtml]

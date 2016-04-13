@@ -101,11 +101,8 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="topicId">The topic identifier</param>
         /// <returns>Topic</returns>
-        public virtual Topic GetTopicById(int topicId)
+        public virtual Topic GetTopicById(string topicId)
         {
-            if (topicId == 0)
-                return null;
-
             string key = string.Format(TOPICS_BY_ID_KEY, topicId);
             return _cacheManager.Get(key, () => _topicRepository.GetById(topicId));
         }
@@ -116,7 +113,7 @@ namespace Nop.Services.Topics
         /// <param name="systemName">The topic system name</param>
         /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
         /// <returns>Topic</returns>
-        public virtual Topic GetTopicBySystemName(string systemName, int storeId = 0)
+        public virtual Topic GetTopicBySystemName(string systemName, string storeId = "")
         {
             if (String.IsNullOrEmpty(systemName))
                 return null;
@@ -125,7 +122,7 @@ namespace Nop.Services.Topics
             query = query.Where(t => t.SystemName.ToLower() == systemName.ToLower());
             query = query.OrderBy(t => t.Id);
             var topics = query.ToList();
-            if (storeId > 0)
+            if (!String.IsNullOrEmpty(storeId))
             {
                 topics = topics.Where(x => _storeMappingService.Authorize(x, storeId)).ToList();
             }
@@ -137,7 +134,7 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false)
+        public virtual IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false)
         {
             string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
             return _cacheManager.Get(key, () =>
@@ -146,7 +143,7 @@ namespace Nop.Services.Topics
 
                 query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
 
-                if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
+                if ((!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations) ||
                     (!ignorAcl && !_catalogSettings.IgnoreAcl))
                 {
                     if (!ignorAcl && !_catalogSettings.IgnoreAcl)
@@ -157,7 +154,7 @@ namespace Nop.Services.Topics
                                 select p;
                     }
                     //Store mapping
-                    if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                    if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
                     {
                         query = from p in query
                                 where !p.LimitedToStores || p.Stores.Contains(storeId)

@@ -43,7 +43,7 @@ namespace Nop.Services.Catalog
         /// Gets a "recently viewed products" identifier list
         /// </summary>
         /// <returns>"recently viewed products" list</returns>
-        protected IList<int> GetRecentlyViewedProductsIds()
+        protected IList<string> GetRecentlyViewedProductsIds()
         {
             return GetRecentlyViewedProductsIds(int.MaxValue);
         }
@@ -53,9 +53,9 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="number">Number of products to load</param>
         /// <returns>"recently viewed products" list</returns>
-        protected IList<int> GetRecentlyViewedProductsIds(int number)
+        protected IList<string> GetRecentlyViewedProductsIds(int number)
         {
-            var productIds = new List<int>();
+            var productIds = new List<string>();
             var recentlyViewedCookie = _httpContext.Request.Cookies.Get("Grandnode.RecentlyViewedProducts");
             if (recentlyViewedCookie == null)
                 return productIds;
@@ -64,10 +64,9 @@ namespace Nop.Services.Catalog
                 return productIds;
             foreach (string productId in values)
             {
-                int prodId = int.Parse(productId);
-                if (!productIds.Contains(prodId))
+                if (!productIds.Contains(productId))
                 {
-                    productIds.Add(prodId);
+                    productIds.Add(productId);
                     if (productIds.Count >= number)
                         break;
                 }
@@ -101,15 +100,15 @@ namespace Nop.Services.Catalog
         /// Adds a product to a recently viewed products list
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        public virtual void AddProductToRecentlyViewedList(int productId)
+        public virtual void AddProductToRecentlyViewedList(string productId)
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return;
 
             var oldProductIds = GetRecentlyViewedProductsIds();
-            var newProductIds = new List<int>();
+            var newProductIds = new List<string>();
             newProductIds.Add(productId);
-            foreach (int oldProductId in oldProductIds)
+            foreach (string oldProductId in oldProductIds)
                 if (oldProductId != productId)
                     newProductIds.Add(oldProductId);
 
@@ -124,7 +123,7 @@ namespace Nop.Services.Catalog
             if (maxProducts <= 0)
                 maxProducts = 10;
             int i = 1;
-            foreach (int newProductId in newProductIds)
+            foreach (string newProductId in newProductIds)
             {
                 recentlyViewedCookie.Values.Add("RecentlyViewedProductIds", newProductId.ToString());
                 if (i == maxProducts)

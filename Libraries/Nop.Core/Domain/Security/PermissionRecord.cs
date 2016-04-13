@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Security
     /// </summary>
     public partial class PermissionRecord : BaseEntity
     {
-        private ICollection<int> _customerRoles;
+        private ICollection<string> _customerRoles;
 
         /// <summary>
         /// Gets or sets the permission name
@@ -28,9 +28,9 @@ namespace Nop.Core.Domain.Security
         /// <summary>
         /// Gets or sets discount usage history
         /// </summary>
-        public virtual ICollection<int> CustomerRoles
+        public virtual ICollection<string> CustomerRoles
         {
-            get { return _customerRoles ?? (_customerRoles = new List<int>()); }
+            get { return _customerRoles ?? (_customerRoles = new List<string>()); }
             protected set { _customerRoles = value; }
         }
     }

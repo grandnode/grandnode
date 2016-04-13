@@ -156,13 +156,13 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                 form.Add("x_company", customer.BillingAddress.Company);
             form.Add("x_address", customer.BillingAddress.Address1);
             form.Add("x_city", customer.BillingAddress.City);
-            if (customer.BillingAddress.StateProvinceId != 0)
+            if (!String.IsNullOrEmpty(customer.BillingAddress.StateProvinceId))
             {
                 var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(customer.BillingAddress.StateProvinceId);
                 form.Add("x_state", state.Abbreviation);
             }
             form.Add("x_zip", customer.BillingAddress.ZipPostalCode);
-            if (customer.BillingAddress.CountryId != 0)
+            if (!String.IsNullOrEmpty(customer.BillingAddress.CountryId))
             {
                 var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(customer.BillingAddress.CountryId);
                 form.Add("x_country", country.TwoLetterIsoCode);
@@ -480,7 +480,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                 subscription.billTo.address = customer.BillingAddress.Address1;
                 //subscription.billTo.address = customer.BillingAddress.Address1 + " " + customer.BillingAddress.Address2;
                 subscription.billTo.city = customer.BillingAddress.City;
-                if (customer.BillingAddress.StateProvinceId != 0)
+                if (!String.IsNullOrEmpty(customer.BillingAddress.StateProvinceId))
                 {
                     var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(customer.BillingAddress.StateProvinceId);
                     subscription.billTo.state = state.Abbreviation;
@@ -495,7 +495,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                     subscription.shipTo.address = customer.ShippingAddress.Address1;
                     //subscription.shipTo.address = customer.ShippingAddress.Address1 + " " + customer.ShippingAddress.Address2;
                     subscription.shipTo.city = customer.ShippingAddress.City;
-                    if (customer.ShippingAddress.StateProvinceId != 0)
+                    if (!String.IsNullOrEmpty(customer.ShippingAddress.StateProvinceId))
                     {
                         var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(customer.ShippingAddress.StateProvinceId);
                         subscription.shipTo.state = state.Abbreviation;

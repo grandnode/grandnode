@@ -54,6 +54,7 @@ namespace Nop.Services.Messages
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductService _productService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
@@ -83,6 +84,7 @@ namespace Nop.Services.Messages
             IStoreContext storeContext,
             IProductAttributeParser productAttributeParser,
             IAddressAttributeFormatter addressAttributeFormatter,
+            IProductService productService,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
@@ -103,6 +105,7 @@ namespace Nop.Services.Messages
             this._productAttributeParser = productAttributeParser;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._storeService = storeService;
+            this._productService = productService;
             this._storeContext = storeContext;
             this._shippingSettings = shippingSettings;
             this._templatesSettings = templatesSettings;
@@ -124,7 +127,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Language identifier</param>
         /// <param name="vendorId">Vendor identifier (used to limit products by vendor</param>
         /// <returns>HTML table of products</returns>
-        protected virtual string ProductListToHtmlTable(Order order, int languageId, int vendorId)
+        protected virtual string ProductListToHtmlTable(Order order, string languageId, string vendorId)
         {
             string result;
 
@@ -149,7 +152,7 @@ namespace Nop.Services.Messages
                 if (product == null)
                     continue;
 
-                if (vendorId > 0 && product.VendorId != vendorId)
+                if (!String.IsNullOrEmpty(vendorId) && product.VendorId != vendorId)
                     continue;
 
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
@@ -239,7 +242,7 @@ namespace Nop.Services.Messages
             }
             #endregion
 
-            if (vendorId == 0)
+            if (String.IsNullOrEmpty(vendorId))
             {
                 //we render checkout attributes and totals only for store owners (hide for vendors)
             
@@ -454,7 +457,7 @@ namespace Nop.Services.Messages
         /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>HTML table of products</returns>
-        protected virtual string ProductListToHtmlTable(Shipment shipment, int languageId)
+        protected virtual string ProductListToHtmlTable(Shipment shipment, string languageId)
         {
             string result;
 
@@ -524,13 +527,55 @@ namespace Nop.Services.Messages
             return result;
         }
 
+
+        protected virtual string ProductListToHtmlTable(Customer customer, string languageId)
+        {
+            string result;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
+
+            #region Products
+            sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", _templatesSettings.Color1));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Cart.Product(s).Name", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Cart.Product(s).Quantity", languageId)));
+            sb.AppendLine("</tr>");
+
+            foreach (var item in customer.ShoppingCartItems)
+            {
+                var product = _productService.GetProductById(item.ProductId);
+                sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
+                //product name
+                string productName = product.GetLocalized(x => x.Name, languageId);
+
+                sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
+                //attributes
+                if (!String.IsNullOrEmpty(item.AttributesXml))
+                {
+                    sb.AppendLine("<br />");
+                    sb.AppendLine(item.AttributesXml);
+                }
+                sb.AppendLine("</td>");
+
+                sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", item.Quantity));
+
+                sb.AppendLine("</tr>");
+            }
+            #endregion
+
+            sb.AppendLine("</table>");
+            result = sb.ToString();
+            return result;
+        }
+
+
         /// <summary>
         /// Get store URL
         /// </summary>
         /// <param name="storeId">Store identifier; Pass 0 to load URL of the current store</param>
         /// <param name="useSsl">Use SSL</param>
         /// <returns></returns>
-        protected virtual string GetStoreUrl(int storeId = 0, bool useSsl = false)
+        protected virtual string GetStoreUrl(string storeId = "", bool useSsl = false)
         {
             var store = _storeService.GetStoreById(storeId) ?? _storeContext.CurrentStore;
 
@@ -565,9 +610,9 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(store, tokens);
         }
 
-        public virtual void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0)
+        public virtual void AddOrderTokens(IList<Token> tokens, Order order, string languageId, string vendorId = "")
         {
-            tokens.Add(new Token("Order.OrderNumber", order.Id.ToString()));
+            tokens.Add(new Token("Order.OrderNumber", order.OrderNumber.ToString()));
 
             tokens.Add(new Token("Order.CustomerFullName", string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName)));
             tokens.Add(new Token("Order.CustomerEmail", order.BillingAddress.Email));
@@ -582,9 +627,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingAddress1", order.BillingAddress.Address1));
             tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
             tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));
-            tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvinceId != 0 ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvinceId != "" ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.BillingZipPostalCode", order.BillingAddress.ZipPostalCode));
-            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.CountryId != 0 ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.CountryId != "" ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
@@ -597,9 +642,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingAddress1", order.ShippingAddress != null ? order.ShippingAddress.Address1 : ""));
             tokens.Add(new Token("Order.ShippingAddress2", order.ShippingAddress != null ? order.ShippingAddress.Address2 : ""));
             tokens.Add(new Token("Order.ShippingCity", order.ShippingAddress != null ? order.ShippingAddress.City : ""));
-            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvinceId != 0 ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvinceId != "" ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : ""));
-            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.CountryId != 0 ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.CountryId != "" ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.ShippingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.ShippingAddress != null ? order.ShippingAddress.CustomAttributes : ""), true));
 
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
@@ -657,9 +702,9 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(order, tokens);
         }
 
-        public virtual void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId)
+        public virtual void AddShipmentTokens(IList<Token> tokens, Shipment shipment, string languageId)
         {
-            tokens.Add(new Token("Shipment.ShipmentNumber", shipment.Id.ToString()));
+            tokens.Add(new Token("Shipment.ShipmentNumber", shipment.ShipmentNumber.ToString()));
             tokens.Add(new Token("Shipment.TrackingNumber", shipment.TrackingNumber));
 
             var trackingNumberUrl = "";
@@ -766,6 +811,19 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(customer, tokens);
         }
 
+        public virtual void AddShoppingCartTokens(IList<Token> tokens, Customer customer)
+        {
+            string languageId = _languageService.GetAllLanguages().FirstOrDefault().Id;
+            if(customer.GenericAttributes.FirstOrDefault(x=>x.Key == "LanguageId")!=null)
+            {
+                languageId = customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId").Value;
+            }
+            tokens.Add(new Token("Cart", ProductListToHtmlTable(customer, languageId), true));
+
+            //event notification
+            _eventPublisher.EntityTokensAdded(customer, tokens);
+        }
+
         public virtual void AddVendorTokens(IList<Token> tokens, Vendor vendor)
         {
             tokens.Add(new Token("Vendor.Name", vendor.Name));
@@ -820,7 +878,7 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(newsComment, tokens);
         }
 
-        public virtual void AddProductTokens(IList<Token> tokens, Product product, int languageId)
+        public virtual void AddProductTokens(IList<Token> tokens, Product product, string languageId)
         {
             tokens.Add(new Token("Product.ID", product.Id.ToString()));
             tokens.Add(new Token("Product.Name", product.GetLocalized(x => x.Name, languageId)));
@@ -836,7 +894,7 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(product, tokens);
         }
 
-        public virtual void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination,  int languageId)
+        public virtual void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination,  string languageId)
         {
             //attributes
             //we cannot inject IProductAttributeFormatter into constructor because it'll cause circular references.
@@ -859,7 +917,7 @@ namespace Nop.Services.Messages
         }
 
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
-            int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
+            int? friendlyForumTopicPageIndex = null, string appendedPostIdentifierAnchor = "")
         {
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             string topicUrl;
@@ -867,8 +925,8 @@ namespace Nop.Services.Messages
                 topicUrl = string.Format("{0}boards/topic/{1}/{2}/page/{3}", GetStoreUrl(), forumTopic.Id, forumTopic.GetSeName(), friendlyForumTopicPageIndex.Value);
             else
                 topicUrl = string.Format("{0}boards/topic/{1}/{2}", GetStoreUrl(), forumTopic.Id, forumTopic.GetSeName());
-            if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)
-                topicUrl = string.Format("{0}#{1}", topicUrl, appendedPostIdentifierAnchor.Value);
+            if (!String.IsNullOrEmpty(appendedPostIdentifierAnchor))
+                topicUrl = string.Format("{0}#{1}", topicUrl, appendedPostIdentifierAnchor);
             tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
             tokens.Add(new Token("Forums.TopicName", forumTopic.Subject));
 

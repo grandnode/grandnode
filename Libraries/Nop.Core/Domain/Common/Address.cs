@@ -8,7 +8,7 @@ namespace Nop.Core.Domain.Common
     public partial class Address : BaseEntity, ICloneable
     {
         [BsonIgnoreAttribute]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the first name
@@ -33,12 +33,12 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
 
         /// <summary>
         /// Gets or sets the state/province identifier
         /// </summary>
-        public int StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
         
         /// <summary>
         /// Gets or sets the city
@@ -80,17 +80,6 @@ namespace Nop.Core.Domain.Common
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
         
-        /// <summary>
-        /// Gets or sets the country
-        /// </summary>
-        //public virtual Country Country { get; set; }
-
-        /// <summary>
-        /// Gets or sets the state/province
-        /// </summary>
-        //public virtual StateProvince StateProvince { get; set; }
-
-
         public object Clone()
         {
             var addr = new Address
@@ -99,9 +88,7 @@ namespace Nop.Core.Domain.Common
                 LastName = this.LastName,
                 Email = this.Email,
                 Company = this.Company,
-                //Country = this.Country,
                 CountryId = this.CountryId,
-                //StateProvince = this.StateProvince,
                 StateProvinceId = this.StateProvinceId,
                 City = this.City,
                 Address1 = this.Address1,
@@ -111,7 +98,6 @@ namespace Nop.Core.Domain.Common
                 FaxNumber = this.FaxNumber,
                 CustomAttributes = this.CustomAttributes,
                 CreatedOnUtc = this.CreatedOnUtc,
-                _id = this._id,
             };
             return addr;
         }

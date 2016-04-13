@@ -19,7 +19,7 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="topicId">The topic identifier</param>
         /// <returns>Topic</returns>
-        Topic GetTopicById(int topicId);
+        Topic GetTopicById(string topicId);
 
         /// <summary>
         /// Gets a topic
@@ -27,14 +27,14 @@ namespace Nop.Services.Topics
         /// <param name="systemName">The topic system name</param>
         /// <param name="storeId">Store identifier; pass 0 to ignore filtering by store and load the first one</param>
         /// <returns>Topic</returns>
-        Topic GetTopicBySystemName(string systemName, int storeId = 0);
+        Topic GetTopicBySystemName(string systemName, string storeId = "");
 
         /// <summary>
         /// Gets all topics
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Topics</returns>
-        IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false);
+        IList<Topic> GetAllTopics(string storeId, bool ignorAcl = false);
 
         /// <summary>
         /// Inserts a topic

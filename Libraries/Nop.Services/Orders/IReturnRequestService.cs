@@ -20,7 +20,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestId">Return request identifier</param>
         /// <returns>Return request</returns>
-        ReturnRequest GetReturnRequestById(int returnRequestId);
+        ReturnRequest GetReturnRequestById(string returnRequestId);
 
         /// <summary>
         /// Search return requests
@@ -32,8 +32,8 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
-        IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
-            int orderItemId = 0, ReturnRequestStatus? rs = null,
+        IPagedList<ReturnRequest> SearchReturnRequests(string storeId = "", string customerId = "",
+            string orderItemId = "", ReturnRequestStatus? rs = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
 
 
@@ -59,7 +59,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestActionId">Return request action identifier</param>
         /// <returns>Return request action</returns>
-        ReturnRequestAction GetReturnRequestActionById(int returnRequestActionId);
+        ReturnRequestAction GetReturnRequestActionById(string returnRequestActionId);
 
         /// <summary>
         /// Inserts a return request action
@@ -98,7 +98,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="returnRequestReasonId">Return request reaspn identifier</param>
         /// <returns>Return request reaspn</returns>
-        ReturnRequestReason GetReturnRequestReasonById(int returnRequestReasonId);
+        ReturnRequestReason GetReturnRequestReasonById(string returnRequestReasonId);
 
         /// <summary>
         /// Inserts a return request reaspn

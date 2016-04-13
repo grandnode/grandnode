@@ -151,7 +151,7 @@ namespace Nop.Admin.Controllers
 
             var model = new MessageTemplateListModel();
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             
@@ -189,7 +189,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -201,7 +201,7 @@ namespace Nop.Admin.Controllers
             
             var model = messageTemplate.ToModel();
             model.SendImmediately = !model.DelayBeforeSend.HasValue;
-            model.HasAttachedDownload = model.AttachedDownloadId > 0;
+            model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
@@ -216,7 +216,7 @@ namespace Nop.Admin.Controllers
                 locale.Body = messageTemplate.GetLocalized(x => x.Body, languageId, false, false);
 
                 var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, languageId, false, false);
-                locale.EmailAccountId = emailAccountId > 0 ? emailAccountId : _emailAccountSettings.DefaultEmailAccountId;
+                locale.EmailAccountId = !String.IsNullOrEmpty(emailAccountId) ? emailAccountId : _emailAccountSettings.DefaultEmailAccountId;
             });
 
             return View(model);
@@ -239,11 +239,11 @@ namespace Nop.Admin.Controllers
                 messageTemplate = model.ToEntity(messageTemplate);
                 //attached file
                 if (!model.HasAttachedDownload)
-                    messageTemplate.AttachedDownloadId = 0;
+                    messageTemplate.AttachedDownloadId = "";
                 if (model.SendImmediately)
                     messageTemplate.DelayBeforeSend = null;
                 messageTemplate.Locales = UpdateLocales(messageTemplate, model);
-                messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
+                messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Updated"));
@@ -260,7 +260,7 @@ namespace Nop.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model.HasAttachedDownload = model.AttachedDownloadId > 0;
+            model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
@@ -271,7 +271,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -312,7 +312,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult TestTemplate(int id, int languageId = 0)
+        public ActionResult TestTemplate(string id, string languageId = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();

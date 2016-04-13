@@ -88,7 +88,7 @@ namespace Nop.Plugin.Shipping.USPS
             bool result = true;
             if (getShippingOptionRequest != null &&
                 getShippingOptionRequest.ShippingAddress != null &&
-                getShippingOptionRequest.ShippingAddress.CountryId != 0)
+                !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId))
             {
                 var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(getShippingOptionRequest.ShippingAddress.CountryId);
                 switch (country.ThreeLetterIsoCode)

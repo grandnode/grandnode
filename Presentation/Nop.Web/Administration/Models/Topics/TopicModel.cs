@@ -26,7 +26,7 @@ namespace Nop.Admin.Models.Topics
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SystemName")]
@@ -70,7 +70,7 @@ namespace Nop.Admin.Models.Topics
         public string Body { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.TopicTemplate")]
-        public int TopicTemplateId { get; set; }
+        public string TopicTemplateId { get; set; }
         public IList<SelectListItem> AvailableTopicTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.MetaKeywords")]
@@ -95,14 +95,14 @@ namespace Nop.Admin.Models.Topics
         public bool SubjectToAcl { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
-        public int[] SelectedCustomerRoleIds { get; set; }
+        public string[] SelectedCustomerRoleIds { get; set; }
 
 
     }
 
     public partial class TopicLocalizedModel : ILocalizedModelLocal
     {
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.Title")]
         [AllowHtml]

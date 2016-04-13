@@ -8,7 +8,7 @@ namespace Nop.Admin.Models.Settings
     [Validator(typeof(RewardPointsSettingsValidator))]
     public partial class RewardPointsSettingsModel : BaseNopModel
     {
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
 
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.Enabled")]

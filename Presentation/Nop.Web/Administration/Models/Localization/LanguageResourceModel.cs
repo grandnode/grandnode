@@ -17,6 +17,6 @@ namespace Nop.Admin.Models.Localization
         [AllowHtml]
         public string Value { get; set; }
 
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
     }
 }

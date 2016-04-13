@@ -14,7 +14,7 @@ namespace Nop.Admin.Models.Blogs
     public partial class BlogPostModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
-        public int LanguageId { get; set; }
+        public string LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
         [AllowHtml]
@@ -74,7 +74,7 @@ namespace Nop.Admin.Models.Blogs
         public bool LimitedToStores { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
+        public string[] SelectedStoreIds { get; set; }
 
 
     }

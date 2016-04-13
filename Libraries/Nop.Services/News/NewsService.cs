@@ -20,7 +20,7 @@ namespace Nop.Services.News
         #region Fields
 
         private readonly IRepository<NewsItem> _newsItemRepository;
-        private readonly IRepository<NewsComment> _newsCommentRepository;
+        //private readonly IRepository<NewsComment> _newsCommentRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly IWorkContext _workContext;
@@ -30,13 +30,13 @@ namespace Nop.Services.News
         #region Ctor
 
         public NewsService(IRepository<NewsItem> newsItemRepository, 
-            IRepository<NewsComment> newsCommentRepository,
+            //IRepository<NewsComment> newsCommentRepository,
             CatalogSettings catalogSettings,
             IEventPublisher eventPublisher,
             IWorkContext workContext)
         {
             this._newsItemRepository = newsItemRepository;
-            this._newsCommentRepository = newsCommentRepository;
+            //this._newsCommentRepository = newsCommentRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
             this._workContext = workContext;
@@ -66,11 +66,8 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="newsId">The news identifier</param>
         /// <returns>News</returns>
-        public virtual NewsItem GetNewsById(int newsId)
+        public virtual NewsItem GetNewsById(string newsId)
         {
-            if (newsId == 0)
-                return null;
-
             return _newsItemRepository.GetById(newsId);
         }
 
@@ -83,12 +80,12 @@ namespace Nop.Services.News
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>News items</returns>
-        public virtual IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
+        public virtual IPagedList<NewsItem> GetAllNews(string languageId = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false)
         {
             var query = _newsItemRepository.Table;
 
-            if (languageId > 0)
+            if (!String.IsNullOrEmpty(languageId))
                 query = query.Where(n => languageId == n.LanguageId);
             if (!showHidden)
             {
@@ -99,7 +96,7 @@ namespace Nop.Services.News
             }
             query = query.OrderByDescending(n => n.CreatedOnUtc);
 
-            if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
+            if ((!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations) ||
                     (!ignorAcl && !_catalogSettings.IgnoreAcl))
             {
                 if (!ignorAcl && !_catalogSettings.IgnoreAcl)
@@ -110,7 +107,7 @@ namespace Nop.Services.News
                             select p;
                 }
                 //Store mapping
-                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     query = from p in query
                             where !p.LimitedToStores || p.Stores.Contains(storeId)
@@ -157,7 +154,7 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <returns>Comments</returns>
-        public virtual IList<NewsComment> GetAllComments(int customerId)
+        public virtual IList<NewsComment> GetAllComments(string customerId)
         {
             var query = from n in _newsItemRepository.Table
                         from c in n.NewsComments
@@ -165,7 +162,7 @@ namespace Nop.Services.News
 
             var query2 = from c in query
                          orderby c.CreatedOnUtc
-                         where (customerId == 0 || c.CustomerId == customerId)
+                         where (customerId == "" || c.CustomerId == customerId)
                          select c;
 
             var content = query2.ToList();

@@ -134,7 +134,7 @@ namespace Nop.Services.Orders
             return customer;
         }
 
-        public static IEnumerable<ShoppingCartItem> LimitPerStore(this IEnumerable<ShoppingCartItem> cart, int storeId)
+        public static IEnumerable<ShoppingCartItem> LimitPerStore(this IEnumerable<ShoppingCartItem> cart, string storeId)
         {
             //simply replace the following code with "return cart"
             //if you want to share shopping carts between stores

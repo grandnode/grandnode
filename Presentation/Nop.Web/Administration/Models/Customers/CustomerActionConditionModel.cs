@@ -26,7 +26,7 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerActionCondition.Fields.ConditionId")]
         public int ConditionId { get; set; }
 
-        public int CustomerActionId { get; set; }
+        public string CustomerActionId { get; set; }
 
 
         public partial class AddProductToConditionModel 
@@ -44,13 +44,13 @@ namespace Nop.Admin.Models.Customers
             [AllowHtml]
             public string SearchProductName { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
-            public int SearchCategoryId { get; set; }
+            public string SearchCategoryId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
-            public int SearchManufacturerId { get; set; }
+            public string SearchManufacturerId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
-            public int SearchStoreId { get; set; }
+            public string SearchStoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
-            public int SearchVendorId { get; set; }
+            public string SearchVendorId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
@@ -60,10 +60,10 @@ namespace Nop.Admin.Models.Customers
             public IList<SelectListItem> AvailableVendors { get; set; }
             public IList<SelectListItem> AvailableProductTypes { get; set; }
 
-            public int CustomerActionId { get; set; }
-            public int CustomerActionConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string CustomerActionConditionId { get; set; }
 
-            public int[] SelectedProductIds { get; set; }
+            public string[] SelectedProductIds { get; set; }
         }
 
         public partial class AddCategoryConditionModel 
@@ -72,10 +72,10 @@ namespace Nop.Admin.Models.Customers
             [AllowHtml]
             public string SearchCategoryName { get; set; }
 
-            public int CustomerActionId { get; set; }
-            public int CustomerActionConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string CustomerActionConditionId { get; set; }
 
-            public int[] SelectedCategoryIds { get; set; }
+            public string[] SelectedCategoryIds { get; set; }
         }
 
         public partial class AddManufacturerConditionModel 
@@ -84,80 +84,80 @@ namespace Nop.Admin.Models.Customers
             [AllowHtml]
             public string SearchManufacturerName { get; set; }
 
-            public int CustomerActionId { get; set; }
-            public int CustomerActionConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string CustomerActionConditionId { get; set; }
 
-            public int[] SelectedManufacturerIds { get; set; }
+            public string[] SelectedManufacturerIds { get; set; }
         }
 
         public partial class AddVendorConditionModel
         {
-            public int CustomerActionId { get; set; }
-            public int ConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
 
-            public int VendorId { get; set; }
-            public int Id { get; set; }
+            public string VendorId { get; set; }
+            public string Id { get; set; }
         }
 
         public partial class AddCustomerRoleConditionModel
         {
-            public int CustomerActionId { get; set; }
-            public int ConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
 
-            public int CustomerRoleId { get; set; }
-            public int Id { get; set; }
+            public string CustomerRoleId { get; set; }
+            public string Id { get; set; }
         }
         public partial class AddCustomerTagConditionModel
         {
-            public int CustomerActionId { get; set; }
-            public int ConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
 
-            public int CustomerTagId { get; set; }
-            public int Id { get; set; }
+            public string CustomerTagId { get; set; }
+            public string Id { get; set; }
         }
 
         public partial class AddProductAttributeConditionModel
         {
-            public int CustomerActionId { get; set; }
-            public int ConditionId { get; set; }
-            public int ProductAttributeId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
+            public string ProductAttributeId { get; set; }
             public string Name { get; set; }
-            public int Id { get; set; }
+            public string Id { get; set; }
         }
         public partial class AddUrlConditionModel
         {
-            public int Id { get; set; }
+            public string Id { get; set; }
             public string Name { get; set; }
-            public int CustomerActionId { get; set; }
-            public int ConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
         }
 
         public partial class AddCustomerRegisterConditionModel
         {
-            public int CustomerActionId { get; set; }
-            public int ConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
             public string CustomerRegisterName { get; set; }
             public string CustomerRegisterValue { get; set; }
-            public int Id { get; set; }
+            public string Id { get; set; }
         }
 
         public partial class AddCustomCustomerAttributeConditionModel
         {
-            public int CustomerActionId { get; set; }
-            public int ConditionId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
             public string CustomerAttributeName { get; set; }
             public string CustomerAttributeValue { get; set; }
-            public int Id { get; set; }
+            public string Id { get; set; }
         }
 
         public partial class AddProductSpecificationConditionModel
         {
-            public int CustomerActionId { get; set; }
-            public int ConditionId { get; set; }
-            public int SpecificationId { get; set; }
-            public int SpecificationValueId { get; set; }
+            public string CustomerActionId { get; set; }
+            public string ConditionId { get; set; }
+            public string SpecificationId { get; set; }
+            public string SpecificationValueId { get; set; }
             public string Name { get; set; }
-            public int Id { get; set; }
+            public string Id { get; set; }
         }
 
     }

@@ -228,7 +228,7 @@ namespace Nop.Services.Authentication.External
             //authenticate
             _authenticationService.SignIn(userFound ?? userLoggedIn, false);
             //activity log
-            _customerActivityService.InsertActivity("PublicStore.Login", 0, _localizationService.GetResource("ActivityLog.PublicStore.Login"), 
+            _customerActivityService.InsertActivity("PublicStore.Login", "", _localizationService.GetResource("ActivityLog.PublicStore.Login"), 
                 userFound ?? userLoggedIn);
             
             return new AuthorizationResult(OpenAuthenticationStatus.Authenticated);

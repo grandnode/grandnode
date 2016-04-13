@@ -30,7 +30,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             this._permissionService = permissionService;
         }
 
-        public ActionResult Configure(int discountId, int? discountRequirementId)
+        public ActionResult Configure(string discountId, string discountRequirementId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -40,34 +40,34 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 throw new ArgumentException("Discount could not be loaded");
 
             DiscountRequirement discountRequirement = null;
-            if (discountRequirementId.HasValue)
+            if (!String.IsNullOrEmpty(discountRequirementId))
             {
-                discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId.Value);
+                discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId);
                 if (discountRequirement == null)
                     return Content("Failed to load requirement.");
             }
 
-            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}-{1}", discount.Id, discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}-{1}", discount.Id, !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : ""));
             
             var model = new RequirementModel();
-            model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
+            model.RequirementId = !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : "";
             model.DiscountId = discountId;
             model.CustomerRoleId = restrictedToCustomerRoleId;
             //customer roles
             //TODO localize "Select customer role"
-            model.AvailableCustomerRoles.Add(new SelectListItem { Text = "Select customer role", Value = "0" });
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = "Select customer role", Value = "" });
             foreach (var cr in _customerService.GetAllCustomerRoles(true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString(), Selected = discountRequirement != null && cr.Id == restrictedToCustomerRoleId });
 
             //add a prefix
-            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesCustomerRoles{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
+            ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesCustomerRoles{0}", !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : "");
 
             return View("~/Plugins/DiscountRules.CustomerRoles/Views/DiscountRulesCustomerRoles/Configure.cshtml", model);
         }
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult Configure(int discountId, int? discountRequirementId, int customerRoleId)
+        public ActionResult Configure(string discountId, string discountRequirementId, string customerRoleId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return Content("Access denied");
@@ -77,8 +77,8 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
                 throw new ArgumentException("Discount could not be loaded");
 
             DiscountRequirement discountRequirement = null;
-            if (discountRequirementId.HasValue)
-                discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId.Value);
+            if (!String.IsNullOrEmpty(discountRequirementId))
+                discountRequirement = discount.DiscountRequirements.FirstOrDefault(dr => dr.Id == discountRequirementId);
 
             if (discountRequirement != null)
             {

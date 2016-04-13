@@ -63,7 +63,6 @@ namespace Nop.Services.Orders
         #region Fields
 
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
-        private readonly IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepository;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
@@ -79,12 +78,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="checkoutAttributeRepository">Checkout attribute repository</param>
-        /// <param name="checkoutAttributeValueRepository">Checkout attribute value repository</param>
         /// <param name="storeMappingService">Store mapping service</param>
         /// <param name="eventPublisher">Event published</param>
         public CheckoutAttributeService(ICacheManager cacheManager,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
-            IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,
             IStoreMappingService storeMappingService,
             IEventPublisher eventPublisher,
             IWorkContext workContext,
@@ -92,7 +89,6 @@ namespace Nop.Services.Orders
         {
             this._cacheManager = cacheManager;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
-            this._checkoutAttributeValueRepository = checkoutAttributeValueRepository;
             this._storeMappingService = storeMappingService;
             this._eventPublisher = eventPublisher;
             this._workContext = workContext;
@@ -129,7 +125,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
         /// <returns>Checkout attributes</returns>
-        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false, bool ignorAcl = false)
+        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(string storeId = "", bool excludeShippableAttributes = false, bool ignorAcl = false)
         {
             string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes, ignorAcl);
             return _cacheManager.Get(key, () =>
@@ -137,7 +133,7 @@ namespace Nop.Services.Orders
                 var query = _checkoutAttributeRepository.Table;
                 query = query.OrderBy(c => c.DisplayOrder);
 
-                if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
+                if ((!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations) ||
                     (!ignorAcl && !_catalogSettings.IgnoreAcl))
                 {
                     if (!ignorAcl && !_catalogSettings.IgnoreAcl)
@@ -148,7 +144,7 @@ namespace Nop.Services.Orders
                                 select p;
                     }
                     //Store mapping
-                    if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                    if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
                     {
                         query = from p in query
                                 where !p.LimitedToStores || p.Stores.Contains(storeId)
@@ -157,17 +153,6 @@ namespace Nop.Services.Orders
                 }
                 return query.ToList();
 
-                //if (storeId > 0)
-                //{
-                //    //store mapping
-                //    checkoutAttributes = checkoutAttributes.Where(ca => _storeMappingService.Authorize(ca)).ToList();
-                //}
-                //if (excludeShippableAttributes)
-                //{
-                //    //remove attributes which require shippable products
-                //    checkoutAttributes = checkoutAttributes.RemoveShippableAttributes().ToList();
-                //}
-                //return checkoutAttributes;
             });
         }
 
@@ -176,11 +161,8 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute</returns>
-        public virtual CheckoutAttribute GetCheckoutAttributeById(int checkoutAttributeId)
+        public virtual CheckoutAttribute GetCheckoutAttributeById(string checkoutAttributeId)
         {
-            if (checkoutAttributeId == 0)
-                return null;
-            
             string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
             return _cacheManager.Get(key, () => _checkoutAttributeRepository.GetById(checkoutAttributeId));
         }
@@ -223,63 +205,6 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Checkout attribute values
-
-        /// <summary>
-        /// Deletes a checkout attribute value
-        /// </summary>
-        /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public virtual void DeleteCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
-        {
-            if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
-
-            _checkoutAttributeValueRepository.Delete(checkoutAttributeValue);
-
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
-
-            //event notification
-            _eventPublisher.EntityDeleted(checkoutAttributeValue);
-        }
-        
-        /// <summary>
-        /// Inserts a checkout attribute value
-        /// </summary>
-        /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public virtual void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
-        {
-            if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
-
-            _checkoutAttributeValueRepository.Insert(checkoutAttributeValue);
-
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
-
-            //event notification
-            _eventPublisher.EntityInserted(checkoutAttributeValue);
-        }
-
-        /// <summary>
-        /// Updates the checkout attribute value
-        /// </summary>
-        /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public virtual void UpdateCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
-        {
-            if (checkoutAttributeValue == null)
-                throw new ArgumentNullException("checkoutAttributeValue");
-
-            _checkoutAttributeValueRepository.Update(checkoutAttributeValue);
-
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
-
-            //event notification
-            _eventPublisher.EntityUpdated(checkoutAttributeValue);
-        }
-        
-        #endregion
 
         #endregion
     }

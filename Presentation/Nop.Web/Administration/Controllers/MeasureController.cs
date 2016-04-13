@@ -109,7 +109,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult WeightDelete(int id)
+        public ActionResult WeightDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
@@ -129,7 +129,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryWeight(int id)
+        public ActionResult MarkAsPrimaryWeight(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
@@ -213,7 +213,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DimensionDelete(int id)
+        public ActionResult DimensionDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
@@ -233,7 +233,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult MarkAsPrimaryDimension(int id)
+        public ActionResult MarkAsPrimaryDimension(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();

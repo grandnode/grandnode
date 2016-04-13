@@ -12,7 +12,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
-        public int SpecificationAttributeId { get; set; }
+        public string SpecificationAttributeId { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute name

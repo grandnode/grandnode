@@ -12,11 +12,11 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Models
         }
 
         [NopResourceDisplayName("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole")]
-        public int CustomerRoleId { get; set; }
+        public string CustomerRoleId { get; set; }
 
-        public int DiscountId { get; set; }
+        public string DiscountId { get; set; }
 
-        public int RequirementId { get; set; }
+        public string RequirementId { get; set; }
 
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }
     }

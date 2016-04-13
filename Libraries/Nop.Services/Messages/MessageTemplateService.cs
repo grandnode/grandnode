@@ -137,11 +137,8 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="messageTemplateId">Message template identifier</param>
         /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateById(int messageTemplateId)
+        public virtual MessageTemplate GetMessageTemplateById(string messageTemplateId)
         {
-            if (messageTemplateId == 0)
-                return null;
-
             return _messageTemplateRepository.GetById(messageTemplateId);
         }
 
@@ -151,7 +148,7 @@ namespace Nop.Services.Messages
         /// <param name="messageTemplateName">Message template name</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Message template</returns>
-        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName, int storeId)
+        public virtual MessageTemplate GetMessageTemplateByName(string messageTemplateName, string storeId)
         {
             if (string.IsNullOrWhiteSpace(messageTemplateName))
                 throw new ArgumentException("messageTemplateName");
@@ -167,7 +164,7 @@ namespace Nop.Services.Messages
                 var templates = query.ToList();
 
                 //store mapping
-                if (storeId > 0)
+                if (!String.IsNullOrEmpty(storeId))
                 {
                     templates = templates
                         .Where(t => _storeMappingService.Authorize(t, storeId))
@@ -184,7 +181,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <returns>Message template list</returns>
-        public virtual IList<MessageTemplate> GetAllMessageTemplates(int storeId)
+        public virtual IList<MessageTemplate> GetAllMessageTemplates(string storeId)
         {
             string key = string.Format(MESSAGETEMPLATES_ALL_KEY, storeId);
             return _cacheManager.Get(key, () =>
@@ -194,7 +191,7 @@ namespace Nop.Services.Messages
                 query = query.OrderBy(t => t.Name);
 
                 //Store mapping
-                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     query = from p in query
                             where !p.LimitedToStores || p.Stores.Contains(storeId)

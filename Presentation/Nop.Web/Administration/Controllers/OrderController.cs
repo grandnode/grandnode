@@ -282,6 +282,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("model");
 
             model.Id = order.Id;
+            model.OrderNumber = order.OrderNumber;
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.OrderStatusId = order.OrderStatusId;
             model.OrderGuid = order.OrderGuid;
@@ -399,7 +400,7 @@ namespace Nop.Admin.Controllers
             var duh = _discountService.GetAllDiscountUsageHistory(orderId: order.Id);
             foreach (var d in duh)
             {
-                var discount = _discountService.GetDiscountById(d.Id);
+                var discount = _discountService.GetDiscountById(d.DiscountId);
                 model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
                 {
                     DiscountId = d.DiscountId,
@@ -540,7 +541,7 @@ namespace Nop.Admin.Controllers
                         model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
                         model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
 
-                        model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.CountryId != 0 ? _countryService.GetCountryById(order.ShippingAddress.CountryId).Name : "")));
+                        model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (!String.IsNullOrEmpty(order.ShippingAddress.CountryId) ? _countryService.GetCountryById(order.ShippingAddress.CountryId).Name : "")));
                     }
                 }
                 model.ShippingMethod = order.ShippingMethod;
@@ -584,9 +585,9 @@ namespace Nop.Admin.Controllers
                 orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
 
                 //license file
-                if (orderItem.LicenseDownloadId.HasValue)
+                if (!String.IsNullOrEmpty(orderItem.LicenseDownloadId))
                 {
-                    var licenseDownload = _downloadService.GetDownloadById(orderItem.LicenseDownloadId.Value);
+                    var licenseDownload = _downloadService.GetDownloadById(orderItem.LicenseDownloadId);
                     if (licenseDownload != null)
                     {
                         orderItemModel.LicenseDownloadGuid = licenseDownload.DownloadGuid;
@@ -638,7 +639,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productId)
+        protected virtual OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(string orderId, string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -721,11 +722,14 @@ namespace Nop.Admin.Controllers
             var baseWeightIn = baseWeight != null ? baseWeight.Name : "";
             var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             var baseDimensionIn = baseDimension != null ? baseDimension.Name : "";
+            var order = _orderService.GetOrderById(shipment.OrderId);
 
             var model = new ShipmentModel
             {
                 Id = shipment.Id,
+                ShipmentNumber = shipment.ShipmentNumber,
                 OrderId = shipment.OrderId,
+                OrderNumber = order.OrderNumber,
                 TrackingNumber = shipment.TrackingNumber,
                 TotalWeight = shipment.TotalWeight.HasValue ? string.Format("{0:F2} [{1}]", shipment.TotalWeight, baseWeightIn) : "",
                 ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
@@ -739,7 +743,6 @@ namespace Nop.Admin.Controllers
 
             if (prepareProducts)
             {
-                var order = _orderService.GetOrderById(shipment.OrderId);
                 foreach (var shipmentItem in shipment.ShipmentItems)
                 {
 
@@ -786,7 +789,6 @@ namespace Nop.Admin.Controllers
 
             if (prepareShipmentEvent && !String.IsNullOrEmpty(shipment.TrackingNumber))
             {
-                var order = _orderService.GetOrderById(shipment.OrderId);
                 var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
                 if (srcm != null &&
                     srcm.PluginDescriptor.Installed &&
@@ -840,7 +842,7 @@ namespace Nop.Admin.Controllers
             //order statuses
             var model = new OrderListModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             if (orderStatusId.HasValue)
             {
                 //pre-select value?
@@ -851,7 +853,7 @@ namespace Nop.Admin.Controllers
 
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             if (paymentStatusId.HasValue)
             {
                 //pre-select value?
@@ -862,7 +864,7 @@ namespace Nop.Admin.Controllers
 
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             if (shippingStatusId.HasValue)
             {
                 //pre-select value?
@@ -872,17 +874,17 @@ namespace Nop.Admin.Controllers
             }
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //warehouses
-            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var w in _shippingService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = w.Name, Value = w.Id.ToString() });
 
@@ -896,7 +898,7 @@ namespace Nop.Admin.Controllers
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             }
-            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //a vendor should have access only to orders with his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
@@ -926,7 +928,7 @@ namespace Nop.Admin.Controllers
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
-		    var filterByProductId = 0;
+		    var filterByProductId = "";
 		    var product = _productService.GetProductById(model.ProductId);
 		    if (product != null && HasAccessToProduct(product))
                 filterByProductId = model.ProductId;
@@ -957,6 +959,7 @@ namespace Nop.Admin.Controllers
                     return new OrderModel
                     {
                         Id = x.Id,
+                        OrderNumber = x.OrderNumber,
                         StoreName = store != null ? store.Name : "Unknown",
                         OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -975,7 +978,7 @@ namespace Nop.Admin.Controllers
             var reportSummary = _orderReportService.GetOrderAverageReportLine(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
-                orderId: 0,
+                orderId: "",
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 os: orderStatus,
                 ps: paymentStatus,
@@ -1020,7 +1023,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("go-to-order-by-number")]
         public ActionResult GoToOrderId(OrderListModel model)
         {
-            var order = _orderService.GetOrderById(model.GoDirectlyToNumber);
+            var order = _orderService.GetOrderByNumber(model.GoDirectlyToNumber);
             if (order == null)
                 return List();
             
@@ -1034,7 +1037,7 @@ namespace Nop.Admin.Controllers
                 return Content("");
 
             //a vendor should have access only to his products
-            var vendorId = 0;
+            var vendorId = "";
             if (_workContext.CurrentVendor != null)
             {
                 vendorId = _workContext.CurrentVendor.Id;
@@ -1083,7 +1086,7 @@ namespace Nop.Admin.Controllers
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
-            var filterByProductId = 0;
+            var filterByProductId = "";
             var product = _productService.GetProductById(model.ProductId);
             if (product != null && HasAccessToProduct(product))
                 filterByProductId = model.ProductId;
@@ -1132,7 +1135,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = selectedIds
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
+                    .Select(x => x)
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
@@ -1162,7 +1165,7 @@ namespace Nop.Admin.Controllers
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
-            var filterByProductId = 0;
+            var filterByProductId = "";
             var product = _productService.GetProductById(model.ProductId);
             if (product != null && HasAccessToProduct(product))
                 filterByProductId = model.ProductId;
@@ -1211,7 +1214,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = selectedIds
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
+                    .Select(x => x)
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
@@ -1228,7 +1231,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("cancelorder")]
-        public ActionResult CancelOrder(int id)
+        public ActionResult CancelOrder(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1262,7 +1265,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("captureorder")]
-        public ActionResult CaptureOrder(int id)
+        public ActionResult CaptureOrder(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1299,7 +1302,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("markorderaspaid")]
-        public ActionResult MarkOrderAsPaid(int id)
+        public ActionResult MarkOrderAsPaid(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1333,7 +1336,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("refundorder")]
-        public ActionResult RefundOrder(int id)
+        public ActionResult RefundOrder(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1369,7 +1372,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("refundorderoffline")]
-        public ActionResult RefundOrderOffline(int id)
+        public ActionResult RefundOrderOffline(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1403,7 +1406,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("voidorder")]
-        public ActionResult VoidOrder(int id)
+        public ActionResult VoidOrder(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1439,7 +1442,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("voidorderoffline")]
-        public ActionResult VoidOrderOffline(int id)
+        public ActionResult VoidOrderOffline(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1471,7 +1474,7 @@ namespace Nop.Admin.Controllers
             }
         }
         
-        public ActionResult PartiallyRefundOrderPopup(int id, bool online)
+        public ActionResult PartiallyRefundOrderPopup(string id, bool online)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1493,7 +1496,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("partialrefundorder")]
-        public ActionResult PartiallyRefundOrderPopup(string btnId, string formId, int id, bool online, OrderModel model)
+        public ActionResult PartiallyRefundOrderPopup(string btnId, string formId, string id, bool online, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1552,7 +1555,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("btnSaveOrderStatus")]
-        public ActionResult ChangeOrderStatus(int id, OrderModel model)
+        public ActionResult ChangeOrderStatus(string id, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1577,8 +1580,6 @@ namespace Nop.Admin.Controllers
                     Note = string.Format("Order status has been edited. New status: {0}", order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext)),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
 
                 });
@@ -1602,7 +1603,7 @@ namespace Nop.Admin.Controllers
 
         #region Edit, delete
 
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1623,7 +1624,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1643,7 +1644,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult PdfInvoice(int orderId)
+        public ActionResult PdfInvoice(string orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1687,7 +1688,7 @@ namespace Nop.Admin.Controllers
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
-            var filterByProductId = 0;
+            var filterByProductId = "";
             var product = _productService.GetProductById(model.ProductId);
             if (product != null && HasAccessToProduct(product))
                 filterByProductId = model.ProductId;
@@ -1729,7 +1730,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = selectedIds
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
+                    .Select(x => x)
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
@@ -1758,7 +1759,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("btnSaveCC")]
-        public ActionResult EditCreditCardInfo(int id, OrderModel model)
+        public ActionResult EditCreditCardInfo(string id, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1797,8 +1798,6 @@ namespace Nop.Admin.Controllers
                 Note = "Credit card info has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
             });
             _orderService.UpdateOrder(order);
@@ -1810,7 +1809,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("btnSaveOrderTotals")]
-        public ActionResult EditOrderTotals(int id, OrderModel model)
+        public ActionResult EditOrderTotals(string id, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1844,8 +1843,6 @@ namespace Nop.Admin.Controllers
                 Note = "Order totals have been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
             });
             _orderService.UpdateOrder(order);
@@ -1856,7 +1853,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("save-shipping-method")]
-        public ActionResult EditShippingMethod(int id, OrderModel model)
+        public ActionResult EditShippingMethod(string id, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1879,8 +1876,6 @@ namespace Nop.Admin.Controllers
                 Note = "Shipping method has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
 
             });
@@ -1897,7 +1892,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnSaveOrderItem")]
         [ValidateInput(false)]
-        public ActionResult EditOrderItem(int id, FormCollection form)
+        public ActionResult EditOrderItem(string id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1912,10 +1907,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = id });
 
             //get order item identifier
-            int orderItemId = 0;
+            string orderItemId = "";
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnSaveOrderItem", StringComparison.InvariantCultureIgnoreCase))
-                    orderItemId = Convert.ToInt32(formValue.Substring("btnSaveOrderItem".Length));
+                    orderItemId = formValue.Substring("btnSaveOrderItem".Length);
 
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (orderItem == null)
@@ -1969,8 +1964,6 @@ namespace Nop.Admin.Controllers
                 Note = "Order item has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
 
             });
@@ -1988,7 +1981,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnDeleteOrderItem")]
         [ValidateInput(false)]
-        public ActionResult DeleteOrderItem(int id, FormCollection form)
+        public ActionResult DeleteOrderItem(string id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2003,10 +1996,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = id });
 
             //get order item identifier
-            int orderItemId = 0;
+            string orderItemId = "";
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnDeleteOrderItem", StringComparison.InvariantCultureIgnoreCase))
-                    orderItemId = Convert.ToInt32(formValue.Substring("btnDeleteOrderItem".Length));
+                    orderItemId = formValue.Substring("btnDeleteOrderItem".Length);
 
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (orderItem == null)
@@ -2036,8 +2029,6 @@ namespace Nop.Admin.Controllers
                     Note = "Order item has been deleted",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -2061,7 +2052,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnResetDownloadCount")]
         [ValidateInput(false)]
-        public ActionResult ResetDownloadCount(int id, FormCollection form)
+        public ActionResult ResetDownloadCount(string id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2072,10 +2063,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             //get order item identifier
-            int orderItemId = 0;
+            string orderItemId = "";
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
-                    orderItemId = Convert.ToInt32(formValue.Substring("btnResetDownloadCount".Length));
+                    orderItemId = formValue.Substring("btnResetDownloadCount".Length);
 
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (orderItem == null)
@@ -2100,7 +2091,7 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnPvActivateDownload")]
         [ValidateInput(false)]
-        public ActionResult ActivateDownloadItem(int id, FormCollection form)
+        public ActionResult ActivateDownloadItem(string id, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2111,10 +2102,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             //get order item identifier
-            int orderItemId = 0;
+            string orderItemId = "";
             foreach (var formValue in form.AllKeys)
                 if (formValue.StartsWith("btnPvActivateDownload", StringComparison.InvariantCultureIgnoreCase))
-                    orderItemId = Convert.ToInt32(formValue.Substring("btnPvActivateDownload".Length));
+                    orderItemId = formValue.Substring("btnPvActivateDownload".Length);
 
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (orderItem == null)
@@ -2136,7 +2127,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult UploadLicenseFilePopup(int id, int orderItemId)
+        public ActionResult UploadLicenseFilePopup(string id, string orderItemId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2159,7 +2150,7 @@ namespace Nop.Admin.Controllers
 
             var model = new OrderModel.UploadLicenseModel
             {
-                LicenseDownloadId = orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0,
+                LicenseDownloadId = !String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId : "",
                 OrderId = order.Id,
                 OrderItemId = orderItem.Id
             };
@@ -2188,7 +2179,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             //attach license
-            if (model.LicenseDownloadId > 0)
+            if (!String.IsNullOrEmpty(model.LicenseDownloadId))
                 orderItem.LicenseDownloadId = model.LicenseDownloadId;
             else
                 orderItem.LicenseDownloadId = null;
@@ -2236,7 +2227,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult AddProductToOrder(int orderId)
+        public ActionResult AddProductToOrder(string orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2248,19 +2239,19 @@ namespace Nop.Admin.Controllers
             var model = new OrderModel.AddOrderProductModel();
             model.OrderId = orderId;
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -2274,9 +2265,12 @@ namespace Nop.Admin.Controllers
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
                 return Content("");
+            var categoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                categoryIds.Add(model.SearchCategoryId);
 
             var gridModel = new DataSourceResult();
-            var products = _productService.SearchProducts(categoryIds: new List<int> {model.SearchCategoryId},
+            var products = _productService.SearchProducts(categoryIds: categoryIds,
                 manufacturerId: model.SearchManufacturerId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName, 
@@ -2299,7 +2293,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult AddProductToOrderDetails(int orderId, int productId)
+        public ActionResult AddProductToOrderDetails(string orderId, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2313,7 +2307,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddProductToOrderDetails(int orderId, int productId, FormCollection form)
+        public ActionResult AddProductToOrderDetails(string orderId, string productId, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2361,10 +2355,8 @@ namespace Nop.Admin.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, selectedAttributeId.ToString());
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                    attribute, ctrlAttributes);
                             }
                         }
                         break;
@@ -2375,10 +2367,8 @@ namespace Nop.Admin.Controllers
                             {
                                 foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, selectedAttributeId.ToString());
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, item);
                                 }
                             }
                         }
@@ -2577,12 +2567,10 @@ namespace Nop.Admin.Controllers
                     DiscountAmountExclTax = decimal.Zero,
                     DownloadCount = 0,
                     IsDownloadActivated = false,
-                    LicenseDownloadId = 0,
+                    LicenseDownloadId = "",
                     RentalStartDateUtc = rentalStartDate,
                     RentalEndDateUtc = rentalEndDate,
                     CreatedOnUtc = DateTime.UtcNow,
-                    _id = ObjectId.GenerateNewId().ToString(),
-                    Id = order.OrderItems.Count > 0 ? order.OrderItems.Max(x => x.Id) + 1 : 1,
 
                 };
                 order.OrderItems.Add(orderItem);
@@ -2597,8 +2585,6 @@ namespace Nop.Admin.Controllers
                     Note = "A new order item has been added",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -2643,7 +2629,7 @@ namespace Nop.Admin.Controllers
 
         #region Addresses
 
-        public ActionResult AddressEdit(int addressId, int orderId)
+        public ActionResult AddressEdit(string addressId, string orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2696,18 +2682,18 @@ namespace Nop.Admin.Controllers
             model.Address.FaxRequired = _addressSettings.FaxRequired;
 
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
             foreach (var c in _countryService.GetAllCountries(showHidden:true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
-            var states = address.CountryId != 0 ? _stateProvinceService.GetStateProvincesByCountryId(address.CountryId, showHidden:true).ToList() : new List<StateProvince>();
+            var states = !String.IsNullOrEmpty(address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(address.CountryId, showHidden:true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
             //customer attribute services
             model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
 
@@ -2762,8 +2748,6 @@ namespace Nop.Admin.Controllers
                     Note = "Address has been edited",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -2797,18 +2781,18 @@ namespace Nop.Admin.Controllers
             model.Address.FaxEnabled = _addressSettings.FaxEnabled;
             model.Address.FaxRequired = _addressSettings.FaxRequired;
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
             foreach (var c in _countryService.GetAllCountries(showHidden:true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
-            var states = address.CountryId != 0 ? _stateProvinceService.GetStateProvincesByCountryId(address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            var states = !String.IsNullOrEmpty(address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
                     model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
             //customer attribute services
             model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
 
@@ -2826,14 +2810,14 @@ namespace Nop.Admin.Controllers
 
             var model = new ShipmentListModel();
             //countries
-            model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "0" });
+            model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "" });
             foreach (var c in _countryService.GetAllCountries(showHidden:true))
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //states
-            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
+            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "" });
 
             //warehouses
-            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var w in _shippingService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = w.Name, Value = w.Id.ToString() });
 
@@ -2853,7 +2837,7 @@ namespace Nop.Admin.Controllers
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //a vendor should have access only to his products
-            int vendorId = 0;
+            string vendorId = "";
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
@@ -2881,7 +2865,7 @@ namespace Nop.Admin.Controllers
 		}
 
         [HttpPost]
-        public ActionResult ShipmentsByOrder(int orderId, DataSourceRequest command)
+        public ActionResult ShipmentsByOrder(string orderId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2915,7 +2899,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ShipmentsItemsByShipmentId(int shipmentId, DataSourceRequest command)
+        public ActionResult ShipmentsItemsByShipmentId(string shipmentId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2947,7 +2931,7 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-        public ActionResult AddShipment(int orderId)
+        public ActionResult AddShipment(string orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -2964,6 +2948,7 @@ namespace Nop.Admin.Controllers
             var model = new ShipmentModel
             {
                 OrderId = order.Id,
+                OrderNumber = order.OrderNumber
             };
 
             //measures
@@ -3065,7 +3050,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
-        public ActionResult AddShipment(int orderId, FormCollection form, bool continueEditing)
+        public ActionResult AddShipment(string orderId, FormCollection form, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3107,7 +3092,7 @@ namespace Nop.Admin.Controllers
                         break;
                     }
 
-                int warehouseId = 0;
+                string warehouseId = "";
                 if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     orderItem.Product.UseMultipleWarehouses)
                 {
@@ -3116,7 +3101,7 @@ namespace Nop.Admin.Controllers
                     foreach (string formKey in form.AllKeys)
                         if (formKey.Equals(string.Format("warehouse_{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
                         {
-                            int.TryParse(form[formKey], out warehouseId);
+                            warehouseId = form[formKey];
                             break;
                         }
                 }
@@ -3166,8 +3151,6 @@ namespace Nop.Admin.Controllers
                 //create a shipment item
                 var shipmentItem = new ShipmentItem
                 {
-                    Id = shipment.ShipmentItems.Count > 0 ? shipment.ShipmentItems.Max(x=>x.Id)+1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     ProductId = orderItem.ProductId,
                     OrderItemId = orderItem.Id,
                     Quantity = qtyToAdd,
@@ -3188,8 +3171,6 @@ namespace Nop.Admin.Controllers
                     Note = "A shipment has been added",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
-                    Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                    _id = ObjectId.GenerateNewId().ToString(),
                     OrderId = order.Id,
                 });
                 _orderService.UpdateOrder(order);
@@ -3204,7 +3185,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("AddShipment", new { orderId = orderId });
         }
 
-        public ActionResult ShipmentDetails(int id)
+        public ActionResult ShipmentDetails(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3223,7 +3204,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult DeleteShipment(int id)
+        public ActionResult DeleteShipment(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3243,6 +3224,7 @@ namespace Nop.Admin.Controllers
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
                 var product = _productService.GetProductById(shipmentItem.ProductId);
+                shipmentItem.ShipmentId = shipment.Id;
                 _productService.ReverseBookedInventory(product, shipmentItem);
             }
 
@@ -3253,8 +3235,6 @@ namespace Nop.Admin.Controllers
                 Note = "A shipment has been deleted",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
                 OrderId = order.Id,
             });
             _orderService.UpdateOrder(order);
@@ -3309,7 +3289,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setasshipped")]
-        public ActionResult SetAsShipped(int id)
+        public ActionResult SetAsShipped(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3372,7 +3352,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("ShipmentDetails")]
         [FormValueRequired("setasdelivered")]
-        public ActionResult SetAsDelivered(int id)
+        public ActionResult SetAsDelivered(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3434,7 +3414,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult PdfPackagingSlip(int shipmentId)
+        public ActionResult PdfPackagingSlip(string shipmentId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3474,7 +3454,7 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //a vendor should have access only to his products
-            int vendorId = 0;
+            string vendorId = "";
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
@@ -3516,7 +3496,7 @@ namespace Nop.Admin.Controllers
             {
                 var ids = selectedIds
                     .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
+                    .Select(x => x)
                     .ToArray();
                 shipments.AddRange(_shipmentService.GetShipmentsByIds(ids));
             }
@@ -3543,7 +3523,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SetAsShippedSelected(ICollection<int> selectedIds)
+        public ActionResult SetAsShippedSelected(ICollection<string> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3575,7 +3555,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult SetAsDeliveredSelected(ICollection<int> selectedIds)
+        public ActionResult SetAsDeliveredSelected(ICollection<string> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3611,7 +3591,7 @@ namespace Nop.Admin.Controllers
         #region Order notes
         
         [HttpPost]
-        public ActionResult OrderNotesSelect(int orderId, DataSourceRequest command)
+        public ActionResult OrderNotesSelect(string orderId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3633,8 +3613,8 @@ namespace Nop.Admin.Controllers
                 orderNoteModels.Add(new OrderModel.OrderNote
                 {
                     Id = orderNote.Id,
-                    OrderId = orderNote.OrderId,
-                    DownloadId = orderNote.DownloadId,
+                    OrderId = order.Id,
+                    DownloadId = String.IsNullOrEmpty(orderNote.DownloadId) ? "": orderNote.DownloadId,
                     DownloadGuid = download != null ? download.DownloadGuid : Guid.Empty,
                     DisplayToCustomer = orderNote.DisplayToCustomer,
                     Note = orderNote.FormatOrderNoteText(),
@@ -3652,7 +3632,7 @@ namespace Nop.Admin.Controllers
         }
         
         [ValidateInput(false)]
-        public ActionResult OrderNoteAdd(int orderId, int downloadId, bool displayToCustomer, string message)
+        public ActionResult OrderNoteAdd(string orderId, string downloadId, bool displayToCustomer, string message)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3672,8 +3652,6 @@ namespace Nop.Admin.Controllers
                 DownloadId = downloadId,
                 OrderId = orderId,
                 CreatedOnUtc = DateTime.UtcNow,
-                Id = order.OrderNotes.Count > 0 ? order.OrderNotes.Max(x => x.Id) + 1 : 1,
-                _id = ObjectId.GenerateNewId().ToString(),
 
             };
             order.OrderNotes.Add(orderNote);
@@ -3692,7 +3670,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult OrderNoteDelete(int id, int orderId)
+        public ActionResult OrderNoteDelete(string id, string orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -3708,6 +3686,8 @@ namespace Nop.Admin.Controllers
             var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == id);
             if (orderNote == null)
                 throw new ArgumentException("No order note found with the specified id");
+
+            orderNote.OrderId = order.Id;
             _orderService.DeleteOrderNote(orderNote);
 
             return new NullJsonResult();
@@ -3722,7 +3702,7 @@ namespace Nop.Admin.Controllers
             int pageSize, int orderBy)
         {
             //a vendor should have access only to his products
-            int vendorId = 0;
+            string vendorId = "";
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
@@ -3800,26 +3780,26 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
                 model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
@@ -3828,10 +3808,10 @@ namespace Nop.Admin.Controllers
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             }
-            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             var vendors = _vendorService.GetAllVendors(showHidden: true);
             foreach (var v in vendors)
                 model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
@@ -3911,7 +3891,7 @@ namespace Nop.Admin.Controllers
                 return Content("");
 
             //a vendor should have access only to his products
-            int vendorId = 0;
+            string vendorId = "";
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
@@ -3959,10 +3939,10 @@ namespace Nop.Admin.Controllers
 
 
             var report = new List<OrderAverageReportLineSummary>();
-            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Pending));
-            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Processing));
-            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Complete));
-            report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Cancelled));
+            report.Add(_orderReportService.OrderAverageReport("", OrderStatus.Pending));
+            report.Add(_orderReportService.OrderAverageReport("", OrderStatus.Processing));
+            report.Add(_orderReportService.OrderAverageReport("", OrderStatus.Complete));
+            report.Add(_orderReportService.OrderAverageReport("", OrderStatus.Cancelled));
             var model = report.Select(x => new OrderAverageReportLineSummaryModel
             {
                 OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -4049,11 +4029,11 @@ namespace Nop.Admin.Controllers
 
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
             return View(model);
         }
@@ -4081,7 +4061,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = items.Select(x =>
                 {
-                    var country = _countryService.GetCountryById(x.CountryId.HasValue ? x.CountryId.Value : 0);
+                    var country = _countryService.GetCountryById(!String.IsNullOrEmpty(x.CountryId) ? x.CountryId : "");
                     var m = new CountryReportLineModel
                     {
                         CountryName = country != null ? country.Name : "Unknown",
@@ -4101,7 +4081,7 @@ namespace Nop.Admin.Controllers
         #region Activity log
 
         [NonAction]
-        protected void LogEditOrder(int orderId)
+        protected void LogEditOrder(string orderId)
         {
             _customerActivityService.InsertActivity("EditOrder", orderId, _localizationService.GetResource("ActivityLog.EditOrder"), orderId);
         }

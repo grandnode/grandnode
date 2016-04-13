@@ -10,7 +10,7 @@ namespace Nop.Core.Domain.Orders
     /// Represents an order item
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class OrderItem : BaseEntity
+    public partial class OrderItem : SubBaseEntity
     {
         private ICollection<GiftCard> _associatedGiftCards;
 
@@ -22,12 +22,12 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
 
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
@@ -99,7 +99,7 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets a license download identifier (in case this is a downloadable product)
         /// </summary>
-        public int? LicenseDownloadId { get; set; }
+        public string LicenseDownloadId { get; set; }
 
         /// <summary>
         /// Gets or sets the total weight of one item

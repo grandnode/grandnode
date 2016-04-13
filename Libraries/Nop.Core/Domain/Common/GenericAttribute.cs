@@ -6,12 +6,12 @@ namespace Nop.Core.Domain.Common
     /// Represents a generic attribute
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class GenericAttribute //: BaseEntity
+    public partial class GenericAttribute
     {
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
-        public int EntityId { get; set; }
+        public string EntityId { get; set; }
         
         /// <summary>
         /// Gets or sets the key group
@@ -31,7 +31,7 @@ namespace Nop.Core.Domain.Common
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         
     }
 }

@@ -111,9 +111,9 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="localeStringResourceId">Locale string resource identifier</param>
         /// <returns>Locale string resource</returns>
-        public virtual LocaleStringResource GetLocaleStringResourceById(int localeStringResourceId)
+        public virtual LocaleStringResource GetLocaleStringResourceById(string localeStringResourceId)
         {
-            if (localeStringResourceId == 0)
+            if (String.IsNullOrEmpty(localeStringResourceId))
                 return null;
 
             return _lsrRepository.GetById(localeStringResourceId);
@@ -139,7 +139,7 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <returns>Locale string resource</returns>
-        public virtual LocaleStringResource GetLocaleStringResourceByName(string resourceName, int languageId,
+        public virtual LocaleStringResource GetLocaleStringResourceByName(string resourceName, string languageId,
             bool logIfNotFound = true)
         {
             var query = from lsr in _lsrRepository.Table
@@ -158,7 +158,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Locale string resources</returns>
-        public virtual IList<LocaleStringResource> GetAllResources(int languageId)
+        public virtual IList<LocaleStringResource> GetAllResources(string languageId)
         {
             var query = from l in _lsrRepository.Table
                         orderby l.ResourceName
@@ -209,7 +209,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Locale string resources</returns>
-        public virtual Dictionary<string, KeyValuePair<int,string>> GetAllResourceValues(int languageId)
+        public virtual Dictionary<string, KeyValuePair<string,string>> GetAllResourceValues(string languageId)
         {
             string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
             return _cacheManager.Get(key, () =>
@@ -222,12 +222,12 @@ namespace Nop.Services.Localization
                             select l;
                 var locales = query.ToList();
                 //format: <name, <id, value>>
-                var dictionary = new Dictionary<string, KeyValuePair<int, string>>();
+                var dictionary = new Dictionary<string, KeyValuePair<string, string>>();
                 foreach (var locale in locales)
                 {
                     var resourceName = locale.ResourceName.ToLowerInvariant();
                     if (!dictionary.ContainsKey(resourceName))
-                        dictionary.Add(resourceName, new KeyValuePair<int, string>(locale.Id, locale.ResourceValue));
+                        dictionary.Add(resourceName, new KeyValuePair<string, string>(locale.Id, locale.ResourceValue));
                 }
                 return dictionary;
             });
@@ -255,7 +255,7 @@ namespace Nop.Services.Localization
         /// <param name="defaultValue">Default value</param>
         /// <param name="returnEmptyIfNotFound">A value indicating whether an empty string will be returned if a resource is not found and default value is set to empty string</param>
         /// <returns>A string representing the requested resource string.</returns>
-        public virtual string GetResource(string resourceKey, int languageId,
+        public virtual string GetResource(string resourceKey, string languageId,
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false)
         {
             string result = string.Empty;

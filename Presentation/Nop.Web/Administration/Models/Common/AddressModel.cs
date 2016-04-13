@@ -35,14 +35,14 @@ namespace Nop.Admin.Models.Common
         public string Company { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.Country")]
-        public int? CountryId { get; set; }
+        public string CountryId { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.Country")]
         [AllowHtml]
         public string CountryName { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
-        public int? StateProvinceId { get; set; }
+        public string StateProvinceId { get; set; }
 
         [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
         [AllowHtml]

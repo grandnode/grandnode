@@ -11,7 +11,7 @@ namespace Nop.Web.Models.Boards
             ForumList = new List<SelectListItem>();
         }
 
-        public int ForumSelected { get; set; }
+        public string ForumSelected { get; set; }
         public string TopicSeName { get; set; }
 
         public IEnumerable<SelectListItem> ForumList { get; set; }

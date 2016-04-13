@@ -13,7 +13,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
             Locales = new List<ConfigurationLocalizedModel>();
         }
 
-        public int ActiveStoreScopeConfiguration { get; set; }
+        public string ActiveStoreScopeConfiguration { get; set; }
 
         [AllowHtml]
         [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]
@@ -38,7 +38,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
 
         public partial class ConfigurationLocalizedModel : ILocalizedModelLocal
         {
-            public int LanguageId { get; set; }
+            public string LanguageId { get; set; }
 
             [AllowHtml]
             [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]

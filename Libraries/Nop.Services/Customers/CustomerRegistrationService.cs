@@ -228,7 +228,7 @@ namespace Nop.Services.Customers
             {
                 _rewardPointsService.AddRewardPointsHistory(request.Customer.Id, _rewardPointsSettings.PointsForRegistration,
                     request.StoreId,
-                    _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"), 0, 0);
+                    _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"), "", 0);
             }
 
             _customerService.UpdateCustomer(request.Customer);

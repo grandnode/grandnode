@@ -40,7 +40,7 @@ namespace Nop.Admin.Models.Catalog
 
         public IList<string> Warnings { get; set; }
 
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
 
         #region Nested classes
 
@@ -51,7 +51,7 @@ namespace Nop.Admin.Models.Catalog
                 Values = new List<ProductAttributeValueModel>();
             }
 
-            public int ProductAttributeId { get; set; }
+            public string ProductAttributeId { get; set; }
 
             public string Name { get; set; }
 

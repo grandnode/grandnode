@@ -29,7 +29,7 @@ namespace Nop.Admin.Models.Messages
         public string Body { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.Store")]
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
         
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CreatedOn")]

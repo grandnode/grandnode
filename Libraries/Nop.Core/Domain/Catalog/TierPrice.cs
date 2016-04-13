@@ -7,22 +7,23 @@ namespace Nop.Core.Domain.Catalog
     /// Represents a tier price
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class TierPrice : BaseEntity
+    public partial class TierPrice : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public int ProductId { get; set; }
+        [BsonIgnore]
+        public string ProductId { get; set; }
 
         /// <summary>
         /// Gets or sets the store identifier (0 - all stores)
         /// </summary>
-        public int StoreId { get; set; }
+        public string StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer role identifier
         /// </summary>
-        public int CustomerRoleId { get; set; }
+        public string CustomerRoleId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity

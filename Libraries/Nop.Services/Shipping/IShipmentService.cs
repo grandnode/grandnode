@@ -32,8 +32,8 @@ namespace Nop.Services.Shipping
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Shipments</returns>
-        IPagedList<Shipment> GetAllShipments(int vendorId = 0, int warehouseId = 0,
-            int shippingCountryId = 0,
+        IPagedList<Shipment> GetAllShipments(string vendorId = "", string warehouseId = "",
+            string shippingCountryId = "",
             int shippingStateId = 0,
             string shippingCity = null,
             string trackingNumber = null,
@@ -46,15 +46,15 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentIds">Shipment identifiers</param>
         /// <returns>Shipments</returns>
-        IList<Shipment> GetShipmentsByIds(int[] shipmentIds);
-        IList<Shipment> GetShipmentsByOrder(int orderId);
+        IList<Shipment> GetShipmentsByIds(string[] shipmentIds);
+        IList<Shipment> GetShipmentsByOrder(string orderId);
 
         /// <summary>
         /// Gets a shipment
         /// </summary>
         /// <param name="shipmentId">Shipment identifier</param>
         /// <returns>Shipment</returns>
-        Shipment GetShipmentById(int shipmentId);
+        Shipment GetShipmentById(string shipmentId);
 
         /// <summary>
         /// Inserts a shipment
@@ -76,7 +76,7 @@ namespace Nop.Services.Shipping
         /// <param name="ignoreShipped">Ignore already shipped shipments</param>
         /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
         /// <returns>Quantity</returns>
-        int GetQuantityInShipments(Product product, int warehouseId,
+        int GetQuantityInShipments(Product product, string warehouseId,
             bool ignoreShipped, bool ignoreDelivered);
     }
 }

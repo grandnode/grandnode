@@ -41,9 +41,6 @@ namespace Nop.Web.Framework.Mvc
     /// </summary>
     public partial class BaseNopEntityModel : BaseNopModel
     {
-        //[BsonId]
-        //public MongoDB.Bson.ObjectId _id { get; set; }
-
-        public virtual int Id { get; set; }
+        public virtual string Id { get; set; }
     }
 }

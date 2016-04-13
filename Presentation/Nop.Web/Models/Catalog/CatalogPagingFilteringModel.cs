@@ -298,8 +298,8 @@ namespace Nop.Web.Models.Catalog
                     var _allFilters = new List<SpecificationAttributeOptionFilter>();
                     foreach (var sao in filterableSpecificationAttributeOptionIds)
                     {
-                        int _specificationAttributeId = Convert.ToInt32(sao.Split(':').FirstOrDefault().ToString());
-                        int _specificationAttributeOptionId = Convert.ToInt32(sao.Split(':').LastOrDefault().ToString());
+                        string _specificationAttributeId = sao.Split(':').FirstOrDefault().ToString();
+                        string _specificationAttributeOptionId = sao.Split(':').LastOrDefault().ToString();
                         var sa = EngineContext.Current.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(_specificationAttributeId);
                         if (sa != null)
                         {

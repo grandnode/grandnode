@@ -13,17 +13,17 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the forum identifier
         /// </summary>
-        public int ForumId { get; set; }
+        public string ForumId { get; set; }
 
         /// <summary>
         /// Gets or sets the forum group
         /// </summary>
-        public int ForumGroupId { get; set; }
+        public string ForumGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the topic type identifier
@@ -48,12 +48,12 @@ namespace Nop.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the last post identifier
         /// </summary>
-        public int LastPostId { get; set; }
+        public string LastPostId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post customer identifier
         /// </summary>
-        public int LastPostCustomerId { get; set; }
+        public string LastPostCustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the last post date and time

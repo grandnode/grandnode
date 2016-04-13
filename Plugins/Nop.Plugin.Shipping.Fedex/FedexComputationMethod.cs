@@ -214,7 +214,7 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.Recipient.Address.StreetLines = new [] { getShippingOptionRequest.ShippingAddress.Address1 };
             request.RequestedShipment.Recipient.Address.City = getShippingOptionRequest.ShippingAddress.City;
             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(getShippingOptionRequest.ShippingAddress.CountryId);
-            if (getShippingOptionRequest.ShippingAddress.StateProvinceId != 0 &&
+            if (!String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.StateProvinceId) &&
                 country!=null)
             {
                 var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(getShippingOptionRequest.ShippingAddress.StateProvinceId);
@@ -784,7 +784,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 return response;
             }
 
-            if (getShippingOptionRequest.ShippingAddress.CountryId == 0)
+            if (String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId))
             {
                 response.AddError("Shipping country is not set");
                 return response;

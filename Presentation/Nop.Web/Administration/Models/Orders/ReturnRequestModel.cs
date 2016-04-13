@@ -8,17 +8,17 @@ namespace Nop.Admin.Models.Orders
     public partial class ReturnRequestModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.ID")]
-        public override int Id { get; set; }
+        public override string Id { get; set; }
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Order")]
-        public int OrderId { get; set; }
+        public string OrderId { get; set; }
 
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Customer")]
         public string CustomerInfo { get; set; }
 
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Product")]
         public string ProductName { get; set; }
 
