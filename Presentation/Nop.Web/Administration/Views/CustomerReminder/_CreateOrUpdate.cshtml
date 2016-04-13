@@ -13,6 +13,19 @@
             },
             select: tabstrip_on_tab_select
         });
+
+        $("#@Html.FieldIdFor(model => model.AllowRenew)").change(toggleAllowRenew);
+
+        toggleAllowRenew();
+
+        function toggleAllowRenew() {
+            if ($('#@Html.FieldIdFor(model => model.AllowRenew)').is(':checked')) {
+                $('#pnlAllowRenew').show();
+            } else {
+                $('#pnlAllowRenew').hide();
+            }
+        }
+
     });
 </script>
 
@@ -77,6 +90,33 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StartDateTimeUtc)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.StartDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.EndDateTimeUtc)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.EndDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.LastUpdateDate)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.LastUpdateDate)
+            @Html.ValidationMessageFor(model => model.LastUpdateDate)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.DisplayOrder)
         </td>
         <td class="adminData">
@@ -85,6 +125,15 @@
         </td>
     </tr>
     <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AllowRenew)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AllowRenew)
+            @Html.ValidationMessageFor(model => model.AllowRenew)
+        </td>
+    </tr>
+    <tr id="pnlAllowRenew">
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.RenewedDay)
         </td>

@@ -20,6 +20,11 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public string Name { get; set; }
 
+        public DateTime StartDateTimeUtc { get; set; }
+        public DateTime EndDateTimeUtc { get; set; }
+        public DateTime LastUpdateDate { get; set; }
+
+        public bool AllowRenew { get; set; }
         public int RenewedDay { get; set; }
         /// <summary>
         /// Gets or sets display order

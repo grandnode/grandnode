@@ -744,7 +744,24 @@ namespace Nop.Services.Customers
             }
             
         }
-        
+
+        public virtual void UpdateCustomerReminderHistory(string customerId, string orderId)
+        {
+            var builder = Builders<CustomerReminderHistory>.Filter;
+            var filter = builder.Eq(x => x.CustomerId, customerId);
+            filter = filter & builder.Eq(x => x.Status, (int)CustomerReminderHistoryStatusEnum.Started);
+
+            var update = Builders<CustomerReminderHistory>.Update
+                .Set(x => x.EndDate, DateTime.UtcNow)
+                .Set(x => x.Status, (int)CustomerReminderHistoryStatusEnum.CompletedOrdered)
+                .Set(x => x.OrderId, orderId);
+
+            var customerReminderRepository = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<CustomerReminderHistory>>();
+            customerReminderRepository.Collection.UpdateManyAsync(filter, update);
+
+        }
+
+
         /// <summary>
         /// Delete guest customer records
         /// </summary>

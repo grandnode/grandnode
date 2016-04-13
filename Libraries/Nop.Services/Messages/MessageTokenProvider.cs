@@ -534,8 +534,8 @@ namespace Nop.Services.Messages
 
             #region Products
             sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", _templatesSettings.Color1));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Cart.Product(s).Name", languageId)));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.Cart.Product(s).Quantity", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.AbandonedCart.Product(s).Name", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.AbandonedCart.Product(s).Quantity", languageId)));
             sb.AppendLine("</tr>");
             var productService = EngineContext.Current.Resolve<IProductService>();
             foreach (var item in customer.ShoppingCartItems)

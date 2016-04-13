@@ -585,6 +585,9 @@
   <LocaleResource Name="Account.YourPersonalDetails">
     <Value>Your Personal Details</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AbandonedCart">
+    <Value>Send email AbandonedCart - ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewCategory">
     <Value>Added a new category ('{0}')</Value>
   </LocaleResource>
@@ -1653,6 +1656,12 @@
   <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
     <Value>A product name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
+    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.Imported">
+    <Value>Categories have been imported successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories">
     <Value>Categories</Value>
   </LocaleResource>
@@ -1880,6 +1889,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.LowStockReport">
     <Value>Low stock report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
+    <Value>Manufacturers have been imported successfully.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
+    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers">
     <Value>Manufacturers</Value>
@@ -8031,8 +8046,32 @@
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.ReminderRule">
     <Value>Reminder Rule</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.StartDate">
+    <Value>Date start</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.StartDate.hint">
+    <Value>Date of start the campaign</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.EndDate.hint">
+    <Value>Date of end the campaign</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.LastUpdateDate">
+    <Value>Last update date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.LastUpdateDate.hint">
+    <Value>Last update date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.AllowRenew">
+    <Value>Allow renew</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.AllowRenew.hint">
+    <Value>Choose when reminder should run again.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.RenewedDay">
-    <Value>Renewed Day</Value>
+    <Value>Renewed Days</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.AllowedTokens">
     <Value>Allowed Tokens</Value>
@@ -13678,6 +13717,12 @@
   <LocaleResource Name="Messages.Order.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>
+  <LocaleResource Name="Messages.AbandonedCart.Product(s).Name">
+    <Value>Product(s) Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.AbandonedCart.Product(s).Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.Order.OrderTotal">
     <Value>Order Total:</Value>
   </LocaleResource>
@@ -15588,18 +15633,6 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
-    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
-    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Category.Imported">
-    <Value>Categories have been imported successfully.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
-    <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="UpgradeSystem.Actual">
     <Value><![CDATA[You have the actual version of the system.]]></Value>

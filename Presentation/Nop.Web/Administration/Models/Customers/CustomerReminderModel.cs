@@ -22,6 +22,18 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.Name")]
         public string Name { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.StartDate")]
+        public DateTime StartDateTimeUtc { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.EndDate")]
+        public DateTime EndDateTimeUtc { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.LastUpdateDate")]
+        public DateTime LastUpdateDate { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.AllowRenew")]
+        public bool AllowRenew { get; set; }
+
         [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.RenewedDay")]
         public int RenewedDay { get; set; }
 

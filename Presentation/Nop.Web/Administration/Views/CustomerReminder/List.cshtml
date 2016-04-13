@@ -63,7 +63,10 @@
                         {
                             field: "Active",
                             title: "@T("Admin.Customers.CustomerReminder.Fields.Active")",
-                            width: 50
+                            width: 50,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
                         }, {
                             field: "Id",
                             title: "@T("Admin.Common.Edit")",

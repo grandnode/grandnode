@@ -442,7 +442,7 @@ namespace Nop.Web.Controllers
             if (lastOrder == null)
                 return true;
 
-            var interval = DateTime.UtcNow - lastOrder.CreatedOnUtc;
+            var interval = DateTime.Now - lastOrder.CreatedOnUtc;
             return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
         }
 

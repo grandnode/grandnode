@@ -246,11 +246,6 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public bool AcceptPrivacyPolicyEnabled { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether cart no older than X days
-        /// </summary>
-        public int CartNoOlderThanXDays { get; set; }
-
         #endregion
     }
 }

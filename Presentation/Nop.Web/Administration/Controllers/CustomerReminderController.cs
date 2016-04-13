@@ -150,6 +150,10 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
                 return AccessDeniedView();
             var model = new CustomerReminderModel();
+            model.StartDateTimeUtc = DateTime.UtcNow;
+            model.EndDateTimeUtc = DateTime.UtcNow.AddMonths(1);
+            model.LastUpdateDate = DateTime.UtcNow.AddDays(-7);
+            model.Active = true;
             return View(model);
         }
 

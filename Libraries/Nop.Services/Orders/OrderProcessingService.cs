@@ -1600,6 +1600,9 @@ namespace Nop.Services.Orders
                     //Updated field "free shipping" after added a new order
                     _customerService.UpdateFreeShipping(order.CustomerId, false);
 
+                    //Update customer reminder history
+                    _customerService.UpdateCustomerReminderHistory(order.CustomerId, order.Id);
+
                     //Update field Last purchase date after added a new order
                     _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
 

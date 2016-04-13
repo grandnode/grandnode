@@ -248,6 +248,8 @@ namespace Nop.Services.Customers
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true);
 
+
+        void UpdateCustomerReminderHistory(string customerId, string orderId);
         /// <summary>
         /// Delete guest customer records
         /// </summary>

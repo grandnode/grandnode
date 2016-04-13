@@ -123,6 +123,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<CustomerActionType> _customerActionType;
         private readonly IRepository<Banner> _banner;
         private readonly IRepository<CustomerReminder> _customerReminder;
+        private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
@@ -208,6 +209,7 @@ namespace Nop.Services.Installation
             IRepository<CustomerActionType> customerActionType,
             IRepository<Banner> banner,
             IRepository<CustomerReminder> customerReminder,
+            IRepository<CustomerReminderHistory> customerReminderHistoryRepository,
             IGenericAttributeService genericAttributeService,
             ICustomerActionService customerActionService,
             IWebHelper webHelper)
@@ -287,6 +289,7 @@ namespace Nop.Services.Installation
             this._customerAction = customerAction;
             this._customerActionType = customerActionType;
             this._customerReminder = customerReminder;
+            this._customerReminderHistoryRepository = customerReminderHistoryRepository; ;
             this._customerActionService = customerActionService;
             this._banner = banner;
         }
@@ -4966,7 +4969,6 @@ namespace Nop.Services.Installation
                 PhoneEnabled = false,
                 FaxEnabled = false,
                 AcceptPrivacyPolicyEnabled = false,
-                CartNoOlderThanXDays = 30,
                 NewsletterEnabled = true,
                 NewsletterTickedByDefault = true,
                 HideNewsletterBlock = false,
@@ -10105,6 +10107,12 @@ namespace Nop.Services.Installation
                                                   Enabled = false,
                                                   Name = "Public store. Delete forum post"
                                               },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CustomerReminder.AbandonedCart",
+                                                  Enabled = true,
+                                                  Name = "Send email AbandonedCart"
+                                              },
                                       };
             _activityLogTypeRepository.Insert(activityLogTypes);
         }
@@ -10222,6 +10230,15 @@ namespace Nop.Services.Installation
                     //60 minutes
                     Seconds = 3600,
                     Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask
+                {
+                    Name = "Customer reminder - AbandonedCart",
+                    //60 minutes
+                    Seconds = 3600,
+                    Type = "Nop.Services.Customers.CustomerReminderAbandonedCartTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
                 },
@@ -10621,6 +10638,8 @@ namespace Nop.Services.Installation
 
             //customer reminder
             _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
 
         }
 

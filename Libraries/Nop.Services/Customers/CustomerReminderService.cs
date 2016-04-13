@@ -10,6 +10,9 @@ using Nop.Services.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Core;
 using Nop.Services.Stores;
+using Nop.Services.Catalog;
+using Nop.Services.Logging;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
 {
@@ -27,6 +30,11 @@ namespace Nop.Services.Customers
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly IStoreService _storeService;
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly IProductService _productService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
+
         #endregion
 
         #region Ctor
@@ -41,7 +49,11 @@ namespace Nop.Services.Customers
             IEmailAccountService emailAccountService,
             IQueuedEmailService queuedEmailService,
             IMessageTokenProvider messageTokenProvider,
-            IStoreService storeService)
+            IStoreService storeService,
+            IProductService productService,
+            ICustomerAttributeParser customerAttributeParser,
+            ICustomerActivityService customerActivityService,
+            ILocalizationService localizationService)
         {
             this._customerReminderRepository = customerReminderRepository;
             this._customerReminderHistoryRepository = customerReminderHistoryRepository;
@@ -53,6 +65,10 @@ namespace Nop.Services.Customers
             this._messageTokenProvider = messageTokenProvider;
             this._queuedEmailService = queuedEmailService;
             this._storeService = storeService;
+            this._customerAttributeParser = customerAttributeParser;
+            this._productService = productService;
+            this._customerActivityService = customerActivityService;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -105,17 +121,265 @@ namespace Nop.Services.Customers
 
             _queuedEmailService.InsertQueuedEmail(email);
 
+            //activity log
+            _customerActivityService.InsertActivity("CustomerReminder.AbandonedCart", customer.Id, _localizationService.GetResource("ActivityLog.AbandonedCart"), customerReminder.Name);
+
             return true;
 
         }
 
+        #region Conditions
         protected bool CheckConditions(CustomerReminder customerReminder, Customer customer)
         {
             if(customerReminder.Conditions.Count == 0)
                 return true;
 
-            return true;
+
+            bool cond = false;
+            foreach (var item in customerReminder.Conditions)
+            {
+                if(item.ConditionType == CustomerReminderConditionTypeEnum.Category)
+                {
+                    cond = ConditionCategory(item, customer.ShoppingCartItems.Select(x => x.ProductId).ToList());
+                }
+                if (item.ConditionType == CustomerReminderConditionTypeEnum.Product)
+                {
+                    cond = ConditionProducts(item, customer.ShoppingCartItems.Select(x=>x.ProductId).ToList());
+                }
+                if (item.ConditionType == CustomerReminderConditionTypeEnum.Manufacturer)
+                {
+                    cond = ConditionManufacturer(item, customer.ShoppingCartItems.Select(x => x.ProductId).ToList());
+                }
+                if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomerTag)
+                {
+                    cond = ConditionCustomerTag(item, customer);
+                }
+                if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomerRole)
+                {
+                    cond = ConditionCustomerRole(item, customer);
+                }
+                if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomerRegisterField)
+                {
+                    cond = ConditionCustomerRegister(item, customer);
+                }
+                if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomCustomerAttribute)
+                {
+                    cond = ConditionCustomerAttribute(item, customer);
+                }
+            }
+
+            return cond;
         }
+        protected bool ConditionCategory(CustomerReminder.ReminderCondition condition, ICollection<string> products)
+        {
+            bool cond = false;
+            if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
+            {
+                cond = true;
+                foreach (var item in condition.Categories)
+                {
+                    foreach (var product in products)
+                    {
+                        var pr = _productService.GetProductById(product);
+                        if (pr != null)
+                        {
+                            if (pr.ProductCategories.Where(x => x.CategoryId == item).Count() == 0)
+                                return false;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            if (condition.Condition == CustomerReminderConditionEnum.OneOfThem)
+            {
+                foreach (var item in condition.Categories)
+                {
+                    foreach (var product in products)
+                    {
+                        var pr = _productService.GetProductById(product);
+                        if (pr != null)
+                        {
+                            if (pr.ProductCategories.Where(x => x.CategoryId == item).Count() > 0)
+                                return true;
+                        }                       
+                    }
+                }
+            }
+
+            return cond;
+        }
+        protected bool ConditionManufacturer(CustomerReminder.ReminderCondition condition, ICollection<string> products)
+        {
+            bool cond = false;
+            if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
+            {
+                cond = true;
+                foreach (var item in condition.Manufacturers)
+                {
+                    foreach (var product in products)
+                    {
+                        var pr = _productService.GetProductById(product);
+                        if (pr != null)
+                        {
+                            if (pr.ProductManufacturers.Where(x => x.ManufacturerId == item).Count() == 0)
+                                return false;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            if (condition.Condition == CustomerReminderConditionEnum.OneOfThem)
+            {
+                foreach (var item in condition.Manufacturers)
+                {
+                    foreach (var product in products)
+                    {
+                        var pr = _productService.GetProductById(product);
+                        if (pr != null)
+                        {
+                            if (pr.ProductManufacturers.Where(x => x.ManufacturerId == item).Count() > 0)
+                                return true;
+                        }
+                    }
+                }
+            }
+
+            return cond;
+        }
+        protected bool ConditionProducts(CustomerReminder.ReminderCondition condition, ICollection<string> products)
+        {
+            bool cond = true;
+            if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
+            {
+                cond = products.ContainsAll(condition.Products);
+            }
+            if (condition.Condition == CustomerReminderConditionEnum.OneOfThem)
+            {
+                cond = products.ContainsAny(condition.Products);
+            }
+
+            return cond;
+        }
+        protected bool ConditionCustomerRole(CustomerReminder.ReminderCondition condition, Customer customer)
+        {
+            bool cond = false;
+            if (customer != null)
+            {
+                var customerRoles = customer.CustomerRoles;
+                if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
+                {
+                    cond = customerRoles.Select(x => x.Id).ContainsAll(condition.CustomerRoles);
+                }
+                if (condition.Condition == CustomerReminderConditionEnum.OneOfThem)
+                {
+                    cond = customerRoles.Select(x => x.Id).ContainsAny(condition.CustomerRoles);
+                }
+            }
+            return cond;
+        }
+        protected bool ConditionCustomerTag(CustomerReminder.ReminderCondition condition, Customer customer)
+        {
+            bool cond = false;
+            if (customer != null)
+            {
+                var customerTags = customer.CustomerTags;
+                if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
+                {
+                    cond = customerTags.Select(x => x).ContainsAll(condition.CustomerTags);
+                }
+                if (condition.Condition == CustomerReminderConditionEnum.OneOfThem)
+                {
+                    cond = customerTags.Select(x => x).ContainsAny(condition.CustomerTags);
+                }
+            }
+            return cond;
+        }
+        protected bool ConditionCustomerRegister(CustomerReminder.ReminderCondition condition, Customer customer)
+        {
+            bool cond = false;
+            if (customer != null)
+            {
+                if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
+                {
+                    cond = true;
+                    foreach (var item in condition.CustomerRegistration)
+                    {
+                        if (customer.GenericAttributes.Where(x => x.Key == item.RegisterField && x.Value == item.RegisterValue).Count() == 0)
+                            cond = false;
+                    }
+                }
+                if (condition.Condition == CustomerReminderConditionEnum.OneOfThem)
+                {
+                    foreach (var item in condition.CustomerRegistration)
+                    {
+                        if (customer.GenericAttributes.Where(x => x.Key == item.RegisterField && x.Value == item.RegisterValue).Count() > 0)
+                            cond = true;
+                    }
+                }
+            }
+            return cond;
+        }
+        protected bool ConditionCustomerAttribute(CustomerReminder.ReminderCondition condition, Customer customer)
+        {
+            bool cond = false;
+            if (customer != null)
+            {
+                if (condition.Condition == CustomerReminderConditionEnum.AllOfThem)
+                {
+                    var customCustomerAttributes = customer.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
+                    if (customCustomerAttributes != null)
+                    {
+                        if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
+                        {
+                            var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            cond = true;
+                            foreach (var item in condition.CustomCustomerAttributes)
+                            {
+                                var _fields = item.RegisterField.Split(':');
+                                if (_fields.Count() > 1)
+                                {
+                                    if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() == 0)
+                                        cond = false;
+                                }
+                                else
+                                    cond = false;
+                            }
+                        }
+                    }
+                }
+                if (condition.Condition == CustomerReminderConditionEnum.OneOfThem)
+                {
+
+                    var customCustomerAttributes = customer.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
+                    if (customCustomerAttributes != null)
+                    {
+                        if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
+                        {
+                            var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(customCustomerAttributes.Value);
+                            foreach (var item in condition.CustomCustomerAttributes)
+                            {
+                                var _fields = item.RegisterField.Split(':');
+                                if (_fields.Count() > 1)
+                                {
+                                    if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() > 0)
+                                        cond = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return cond;
+        }
+        #endregion
 
         protected void UpdateHistory(Customer customer, CustomerReminder customerReminder, string reminderlevelId, CustomerReminderHistory history)
         {
@@ -131,6 +395,7 @@ namespace Nop.Services.Customers
                     customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId).Level)
                 {
                     history.Status = (int)CustomerReminderHistoryStatusEnum.CompletedReminder;
+                    history.EndDate = DateTime.UtcNow;
                 }
                 _customerReminderHistoryRepository.Update(history);
             }
@@ -141,6 +406,7 @@ namespace Nop.Services.Customers
                 history.Status = (int)CustomerReminderHistoryStatusEnum.Started;
                 history.StartDate = DateTime.UtcNow;
                 history.CustomerReminderId = customerReminder.Id;
+                history.ReminderRuleId = customerReminder.ReminderRuleId;
                 history.Levels.Add(new CustomerReminderHistory.HistoryLevel()
                 {
                     Level = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId).Level,
@@ -153,9 +419,10 @@ namespace Nop.Services.Customers
 
         }
 
-        protected void CloseHistoryReminder(Customer customer, CustomerReminder customerReminder, string reminderlevelId, CustomerReminderHistory history)
+        protected void CloseHistoryReminder(Customer customer, CustomerReminder customerReminder, CustomerReminderHistory history)
         {
             history.Status = (int)CustomerReminderHistoryStatusEnum.CompletedReminder;
+            history.EndDate = DateTime.UtcNow;
             _customerReminderHistoryRepository.Update(history);
         }
 
@@ -274,22 +541,24 @@ namespace Nop.Services.Customers
         #endregion
 
         #region Tasks
+
         public virtual void Task_AbandonedCart()
         {
-
+            var datetimeUtcNow = DateTime.UtcNow;
             var customerReminder = (from cr in _customerReminderRepository.Table
-                                   where cr.Active
-                                   select cr).ToList();
+                                   where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                    select cr).ToList();
 
             if (customerReminder.Count > 0)
             {
-                var customers = from cu in _customerRepository.Table
-                                where cu.HasShoppingCartItems && cu.LastUpdateCartDateUtc > DateTime.UtcNow.AddDays(-_customerSettings.CartNoOlderThanXDays)
-                                select cu;
-
                 foreach (var reminder in customerReminder)
                 {
-                    foreach(var customer in customers)
+                    var customers = from cu in _customerRepository.Table
+                                    where cu.HasShoppingCartItems && cu.LastUpdateCartDateUtc > reminder.LastUpdateDate
+                                    && (!String.IsNullOrEmpty(cu.Email))
+                                    select cu;
+
+                    foreach (var customer in customers)
                     {
                         var history = (from hc in _customerReminderHistoryRepository.Table
                                              where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id                                             
@@ -312,12 +581,12 @@ namespace Nop.Services.Customers
                                 }
                                 else
                                 {
-                                    CloseHistoryReminder(customer, reminder, reminderLevel.Id, activereminderhistory);
+                                    CloseHistoryReminder(customer, reminder, activereminderhistory);
                                 }
                             }
                             else
                             {
-                                if(history.Max(x=>x.EndDate).AddDays(reminder.RenewedDay)  > DateTime.UtcNow)
+                                if(DateTime.UtcNow > history.Max(x=>x.EndDate).AddDays(reminder.RenewedDay) && reminder.AllowRenew)
                                 {
                                     var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                                     if (level!=null)

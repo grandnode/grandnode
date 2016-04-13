@@ -267,6 +267,7 @@
     <Compile Include="Customers\CustomerActionEventService.cs" />
     <Compile Include="Customers\CustomerActionService.cs" />
     <Compile Include="Customers\CustomerReminderService.cs" />
+    <Compile Include="Customers\CustomerReminderAbandonedCartTask.cs" />
     <Compile Include="Customers\ICustomerActionEventService.cs" />
     <Compile Include="Customers\ICustomerActionService.cs" />
     <Compile Include="Customers\ICustomerAttributeParser.cs" />

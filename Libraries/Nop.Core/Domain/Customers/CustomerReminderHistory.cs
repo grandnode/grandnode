@@ -15,6 +15,16 @@ namespace Nop.Core.Domain.Customers
 
         public string CustomerReminderId { get; set; }
         public string CustomerId { get; set; }
+
+        public int ReminderRuleId { get; set; }
+
+        [BsonIgnoreAttribute]
+        public CustomerReminderRuleEnum ReminderRule
+        {
+            get { return (CustomerReminderRuleEnum)ReminderRuleId; }
+            set { this.ReminderRuleId = (int)value; }
+        }
+
         public int Status { get; set; }
 
         [BsonIgnoreAttribute]

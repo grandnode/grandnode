@@ -1137,5 +1137,37 @@
   <LocaleResource Name="admin.customers.customeraction.Deleted">
     <Value>The customer action has been deleted successfully.</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Messages.AbandonedCart.Product(s).Name">
+    <Value>Product(s) Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.AbandonedCart.Product(s).Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.StartDate.hint">
+    <Value>Date of start the campaign</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.EndDate.hint">
+    <Value>Date of end the campaign</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.LastUpdateDate">
+    <Value>Last update date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.LastUpdateDate.hint">
+    <Value>Last update date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.AllowRenew">
+    <Value>Allow renew</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.AllowRenew.hint">
+    <Value>Choose when reminder should run again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.AbandonedCart">
+    <Value>Send email AbandonedCart - ('{0}')</Value>
+  </LocaleResource>
 </Language>
