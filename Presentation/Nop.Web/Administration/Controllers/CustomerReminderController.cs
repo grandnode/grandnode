@@ -21,6 +21,7 @@ using Nop.Web.Framework.Mvc;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using System.Text;
+using Nop.Services.Helpers;
 
 namespace Nop.Admin.Controllers
 {
@@ -43,6 +44,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerReminderService _customerReminderService;
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IEmailAccountService _emailAccountService;
+        private readonly IDateTimeHelper _dateTimeHelper;
 
         #endregion
 
@@ -62,7 +64,8 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext,
             ICustomerReminderService customerReminderService,
             IMessageTemplateService messageTemplateService,
-            IEmailAccountService emailAccountService)
+            IEmailAccountService emailAccountService,
+            IDateTimeHelper dateTimeHelper)
         {
             this._customerService = customerService;
             this._customerAttributeService = customerAttributeService;
@@ -79,6 +82,7 @@ namespace Nop.Admin.Controllers
             this._customerReminderService = customerReminderService;
             this._messageTemplateService = messageTemplateService;
             this._emailAccountService = emailAccountService;
+            this._dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -99,10 +103,30 @@ namespace Nop.Admin.Controllers
                     Value = item.Id.ToString()
                 });
             }
-            model.AllowedTokens = FormatTokens(_customerReminderService.AllowedTokens(customerReminder.ReminderRule));
+            var messageTokenProvider = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IMessageTokenProvider>();
+            model.AllowedTokens = FormatTokens(messageTokenProvider.GetListOfCustomerReminderAllowedTokens(customerReminder.ReminderRule));
 
 
         }
+        public class SerializeCustomerReminderHistoryModel
+        {
+            public string Id { get; set; }
+            public string Email { get; set; }
+            public DateTime SendDate { get; set; }
+            public int Level { get; set; }
+            public bool OrderId { get; set; }
+        }
+        protected virtual SerializeCustomerReminderHistoryModel PrepareHistoryModelForList(SerializeCustomerReminderHistory history)
+        {
+            return new SerializeCustomerReminderHistoryModel
+            {
+                Id = history.Id,
+                Email = _customerService.GetCustomerById(history.CustomerId).Email,
+                SendDate = _dateTimeHelper.ConvertToUserTime(history.SendDate, DateTimeKind.Utc),
+                OrderId = !String.IsNullOrEmpty(history.OrderId)
+            };
+        }
+
 
         private string FormatTokens(string[] tokens)
         {
@@ -136,7 +160,7 @@ namespace Nop.Admin.Controllers
             var customeractions = _customerReminderService.GetCustomerReminders();
             var gridModel = new DataSourceResult
             {
-                Data = customeractions.Select(x => new { Id = x.Id, Name = x.Name, Active = x.Active }),
+                Data = customeractions.Select(x => new { Id = x.Id, Name = x.Name, Active = x.Active, Rule = x.ReminderRule.ToString() }),
                 Total = customeractions.Count()
             };
             return new JsonResult
@@ -227,6 +251,34 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
+        public ActionResult Run(string Id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
+                return AccessDeniedView();
+            var model = _customerReminderService.GetCustomerReminderById(Id);
+            if(model==null)
+                return RedirectToAction("List");
+
+            if (model.ReminderRule == CustomerReminderRuleEnum.AbandonedCart)
+                _customerReminderService.Task_AbandonedCart(model.Id);
+
+            if (model.ReminderRule == CustomerReminderRuleEnum.Birthday)
+                _customerReminderService.Task_Bithday(model.Id);
+
+            if (model.ReminderRule == CustomerReminderRuleEnum.LastActivity)
+                _customerReminderService.Task_LastActivity(model.Id);
+
+            if (model.ReminderRule == CustomerReminderRuleEnum.LastPurchase)
+                _customerReminderService.Task_LastPurchase(model.Id);
+
+            if (model.ReminderRule == CustomerReminderRuleEnum.RegisteredCustomer)
+                _customerReminderService.Task_RegisteredCustomer(model.Id);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerReminder.Run"));
+            return RedirectToAction("Edit", new { id = Id });
+        }
+
+        [HttpPost]
         public ActionResult Delete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
@@ -248,6 +300,26 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", new { id = customerReminder.Id });
             }
         }
+
+        [HttpPost]
+        public ActionResult History(DataSourceRequest command, string customerReminderId)
+        {
+            //we use own own binder for searchCustomerRoleIds property 
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageReminders))
+                return AccessDeniedView();
+
+            var history = _customerReminderService.GetAllCustomerReminderHistory(customerReminderId,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = history.Select(PrepareHistoryModelForList),
+                Total = history.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
         #endregion
 
         #region Condition

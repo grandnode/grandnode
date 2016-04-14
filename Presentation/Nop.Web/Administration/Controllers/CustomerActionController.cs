@@ -164,7 +164,7 @@ namespace Nop.Admin.Controllers
             var customeractions = _customerActionService.GetCustomerActions();
             var gridModel = new DataSourceResult
 			{
-                Data = customeractions.Select(x=> new { Id = x.Id, Name = x.Name, Active = x.Active }),
+                Data = customeractions.Select(x=> new { Id = x.Id, Name = x.Name, Active = x.Active, ActionType = _customerActionService.GetCustomerActionTypeById(x.ActionTypeId).Name }),
                 Total = customeractions.Count()
 			};
 			return new JsonResult

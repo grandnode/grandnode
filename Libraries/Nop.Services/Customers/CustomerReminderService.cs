@@ -80,7 +80,7 @@ namespace Nop.Services.Customers
 
             var reminderLevel = customerReminder.Levels.FirstOrDefault(x => x.Id == reminderlevelId);
             var emailAccount = _emailAccountService.GetEmailAccountById(reminderLevel.EmailAccountId);
-            var store = _storeService.GetStoreById(customer.ShoppingCartItems.FirstOrDefault().StoreId);
+            var store = customer.ShoppingCartItems.Count > 0 ? _storeService.GetStoreById(customer.ShoppingCartItems.FirstOrDefault().StoreId): _storeService.GetAllStores().FirstOrDefault() ;
 
             //retrieve message template data
             var bcc = reminderLevel.BccEmailAddresses;
@@ -91,9 +91,7 @@ namespace Nop.Services.Customers
 
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
-            if(customerReminder.ReminderRule == CustomerReminderRuleEnum.AbandonedCart)
-                _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
+            _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
 
             //Replace subject and body tokens 
             var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
@@ -141,15 +139,15 @@ namespace Nop.Services.Customers
             {
                 if(item.ConditionType == CustomerReminderConditionTypeEnum.Category)
                 {
-                    cond = ConditionCategory(item, customer.ShoppingCartItems.Select(x => x.ProductId).ToList());
+                    cond = ConditionCategory(item, customer.ShoppingCartItems.Where(x=>x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Product)
                 {
-                    cond = ConditionProducts(item, customer.ShoppingCartItems.Select(x=>x.ProductId).ToList());
+                    cond = ConditionProducts(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x=>x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.Manufacturer)
                 {
-                    cond = ConditionManufacturer(item, customer.ShoppingCartItems.Select(x => x.ProductId).ToList());
+                    cond = ConditionManufacturer(item, customer.ShoppingCartItems.Where(x => x.ShoppingCartType == Core.Domain.Orders.ShoppingCartType.ShoppingCart).Select(x => x.ProductId).ToList());
                 }
                 if (item.ConditionType == CustomerReminderConditionTypeEnum.CustomerTag)
                 {
@@ -502,54 +500,43 @@ namespace Nop.Services.Customers
         }
 
 
-        /// <summary>
-        /// Get allowed tokens for rule
-        /// </summary>
-        /// <param name="Rule">Customer Reminder Rule</param>
-        public string[] AllowedTokens(CustomerReminderRuleEnum rule)
+
+        public IPagedList<SerializeCustomerReminderHistory> GetAllCustomerReminderHistory(string customerReminderId, int pageIndex = 0, int pageSize = 2147483647)
         {
-            var allowedTokens = new List<string>();
-            allowedTokens.AddRange(
-                new List<string>{ "%Store.Name%",
-                "%Store.URL%",
-                "%Store.Email%",
-                "%Store.CompanyName%",
-                "%Store.CompanyAddress%",
-                "%Store.CompanyPhoneNumber%",
-                "%Store.CompanyVat%",
-                "%Twitter.URL%",
-                "%Facebook.URL%",
-                "%YouTube.URL%",
-                "%GooglePlus.URL%"}
-                );
+            var query = from h in _customerReminderHistoryRepository.Table
+                        from l in h.Levels                        
+                        select new SerializeCustomerReminderHistory()
+                        { CustomerId = h.CustomerId, Id = h.Id, CustomerReminderId = h.CustomerReminderId, Level = l.Level, SendDate = l.SendDate, OrderId = h.OrderId };
 
-            if(rule == CustomerReminderRuleEnum.AbandonedCart)
-            {
-                allowedTokens.Add("%Cart%");
+            query = from p in query
+                    where p.CustomerReminderId == customerReminderId
+                    select p;
 
-            }
-            allowedTokens.AddRange(
-                new List<string>{
-                "%Customer.Email%",
-                "%Customer.Username%",
-                "%Customer.FullName%",
-                "%Customer.FirstName%",
-                "%Customer.LastName%"
-                });
-            return allowedTokens.ToArray();
+            var history = new PagedList<SerializeCustomerReminderHistory>(query, pageIndex, pageSize);
+            return history;
         }
 
         #endregion
 
         #region Tasks
 
-        public virtual void Task_AbandonedCart()
+        public virtual void Task_AbandonedCart(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow;
-            var customerReminder = (from cr in _customerReminderRepository.Table
-                                   where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                   && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.AbandonedCart
+            var customerReminder = new List<CustomerReminder>();
+            if (String.IsNullOrEmpty(id))
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
+                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.AbandonedCart
                                     select cr).ToList();
+            }
+            else
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
+                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.AbandonedCart
+                                    select cr).ToList();
+            }
 
             if (customerReminder.Count > 0)
             {
@@ -629,14 +616,23 @@ namespace Nop.Services.Customers
             }
         }
 
-        public virtual void Task_RegisteredCustomer()
+        public virtual void Task_RegisteredCustomer(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow;
-            var customerReminder = (from cr in _customerReminderRepository.Table
+            var customerReminder = new List<CustomerReminder>();
+            if (String.IsNullOrEmpty(id))
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
                                     where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
                                     && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.RegisteredCustomer
                                     select cr).ToList();
-
+            }
+            else
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
+                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.RegisteredCustomer
+                                    select cr).ToList();
+            }
             if (customerReminder.Count > 0)
             {
                 foreach (var reminder in customerReminder)
@@ -644,6 +640,7 @@ namespace Nop.Services.Customers
                     var customers = from cu in _customerRepository.Table
                                     where cu.CreatedOnUtc > reminder.LastUpdateDate
                                     && (!String.IsNullOrEmpty(cu.Email))
+                                    && !cu.IsSystemAccount
                                     select cu;
 
                     foreach (var customer in customers)
@@ -680,7 +677,7 @@ namespace Nop.Services.Customers
                                     if (level != null)
                                     {
 
-                                        if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                        if (DateTime.UtcNow > customer.CreatedOnUtc.AddDays(level.Day).AddHours(level.Hour))
                                         {
                                             if (CheckConditions(reminder, customer))
                                             {
@@ -699,7 +696,7 @@ namespace Nop.Services.Customers
                             if (level != null)
                             {
 
-                                if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                if (DateTime.UtcNow > customer.CreatedOnUtc.AddDays(level.Day).AddHours(level.Hour))
                                 {
                                     if (CheckConditions(reminder, customer))
                                     {
@@ -716,20 +713,29 @@ namespace Nop.Services.Customers
 
         }
 
-        public virtual void Task_LastActivity()
+        public virtual void Task_LastActivity(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow;
-            var customerReminder = (from cr in _customerReminderRepository.Table
+            var customerReminder = new List<CustomerReminder>();
+            if (String.IsNullOrEmpty(id))
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
                                     where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
                                     && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastActivity
                                     select cr).ToList();
-
+            }
+            else
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
+                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastActivity
+                                    select cr).ToList();
+            }
             if (customerReminder.Count > 0)
             {
                 foreach (var reminder in customerReminder)
                 {
                     var customers = from cu in _customerRepository.Table
-                                    where cu.LastActivityDateUtc > reminder.LastUpdateDate
+                                    where cu.LastActivityDateUtc < reminder.LastUpdateDate
                                     && (!String.IsNullOrEmpty(cu.Email))
                                     select cu;
 
@@ -767,7 +773,7 @@ namespace Nop.Services.Customers
                                     if (level != null)
                                     {
 
-                                        if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                        if (DateTime.UtcNow > customer.LastActivityDateUtc.AddDays(level.Day).AddHours(level.Hour))
                                         {
                                             if (CheckConditions(reminder, customer))
                                             {
@@ -785,8 +791,7 @@ namespace Nop.Services.Customers
                             var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                             if (level != null)
                             {
-
-                                if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                if (DateTime.UtcNow > customer.LastActivityDateUtc.AddDays(level.Day).AddHours(level.Hour))
                                 {
                                     if (CheckConditions(reminder, customer))
                                     {
@@ -803,21 +808,31 @@ namespace Nop.Services.Customers
 
         }
 
-        public virtual void Task_LastPurchase()
+        public virtual void Task_LastPurchase(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow;
-            var customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastPurchase
+            var customerReminder = new List<CustomerReminder>();
+            if (String.IsNullOrEmpty(id))
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
+                                        where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                        && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastPurchase
+                                        select cr).ToList();
+            }
+            else
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
+                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastPurchase
                                     select cr).ToList();
-
+            }
             if (customerReminder.Count > 0)
             {
                 foreach (var reminder in customerReminder)
                 {
                     var customers = from cu in _customerRepository.Table
-                                    where cu.LastPurchaseDateUtc < reminder.LastUpdateDate
+                                    where cu.LastPurchaseDateUtc < reminder.LastUpdateDate || cu.LastPurchaseDateUtc==null
                                     && (!String.IsNullOrEmpty(cu.Email))
+                                    && !cu.IsSystemAccount 
                                     select cu;
 
                     foreach (var customer in customers)
@@ -853,8 +868,8 @@ namespace Nop.Services.Customers
                                     var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                                     if (level != null)
                                     {
-
-                                        if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                        DateTime lastpurchaseDate = customer.LastPurchaseDateUtc.HasValue ? customer.LastPurchaseDateUtc.Value.AddDays(level.Day).AddHours(level.Hour) : DateTime.MinValue;
+                                        if (DateTime.UtcNow > lastpurchaseDate)
                                         {
                                             if (CheckConditions(reminder, customer))
                                             {
@@ -872,8 +887,8 @@ namespace Nop.Services.Customers
                             var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                             if (level != null)
                             {
-
-                                if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                DateTime lastpurchaseDate = customer.LastPurchaseDateUtc.HasValue ? customer.LastPurchaseDateUtc.Value.AddDays(level.Day).AddHours(level.Hour) : DateTime.MinValue;
+                                if (DateTime.UtcNow > lastpurchaseDate)
                                 {
                                     if (CheckConditions(reminder, customer))
                                     {
@@ -890,14 +905,23 @@ namespace Nop.Services.Customers
 
         }
 
-        public virtual void Task_Bithday()
+        public virtual void Task_Bithday(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow;
-            
-            var customerReminder = (from cr in _customerReminderRepository.Table
-                                    where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
-                                    && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.Birthday
+            var customerReminder = new List<CustomerReminder>();
+            if (String.IsNullOrEmpty(id))
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
+                                        where cr.Active && datetimeUtcNow >= cr.StartDateTimeUtc && datetimeUtcNow <= cr.EndDateTimeUtc
+                                        && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.Birthday
+                                        select cr).ToList();
+            }
+            else
+            {
+                customerReminder = (from cr in _customerReminderRepository.Table
+                                    where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.Birthday
                                     select cr).ToList();
+            }
 
             if (customerReminder.Count > 0)
             {
@@ -984,5 +1008,15 @@ namespace Nop.Services.Customers
 
         }
         #endregion
+    }
+
+    public class SerializeCustomerReminderHistory
+    {
+        public string Id { get; set; }
+        public string CustomerReminderId { get; set; }
+        public string CustomerId { get; set; }
+        public DateTime SendDate { get; set; }
+        public int Level { get; set; }
+        public string OrderId { get; set; }
     }
 }

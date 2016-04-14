@@ -14,9 +14,30 @@
         <div class="options">
             <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+            <input type="button" id="run" name="run" class="k-button" value="@T("Admin.Common.Run")" />
             <span id="customerreminder-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("customerreminder-delete")
+
+
+@*run report*@
+@using (Html.BeginForm("Run", "CustomerReminder", FormMethod.Post, new { id = "run-form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#run').click(function (e) {
+            e.preventDefault();            
+            $('#run-form').submit();
+            return false;
+        });
+    });
+
+</script>

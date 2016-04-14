@@ -42,6 +42,9 @@
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
             @T("Admin.Customers.CustomerReminder.Levels")
         </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerReminder.History")
+        </li>
     </ul>
     <div>
         @TabInfo()
@@ -51,6 +54,9 @@
     </div>
     <div>
         @TabLevels()
+    </div>
+    <div>
+        @TabHistory()
     </div>
 </div>
 
@@ -143,7 +149,7 @@
         </td>
     </tr>
     <tr>
-        <td class="adminTitle">
+        <td class="adminTitle" style="vertical-align: top;">
             @Html.NopLabelFor(model => model.ReminderRuleId)
         </td>
         <td class="adminData">
@@ -156,20 +162,51 @@
                 @Html.DropDownListFor(model => model.ReminderRuleId, ((Nop.Core.Domain.Customers.CustomerReminderRuleEnum)Model.ReminderRuleId).ToSelectList())
             }
             @Html.ValidationMessageFor(model => model.ReminderRuleId)
+            <p>
+                <em>
+                    @T("admin.customers.customerreminder.text1")
+                </em>
+            </p>
+            <p>
+                <em>
+                    @T("admin.customers.customerreminder.text2")
+                </em>
+            </p>
+            <p>
+                <em>
+                    @T("admin.customers.customerreminder.text3")
+                </em>
+            </p>
+            <p>
+                <em>
+                    @T("admin.customers.customerreminder.text4")
+                </em>
+            </p>
+            <p>
+                <em>
+                    @T("admin.customers.customerreminder.text5")
+                </em>
+            </p>
         </td>
     </tr>
 
     <tr>
-        <td class="adminTitle">
+        <td class="adminTitle" style="vertical-align: top;">
             @Html.NopLabelFor(model => model.ConditionId)
         </td>
         <td class="adminData">
             @Html.DropDownListFor(model => model.ConditionId, ((Nop.Core.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList())
             @Html.ValidationMessageFor(model => model.ConditionId)
-            <em>
-                <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>
-                <p>@T("admin.customers.actiontype.helpText.AllOfThem")</p>
-            </em>
+            <p>
+                <em>
+                    @T("admin.customers.actiontype.helpText.OneOfThem")
+                </em>
+            </p>
+            <p>
+                <em>
+                    @T("admin.customers.actiontype.helpText.AllOfThem")
+                </em>
+            </p>
         </td>
     </tr>
 </table>
@@ -385,6 +422,101 @@
             </tr>
 
         }
+    </table>
+}
+
+@helper TabHistory()
+{
+    <table class="adminContent">
+        <tr>
+            <td>
+                @if (String.IsNullOrEmpty(Model.Id))
+                {
+                    @T("Admin.Customers.CustomerReminder.SaveBeforeEdit")
+                }
+            </td>
+        </tr>
+        @if (!String.IsNullOrEmpty(Model.Id))
+    {
+            <tr>
+                <td>
+                    @{
+                        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+                        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+                    }
+                    <div id="history-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#history-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("History", "CustomerReminder", new { customerReminderId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                    },
+                              schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "SendDate",
+                                    title: "@T("Admin.Customers.CustomerReminder.History.Fields.SendDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                },
+                                {
+                                    field: "Email",
+                                    title: "@T("Admin.Customers.CustomerReminder.History.Fields.Customer")",
+                                    width: 100,
+                                },
+                                {
+                                    field: "Level",
+                                    title: "@T("Admin.Customers.CustomerReminder.History.Fields.Level")",
+                                    width: 50,
+                                },
+                                {
+                                    field: "OrderId",
+                                    title: "@T("Admin.Customers.CustomerReminder.History.Fields.Order")",
+                                    width: 50,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=OrderId#.gif" />'
+                                }]
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+           
+
+            }
     </table>
 }
 

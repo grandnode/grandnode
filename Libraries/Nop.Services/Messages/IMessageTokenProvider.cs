@@ -62,5 +62,7 @@ namespace Nop.Services.Messages
         string[] GetListOfCampaignAllowedTokens();
 
         string[] GetListOfAllowedTokens();
+
+        string[] GetListOfCustomerReminderAllowedTokens(CustomerReminderRuleEnum rule);
     }
 }

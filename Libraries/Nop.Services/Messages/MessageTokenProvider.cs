@@ -525,7 +525,7 @@ namespace Nop.Services.Messages
         }
 
 
-        protected virtual string ProductListToHtmlTable(Customer customer, string languageId)
+        protected virtual string ProductListToHtmlTable(Customer customer, string languageId, bool cart, bool withPicture)
         {
             string result;
 
@@ -534,17 +534,34 @@ namespace Nop.Services.Messages
 
             #region Products
             sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", _templatesSettings.Color1));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.AbandonedCart.Product(s).Name", languageId)));
-            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.AbandonedCart.Product(s).Quantity", languageId)));
+            if (withPicture)
+                sb.AppendLine(string.Format("<th>{0}</th>", cart ? _localizationService.GetResource("Messages.ShoppingCart.Product(s).Picture", languageId) : _localizationService.GetResource("Messages.Wishlist.Product(s).Picture", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", cart ? _localizationService.GetResource("Messages.ShoppingCart.Product(s).Name", languageId) : _localizationService.GetResource("Messages.Wishlist.Product(s).Name", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", cart ? _localizationService.GetResource("Messages.ShoppingCart.Product(s).Quantity", languageId) : _localizationService.GetResource("Messages.Wishlist.Product(s).Quantity", languageId)));
             sb.AppendLine("</tr>");
             var productService = EngineContext.Current.Resolve<IProductService>();
-            foreach (var item in customer.ShoppingCartItems)
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+
+            foreach (var item in cart ? customer.ShoppingCartItems.Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart) :
+                customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist))
             {
                 var product = productService.GetProductById(item.ProductId);
                 sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
                 //product name
                 string productName = product.GetLocalized(x => x.Name, languageId);
-
+                if(withPicture)
+                {
+                    string pictureUrl = "";
+                    if (product.ProductPictures.Count > 0)
+                    {
+                        var picture = pictureService.GetPictureById(product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault().PictureId);
+                        if(picture!=null)
+                        {
+                            pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
+                        }
+                    }
+                    sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
+                }
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
                 //attributes
                 if (!String.IsNullOrEmpty(item.AttributesXml))
@@ -815,7 +832,10 @@ namespace Nop.Services.Messages
             {
                 languageId = customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId").Value;
             }
-            tokens.Add(new Token("Cart", ProductListToHtmlTable(customer, languageId), true));
+            tokens.Add(new Token("ShoppingCart.Products", ProductListToHtmlTable(customer, languageId, true, false), true));
+            tokens.Add(new Token("ShoppingCart.ProductsWithPictures", ProductListToHtmlTable(customer, languageId, true, true), true));
+            tokens.Add(new Token("Wishlist.Products", ProductListToHtmlTable(customer, languageId, true, false), true));
+            tokens.Add(new Token("Wishlist.ProductsWithPictures", ProductListToHtmlTable(customer, languageId, true, true), true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(customer, tokens);
@@ -1111,7 +1131,42 @@ namespace Nop.Services.Messages
             };
             return allowedTokens.ToArray();
         }
-        
+
+        public virtual string[] GetListOfCustomerReminderAllowedTokens(CustomerReminderRuleEnum rule)
+        {
+            var allowedTokens = new List<string>();
+            allowedTokens.AddRange(
+                new List<string>{ "%Store.Name%",
+                "%Store.URL%",
+                "%Store.Email%",
+                "%Store.CompanyName%",
+                "%Store.CompanyAddress%",
+                "%Store.CompanyPhoneNumber%",
+                "%Store.CompanyVat%",
+                "%Twitter.URL%",
+                "%Facebook.URL%",
+                "%YouTube.URL%",
+                "%GooglePlus.URL%"}
+                );
+
+            if (rule == CustomerReminderRuleEnum.AbandonedCart)
+            {
+                allowedTokens.Add("%ShoppingCart.Products%");
+                allowedTokens.Add("%ShoppingCart.ProductsWithPictures%");
+                allowedTokens.Add("%Wishlist.Products%");
+                allowedTokens.Add("%Wishlist.ProductsWithPictures%");
+            }
+            allowedTokens.AddRange(
+                new List<string>{
+                "%Customer.Email%",
+                "%Customer.Username%",
+                "%Customer.FullName%",
+                "%Customer.FirstName%",
+                "%Customer.LastName%"
+                });
+            return allowedTokens.ToArray();
+        }
+
         #endregion
     }
 }

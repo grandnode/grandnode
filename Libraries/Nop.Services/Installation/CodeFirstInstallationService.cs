@@ -5070,6 +5070,7 @@ namespace Nop.Services.Installation
                 Color1 = "#b9babe",
                 Color2 = "#ebecee",
                 Color3 = "#dde2e6",
+                PictureSize = 50,
             });
 
             settingService.SaveSetting(new ShoppingCartSettings

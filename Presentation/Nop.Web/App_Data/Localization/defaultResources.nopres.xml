@@ -3606,6 +3606,9 @@
   <LocaleResource Name="Admin.Common.Preview">
     <Value>Preview</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Run">
+    <Value>Run</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.Save">
     <Value>Save</Value>
   </LocaleResource>
@@ -8059,10 +8062,10 @@
     <Value>Date of end the campaign</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.LastUpdateDate">
-    <Value>Last update date</Value>
+    <Value>Activity date for rule</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.LastUpdateDate.hint">
-    <Value>Last update date</Value>
+    <Value>Activity date for rule</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.AllowRenew">
     <Value>Allow renew</Value>
@@ -8072,6 +8075,21 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.RenewedDay">
     <Value>Renewed Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history">
+    <Value>History mailings</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history.fields.senddate">
+    <Value>Sent on</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history.fields.customer">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history.fields.level">
+    <Value>Level</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history.fields.order">
+    <Value>Ordered</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.AllowedTokens">
     <Value>Allowed Tokens</Value>
@@ -8289,6 +8307,9 @@
   <LocaleResource Name="admin.customers.customerreminder.levels.addnew">
     <Value>Add new</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.run">
+    <Value>Completed the process of customer reminder</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.customers.customerreminder.savebeforeedit">
     <Value>You must save it before edit</Value>
   </LocaleResource>
@@ -8302,11 +8323,28 @@
     <Value>Level added</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customerreminderlevel.exists">
-    <Value>This Level exist</Value>
+    <Value>This level exist</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customerreminderlevel.updated">
     <Value>Reminder level updated</Value>
   </LocaleResource>
+
+  <LocaleResource Name="admin.customers.customerreminder.text1">
+    <Value>Abandoned cart – You can set custom reminger to customers who left their carts without confirming order. Activity date is counting "from this date".</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text2">
+    <Value>Registered customer – You can set custom reminder to customers who just register in your store. Activity date is counting from this date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text3">
+    <Value>Last purchase – You can set custom reminder to customers who made last purchase to specified date. Activity date is counting "to this date"</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text4">
+    <Value>Last activity – You can set custom reminder to customers who made last activity to specified date. Activity date is counting "to this date".</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text5">
+    <Value>Birthday – You can set custom reminder related to customers birthday (field Activity date is not used).</Value>
+  </LocaleResource>
+
   <LocaleResource Name="activitylog.addnewcustomerreminder">
     <Value>Add new customer reminder</Value>
   </LocaleResource>
@@ -13717,11 +13755,14 @@
   <LocaleResource Name="Messages.Order.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>
-  <LocaleResource Name="Messages.AbandonedCart.Product(s).Name">
+  <LocaleResource Name="Messages.ShoppingCart.Product(s).Name">
     <Value>Product(s) Name</Value>
   </LocaleResource>
-  <LocaleResource Name="Messages.AbandonedCart.Product(s).Quantity">
+  <LocaleResource Name="Messages.ShoppingCart.Product(s).Quantity">
     <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.ShoppingCart.Product(s).picture">
+    <Value>Picture</Value>
   </LocaleResource>
   <LocaleResource Name="Messages.Order.OrderTotal">
     <Value>Order Total:</Value>

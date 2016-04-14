@@ -1,4 +1,5 @@
 ﻿
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using System.Collections.Generic;
 
@@ -41,20 +42,19 @@ namespace Nop.Services.Customers
         void UpdateCustomerReminder(CustomerReminder customerReminder);
 
         /// <summary>
-        /// Get allowed tokens for rule
+        /// Gets customer reminders history for reminder
         /// </summary>
-        /// <param name="Rule">Customer Reminder Rule</param>
-        string[] AllowedTokens(CustomerReminderRuleEnum rule);
-
+        /// <returns>SerializeCustomerReminderHistory</returns>
+        IPagedList<SerializeCustomerReminderHistory> GetAllCustomerReminderHistory(string customerReminderId, int pageIndex = 0, int pageSize = 2147483647);
 
         /// <summary>
         /// Run task Abandoned Cart
         /// </summary>
-        void Task_AbandonedCart();
-        void Task_RegisteredCustomer();
-        void Task_LastActivity();
-        void Task_LastPurchase();
-        void Task_Bithday();
+        void Task_AbandonedCart(string id = "");
+        void Task_RegisteredCustomer(string id = "");
+        void Task_LastActivity(string id = "");
+        void Task_LastPurchase(string id = "");
+        void Task_Bithday(string id = "");
 
     }
 }

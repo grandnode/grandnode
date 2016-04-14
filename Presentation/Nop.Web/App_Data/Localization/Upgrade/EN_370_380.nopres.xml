@@ -927,6 +927,9 @@
   <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Subject.Hint">
     <Value>Enter the subject</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.run">
+    <Value>Completed the process of customer reminder</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles">
     <Value>Customer roles</Value>
   </LocaleResource>
@@ -1156,10 +1159,10 @@
     <Value>Date of end the campaign</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.LastUpdateDate">
-    <Value>Last update date</Value>
+    <Value>Activity date for rule</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.LastUpdateDate.hint">
-    <Value>Last update date</Value>
+    <Value>Activity date for rule</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Fields.AllowRenew">
     <Value>Allow renew</Value>
@@ -1182,4 +1185,47 @@
   <LocaleResource Name="ActivityLog.Birthday">
     <Value>Send email Birthday - ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Run">
+    <Value>Run</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history">
+    <Value>History mailings</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history.fields.senddate">
+    <Value>Sent on</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history.fields.customer">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history.fields.level">
+    <Value>Level</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.history.fields.order">
+    <Value>Ordered</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text1">
+    <Value>Abandoned cart – You can set custom reminger to customers who left their carts without confirming order. Activity date is counting "from this date".</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text2">
+    <Value>Registered customer – You can set custom reminder to customers who just register in your store. Activity date is counting from this date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text3">
+    <Value>Last purchase – You can set custom reminder to customers who made last purchase to specified date. Activity date is counting "to this date"</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text4">
+    <Value>Last activity – You can set custom reminder to customers who made last activity to specified date. Activity date is counting "to this date".</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text5">
+    <Value>Birthday – You can set custom reminder related to customers birthday (field Activity date is not used).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.ShoppingCart.Product(s).Name">
+    <Value>Product(s) Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.ShoppingCart.Product(s).Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.ShoppingCart.Product(s).picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+
 </Language>

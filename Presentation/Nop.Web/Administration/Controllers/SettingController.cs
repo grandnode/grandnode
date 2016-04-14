@@ -3000,6 +3000,8 @@ namespace Nop.Admin.Controllers
 
             if (model.StoreId != null)
                 model.StoreId = model.StoreId.Trim();
+            else
+                model.StoreId = "";
 
             if (!ModelState.IsValid)
             {
@@ -3039,6 +3041,8 @@ namespace Nop.Admin.Controllers
 
             if (model.StoreId != null)
                 model.Value = model.StoreId.Trim();
+            else
+                model.StoreId = "";
 
             if (!ModelState.IsValid)
             {

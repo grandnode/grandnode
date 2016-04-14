@@ -60,11 +60,18 @@
                             field: "Name",
                             title: "@T("Admin.Customers.CustomerAction.Fields.Name")",
                             width: 300
+                        }, {
+                            field: "ActionType",
+                            title: "@T("admin.customers.actiontype.fields.name")",
+                            width: 100
                         },
                         {
                             field: "Active",
                             title: "@T("Admin.Customers.CustomerAction.Fields.Active")",
-                            width: 50
+                            width: 50,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
                         }, {
                             field: "Id",
                             title: "@T("Admin.Common.Edit")",

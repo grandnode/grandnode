@@ -24,6 +24,8 @@ namespace Nop.Core.Domain.Messages
         /// </summary>
         public string Color3 { get; set; }
 
+        public int PictureSize { get; set; }
+
     }
 
 }

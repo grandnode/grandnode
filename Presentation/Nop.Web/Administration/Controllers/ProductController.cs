@@ -515,22 +515,7 @@ namespace Nop.Admin.Controllers
                     });
                 }
 
-                //specification attributes
-                /*
-                var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
-                for (int i = 0; i < specificationAttributes.Count; i++)
-                {
-                    var sa = specificationAttributes[i];
-                    model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() });
-                    if (i == 0)
-                    {
-                        //attribute options
-                        foreach (var sao in specificationAttributes[i].SpecificationAttributeOptions) //_specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(sa.Id))
-                            model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem { Text = sao.Name, Value = sao.Id.ToString() });
-                    }
-                }
-                */
-
+                
                 //specification attributes
                 model.AddSpecificationAttributeModel.AvailableAttributes = _cacheManager
                     .Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, () =>
@@ -547,35 +532,6 @@ namespace Nop.Admin.Controllers
                         return availableSpecificationAttributes;
                     });
 
-                //options of preselected specification attribute
-                if (model.AddSpecificationAttributeModel.AvailableAttributes.Any())
-                {
-                    /*
-                    var selectedAttributeId = int.Parse(model.AddSpecificationAttributeModel.AvailableAttributes.First().Value);
-                    foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(selectedAttributeId))
-                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem
-                        {
-                            Text = sao.Name,
-                            Value = sao.Id.ToString()
-                        });
-                    */
-                    //specification attributes
-                    /*
-                    var selectedAttributeId = int.Parse(model.AddSpecificationAttributeModel.AvailableAttributes.First().Value);
-                    //var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
-                    for (int i = 0; i < specificationAttributes.Count; i++)
-                    {
-                        var sa = specificationAttributes[i];
-                        model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() });
-                        if (i == 0)
-                        {
-                            //attribute options
-                            foreach (var sao in specificationAttributes[i].SpecificationAttributeOptions) //_specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(sa.Id))
-                                model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem { Text = sao.Name, Value = sao.Id.ToString() });
-                        }
-                    }
-                    */
-                }
                 //default specs values
                 model.AddSpecificationAttributeModel.ShowOnProductPage = true;
 
