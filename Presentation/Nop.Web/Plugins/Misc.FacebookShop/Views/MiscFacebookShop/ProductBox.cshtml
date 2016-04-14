@@ -30,7 +30,7 @@
                     var fbProductUrl = productUrl;
                     //note that it won't be rendered on localhost
                     //uncomment the line below in order to render facebook like box even on localhost (minor hack)
-                    fbProductUrl = fbProductUrl.Replace("://localhost", "://demo.nopcommerce.com");
+                    fbProductUrl = fbProductUrl.Replace("://localhost", "://demo.grandnode.com");
                 }
                 <iframe src="//www.facebook.com/plugins/like.php?href=@Html.Raw(HttpUtility.UrlEncode(fbProductUrl))&amp;width=100&amp;height=21&amp;colorscheme=light&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;send=false&amp;appId=159953744080931" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe>
             </div>

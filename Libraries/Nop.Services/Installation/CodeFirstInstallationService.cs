@@ -10111,7 +10111,31 @@ namespace Nop.Services.Installation
                                               {
                                                   SystemKeyword = "CustomerReminder.AbandonedCart",
                                                   Enabled = true,
-                                                  Name = "Send email AbandonedCart"
+                                                  Name = "Send email Customer reminder - AbandonedCart"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CustomerReminder.RegisteredCustomer",
+                                                  Enabled = true,
+                                                  Name = "Send email Customer reminder - RegisteredCustomer"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CustomerReminder.LastActivity",
+                                                  Enabled = true,
+                                                  Name = "Send email Customer reminder - LastActivity"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CustomerReminder.LastPurchase",
+                                                  Enabled = true,
+                                                  Name = "Send email Customer reminder - LastPurchase"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CustomerReminder.Birthday",
+                                                  Enabled = true,
+                                                  Name = "Send email Customer reminder - Birthday"
                                               },
                                       };
             _activityLogTypeRepository.Insert(activityLogTypes);
@@ -10239,6 +10263,42 @@ namespace Nop.Services.Installation
                     //60 minutes
                     Seconds = 3600,
                     Type = "Nop.Services.Customers.CustomerReminderAbandonedCartTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask
+                {
+                    Name = "Customer reminder - RegisteredCustomer",
+                    //24 hours
+                    Seconds = 86400,
+                    Type = "Nop.Services.Customers.CustomerReminderRegisteredCustomerTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask
+                {
+                    Name = "Customer reminder - LastActivity",
+                    //24 hours
+                    Seconds = 86400,
+                    Type = "Nop.Services.Customers.CustomerReminderLastActivityTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask
+                {
+                    Name = "Customer reminder - LastPurchase",
+                    //24 hours
+                    Seconds = 86400,
+                    Type = "Nop.Services.Customers.CustomerReminderLastPurchaseTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask
+                {
+                    Name = "Customer reminder - Bithday",
+                    //24 hours
+                    Seconds = 86400,
+                    Type = "Nop.Services.Customers.CustomerReminderBithdayTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
                 },

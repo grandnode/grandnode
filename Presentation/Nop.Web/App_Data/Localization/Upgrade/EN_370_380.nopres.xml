@@ -1170,4 +1170,16 @@
   <LocaleResource Name="ActivityLog.AbandonedCart">
     <Value>Send email AbandonedCart - ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.RegisteredCustomer">
+    <Value>Send email RegisteredCustomer - ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.LastActivity">
+    <Value>Send email LastActivity - ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.LastPurchase">
+    <Value>Send email LastPurchase - ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Birthday">
+    <Value>Send email Birthday - ('{0}')</Value>
+  </LocaleResource>
 </Language>

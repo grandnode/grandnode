@@ -266,6 +266,10 @@
     <Compile Include="Configuration\SettingExtensions.cs" />
     <Compile Include="Customers\CustomerActionEventService.cs" />
     <Compile Include="Customers\CustomerActionService.cs" />
+    <Compile Include="Customers\CustomerReminderBithdayTask.cs" />
+    <Compile Include="Customers\CustomerReminderLastPurchaseTask.cs" />
+    <Compile Include="Customers\CustomerReminderLastActivityTask.cs" />
+    <Compile Include="Customers\CustomerReminderRegisteredCustomerTask.cs" />
     <Compile Include="Customers\CustomerReminderService.cs" />
     <Compile Include="Customers\CustomerReminderAbandonedCartTask.cs" />
     <Compile Include="Customers\ICustomerActionEventService.cs" />

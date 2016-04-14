@@ -51,5 +51,10 @@ namespace Nop.Services.Customers
         /// Run task Abandoned Cart
         /// </summary>
         void Task_AbandonedCart();
+        void Task_RegisteredCustomer();
+        void Task_LastActivity();
+        void Task_LastPurchase();
+        void Task_Bithday();
+
     }
 }
