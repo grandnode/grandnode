@@ -241,12 +241,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
-    <Reference Include="WebMarkupMin.Core, Version=1.0.1.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebMarkupMin.Core.1.0.1\lib\net40\WebMarkupMin.Core.dll</HintPath>
+    <Reference Include="WebMarkupMin.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.Core.1.1.0\lib\net40\WebMarkupMin.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebMarkupMin.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebMarkupMin.Web.1.0.0\lib\net40\WebMarkupMin.Web.dll</HintPath>
+    <Reference Include="WebMarkupMin.Web, Version=1.1.1.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.Web.1.1.1\lib\net40\WebMarkupMin.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

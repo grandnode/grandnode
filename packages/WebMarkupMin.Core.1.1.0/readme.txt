@@ -1,11 +1,11 @@
 
 
    ----------------------------------------------------------------------
-              README file for Web Markup Minifier: Core 1.0.1
+              README file for Web Markup Minifier: Core 1.1.0
 
    ----------------------------------------------------------------------
 
-      Copyright (c) 2013-2015 Andrey Taritsyn - http://www.taritsyn.ru
+      Copyright (c) 2013-2016 Andrey Taritsyn - http://www.taritsyn.ru
 
 
    ===========
@@ -46,7 +46,10 @@
    =============
    RELEASE NOTES
    =============
-   Now during minification removes the byte order mark (BOM).
+   1. In configuration settings of HTML minifier was added one new
+      property - `PreserveCase` (default `false`);
+   2. Fixed a errors that occurred when processing of Angular 2, Aurelia
+      and Polymer templates.
 
    =============
    DOCUMENTATION

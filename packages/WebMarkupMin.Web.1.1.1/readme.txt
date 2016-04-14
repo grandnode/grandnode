@@ -1,11 +1,11 @@
 
 
    ----------------------------------------------------------------------
-         README file for Web Markup Minifier: Web Extensions 1.0.0
+         README file for Web Markup Minifier: Web Extensions 1.1.1
 
    ----------------------------------------------------------------------
 
-      Copyright (c) 2013-2015 Andrey Taritsyn - http://www.taritsyn.ru
+      Copyright (c) 2013-2016 Andrey Taritsyn - http://www.taritsyn.ru
 
 
    ===========
@@ -23,8 +23,8 @@
    =============
    RELEASE NOTES
    =============
-   Now during HTTP compression the deflate algorithm has a higher
-   priority than the gzip algorithm.
+   Fixed a error #21 “A Potentially dangerous Request.Form value with
+   [ValidateInput(false)] and [CompressContent]”.
 
    =============
    DOCUMENTATION
