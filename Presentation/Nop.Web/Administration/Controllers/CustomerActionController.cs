@@ -20,6 +20,7 @@ using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Mvc;
 using Nop.Services.Messages;
+using Nop.Services.Helpers;
 
 namespace Nop.Admin.Controllers
 {
@@ -44,6 +45,7 @@ namespace Nop.Admin.Controllers
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IBannerService _bannerService;
         private readonly IMessageTemplateService _messageTemplateService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         #endregion
 
         #region Constructors
@@ -64,7 +66,8 @@ namespace Nop.Admin.Controllers
             IProductAttributeService productAttributeService,
             ISpecificationAttributeService specificationAttributeService,
             IBannerService bannerService,
-            IMessageTemplateService messageTemplateService)
+            IMessageTemplateService messageTemplateService,
+            IDateTimeHelper dateTimeHelper)
 		{
             this._customerService = customerService;
             this._customerAttributeService = customerAttributeService;
@@ -83,6 +86,7 @@ namespace Nop.Admin.Controllers
             this._specificationAttributeService = specificationAttributeService;
             this._bannerService = bannerService;
             this._messageTemplateService = messageTemplateService;
+            this._dateTimeHelper = dateTimeHelper;
         }
 
         #endregion
@@ -134,7 +138,44 @@ namespace Nop.Admin.Controllers
                 });
             }
 
+            foreach (var item in _customerActionService.GetCustomerActionType())
+            {
+                model.ActionType.Add(new SelectListItem()
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString()
+                });
+            }
 
+
+        }
+
+        public class SerializeCustomerActionHistory
+        {
+            public string Email { get; set; }
+            public DateTime CreateDateUtc { get; set; }
+
+        }
+        protected virtual SerializeCustomerActionHistory PrepareHistoryModelForList(CustomerActionHistory history)
+        {
+            var customer = _customerService.GetCustomerById(history.CustomerId);
+            return new SerializeCustomerActionHistory
+            {
+                Email = customer!=null ? String.IsNullOrEmpty(customer.Email) ? "(unknown)" : customer.Email: "(unknown)",
+                CreateDateUtc = _dateTimeHelper.ConvertToUserTime(history.CreateDateUtc, DateTimeKind.Utc),
+            };
+        }
+
+        protected void CheckValidateModel(CustomerActionModel model)
+        {
+            if ((model.ReactionType == CustomerReactionTypeEnum.Banner) && String.IsNullOrEmpty(model.BannerId))
+                ModelState.AddModelError("error", "Banner is required");
+            if ((model.ReactionType == CustomerReactionTypeEnum.Email) && String.IsNullOrEmpty(model.MessageTemplateId))
+                ModelState.AddModelError("error", "Email is required");
+            if ((model.ReactionType == CustomerReactionTypeEnum.AssignToCustomerRole) && String.IsNullOrEmpty(model.CustomerRoleId))
+                ModelState.AddModelError("error", "Customer role is required");
+            if ((model.ReactionType == CustomerReactionTypeEnum.AssignToCustomerTag) && String.IsNullOrEmpty(model.CustomerTagId))
+                ModelState.AddModelError("error", "Tag is required");
         }
 
         #endregion
@@ -184,15 +225,6 @@ namespace Nop.Admin.Controllers
             model.EndDateTimeUtc = DateTime.UtcNow.AddMonths(1);
             model.ReactionTypeId = (int)CustomerReactionTypeEnum.Banner;
             PrepareReactObjectModel(model);
-            foreach (var item in _customerActionService.GetCustomerActionType())
-            {
-                model.ActionType.Add(new SelectListItem()
-                {
-                    Text = item.Name,
-                    Value = item.Id.ToString()
-                });
-            }
-
             return View(model);
         }
 
@@ -201,7 +233,7 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
-            
+            CheckValidateModel(model);
             if (ModelState.IsValid)
             {
                 var customeraction = model.ToEntity();
@@ -211,14 +243,7 @@ namespace Nop.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAction.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customeraction.Id }) : RedirectToAction("List");
             }
-            foreach (var item in _customerActionService.GetCustomerActionType())
-            {
-                model.ActionType.Add(new SelectListItem()
-                {
-                    Text = item.Name,
-                    Value = item.Id.ToString()
-                });
-            }
+            PrepareReactObjectModel(model);
             return View(model);
         }
 
@@ -234,14 +259,7 @@ namespace Nop.Admin.Controllers
             var model = customerAction.ToModel();
             model.ConditionCount = customerAction.Conditions.Count();
             PrepareReactObjectModel(model);
-            foreach (var item in _customerActionService.GetCustomerActionType())
-            {
-                model.ActionType.Add(new SelectListItem()
-                {
-                    Text = item.Name,
-                    Value = item.Id.ToString()
-                });
-            }
+           
             
             return View(model);
 		}
@@ -251,7 +269,9 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
-            
+
+            CheckValidateModel(model);
+
             var customeraction = _customerActionService.GetCustomerActionById(model.Id);
             if (customeraction == null)
                 return RedirectToAction("List");
@@ -274,6 +294,7 @@ namespace Nop.Admin.Controllers
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAction.Updated"));
                     return continueEditing ? RedirectToAction("Edit", new { id = customeraction.Id}) : RedirectToAction("List");
                 }
+                PrepareReactObjectModel(model);
                 return View(model);
             }
             catch (Exception exc)
@@ -282,6 +303,26 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", new { id = customeraction.Id });
             }
         }
+
+        [HttpPost]
+        public ActionResult History(DataSourceRequest command, string customerActionId)
+        {
+            //we use own own binder for searchCustomerRoleIds property 
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
+                return AccessDeniedView();
+
+            var history = _customerActionService.GetAllCustomerActionHistory(customerActionId,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = history.Select(PrepareHistoryModelForList),
+                Total = history.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
 
         [HttpPost]
         public ActionResult Delete(string id)

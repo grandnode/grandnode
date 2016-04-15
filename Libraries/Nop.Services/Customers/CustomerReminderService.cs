@@ -380,6 +380,8 @@ namespace Nop.Services.Customers
         }
         #endregion
 
+        #region History
+
         protected void UpdateHistory(Customer customer, CustomerReminder customerReminder, string reminderlevelId, CustomerReminderHistory history)
         {
             if(history!=null)
@@ -424,6 +426,8 @@ namespace Nop.Services.Customers
             history.EndDate = DateTime.UtcNow;
             _customerReminderHistoryRepository.Update(history);
         }
+
+        #endregion
 
         #endregion
 

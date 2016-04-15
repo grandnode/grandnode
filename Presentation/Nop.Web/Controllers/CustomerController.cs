@@ -1077,7 +1077,7 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.RegistrationFreeShipping)
                         _customerService.UpdateFreeShipping(customer.Id, true);
 
-                    _customerActionEventService.Registration(customer.Id);
+                    _customerActionEventService.Registration(customer);
 
                     //raise event       
                     _eventPublisher.Publish(new CustomerRegisteredEvent(customer));

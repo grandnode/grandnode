@@ -189,6 +189,66 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+        public ActionResult Create()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
+            var model = new MessageTemplateModel();
+            
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
+
+            //available email accounts
+            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                model.AvailableEmailAccounts.Add(ea.ToModel());
+
+            return View(model);
+        }
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public ActionResult Create(MessageTemplateModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                var messageTemplate = model.ToEntity();
+                //attached file
+                if (!model.HasAttachedDownload)
+                    messageTemplate.AttachedDownloadId = "";
+                if (model.SendImmediately)
+                    messageTemplate.DelayBeforeSend = null;
+                messageTemplate.Locales = UpdateLocales(messageTemplate, model);
+                messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                _messageTemplateService.InsertMessageTemplate(messageTemplate);
+
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.AddNew"));
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", new { id = messageTemplate.Id });
+                }
+                return RedirectToAction("List");
+            }
+
+
+            //If we got this far, something failed, redisplay form
+            model.HasAttachedDownload = !String.IsNullOrEmpty(model.AttachedDownloadId);
+            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
+            //available email accounts
+            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                model.AvailableEmailAccounts.Add(ea.ToModel());
+            //Store
+            PrepareStoresMappingModel(model, null, true);
+            return View(model);
+
+        }
+
+
         public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))

@@ -391,7 +391,7 @@ namespace Nop.Services.Messages
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, 
-            string languageId, string customerId);
+            string languageId, Customer customer);
 
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace Nop.Services.Messages
         /// <param name="Order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, string languageId);
+        int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, Customer customer, string languageId);
 
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, string customerId);
+        int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer);
 
         #endregion
     }

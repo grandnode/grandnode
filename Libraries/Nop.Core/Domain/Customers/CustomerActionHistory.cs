@@ -12,6 +12,7 @@ namespace Nop.Core.Domain.Customers
     {
         public string CustomerActionId { get; set; }
         public string CustomerId { get; set; }
+        public DateTime CreateDateUtc { get; set; }
 
     }
 }

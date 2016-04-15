@@ -4263,7 +4263,7 @@ namespace Nop.Services.Installation
                     Name = "Viewed",
                     SystemKeyword = "Viewed",
                     Enabled = false,
-                    ConditionType = {1, 2, 3, 6, 7, 8, 9, 10}
+                    ConditionType = {1, 2, 3, 7, 8, 9, 10}
                 },
                 new CustomerActionType()
                 {

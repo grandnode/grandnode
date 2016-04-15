@@ -101,14 +101,16 @@ namespace Nop.Services.Customers
 
         protected void SaveActionToCustomer(string actionId, string customerId)
         {
-            _customerActionHistoryRepository.Insert(new CustomerActionHistory() { CustomerId = customerId, CustomerActionId = actionId });
+            _customerActionHistoryRepository.Insert(new CustomerActionHistory() { CustomerId = customerId, CustomerActionId = actionId, CreateDateUtc = DateTime.UtcNow });
         }
         #endregion
 
         #region Condition
-        protected bool Condition(CustomerAction action, Product product, string attributesXml, string customerId, string currentUrl, string previousUrl)
+        protected bool Condition(CustomerAction action, Product product, string attributesXml, Customer customer, string currentUrl, string previousUrl)
         {
             var _cat = _customerActionTypeRepository.Table.AsQueryable().ToList();
+            if (action.Conditions.Count() == 0)
+                return true;
 
             bool cond = false;
             foreach (var item in action.Conditions)
@@ -167,7 +169,7 @@ namespace Nop.Services.Customers
                             if(_actLogType.Enabled)
                             {
                                 var productCategory = (from p in _activityLogRepository.Table
-                                          where p.CustomerId == customerId && p.ActivityLogTypeId == _actLogType.Id
+                                          where p.CustomerId == customer.Id && p.ActivityLogTypeId == _actLogType.Id
                                           select p.EntityKeyId).Distinct().ToList();
                                 cond = ConditionCategory(item, productCategory);
                             }
@@ -185,7 +187,7 @@ namespace Nop.Services.Customers
                             if (_actLogType.Enabled)
                             {
                                 var productManufacturer = (from p in _activityLogRepository.Table
-                                                           where p.CustomerId == customerId && p.ActivityLogTypeId == _actLogType.Id
+                                                           where p.CustomerId == customer.Id && p.ActivityLogTypeId == _actLogType.Id
                                                            select p.EntityKeyId).Distinct().ToList();
                                 cond = ConditionManufacturer(item, productManufacturer);
                             }
@@ -203,7 +205,7 @@ namespace Nop.Services.Customers
                             if (_actLogType.Enabled)
                             {
                                 var products = (from p in _activityLogRepository.Table
-                                                    where p.CustomerId == customerId && p.ActivityLogTypeId == _actLogType.Id
+                                                    where p.CustomerId == customer.Id && p.ActivityLogTypeId == _actLogType.Id
                                                     select p.EntityKeyId).Distinct().ToList();
                                 cond = ConditionProducts(item, products);
                             }
@@ -214,22 +216,22 @@ namespace Nop.Services.Customers
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomerRole)
                 {
-                    cond = ConditionCustomerRole(item, customerId);
+                    cond = ConditionCustomerRole(item, customer);
                 }
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomerTag)
                 {
-                    cond = ConditionCustomerTag(item, customerId);
+                    cond = ConditionCustomerTag(item, customer);
                 }
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomerRegisterField)
                 {
-                    cond = ConditionCustomerRegister(item, customerId);
+                    cond = ConditionCustomerRegister(item, customer);
                 }
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.CustomCustomerAttribute)
                 {
-                    cond = ConditionCustomerAttribute(item, customerId);
+                    cond = ConditionCustomerAttribute(item, customer);
                 }
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.UrlCurrent)
@@ -423,10 +425,9 @@ namespace Nop.Services.Customers
             return condition.Vendors.Contains(vendorId);
         }
 
-        protected bool ConditionCustomerRole(CustomerAction.ActionCondition condition, string customerId)
+        protected bool ConditionCustomerRole(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
-            var customer = _customerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 var customerRoles = customer.CustomerRoles;
@@ -442,10 +443,9 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionCustomerTag(CustomerAction.ActionCondition condition, string customerId)
+        protected bool ConditionCustomerTag(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
-            var customer = _customerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 var customerTags = customer.CustomerTags;
@@ -461,10 +461,9 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionCustomerRegister(CustomerAction.ActionCondition condition, string customerId)
+        protected bool ConditionCustomerRegister(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
-            var customer = _customerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
@@ -488,10 +487,9 @@ namespace Nop.Services.Customers
             return cond;
         }
 
-        protected bool ConditionCustomerAttribute(CustomerAction.ActionCondition condition, string customerId)
+        protected bool ConditionCustomerAttribute(CustomerAction.ActionCondition condition, Customer customer)
         {
             bool cond = false;
-            var customer = _customerService.GetCustomerById(customerId);
             if (customer != null)
             {
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
@@ -545,50 +543,51 @@ namespace Nop.Services.Customers
         #endregion
 
         #region Reaction
-        protected void Reaction(CustomerAction action, string customerId, ShoppingCartItem cartItem, Order order)
+        protected void Reaction(CustomerAction action, Customer customer, ShoppingCartItem cartItem, Order order)
         {
             if (action.ReactionType == CustomerReactionTypeEnum.Banner)
             {
                 var banner = _bannerRepository.GetById(action.BannerId);
-                PrepareBanner(action, banner, customerId);
+                if(banner!=null)
+                    PrepareBanner(action, banner, customer.Id);
             }
 
             var _cat = _customerActionTypeRepository.Table.AsQueryable().ToList();
 
             if (action.ReactionType == CustomerReactionTypeEnum.Email)
             {
-                if (action.ActionTypeId == _cat.FirstOrDefault(x=>x.SystemKeyword== "AddToCart").Id) //(int)CustomerActionTypeEnum.AddToCart)
+                if (action.ActionTypeId == _cat.FirstOrDefault(x=>x.SystemKeyword== "AddToCart").Id) 
                 {
                     if(cartItem!=null)
                         _workflowMessageService.SendCustomerActionEvent_AddToCart_Notification(action, cartItem,
-                            _workContext.WorkingLanguage.Id, customerId);
+                            _workContext.WorkingLanguage.Id, customer);
                 }
 
-                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id) //(int)CustomerActionTypeEnum.AddOrder)
+                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id) 
                 {
                     if(order!=null)
-                        _workflowMessageService.SendCustomerActionEvent_AddToOrder_Notification(action, order,
+                        _workflowMessageService.SendCustomerActionEvent_AddToOrder_Notification(action, order, customer,
                             _workContext.WorkingLanguage.Id);
                 }
 
-                if (action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id && action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id) //(int)CustomerActionTypeEnum.AddOrder && action.ActionTypeId != (int)CustomerActionTypeEnum.AddToCart)
+                if (action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id && action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id) 
                 {
                     _workflowMessageService.SendCustomerActionEvent_Notification(action, 
-                        _workContext.WorkingLanguage.Id, customerId);
+                        _workContext.WorkingLanguage.Id, customer);
                 }
             }
 
             if (action.ReactionType == CustomerReactionTypeEnum.AssignToCustomerRole)
             {
-                AssignToCustomerRole(action, customerId);
+                AssignToCustomerRole(action, customer);
             }
 
             if (action.ReactionType == CustomerReactionTypeEnum.AssignToCustomerTag)
             {
-                AssignToCustomerTag(action, customerId);
+                AssignToCustomerTag(action, customer);
             }
 
-            SaveActionToCustomer(action.Id, customerId);
+            SaveActionToCustomer(action.Id, customer.Id);
 
         }
         protected void PrepareBanner(CustomerAction action, Banner banner, string customerId)
@@ -604,9 +603,8 @@ namespace Nop.Services.Customers
             _bannerActiveRepository.Insert(banneractive);
         }
 
-        protected void AssignToCustomerRole(CustomerAction action, string customerId)
+        protected void AssignToCustomerRole(CustomerAction action, Customer customer)
         {
-            var customer = _customerService.GetCustomerById(customerId);
             if(customer.CustomerRoles.Where(x=>x.Id == action.CustomerRoleId).Count() == 0)
             {
                 var customerRole = _customerService.GetCustomerRoleById(action.CustomerRoleId);
@@ -618,12 +616,11 @@ namespace Nop.Services.Customers
             }
         }
 
-        protected void AssignToCustomerTag(CustomerAction action, string customerId)
+        protected void AssignToCustomerTag(CustomerAction action, Customer customer)
         {
-            var customer = _customerService.GetCustomerById(customerId);
             if (customer.CustomerTags.Where(x => x == action.CustomerTagId).Count() == 0)
             {
-                _customerTagService.InsertTagToCustomer(action.CustomerTagId, customerId);
+                _customerTagService.InsertTagToCustomer(action.CustomerTagId, customer.Id);
             }
         }
 
@@ -633,7 +630,7 @@ namespace Nop.Services.Customers
 
         #region Methods
 
-        public virtual void AddToCart(ShoppingCartItem cart, Product product)
+        public virtual void AddToCart(ShoppingCartItem cart, Product product, Customer customer)
         {
             var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddToCart.ToString()).FirstOrDefault();
             if (actionType.Enabled)
@@ -648,16 +645,16 @@ namespace Nop.Services.Customers
                 {
                     if (!UsedAction(item.Id, cart.CustomerId))
                     {
-                        if (Condition(item, product, cart.AttributesXml, cart.CustomerId, null, null))
+                        if (Condition(item, product, cart.AttributesXml, customer, null, null))
                         {
-                            Reaction(item, cart.CustomerId, cart, null);
+                            Reaction(item, customer, cart, null);
                         }
                     }
                 }
             }
         }
 
-        public virtual void AddOrder(Order order)
+        public virtual void AddOrder(Order order, Customer customer)
         {
             var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
             if (actionType.Enabled)
@@ -674,9 +671,9 @@ namespace Nop.Services.Customers
                     {
                         foreach(var orderItem in order.OrderItems)
                         {
-                            if (Condition(item, orderItem.Product, orderItem.AttributesXml, order.CustomerId, null, null))
+                            if (Condition(item, orderItem.Product, orderItem.AttributesXml, customer, null, null))
                             {
-                                Reaction(item, order.CustomerId, null, order);
+                                Reaction(item, customer, null, order);
                                 break;
                             }
                         }
@@ -686,56 +683,62 @@ namespace Nop.Services.Customers
             }
         }
 
-        public virtual void Url(string customerId, string currentUrl, string previousUrl)
+        public virtual void Url(Customer customer, string currentUrl, string previousUrl)
         {
-            var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
-            if (actionType.Enabled)
+            if (!customer.IsSystemAccount)
             {
-                var datetimeUtcNow = DateTime.UtcNow;
-                var query = from a in _customerActionRepository.Table
-                            where a.Active == true && a.ActionTypeId == actionType.Id
-                                    && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
-                            select a;
-
-                foreach (var item in query.ToList())
+                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
+                if (actionType.Enabled)
                 {
-                    if (!UsedAction(item.Id, customerId))
+                    var datetimeUtcNow = DateTime.UtcNow;
+                    var query = from a in _customerActionRepository.Table
+                                where a.Active == true && a.ActionTypeId == actionType.Id
+                                        && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                                select a;
+
+                    foreach (var item in query.ToList())
                     {
-                        if (Condition(item, null, null, customerId, currentUrl, previousUrl))
+                        if (!UsedAction(item.Id, customer.Id))
                         {
-                            Reaction(item, customerId, null, null);
+                            if (Condition(item, null, null, customer, currentUrl, previousUrl))
+                            {
+                                Reaction(item, customer, null, null);
+                            }
                         }
                     }
-                }
 
+                }
             }
         }
 
-        public virtual void Viewed(string customerId, string currentUrl, string previousUrl)
+        public virtual void Viewed(Customer customer, string currentUrl, string previousUrl)
         {
-            var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
-            if (actionType.Enabled)
+            if (!customer.IsSystemAccount)
             {
-                var datetimeUtcNow = DateTime.UtcNow;
-                var query = from a in _customerActionRepository.Table
-                            where a.Active == true && a.ActionTypeId == actionType.Id
-                                    && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
-                            select a;
-
-                foreach (var item in query.ToList())
+                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
+                if (actionType.Enabled)
                 {
-                    if (!UsedAction(item.Id, customerId))
+                    var datetimeUtcNow = DateTime.UtcNow;
+                    var query = from a in _customerActionRepository.Table
+                                where a.Active == true && a.ActionTypeId == actionType.Id
+                                        && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                                select a;
+
+                    foreach (var item in query.ToList())
                     {
-                        if (Condition(item, null, null, customerId, currentUrl, previousUrl))
+                        if (!UsedAction(item.Id, customer.Id))
                         {
-                            Reaction(item, customerId, null, null);
+                            if (Condition(item, null, null, customer, currentUrl, previousUrl))
+                            {
+                                Reaction(item, customer, null, null);
+                            }
                         }
                     }
-                }
 
+                }
             }
         }
-        public virtual void Registration(string customerId)
+        public virtual void Registration(Customer customer)
         {
             var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
             if (actionType.Enabled)
@@ -748,11 +751,11 @@ namespace Nop.Services.Customers
 
                 foreach (var item in query.ToList())
                 {
-                    if (!UsedAction(item.Id, customerId))
+                    if (!UsedAction(item.Id, customer.Id))
                     {
-                        if (Condition(item, null, null, customerId, null, null))
+                        if (Condition(item, null, null, customer, null, null))
                         {
-                            Reaction(item, customerId, null, null);
+                            Reaction(item, customer, null, null);
                         }
                     }
                 }

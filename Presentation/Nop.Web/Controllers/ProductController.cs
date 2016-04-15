@@ -1006,7 +1006,7 @@ namespace Nop.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
-            _customerActionEventService.Viewed(_workContext.CurrentCustomer.Id, Request.Url.ToString(), Request.UrlReferrer!=null ? Request.UrlReferrer.ToString() : "");
+            _customerActionEventService.Viewed(_workContext.CurrentCustomer, Request.Url.ToString(), Request.UrlReferrer!=null ? Request.UrlReferrer.ToString() : "");
             return View(model.ProductTemplateViewPath, model);
         }
 

@@ -75,6 +75,9 @@ namespace Nop.Services.Messages
             string attachmentFilePath = null, string attachmentFileName = null,
             string replyToEmailAddress = null, string replyToName = null)
         {
+            if (String.IsNullOrEmpty(toEmailAddress))
+                return 0;
+
             //retrieve localized message template data
             var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
             var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
@@ -108,7 +111,6 @@ namespace Nop.Services.Messages
             };
 
             _queuedEmailService.InsertQueuedEmail(email);
-            //return email.Id;
             return 1;
         }
 
@@ -1669,7 +1671,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, string languageId, string customerId)
+        public virtual int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, string languageId, Customer customer)
         {
             if (cartItem == null)
                 throw new ArgumentNullException("cartItem");
@@ -1692,8 +1694,6 @@ namespace Nop.Services.Messages
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(customerId);
-
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
 
@@ -1713,7 +1713,7 @@ namespace Nop.Services.Messages
         /// <param name="Order">Order</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, string languageId)
+        public virtual int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, Customer customer, string languageId)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -1727,7 +1727,6 @@ namespace Nop.Services.Messages
 
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(order.CustomerId);
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
@@ -1752,7 +1751,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, string customerId)
+        public virtual int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer)
         {
             var store = _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
@@ -1764,7 +1763,6 @@ namespace Nop.Services.Messages
             //email account
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
 
-            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(customerId);
             //tokens
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);

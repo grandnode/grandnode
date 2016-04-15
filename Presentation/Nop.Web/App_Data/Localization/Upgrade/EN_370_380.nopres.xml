@@ -480,6 +480,15 @@
   <LocaleResource Name="admin.customers.customeraction.fields.startDateTimeUtc.hint">
     <Value>Start DateTime (Utc)</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.history">
+    <Value>History</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.history.fields.createdateutc">
+    <Value>Create date</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.history.fields.customer">
+    <Value>Customer</Value>
+  </LocaleResource>
   <LocaleResource Name="admin.customers.customeraction.info">
     <Value>Action Info</Value>
   </LocaleResource>
@@ -1227,5 +1236,10 @@
   <LocaleResource Name="Messages.ShoppingCart.Product(s).picture">
     <Value>Picture</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.AddNew">
+    <Value>Add new message template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.AddNew">
+    <Value>The message template has been added successfully.</Value>
+  </LocaleResource>
 </Language>

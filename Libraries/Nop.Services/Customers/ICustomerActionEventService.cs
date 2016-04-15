@@ -11,27 +11,27 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Run action add to cart 
         /// </summary>
-        void AddToCart(ShoppingCartItem cart, Product product);
+        void AddToCart(ShoppingCartItem cart, Product product, Customer customer);
 
         /// <summary>
         /// Run action add new order
         /// </summary>
-        void AddOrder(Order order);
+        void AddOrder(Order order, Customer customer);
 
         /// <summary>
         /// Viewed
         /// </summary>
-        void Viewed(string customerId, string currentUrl, string previousUrl);
+        void Viewed(Customer customer, string currentUrl, string previousUrl);
 
         /// <summary>
         /// Run action url
         /// </summary>
-        void Url(string customerId, string currentUrl, string previousUrl);
+        void Url(Customer customer, string currentUrl, string previousUrl);
 
 
         /// <summary>
         /// Run action url
         /// </summary>
-        void Registration(string customerId);
+        void Registration(Customer customer);
     }
 }

@@ -7332,6 +7332,9 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates">
     <Value>Message templates</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.AddNew">
+    <Value>Add new message template</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.BackToList">
     <Value>back to return message template list</Value>
   </LocaleResource>
@@ -7466,6 +7469,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.TestDetails">
     <Value>Send test email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.AddNew">
+    <Value>The message template has been added successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Updated">
     <Value>The message template has been updated successfully.</Value>
@@ -8465,6 +8471,15 @@
  <LocaleResource Name="admin.customers.customeraction.fields.startDateTimeUtc.hint">
   <Value>Start DateTime (Utc)</Value>
  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.history">
+    <Value>History</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.history.fields.createdateutc">
+    <Value>Create date</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customeraction.history.fields.customer">
+    <Value>Customer</Value>
+  </LocaleResource>  
  <LocaleResource Name="admin.customers.customeraction.info">
   <Value>Action Info</Value>
  </LocaleResource>

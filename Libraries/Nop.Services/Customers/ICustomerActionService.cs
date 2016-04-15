@@ -1,4 +1,5 @@
 ﻿
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using System.Collections.Generic;
 
@@ -43,6 +44,8 @@ namespace Nop.Services.Customers
         //CustomerActionConditionType GetCustomerActionConditionTypeById(string id);
         IList<CustomerActionType> GetCustomerActionType();
         CustomerActionType GetCustomerActionTypeById(string id);
+
+        IPagedList<CustomerActionHistory> GetAllCustomerActionHistory(string customerActionId, int pageIndex = 0, int pageSize = 2147483647);
 
         void UpdateCustomerActionType(CustomerActionType customerActionType);
 

@@ -1153,7 +1153,7 @@ namespace Nop.Services.Orders
                     _customerService.InsertShoppingCartItem(shoppingCartItem);
                     _customerService.UpdateHasShoppingCartItems(customer);
 
-                    _customerActionEventService.AddToCart(shoppingCartItem, product);
+                    _customerActionEventService.AddToCart(shoppingCartItem, product, customer);
                     //event notification
                     _eventPublisher.EntityInserted(shoppingCartItem);
                 }

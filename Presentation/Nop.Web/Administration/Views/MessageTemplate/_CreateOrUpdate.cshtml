@@ -63,8 +63,15 @@
                 @Html.NopLabelFor(model => model.Name):
             </td>
             <td class="adminData">
-                @Model.Name
-                @Html.HiddenFor(model => model.Name)
+                @if (!String.IsNullOrEmpty(Model.Id))
+                {
+                    @Model.Name
+                    @Html.HiddenFor(model => model.Name)
+                }
+                else
+                {
+                    @Html.EditorFor(model => model.Name)
+                }
             </td>
         </tr>
         <tr>

@@ -2,8 +2,11 @@
 using Nop.Core.Domain.Customers;
 using Nop.Services.Events;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using Nop.Core;
 
 namespace Nop.Services.Customers
 {
@@ -13,6 +16,7 @@ namespace Nop.Services.Customers
 
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
+        private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -21,10 +25,12 @@ namespace Nop.Services.Customers
 
         public CustomerActionService(IRepository<CustomerAction> customerActionRepository,
             IRepository<CustomerActionType> customerActionTypeRepository,
+            IRepository<CustomerActionHistory> customerActionHistoryRepository,
             IEventPublisher eventPublisher)
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
+            this._customerActionHistoryRepository = customerActionHistoryRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -110,6 +116,16 @@ namespace Nop.Services.Customers
             var query = _customerActionTypeRepository.Table;
             return query.ToList();
         }
+
+        public virtual IPagedList<CustomerActionHistory> GetAllCustomerActionHistory(string customerActionId, int pageIndex = 0, int pageSize = 2147483647)
+        {
+            var query = from h in _customerActionHistoryRepository.Table
+                        where h.CustomerActionId == customerActionId
+                        select h;
+            var history = new PagedList<CustomerActionHistory>(query, pageIndex, pageSize);
+            return history;
+        }
+
         public virtual CustomerActionType GetCustomerActionTypeById(string id)
         {
             return _customerActionTypeRepository.GetById(id);

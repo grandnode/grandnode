@@ -1608,7 +1608,7 @@ namespace Nop.Services.Orders
 
                     //raise event       
                     _eventPublisher.Publish(new OrderPlacedEvent(order));
-                    _customerActionEventService.AddOrder(order);
+                    _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);
                     if (order.PaymentStatus == PaymentStatus.Paid)
                     {
                         ProcessOrderPaid(order);

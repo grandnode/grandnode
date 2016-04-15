@@ -1094,7 +1094,7 @@ namespace Nop.Web.Controllers
         [HttpGet]
         public ActionResult CustomerActionEventUrl(string curl, string purl)
         {
-            _customerActionEventService.Url(_workContext.CurrentCustomer.Id, curl, purl);
+            _customerActionEventService.Url(_workContext.CurrentCustomer, curl, purl);
             return Json
                 (
                     new { empty = "" },

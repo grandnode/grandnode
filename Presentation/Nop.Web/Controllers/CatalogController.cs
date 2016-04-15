@@ -602,7 +602,7 @@ namespace Nop.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewCategory", category.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
-            _customerActionEventService.Viewed(_workContext.CurrentCustomer.Id, Request.Url.ToString(), Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "");
+            _customerActionEventService.Viewed(_workContext.CurrentCustomer, Request.Url.ToString(), Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "");
 
             return View(templateViewPath, model);
         }
@@ -853,7 +853,7 @@ namespace Nop.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
-            _customerActionEventService.Viewed(_workContext.CurrentCustomer.Id, Request.Url.ToString(), Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "");
+            _customerActionEventService.Viewed(_workContext.CurrentCustomer, Request.Url.ToString(), Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "");
 
             return View(templateViewPath, model);
         }

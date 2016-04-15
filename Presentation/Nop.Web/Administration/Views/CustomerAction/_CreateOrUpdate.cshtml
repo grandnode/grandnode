@@ -82,6 +82,9 @@
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
             @T("Admin.Customers.CustomerAction.Reaction")
         </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerAction.History")
+        </li>
     </ul>
     <div>
         @TabInfo()
@@ -91,6 +94,9 @@
     </div>
     <div>
         @TabReaction()
+    </div>
+    <div>
+        @TabHistory()
     </div>
 </div>
 
@@ -348,6 +354,90 @@
                 @Html.ValidationMessageFor(model => model.CustomerTagId)
             </td>
         </tr>
+    </table>
+}
+
+
+
+@helper TabHistory()
+{
+    <table class="adminContent">
+        <tr>
+            <td>
+                @if (String.IsNullOrEmpty(Model.Id))
+                {
+                    @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
+                }
+            </td>
+        </tr>
+        @if (!String.IsNullOrEmpty(Model.Id))
+    {
+            <tr>
+                <td>
+                    @{
+                        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+                        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+                    }
+                    <div id="history-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#history-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("History", "CustomerAction", new { customerActionId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                    },
+                              schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "CreateDateUtc",
+                                    title: "@T("Admin.Customers.CustomerAction.History.Fields.CreateDateUtc")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                },
+                                {
+                                    field: "Email",
+                                    title: "@T("Admin.Customers.CustomerAction.History.Fields.Customer")",
+                                    width: 100,
+                                }]
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+
+
+                        }
     </table>
 }
 
