@@ -12,46 +12,50 @@ var CustomerAction = {
         this.RemoveUrl = removeUrl;
     },
 
+    checkActiveBanner: function () {
+        $.ajax({
+            type: "GET",
+            cache: false,
+            url: this.UrlBanner
+        }).then(function (success) {
+            CustomerAction.nextStep(success)
+        }).fail(function (failureResponse) {
+            CustomerAction.ajaxFailure(failureResponse)
+        });
+    },
+
     checkActiveUrl: function (_curl, _purl) {
         $.ajax({
             type: "GET",
+            cache: false,
             url: this.UrlActive,
-            data: {"curl": _curl, "purl": _purl }
-        }).complete(() =>
-            this.checkActiveBanner())
-        .fail((failureResponse) =>
-            ajaxFailure(failureResponse)
-        );
+            data: {"curl": _curl, "purl": _purl },
+        }).complete(function () {
+            CustomerAction.checkActiveBanner();
+        }).fail(function (failureResponse) {
+            CustomerAction.ajaxFailure(failureResponse)
+        });
     },
 
-    checkActiveBanner: function () {
-        $.ajax({
-                type: "GET",
-                url: this.UrlBanner
-        }).then((success) =>
-            this.nextStep(success)
-        ).fail((failureResponse) =>
-            ajaxFailure(failureResponse)
-        );
-    },
     nextStep: function (response) {
         if(response.Id)
         {
             $('#action-body').html(response.Body);
             window.setTimeout(function () {
-                $('.popup-action-form').magnificPopup('open');
+                $('.popup-action-form').magnificPopup('open');                
             }, 100);
-            this.removeAction(response.Id);
+            CustomerAction.removeAction(response.Id);
         }
     },
     removeAction: function (id) {
         $.ajax({
             type: "post",
+            cache: false,
             url: this.RemoveUrl,
             data: { "Id": id }
-        }).fail((failureResponse) =>
-            this.ajaxFailure(failureResponse)
-        )
+        }).fail(function (failureResponse) {
+            CustomerAction.ajaxFailure(failureResponse)
+        })
     },
     ajaxFailure: function (failureResponse) {
         alert('Error: ' + failureResponse.responseText);

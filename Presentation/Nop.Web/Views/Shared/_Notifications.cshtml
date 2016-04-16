@@ -58,8 +58,10 @@
 </div>
 
 <script>
-    CustomerAction.init('@Url.Action("CustomerActionEventUrl", "Common")', '@Url.Action("GetActiveBanner", "Common")', '@Url.Action("RemoveBanner", "Common")');
-    CustomerAction.checkActiveUrl('@Request.Url.ToString()', '@Request.UrlReferrer');
+    //$(document).ready(function () {
+        CustomerAction.init('@Url.Action("CustomerActionEventUrl", "Common")', '@Url.Action("GetActiveBanner", "Common")', '@Url.Action("RemoveBanner", "Common")');
+        CustomerAction.checkActiveUrl('@Request.Url.ToString()', '@Request.UrlReferrer');
+    //});
 </script>
 
 @Html.Widget("notifications")
