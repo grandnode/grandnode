@@ -39,6 +39,8 @@ using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
 using Nop.Core.Infrastructure;
 using MongoDB.Bson;
+using Nop.Services.Common;
+using Nop.Core.Domain.Messages;
 
 namespace Nop.Web.Controllers
 {
@@ -251,6 +253,8 @@ namespace Nop.Web.Controllers
             
             //email a friend
             model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
+            //ask question product
+            model.AskQuestionEnabled = _catalogSettings.AskQuestionEnabled;
             //compare products
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
             //store name
@@ -1499,6 +1503,79 @@ namespace Nop.Web.Controllers
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage;
+            return View(model);
+        }
+
+        #endregion
+
+        #region Ask question
+
+        [NopHttpsRequirement(SslRequirement.No)]
+        public ActionResult AskQuestion(string productId)
+        {
+            var product = _productService.GetProductById(productId);
+            if (product == null ||  !product.Published || !_catalogSettings.AskQuestionEnabled)
+                return HttpNotFound();
+
+            var customer = _workContext.CurrentCustomer;
+
+            var model = new ProductAskQuestionModel();
+            model.Id = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+            model.Email = customer.Email;
+            model.FullName = customer.GetFullName();
+            model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+            model.Message = "";
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("AskQuestion")]
+        [FormValueRequired("send-email")]
+        [PublicAntiForgery]
+        [CaptchaValidator]
+        public ActionResult AskQuestion(ProductAskQuestionModel model, bool captchaValid)
+        {
+            var product = _productService.GetProductById(model.ProductId);
+            if (product == null || !product.Published || !_catalogSettings.AskQuestionEnabled)
+                return HttpNotFound();
+
+            // validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
+            if (ModelState.IsValid)
+            {
+                // email
+                var result = _workflowMessageService.SendProductQuestionMessage(
+                    _workContext.CurrentCustomer,
+                    _workContext.WorkingLanguage.Id,
+                    product,
+                    model.Email,
+                    model.FullName,
+                    model.Phone,
+                    Core.Html.HtmlHelper.FormatText(model.Message, false, true, false, false, false, false));
+
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.AskQuestion", _workContext.CurrentCustomer.Id, _localizationService.GetResource("ActivityLog.PublicStore.AskQuestion"));
+
+                model.SuccessfullySent = true;
+                model.ProductSeName= product.GetSeName();
+                model.ProductName = product.GetLocalized(x => x.Name);
+                model.Result = _localizationService.GetResource("Products.AskQuestion.SuccessfullySent");
+                return View(model);
+            }
+
+            // If we got this far, something failed, redisplay form
+            var customer = _workContext.CurrentCustomer;
+            model.Id = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnAskQuestionPage;
             return View(model);
         }
 

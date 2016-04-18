@@ -1242,4 +1242,65 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.AddNew">
     <Value>The message template has been added successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AskQuestion">
+    <Value>Ask a question about product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion">
+    <Value>Ask question</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.ProductAskQuestion">
+    <Value>Ask question</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion">
+    <Value>Ask question</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Title">
+    <Value>Ask question</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Email">
+    <Value>Email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Email.Hint">
+    <Value>Enter your email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.FullName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.FullName.Hint">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Phone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Phone.Hint">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Message">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Message.Hint">
+    <Value>Enter message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Button">
+    <Value>Send message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionEnabled">
+    <Value>'Ask question' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AskQuestionEnabled.Hint">
+    <Value>Check to allow customers to use the 'Ask question' option on the product page in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnAskQuestionPage">
+    <Value>Show on 'ask question' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnAskQuestionPage.Hint">
+    <Value>Check to show CAPTCHA on 'ask question' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Email.required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="products.askquestion.successfullysent">
+    <Value>Your message has been sent.</Value>
+  </LocaleResource>
+
 </Language>

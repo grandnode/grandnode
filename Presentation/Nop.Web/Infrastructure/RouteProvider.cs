@@ -188,6 +188,12 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Product", action = "ProductEmailAFriend" },
                             new { productId = @"\w+" },
                             new[] { "Nop.Web.Controllers" });
+            //product ask question
+            routes.MapLocalizedRoute("AskQuestion",
+                            "askquestion/{productId}",
+                            new { controller = "Product", action = "AskQuestion" },
+                            new { productId = @"\w+" },
+                            new[] { "Nop.Web.Controllers" });
             //reviews
             routes.MapLocalizedRoute("ProductReviews",
                             "productreviews/{productId}",

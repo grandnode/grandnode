@@ -20,6 +20,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Forums;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Messages
 {
@@ -36,6 +37,7 @@ namespace Nop.Services.Messages
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -51,6 +53,7 @@ namespace Nop.Services.Messages
             IStoreService storeService,
             IStoreContext storeContext,
             EmailAccountSettings emailAccountSettings,
+            CommonSettings commonSettings,
             IEventPublisher eventPublisher)
         {
             this._messageTemplateService = messageTemplateService;
@@ -62,6 +65,7 @@ namespace Nop.Services.Messages
             this._storeService = storeService;
             this._storeContext = storeContext;
             this._emailAccountSettings = emailAccountSettings;
+            this._commonSettings = commonSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -971,7 +975,7 @@ namespace Nop.Services.Messages
 
         #endregion
         
-        #region Send a message to a friend
+        #region Send a message to a friend, ask question
 
         /// <summary>
         /// Sends "email a friend" message
@@ -1056,6 +1060,81 @@ namespace Nop.Services.Messages
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var toEmail = friendsEmail;
+            var toName = "";
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+
+        /// <summary>
+        /// Sends "email a friend" message
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Product instance</param>
+        /// <param name="customerEmail">Customer's email</param>
+        /// <param name="friendsEmail">Friend's email</param>
+        /// <param name="personalMessage">Personal message</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendProductQuestionMessage(Customer customer, string languageId,
+            Product product, string customerEmail, string fullName, string phone, string message)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("Service.AskQuestion", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            _messageTokenProvider.AddProductTokens(tokens, product, languageId);
+            tokens.Add(new Token("AskQuestion.Message", message, true));
+            tokens.Add(new Token("AskQuestion.Email", customerEmail));
+            tokens.Add(new Token("AskQuestion.FullName", fullName));
+            tokens.Add(new Token("AskQuestion.Phone", phone));
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            //store in database
+            if (_commonSettings.StoreInDatabaseContactUsForm)
+            {
+                var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
+                var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
+                //Replace subject and body tokens 
+                var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
+                var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+
+                var contactus = new ContactUs()
+                {
+                    CreatedOnUtc = DateTime.UtcNow,
+                    CustomerId = customer.Id,
+                    StoreId = _storeContext.CurrentStore.Id,
+                    VendorId = "",
+                    Email = customerEmail,
+                    FullName = fullName,
+                    Subject = subjectReplaced,
+                    Enquiry = bodyReplaced,
+                    EmailAccountId = emailAccount.Id,
+                    IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress()
+                };
+                EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
+            }
+
+            var toEmail = emailAccount.Email;
             var toName = "";
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,

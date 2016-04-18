@@ -200,7 +200,7 @@ namespace Nop.Services.Messages
 
         #endregion
 
-        #region Send a message to a friend
+        #region Send a message to a friend, ask question
 
         /// <summary>
         /// Sends "email a friend" message
@@ -227,8 +227,21 @@ namespace Nop.Services.Messages
         int SendWishlistEmailAFriendMessage(Customer customer, string languageId,
              string customerEmail, string friendsEmail, string personalMessage);
 
+
+        /// <summary>
+        /// Sends "email a friend" message
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="product">Product instance</param>
+        /// <param name="customerEmail">Customer's email</param>
+        /// <param name="friendsEmail">Friend's email</param>
+        /// <param name="personalMessage">Personal message</param>
+        /// <returns>Queued email identifier</returns>
+        int SendProductQuestionMessage(Customer customer, string languageId,
+            Product product, string customerEmail, string fullName, string phone, string message);
         #endregion
-        
+
         #region Return requests
 
         /// <summary>

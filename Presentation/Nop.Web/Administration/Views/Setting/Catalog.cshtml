@@ -302,6 +302,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AskQuestionEnabled_OverrideForStore, model => model.AskQuestionEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AskQuestionEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AskQuestionEnabled)
+                @Html.ValidationMessageFor(model => model.AskQuestionEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.EmailAFriendEnabled_OverrideForStore, model => model.EmailAFriendEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.EmailAFriendEnabled):
             </td>

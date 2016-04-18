@@ -375,6 +375,7 @@
             $('#ssCaptchaShowOnContactUsPagepnl').show();
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+            $('#ssCaptchaShowOnAskQuestionPagepnl').show();
             $('#ssCaptchaShowOnBlogCommentPagepnl').show();
             $('#ssCaptchaShowOnNewsCommentPagepnl').show();
             $('#ssCaptchaShowOnProductReviewPagepnl').show();
@@ -389,6 +390,7 @@
             $('#ssCaptchaShowOnContactUsPagepnl').hide();
             $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
             $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+            $('#ssCaptchaShowOnAskQuestionPagepnl').hide();
             $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
             $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
             $('#ssCaptchaShowOnProductReviewPagepnl').hide();
@@ -520,6 +522,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnAskQuestionPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage)
             </td>
         </tr>
         <tr id="ssCaptchaShowOnBlogCommentPagepnl">

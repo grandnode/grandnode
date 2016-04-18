@@ -75,6 +75,7 @@ namespace Nop.Web.Models.Catalog
         public bool DisplayBackInStockSubscription { get; set; }
 
         public bool EmailAFriendEnabled { get; set; }
+        public bool AskQuestionEnabled { get; set; }
         public bool CompareProductsEnabled { get; set; }
 
         public string PageShareCode { get; set; }

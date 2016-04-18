@@ -87,6 +87,10 @@ namespace Nop.Admin.Models.Settings
         public bool EmailAFriendEnabled { get; set; }
         public bool EmailAFriendEnabled_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AskQuestionEnabled")]
+        public bool AskQuestionEnabled { get; set; }
+        public bool AskQuestionEnabled_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowAnonymousUsersToEmailAFriend")]
         public bool AllowAnonymousUsersToEmailAFriend { get; set; }
         public bool AllowAnonymousUsersToEmailAFriend_OverrideForStore { get; set; }

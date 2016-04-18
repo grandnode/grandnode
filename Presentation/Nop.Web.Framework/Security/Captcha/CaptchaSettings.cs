@@ -32,6 +32,10 @@ namespace Nop.Web.Framework.Security.Captcha
         /// </summary>
         public bool ShowOnEmailProductToFriendPage { get; set; }
         /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the "ask question" page
+        /// </summary>
+        public bool ShowOnAskQuestionPage { get; set; }
+        /// <summary>
         /// A value indicating whether CAPTCHA should be displayed on the "comment blog" page
         /// </summary>
         public bool ShowOnBlogCommentPage { get; set; }

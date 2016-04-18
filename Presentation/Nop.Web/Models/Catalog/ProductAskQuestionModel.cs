@@ -1,0 +1,44 @@
+﻿using FluentValidation.Attributes;
+using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
+using Nop.Web.Validators.Catalog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace Nop.Web.Models.Catalog
+{
+    [Validator(typeof(ProductAskQuestionValidator))]
+    public partial class ProductAskQuestionModel: BaseNopEntityModel
+    {
+        public string ProductId { get; set; }
+
+        public string ProductName { get; set; }
+
+        public string ProductSeName { get; set; }
+
+        [AllowHtml]
+        [NopResourceDisplayName("Products.AskQuestion.Email")]
+        public string Email { get; set; }
+
+        [AllowHtml]
+        [NopResourceDisplayName("Products.AskQuestion.FullName")]
+        public string FullName { get; set; }
+
+        [AllowHtml]
+        [NopResourceDisplayName("Products.AskQuestion.Phone")]
+        public string Phone { get; set; }
+
+        [AllowHtml]
+        [NopResourceDisplayName("Products.AskQuestion.Message")]
+        public string Message { get; set; }
+
+        public bool SuccessfullySent { get; set; }
+        public string Result { get; set; }
+
+        public bool DisplayCaptcha { get; set; }
+
+    }
+}

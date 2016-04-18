@@ -4527,6 +4527,14 @@ namespace Nop.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "Service.AskQuestion",
+                                           Subject = "%Store.Name%. Question about a product",
+                                           Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%AskQuestion.Email% wanted to ask question about a product %Product.Name%. <br /><br /><b><a target=\"_blank\" href=\"%Product.ProductURLForCustomer%\">%Product.Name%</a></b> <br />%Product.ShortDescription% <br />%AskQuestion.Message%<br /> %AskQuestion.Email% <br /> %AskQuestion.FullName% <br /> %AskQuestion.Phone% <br />%Store.Name%</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
                                            Name = "Wishlist.EmailAFriend",
                                            Subject = "%Store.Name%. Wishlist",
                                            Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%Wishlist.Email% was shopping on %Store.Name% and wanted to share a wishlist with you. <br /><br /><br />For more info click <a target=\"_blank\" href=\"%Wishlist.URLForCustomer%\">here</a> <br /><br /><br />%Wishlist.PersonalMessage%<br /><br />%Store.Name%</p>",
@@ -4873,6 +4881,7 @@ namespace Nop.Services.Installation
                 AllowAnonymousUsersToReviewProduct = false,
                 NotifyStoreOwnerAboutNewProductReviews = false,
                 EmailAFriendEnabled = true,
+                AskQuestionEnabled = false,
                 AllowAnonymousUsersToEmailAFriend = false,
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,
@@ -10006,6 +10015,13 @@ namespace Nop.Services.Installation
                                                   Enabled = false,
                                                   Name = "Public store. View a product"
                                               },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AskQuestion",
+                                                  Enabled = false,
+                                                  Name = "Public store. Ask a question about product"
+                                              },
+
                                           new ActivityLogType
                                               {
                                                   SystemKeyword = "PublicStore.PlaceOrder",

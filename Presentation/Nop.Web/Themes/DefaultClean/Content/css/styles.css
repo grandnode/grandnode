@@ -1587,7 +1587,8 @@ label, label + * {
 	background-color: #248ece;
 }
 .item-box .add-to-compare-list-button,
-.item-box .add-to-wishlist-button {
+.item-box .add-to-wishlist-button,
+.item-box .ask-a-question-button{
 	width: 20%;
 	border-left: 1px solid #fff !important;
 	background-color: #eaeaea;
@@ -1601,8 +1602,14 @@ label, label + * {
 .item-box .add-to-wishlist-button {
 	background-image: url('../images/wishlist-button.png');
 }
+.item-box .ask-a-question-button {
+	background-image: url('../images/askquestion-button.png');
+}
+
 .item-box .add-to-compare-list-button:hover,
-.item-box .add-to-wishlist-button:hover {
+.item-box .add-to-wishlist-button:hover 
+.item-box .ask-a-question-button:hover 
+{
 	background-color: #ddd;
 }
 
@@ -1903,6 +1910,10 @@ label, label + * {
 .overview .add-to-wishlist-button,
 .variant-overview .add-to-wishlist-button {
     background-image: url('../images/wishlist-button.png');
+}
+.overview .ask-a-question-button,
+.variant-overview .ask-a-question-button {
+    background-image: url('../images/askquestion-button.png');
 }
 
 .overview .manufacturers {
@@ -2800,20 +2811,25 @@ label, label + * {
 
 .contact-page .page-title,
 .email-a-friend-page .page-title,
-.apply-vendor-page .page-title {
+.apply-vendor-page .page-title,
+.ask-a-question-page .page-title{
 	margin: 0 0 -1px;
 }
 .contact-page .result,
 .contact-page .message-error,
 .email-a-friend-page .result,
 .email-a-friend-page .message-error,
+.ask-a-question-page .result,
+.ask-a-question-page .message-error,
 .apply-vendor-page .result,
 .apply-vendor-page .message-error {
 	margin: 20px 0;
 }
 .contact-page .button-1,
 .email-a-friend-page .button-1,
-.apply-vendor-page .button-1 {
+.ask-a-question-page .button-1,
+.apply-vendor-page .button-1,
+.ask-a-question-page .button-1 {
 	min-width: 140px;
 	border: none;
 	background-color: #4ab2f1;
@@ -2825,15 +2841,18 @@ label, label + * {
 }
 .contact-page .button-1:hover,
 .email-a-friend-page .button-1:hover,
-.apply-vendor-page .button-1:hover {
+.apply-vendor-page .button-1:hover,
+.ask-a-question-page .button-1:hover {
 	background-color: #248ece;
 }
 .contact-page .topic-block,
 .email-a-friend-page .title,
+.ask-a-question-page .title,
 .apply-vendor-page .title {
 	margin: 25px 0;
 }
-.email-a-friend-page .title h2 {
+.email-a-friend-page .title h2,
+.ask-a-question-page .title h2 {
 	font-weight: normal;
 	color: #4ab2f1;
 }

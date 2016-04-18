@@ -207,6 +207,10 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailProductToFriendPage")]
             public bool CaptchaShowOnEmailProductToFriendPage { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnAskQuestionPage")]
+            public bool CaptchaShowOnAskQuestionPage { get; set; }
+
+
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage")]
             public bool CaptchaShowOnBlogCommentPage { get; set; }
 

@@ -1,0 +1,8 @@
+﻿@model ProductDetailsModel
+@using Nop.Web.Models.Catalog;
+@if (Model.AskQuestionEnabled)
+{
+    <div class="ask-a-question">
+        <input type="button" value="@T("Products.AskQuestion")" class="button-2 ask-a-question-button" onclick="setLocation('@Url.RouteUrl("AskQuestion", new { productId = Model.Id })')" />
+    </div>
+}

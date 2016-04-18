@@ -121,6 +121,11 @@ namespace Nop.Core.Domain.Catalog
         public bool EmailAFriendEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'ask product question' feature is enabled
+        /// </summary>
+        public bool AskQuestionEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users to email a friend.
         /// </summary>
         public bool AllowAnonymousUsersToEmailAFriend { get; set; }
