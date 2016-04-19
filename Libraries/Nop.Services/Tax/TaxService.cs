@@ -132,13 +132,16 @@ namespace Nop.Services.Tax
         /// <param name="customer">Customer</param>
         /// <returns>Package for tax calculation</returns>
         protected virtual CalculateTaxRequest CreateCalculateTaxRequest(Product product, 
-            string taxCategoryId, Customer customer)
+            string taxCategoryId, Customer customer, decimal price)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
             var calculateTaxRequest = new CalculateTaxRequest();
             calculateTaxRequest.Customer = customer;
+            calculateTaxRequest.Product = product;
+            calculateTaxRequest.Price = price;
+
             if (!String.IsNullOrEmpty(taxCategoryId))
             {
                 calculateTaxRequest.TaxCategoryId = taxCategoryId;
@@ -224,17 +227,18 @@ namespace Nop.Services.Tax
             }
             return result;
         }
-        
+
         /// <summary>
         /// Gets tax rate
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="taxCategoryId">Tax category identifier</param>
         /// <param name="customer">Customer</param>
+        /// <param name="price">Price (taxable value)</param>
         /// <param name="taxRate">Calculated tax rate</param>
         /// <param name="isTaxable">A value indicating whether a request is taxable</param>
         protected virtual void GetTaxRate(Product product, string taxCategoryId, 
-            Customer customer, out decimal taxRate, out bool isTaxable)
+            Customer customer, decimal price, out decimal taxRate, out bool isTaxable)
         {
             taxRate = decimal.Zero;
             isTaxable = true;
@@ -245,7 +249,7 @@ namespace Nop.Services.Tax
                 return;
 
             //tax request
-            var calculateTaxRequest = CreateCalculateTaxRequest(product, taxCategoryId, customer);
+            var calculateTaxRequest = CreateCalculateTaxRequest(product, taxCategoryId, customer, price);
 
             //tax exempt
             if (IsTaxExempt(product, calculateTaxRequest.Customer))
@@ -386,7 +390,7 @@ namespace Nop.Services.Tax
 
 
             bool isTaxable;
-            GetTaxRate(product, taxCategoryId, customer, out taxRate, out isTaxable);
+            GetTaxRate(product, taxCategoryId, customer, price, out taxRate, out isTaxable);
 
             if (priceIncludesTax)
             {
