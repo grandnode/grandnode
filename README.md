@@ -28,7 +28,7 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
 ## Store demo: ##
 
-Browse our shopping cart demo store to get a feel for nopCommerce shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
+Browse our shopping cart demo store to get a feel for grandnode shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
 
 ##### Frontend:
 [![ScreenShot](http://grandnode.com/Content/Images/uploaded/grand.png)](http://demo.grandnode.com/)
