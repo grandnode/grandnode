@@ -268,10 +268,11 @@ namespace Nop.Services.Orders
             //sub totals
             decimal subTotalExclTaxWithoutDiscount = decimal.Zero;
             decimal subTotalInclTaxWithoutDiscount = decimal.Zero;
+            var productService = EngineContext.Current.Resolve<IProductService>();
             foreach (var shoppingCartItem in cart)
             {
                 decimal sciSubTotal = _priceCalculationService.GetSubTotal(shoppingCartItem);
-                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(shoppingCartItem.ProductId);
+                var product = productService.GetProductById(shoppingCartItem.ProductId);
                 decimal taxRate;
                 decimal sciExclTax = _taxService.GetProductPrice(product, sciSubTotal, false, customer, out taxRate);
                 decimal sciInclTax = _taxService.GetProductPrice(product, sciSubTotal, true, customer, out taxRate);
@@ -394,10 +395,7 @@ namespace Nop.Services.Orders
                 subTotalWithDiscount = RoundingHelper.RoundPrice(subTotalWithDiscount);
         }
 
-
-
-
-
+        
         /// <summary>
         /// Gets shopping cart additional shipping charge
         /// </summary>
@@ -650,10 +648,7 @@ namespace Nop.Services.Orders
             return shippingTotalTaxed;
         }
 
-
-
-
-
+        
         /// <summary>
         /// Gets tax
         /// </summary>
