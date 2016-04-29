@@ -38,7 +38,7 @@ namespace Nop.Services.Customers
 
 
         #region Methods
-
+        
         /// <summary>
         /// Gets customer action
         /// </summary>
@@ -83,7 +83,7 @@ namespace Nop.Services.Customers
         public virtual void DeleteCustomerAction(CustomerAction customerAction)
         {
             if (customerAction == null)
-                throw new ArgumentNullException("customerAction");
+                throw new ArgumentNullException("customerAction"); 
 
             _customerActionRepository.Delete(customerAction);
 

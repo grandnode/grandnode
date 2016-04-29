@@ -22,7 +22,7 @@ namespace Nop.Data
         /// <summary>
         /// Gets the collection
         /// </summary>
-        private IMongoCollection<T> _collection;       
+        protected IMongoCollection<T> _collection;       
         public IMongoCollection<T>  Collection
         {
             get
@@ -34,7 +34,7 @@ namespace Nop.Data
         /// <summary>
         /// Mongo Database
         /// </summary>
-        private IMongoDatabase _database;
+        protected IMongoDatabase _database;
         public IMongoDatabase Database
         {
             get
@@ -51,8 +51,10 @@ namespace Nop.Data
         /// Ctor
         /// </summary>
         public MongoDBRepository()
+        {            
+        }
+        public MongoDBRepository(string connectionString)
         {
-            string connectionString = DataSettingsHelper.ConnectionString();
             var client = new MongoClient(connectionString);
             var databaseName = new MongoUrl(connectionString).DatabaseName;
             _database = client.GetDatabase(databaseName);
@@ -67,6 +69,11 @@ namespace Nop.Data
             _collection = _database.GetCollection<T>(typeof(T).Name);
         }
 
+        public MongoDBRepository(IMongoClient client, IMongoDatabase mongodatabase)
+        {
+            _database = mongodatabase;
+            _collection = _database.GetCollection<T>(typeof(T).Name);
+        }
 
         #endregion
 
