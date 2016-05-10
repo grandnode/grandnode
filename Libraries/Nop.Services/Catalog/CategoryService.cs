@@ -371,6 +371,8 @@ namespace Nop.Services.Catalog
         {
             if (category == null)
                 throw new ArgumentNullException("category");
+            if (String.IsNullOrEmpty(category.ParentCategoryId))
+                category.ParentCategoryId = "";
 
             //validate category hierarchy
             var parentCategory = GetCategoryById(category.ParentCategoryId);

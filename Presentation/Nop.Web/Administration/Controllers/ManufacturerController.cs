@@ -629,6 +629,7 @@ namespace Nop.Admin.Controllers
 
             productManufacturer.IsFeaturedProduct = model.IsFeaturedProduct;
             productManufacturer.DisplayOrder = model.DisplayOrder;
+            productManufacturer.ProductId = model.ProductId;
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
             return new NullJsonResult();
@@ -648,7 +649,8 @@ namespace Nop.Admin.Controllers
             if (productManufacturer == null)
                 throw new ArgumentException("No product manufacturer mapping found with the specified id");
 
-            //var manufacturerId = productManufacturer.ManufacturerId;
+            productManufacturer.ProductId = productId;
+
             _manufacturerService.DeleteProductManufacturer(productManufacturer);
 
             return new NullJsonResult();
