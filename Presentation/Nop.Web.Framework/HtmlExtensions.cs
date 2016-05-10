@@ -187,6 +187,62 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
+        public static MvcHtmlString GrandLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes = null)
+        {
+            ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
+            string labelText = metadata.DisplayName ?? metadata.PropertyName ?? htmlFieldName.Split('.').Last();
+            if (String.IsNullOrEmpty(labelText))
+            {
+                return MvcHtmlString.Empty;
+            }
+
+            TagBuilder tag = new TagBuilder("label");
+            tag.MergeAttributes(htmlAttributes);
+            tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
+            tag.AddCssClass("control-label col-md-3");
+            tag.SetInnerText(labelText);
+
+            object value;
+            var hintResource = string.Empty;
+            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
+            {
+                var resourceDisplayName = value as NopResourceDisplayName;
+                if (resourceDisplayName != null)
+                {
+                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
+                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
+                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
+                    if (!String.IsNullOrEmpty(hintResource))
+                    {
+                        TagBuilder i = new TagBuilder("i");
+                        i.AddCssClass("help icon-question");
+                        i.Attributes.Add("title", hintResource);
+                        i.Attributes.Add("data-toggle", "tooltip");
+                        i.Attributes.Add("data-placement", "bottom");
+                        tag.InnerHtml = string.Format("{0} {1}", labelText, i.ToString(TagRenderMode.Normal));
+                    }
+                }
+            }
+            return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
+        }
+
+        public static MvcHtmlString GrandEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, TValue>> expression, bool? renderFormControlClass = null)
+        {
+            var result = new StringBuilder();
+
+            object htmlAttributes = null;
+            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
+            if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
+                (renderFormControlClass.HasValue && renderFormControlClass.Value))
+                htmlAttributes = new { @class = "form-control" };
+
+            result.Append(helper.EditorFor(expression, new { htmlAttributes }));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
         public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,
