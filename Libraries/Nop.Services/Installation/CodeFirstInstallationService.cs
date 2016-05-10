@@ -42,6 +42,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Configuration;
+using Nop.Data;
 
 namespace Nop.Services.Installation
 {

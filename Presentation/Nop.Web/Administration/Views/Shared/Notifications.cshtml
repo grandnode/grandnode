@@ -24,13 +24,13 @@
 }
 @foreach (var message in successMessages)
 {
-    <div class="message-box message-box-success">
-        @message
+    <div class="note note-success">
+        <p> @message </p>
     </div>
 }
 @foreach (var message in errorMessages)
 {
-    <div class="message-box message-box-error">
-        @message
+    <div class="note note-warning">
+        <p> @message </p>
     </div>
 }

@@ -17,6 +17,9 @@ using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
 using Nop.Core.Caching;
 using MongoDB.Driver;
+using Nop.Data;
+using Autofac;
+using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Web.Controllers
 {
@@ -130,17 +133,6 @@ namespace Nop.Web.Controllers
             if (model.DatabaseConnectionString != null)
                 model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();
 
-            //prepare language list
-            foreach (var lang in _locService.GetAvailableLanguages())
-            {
-                model.AvailableLanguages.Add(new SelectListItem
-                {
-                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
-                    Text = lang.Name,
-                    Selected = _locService.GetCurrentLanguage().Code == lang.Code,
-                });
-            }
-
             string connectionString = "";
 
             if (model.MongoDBConnectionInfo)
@@ -173,33 +165,6 @@ namespace Nop.Web.Controllers
 
             }
 
-
-            if (!String.IsNullOrEmpty(connectionString))
-            {
-                /*
-                try
-                {
-                    var client = new MongoClient(connectionString);
-                    var databases = client.ListDatabasesAsync().Result;
-                }
-                catch (Exception ex)
-                {
-                    
-                    if (ex.InnerException == null)
-                        ModelState.AddModelError("", ex.Message);
-                    else
-                    {
-                        ModelState.AddModelError("", ex.InnerException.Message);
-                    }
-                }
-                */
-            }
-            //Consider granting access rights to the resource to the ASP.NET request identity. 
-            //ASP.NET has a base process identity 
-            //(typically {MACHINE}\ASPNET on IIS 5 or Network Service on IIS 6 and IIS 7, 
-            //and the configured application pool identity on IIS 7.5) that is used if the application is not impersonating.
-            //If the application is impersonating via <identity impersonate="true"/>, 
-            //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
@@ -226,12 +191,22 @@ namespace Nop.Web.Controllers
                     };
                     settingsManager.SaveSettings(settings);
 
-                    //DataSettingsHelper.InitConnectionString();
 
                     var dataProviderInstance = EngineContext.Current.Resolve<BaseDataProviderManager>().LoadDataProvider();
                     dataProviderInstance.InitDatabase();
 
+                    var dataSettingsManager = new DataSettingsManager();
+                    var dataProviderSettings = dataSettingsManager.LoadSettings();
+                    
                     //now resolve installation service
+                    var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
+                    var dataProviderInstall = mongoDBDataProviderManager.LoadDataProvider();
+
+                    var builder = new ContainerBuilder();
+                    builder.Register(c => new MongoClient(dataProviderSettings.DataConnectionString)).As(typeof(IMongoClient)).SingleInstance();
+                    builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+                    builder.Update(EngineContext.Current.ContainerManager.Container);
+
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
@@ -292,6 +267,19 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message));
                 }
             }
+
+            //prepare language list
+            foreach (var lang in _locService.GetAvailableLanguages())
+            {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
+                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
+                    Text = lang.Name,
+                    Selected = _locService.GetCurrentLanguage().Code == lang.Code,
+                });
+            }
+
+
             return View(model);
         }
 

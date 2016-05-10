@@ -1,5 +1,7 @@
-﻿@using Nop.Services.Security
-@model DashboardModel
+﻿@model DashboardModel
+
+@using Nop.Services.Security
+
 @{
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
@@ -9,97 +11,131 @@
     var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
     var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
 }
+
 @Html.AntiForgeryToken()
-<div class="section-title">
-    <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
-    @T("Admin.Dashboard")
+<div class="page-bar" style="height:43px;">
+    <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase">@DateTime.Now.ToLongDateString() @DateTime.Now.ToLongTimeString()</span>&nbsp;
+        </div>
+    </div>
 </div>
-<table class="dashboard">
-    @Html.Widget("admin_dashboard_top")
-    <tr>
-        <td class="maincol">
-            <div class="section-header">
-                <div class="title">
-                    <img src="@Url.Content("~/Administration/Content/images/ico-stat1.gif")" alt="" />
-                    @T("Admin.Dashboard.StoreStatistics")
-                </div>
-            </div>
+<div class="content-header">
+    <h3 class="page-title">
+        <i class="icon-home"></i>
+        @T("Admin.Dashboard")
+        <small>@T("Admin.Dashboard.StoreStatistics")</small>
+    </h3>
+</div>
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            @Html.Widget("admin_dashboard_top")
             @if (!Model.IsLoggedInAsVendor && canManageOrders)
             {
-                <table class="stats">
-                    <tbody>
-                        <tr>
-                            <td class="orderaveragereport">
-                                <div class="statisticsTitle">
-                                    @T("Admin.SalesReport.Average")
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.Average")</span>
                                 </div>
-                                @Html.Action("OrderAverageReport", "Order")  
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                            <div class="portlet-body">
+                                @Html.Action("OrderAverageReport", "Order")
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-
             @if (!Model.IsLoggedInAsVendor)
             {
                 if (canManageOrders || canManageCustomers || canManageProducts)
                 {
-                    <table class="stats">
-                        <tbody>
-                            <tr>
-                                @if (canManageOrders)
-                                {
-                                    <td class="orderstatistics">
-                                        <div class="statisticsTitle">
-                                            @T("Admin.SalesReport.Incomplete")
+                    <div class="row">
+                        @if (canManageOrders)
+                        {
+                            <div class="col-md-6">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.Incomplete")</span>
                                         </div>
+                                    </div>
+                                    <div class="portlet-body">
                                         @Html.Action("OrderIncompleteReport", "Order")
-                                    </td>
-                                }
-                                @if (canManageCustomers)
-                                {
-                                    <td class="customerstatistics">
-                                        <div class="statisticsTitle">
-                                            @T("Admin.Customers.Reports.RegisteredCustomers")
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (canManageCustomers)
+                        {
+                            <div class="col-md-3">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-dark bold uppercase">@T("Admin.Customers.Reports.RegisteredCustomers")</span>
                                         </div>
+                                    </div>
+                                    <div class="portlet-body">
                                         @Html.Action("ReportRegisteredCustomers", "Customer")
-                                    </td>
-                                }
-                                @if (canManageProducts)
-                                {
-                                    <td class="search-term-statistics">
-                                        <div class="statisticsTitle">
-                                            @T("Admin.SearchTermReport")
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (canManageProducts)
+                        {
+                            <div class="col-md-3">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-dark bold uppercase">@T("Admin.SearchTermReport")</span>
                                         </div>
+                                    </div>
+                                    <div class="portlet-body">
                                         @Html.Action("PopularSearchTermsReport", "Common")
-                                    </td>
-                                }
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 }
             }
+
             @if (canManageOrders)
             {
-                <table class="stats">
-                    <tr>
-                        <td class="bestsellers">
-                            <div class="statisticsTitle">
-                                @T("Admin.SalesReport.BestSellers.ByQuantity")
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.BestSellers.ByQuantity")</span>
+                                </div>
                             </div>
-                            @Html.Action("BestsellersBriefReportByQuantity", "Order")
-                        </td>
-                        <td class="bestsellers">
-                            <div class="statisticsTitle">
-                                @T("Admin.SalesReport.BestSellers.ByAmount")
+                            <div class="portlet-body">
+                                @Html.Action("BestsellersBriefReportByQuantity", "Order")
                             </div>
-                            @Html.Action("BestsellersBriefReportByAmount", "Order")
-                        </td>
-                    </tr>
-                </table>
-
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.BestSellers.ByAmount")</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                @Html.Action("BestsellersBriefReportByAmount", "Order")
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-        </td>
-    </tr>
-    @Html.Widget("admin_dashboard_bottom")
-</table>
+        </div>
+        @Html.Widget("admin_dashboard_bottom")
+    </div>
+</div>
