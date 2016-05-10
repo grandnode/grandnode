@@ -2270,7 +2270,9 @@
     <Content Include="Views\Product\AskQuestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\kendo\2016.2.504\" />
     <Folder Include="Plugins\bin\" />
+    <Folder Include="Scripts\kendo\2016.2.504\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">

@@ -22,6 +22,7 @@ $(document).ready(function () {
     $('.multi-store-override-option').each(function (k, v) {
         checkOverriddenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
+    $('i.help').tooltip();
 });
 
 function checkAllOverriddenStoreValue(item) {
@@ -102,8 +103,10 @@ function addAntiForgeryToken(data) {
 
 
 // Ajax activity indicator bound to ajax start/stop document events
+/*
 $(document).ajaxStart(function () {
-    $('#ajaxBusy').show();
+    App.startPageLoading();
 }).ajaxStop(function () {
-    $('#ajaxBusy').hide();
+    App.stopPageLoading();
 });
+*/
