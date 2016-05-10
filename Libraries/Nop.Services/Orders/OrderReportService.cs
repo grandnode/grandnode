@@ -174,7 +174,7 @@ namespace Nop.Services.Orders
             if (ignoreCancelledOrders)
             {
                 var cancelledOrderStatusId = (int)OrderStatus.Cancelled;
-                filter = filter & builder.Where(o => o.OrderStatusId == cancelledOrderStatusId);
+                filter = filter & builder.Where(o => o.OrderStatusId != cancelledOrderStatusId);
 
             }
             if (!String.IsNullOrEmpty(paymentMethodSystemName))
