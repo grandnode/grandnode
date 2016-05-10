@@ -669,6 +669,7 @@ namespace Nop.Admin.Controllers
 
             productCategory.IsFeaturedProduct = model.IsFeaturedProduct;
             productCategory.DisplayOrder = model.DisplayOrder;
+            productCategory.ProductId = model.ProductId;
             _categoryService.UpdateProductCategory(productCategory);
 
             return new NullJsonResult();
@@ -686,8 +687,8 @@ namespace Nop.Admin.Controllers
             var productCategory = product.ProductCategories.Where(x => x.Id == id).FirstOrDefault();
             if (productCategory == null)
                 throw new ArgumentException("No product category mapping found with the specified id");
+            productCategory.ProductId = productId;
 
-            //var categoryId = productCategory.CategoryId;
             _categoryService.DeleteProductCategory(productCategory);
 
             return new NullJsonResult();
