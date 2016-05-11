@@ -15,6 +15,7 @@
         });
     });
 </script>
+
 <div id="category-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -99,241 +100,210 @@
     </script>
 
     @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Name)
-                @Html.ValidationMessageFor(model => model.Locales[item].Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Description):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Locales[item].Description)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
-                ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Description):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.Description, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Description)
-            </td>
-        </tr>
-    </table>
-            ))
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CategoryTemplateId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.CategoryTemplateId, Model.AvailableCategoryTemplates)
-                @Html.ValidationMessageFor(model => model.CategoryTemplateId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PictureId)
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PictureId)
-                @Html.ValidationMessageFor(model => model.PictureId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ParentCategoryId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.ParentCategoryId, Model.AvailableCategories)
-                @Html.ValidationMessageFor(model => model.ParentCategoryId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PriceRanges):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.PriceRanges)
-                @Html.ValidationMessageFor(model => model.PriceRanges)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShowOnHomePage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.ShowOnHomePage)
-                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IncludeInTopMenu):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.IncludeInTopMenu)
-                @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
-                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
-            </td>
-        </tr>
-        <tr id="pnlPageSize">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.PageSize)
-                @Html.ValidationMessageFor(model => model.PageSize)
-            </td>
-        </tr>
-        <tr id="pnlPageSizeOptions">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PageSizeOptions):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.PageSizeOptions)
-                @Html.ValidationMessageFor(model => model.PageSizeOptions)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Published):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.Published)
-                @Html.ValidationMessageFor(model => model.Published)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].Name)
+                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Description)
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Description)
+                <div class="col-md-9">
+                    @Html.EditorFor(x => x.Description, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Description)
+                </div>
+            </div>
+        </div>
+    </div>
+    ))
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CategoryTemplateId)
+                <div class="col-md-9">
+                    @Html.GrandDropDownListFor(model => model.CategoryTemplateId, Model.AvailableCategoryTemplates)
+                    @Html.ValidationMessageFor(model => model.CategoryTemplateId)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.PictureId)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.PictureId)
+                    @Html.ValidationMessageFor(model => model.PictureId)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.ParentCategoryId)
+                <div class="col-md-9">
+                    @Html.GrandDropDownListFor(model => model.ParentCategoryId, Model.AvailableCategories)
+                    @Html.ValidationMessageFor(model => model.ParentCategoryId)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.PriceRanges)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(x => x.PriceRanges)
+                    @Html.ValidationMessageFor(model => model.PriceRanges)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.ShowOnHomePage)
+                <div class="col-md-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(x => x.ShowOnHomePage)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.IncludeInTopMenu)
+                <div class="col-md-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(x => x.IncludeInTopMenu)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.AllowCustomersToSelectPageSize)
+                <div class="col-md-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(x => x.AllowCustomersToSelectPageSize)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPageSize">
+                @Html.GrandLabelFor(model => model.PageSize)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(x => x.PageSize)
+                    @Html.ValidationMessageFor(model => model.PageSize)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPageSizeOptions">
+                @Html.GrandLabelFor(model => model.PageSizeOptions)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(x => x.PageSizeOptions)
+                    @Html.ValidationMessageFor(model => model.PageSizeOptions)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Published)
+                <div class="col-md-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(x => x.Published)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.Published)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.DisplayOrder)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabSeo()
 {
     @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaKeywords):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].MetaKeywords)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.Locales[item].MetaDescription)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaTitle):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].MetaTitle)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].SeName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].SeName)
-                @Html.ValidationMessageFor(model => model.Locales[item].SeName)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].MetaKeywords)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].MetaKeywords)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].MetaDescription)
+                <div class="col-md-9">
+                    @Html.GrandTextAreaFor(model => model.Locales[item].MetaDescription)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].MetaTitle)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].MetaTitle)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].SeName)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].SeName)
+                    @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
                ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaKeywords):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaKeywords)
-                @Html.ValidationMessageFor(model => model.MetaKeywords)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(x => x.MetaDescription)
-                @Html.ValidationMessageFor(model => model.MetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaTitle):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaTitle)
-                @Html.ValidationMessageFor(model => model.MetaTitle)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SeName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.SeName)
-                @Html.ValidationMessageFor(model => model.SeName)
-            </td>
-        </tr>
-    </table>))
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.MetaKeywords)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(x => x.MetaKeywords)
+                    @Html.ValidationMessageFor(model => model.MetaKeywords)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.MetaDescription)
+                <div class="col-md-9">
+                    @Html.GrandTextAreaFor(x => x.MetaDescription)
+                    @Html.ValidationMessageFor(model => model.MetaDescription)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.MetaTitle)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(x => x.MetaTitle)
+                    @Html.ValidationMessageFor(model => model.MetaTitle)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SeName)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(x => x.SeName)
+                    @Html.ValidationMessageFor(model => model.SeName)
+                </div>
+            </div>
+        </div>
+    </div>))
 }
+
 @helper TabProducts()
 {
 if (!String.IsNullOrEmpty(Model.Id))
@@ -341,138 +311,134 @@ if (!String.IsNullOrEmpty(Model.Id))
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
-        <table class="adminContent">
-            <tr>
-                <td>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="products-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Catalog.Categories.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new { categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form" }))', 800, 800, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefreshProducts" style="display: none" />
+            </div>
+        </div>
+        <script>
+        $(document).ready(function () {
+            $("#products-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ProductList", "Category", new { categoryId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("ProductUpdate", "Category"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ProductDelete", "Category"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                ProductName: {editable: false, type: "string" },
+                                IsFeaturedProduct: {editable: true, type: "boolean" },
+                                DisplayOrder: {editable: true, type: "number" },
+                                ProductId: {editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function(e) {
+                        if(e.type=="update") {
+                            this.read();
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductName",
+                    title: "@T("Admin.Catalog.Categories.Products.Fields.Product")"
+                }, {
+                    field: "IsFeaturedProduct",
+                    title: "@T("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")",
+                    width: 150,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("Admin.Catalog.Categories.Products.Fields.DisplayOrder")",
+                    //integer format
+                    format: "{0:0}",
+                    width: 150
+                }, {
+                    field: "ProductId",
+                    title: "@T("Admin.Common.View")",
+                    width: 100,
+                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                }, {
+                    command: [{
+                        name: "edit",
+                        text: {
+                            edit: "@T("Admin.Common.Edit")",
+                            update: "@T("Admin.Common.Update")",
+                            cancel: "@T("Admin.Common.Cancel")"
+                        }
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                    width: 200
+                }]
+            });
+        });
+        </script>
 
-                    <div id="products-grid"></div>
+        <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshProducts').click(function () {
+                //refresh grid
+                var grid = $("#products-grid").data('kendoGrid');
+                grid.dataSource.read();
 
-                    <script>
-                            $(document).ready(function () {
-                                $("#products-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ProductList", "Category", new { categoryId = Model.Id }))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            },
-                                            update: {
-                                                url:"@Html.Raw(Url.Action("ProductUpdate", "Category"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            },
-                                            destroy: {
-                                                url: "@Html.Raw(Url.Action("ProductDelete", "Category"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors",
-                                            model: {
-                                                id: "Id",
-                                                fields: {
-                                                    ProductName: {editable: false, type: "string" },
-                                                    IsFeaturedProduct: {editable: true, type: "boolean" },
-                                                    DisplayOrder: {editable: true, type: "number" },
-                                                    ProductId: {editable: false, type: "string" }
-                                                }
-                                            }
-                                        },
-                                        requestEnd: function(e) {
-                                            if(e.type=="update") {
-                                                this.read();
-                                            }
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(defaultGridPageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(gridPageSizes)]
-                                    },
-                                    editable: {
-                                        confirmation: false,
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [{
-                                        field: "ProductName",
-                                        title: "@T("Admin.Catalog.Categories.Products.Fields.Product")"
-                                    }, {
-                                        field: "IsFeaturedProduct",
-                                        title: "@T("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")",
-                                        width: 150,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
-                                    }, {
-                                        field: "DisplayOrder",
-                                        title: "@T("Admin.Catalog.Categories.Products.Fields.DisplayOrder")",
-                                        //integer format
-                                        format: "{0:0}",
-                                        width: 150
-                                    }, {
-                                        field: "ProductId",
-                                        title: "@T("Admin.Common.View")",
-                                        width: 100,
-                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
-                                    }, {
-                                        command: [{
-                                            name: "edit",
-                                            text: {
-                                                edit: "@T("Admin.Common.Edit")",
-                                                update: "@T("Admin.Common.Update")",
-                                                cancel: "@T("Admin.Common.Cancel")"
-                                            }
-                                        }, {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
-                                        }],
-                                        width: 200
-                                    }]
-                                });
-                            });
-                    </script>
-                </td>
-            </tr>
-            <tr>
-                <td width="100%">
-                    <input type="submit" id="btnAddNewProduct" value="@T("Admin.Catalog.Categories.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new { categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form" }))', 800, 800, true); return false;" class="k-button" />
-                    <input type="submit" id="btnRefreshProducts" style="display: none" />
-                    <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#btnRefreshProducts').click(function () {
-                                    //refresh grid
-                                    var grid = $("#products-grid").data('kendoGrid');
-                                    grid.dataSource.read();
-
-                                    //return false to don't reload a page
-                                    return false;
-                                });
-                            });
-                    </script>
-                </td>
-            </tr>
-        </table>
+                //return false to don't reload a page
+                return false;
+            });
+        });
+        </script>
 }
 else
 {
-        @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+        <div class="note note-info">
+            @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+        </div>
 }
 }
 
@@ -480,18 +446,26 @@ else
 {
 if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
 {
-    foreach (var discount in Model.AvailableDiscounts)
-    {
-            <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
-                   @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>  } />@discount.Name
-                <br />
-    }
+        <div class="mt-checkbox-list">
+            @foreach (var discount in Model.AvailableDiscounts)
+            {
+                <label class="mt-checkbox mt-checkbox-outline">
+                    <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
+                           @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>       } />@discount.Name
+                        <span></span>
+                    </label>
+            }
+        </div>
+
 }
 else
 {
-        @T("Admin.Catalog.Categories.Discounts.NoDiscounts")
+        <div class="note note-info">
+            @T("Admin.Catalog.Categories.Discounts.NoDiscounts")
+        </div>
 }
 }
+
 @helper TabAcl()
 {
 
@@ -514,38 +488,44 @@ else
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SubjectToAcl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SubjectToAcl)
-                @Html.ValidationMessageFor(model => model.SubjectToAcl)
-            </td>
-        </tr>
-        <tr id="pnl-acl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableCustomerRoles):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
-                {
-                    @Html.Action("AclDisabledWarning", "Common")
-                    foreach (var customerRole in Model.AvailableCustomerRoles)
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SubjectToAcl)
+                <div class="col-md-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.SubjectToAcl)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.SubjectToAcl)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-acl">
+                @Html.GrandLabelFor(model => model.AvailableCustomerRoles)
+                <div class="col-md-9">
+                    @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
                     {
-                        <div>
-                            <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds!=null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                        @Html.Action("AclDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var customerRole in Model.AvailableCustomerRoles)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds!=null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                                    <span></span>
+                                </label>
+                            }
                         </div>
                     }
-                }
-                else
-                {
-                    <div>No customer roles defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    else
+                    {
+                        <div class="note note-info">
+                            No customer roles defined
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @helper TabStores()
@@ -569,38 +549,45 @@ else
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitedToStores):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitedToStores)
-                @Html.ValidationMessageFor(model => model.LimitedToStores)
-            </td>
-        </tr>
-        <tr id="pnl-available-stores">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableStores):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                {
-                    @Html.Action("MultistoreDisabledWarning", "Common")
-                    foreach (var store in Model.AvailableStores)
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LimitedToStores)
+                <div class="col-md-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.LimitedToStores)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.LimitedToStores)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-available-stores">
+                @Html.GrandLabelFor(model => model.AvailableStores)
+                <div class="col-md-9">
+                    @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                     {
-                        <div>
-                            <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                        @Html.Action("MultistoreDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var store in Model.AvailableStores)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    <span></span>
+                                </label>
+                            }
                         </div>
                     }
-                }
-                else
-                {
-                    <div>No stores defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    else
+                    {
+                        <div class="note note-info">
+                            No stores defined
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @helper TabActivityLog()
@@ -608,72 +595,70 @@ else
 var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
 var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="activitylog-grid"></div>
-                <script>
-                    $(document).ready(function () {
-                        $("#activitylog-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ListActivityLog", "Category", new { categoryId = Model.Id }))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "ActivityLogTypeName",
-                                title: "@T("Admin.Catalog.Categories.ActivityLog.ActivityLogType")",
-                                width: 200,
-                            }, {
-                                field: "CustomerId",
-                                title: "@T("Admin.Catalog.Categories.ActivityLog.Customer")",
-                                width: 200,
-                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
-                            }, {
-                                field: "Comment",
-                                title: "@T("Admin.Catalog.Categories.ActivityLog.Comment")"
-                            }, {
-                                field: "CreatedOn",
-                                title: "@T("Admin.Catalog.Categories.ActivityLog.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }]
-                        });
-                    });
-                </script>
-            </td>
-        </tr>
-    </table>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="activitylog-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#activitylog-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListActivityLog", "Category", new { categoryId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ActivityLogTypeName",
+                    title: "@T("Admin.Catalog.Categories.ActivityLog.ActivityLogType")",
+                    width: 200,
+                }, {
+                    field: "CustomerId",
+                    title: "@T("Admin.Catalog.Categories.ActivityLog.Customer")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                }, {
+                    field: "Comment",
+                    title: "@T("Admin.Catalog.Categories.ActivityLog.Comment")"
+                }, {
+                    field: "CreatedOn",
+                    title: "@T("Admin.Catalog.Categories.ActivityLog.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                }]
+            });
+        });
+    </script>
 }
 
 

@@ -14,6 +14,7 @@ using Nop.Services.Localization;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using System.Web.Routing;
 
 namespace Nop.Web.Framework
 {
@@ -241,6 +242,44 @@ namespace Nop.Web.Framework
             result.Append(helper.EditorFor(expression, new { htmlAttributes }));
 
             return MvcHtmlString.Create(result.ToString());
+        }
+        public static MvcHtmlString GrandDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+           Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
+           object htmlAttributes = null)
+        {
+            var result = new StringBuilder();
+            
+            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
+            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            attrs = AddFormControlClassToHtmlAttributes(attrs);
+            result.Append(helper.DropDownListFor(expression, itemList, attrs));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString GrandTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+           Expression<Func<TModel, TValue>> expression, 
+           object htmlAttributes = null)
+        {
+            var result = new StringBuilder();
+
+            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
+            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            attrs = AddFormControlClassToHtmlAttributes(attrs);
+            result.Append(helper.TextAreaFor(expression, attrs));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static RouteValueDictionary AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
+        {
+            if (htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))
+                htmlAttributes["class"] = "form-control";
+            else
+                if (!htmlAttributes["class"].ToString().Contains("form-control"))
+                htmlAttributes["class"] += " form-control";
+
+            return htmlAttributes as RouteValueDictionary;
         }
 
         public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,

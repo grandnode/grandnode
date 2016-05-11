@@ -6,7 +6,7 @@
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
     Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", true);
-    
+
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
     var allowJbimages = false;
     var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
@@ -14,7 +14,7 @@
     //so if you're running in a virtual directory, then uncomment the code below:
     //allowJbimages = true;
     //allowRoxyFileman =false;
-    
+
 
     var random = CommonHelper.GenerateRandomInteger();
 
@@ -22,7 +22,7 @@
     var additionalEditorSettings = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAdditionalSettings;
     //is java-script supported?
     var allowJavaScript = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAllowJavaScript;
-    
+
     //allow HTML body? Full page? - http://www.tinymce.com/wiki.php/Plugin:fullpage
     //false by default
     var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);
@@ -42,7 +42,7 @@
             tinyMCE.activeEditor.windowManager.open({
                 file: roxyFileman,
                 title: 'Roxy Fileman',
-                width: 850,
+                width: 767,
                 height: 650,
                 resizable: "yes",
                 plugins: "media",
@@ -56,7 +56,7 @@
             selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 350,
-            width: 790,
+            width: 717,
             plugins: [
                 "advlist autolink lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",

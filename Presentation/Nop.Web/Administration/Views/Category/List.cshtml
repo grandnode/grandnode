@@ -6,43 +6,59 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
 }
-@Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-        @T("Admin.Catalog.Categories.Manage") @Html.ActionLink("(" + T("Admin.Catalog.Categories.SwitchToTreeView") + ")", "Tree")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a> <a href="@Url.Action("ExportXml")" class="k-button">@T("Admin.Common.ExportToXml")</a>
-        <a href="@Url.Action("ExportXlsx")" class="k-button">@T("Admin.Common.ExportToExcel")</a>
-        <input type="button" id="importexcel" name="importexcel" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
-    </div>
-</div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchCategoryName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchCategoryName)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-categories" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="categories-grid"></div>
 
+@Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Admin.Catalog.Categories.Manage")
+                    <small>@Html.ActionLink("(" + T("Admin.Catalog.Categories.SwitchToTreeView") + ")", "Tree")</small>
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("Create")" class="btn default">@T("Admin.Common.AddNew")</a>
+                    <a href="@Url.Action("ExportXml")" class="btn default">@T("Admin.Common.ExportToXml")</a>
+                    <a href="@Url.Action("ExportXlsx")" class="btn default">@T("Admin.Common.ExportToExcel")</a>
+                    <input type="button" id="importexcel" name="importexcel" class="btn default" value="@T("Admin.Common.ImportFromExcel")" />
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchCategoryName)
+                            <div class="col-md-4">
+                                @Html.GrandEditorFor(model => model.SearchCategoryName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchStoreId)
+                            <div class="col-md-4">
+                                @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-9">
+                                <input type="button" id="search-categories" class="btn green" value="@T("Admin.Common.Search")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="portlet-body">
+                <div id="categories-grid"></div>
+            </div>
             <script>
                 $(document).ready(function () {
                     $("#categories-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "Category"))",
@@ -120,42 +136,44 @@
 
                 function additionalData() {
                     var data = {
-                        SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val()
+                        SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val(),
+                        SearchStoreId: $('#SearchStoreId').val()
                     };
                     addAntiForgeryToken(data);
                     return data;
                 }
             </script>
-        </td>
-    </tr>
-</table>
 
-@*import categories form*@
-<div id="importexcel-window" style="display:none;">
-    @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
-        <table style="text-align:left;">
-            <tr>
-                <td colspan="2">
-                    <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @T("Admin.Common.ExcelFile"):
-                </td>
-                <td>
-                    <input type="file" id="importexcelfile" name="importexcelfile" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
-                </td>
-            </tr>
-        </table>
-    }
+
+            @*import categories form*@
+            <div id="importexcel-window" style="display:none;">
+                @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                    @Html.AntiForgeryToken()
+                    <table style="text-align:left;">
+                        <tr>
+                            <td colspan="2">
+                                <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @T("Admin.Common.ExcelFile"):
+                            </td>
+                            <td>
+                                <input type="file" id="importexcelfile" name="importexcelfile" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -172,5 +190,6 @@
             }
             window.data('kendoWindow').center().open();
         });
+
     });
 </script>

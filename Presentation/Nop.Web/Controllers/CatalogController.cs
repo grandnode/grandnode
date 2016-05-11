@@ -341,7 +341,7 @@ namespace Nop.Web.Controllers
 
             if (allCategories == null)
             {
-                allCategories = _categoryService.GetAllCategories();
+                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
             }
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
             foreach (var category in categories)
@@ -1214,7 +1214,7 @@ namespace Nop.Web.Controllers
             {
                 var categoriesModel = new List<SearchModel.CategoryModel>();
                 //all categories
-                var allCategories = _categoryService.GetAllCategories();
+                var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
                 foreach (var c in allCategories)
                 {
                     //generate full category name (breadcrumb)

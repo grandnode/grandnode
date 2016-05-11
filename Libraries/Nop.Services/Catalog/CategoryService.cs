@@ -187,7 +187,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public virtual IPagedList<Category> GetAllCategories(string categoryName = "", 
+        public virtual IPagedList<Category> GetAllCategories(string categoryName = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = from c in _categoryRepository.Table
@@ -200,7 +200,7 @@ namespace Nop.Services.Catalog
 
             query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
             
-            if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
+            if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) &&  !_catalogSettings.IgnoreStoreLimitations)))
             {
                 if (!_catalogSettings.IgnoreAcl)
                 {
@@ -210,12 +210,11 @@ namespace Nop.Services.Catalog
                             where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
                             select p;
                 }
-                if (!_catalogSettings.IgnoreStoreLimitations)
+                if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from p in query
-                            where !p.LimitedToStores || p.Stores.Contains(currentStoreId)
+                            where !p.LimitedToStores || p.Stores.Contains(storeId)
                             select p;
                 }
 

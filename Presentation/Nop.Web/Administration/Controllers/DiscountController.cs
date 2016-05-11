@@ -643,7 +643,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
-                command.Page - 1, command.PageSize, true);
+                pageIndex: command.Page - 1, pageSize: command.PageSize, showHidden: true);
             var gridModel = new DataSourceResult
             {
                 Data = categories.Select(x =>

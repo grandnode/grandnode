@@ -1302,5 +1302,10 @@
   <LocaleResource Name="products.askquestion.successfullysent">
     <Value>Your message has been sent.</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>

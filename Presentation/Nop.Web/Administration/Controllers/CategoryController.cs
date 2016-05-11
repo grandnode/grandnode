@@ -285,6 +285,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new CategoryListModel();
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
             return View(model);
         }
 
@@ -294,7 +298,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            var categories = _categoryService.GetAllCategories(model.SearchCategoryName, 
+            var categories = _categoryService.GetAllCategories(model.SearchCategoryName, model.SearchStoreId,
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {

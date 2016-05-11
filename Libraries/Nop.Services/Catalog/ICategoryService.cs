@@ -23,7 +23,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        IPagedList<Category> GetAllCategories(string categoryName = "",
+        IPagedList<Category> GetAllCategories(string categoryName = "", string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
