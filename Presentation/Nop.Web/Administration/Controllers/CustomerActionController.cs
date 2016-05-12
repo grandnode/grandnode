@@ -824,7 +824,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
-            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
+            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,"",
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {

@@ -267,7 +267,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
-            var model = new ManufacturerListModel();
+            var model = new ManufacturerListModel();            
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+            return View(model);
+
             return View(model);
         }
 
@@ -277,8 +282,8 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
                 return AccessDeniedView();
 
-            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
-                command.Page - 1, command.PageSize, true);
+            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, 
+                model.SearchStoreId, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = manufacturers.Select(x => x.ToModel()),

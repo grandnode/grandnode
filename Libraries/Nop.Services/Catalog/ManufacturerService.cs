@@ -154,6 +154,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
         public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
+            string storeId = "",
             int pageIndex = 0,
             int pageSize = int.MaxValue, 
             bool showHidden = false)
@@ -168,7 +169,7 @@ namespace Nop.Services.Catalog
             
             query = query.OrderBy(m => m.DisplayOrder);
 
-            if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
+            if ((!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
             { 
                 if (!_catalogSettings.IgnoreAcl)
                 {
@@ -179,12 +180,11 @@ namespace Nop.Services.Catalog
                             select p;
 
                 }
-                if (!_catalogSettings.IgnoreStoreLimitations)
+                if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
                 {
                     //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from p in query
-                            where !p.LimitedToStores || p.Stores.Contains(currentStoreId)
+                            where !p.LimitedToStores || p.Stores.Contains(storeId)
                             select p;
                 }
 

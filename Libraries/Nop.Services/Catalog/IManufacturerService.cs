@@ -24,6 +24,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
         IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
+            string storeId = "",
             int pageIndex = 0,
             int pageSize = int.MaxValue,
             bool showHidden = false);

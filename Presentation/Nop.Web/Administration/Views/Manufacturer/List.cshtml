@@ -7,129 +7,143 @@
     ViewBag.Title = T("Admin.Catalog.Manufacturers").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-        @T("Admin.Catalog.Manufacturers")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
-        <a href="@Url.Action("ExportXml")" class="k-button">@T("Admin.Common.ExportToXml")</a>
-        <a href="@Url.Action("ExportXlsx")" class="k-button">@T("Admin.Common.ExportToExcel")</a>
-        <input type="button" id="importexcel" name="importexcel" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-barcode"></i>
+                    @T("Admin.Catalog.Manufacturers")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("Create")" class="btn default">@T("Admin.Common.AddNew")</a>
+                    <a href="@Url.Action("ExportXml")" class="btn default">@T("Admin.Common.ExportToXml")</a>
+                    <a href="@Url.Action("ExportXlsx")" class="btn default">@T("Admin.Common.ExportToExcel")</a>
+                    <input type="button" id="importexcel" name="importexcel" class="btn default" value="@T("Admin.Common.ImportFromExcel")" />
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchManufacturerName)
+                            <div class="col-md-4">
+                                @Html.GrandEditorFor(model => model.SearchManufacturerName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchStoreId)
+                            <div class="col-md-4">
+                                @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-9">
+                                <input type="button" id="search-manufacturers" class="btn green" value="@T("Admin.Common.Search")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="manufacturers-grid"></div>
+            </div>
+        </div>
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchManufacturerName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchManufacturerName)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-manufacturers" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="manufacturers-grid"></div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#manufacturers-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "Manufacturer"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.Catalog.Manufacturers.Fields.Name")"
-                        }, {
-                            field: "Published",
-                            title: "@T("Admin.Catalog.Manufacturers.Fields.Published")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Catalog.Manufacturers.Fields.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-            </script>
+<script>
+    $(document).ready(function () {
+        $("#manufacturers-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "Manufacturer"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: additionalData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Name",
+                title: "@T("Admin.Catalog.Manufacturers.Fields.Name")"
+            }, {
+                field: "Published",
+                title: "@T("Admin.Catalog.Manufacturers.Fields.Published")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.Catalog.Manufacturers.Fields.DisplayOrder")",
+                width: 100
+            }, {
+                field: "Id",
+                title: "@T("Admin.Common.Edit")",
+                width: 100,
+                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+            }]
+        });
+    });
+</script>
 
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    //search button
-                    $('#search-manufacturers').click(function () {
-                        //search
-                        var grid = $('#manufacturers-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
+<script type="text/javascript">
+    $(document).ready(function () {
+        //search button
+        $('#search-manufacturers').click(function () {
+            //search
+            var grid = $('#manufacturers-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            //grid.dataSource.read(); we already loaded the grid above using "page" function
+            return false;
+        });
 
-                    $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function (event) {
-                        if (event.keyCode == 13) {
-                            $("#search-manufacturers").click();
-                            return false;
-                        }
-                    });
-                });
+        $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-manufacturers").click();
+                return false;
+            }
+        });
+    });
 
-                function additionalData() {
-                    var data = {
-                        SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
-            </script>
-        </td>
-    </tr>
-</table>
+    function additionalData() {
+        var data = {
+            SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val(),
+            SearchStoreId: $('#SearchStoreId').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+</script>
 
 @*import manufacturers form*@
 <div id="importexcel-window" style="display:none;">

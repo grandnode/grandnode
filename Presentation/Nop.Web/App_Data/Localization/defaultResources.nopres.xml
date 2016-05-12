@@ -2076,6 +2076,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchManufacturerName.Hint">
     <Value>A manufacturer name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Catalog.Manufacturers.Products">
     <Value>Products</Value>
   </LocaleResource>
