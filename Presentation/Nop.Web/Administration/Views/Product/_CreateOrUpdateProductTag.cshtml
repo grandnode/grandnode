@@ -10,32 +10,28 @@
     </script>
 }
 @(Html.LocalizedEditor<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
-@<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Locales[item].Name):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Locales[item].Name)
-            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-        </td>
-    </tr>
-</table>
+@<div class="form-horizontal">
+     <div class="form-body">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Locales[item].Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Locales[item].Name)
+                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+             </div>
+         </div>
+         @Html.HiddenFor(model => model.Locales[item].LanguageId)
+     </div>
+</div>
 ,
-@<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Name):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </td>
-    </tr>
-</table>
+@<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.NopLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+    </div>
+</div>
 ))

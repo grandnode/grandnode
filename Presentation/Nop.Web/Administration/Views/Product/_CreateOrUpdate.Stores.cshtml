@@ -19,35 +19,42 @@
         }
 
 </script>
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.LimitedToStores):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.LimitedToStores)
-            @Html.ValidationMessageFor(model => model.LimitedToStores)
-        </td>
-    </tr>
-    <tr id="pnl-available-stores">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AvailableStores):
-        </td>
-        <td class="adminData">
-            @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-            {
-                @Html.Action("MultistoreDisabledWarning", "Common")
-                foreach (var store in Model.AvailableStores)
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.LimitedToStores)
+            <div class="col-md-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.LimitedToStores)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.LimitedToStores)
+            </div>
+        </div>
+        <div class="form-group" id="pnl-available-stores">
+            @Html.GrandLabelFor(model => model.AvailableStores)
+            <div class="col-md-9">
+                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                 {
-                <div>
-                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
-                </div>
+                    @Html.Action("MultistoreDisabledWarning", "Common")
+                    <div class="mt-checkbox-list">
+                        @foreach (var store in Model.AvailableStores)
+                        {
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                <span></span>
+                            </label>
+                        }
+                    </div>
                 }
-            }
-            else
-            {
-                <div>No stores defined</div>
-            }
-        </td>
-    </tr>
-</table>
+                else
+                {
+                    <div class="note note-info">
+                        No stores defined
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

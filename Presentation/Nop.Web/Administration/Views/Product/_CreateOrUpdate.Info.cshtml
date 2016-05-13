@@ -389,1093 +389,860 @@
     }
 
 </script>
-<table class="adminContent">
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Id):
-            </td>
-            <td class="adminData">
-                @Model.Id.ToString()
-                @Html.ValidationMessageFor(model => model.Id)
-            </td>
-        </tr>
-    }
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ProductTypeId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.ProductTypeId, ((ProductType)Model.ProductTypeId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.ProductTypeId)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.VisibleIndividually):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.VisibleIndividually)
-            @Html.ValidationMessageFor(model => model.VisibleIndividually)
-        </td>
-    </tr>
-    @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.AssociatedToProductId))
-    {
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AssociatedToProductId):
-            </td>
-            <td class="adminData">
-                @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
-            </td>
-        </tr>
-    }
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ProductTemplateId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.ProductTemplateId, Model.AvailableProductTemplates)
-            @Html.ValidationMessageFor(model => model.ProductTemplateId)
-        </td>
-    </tr>
-</table>
+<div class="form-horizontal">
+    <div class="form-body">
+        @if (!String.IsNullOrEmpty(Model.Id))
+        {
+            @*<div class="form-group">
+                @Html.GrandLabelFor(model => model.Id)
+                <div class="col-md-9">
+                    <span class="form-control"> @Model.Id.ToString() </span>
+                    @Html.ValidationMessageFor(model => model.Id)
+                </div>
+            </div>*@
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ProductTypeId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.ProductTypeId, ((ProductType)Model.ProductTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ProductTypeId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.VisibleIndividually)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.VisibleIndividually)
+                @Html.ValidationMessageFor(model => model.VisibleIndividually)
+            </div>
+        </div>
+        @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.AssociatedToProductId))
+        {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.AssociatedToProductId)
+                <div class="adminData">
+                    @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ProductTemplateId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.ProductTemplateId, Model.AvailableProductTemplates)
+                @Html.ValidationMessageFor(model => model.ProductTemplateId)
+            </div>
+        </div>
+    </div>
+</div>
 @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Name)
-                @Html.ValidationMessageFor(model => model.Locales[item].Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].ShortDescription):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.Locales[item].ShortDescription, new { style = "Width: 250px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.Locales[item].ShortDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].FullDescription):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].FullDescription, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Locales[item].FullDescription)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal portlet light bg-inverse form-fit">
+         <div class="form-body">
+             <div class="form-group">
+                 @Html.GrandLabelFor(model => model.Locales[item].Name)
+                 <div class="col-md-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].Name)
+                     @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                 </div>
+             </div>
+             <div class="form-group">
+                 @Html.GrandLabelFor(model => model.Locales[item].ShortDescription)
+                 <div class="col-md-9">
+                     @Html.GrandTextAreaFor(model => model.Locales[item].ShortDescription, new { style = "Height: 100px;" })
+                     @Html.ValidationMessageFor(model => model.Locales[item].ShortDescription)
+                 </div>
+             </div>
+             <div class="form-group">
+                 @Html.GrandLabelFor(model => model.Locales[item].FullDescription)
+                 <div class="col-md-9">
+                     @Html.EditorFor(model => model.Locales[item].FullDescription, "RichEditor")
+                     @Html.ValidationMessageFor(model => model.Locales[item].FullDescription)
+                 </div>
+             </div>
+             @Html.HiddenFor(model => model.Locales[item].LanguageId)
+         </div>
+    </div>
                 ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShortDescription):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(x => x.ShortDescription, new { style = "Width: 250px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.ShortDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.FullDescription):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.FullDescription, "RichEditor")
-                @Html.ValidationMessageFor(model => model.FullDescription)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal portlet light bg-inverse form-fit">
+         <div class="form-body">
+             <div class="form-group">
+                 @Html.GrandLabelFor(model => model.Name)
+                 <div class="col-md-9">
+                     @Html.GrandEditorFor(model => model.Name)
+                     @Html.ValidationMessageFor(model => model.Name)
+                 </div>
+             </div>
+             <div class="form-group">
+                 @Html.GrandLabelFor(model => model.ShortDescription)
+                 <div class="col-md-9">
+                     @Html.GrandTextAreaFor(x => x.ShortDescription, new { style = "Height: 100px;" })
+                     @Html.ValidationMessageFor(model => model.ShortDescription)
+                 </div>
+             </div>
+             <div class="form-group">
+                 @Html.GrandLabelFor(model => model.FullDescription)
+                 <div class="col-md-9">
+                     @Html.EditorFor(x => x.FullDescription, "RichEditor")
+                     @Html.ValidationMessageFor(model => model.FullDescription)
+                 </div>
+             </div>
+         </div>
+    </div>
             ))
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AdminComment):
-        </td>
-        <td class="adminData">
-            @Html.TextAreaFor(model => model.AdminComment)
-            @Html.ValidationMessageFor(model => model.AdminComment)
-        </td>
-    </tr>
-    <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.VendorId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.VendorId, Model.AvailableVendors)
-            @Html.ValidationMessageFor(model => model.VendorId)
-        </td>
-    </tr>
-    <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ShowOnHomePage):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ShowOnHomePage)
-            @Html.ValidationMessageFor(model => model.ShowOnHomePage)
-        </td>
-    </tr>
-    <tr id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayOrder):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayOrder)
-            @Html.ValidationMessageFor(model => model.DisplayOrder)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayOrderCategory):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayOrderCategory)
-            @Html.ValidationMessageFor(model => model.DisplayOrderCategory)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayOrderManufacturer):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayOrderManufacturer)
-            @Html.ValidationMessageFor(model => model.DisplayOrderManufacturer)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AllowCustomerReviews):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AllowCustomerReviews)
-            @Html.ValidationMessageFor(model => model.AllowCustomerReviews)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ProductTags):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ProductTags)
-            @Html.ValidationMessageFor(model => model.ProductTags)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Sku):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Sku)
-            @Html.ValidationMessageFor(model => model.Sku)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ManufacturerPartNumber):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ManufacturerPartNumber)
-            @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Gtin):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Gtin)
-            @Html.ValidationMessageFor(model => model.Gtin)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-prices">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Price):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Price) [@Model.PrimaryStoreCurrencyCode]
-            @Html.ValidationMessageFor(model => model.Price)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OldPrice):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.OldPrice) [@Model.PrimaryStoreCurrencyCode]
-            @Html.ValidationMessageFor(model => model.OldPrice)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ProductCost):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ProductCost) [@Model.PrimaryStoreCurrencyCode]
-            @Html.ValidationMessageFor(model => model.ProductCost)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SpecialPrice):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SpecialPrice) [@Model.PrimaryStoreCurrencyCode]
-            @Html.ValidationMessageFor(model => model.SpecialPrice)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SpecialPriceStartDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SpecialPriceStartDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.SpecialPriceStartDateTimeUtc)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SpecialPriceEndDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SpecialPriceEndDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.SpecialPriceEndDateTimeUtc)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisableBuyButton):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisableBuyButton)
-            @Html.ValidationMessageFor(model => model.DisableBuyButton)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisableWishlistButton):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisableWishlistButton)
-            @Html.ValidationMessageFor(model => model.DisableWishlistButton)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AvailableForPreOrder):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AvailableForPreOrder)
-            @Html.ValidationMessageFor(model => model.AvailableForPreOrder)
-        </td>
-    </tr>
-    <tr id="pnlPreOrderAvailabilityStartDateTimeUtc">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.PreOrderAvailabilityStartDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CallForPrice):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.CallForPrice)
-            @Html.ValidationMessageFor(model => model.CallForPrice)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CustomerEntersPrice):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.CustomerEntersPrice)
-            @Html.ValidationMessageFor(model => model.CustomerEntersPrice)
-        </td>
-    </tr>
-    <tr id="pnlMinimumCustomerEnteredPrice">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.MinimumCustomerEnteredPrice):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.MinimumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
-            @Html.ValidationMessageFor(model => model.MinimumCustomerEnteredPrice)
-        </td>
-    </tr>
-    <tr id="pnlMaximumCustomerEnteredPrice">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.MaximumCustomerEnteredPrice):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.MaximumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
-            @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
-        </td>
-    </tr>
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.BasepriceEnabled):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.BasepriceEnabled)
-            @Html.ValidationMessageFor(model => model.BasepriceEnabled)
-        </td>
-    </tr>
-    <tr id="pnlBasepriceAmount">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.BasepriceAmount):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.BasepriceAmount)
-            @Html.ValidationMessageFor(model => model.BasepriceAmount)
-        </td>
-    </tr>
-    <tr id="pnlBasepriceUnit">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.BasepriceUnitId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.BasepriceUnitId, Model.AvailableBasepriceUnits)
-            @Html.ValidationMessageFor(model => model.BasepriceUnitId)
-        </td>
-    </tr>
-    <tr id="pnlBasepriceBaseAmount">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.BasepriceBaseAmount):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.BasepriceBaseAmount)
-            @Html.ValidationMessageFor(model => model.BasepriceBaseAmount)
-        </td>
-    </tr>
-    <tr id="pnlBasepriceBaseUnit">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.BasepriceBaseUnitId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.BasepriceBaseUnitId, Model.AvailableBasepriceBaseUnits)
-            @Html.ValidationMessageFor(model => model.BasepriceBaseUnitId)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-required-other-products">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.RequireOtherProducts):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.RequireOtherProducts)
-            @Html.ValidationMessageFor(model => model.RequireOtherProducts)
-        </td>
-    </tr>
-    <tr id="pnlRequiredProductIds">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.RequiredProductIds):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.RequiredProductIds)
-            @Html.ValidationMessageFor(model => model.RequiredProductIds)
-            <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-            <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new { btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="k-button" />
-            <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#btnRefreshRequiredProducts').click(function () {
-                        //refresh product list
-                        loadRequiredProductFriendlyNames();
-
-                        //return false to don't reload a page
-                        return false;
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AdminComment)
+            <div class="col-md-9">
+                @Html.GrandTextAreaFor(model => model.AdminComment)
+                @Html.ValidationMessageFor(model => model.AdminComment)
+            </div>
+        </div>
+        <div @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+            @Html.GrandLabelFor(model => model.VendorId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                @Html.ValidationMessageFor(model => model.VendorId)
+            </div>
+        </div>
+        <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+            @Html.GrandLabelFor(model => model.ShowOnHomePage)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.ShowOnHomePage)
+                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDisplayOrder" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrderCategory)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.DisplayOrderCategory)
+                @Html.ValidationMessageFor(model => model.DisplayOrderCategory)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrderManufacturer)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.DisplayOrderManufacturer)
+                @Html.ValidationMessageFor(model => model.DisplayOrderManufacturer)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AllowCustomerReviews)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AllowCustomerReviews)
+                @Html.ValidationMessageFor(model => model.AllowCustomerReviews)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ProductTags)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.ProductTags, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProductTags)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Sku)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.Sku)
+                @Html.ValidationMessageFor(model => model.Sku)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ManufacturerPartNumber)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.ManufacturerPartNumber)
+                @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Gtin)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.Gtin)
+                @Html.ValidationMessageFor(model => model.Gtin)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-prices">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Price)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.Price) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.Price)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OldPrice)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.OldPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.OldPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ProductCost)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.ProductCost) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.ProductCost)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.SpecialPrice)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.SpecialPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.SpecialPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.SpecialPriceStartDateTimeUtc)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.SpecialPriceStartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.SpecialPriceStartDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.SpecialPriceEndDateTimeUtc)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.SpecialPriceEndDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.SpecialPriceEndDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisableBuyButton)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DisableBuyButton)
+                @Html.ValidationMessageFor(model => model.DisableBuyButton)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisableWishlistButton)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DisableWishlistButton)
+                @Html.ValidationMessageFor(model => model.DisableWishlistButton)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AvailableForPreOrder)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AvailableForPreOrder)
+                @Html.ValidationMessageFor(model => model.AvailableForPreOrder)
+            </div>
+        </div>
+        <div class="form-group" id="pnlPreOrderAvailabilityStartDateTimeUtc">
+            @Html.GrandLabelFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CallForPrice)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.CallForPrice)
+                @Html.ValidationMessageFor(model => model.CallForPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerEntersPrice)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.CustomerEntersPrice)
+                @Html.ValidationMessageFor(model => model.CustomerEntersPrice)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMinimumCustomerEnteredPrice">
+            @Html.GrandLabelFor(model => model.MinimumCustomerEnteredPrice)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.MinimumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.MinimumCustomerEnteredPrice)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMaximumCustomerEnteredPrice">
+            @Html.GrandLabelFor(model => model.MaximumCustomerEnteredPrice)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.MaximumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.BasepriceEnabled)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.BasepriceEnabled)
+                @Html.ValidationMessageFor(model => model.BasepriceEnabled)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBasepriceAmount">
+            @Html.GrandLabelFor(model => model.BasepriceAmount)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.BasepriceAmount)
+                @Html.ValidationMessageFor(model => model.BasepriceAmount)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBasepriceUnit">
+            @Html.GrandLabelFor(model => model.BasepriceUnitId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.BasepriceUnitId, Model.AvailableBasepriceUnits)
+                @Html.ValidationMessageFor(model => model.BasepriceUnitId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBasepriceBaseAmount">
+            @Html.GrandLabelFor(model => model.BasepriceBaseAmount)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.BasepriceBaseAmount)
+                @Html.ValidationMessageFor(model => model.BasepriceBaseAmount)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBasepriceBaseUnit">
+            @Html.GrandLabelFor(model => model.BasepriceBaseUnitId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.BasepriceBaseUnitId, Model.AvailableBasepriceBaseUnits)
+                @Html.ValidationMessageFor(model => model.BasepriceBaseUnitId)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal" id="group-required-other-products">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.RequireOtherProducts)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.RequireOtherProducts)
+                @Html.ValidationMessageFor(model => model.RequireOtherProducts)
+            </div>
+        </div>
+        <div class="form-group" id="pnlRequiredProductIds">
+            @Html.GrandLabelFor(model => model.RequiredProductIds)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.RequiredProductIds)
+                @Html.ValidationMessageFor(model => model.RequiredProductIds)
+                <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" 
+                       onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", 
+                                                       new { btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshRequiredProducts').click(function () {
+                            loadRequiredProductFriendlyNames();
+                            return false;
+                        });
                     });
-                });
-            </script>
-            <span id="required-product-names" class="required-product-names"></span>
-        </td>
-    </tr>
-    <tr id="pnlAutomaticallyAddRequiredProducts">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AutomaticallyAddRequiredProducts):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AutomaticallyAddRequiredProducts)
-            @Html.ValidationMessageFor(model => model.AutomaticallyAddRequiredProducts)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-giftcard">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsGiftCard):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsGiftCard)
-            @Html.ValidationMessageFor(model => model.IsGiftCard)
-        </td>
-    </tr>
-    <tr id="pnlGiftCardType">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.GiftCardTypeId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.GiftCardTypeId)
-        </td>
-    </tr>
-    <tr id="pnlOverriddenGiftCardAmount">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OverriddenGiftCardAmount):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.OverriddenGiftCardAmount)
-            @Html.ValidationMessageFor(model => model.OverriddenGiftCardAmount)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-downloads">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsDownload):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsDownload)
-            @Html.ValidationMessageFor(model => model.IsDownload)
-        </td>
-    </tr>
-    <tr id="pnlDownloadFile">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DownloadId):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DownloadId)
-            @Html.ValidationMessageFor(model => model.DownloadId)
-        </td>
-    </tr>
-    <tr id="pnlUnlimitedDownloads">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.UnlimitedDownloads):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.UnlimitedDownloads)
-            @Html.ValidationMessageFor(model => model.UnlimitedDownloads)
-        </td>
-    </tr>
-    <tr id="pnlMaxNumberOfDownloads">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.MaxNumberOfDownloads):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.MaxNumberOfDownloads)
-            @Html.ValidationMessageFor(model => model.MaxNumberOfDownloads)
-        </td>
-    </tr>
-    <tr id="pnlDownloadExpirationDays">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DownloadExpirationDays):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DownloadExpirationDays)
-            @Html.ValidationMessageFor(model => model.DownloadExpirationDays)
-        </td>
-    </tr>
-    <tr id="pnlDownloadActivationType">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DownloadActivationTypeId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.DownloadActivationTypeId, ((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.DownloadActivationTypeId)
-        </td>
-    </tr>
-    <tr id="pnlHasUserAgreement">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.HasUserAgreement):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.HasUserAgreement)
-            @Html.ValidationMessageFor(model => model.HasUserAgreement)
-        </td>
-    </tr>
-    <tr id="pnlUserAgreementText">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.UserAgreementText):
-        </td>
-        <td class="adminData">
-            @Html.TextAreaFor(model => model.UserAgreementText)
-            @Html.ValidationMessageFor(model => model.UserAgreementText)
-        </td>
-    </tr>
-    <tr id="pnlHasSampleDownload">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.HasSampleDownload):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.HasSampleDownload)
-            @Html.ValidationMessageFor(model => model.HasSampleDownload)
-        </td>
-    </tr>
-    <tr id="pnlSampleDownloadFile">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SampleDownloadId):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SampleDownloadId)
-            @Html.ValidationMessageFor(model => model.SampleDownloadId)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-recurring">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsRecurring):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsRecurring)
-            @Html.ValidationMessageFor(model => model.IsRecurring)
-        </td>
-    </tr>
-    <tr id="pnlCycleLength">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.RecurringCycleLength):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.RecurringCycleLength)
-            @Html.ValidationMessageFor(model => model.RecurringCycleLength)
-        </td>
-    </tr>
-    <tr id="pnlCyclePeriod">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.RecurringCyclePeriodId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.RecurringCyclePeriodId, ((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.RecurringCyclePeriodId)
-        </td>
-    </tr>
-    <tr id="pnlTotalCycles">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.RecurringTotalCycles):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.RecurringTotalCycles)
-            @Html.ValidationMessageFor(model => model.RecurringTotalCycles)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-rental">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsRental):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsRental)
-            @Html.ValidationMessageFor(model => model.IsRental)
-        </td>
-    </tr>
-    <tr id="pnlRentalPriceLength">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.RentalPriceLength):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.RentalPriceLength)
-            @Html.ValidationMessageFor(model => model.RentalPriceLength)
-        </td>
-    </tr>
-    <tr id="pnlRentalPricePeriod">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.RentalPricePeriodId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.RentalPricePeriodId, ((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.RentalPricePeriodId)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-shipping">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsShipEnabled):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsShipEnabled)
-            @Html.ValidationMessageFor(model => model.IsShipEnabled)
-        </td>
-    </tr>
-    <tr id="pnlFreeShipping">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsFreeShipping):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsFreeShipping)
-            @Html.ValidationMessageFor(model => model.IsFreeShipping)
-        </td>
-    </tr>
-    <tr id="pnlShipSeparately">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ShipSeparately):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ShipSeparately)
-            @Html.ValidationMessageFor(model => model.ShipSeparately)
-        </td>
-    </tr>
-    <tr id="pnlAdditionalShippingCharge">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AdditionalShippingCharge):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AdditionalShippingCharge) [@Model.PrimaryStoreCurrencyCode]
-            @Html.ValidationMessageFor(model => model.AdditionalShippingCharge)
-        </td>
-    </tr>
-    <tr id="pnlWeight">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Weight):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Weight) [@Model.BaseWeightIn]
-            @Html.ValidationMessageFor(model => model.Weight)
-        </td>
-    </tr>
-    <tr id="pnlLength">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Length):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Length) [@Model.BaseDimensionIn]
-            @Html.ValidationMessageFor(model => model.Length)
-        </td>
-    </tr>
-    <tr id="pnlWidth">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Width):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Width) [@Model.BaseDimensionIn]
-            @Html.ValidationMessageFor(model => model.Width)
-        </td>
-    </tr>
-    <tr id="pnlHeight">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Height):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Height) [@Model.BaseDimensionIn]
-            @Html.ValidationMessageFor(model => model.Height)
-        </td>
-    </tr>
-    <tr id="pnlDeliveryDate">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DeliveryDateId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.DeliveryDateId, Model.AvailableDeliveryDates)
-            @Html.ValidationMessageFor(model => model.DeliveryDateId)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-tax">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsTaxExempt):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsTaxExempt)
-            @Html.ValidationMessageFor(model => model.IsTaxExempt)
-        </td>
-    </tr>
-    <tr id="pnlTaxCategory">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.TaxCategoryId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
-            @Html.ValidationMessageFor(model => model.TaxCategoryId)
-        </td>
-    </tr>
-    <tr id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
-            @Html.ValidationMessageFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
-        </td>
-    </tr>
-</table>
-<table class="adminContent" id="group-inventory">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ManageInventoryMethodId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.ManageInventoryMethodId, ((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.ManageInventoryMethodId)
-        </td>
-    </tr>
-    <tr id="pnlUseMultipleWarehouses">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.UseMultipleWarehouses):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.UseMultipleWarehouses)
-            @Html.ValidationMessageFor(model => model.UseMultipleWarehouses)
-        </td>
-    </tr>
-    <tr id="pnlWarehouse">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.WarehouseId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
-            @Html.ValidationMessageFor(model => model.WarehouseId)
-        </td>
-    </tr>
-    <tr id="pnlMultipleWarehouses">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ProductWarehouseInventoryModels):
-        </td>
-        <td class="adminData">
-            @if (Model.ProductWarehouseInventoryModels.Count > 0)
-            {
-                <table class="tablestyle" border="1" cellspacing="0" style="width: 600px; border-collapse: collapse;">
-                    <thead>
-                        <tr class="headerstyle">
-                            <th>
-                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")
-                            </th>
-                            <th align="center">
-                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")
-                            </th>
-                            <th align="center">
-                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")
-                            </th>
-                            <th align="center">
-                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")
-                            </th>
-                            <th align="center">
-                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.ProductWarehouseInventoryModels)
-                        {
-                            <tr>
-                                <td style="width: 40%;">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        @item.WarehouseName
-                                    </div>
-                                </td>
-                                <td align="center" style="width: 10%;">
-                                    <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
-                                    <script type="text/javascript">
-                                        $(document).ready(function () {
-                                            $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
-                                            toggleWarehouseUsed_@(item.WarehouseId)();
-                                        });
-                                        function toggleWarehouseUsed_@(item.WarehouseId)() {
-                                            if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
-                                                $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
-                                                $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', false);
-                                            }
-                                            else {
-                                                $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
-                                                $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', true);
-                                            }
-                                        }
-                                    </script>
-                                </td>
-                                <td align="center" style="width: 20%;">
-                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width:70px;" />
-                                </td>
-                                <td align="center" style="width: 20%;">
-                                    <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="adminInput" style="width:70px;" />
-                                </td>
-                                <td align="center" style="width: 10%;">
-                                    @item.PlannedQuantity
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <p>
-                    <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description1")</em>
-                </p>
-                <p>
-                    <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description2")</em>
-                </p>
-                <p>
-                    <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description3")</em>
-                </p>
-            }
-            else
-            {
-                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse.NotDefined")
-            }
-        </td>
-    </tr>
-    <tr id="pnlStockQuantity">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StockQuantity):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.StockQuantity)
-            @Html.ValidationMessageFor(model => model.StockQuantity)
-        </td>
-    </tr>
-    <tr id="pnlDisplayStockAvailability">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayStockAvailability):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayStockAvailability)
-            @Html.ValidationMessageFor(model => model.DisplayStockAvailability)
-        </td>
-    </tr>
-    <tr id="pnlDisplayStockQuantity">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayStockQuantity):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayStockQuantity)
-            @Html.ValidationMessageFor(model => model.DisplayStockQuantity)
-        </td>
-    </tr>
-    <tr id="pnlMinStockQuantity">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.MinStockQuantity):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.MinStockQuantity)
-            @Html.ValidationMessageFor(model => model.MinStockQuantity)
-        </td>
-    </tr>
-    <tr id="pnlLowStockActivity">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.LowStockActivityId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.LowStockActivityId, ((LowStockActivity)Model.LowStockActivityId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.LowStockActivityId)
-        </td>
-    </tr>
-    <tr id="pnlNotifyForQuantityBelow">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.NotifyAdminForQuantityBelow):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.NotifyAdminForQuantityBelow)
-            @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
-        </td>
-    </tr>
-    <tr id="pnlBackorders">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.BackorderModeId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.BackorderModeId, ((BackorderMode)Model.BackorderModeId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.BackorderModeId)
-        </td>
-    </tr>
-    <tr id="pnlAllowBackInStockSubscriptions">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AllowBackInStockSubscriptions):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AllowBackInStockSubscriptions)
-            @Html.ValidationMessageFor(model => model.AllowBackInStockSubscriptions)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OrderMinimumQuantity):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.OrderMinimumQuantity)
-            @Html.ValidationMessageFor(model => model.OrderMinimumQuantity)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OrderMaximumQuantity):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.OrderMaximumQuantity)
-            @Html.ValidationMessageFor(model => model.OrderMaximumQuantity)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AllowedQuantities):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AllowedQuantities)
-            @Html.ValidationMessageFor(model => model.AllowedQuantities)
-        </td>
-    </tr>
-    <tr id="pnlAllowAddingOnlyExistingAttributeCombinations">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AllowAddingOnlyExistingAttributeCombinations):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
-            @Html.ValidationMessageFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr class="adminSeparator">
-        <td colspan="2">
-            <hr />
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AvailableStartDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AvailableStartDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.AvailableStartDateTimeUtc)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AvailableEndDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.AvailableEndDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.AvailableEndDateTimeUtc)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.MarkAsNew):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.MarkAsNew)
-            @Html.ValidationMessageFor(model => model.MarkAsNew)
-        </td>
-    </tr>
-    <tr id="pnlMarkAsNewStartDateTimeUtc">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.MarkAsNewStartDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.MarkAsNewStartDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.MarkAsNewStartDateTimeUtc)
-        </td>
-    </tr>
-    <tr id="pnlMarkAsNewEndDateTimeUtc">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.MarkAsNewEndDateTimeUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.MarkAsNewEndDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.MarkAsNewEndDateTimeUtc)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Published):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Published)
-            @Html.ValidationMessageFor(model => model.Published)
-        </td>
-    </tr>
-    @if (Model.CreatedOn.HasValue)
-    {
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CreatedOn):
-            </td>
-            <td class="adminData">
-                @Model.CreatedOn.Value.ToString("F")
-            </td>
-        </tr>
-    }
-    @if (Model.UpdatedOn.HasValue)
-    {
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.UpdatedOn):
-            </td>
-            <td class="adminData">
-                @Model.UpdatedOn.Value.ToString("F")
-            </td>
-        </tr>
-    }
-</table>
+                </script>
+                <span id="required-product-names" class="required-product-names"></span>
+            </div>         
+        </div>
+        <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
+            @Html.GrandLabelFor(model => model.AutomaticallyAddRequiredProducts)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AutomaticallyAddRequiredProducts)
+                @Html.ValidationMessageFor(model => model.AutomaticallyAddRequiredProducts)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal portlet light bg-inverse form-fit"  id="group-giftcard">
+    <div class="form-body">       
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsGiftCard)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.IsGiftCard)
+                @Html.ValidationMessageFor(model => model.IsGiftCard)
+            </div>
+        </div>
+        <div class="form-group" id="pnlGiftCardType">
+            @Html.GrandLabelFor(model => model.GiftCardTypeId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlOverriddenGiftCardAmount">
+            @Html.GrandLabelFor(model => model.OverriddenGiftCardAmount)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.OverriddenGiftCardAmount)
+                @Html.ValidationMessageFor(model => model.OverriddenGiftCardAmount)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal" id="group-downloads">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsDownload)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.IsDownload)
+                @Html.ValidationMessageFor(model => model.IsDownload)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadFile">
+            @Html.GrandLabelFor(model => model.DownloadId)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DownloadId)
+                @Html.ValidationMessageFor(model => model.DownloadId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlUnlimitedDownloads">
+            @Html.GrandLabelFor(model => model.UnlimitedDownloads)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.UnlimitedDownloads)
+                @Html.ValidationMessageFor(model => model.UnlimitedDownloads)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMaxNumberOfDownloads">
+            @Html.GrandLabelFor(model => model.MaxNumberOfDownloads)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.MaxNumberOfDownloads)
+                @Html.ValidationMessageFor(model => model.MaxNumberOfDownloads)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadExpirationDays">
+            @Html.GrandLabelFor(model => model.DownloadExpirationDays)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.DownloadExpirationDays)
+                @Html.ValidationMessageFor(model => model.DownloadExpirationDays)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadActivationType">
+            @Html.GrandLabelFor(model => model.DownloadActivationTypeId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.DownloadActivationTypeId, ((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.DownloadActivationTypeId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlHasUserAgreement">
+            @Html.GrandLabelFor(model => model.HasUserAgreement)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.HasUserAgreement)
+                @Html.ValidationMessageFor(model => model.HasUserAgreement)
+            </div>
+        </div>
+        <div class="form-group" id="pnlUserAgreementText">
+            @Html.GrandLabelFor(model => model.UserAgreementText)
+            <div class="col-md-9">
+                @Html.GrandTextAreaFor(model => model.UserAgreementText)
+                @Html.ValidationMessageFor(model => model.UserAgreementText)
+            </div>
+        </div>
+        <div class="form-group" id="pnlHasSampleDownload">
+            @Html.GrandLabelFor(model => model.HasSampleDownload)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.HasSampleDownload)
+                @Html.ValidationMessageFor(model => model.HasSampleDownload)
+            </div>
+        </div>
+        <div class="form-group" id="pnlSampleDownloadFile">
+            @Html.GrandLabelFor(model => model.SampleDownloadId)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.SampleDownloadId)
+                @Html.ValidationMessageFor(model => model.SampleDownloadId)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-recurring">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsRecurring)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.IsRecurring)
+                @Html.ValidationMessageFor(model => model.IsRecurring)
+            </div>
+        </div>
+        <div class="form-group" id="pnlCycleLength">
+            @Html.GrandLabelFor(model => model.RecurringCycleLength)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.RecurringCycleLength)
+                @Html.ValidationMessageFor(model => model.RecurringCycleLength)
+            </div>
+        </div>
+        <div class="form-group" id="pnlCyclePeriod">
+            @Html.GrandLabelFor(model => model.RecurringCyclePeriodId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.RecurringCyclePeriodId, ((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.RecurringCyclePeriodId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlTotalCycles">
+            @Html.GrandLabelFor(model => model.RecurringTotalCycles)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.RecurringTotalCycles)
+                @Html.ValidationMessageFor(model => model.RecurringTotalCycles)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal" id="group-rental">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsRental)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.IsRental)
+                @Html.ValidationMessageFor(model => model.IsRental)
+            </div>
+        </div>
+        <div class="form-group" id="pnlRentalPriceLength">
+            @Html.GrandLabelFor(model => model.RentalPriceLength)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.RentalPriceLength)
+                @Html.ValidationMessageFor(model => model.RentalPriceLength)
+            </div>
+        </div>
+        <div class="form-group" id="pnlRentalPricePeriod">
+            @Html.GrandLabelFor(model => model.RentalPricePeriodId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.RentalPricePeriodId, ((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.RentalPricePeriodId)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-shipping">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsShipEnabled)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.IsShipEnabled)
+                @Html.ValidationMessageFor(model => model.IsShipEnabled)
+            </div>
+        </div>
+        <div class="form-group" id="pnlFreeShipping">
+            @Html.GrandLabelFor(model => model.IsFreeShipping)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.IsFreeShipping)
+                @Html.ValidationMessageFor(model => model.IsFreeShipping)
+            </div>
+        </div>
+        <div class="form-group" id="pnlShipSeparately">
+            @Html.GrandLabelFor(model => model.ShipSeparately)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.ShipSeparately)
+                @Html.ValidationMessageFor(model => model.ShipSeparately)
+            </div>
+        </div>
+        <div class="form-group" id="pnlAdditionalShippingCharge">
+            @Html.GrandLabelFor(model => model.AdditionalShippingCharge)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.AdditionalShippingCharge) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.AdditionalShippingCharge)
+            </div>
+        </div>
+        <div class="form-group" id="pnlWeight">
+            @Html.GrandLabelFor(model => model.Weight)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.Weight) [@Model.BaseWeightIn]
+                @Html.ValidationMessageFor(model => model.Weight)
+            </div>
+        </div>
+        <div class="form-group" id="pnlLength">
+            @Html.GrandLabelFor(model => model.Length)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.Length) [@Model.BaseDimensionIn]
+                @Html.ValidationMessageFor(model => model.Length)
+            </div>
+        </div>
+        <div class="form-group" id="pnlWidth">
+            @Html.GrandLabelFor(model => model.Width)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.Width) [@Model.BaseDimensionIn]
+                @Html.ValidationMessageFor(model => model.Width)
+            </div>
+        </div>
+        <div class="form-group" id="pnlHeight">
+            @Html.GrandLabelFor(model => model.Height)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.Height) [@Model.BaseDimensionIn]
+                @Html.ValidationMessageFor(model => model.Height)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDeliveryDate">
+            @Html.GrandLabelFor(model => model.DeliveryDateId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.DeliveryDateId, Model.AvailableDeliveryDates)
+                @Html.ValidationMessageFor(model => model.DeliveryDateId)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal" id="group-tax">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsTaxExempt)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.IsTaxExempt)
+                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+            </div>
+        </div>
+        <div class="form-group" id="pnlTaxCategory">
+            @Html.GrandLabelFor(model => model.TaxCategoryId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
+                @Html.ValidationMessageFor(model => model.TaxCategoryId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
+            @Html.GrandLabelFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                @Html.ValidationMessageFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-inventory">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ManageInventoryMethodId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.ManageInventoryMethodId, ((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ManageInventoryMethodId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlUseMultipleWarehouses">
+            @Html.GrandLabelFor(model => model.UseMultipleWarehouses)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.UseMultipleWarehouses)
+                @Html.ValidationMessageFor(model => model.UseMultipleWarehouses)
+            </div>
+        </div>
+        <div class="form-group" id="pnlWarehouse">
+            @Html.GrandLabelFor(model => model.WarehouseId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
+                @Html.ValidationMessageFor(model => model.WarehouseId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMultipleWarehouses">
+            @Html.GrandLabelFor(model => model.ProductWarehouseInventoryModels)
+            <div class="col-md-9">
+                    @if (Model.ProductWarehouseInventoryModels.Count > 0)
+                    {
+                        <table style="width: 600px; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")
+                                    </th>
+                                    <th align="center">
+                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")
+                                    </th>
+                                    <th align="center">
+                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")
+                                    </th>
+                                    <th align="center">
+                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")
+                                    </th>
+                                    <th align="center">
+                                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ProductWarehouseInventoryModels)
+                                {
+                                    <tr>
+                                        <td style="width: 40%;">
+                                            <div style="padding-left: 10px; padding-right: 10px;">
+                                                @item.WarehouseName
+                                            </div>
+                                        </td>
+                                        <td align="center" style="width: 10%;">
+                                            <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
+                                            <script type="text/javascript">
+                                                $(document).ready(function() {
+                                                    $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
+                                                    toggleWarehouseUsed_@(item.WarehouseId)();
+                                                });
+
+                                                function toggleWarehouseUsed_@(item.WarehouseId)() {
+                                                    if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
+                                                        $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
+                                                        $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', false);
+                                                    } else {
+                                                        $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
+                                                        $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', true);
+                                                    }
+                                                }
+                                            </script>
+                                        <td align="center" style="width: 20%;">
+                                            <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width: 70px;" />
+                                        </td>
+                                        <td align="center" style="width: 20%;">
+                                            <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="adminInput" style="width: 70px;" />
+                                        </td>
+                                        <td align="center" style="width: 10%;">
+                                            @item.PlannedQuantity
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <p>
+                            <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description1")</em>
+                        </p>
+                        <p>
+                            <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description2")</em>
+                        </p>
+                        <p>
+                            <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description3")</em>
+                        </p>
+                    }
+                    else
+                    {
+                        @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse.NotDefined")
+                    }
+            </div>
+        </div>
+        <div class="form-group" id="pnlStockQuantity">
+            @Html.GrandLabelFor(model => model.StockQuantity)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.StockQuantity)
+                @Html.ValidationMessageFor(model => model.StockQuantity)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDisplayStockAvailability">
+            @Html.GrandLabelFor(model => model.DisplayStockAvailability)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DisplayStockAvailability)
+                @Html.ValidationMessageFor(model => model.DisplayStockAvailability)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDisplayStockQuantity">
+            @Html.GrandLabelFor(model => model.DisplayStockQuantity)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.DisplayStockQuantity)
+                @Html.ValidationMessageFor(model => model.DisplayStockQuantity)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMinStockQuantity">
+            @Html.GrandLabelFor(model => model.MinStockQuantity)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.MinStockQuantity)
+                @Html.ValidationMessageFor(model => model.MinStockQuantity)
+            </div>
+        </div>
+        <div class="form-group" id="pnlLowStockActivity">
+            @Html.GrandLabelFor(model => model.LowStockActivityId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.LowStockActivityId, ((LowStockActivity)Model.LowStockActivityId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.LowStockActivityId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlNotifyForQuantityBelow">
+            @Html.GrandLabelFor(model => model.NotifyAdminForQuantityBelow)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.NotifyAdminForQuantityBelow)
+                @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBackorders">
+            @Html.GrandLabelFor(model => model.BackorderModeId)
+            <div class="col-md-9">
+                @Html.GrandDropDownListFor(model => model.BackorderModeId, ((BackorderMode)Model.BackorderModeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.BackorderModeId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlAllowBackInStockSubscriptions">
+            @Html.GrandLabelFor(model => model.AllowBackInStockSubscriptions)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AllowBackInStockSubscriptions)
+                @Html.ValidationMessageFor(model => model.AllowBackInStockSubscriptions)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OrderMinimumQuantity)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.OrderMinimumQuantity)
+                @Html.ValidationMessageFor(model => model.OrderMinimumQuantity)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OrderMaximumQuantity)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.OrderMaximumQuantity)
+                @Html.ValidationMessageFor(model => model.OrderMaximumQuantity)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AllowedQuantities)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.AllowedQuantities)
+                @Html.ValidationMessageFor(model => model.AllowedQuantities)
+            </div>
+        </div>
+        <div class="form-group" id="pnlAllowAddingOnlyExistingAttributeCombinations">
+            @Html.GrandLabelFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+                @Html.ValidationMessageFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal">    
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AvailableStartDateTimeUtc)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.AvailableStartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.AvailableStartDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AvailableEndDateTimeUtc)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.AvailableEndDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.AvailableEndDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.MarkAsNew)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.MarkAsNew)
+                @Html.ValidationMessageFor(model => model.MarkAsNew)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMarkAsNewStartDateTimeUtc">
+            @Html.GrandLabelFor(model => model.MarkAsNewStartDateTimeUtc)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.MarkAsNewStartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.MarkAsNewStartDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMarkAsNewEndDateTimeUtc">
+            @Html.GrandLabelFor(model => model.MarkAsNewEndDateTimeUtc)
+            <div class="col-md-9">
+                @Html.GrandEditorFor(model => model.MarkAsNewEndDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.MarkAsNewEndDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Published)
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.Published)
+                @Html.ValidationMessageFor(model => model.Published)
+            </div>
+        </div>
+        @if (Model.CreatedOn.HasValue)
+        {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CreatedOn)
+                <div class="col-md-9">
+                    <span class="form-control">@Model.CreatedOn.Value.ToString("F")</span>
+                </div>
+            </div>
+        }
+        @if (Model.UpdatedOn.HasValue)
+        {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.UpdatedOn)
+                <div class="col-md-9">
+                    <span class="form-control">@Model.UpdatedOn.Value.ToString("F")</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>

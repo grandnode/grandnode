@@ -4,7 +4,11 @@
 
 @if (!String.IsNullOrEmpty(Model.Id))
 {
-    <div id="tierprices-grid"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tierprices-grid"></div>
+        </div>
+    </div>
 
     <script>
         $(document).ready(function () {
@@ -192,5 +196,7 @@
     }
     else
     {
-        @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
+        <div class="note note-info">
+            @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
+        </div>
     }

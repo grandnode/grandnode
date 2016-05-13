@@ -3,7 +3,12 @@
 {
     if (Model.AvailableManufacturers.Count > 0)
     {
-        <div id="productmanufacturers-grid"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="productmanufacturers-grid"></div>
+            </div>
+        </div>
+
 
             <script>
                 $(document).ready(function () {
@@ -161,10 +166,14 @@
     }
     else
     {
-        @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
+        <div class="note note-info">
+            @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
+        </div>
     }
 }
 else
 {
-    @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+    <div class="note note-info">
+            @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+    </div>
 }

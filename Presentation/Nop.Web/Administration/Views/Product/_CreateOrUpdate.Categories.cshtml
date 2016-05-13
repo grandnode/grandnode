@@ -5,8 +5,12 @@
 {
     if (Model.AvailableCategories.Count > 0)
     {
-        <div id="productcategories-grid"></div>
-
+        
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="productcategories-grid"></div>
+            </div>
+        </div>
         <script>
             $(document).ready(function () {
                 $("#productcategories-grid").kendoGrid({
@@ -163,11 +167,15 @@
     }
     else
     {
-        @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
+        <div class="note note-info">
+            @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
+        </div>
     }
 }
 else
 {
-    @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
+    <div class="note note-info">
+        @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
+    </div>
 }
 

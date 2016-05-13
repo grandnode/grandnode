@@ -72,16 +72,16 @@ namespace Nop.Services.ExportImport
                 foreach (var category in categories)
                 {
                     xmlWriter.WriteStartElement("Category");
-                    xmlWriter.WriteElementString("Id", null, category.Id.ToString());
+                    xmlWriter.WriteElementString("Id", null, category.Id);
                     xmlWriter.WriteElementString("Name", null, category.Name);
                     xmlWriter.WriteElementString("Description", null, category.Description);
-                    xmlWriter.WriteElementString("CategoryTemplateId", null, category.CategoryTemplateId.ToString());
+                    xmlWriter.WriteElementString("CategoryTemplateId", null, category.CategoryTemplateId);
                     xmlWriter.WriteElementString("MetaKeywords", null, category.MetaKeywords);
                     xmlWriter.WriteElementString("MetaDescription", null, category.MetaDescription);
                     xmlWriter.WriteElementString("MetaTitle", null, category.MetaTitle);
                     xmlWriter.WriteElementString("SeName", null, category.GetSeName(""));
                     xmlWriter.WriteElementString("ParentCategoryId", null, category.ParentCategoryId);
-                    xmlWriter.WriteElementString("PictureId", null, category.PictureId.ToString());
+                    xmlWriter.WriteElementString("PictureId", null, category.PictureId);
                     xmlWriter.WriteElementString("PageSize", null, category.PageSize.ToString());
                     xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, category.AllowCustomersToSelectPageSize.ToString());
                     xmlWriter.WriteElementString("PageSizeOptions", null, category.PageSizeOptions);
@@ -103,8 +103,8 @@ namespace Nop.Services.ExportImport
                         if (cat != null)
                         {
                             xmlWriter.WriteStartElement("ProductCategory");
-                            xmlWriter.WriteElementString("ProductCategoryId", null, cat.Id.ToString());
-                            xmlWriter.WriteElementString("ProductId", null, productCategory.ProductId.ToString());
+                            xmlWriter.WriteElementString("ProductCategoryId", null, cat.Id);
+                            xmlWriter.WriteElementString("ProductId", null, productCategory.ProductId);
                             xmlWriter.WriteElementString("ProductName", null, cat.Name);
                             xmlWriter.WriteElementString("IsFeaturedProduct", null, productCategory.IsFeaturedProduct.ToString());
                             xmlWriter.WriteElementString("DisplayOrder", null, productCategory.DisplayOrder.ToString());
@@ -290,13 +290,13 @@ namespace Nop.Services.ExportImport
 
                 xmlWriter.WriteElementString("ProductId", null, product.Id.ToString());
                 xmlWriter.WriteElementString("ProductTypeId", null, product.ProductTypeId.ToString());
-                xmlWriter.WriteElementString("ParentGroupedProductId", null, product.ParentGroupedProductId.ToString());
+                xmlWriter.WriteElementString("ParentGroupedProductId", null, product.ParentGroupedProductId);
                 xmlWriter.WriteElementString("VisibleIndividually", null, product.VisibleIndividually.ToString());
                 xmlWriter.WriteElementString("Name", null, product.Name);
                 xmlWriter.WriteElementString("ShortDescription", null, product.ShortDescription);
                 xmlWriter.WriteElementString("FullDescription", null, product.FullDescription);
                 xmlWriter.WriteElementString("AdminComment", null, product.AdminComment);
-                xmlWriter.WriteElementString("VendorId", null, product.VendorId.ToString());
+                xmlWriter.WriteElementString("VendorId", null, product.VendorId);
                 xmlWriter.WriteElementString("ProductTemplateId", null, product.ProductTemplateId.ToString());
                 xmlWriter.WriteElementString("ShowOnHomePage", null, product.ShowOnHomePage.ToString());
                 xmlWriter.WriteElementString("MetaKeywords", null, product.MetaKeywords);
@@ -314,7 +314,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("RequiredProductIds", null, product.RequiredProductIds);
                 xmlWriter.WriteElementString("AutomaticallyAddRequiredProducts", null, product.AutomaticallyAddRequiredProducts.ToString());
                 xmlWriter.WriteElementString("IsDownload", null, product.IsDownload.ToString());
-                xmlWriter.WriteElementString("DownloadId", null, product.DownloadId.ToString());
+                xmlWriter.WriteElementString("DownloadId", null, product.DownloadId);
                 xmlWriter.WriteElementString("UnlimitedDownloads", null, product.UnlimitedDownloads.ToString());
                 xmlWriter.WriteElementString("MaxNumberOfDownloads", null, product.MaxNumberOfDownloads.ToString());
                 if (product.DownloadExpirationDays.HasValue)
@@ -323,7 +323,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteElementString("DownloadExpirationDays", null, string.Empty);
                 xmlWriter.WriteElementString("DownloadActivationType", null, product.DownloadActivationType.ToString());
                 xmlWriter.WriteElementString("HasSampleDownload", null, product.HasSampleDownload.ToString());
-                xmlWriter.WriteElementString("SampleDownloadId", null, product.SampleDownloadId.ToString());
+                xmlWriter.WriteElementString("SampleDownloadId", null, product.SampleDownloadId);
                 xmlWriter.WriteElementString("HasUserAgreement", null, product.HasUserAgreement.ToString());
                 xmlWriter.WriteElementString("UserAgreementText", null, product.UserAgreementText);
                 xmlWriter.WriteElementString("IsRecurring", null, product.IsRecurring.ToString());
@@ -337,13 +337,13 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("IsFreeShipping", null, product.IsFreeShipping.ToString());
                 xmlWriter.WriteElementString("ShipSeparately", null, product.ShipSeparately.ToString());
                 xmlWriter.WriteElementString("AdditionalShippingCharge", null, product.AdditionalShippingCharge.ToString());
-                xmlWriter.WriteElementString("DeliveryDateId", null, product.DeliveryDateId.ToString());
+                xmlWriter.WriteElementString("DeliveryDateId", null, product.DeliveryDateId);
                 xmlWriter.WriteElementString("IsTaxExempt", null, product.IsTaxExempt.ToString());
-                xmlWriter.WriteElementString("TaxCategoryId", null, product.TaxCategoryId.ToString());
+                xmlWriter.WriteElementString("TaxCategoryId", null, product.TaxCategoryId);
                 xmlWriter.WriteElementString("IsTelecommunicationsOrBroadcastingOrElectronicServices", null, product.IsTelecommunicationsOrBroadcastingOrElectronicServices.ToString());
                 xmlWriter.WriteElementString("ManageInventoryMethodId", null, product.ManageInventoryMethodId.ToString());
                 xmlWriter.WriteElementString("UseMultipleWarehouses", null, product.UseMultipleWarehouses.ToString());
-                xmlWriter.WriteElementString("WarehouseId", null, product.WarehouseId.ToString());
+                xmlWriter.WriteElementString("WarehouseId", null, product.WarehouseId);
                 xmlWriter.WriteElementString("StockQuantity", null, product.StockQuantity.ToString());
                 xmlWriter.WriteElementString("DisplayStockAvailability", null, product.DisplayStockAvailability.ToString());
                 xmlWriter.WriteElementString("DisplayStockQuantity", null, product.DisplayStockQuantity.ToString());
@@ -372,9 +372,9 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("MaximumCustomerEnteredPrice", null, product.MaximumCustomerEnteredPrice.ToString());
                 xmlWriter.WriteElementString("BasepriceEnabled", null, product.BasepriceEnabled.ToString());
                 xmlWriter.WriteElementString("BasepriceAmount", null, product.BasepriceAmount.ToString());
-                xmlWriter.WriteElementString("BasepriceUnitId", null, product.BasepriceUnitId.ToString());
+                xmlWriter.WriteElementString("BasepriceUnitId", null, product.BasepriceUnitId);
                 xmlWriter.WriteElementString("BasepriceBaseAmount", null, product.BasepriceBaseAmount.ToString());
-                xmlWriter.WriteElementString("BasepriceBaseUnitId", null, product.BasepriceBaseUnitId.ToString());
+                xmlWriter.WriteElementString("BasepriceBaseUnitId", null, product.BasepriceBaseUnitId);
                 xmlWriter.WriteElementString("MarkAsNew", null, product.MarkAsNew.ToString());
                 xmlWriter.WriteElementString("MarkAsNewStartDateTimeUtc", null, product.MarkAsNewStartDateTimeUtc.HasValue ? product.MarkAsNewStartDateTimeUtc.ToString() : "");
                 xmlWriter.WriteElementString("MarkAsNewEndDateTimeUtc", null, product.MarkAsNewEndDateTimeUtc.HasValue ? product.MarkAsNewEndDateTimeUtc.ToString() : "");
@@ -405,8 +405,8 @@ namespace Nop.Services.ExportImport
                 foreach (var tierPrice in tierPrices)
                 {
                     xmlWriter.WriteStartElement("TierPrice");
-                    xmlWriter.WriteElementString("TierPriceId", null, tierPrice.Id.ToString());
-                    xmlWriter.WriteElementString("StoreId", null, tierPrice.StoreId.ToString());
+                    xmlWriter.WriteElementString("TierPriceId", null, tierPrice.Id);
+                    xmlWriter.WriteElementString("StoreId", null, tierPrice.StoreId);
                     xmlWriter.WriteElementString("CustomerRoleId", null, tierPrice.CustomerRoleId != "" ? tierPrice.CustomerRoleId : "");
                     xmlWriter.WriteElementString("Quantity", null, tierPrice.Quantity.ToString());
                     xmlWriter.WriteElementString("Price", null, tierPrice.Price.ToString());
@@ -419,8 +419,8 @@ namespace Nop.Services.ExportImport
                 foreach (var productAttributeMapping in productAttributMappings)
                 {
                     xmlWriter.WriteStartElement("ProductAttributeMapping");
-                    xmlWriter.WriteElementString("ProductAttributeMappingId", null, productAttributeMapping.Id.ToString());
-                    xmlWriter.WriteElementString("ProductAttributeId", null, productAttributeMapping.ProductAttributeId.ToString());
+                    xmlWriter.WriteElementString("ProductAttributeMappingId", null, productAttributeMapping.Id);
+                    xmlWriter.WriteElementString("ProductAttributeId", null, productAttributeMapping.ProductAttributeId);
                     xmlWriter.WriteElementString("ProductAttributeName", null, _productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId).Name);
                     xmlWriter.WriteElementString("TextPrompt", null, productAttributeMapping.TextPrompt);
                     xmlWriter.WriteElementString("IsRequired", null, productAttributeMapping.IsRequired.ToString());
@@ -456,19 +456,19 @@ namespace Nop.Services.ExportImport
                     foreach (var productAttributeValue in productAttributeValues)
                     {
                         xmlWriter.WriteStartElement("ProductAttributeValue");
-                        xmlWriter.WriteElementString("ProductAttributeValueId", null, productAttributeValue.Id.ToString());
+                        xmlWriter.WriteElementString("ProductAttributeValueId", null, productAttributeValue.Id);
                         xmlWriter.WriteElementString("Name", null, productAttributeValue.Name);
                         xmlWriter.WriteElementString("AttributeValueTypeId", null, productAttributeValue.AttributeValueTypeId.ToString());
-                        xmlWriter.WriteElementString("AssociatedProductId", null, productAttributeValue.AssociatedProductId.ToString());
+                        xmlWriter.WriteElementString("AssociatedProductId", null, productAttributeValue.AssociatedProductId);
                         xmlWriter.WriteElementString("ColorSquaresRgb", null, productAttributeValue.ColorSquaresRgb);
-                        xmlWriter.WriteElementString("ImageSquaresPictureId", null, productAttributeValue.ImageSquaresPictureId.ToString());
+                        xmlWriter.WriteElementString("ImageSquaresPictureId", null, productAttributeValue.ImageSquaresPictureId);
                         xmlWriter.WriteElementString("PriceAdjustment", null, productAttributeValue.PriceAdjustment.ToString());
                         xmlWriter.WriteElementString("WeightAdjustment", null, productAttributeValue.WeightAdjustment.ToString());
                         xmlWriter.WriteElementString("Cost", null, productAttributeValue.Cost.ToString());
                         xmlWriter.WriteElementString("Quantity", null, productAttributeValue.Quantity.ToString());
                         xmlWriter.WriteElementString("IsPreSelected", null, productAttributeValue.IsPreSelected.ToString());
                         xmlWriter.WriteElementString("DisplayOrder", null, productAttributeValue.DisplayOrder.ToString());
-                        xmlWriter.WriteElementString("PictureId", null, productAttributeValue.PictureId.ToString());
+                        xmlWriter.WriteElementString("PictureId", null, productAttributeValue.PictureId);
                         xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();
@@ -570,7 +570,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Name", p => p.Name),
                 new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
                 new PropertyByName<Product>("FullDescription", p => p.FullDescription),
-                new PropertyByName<Product>("VendorId", p => p.VendorId.ToString()),
+                new PropertyByName<Product>("VendorId", p => p.VendorId),
                 new PropertyByName<Product>("ProductTemplateId", p => p.ProductTemplateId),
                 new PropertyByName<Product>("ShowOnHomePage", p => p.ShowOnHomePage),
                 new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords),

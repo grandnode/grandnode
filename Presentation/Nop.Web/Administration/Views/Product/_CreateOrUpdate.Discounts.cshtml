@@ -2,18 +2,20 @@
 
 @if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
 {
-    foreach (var discount in Model.AvailableDiscounts)
+<div class="mt-checkbox-list">
+    @foreach (var discount in Model.AvailableDiscounts)
     {
-    <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
-            @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id))
-            {
-                <text>checked="checked"</text>
-            }
-            />@discount.Name
-    <br />
+        <label class="mt-checkbox mt-checkbox-outline">
+            <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
+                   @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>  } />@discount.Name
+                <span></span>
+            </label>
     }
+</div>
 }
 else
 {
-    @T("Admin.Catalog.Products.Discounts.NoDiscounts")
+<div class="note note-info">
+    @T("Admin.Catalog.Manufacturers.Discounts.NoDiscounts")
+</div>
 }

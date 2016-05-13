@@ -3573,6 +3573,9 @@
   <LocaleResource Name="Admin.Common.ExcelFile">
     <Value>Excel file</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Export">
+    <Value>Export</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.ExportToCsv">
     <Value>Export to CSV</Value>
   </LocaleResource>

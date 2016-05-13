@@ -15,13 +15,101 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(false)
     
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
-        </div>
-        <div class="options">
+   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cube"></i>
+                        @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
+                    </div>
+                    <div class="actions">
+                        @*<input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />*@
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @Html.Partial("_ProductAttributes", Model.ProductAttributes)
+                            <br />
+                            @if (Model.Warnings.Count > 0)
+                            {
+                                <div class="message-box message-box-error">
+                                    @foreach (var warning in Model.Warnings)
+                                    {
+                                        @warning
+                                        <br />
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
 
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.StockQuantity, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.StockQuantity)
+                                    @Html.ValidationMessageFor(model => model.StockQuantity)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.AllowOutOfStockOrders, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.AllowOutOfStockOrders)
+                                    @Html.ValidationMessageFor(model => model.AllowOutOfStockOrders)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Sku, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.Sku)
+                                    @Html.ValidationMessageFor(model => model.Sku)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.ManufacturerPartNumber, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ManufacturerPartNumber)
+                                    @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Gtin, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.Gtin)
+                                    @Html.ValidationMessageFor(model => model.Gtin)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.OverriddenPrice, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.OverriddenPrice)
+                                    @Html.ValidationMessageFor(model => model.OverriddenPrice)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.NotifyAdminForQuantityBelow, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.NotifyAdminForQuantityBelow)
+                                    @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-sm-offset-3 col-md-offset-3 col-md-9 col-sm-9">
+                                        <input type="submit" name="save" class="btn green" 
+                                               type="submit" id="add-attribute-combination" name="add-attribute-combination"
+                                               value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -35,92 +123,6 @@
         </script>
     }
 
-    <div style="border: 1px dashed #2F4F4F; padding: 15px; margin: 10px 0px 10px 0px;">
-        @Html.Partial("_ProductAttributes", Model.ProductAttributes)
-        <br />
-        @if (Model.Warnings.Count > 0)
-        {
-            <div class="message-box message-box-error">
-                @foreach (var warning in Model.Warnings)
-                {
-                    @warning
-                    <br />
-                }
-            </div>
-        }
-    </div>
-    <div>
-        <table class="adminContent">
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.StockQuantity):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.StockQuantity)
-                    @Html.ValidationMessageFor(model => model.StockQuantity)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AllowOutOfStockOrders):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.AllowOutOfStockOrders)
-                    @Html.ValidationMessageFor(model => model.AllowOutOfStockOrders)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Sku):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Sku)
-                    @Html.ValidationMessageFor(model => model.Sku)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.ManufacturerPartNumber):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.ManufacturerPartNumber)
-                    @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Gtin):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Gtin)
-                    @Html.ValidationMessageFor(model => model.Gtin)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.OverriddenPrice):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.OverriddenPrice)
-                    @Html.ValidationMessageFor(model => model.OverriddenPrice)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.NotifyAdminForQuantityBelow):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.NotifyAdminForQuantityBelow)
-                    @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" align="left">
-                    <input type="submit" id="add-attribute-combination" name="add-attribute-combination"
-                           class="k-button" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" />
-                </td>
-            </tr>
-        </table>
-    </div>
-
+    
+    
 }

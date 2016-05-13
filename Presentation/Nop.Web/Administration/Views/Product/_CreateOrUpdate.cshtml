@@ -3,18 +3,22 @@
 @Html.HiddenFor(model => model.Id)
 
 <script>
+    $('body').addClass('page-sidebar-closed');
+    $('.page-sidebar-menu').addClass('page-sidebar-menu-closed');
     $(document).ready(function () {
+        $('#product-edit').show();
         $("#product-edit").kendoTabStrip({
             animation: {
                 open: {
                     effects: "fadeIn"
                 }
-            },
+            },            
+            tabPosition: "left",
             select: tabstrip_on_tab_select
         });
     });
 </script>
-<div id="product-edit">
+<div id="product-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.Info")

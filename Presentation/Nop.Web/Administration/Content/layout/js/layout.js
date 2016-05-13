@@ -401,7 +401,6 @@ var Layout = function () {
             var sidebar = $('.page-sidebar');
             var sidebarMenu = $('.page-sidebar-menu');
             $(".sidebar-search", sidebar).removeClass("open");
-
             if (body.hasClass("page-sidebar-closed")) {
                 body.removeClass("page-sidebar-closed");
                 sidebarMenu.removeClass("page-sidebar-menu-closed");
@@ -628,5 +627,28 @@ var Layout = function () {
 if (App.isAngularJsApp() === false) {
     jQuery(document).ready(function() {    
        Layout.init(); // init metronic core componets
+    });
+}
+
+
+var CookieConsent = function () {
+
+    var _init = function () {
+        $('.mt-cookie-consent-bar').cookieBar({
+            closeButton: '.mt-cookie-consent-btn'
+        });
+    };
+
+    return {
+        init: function () {
+            _init();
+        }
+    };
+
+}();
+
+if (App.isAngularJsApp() === false) {
+    jQuery(document).ready(function () {
+        CookieConsent.init();
     });
 }

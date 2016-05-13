@@ -12,131 +12,128 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.Products.Fields.RequiredProductIds.Choose")
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("Admin.Catalog.Products.Fields.RequiredProductIds.Choose")
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchProductName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.SearchProductName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchCategoryId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.SearchCategoryId, Model.AvailableCategories)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchManufacturerId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9  col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.SearchManufacturerId, Model.AvailableManufacturers)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchStoreId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchVendorId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.SearchVendorId, Model.AvailableVendors)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchProductTypeId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-1 col-md-11 col-sm-11 btn-group btn-group-devided">
+                                        <input type="button" id="search-products" class="btn default" value="@T("Admin.Common.Search")" />
+                                        <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="products-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchProductName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchProductName)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchCategoryId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchCategoryId", Model.AvailableCategories)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchManufacturerId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchManufacturerId", Model.AvailableManufacturers)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchStoreId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchStoreId", Model.AvailableStores)
-            </td>
-        </tr>
-        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchVendorId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchVendorId", Model.AvailableVendors)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchProductTypeId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchProductTypeId", Model.AvailableProductTypes)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-products" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="products-grid"></div>
 
-                <script>
-                    $(document).ready(function () {
-                        $("#products-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("RequiredProductAddPopupList", "Product"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "Name",
-                                title: "@T("Admin.Common.Select")",
-                                width: 50,
-                                template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectRequiredProduct(#=Id#)" class="k-button" />'
-                            },{
-                                field: "Name",
-                                title: "@T("Admin.Catalog.Products.Fields.Name")"
-                            }, {
-                                field: "Published",
-                                title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                            }]
-                        });
-                    });
-                </script>
-            </td>
-        </tr>
-    </table>
+    <script>
+        $(document).ready(function () {
+            $("#products-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("RequiredProductAddPopupList", "Product"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Name",
+                    title: "@T("Admin.Common.Select")",
+                    width: 50,
+                    template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectRequiredProduct(\'#=Id#\')" class="k-button" />'
+                },{
+                    field: "Name",
+                    title: "@T("Admin.Catalog.Products.Fields.Name")"
+                }, {
+                    field: "Published",
+                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                }]
+            });
+        });
+    </script>
+           
     
     <script type="text/javascript">
         $(document).ready(function () {

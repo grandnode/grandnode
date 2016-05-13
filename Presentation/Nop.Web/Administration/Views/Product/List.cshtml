@@ -10,214 +10,228 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.Products.Manage")
-        </div>
-        <div class="options">
-            <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
-            <input type="submit" name="download-catalog-pdf" class="k-button" value="@T("Admin.Catalog.Products.List.DownloadPDF")" />
-            <input type="submit" name="exportxml-all" class="k-button" value="@T("Admin.Common.ExportToXml.All")" />
-            <input type="button" id="exportxml-selected" class="k-button" value="@T("Admin.Common.ExportToXml.Selected")" />
-            <input type="submit" name="exportexcel-all" class="k-button" value="@T("Admin.Common.ExportToExcel.All")" />
-            <input type="button" id="exportexcel-selected" class="k-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                //a vendor cannot import products
-                <input type="button" id="importexcel" name="importexcel" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
-            }
-            <input type="button" id="delete-selected" class="k-button" value="@T("Admin.Common.Delete.Selected")" />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("Admin.Catalog.Products.Manage")
+                    </div>
+                    <div class="actions btn-group btn-group-devided">
+                        <a href="@Url.Action("Create")" class="btn default">@T("Admin.Common.AddNew")</a>
+                        <input type="submit" name="download-catalog-pdf" class="btn default" value="@T("Admin.Catalog.Products.List.DownloadPDF")" />
+
+                        <div class="btn-group btn-group-devided">
+                            <a class="btn default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                @T("Admin.Common.Export")
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <input type="submit" name="exportxml-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.All")" />
+                                </li>
+                                <li>
+                                    <input type="button" id="exportxml-selected" class="btn default" style="width: 100%;"value="@T("Admin.Common.ExportToXml.Selected")" />
+                                </li>
+                                <li>
+                                    <input type="submit" name="exportexcel-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.All")" />
+                                </li>
+                                <li>
+                                    <input type="button" id="exportexcel-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.Selected")" />
+                                </li>
+                            </ul>
+                        </div>
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            //a vendor cannot import products
+                            <input type="button" id="importexcel" name="importexcel" class="btn default" value="@T("Admin.Common.ImportFromExcel")" />
+                        }
+                        <input type="button" id="delete-selected" class="btn default" value="@T("Admin.Common.Delete.Selected")" />
+                    </div>
+                </div>
+
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchProductName)
+                                <div class="col-md-4">
+                                    @Html.GrandEditorFor(model => model.SearchProductName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchCategoryId)
+                                <div class="col-md-4">
+                                    @Html.GrandDropDownListFor(model => model.SearchCategoryId, Model.AvailableCategories)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchIncludeSubCategories)
+                                <div class="col-md-4">
+                                    @Html.GrandEditorFor(model => model.SearchIncludeSubCategories)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchManufacturerId)
+                                <div class="col-md-4">
+                                    @Html.GrandDropDownListFor(model => model.SearchManufacturerId, Model.AvailableManufacturers)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchStoreId)
+                                <div class="col-md-4">
+                                    @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                                </div>
+                            </div>
+                            <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                @Html.GrandLabelFor(model => model.SearchVendorId)
+                                <div class="col-md-4">
+                                    @Html.GrandDropDownListFor(model => model.SearchVendorId, Model.AvailableVendors)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchWarehouseId)
+                                <div class="col-md-4">
+                                    @Html.GrandDropDownListFor(model => model.SearchWarehouseId, Model.AvailableWarehouses)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchProductTypeId)
+                                <div class="col-md-4">
+                                    @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchPublishedId)
+                                <div class="col-md-4">
+                                    @Html.GrandDropDownListFor(model => model.SearchPublishedId, Model.AvailablePublishedOptions)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.GoDirectlyToSku)
+                                <div class="col-md-4">
+                                    <div class="input-group" style="text-align:left">
+                                        @Html.GrandEditorFor(model => model.GoDirectlyToSku)
+                                        <span class="input-group-btn">
+                                            <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="btn default" value="@T("Admin.Common.Go")" />
+                                        </span>
+                                    </div>
+                                   
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <input type="button" id="search-products" class="btn default" value="@T("Admin.Common.Search")" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="products-grid"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchProductName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchProductName)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchCategoryId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchCategoryId", Model.AvailableCategories)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchIncludeSubCategories):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchIncludeSubCategories)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchManufacturerId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchManufacturerId", Model.AvailableManufacturers)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchStoreId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchStoreId", Model.AvailableStores)
-            </td>
-        </tr>
-        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchVendorId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchVendorId", Model.AvailableVendors)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchWarehouseId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchWarehouseId", Model.AvailableWarehouses)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchProductTypeId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchProductTypeId", Model.AvailableProductTypes)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchPublishedId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchPublishedId", Model.AvailablePublishedOptions)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.GoDirectlyToSku):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.GoDirectlyToSku)
-                <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="k-button" value="@T("Admin.Common.Go")" />
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-products" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="products-grid"></div>
 
-                <script>
-                    $(document).ready(function() {
-                        $("#products-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ProductList", "Product"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            dataBound: onDataBound,
-                            columns: [
-                                {
-                                    field: "Id",
-                                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                    width: 50
-                                },
-                                {
-                                    field: "PictureThumbnailUrl",
-                                    title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
-                                    template: '<img src="#=PictureThumbnailUrl#" />',
-                                    width: 100
-                                },
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Catalog.Products.Fields.Name")",
-                                    width: 300
-                                }, {
-                                    field: "Sku",
-                                    title: "@T("Admin.Catalog.Products.Fields.Sku")",
-                                    width: 100
-                                }, {
-                                    field: "Price",
-                                    title: "@T("Admin.Catalog.Products.Fields.Price")",
-                                    width: 150,
-                                    //if not a grouped product, then display
-                                    template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct)) {# #:Price# #}  #"
-                                }, {
-                                    field: "StockQuantityStr",
-                                    title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                                    width: 100
-                                }, {
-                                    field: "ProductTypeName",
-                                    title: "@T("Admin.Catalog.Products.Fields.ProductType")",
-                                    width: 100
-                                }, {
-                                    field: "Published",
-                                    title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                                }
-                            ]
-                        } );
-                    });
-                </script>
-            </td>
-        </tr>
-    </table>
+    <script>
+        $(document).ready(function() {
+            $("#products-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ProductList", "Product"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                dataBound: onDataBound,
+                columns: [
+                    {
+                        field: "Id",
+                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                        width: 50
+                    },
+                    {
+                        field: "PictureThumbnailUrl",
+                        title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
+                        template: '<img src="#=PictureThumbnailUrl#" />',
+                        width: 100
+                    },
+                    {
+                        field: "Name",
+                        title: "@T("Admin.Catalog.Products.Fields.Name")",
+                        width: 300
+                    }, {
+                        field: "Sku",
+                        title: "@T("Admin.Catalog.Products.Fields.Sku")",
+                        width: 100
+                    }, {
+                        field: "Price",
+                        title: "@T("Admin.Catalog.Products.Fields.Price")",
+                        width: 150,
+                        //if not a grouped product, then display
+                        template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct)) {# #:Price# #}  #"
+                    }, {
+                        field: "StockQuantityStr",
+                        title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
+                        width: 100
+                    }, {
+                        field: "ProductTypeName",
+                        title: "@T("Admin.Catalog.Products.Fields.ProductType")",
+                        width: 100
+                    }, {
+                        field: "Published",
+                        title: "@T("Admin.Catalog.Products.Fields.Published")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                    }
+                ]
+            } );
+        });
+    </script>
 
     <script type="text/javascript">
 

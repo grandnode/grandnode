@@ -1313,5 +1313,8 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Export">
+    <Value>Export</Value>
+  </LocaleResource>
 </Language>
