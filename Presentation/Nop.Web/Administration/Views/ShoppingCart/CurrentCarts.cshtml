@@ -7,24 +7,34 @@
 }
 
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-        @T("Admin.CurrentCarts")
-    </div>
-    <div class="options">
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cart-plus"></i>
+                    @T("Admin.CurrentCarts")
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="carts-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="carts-grid"></div>
+           
 
-            <script>
+    <script>
     $(document).ready(function() {
         $("#carts-grid").kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("CurrentCarts", "ShoppingCart"))",
@@ -73,7 +83,6 @@
     function detailInit(e) {
         $("<div/>").appendTo(e.detailCell).kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("GetCartDetails", "ShoppingCart"))?customerId="+e.data.CustomerId,
@@ -137,7 +146,5 @@
             ]
         });
     }
-            </script>
-        </td>
-    </tr>
-</table>
+    </script>
+        

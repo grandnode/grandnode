@@ -6,18 +6,31 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @T("Admin.ReturnRequests.EditReturnRequestDetails") @Html.ActionLink("(" + T("Admin.ReturnRequests.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" name="notify-customer" class="k-button" value="@T("Admin.ReturnRequests.NotifyCustomer")" />
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
-            <span id="returnrequest-delete" class="k-button">@T("Admin.Common.Delete")</span>
+   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-truck"></i>
+                        @T("Admin.ReturnRequests.EditReturnRequestDetails")
+                        <small> @Html.ActionLink("(" + T("Admin.ReturnRequests.BackToList") + ")", "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <input type="submit" name="notify-customer" class="btn green" value="@T("Admin.ReturnRequests.NotifyCustomer")" />
+                            <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
+                            <input type="submit" name="save-continue" class="btn default" value="@T("Admin.Common.SaveContinue")" />
+                            <span id="returnrequest-delete" class="btn red">@T("Admin.Common.Delete")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdate", Model)
+                </div>
+            </div>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+
 }
 @Html.DeleteConfirmation("returnrequest-delete")

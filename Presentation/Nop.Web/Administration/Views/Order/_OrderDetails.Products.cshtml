@@ -2,9 +2,9 @@
 @using Nop.Core.Domain.Tax;
 @using Nop.Core.Domain.Catalog;
 
-<table class="adminContent">
+<table class="table table-bordered table-striped">
     <tr>
-        <td class="adminData">
+        <td>
             @foreach (var item in Model.Items)
             {
                 <script type="text/javascript">
@@ -39,7 +39,7 @@
                 </script>
 
             }
-            <table class="tablestyle" border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+            <table class="table table-bordered table-striped">
                 <col />
                 <col />
                 @if (Model.HasDownloadableProducts)
@@ -55,34 +55,34 @@
                     <col />
                 }
                 <thead>
-                    <tr class="headerstyle">
-                        <th align="center">
+                    <tr>
+                        <th>
                             @T("Admin.Orders.Products.Picture")
                         </th>
-                        <th align="center">
+                        <th>
                             @T("Admin.Orders.Products.ProductName")
                         </th>
                         @if (Model.HasDownloadableProducts)
                         {
-                            <th align="center">
+                            <th>
                                 @T("Admin.Orders.Products.Download")
                             </th>
                         }
-                        <th align="center">
+                        <th>
                             @T("Admin.Orders.Products.Price")
                         </th>
-                        <th align="center">
+                        <th>
                             @T("Admin.Orders.Products.Quantity")
                         </th>
-                        <th align="center">
+                        <th>
                             @T("Admin.Orders.Products.Discount")
                         </th>
-                        <th align="center">
+                        <th>
                             @T("Admin.Orders.Products.Total")
                         </th>
                         @if (!Model.IsLoggedInAsVendor)
                         {
-                            <th align="center">
+                            <th>
                                 @T("Admin.Common.Edit")
                             </th>
                         }
@@ -92,11 +92,11 @@
                     @foreach (var item in Model.Items)
                     {
                         <tr>
-                            <td align="center" style="width: 10%;">
+                            <td>
                                 <img src="@item.PictureThumbnailUrl" alt="" title="" />
                             </td>
-                            <td style="width: 25%;">
-                                <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                            <td>
+                                <div>
                                     <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {
@@ -162,7 +162,7 @@
                             </td>
                             @if (Model.HasDownloadableProducts)
                             {
-                                <td align="center" style="width: 10%;">
+                                <td>
                                     @if (item.IsDownload)
                                     {
                                         <div>
@@ -192,7 +192,7 @@
                                     }
                                 </td>
                             }
-                            <td align="center" style="width: 15%;">
+                            <td>
                                 @if (Model.AllowCustomersToSelectTaxDisplayType)
                                 {
                                     @item.UnitPriceInclTax
@@ -238,7 +238,7 @@
                                     </table>
                                 </div>
                             </td>
-                            <td align="center" style="width: 10%;">
+                            <td>
                                 <div>@item.Quantity</div>
                                 <div id="pnlEditPvQuantity@(item.Id)">
                                     <table class="order-edit">
@@ -250,7 +250,7 @@
                                     </table>
                                 </div>
                             </td>
-                            <td align="center" style="width: 15%;">
+                            <td>
                                 @if (Model.AllowCustomersToSelectTaxDisplayType)
                                 {
                                     @item.DiscountInclTax
@@ -296,7 +296,7 @@
                                     </table>
                                 </div>
                             </td>
-                            <td align="center" style="width: 15%;">
+                            <td>
                                 @if (Model.AllowCustomersToSelectTaxDisplayType)
                                 {
                                     @item.SubTotalInclTax
@@ -346,10 +346,10 @@
                             @if (!Model.IsLoggedInAsVendor)
                             {
                                 <td align="center" style="width: 15%;">
-                                    <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " id="btnEditOrderItem@(item.Id)" class="adminButton" />
-                                    <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                    <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="adminButton" style="display:none;" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                    <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)    (false);return false; " id="btnCancelOrderItem@(item.Id)" class="adminButton" style="display:none;" />
+                                    <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " id="btnEditOrderItem@(item.Id)" class="btn default" />
+                                    <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="btn red" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                    <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="btn green" style="display:none;" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                    <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)    (false);return false; " id="btnCancelOrderItem@(item.Id)" class="btn default" style="display:none;" />
                                 </td>
                             }
                         </tr>
@@ -358,20 +358,20 @@
             </table>
         </td>
     </tr>
-    @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo) && !Model.IsLoggedInAsVendor)
-    {
-        <tr>
-            <td class="adminData">
-                @Html.Raw(Model.CheckoutAttributeInfo)
-            </td>
-        </tr>
-    }
-    @if (!Model.IsLoggedInAsVendor)
-    {
-        <tr>
-            <td class="adminData">
-                <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new { orderId = Model.Id }))'); return false; " class="k-button" />
-            </td>
-        </tr>
-    }
 </table>
+
+
+@if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo) && !Model.IsLoggedInAsVendor)
+{
+    <div class="note note-info">
+            @Html.Raw(Model.CheckoutAttributeInfo)
+    </div>
+}
+@if (!Model.IsLoggedInAsVendor)
+{
+    <div class="form-actions">
+            <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new { orderId = Model.Id }))'); return false; " class="btn green" />
+    </div>
+}
+
+

@@ -5,17 +5,14 @@
     string controlId = string.Format("address_attribute_{0}", attribute.Id);
     string textPrompt = attribute.Name;
 
-    <tr>
-        <td class="adminTitle">
-            @textPrompt:
-        </td>
-        <td class="adminData">
-
+    <div class="form-group">
+        <label class="control-label col-md-3">@textPrompt</label>
+        <div class="col-md-9">
             @switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
                     {
-                        <select name="@(controlId)" id="@(controlId)">
+                        <select class="form-control" name="@(controlId)" id="@(controlId)">
                             @if (!attribute.IsRequired)
                             {
                                 <option value="0">---</option>
@@ -29,34 +26,34 @@
                     break;
                 case AttributeControlType.RadioList:
                     {
-                        <ul class="option-list">
+                        <div class="radio-list">
                             @foreach (var attributeValue in attribute.Values)
                             {
-                                <li>
+                                <div>
                                     <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
-                                </li>
+                                </div>
                             }
-                        </ul>
+                        </div>
                     }
                     break;
                 case AttributeControlType.Checkboxes:
                 case AttributeControlType.ReadonlyCheckboxes:
                     {
-                        <ul class="option-list">
+                        <div class="checkbox-list">
                             @foreach (var attributeValue in attribute.Values)
                             {
-                                <li>
+                                <div>
                                     <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
-                                </li>
+                                </div>
                             }
-                        </ul>
+                        </div>
                     }
                     break;
                 case AttributeControlType.TextBox:
                     {
-                        <input name="@(controlId)" type="text" class="text-box single-line" id="@(controlId)" value="@attribute.DefaultValue" />
+                        <input name="@(controlId)" type="text" class="form-control text-box single-line" id="@(controlId)" value="@attribute.DefaultValue" />
                     }
                     break;
                 case AttributeControlType.MultilineTextbox:
@@ -73,6 +70,6 @@
                     }
                     break;
             }
-        </td>
-    </tr>
+        </div>
+    </div>
 }

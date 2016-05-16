@@ -12,61 +12,71 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @T("Admin.Orders.Shipments.List")
-        </div>
-        <div class="options">
-            <input type="submit" name="exportpackagingslips-all" class="k-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.All")" />
-            <input type="button" id="exportpackagingslips-selected" class="k-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
-            <input type="button" id="ship-selected" class="k-button" value="@T("Admin.Orders.Shipments.ShipSelected")" />
-            <input type="button" id="deliver-selected" class="k-button" value="@T("Admin.Orders.Shipments.DeliverySelected")" />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-truck"></i>
+                        @T("Admin.Orders.Shipments.List")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <input type="submit" name="exportpackagingslips-all" class="btn default" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.All")" />
+                            <input type="button" id="exportpackagingslips-selected" class="btn default" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
+                            <input type="button" id="ship-selected" class="btn default" value="@T("Admin.Orders.Shipments.ShipSelected")" />
+                            <input type="button" id="deliver-selected" class="btn default" value="@T("Admin.Orders.Shipments.DeliverySelected")" />
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.StartDate)
+                                <div class="col-md-9">
+                                    @Html.GrandEditorFor(model => model.StartDate)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.EndDate)
+                                <div class="col-md-9">
+                                    @Html.GrandEditorFor(model => model.EndDate)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.TrackingNumber)
+                                <div class="col-md-9">
+                                    @Html.GrandEditorFor(model => model.TrackingNumber)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.LoadNotShipped)
+                                <div class="col-md-9">
+                                    @Html.GrandEditorFor(model => model.LoadNotShipped)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <input type="button" id="search-shipments" class="btn default" value="@T("Admin.Common.Search")" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div id="shipments-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StartDate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StartDate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.EndDate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EndDate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TrackingNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TrackingNumber)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LoadNotShipped):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LoadNotShipped)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-shipments" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="shipments-grid"></div>
+
+
+
+                
 
                 <script>
                     $(document).ready(function () {
@@ -209,9 +219,7 @@
                         });
                     }
                 </script>
-            </td>
-        </tr>
-    </table>
+           
     
     <script type="text/javascript">
 

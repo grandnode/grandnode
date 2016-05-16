@@ -6,31 +6,84 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "order-form" }))
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @T("Admin.Orders.EditOrderDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="k-button">@T("Admin.Orders.PdfInvoice")</a>
-            }
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                <span id="order-delete" class="k-button">@T("Admin.Common.Delete")</span>
-            }
-            <input type="submit" id="btnRefreshPage" style="display: none" />
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#btnRefreshPage').click(function () {
-                        //refresh page
-                        location.reload();
-                    });
-                });
-            </script>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-basket"></i>
+                        @T("Admin.Orders.EditOrderDetails") - @Model.OrderNumber
+                        <small>@Html.ActionLink("(" + T("Admin.Orders.BackToList") + ")", "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="btn default">@T("Admin.Orders.PdfInvoice")</a>
+                            }
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                <span id="order-delete" class="btn red">@T("Admin.Common.Delete")</span>
+                            }
+                            <input type="submit" id="btnRefreshPage" style="display: none" />
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                $('#btnRefreshPage').click(function () {
+                                //refresh page
+                                location.reload();
+                                });
+                            });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div id="order-edit">
+                        <ul>
+                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                                @T("Admin.Orders.Info")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                                @T("Admin.Orders.BillingInfo")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                                @T("Admin.Orders.ShippingInfo")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                                @T("Admin.Orders.Products")
+                            </li>
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                                    @T("Admin.Orders.OrderNotes")
+                                </li>
+                            }
+                        </ul>
+                        <div>
+                            @TabInfo()
+                        </div>
+                        <div>
+                            @TabBillingInfo()
+                        </div>
+                        <div>
+                            @TabShippingInfo()
+                        </div>
+                        <div>
+                            @TabProducts()
+                        </div>
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            <div>
+                                @TabOrderNotes()
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
+
 
     @Html.ValidationSummary(false)
 
@@ -46,46 +99,6 @@
             });
         });
     </script>
-    <div id="order-edit">
-        <ul>
-            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                @T("Admin.Orders.Info")
-            </li>
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                @T("Admin.Orders.BillingInfo")
-            </li>
-            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                @T("Admin.Orders.ShippingInfo")
-            </li>
-            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                @T("Admin.Orders.Products")
-            </li>
-            @if (!Model.IsLoggedInAsVendor)
-            {
-                <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                    @T("Admin.Orders.OrderNotes")
-                </li>
-            }
-        </ul>
-        <div>
-            @TabInfo()
-        </div>
-        <div>
-            @TabBillingInfo()
-        </div>
-        <div>
-            @TabShippingInfo()
-        </div>
-        <div>
-            @TabProducts()
-        </div>
-        @if (!Model.IsLoggedInAsVendor)
-        {
-            <div>
-                @TabOrderNotes()
-            </div>
-        }
-    </div>
 
     {
         //custom tabs

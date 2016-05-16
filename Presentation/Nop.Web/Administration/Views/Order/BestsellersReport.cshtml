@@ -8,184 +8,180 @@
 }
 
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-        @T("Admin.SalesReport.Bestsellers")
-    </div>
-    <div class="options">
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list-alt"></i>
+                    @T("Admin.SalesReport.Bestsellers")
+                </div>
+               
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        @Html.GrandLabelFor(model => model.StartDate)
+                                        <div class="col-md-9">
+                                            @Html.GrandEditorFor(model => model.StartDate)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.GrandLabelFor(model => model.EndDate)
+                                        <div class="col-md-9">
+                                            @Html.GrandEditorFor(model => model.EndDate)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.GrandLabelFor(model => model.StoreId)
+                                        <div class="col-md-9">
+                                            @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                                        </div>
+                                    </div>
+                                    <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        @Html.GrandLabelFor(model => model.OrderStatusId)
+                                        <div class="col-md-9">
+                                            @Html.GrandDropDownListFor(model => model.OrderStatusId, Model.AvailableOrderStatuses)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.GrandLabelFor(model => model.PaymentStatusId)
+                                        <div class="col-md-9">
+                                            @Html.GrandDropDownListFor(model => model.PaymentStatusId, Model.AvailablePaymentStatuses)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.GrandLabelFor(model => model.CategoryId)
+                                        <div class="col-md-9">
+                                            @Html.GrandDropDownListFor(model => model.CategoryId, Model.AvailableCategories)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.GrandLabelFor(model => model.ManufacturerId)
+                                        <div class="col-md-9">
+                                            @Html.GrandDropDownListFor(model => model.ManufacturerId, Model.AvailableManufacturers)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.GrandLabelFor(model => model.BillingCountryId)
+                                        <div class="col-md-9">
+                                            @Html.GrandDropDownListFor(model => model.BillingCountryId, Model.AvailableCountries)
+                                        </div>
+                                    </div>
+                                    <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                        @Html.GrandLabelFor(model => model.VendorId)
+                                        <div class="col-md-9">
+                                            @Html.GrandDropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <input type="button" id="search-salesreport" class="btn default" value="@T("Admin.SalesReport.Bestsellers.RunReport")" />                                        </div>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div id="salesreport-grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StartDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.StartDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.EndDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.EndDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StoreId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("StoreId", Model.AvailableStores)
-        </td>
-    </tr>
-    <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OrderStatusId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.PaymentStatusId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CategoryId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("CategoryId", Model.AvailableCategories)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ManufacturerId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("ManufacturerId", Model.AvailableManufacturers)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.BillingCountryId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("BillingCountryId", Model.AvailableCountries)
-        </td>
-    </tr>
-    <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.VendorId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("VendorId", Model.AvailableVendors)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-salesreport" class="k-button" value="@T("Admin.SalesReport.Bestsellers.RunReport")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="salesreport-grid"></div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#salesreport-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("BestsellersReportList", "Order"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "ProductName",
-                            title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
-                        }, {
-                            field: "TotalQuantity",
-                            title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
-                        },{
-                            field: "TotalAmount",
-                            title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
-                        },{
-                            field: "ProductId",
-                            title: "@T("Admin.Common.View")",
-                            width: 100,
-                            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
-                        }]
-                    });
-                });
-            </script>
+            
 
-            <script type="text/javascript">
+<script>
+    $(document).ready(function () {
+        $("#salesreport-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("BestsellersReportList", "Order"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: additionalData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "ProductName",
+                title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
+            }, {
+                field: "TotalQuantity",
+                title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
+            },{
+                field: "TotalAmount",
+                title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
+            },{
+                field: "ProductId",
+                title: "@T("Admin.Common.View")",
+                width: 100,
+                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+            }]
+        });
+    });
+</script>
 
-                $(document).ready(function () {
+<script type="text/javascript">
 
-                    $('#search-salesreport').click(function () {
-                        var grid = $('#salesreport-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
+    $(document).ready(function () {
 
-                });
+        $('#search-salesreport').click(function () {
+            var grid = $('#salesreport-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            //grid.dataSource.read(); we already loaded the grid above using "page" function
+            return false;
+        });
 
-                function additionalData() {
-                    var data = {
-                        StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                        EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                        StoreId: $('#StoreId').val(),
-                        OrderStatusId: $('#OrderStatusId').val(),
-                        PaymentStatusId: $('#PaymentStatusId').val(),
-                        CategoryId: $('#CategoryId').val(),
-                        ManufacturerId: $('#ManufacturerId').val(),
-                        BillingCountryId: $('#BillingCountryId').val(),
-                        VendorId: $('#VendorId').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
+    });
 
-            </script>
-        </td>
-    </tr>
-</table>
+    function additionalData() {
+        var data = {
+            StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+            EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+            StoreId: $('#StoreId').val(),
+            OrderStatusId: $('#OrderStatusId').val(),
+            PaymentStatusId: $('#PaymentStatusId').val(),
+            CategoryId: $('#CategoryId').val(),
+            ManufacturerId: $('#ManufacturerId').val(),
+            BillingCountryId: $('#BillingCountryId').val(),
+            VendorId: $('#VendorId').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+
+</script>
+        

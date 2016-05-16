@@ -14,32 +14,53 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderNumber) @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
+            
         </div>
         <div class="options">
-            <input type="submit" id="shipment-save" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" id="shipment-save-continue" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+           
         </div>
     </div>
     @Html.ValidationSummary(false)
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TrackingNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TrackingNumber)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AdminComment):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AdminComment)
-            </td>
-        </tr>
-    </table>
+   
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-truck"></i>
+                        @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderNumber) @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <input type="submit" id="shipment-save" name="save" class="btn default" value="@T("Admin.Common.Save")" />
+                            <input type="submit" id="shipment-save-continue" name="save-continue" class="btn default" value="@T("Admin.Common.SaveContinue")" />
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.TrackingNumber)
+                                <div class="col-md-9">
+                                    @Html.GrandEditorFor(model => model.TrackingNumber)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.AdminComment)
+                                <div class="col-md-9">
+                                    @Html.GrandEditorFor(model => model.AdminComment)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     if (itemsFromMultipleWarehouses.Any())
     {
         <script type="text/javascript">
@@ -84,39 +105,39 @@
             }
         </script>
     }
-    <table class="adminContent">
+    <table class="table table-bordered table-striped">
         <tr>
-            <td class="adminData">
+            <td>
                 <strong>@T("Admin.Orders.Shipments.Products")</strong>
             </td>
         </tr>
         <tr>
-            <td class="adminData">
-                <table class="tablestyle" border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+            <td>
+                <table class="table table-bordered table-striped">
                     <thead>
-                        <tr class="headerstyle">
-                            <th align="center">
+                        <tr>
+                            <th>
                                 @T("Admin.Orders.Shipments.Products.ProductName")
                             </th>
-                            <th align="center">
+                            <th>
                                 @T("Admin.Orders.Shipments.Products.SKU")
                             </th>
-                            <th align="center">
+                            <th>
                                 @T("Admin.Orders.Shipments.Products.Warehouse")
                             </th>
-                            <th align="center">
+                            <th>
                                 @T("Admin.Orders.Shipments.Products.ItemWeight")
                             </th>
-                            <th align="center">
+                            <th>
                                 @T("Admin.Orders.Shipments.Products.ItemDimensions")
                             </th>
-                            <th align="center">
+                            <th>
                                 @T("Admin.Orders.Shipments.Products.QtyOrdered")
                             </th>
-                            <th align="center">
+                            <th>
                                 @T("Admin.Orders.Shipments.Products.QtyShipped")
                             </th>
-                            <th align="center">
+                            <th>
                                 @T("Admin.Orders.Shipments.Products.QtyToShip")
                             </th>
                         </tr>
@@ -125,7 +146,7 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr>
-                                <td style="width:30%;">
+                                <td>
                                     <div style="padding-left:10px;padding-right:10px;">
                                         <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
@@ -143,13 +164,13 @@
                                         }
                                     </div>
                                 </td>
-                                <td style="width:10%;">
+                                <td>
                                     <div style="padding-left:10px;padding-right:10px;">
                                         @item.Sku
                                     </div>
                                 </td>
-                                <td align="center" style="width:20%;">
-                                    <div style="padding-left:10px;padding-right:10px;">
+                                <td>
+                                    <div>
                                         @if (item.AllowToChooseWarehouse)
                                         {
                                             if (item.AvailableWarehouses.Count > 0)
@@ -183,20 +204,20 @@
                                         }
                                     </div>
                                 </td>
-                                <td align="center" style="width:10%;">
+                                <td>
                                     @item.ItemWeight
                                 </td>
-                                <td align="center" style="width:10%;">
+                                <td>
                                     @item.ItemDimensions
                                 </td>
-                                <td align="center" style="width:5%;">
+                                <td>
                                     @item.QuantityOrdered
                                 </td>
-                                <td align="center" style="width:5%;">
+                                <td>
                                     @item.QuantityInAllShipments
                                 </td>
-                                <td align="center" style="width:20%;">
-                                    <input name="qtyToAdd@(item.OrderItemId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderItemId)" class="adminInput" style="width:100px;" />
+                                <td>
+                                    <input name="qtyToAdd@(item.OrderItemId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderItemId)" class="form-control" style="width:100px;" />
                                 </td>
                             </tr>
                         }

@@ -77,158 +77,140 @@
         }
     }
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.GiftCardTypeId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.GiftCardTypeId)
-            </td>
-        </tr>
-        @if (!String.IsNullOrEmpty(Model.PurchasedWithOrderId))
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.PurchasedWithOrderId)
-                </td>
-                <td class="adminData">
-                    <a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId })">@Model.PurchasedWithOrderId - @T("Admin.Common.View")</a>
-                </td>
-            </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Amount):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Amount) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.Amount)
-            </td>
-        </tr>
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.RemainingAmountStr):
-                </td>
-                <td class="adminData">
-                    @Model.RemainingAmountStr
-                </td>
-            </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IsGiftCardActivated):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IsGiftCardActivated)
-                @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.GiftCardCouponCode):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.GiftCardCouponCode)
-                @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
-                <input type="button" id="generateCouponCode" class="k-button" value="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")" />
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#generateCouponCode').click(function () {
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.GiftCardTypeId)
+                <div class="col-md-9">
+                    @Html.GrandDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
+                    @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.PurchasedWithOrderId))
+            {
+                <div class="form-group">
+                        @Html.GrandLabelFor(model => model.PurchasedWithOrderId)
+                    <div class="col-md-9">
+                        <label class="control-label"><a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId })">@Model.PurchasedWithOrderId - @T("Admin.Common.View")</a></label> 
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Amount)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.Amount) [@Model.PrimaryStoreCurrencyCode]
+                    @Html.ValidationMessageFor(model => model.Amount)
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                        @Html.GrandLabelFor(model => model.RemainingAmountStr)
+                    <div class="col-md-9">
+                        <label class="control-label">@Model.RemainingAmountStr</label>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.IsGiftCardActivated)
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.IsGiftCardActivated)
+                    @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.GiftCardCouponCode)
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <div class="input-group-control">
+                            @Html.GrandEditorFor(model => model.GiftCardCouponCode)
+                        </div>
+                        <div class="input-group-btn">
+                            <input type="button" id="generateCouponCode" class="btn default" value="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")" />
+                        </div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#generateCouponCode').click(function () {
 
-                            var postData = {
-                            };
-                            addAntiForgeryToken(postData);
+                                var postData = {
+                                };
+                                addAntiForgeryToken(postData);
 
-                            $.ajax({
-                                cache:false,
-                                type: "POST",
-                                url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
-                                data: postData,
-                                success: function (data) {
-                                    $('#@Html.FieldIdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
-                                },
-                                error:function (xhr, ajaxOptions, thrownError){
-                                    alert('Failed to generate code.');
-                                }
+                                $.ajax({
+                                    cache:false,
+                                    type: "POST",
+                                    url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
+                                    data: postData,
+                                    success: function (data) {
+                                        $('#@Html.FieldIdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
+                                    },
+                                    error:function (xhr, ajaxOptions, thrownError){
+                                        alert('Failed to generate code.');
+                                    }
+                                });
                             });
                         });
-                    });
-                </script>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.RecipientName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.RecipientName)
-                @Html.ValidationMessageFor(model => model.RecipientName)
-            </td>
-        </tr>
-        <tr id="pnlRecipientEmail">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.RecipientEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.RecipientEmail)
-                @Html.ValidationMessageFor(model => model.RecipientEmail)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SenderName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SenderName)
-                @Html.ValidationMessageFor(model => model.SenderName)
-            </td>
-        </tr>
-        <tr id="pnlSenderEmail">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SenderEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SenderEmail)
-                @Html.ValidationMessageFor(model => model.SenderEmail)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Message):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.Message)
-                @Html.ValidationMessageFor(model => model.Message)
-            </td>
-        </tr>
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <tr id="pnlNotifyRecipient">
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.IsRecipientNotified):
-                </td>
-                <td class="adminData">
-                    @Model.IsRecipientNotified.ToString()
-                    <input type="submit" name="notifyRecipient" class="k-button" value="@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")" />
-                </td>
-            </tr>
-        }
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.CreatedOn):
-                </td>
-                <td class="adminData">
-                    @Html.DisplayFor(model => model.CreatedOn)
-                </td>
-            </tr>
-        }
-    </table>
+                    </script>
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.RecipientName)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.RecipientName)
+                    @Html.ValidationMessageFor(model => model.RecipientName)
+                </div>
+            </div>
+            <div class="form-group" id="pnlRecipientEmail">
+                    @Html.GrandLabelFor(model => model.RecipientEmail)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.RecipientEmail)
+                    @Html.ValidationMessageFor(model => model.RecipientEmail)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SenderName)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.SenderName)
+                    @Html.ValidationMessageFor(model => model.SenderName)
+                </div>
+            </div>
+            <div class="form-group" id="pnlSenderEmail">
+                    @Html.GrandLabelFor(model => model.SenderEmail)
+                <div class="col-md-9">
+                    @Html.GrandEditorFor(model => model.SenderEmail)
+                    @Html.ValidationMessageFor(model => model.SenderEmail)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Message)
+                <div class="col-md-9">
+                    @Html.GrandTextAreaFor(model => model.Message)
+                    @Html.ValidationMessageFor(model => model.Message)
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group" id="pnlNotifyRecipient">
+                        @Html.GrandLabelFor(model => model.IsRecipientNotified)
+                    <div class="col-md-9">
+                        <label class="control-label">@Model.IsRecipientNotified.ToString()</label>
+                        <input type="submit" name="notifyRecipient" class="k-button" value="@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")" />
+                    </div>
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                        @Html.GrandLabelFor(model => model.CreatedOn)
+                    <div class="col-md-9">
+                        <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 }
 @helper TabHistory()
 {

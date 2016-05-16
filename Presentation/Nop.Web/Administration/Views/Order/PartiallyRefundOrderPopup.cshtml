@@ -32,16 +32,16 @@
         <strong>
             @string.Format(T("Admin.Orders.Fields.PartialRefund.OrderInfo").Text, Model.Id)</strong>
     </p>
-    <table width="100%">
+    <table>
         <tr>
-            <td class="adminTitle">
+            <td>
                 @Html.NopLabelFor(model => model.AmountToRefund):
             </td>
-            <td class="adminData">
+            <td>
                 @Html.EditorFor(model => model.AmountToRefund): &nbsp;&nbsp;&nbsp; <span style="white-space: nowrap">
                     @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)</span>
             </td>
         </tr>
     </table>
-    <input type="submit" name="partialrefundorder" value="@T("Admin.Orders.Fields.Refund")" id="partialrefundorder" class="adminButton" />
+    <input type="submit" name="partialrefundorder" value="@T("Admin.Orders.Fields.Refund")" id="partialrefundorder" class="btn default" />
 }
