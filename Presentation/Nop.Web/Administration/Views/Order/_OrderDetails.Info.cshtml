@@ -79,7 +79,7 @@
         {
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.OrderStatus)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <strong>
                         @Model.OrderStatus
                     </strong>&nbsp;
@@ -101,7 +101,7 @@
         }
         <div class="form-group">
             @Html.GrandLabelFor(model => model.OrderNumber)
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Model.OrderNumber</label>
             </div>
         </div>
@@ -109,14 +109,14 @@
         {
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.OrderGuid)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <label class="control-label">@Model.OrderGuid</label>
                 </div>
             </div>
         }
         <div>
             @Html.GrandLabelFor(model => model.StoreName)
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 <label class="control-label">@Model.StoreName</label>
             </div>
         </div>
@@ -125,7 +125,7 @@
         {
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.CustomerId)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <label class="control-label">
                         @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
                     </label>
@@ -133,7 +133,7 @@
             </div>
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.CustomerIp)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <label class="control-label">@Model.CustomerIp</label>
                 </div>
             </div>
@@ -141,7 +141,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.RecurringPaymentId)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">
                             <a href="@Url.Action("Edit", "RecurringPayment", new { id = Model.RecurringPaymentId })">@T("Admin.Common.View")</a>
                         </label>
@@ -152,7 +152,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.VatNumber)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.VatNumber</label>
                     </div>
                 </div>
@@ -161,7 +161,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.AffiliateId)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">
                             <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
                         </label>
@@ -172,7 +172,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.OrderSubtotalInclTax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderSubtotalInclTax</label>
                     </div>
                 </div>
@@ -181,7 +181,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.OrderSubtotalExclTax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderSubtotalExclTax</label>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.OrderSubTotalDiscountInclTax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderSubTotalDiscountInclTax</label>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.OrderSubTotalDiscountExclTax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderSubTotalDiscountExclTax</label>
                     </div>
                 </div>
@@ -210,7 +210,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.OrderShippingInclTax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderShippingInclTax</label>
                     </div>
                 </div>
@@ -219,7 +219,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.OrderShippingExclTax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderShippingExclTax</label>
                     </div>
                 </div>
@@ -229,7 +229,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeInclTax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.PaymentMethodAdditionalFeeInclTax</label>
                     </div>
                 </div>
@@ -239,7 +239,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeExclTax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.PaymentMethodAdditionalFeeExclTax</label>
                     </div>
                 </div>
@@ -250,7 +250,7 @@
                 {
                     <div class="form-group">
                         @Html.GrandLabelFor(model => model.Tax) @tr.Rate%:
-                        <div class="col-md-9">
+                        <div class="col-md-9 col-sm-9">
                             <label class="control-label">@tr.Value</label>
                         </div>
                     </div>
@@ -260,7 +260,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.Tax)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.Tax</label>
                     </div>
                 </div>
@@ -269,7 +269,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.OrderTotalDiscount)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.OrderTotalDiscount</label>
                     </div>
                 </div>
@@ -278,7 +278,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.GiftCards[0].CouponCode) 
-                    <div class="col-md-9">                       
+                    <div class="col-md-9 col-sm-9">                       
                         <label class="control-label">(@(gc.CouponCode))</label>
                         <label class="control-label">@gc.Amount</label>
                     </div>
@@ -288,7 +288,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.RedeemedRewardPoints)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">
                             @Model.RedeemedRewardPoints @T("Admin.Orders.Fields.RedeemedRewardPoints.Points")
                             <text>/</text>
@@ -299,7 +299,7 @@
             }
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.OrderTotal)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <label class="control-label">@Model.OrderTotal</label>
                 </div>
             </div>
@@ -307,7 +307,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.RefundedAmount)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.RefundedAmount</label>
                     </div>
                 </div>
@@ -316,7 +316,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.UsedDiscounts)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         @for (int i = 0; i < Model.UsedDiscounts.Count; i++)
                         {
                             var discount = Model.UsedDiscounts[i];
@@ -333,55 +333,55 @@
             }
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.Profit)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <label class="control-label">@Model.Profit</label>
                 </div>
             </div>
             <div class="form-group" id="trEditOrderTotals">
                 <label class="control-label col-md-3"></label>
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <div class="form-horizontal portlet light bg-inverse form-fit">
                         <div class="form-body">
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.OrderSubtotalInclTaxValue)
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
                                     @Html.GrandEditorFor(model => model.OrderSubtotalInclTaxValue)
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax") </label>
                                     @Html.GrandEditorFor(model => model.OrderSubtotalExclTaxValue)
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.OrderSubTotalDiscountInclTaxValue)
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
                                     @Html.GrandEditorFor(model => model.OrderSubTotalDiscountInclTaxValue)
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax") </label>
                                     @Html.EditorFor(model => model.OrderSubTotalDiscountExclTaxValue)
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.OrderShippingInclTaxValue)
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.InclTax") </label>
                                     @Html.EditorFor(model => model.OrderShippingInclTaxValue)
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <label class="control-label">@T("Admin.Orders.Fields.Edit.ExclTax")</label> 
                                     @Html.EditorFor(model => model.OrderShippingExclTaxValue)
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <label class="control-label"> @T("Admin.Orders.Fields.Edit.InclTax") </label>
                                     @Html.EditorFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 col-sm-6">
                                     <label class="control-label"> @T("Admin.Orders.Fields.Edit.ExclTax") </label>
                                     @Html.EditorFor(model => model.PaymentMethodAdditionalFeeExclTaxValue)
                                 </div>
@@ -426,7 +426,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.CardType)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardType">@Model.CardType</label>
                         @Html.GrandEditorFor(model => model.CardType)
                     </div>
@@ -436,7 +436,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.CardName)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardName">@Model.CardName</label>
                         @Html.GrandEditorFor(model => model.CardName)
                     </div>
@@ -446,7 +446,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.CardNumber)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardNumber">@Model.CardNumber</label>
                         @Html.GrandEditorFor(model => model.CardNumber)
                     </div>
@@ -456,7 +456,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.CardCvv2)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardCvv2">@Model.CardCvv2</label>
                         @Html.GrandEditorFor(model => model.CardCvv2)
                     </div>
@@ -466,7 +466,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.CardExpirationMonth)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardExpirationMonth">@Model.CardExpirationMonth</label>
                         @Html.GrandEditorFor(model => model.CardExpirationMonth)
                     </div>
@@ -476,7 +476,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.CardExpirationYear)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label" id="lblCardExpirationYear">@Model.CardExpirationYear</label>
                         @Html.GrandEditorFor(model => model.CardExpirationYear)
                     </div>
@@ -497,7 +497,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.AuthorizationTransactionId)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.AuthorizationTransactionId</label>
                     </div>
                 </div>
@@ -506,7 +506,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.CaptureTransactionId)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.CaptureTransactionId</label>
                     </div>
                 </div>
@@ -515,21 +515,21 @@
             {
                 <div class="form-group">
                     @Html.NopLabelFor(model => model.SubscriptionTransactionId)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label"> @Model.SubscriptionTransactionId</label>
                     </div>
                 </div>
             }
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.PaymentMethod)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <label class="control-label">@Model.PaymentMethod</label>
                 </div>
             </div>
         }
         <div class="form-group">
             @Html.GrandLabelFor(model => model.PaymentStatus)
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 <label class="control-label"> @Model.PaymentStatus</label>
 
                 @if (!Model.IsLoggedInAsVendor)
@@ -581,7 +581,7 @@
         {
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.CustomValues)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <table>
                         @foreach (var item in Model.CustomValues)
                 {
@@ -596,7 +596,7 @@
         }
         <div class="form-group">
             @Html.GrandLabelFor(model => model.CreatedOn)
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
             </div>
         </div>

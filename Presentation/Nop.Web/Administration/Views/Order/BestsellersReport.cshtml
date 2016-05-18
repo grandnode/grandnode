@@ -26,55 +26,55 @@
                                 <div class="form-body">
                                     <div class="form-group">
                                         @Html.GrandLabelFor(model => model.StartDate)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandEditorFor(model => model.StartDate)
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         @Html.GrandLabelFor(model => model.EndDate)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandEditorFor(model => model.EndDate)
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         @Html.GrandLabelFor(model => model.StoreId)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
                                         </div>
                                     </div>
                                     <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                         @Html.GrandLabelFor(model => model.OrderStatusId)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandDropDownListFor(model => model.OrderStatusId, Model.AvailableOrderStatuses)
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         @Html.GrandLabelFor(model => model.PaymentStatusId)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandDropDownListFor(model => model.PaymentStatusId, Model.AvailablePaymentStatuses)
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         @Html.GrandLabelFor(model => model.CategoryId)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandDropDownListFor(model => model.CategoryId, Model.AvailableCategories)
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         @Html.GrandLabelFor(model => model.ManufacturerId)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandDropDownListFor(model => model.ManufacturerId, Model.AvailableManufacturers)
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         @Html.GrandLabelFor(model => model.BillingCountryId)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandDropDownListFor(model => model.BillingCountryId, Model.AvailableCountries)
                                         </div>
                                     </div>
                                     <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
                                         @Html.GrandLabelFor(model => model.VendorId)
-                                        <div class="col-md-9">
+                                        <div class="col-md-9 col-sm-9">
                                             @Html.GrandDropDownListFor(model => model.VendorId, Model.AvailableVendors)
                                         </div>
                                     </div>

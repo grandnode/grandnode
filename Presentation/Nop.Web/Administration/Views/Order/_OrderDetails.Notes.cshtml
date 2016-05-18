@@ -117,14 +117,14 @@
     <div class="form-body">
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AddOrderNoteMessage)
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandTextAreaFor(model => model.AddOrderNoteMessage, new { style = "Height: 100px;" })
                 @Html.ValidationMessageFor(model => model.AddOrderNoteMessage)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AddOrderNoteDownloadId)
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.AddOrderNoteHasDownload) @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
                 <div id="pnlAddOrderNoteDownloadId">
                     @Html.EditorFor(model => model.AddOrderNoteDownloadId)
@@ -134,7 +134,7 @@
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AddOrderNoteDisplayToCustomer)
-            <div class="col-md-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.AddOrderNoteDisplayToCustomer)
                 @Html.ValidationMessageFor(model => model.AddOrderNoteDisplayToCustomer)
             </div>

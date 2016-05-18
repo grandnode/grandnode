@@ -11,14 +11,14 @@
                     effects: "fadeIn"
                 }
             },
-            select: tabstrip_on_tab_select
+            select: tabstrip_on_tab_select,            
         });
     });
 </script>
 
 <div id="customeractioncondition-edit">
     <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex()) id="tab-info">
             @T("Admin.Customers.CustomerActionCondition.Info")
         </li>
         <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-product">
@@ -323,43 +323,39 @@
         
 
 
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Name)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </td>
-    </tr>
-    <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerActionConditionTypeId)
-            </td>
-            <td class="adminData">
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerActionConditionTypeId)
+            <div class="col-md-9 col-sm-9">
                 @if (!String.IsNullOrEmpty(Model.Id))
                 {
-                    @Html.DropDownListFor(model => model.CustomerActionConditionTypeId, Model.CustomerActionConditionType, new { @disabled = "disabled" })
+                    @Html.GrandDropDownListFor(model => model.CustomerActionConditionTypeId, Model.CustomerActionConditionType, new { @disabled = "disabled" })
                 }
                 else
                 {
-                    @Html.DropDownListFor(model => model.CustomerActionConditionTypeId, Model.CustomerActionConditionType)
+                    @Html.GrandDropDownListFor(model => model.CustomerActionConditionTypeId, Model.CustomerActionConditionType)
                 }
                 @Html.ValidationMessageFor(model => model.CustomerActionConditionTypeId)
                 @Html.HiddenFor(x => x.CustomerActionConditionTypeId)
-            </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ConditionId)
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.ConditionId, ((Nop.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.ConditionId)
-        </td>
-    </tr>
-</table>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ConditionId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ConditionId, ((Nop.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ConditionId)
+            </div>
+        </div>
+    </div>
+</div>
 }
 
 @helper TabProduct()

@@ -69,7 +69,7 @@
                         <div class="form-body">
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.OrderId)
-                                <div class="col-md-9">
+                                <div class="col-md-9 col-sm-9">
                                     <label class="control-label">
                                         <a href="@Url.Action("Edit", "Order", new {Id = Model.OrderId})">@Model.OrderNumber - @T("Admin.Common.View")</a>
                                     </label>
@@ -107,13 +107,13 @@
                             </div>
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.TotalWeight)
-                                <div class="col-md-9">
+                                <div class="col-md-9 col-sm-9">
                                     <label class="control-label">@Model.TotalWeight</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.ShippedDate)
-                                <div class="col-md-9">
+                                <div class="col-md-9 col-sm-9">
                                     <span id="lblShippedDate">@Model.ShippedDate</span>
                                     @if (Model.CanShip)
                                     {
@@ -130,7 +130,7 @@
                             </div>
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.DeliveryDate)
-                                <div class="col-md-9">
+                                <div class="col-md-9 col-sm-9">
                                     <span id="lblDeliveryDate">@Model.DeliveryDate</span>
                                     @if (Model.CanDeliver)
                                     {

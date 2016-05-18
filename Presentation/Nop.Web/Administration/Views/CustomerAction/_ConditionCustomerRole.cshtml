@@ -1,27 +1,24 @@
 ﻿@model CustomerActionConditionModel
 
+    @if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
+        </div>
+    }
 
-<table class="adminContent">
-    <tr>
-        <td>
-            @if (String.IsNullOrEmpty(Model.Id))
-            {
-                @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
-            }
-        </td>
-    </tr>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
-        <tr>
-            <td>
-
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="customerrole-grid"></div>
+            </div>
+        </div>
 
                 <script>
-            $(document).ready(function () {
+                $(document).ready(function () {
                 $("#customerrole-grid").kendoGrid({
                     dataSource: {
-                        type: "json",
                         transport: {
                             read: {
                                 url: "@Html.Raw(Url.Action("ConditionCustomerRole", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
@@ -116,8 +113,5 @@
                     });
                 }
                 </script>
-
-            </td>
-        </tr>
+            
     }
-</table>

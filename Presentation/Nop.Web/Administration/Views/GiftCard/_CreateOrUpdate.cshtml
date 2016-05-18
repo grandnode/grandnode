@@ -81,7 +81,7 @@
         <div class="form-body">
             <div class="form-group">
                     @Html.GrandLabelFor(model => model.GiftCardTypeId)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     @Html.GrandDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
                     @Html.ValidationMessageFor(model => model.GiftCardTypeId)
                 </div>
@@ -90,14 +90,14 @@
             {
                 <div class="form-group">
                         @Html.GrandLabelFor(model => model.PurchasedWithOrderId)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label"><a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId })">@Model.PurchasedWithOrderId - @T("Admin.Common.View")</a></label> 
                     </div>
                 </div>
             }
             <div class="form-group">
                     @Html.GrandLabelFor(model => model.Amount)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.Amount) [@Model.PrimaryStoreCurrencyCode]
                     @Html.ValidationMessageFor(model => model.Amount)
                 </div>
@@ -106,21 +106,21 @@
             {
                 <div class="form-group">
                         @Html.GrandLabelFor(model => model.RemainingAmountStr)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.RemainingAmountStr</label>
                     </div>
                 </div>
             }
             <div class="form-group">
                     @Html.GrandLabelFor(model => model.IsGiftCardActivated)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     @Html.EditorFor(model => model.IsGiftCardActivated)
                     @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
                 </div>
             </div>
             <div class="form-group">
                     @Html.GrandLabelFor(model => model.GiftCardCouponCode)
-                <div class="col-md-4">
+                <div class="col-md-4 col-sm-6">
                     <div class="input-group">
                         <div class="input-group-control">
                             @Html.GrandEditorFor(model => model.GiftCardCouponCode)
@@ -157,35 +157,35 @@
             </div>
             <div class="form-group">
                     @Html.GrandLabelFor(model => model.RecipientName)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.RecipientName)
                     @Html.ValidationMessageFor(model => model.RecipientName)
                 </div>
             </div>
             <div class="form-group" id="pnlRecipientEmail">
                     @Html.GrandLabelFor(model => model.RecipientEmail)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.RecipientEmail)
                     @Html.ValidationMessageFor(model => model.RecipientEmail)
                 </div>
             </div>
             <div class="form-group">
                     @Html.GrandLabelFor(model => model.SenderName)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.SenderName)
                     @Html.ValidationMessageFor(model => model.SenderName)
                 </div>
             </div>
             <div class="form-group" id="pnlSenderEmail">
                     @Html.GrandLabelFor(model => model.SenderEmail)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.SenderEmail)
                     @Html.ValidationMessageFor(model => model.SenderEmail)
                 </div>
             </div>
             <div class="form-group">
                     @Html.GrandLabelFor(model => model.Message)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     @Html.GrandTextAreaFor(model => model.Message)
                     @Html.ValidationMessageFor(model => model.Message)
                 </div>
@@ -194,7 +194,7 @@
             {
                 <div class="form-group" id="pnlNotifyRecipient">
                         @Html.GrandLabelFor(model => model.IsRecipientNotified)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.IsRecipientNotified.ToString()</label>
                         <input type="submit" name="notifyRecipient" class="k-button" value="@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")" />
                     </div>
@@ -204,7 +204,7 @@
             {
                 <div class="form-group">
                         @Html.GrandLabelFor(model => model.CreatedOn)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
                     </div>
                 </div>

@@ -1,140 +1,137 @@
 ﻿@model CustomerActionConditionModel
 
 
-<table class="adminContent">
-    <tr>
-        <td>
-            @if (String.IsNullOrEmpty(Model.Id))
-            {
-                @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
-            }
-        </td>
-    </tr>
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <tr>
-            <td>
 
-                <div id="customerregister-grid"></div>
+@if (String.IsNullOrEmpty(Model.Id))
+{
+    <div class="note note-info">
+        @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
+    </div>
+}
 
-                <script>
-            $(document).ready(function () {
-                $("#customerregister-grid").kendoGrid({
-                    dataSource: {
-                        type: "json",
-                        transport: {
-                            read: {
-                                url: "@Html.Raw(Url.Action("ConditionCustomerRegister", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
-                            create: {
-                                url: "@Html.Raw(Url.Action("ConditionCustomerRegisterInsert", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
-                            update: {
-                                url: "@Html.Raw(Url.Action("ConditionCustomerRegisterUpdate", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
-                            destroy: {
-                                url: "@Html.Raw(Url.Action("ConditionDeletePosition", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            }
-                        },
-                        schema: {
-                            data: "Data",
-                            total: "Total",
-                            errors: "Errors",
-                            model: {
-                                id: "Id",
-                                fields: {
-                                    CustomerRegisterName: { editable: true, type: "string" },
-                                    CustomerRegisterValue: { editable: true, type: "string" },
-                                    Id: { editable: false, type: "string" }
-                                }
-                            }
-                        },
-                        requestEnd: function (e) {
-                            if (e.type == "create" || e.type == "update") {
-                                this.read();
-                            }
-                        },
-                        error: function (e) {
-                            display_kendoui_grid_error(e);
-                            // Cancel the changes
-                            this.cancelChanges();
-                        },
-                        serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
-                    },
-                    pageable: {
-                        refresh: true,
-                        numeric: false,
-                        previousNext: false,
-                        info: false
-                    },
-                    toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                    editable: {
-                        confirmation: false,
-                        mode: "inline",
-                    },
-                    scrollable: false,
-                    columns: [{
-                            field: "CustomerRegisterName",
-                            title: "@T("Admin.Customers.CustomerActionCondition.Fields.CustomerRegisterName")",
-                            width: 200,
-                            editor: crDropDownEditor,
-                            template: "#:CustomerRegisterName#"
-                        }, {
-                            field: "CustomerRegisterValue",
-                            title: "@T("Admin.Customers.CustomerActionCondition.Fields.CustomerRegisterValue")",
-                            width: 200,
-                        },
-                        {
-                        command: [
-                            {
-                                name: "edit",
-                                text: {
-                                    edit: "@T("Admin.Common.Edit")",
-                                    update: "@T("Admin.Common.Update")",
-                                    cancel: "@T("Admin.Common.Cancel")"
-                                }
-                        },{
-                            name: "destroy",
-                            text: "@T("Admin.Common.Delete")"
-                        }],
-                        width: 200
-                    }]
-                });
-            });
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="customerregister-grid"></div>
+        </div>
+    </div>
 
-
-            function crDropDownEditor(container, options) {
-                $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRegisterName"/>')
-                    .appendTo(container)
-                    .kendoDropDownList({
-                        autoBind: false,
-                        dataSource:
-                        {
-                            type: "json",
-                            transport: {
-                                read: "@Html.Raw(Url.Action("CustomerRegisterFields", "CustomerAction"))"
-                            }
-                        },
-                        optionLabel: " -- Select -- "
-                    });
+    <script>
+    $(document).ready(function () {
+    $("#customerregister-grid").kendoGrid({
+        dataSource: {
+            type: "json",
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("ConditionCustomerRegister", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
+                create: {
+                    url: "@Html.Raw(Url.Action("ConditionCustomerRegisterInsert", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
+                update: {
+                    url: "@Html.Raw(Url.Action("ConditionCustomerRegisterUpdate", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
+                destroy: {
+                    url: "@Html.Raw(Url.Action("ConditionDeletePosition", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
                 }
-                </script>
+            },
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors",
+                model: {
+                    id: "Id",
+                    fields: {
+                        CustomerRegisterName: { editable: true, type: "string" },
+                        CustomerRegisterValue: { editable: true, type: "string" },
+                        Id: { editable: false, type: "string" }
+                    }
+                }
+            },
+            requestEnd: function (e) {
+                if (e.type == "create" || e.type == "update") {
+                    this.read();
+                }
+            },
+            error: function (e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            numeric: false,
+            previousNext: false,
+            info: false
+        },
+        toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+        editable: {
+            confirmation: false,
+            mode: "inline",
+        },
+        scrollable: false,
+        columns: [{
+                field: "CustomerRegisterName",
+                title: "@T("Admin.Customers.CustomerActionCondition.Fields.CustomerRegisterName")",
+                width: 200,
+                editor: crDropDownEditor,
+                template: "#:CustomerRegisterName#"
+            }, {
+                field: "CustomerRegisterValue",
+                title: "@T("Admin.Customers.CustomerActionCondition.Fields.CustomerRegisterValue")",
+                width: 200,
+            },
+            {
+            command: [
+                {
+                    name: "edit",
+                    text: {
+                        edit: "@T("Admin.Common.Edit")",
+                        update: "@T("Admin.Common.Update")",
+                        cancel: "@T("Admin.Common.Cancel")"
+                    }
+            },{
+                name: "destroy",
+                text: "@T("Admin.Common.Delete")"
+            }],
+            width: 200
+        }]
+    });
+});
 
-            </td>
-        </tr>
+
+function crDropDownEditor(container, options) {
+    $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRegisterName"/>')
+        .appendTo(container)
+        .kendoDropDownList({
+            autoBind: false,
+            dataSource:
+            {
+                type: "json",
+                transport: {
+                    read: "@Html.Raw(Url.Action("CustomerRegisterFields", "CustomerAction"))"
+                }
+            },
+            optionLabel: " -- Select -- "
+        });
     }
-</table>
+    </script>
+
+    }

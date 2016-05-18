@@ -201,7 +201,7 @@ namespace Nop.Web.Framework
             TagBuilder tag = new TagBuilder("label");
             tag.MergeAttributes(htmlAttributes);
             tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
-            tag.AddCssClass("control-label col-md-3");
+            tag.AddCssClass("control-label col-md-3 col-sm-3");
             tag.SetInnerText(labelText);
 
             object value;

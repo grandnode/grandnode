@@ -3,63 +3,54 @@
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 }
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StartDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.StartDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.EndDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.EndDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OrderStatusId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.PaymentStatusId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ShippingStatusId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-best-customers-numberoforders-grid" class="k-button" value="@T("Admin.Customers.Reports.RunReport")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.StartDate)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.StartDate)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.EndDate)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.EndDate)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OrderStatusId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.OrderStatusId, Model.AvailableOrderStatuses)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.PaymentStatusId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.PaymentStatusId, Model.AvailablePaymentStatuses)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ShippingStatusId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ShippingStatusId, Model.AvailableShippingStatuses)
+            </div>
+        </div>
+
+    </div>
+    <div class="form-actions">
+            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                <input type="button" id="search-best-customers-numberoforders-grid" class="btn default" value="@T("Admin.Customers.Reports.RunReport")" />
+            </div>
+    </div>
+</div>
+
             <div id="best-customers-numberoforders-grid"></div>
 
             <script>
                 $(document).ready(function () {
                     $("#best-customers-numberoforders-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("ReportBestCustomersByNumberOfOrdersList", "Customer"))",
@@ -136,7 +127,4 @@
                 }
 
             </script>
-        </td>
-    </tr>
-</table>
     

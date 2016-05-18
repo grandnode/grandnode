@@ -10,376 +10,377 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
-            @T("Admin.Customers.Customers")
-        </div>
-        <div class="options">
-            <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
-            <input type="submit" name="exportxml-all" class="k-button" value="@T("Admin.Common.ExportToXml.All")" />
-            <input type="button" id="exportxml-selected" class="k-button" value="@T("Admin.Common.ExportToXml.Selected")" />
-            <input type="submit" name="exportexcel-all" class="k-button" value="@T("Admin.Common.ExportToExcel.All")" />
-            <input type="button" id="exportexcel-selected" class="k-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-users"></i>
+                        @T("Admin.Customers.Customers")
+                    </div>
+                    <div class="actions btn-group btn-group-devided">
+                        <a href="@Url.Action("Create")" class="btn default">@T("Admin.Common.AddNew")</a>
+                        <input type="submit" name="exportxml-all" class="btn default" value="@T("Admin.Common.ExportToXml.All")" />
+                        <input type="button" id="exportxml-selected" class="btn default" value="@T("Admin.Common.ExportToXml.Selected")" />
+                        <input type="submit" name="exportexcel-all" class="btn default" value="@T("Admin.Common.ExportToExcel.All")" />
+                        <input type="button" id="exportexcel-selected" class="btn default" value="@T("Admin.Common.ExportToExcel.Selected")" />
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchCustomerRoleIds)
+                                <div class="col-md-9 col-sm-9">
+                                    @foreach (var customerRole in Model.AvailableCustomerRoles)
+                                    {
+                                        <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
+                                               @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id)) { <text> checked="checked" </text>  } />@customerRole.Name
+                                            <br />
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchCustomerTagIds)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.SearchCustomerTagIds, new { SelectList = Model.AvailableCustomerTags })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchEmail)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.SearchEmail)
+                                </div>
+                            </div>
+                            @if (Model.UsernamesEnabled)
+                            {
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.SearchUsername)
+                                    <div class="col-md-9 col-sm-9">
+                                        @Html.GrandEditorFor(model => model.SearchUsername)
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchFirstName)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.SearchFirstName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchLastName)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.SearchLastName)
+                                </div>
+                            </div>
+                            @if (Model.CompanyEnabled)
+                            {
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.SearchCompany)
+                                    <div class="col-md-9 col-sm-9">
+                                        @Html.GrandEditorFor(model => model.SearchCompany)
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.PhoneEnabled)
+                            {
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.SearchPhone)
+                                    <div class="col-md-9 col-sm-9">
+                                        @Html.GrandEditorFor(model => model.SearchPhone)
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.ZipPostalCodeEnabled)
+                            {
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.SearchZipPostalCode)
+                                    <div class="col-md-9 col-sm-9">
+                                        @Html.GrandEditorFor(model => model.SearchZipPostalCode)
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <input type="button" id="search-customers" class="btn default" value="@T("Admin.Common.Search")" />                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div id="customers-grid"></div>
+                </div>
+            </div>
         </div>
     </div>
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchCustomerRoleIds):
-            </td>
-            <td class="adminData">
-                @foreach (var customerRole in Model.AvailableCustomerRoles)
-                {
-                    <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
-                @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id))
-                {
-                    <text>checked="checked"</text>
-                }
-                />@customerRole.Name
-                    <br />
-                }
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchCustomerTagIds):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchCustomerTagIds, new { SelectList = Model.AvailableCustomerTags })
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchEmail)
-            </td>
-        </tr>
-        @if (Model.UsernamesEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SearchUsername):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SearchUsername)
-                </td>
-            </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchFirstName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchFirstName)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchLastName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchLastName)
-            </td>
-        </tr>
-        @if (Model.CompanyEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SearchCompany):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SearchCompany)
-                </td>
-            </tr>
-        }        
-        @if (Model.PhoneEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SearchPhone):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SearchPhone)
-                </td>
-            </tr>
-        }
-        @if (Model.ZipPostalCodeEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SearchZipPostalCode):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SearchZipPostalCode)
-                </td>
-            </tr>
-        } 
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-customers" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="customers-grid"></div>
 
-                <script>
-                    $(document).ready(function () {
-                        $("#customers-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("CustomerList", "Customer"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            scrollable: false,
-                            dataBound: onDataBound,
-                            columns: [{
-                                    field: "Id",
-                                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                    width: 50
-                                }, {
-                                    field: "Email",
-                                    title: "@T("Admin.Customers.Customers.Fields.Email")",
-                                    width: 200
-                                },
-                                @if (Model.UsernamesEnabled)
-                                {
-                                    <text>{
-                                        field: "Username",
-                                        title: "@T("Admin.Customers.Customers.Fields.Username")",
-                                        width: 200
-                                    },</text>
-                                }
-                                {
-                                    field: "FullName",
-                                    title: "@T("Admin.Customers.Customers.Fields.FullName")",
-                                    width: 200
-                                }, {
-                                    field: "CustomerRoleNames",
-                                    title: "@T("Admin.Customers.Customers.Fields.CustomerRoles")",
-                                    width: 200
-                                }, 
-            
-                                @if (Model.CompanyEnabled)
-                                {
-                                    <text>{
-                field: "Company",
-                                    title: "@T("Admin.Customers.Customers.Fields.Company")",
-            width: 200
-        },</text>
-                                }
-        
-                                @if (Model.PhoneEnabled)
-                                {
-                                    <text>{
-                field: "Phone",
-                    title: "@T("Admin.Customers.Customers.Fields.Phone")",
-            width: 200
-        },</text>
-                                }
-        
-                                @if (Model.ZipPostalCodeEnabled)
-                                {
-                                    <text>{
-                field: "ZipPostalCode",
-                    title: "@T("Admin.Customers.Customers.Fields.ZipPostalCode")",
-            width: 200
-        },</text>
-                                }
-                            {
-                                field: "Active",
-                                title: "@T("Admin.Customers.Customers.Fields.Active")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
-                            }, {
-                                field: "CreatedOn",
-                                title: "@T("Admin.Customers.Customers.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "LastActivityDate",
-                                title: "@T("Admin.Customers.Customers.Fields.LastActivityDate")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 50,
-                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }]
-                        });
-                    });
-                </script>
 
-                <script type="text/javascript">
 
-                    var selectedIds = [];
-
-                    $(document).ready(function () {
-
-                        //search button
-                        $('#search-customers').click(function () {
-                            var grid = $('#customers-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            //clear selected checkboxes
-                            $('.checkboxGroups').attr('checked', false).change();
-                            selectedIds = [];
-                            return false;
-                        });
-
-                        $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
+        <script>
+            $(document).ready(function () {
+                $("#customers-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("CustomerList", "Customer"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: additionalData
                             }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchUsername)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchFirstName)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchLastName)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchCompany)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchPhone)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchZipPostalCode)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-
-                        $('#mastercheckbox').click(function () {
-                            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-                        });
-
-                        //wire up checkboxes.
-                        $('#customers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
-                            var $check = $(this);
-                            if ($check.is(":checked") == true) {
-                                var checked = jQuery.inArray($check.val(), selectedIds);
-                                if (checked == -1) {
-                                    //add id to selectedIds.
-                                    selectedIds.push($check.val());
-                                }
-                            }
-                            else {
-                                var checked = jQuery.inArray($check.val(), selectedIds);
-                                if (checked > -1) {
-                                    //remove id from selectedIds.
-                                    selectedIds = $.grep(selectedIds, function (item, index) {
-                                        return item != $check.val();
-                                    });
-                                }
-                            }
-                            updateMasterCheckbox();
-                        });
-                    });
-
-                    function onDataBound(e) {
-
-                        $('#customers-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
-                            var currentId = $(this).val();
-                            var checked = jQuery.inArray(currentId, selectedIds);
-                            //set checked based on if current checkbox's value is in selectedIds.
-                            $(this).attr('checked', checked > -1);
-                        });
-
-                        updateMasterCheckbox();
-                    }
-
-                    function updateMasterCheckbox() {
-                        var numChkBoxes = $('#customers-grid input[type=checkbox][id!=mastercheckbox]').length;
-                        var numChkBoxesChecked = $('#customers-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
-                        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                    }
-
-                    function additionalData() {
-                        var customerRoleIds = [];
-                        $('[name=SearchCustomerRoleIds]:checked').each(function () {
-                            customerRoleIds.push($(this).val());
-                        });
-                        var customerTagIds = [];
-                        if($('#@Html.FieldIdFor(model => model.SearchCustomerTagIds)').val()!=null){
-                            customerTagIds = $('#@Html.FieldIdFor(model => model.SearchCustomerTagIds)').val();
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(defaultGridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(gridPageSizes)]
+                    },
+                    scrollable: false,
+                    dataBound: onDataBound,
+                    columns: [{
+                            field: "Id",
+                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                            width: 50
+                        }, {
+                            field: "Email",
+                            title: "@T("Admin.Customers.Customers.Fields.Email")",
+                            width: 200
+                        },
+                        @if (Model.UsernamesEnabled)
+                        {
+                            <text>{
+                                field: "Username",
+                                title: "@T("Admin.Customers.Customers.Fields.Username")",
+                                width: 200
+                            },</text>
                         }
+                        {
+                            field: "FullName",
+                            title: "@T("Admin.Customers.Customers.Fields.FullName")",
+                            width: 200
+                        }, {
+                            field: "CustomerRoleNames",
+                            title: "@T("Admin.Customers.Customers.Fields.CustomerRoles")",
+                            width: 200
+                        }, 
+            
+                        @if (Model.CompanyEnabled)
+                        {
+                                                    <text>{
+                                field: "Company",
+                                                    title: "@T("Admin.Customers.Customers.Fields.Company")",
+                            width: 200
+                        },</text>
+                                                }
+        
+                                                @if (Model.PhoneEnabled)
+                                                {
+                                                    <text>{
+                                field: "Phone",
+                                    title: "@T("Admin.Customers.Customers.Fields.Phone")",
+                            width: 200
+                        },</text>
+                                                }
+        
+                                                @if (Model.ZipPostalCodeEnabled)
+                                                {
+                                                    <text>{
+                                field: "ZipPostalCode",
+                                    title: "@T("Admin.Customers.Customers.Fields.ZipPostalCode")",
+                            width: 200
+                        },</text>
+                        }
+                    {
+                        field: "Active",
+                        title: "@T("Admin.Customers.Customers.Fields.Active")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                    }, {
+                        field: "CreatedOn",
+                        title: "@T("Admin.Customers.Customers.Fields.CreatedOn")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "LastActivityDate",
+                        title: "@T("Admin.Customers.Customers.Fields.LastActivityDate")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 50,
+                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                    }]
+                });
+            });
+        </script>
 
-                        var data = {
-                            SearchCustomerRoleIds: customerRoleIds.join(","),
-                            SearchCustomerTagIds: customerTagIds,  
-                            SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
-                            SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val(),
-                            SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
-                            SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
-                            SearchCompany: $('#@Html.FieldIdFor(model => model.SearchCompany)').val(),
-                            SearchPhone: $('#@Html.FieldIdFor(model => model.SearchPhone)').val(),
-                            SearchZipPostalCode: $('#@Html.FieldIdFor(model => model.SearchZipPostalCode)').val()
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
+        <script type="text/javascript">
+
+            var selectedIds = [];
+
+            $(document).ready(function () {
+
+                //search button
+                $('#search-customers').click(function () {
+                    var grid = $('#customers-grid').data('kendoGrid');
+                    grid.dataSource.page(1); //new search. Set page size to 1
+                    //grid.dataSource.read(); we already loaded the grid above using "page" function
+                    //clear selected checkboxes
+                    $('.checkboxGroups').attr('checked', false).change();
+                    selectedIds = [];
+                    return false;
+                });
+                $("#@Html.FieldIdFor(model => model.SearchCustomerTagIds)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
                     }
-                </script>
-            </td>
-        </tr>
-    </table>
+                });
+
+                $("#@Html.FieldIdFor(model => model.SearchCustomerTagIds)").data().kendoMultiSelect.input.on('keydown',function(e){
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
+                    }
+                })
+
+
+                $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
+                    }
+                });
+                $("#@Html.FieldIdFor(model => model.SearchUsername)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
+                    }
+                });
+                $("#@Html.FieldIdFor(model => model.SearchFirstName)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
+                    }
+                });
+                $("#@Html.FieldIdFor(model => model.SearchLastName)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
+                    }
+                });
+                $("#@Html.FieldIdFor(model => model.SearchCompany)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
+                    }
+                });
+                $("#@Html.FieldIdFor(model => model.SearchPhone)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
+                    }
+                });
+                $("#@Html.FieldIdFor(model => model.SearchZipPostalCode)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-customers").click();
+                        return false;
+                    }
+                });
+
+                $('#mastercheckbox').click(function () {
+                    $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                });
+
+                //wire up checkboxes.
+                $('#customers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                    var $check = $(this);
+                    if ($check.is(":checked") == true) {
+                        var checked = jQuery.inArray($check.val(), selectedIds);
+                        if (checked == -1) {
+                            //add id to selectedIds.
+                            selectedIds.push($check.val());
+                        }
+                    }
+                    else {
+                        var checked = jQuery.inArray($check.val(), selectedIds);
+                        if (checked > -1) {
+                            //remove id from selectedIds.
+                            selectedIds = $.grep(selectedIds, function (item, index) {
+                                return item != $check.val();
+                            });
+                        }
+                    }
+                    updateMasterCheckbox();
+                });
+            });
+
+            function onDataBound(e) {
+
+                $('#customers-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                    var currentId = $(this).val();
+                    var checked = jQuery.inArray(currentId, selectedIds);
+                    //set checked based on if current checkbox's value is in selectedIds.
+                    $(this).attr('checked', checked > -1);
+                });
+
+                updateMasterCheckbox();
+            }
+
+            function updateMasterCheckbox() {
+                var numChkBoxes = $('#customers-grid input[type=checkbox][id!=mastercheckbox]').length;
+                var numChkBoxesChecked = $('#customers-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            }
+
+            function additionalData() {
+                var customerRoleIds = [];
+                $('[name=SearchCustomerRoleIds]:checked').each(function () {
+                    customerRoleIds.push($(this).val());
+                });
+                var customerTagIds = [];
+                if($('#@Html.FieldIdFor(model => model.SearchCustomerTagIds)').val()!=null){
+                    customerTagIds = $('#@Html.FieldIdFor(model => model.SearchCustomerTagIds)').val();
+                }
+
+                var data = {
+                    SearchCustomerRoleIds: customerRoleIds.join(","),
+                    SearchCustomerTagIds: customerTagIds,
+                    SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
+                    SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val(),
+                    SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
+                    SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
+                    SearchCompany: $('#@Html.FieldIdFor(model => model.SearchCompany)').val(),
+                    SearchPhone: $('#@Html.FieldIdFor(model => model.SearchPhone)').val(),
+                    SearchZipPostalCode: $('#@Html.FieldIdFor(model => model.SearchZipPostalCode)').val()
+                };
+                addAntiForgeryToken(data);
+                return data;
+            }
+        </script>
 }
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@

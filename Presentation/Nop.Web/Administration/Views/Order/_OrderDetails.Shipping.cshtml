@@ -8,7 +8,7 @@
 
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.ShippingAddress)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <table class="table table-bordered table-striped">
                             @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
                     {
@@ -157,7 +157,7 @@
             }
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.ShippingMethod)
-                <div class="col-md-9">
+                <div class="col-md-9 col-sm-9">
                     <span class="control-label" id="lblShippingMethod">@Model.ShippingMethod</span>
                     @if (!Model.IsLoggedInAsVendor)
                     {
@@ -195,7 +195,7 @@
             {
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.ShippingStatus)
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-sm-9">
                         <label class="control-label">@Model.ShippingStatus</label> 
                     </div>
                 </div>

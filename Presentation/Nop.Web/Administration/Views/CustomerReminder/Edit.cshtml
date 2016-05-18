@@ -6,19 +6,31 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
-            @T("Admin.Customers.CustomerReminder.Edit") - @Model.Name @Html.ActionLink("(" + T("Admin.Customers.CustomerReminder.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
-            <input type="button" id="run" name="run" class="k-button" value="@T("Admin.Common.Run")" />
-            <span id="customerreminder-delete" class="k-button">@T("Admin.Common.Delete")</span>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-bell"></i>
+                        @T("Admin.Customers.CustomerReminder.Edit") - @Model.Name 
+                        <small>@Html.ActionLink("(" + T("Admin.Customers.CustomerReminder.BackToList") + ")", "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
+                            <input type="submit" name="save-continue" class="btn default" value="@T("Admin.Common.SaveContinue")" />
+                            <span id="customerreminder-delete" class="btn red">@T("Admin.Common.Delete")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdate", Model)
+                </div>
+            </div>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+
+
 }
 @Html.DeleteConfirmation("customerreminder-delete")
 

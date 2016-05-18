@@ -10,87 +10,71 @@
         <div class="message-error">@validationSummary</div>
     }
 }
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Level)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Level)
-            @Html.ValidationMessageFor(model => model.Level)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Name)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Day)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Day)
-            @Html.ValidationMessageFor(model => model.Day)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Hour)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Hour)
-            @Html.ValidationMessageFor(model => model.Hour)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.EmailAccounts)
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.EmailAccountId, Model.EmailAccounts)
-            @Html.ValidationMessageFor(model => model.EmailAccountId)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.BccEmailAddresses)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.BccEmailAddresses)
-            @Html.ValidationMessageFor(model => model.BccEmailAddresses)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Subject)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Subject)
-            @Html.ValidationMessageFor(model => model.Subject)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AllowedTokens)
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.AllowedTokens)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Body)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Body, "RichEditor")
-            @Html.ValidationMessageFor(model => model.Body)
-        </td>
-    </tr>
-</table>
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Level)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Level)
+                @Html.ValidationMessageFor(model => model.Level)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Day)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Day)
+                @Html.ValidationMessageFor(model => model.Day)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Hour)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Hour)
+                @Html.ValidationMessageFor(model => model.Hour)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.EmailAccounts)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.EmailAccountId, Model.EmailAccounts)
+                @Html.ValidationMessageFor(model => model.EmailAccountId)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.BccEmailAddresses)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.BccEmailAddresses)
+                @Html.ValidationMessageFor(model => model.BccEmailAddresses)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Subject)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Subject)
+                @Html.ValidationMessageFor(model => model.Subject)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.AllowedTokens)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.AllowedTokens)</label> 
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Body)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.Body, "RichEditor")
+                @Html.ValidationMessageFor(model => model.Body)
+            </div>
+        </div>
+    </div>
+</div>
 
 

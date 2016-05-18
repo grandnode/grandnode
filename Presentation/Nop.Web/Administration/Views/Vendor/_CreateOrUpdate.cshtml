@@ -84,251 +84,210 @@
     </script>
 
     @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Name)
-                @Html.ValidationMessageFor(model => model.Locales[item].Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Description):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Locales[item].Description)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].Name)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].Name)
+                     @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].Description)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                     @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                 </div>
+             </div>
+             @Html.HiddenFor(model => model.Locales[item].LanguageId)
+         </div>
+    </div>
         ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Description):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.Description, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Description)
-            </td>
-        </tr>
-    </table>
-          ))
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Email):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
-            </td>
-        </tr>
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AssociatedCustomers):
-                </td>
-                <td class="adminData">
-                    @if (Model.AssociatedCustomers.Count > 0)
-                    {
-                        for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
-                        {
-                            @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
-                            if (i != Model.AssociatedCustomers.Count - 1)
-                            {
-                                <text>, </text>
-                            }
-                        }
-                    }
-                    else
-                    {
-                        @T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")
-                    }
-                </td>
-            </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PictureId)
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PictureId)
-                @Html.ValidationMessageFor(model => model.PictureId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AdminComment):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.AdminComment, new { style = "Width: 250px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.AdminComment)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
-                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
-            </td>
-        </tr>
-        <tr id="pnlPageSize">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.PageSize)
-                @Html.ValidationMessageFor(model => model.PageSize)
-            </td>
-        </tr>
-        <tr id="pnlPageSizeOptions">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PageSizeOptions):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.PageSizeOptions)
-                @Html.ValidationMessageFor(model => model.PageSizeOptions)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Active):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Active)
-                @Html.ValidationMessageFor(model => model.Active)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Name)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Name)
+                     @Html.ValidationMessageFor(model => model.Name)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Description)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.EditorFor(x => x.Description, "RichEditor")
+                     @Html.ValidationMessageFor(model => model.Description)
+                 </div>
+             </div>
+         </div>
+    </div>
+    ))
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Email)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Email)
+                    @Html.ValidationMessageFor(model => model.Email)
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                        @Html.GrandLabelFor(model => model.AssociatedCustomers)
+                        <div class="col-md-9 col-sm-9">
+                            <label class="control-label">
+                                @if (Model.AssociatedCustomers.Count > 0)
+                                {
+                                    for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
+                                    {
+                                        @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
+                                        if (i != Model.AssociatedCustomers.Count - 1)
+                                        {
+                                            <text>, </text>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    @T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")
+                                }
+                            </label>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.PictureId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.PictureId)
+                    @Html.ValidationMessageFor(model => model.PictureId)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.AdminComment)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(model => model.AdminComment, new { style = "Height: 100px;" })
+                    @Html.ValidationMessageFor(model => model.AdminComment)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.AllowCustomersToSelectPageSize)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
+                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPageSize">
+                    @Html.GrandLabelFor(model => model.PageSize)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.PageSize)
+                    @Html.ValidationMessageFor(model => model.PageSize)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPageSizeOptions">
+                    @Html.GrandLabelFor(model => model.PageSizeOptions)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(x => x.PageSizeOptions)
+                    @Html.ValidationMessageFor(model => model.PageSizeOptions)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Active)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.Active)
+                    @Html.ValidationMessageFor(model => model.Active)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.DisplayOrder)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabSeo()
 {
     @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaKeywords):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].MetaKeywords)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.Locales[item].MetaDescription)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaTitle):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].MetaTitle)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].SeName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].SeName)
-                @Html.ValidationMessageFor(model => model.Locales[item].SeName)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].MetaKeywords)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].MetaKeywords)
+                     @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].MetaDescription)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandTextAreaFor(model => model.Locales[item].MetaDescription)
+                     @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].MetaTitle)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].MetaTitle)
+                     @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].SeName)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].SeName)
+                     @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                 </div>
+             </div>
+             @Html.HiddenFor(model => model.Locales[item].LanguageId)
+         </div>
+    </div>
         ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaKeywords):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaKeywords)
-                @Html.ValidationMessageFor(model => model.MetaKeywords)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(x => x.MetaDescription)
-                @Html.ValidationMessageFor(model => model.MetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaTitle):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaTitle)
-                @Html.ValidationMessageFor(model => model.MetaTitle)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SeName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.SeName)
-                @Html.ValidationMessageFor(model => model.SeName)
-            </td>
-        </tr>
-    </table>))
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.MetaKeywords)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(x => x.MetaKeywords)
+                     @Html.ValidationMessageFor(model => model.MetaKeywords)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.MetaDescription)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandTextAreaFor(x => x.MetaDescription)
+                     @Html.ValidationMessageFor(model => model.MetaDescription)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.MetaTitle)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(x => x.MetaTitle)
+                     @Html.ValidationMessageFor(model => model.MetaTitle)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.SeName)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(x => x.SeName)
+                     @Html.ValidationMessageFor(model => model.SeName)
+                 </div>
+             </div>
+         </div>
+    </div>))
 }
 @helper TabVendorNotes()
 {
-    <table class="adminContent">
-        <tr>
-            <td>
+
                 <div id="vendornotes-grid"></div>
 
                 <script>
                 $(document).ready(function () {
                     $("#vendornotes-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("VendorNotesSelect", "Vendor", new { vendorId = Model.Id }))",
@@ -395,30 +354,28 @@
                     });
                 });
                 </script>
-            </td>
-        </tr>
-    </table>
+          
     <p>
         <strong>
             @T("Admin.Vendors.VendorNotes.AddTitle")
         </strong>
     </p>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddVendorNoteMessage):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.AddVendorNoteMessage, new { style = "Width: 350px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.AddVendorNoteMessage)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="left">
-                <input type="button" id="addVendorNote" class="k-button" value="@T("Admin.Vendors.VendorNotes.AddButton")" />
-            </td>
-        </tr>
-    </table>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.AddVendorNoteMessage)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(model => model.AddVendorNoteMessage, new { style = "Height: 100px;" })
+                    @Html.ValidationMessageFor(model => model.AddVendorNoteMessage)
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                <input type="button" id="addVendorNote" class="btn default" value="@T("Admin.Vendors.VendorNotes.AddButton")" />
+            </div>
+        </div>
+    </div>
 
     <script type="text/javascript">
     $(document).ready(function () {

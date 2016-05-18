@@ -31,7 +31,7 @@ namespace Nop.Admin.Models.Customers
         public string SystemName { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
-        public int PurchasedWithProductId { get; set; }
+        public string PurchasedWithProductId { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public string PurchasedWithProductName { get; set; }

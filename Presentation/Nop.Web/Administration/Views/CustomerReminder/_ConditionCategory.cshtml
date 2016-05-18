@@ -1,21 +1,23 @@
 ﻿@model CustomerReminderModel.ConditionModel
 
 
-<table class="adminContent">
-    <tr>
-        <td>
-            @if (String.IsNullOrEmpty(Model.Id))
-            {
-                @T("Admin.Customers.CustomerReminder.Condition.SaveBeforeEdit")
-            }
-        </td>
-    </tr>
+    @if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerReminder.Condition.SaveBeforeEdit")
+        </div>
+    }
     @if (!String.IsNullOrEmpty(Model.Id))
     {
-        <tr>
-            <td>
-
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="categories-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewCategory" value="@T("Admin.Customers.CustomerReminder.Condition.Category.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id, btnId = "btnRefreshCategories"}))', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="btnRefreshCategories" style="display: none" />
+            </div>
+        </div>
 
                 <script>
                         $(document).ready(function () {
@@ -86,12 +88,6 @@
                             });
                         });
                 </script>
-            </td>
-        </tr>
-            <tr>
-                <td width="100%">
-                    <input type="submit" id="btnAddNewCategory" value="@T("Admin.Customers.CustomerReminder.Condition.Category.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id, btnId = "btnRefreshCategories"}))', 800, 800, true); return false;" class="k-button" />
-                    <input type="submit" id="btnRefreshCategories" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {
                             $('#btnRefreshCategories').click(function () {
@@ -101,8 +97,5 @@
                             });
                         });
                     </script>
-                </td>
-            </tr>
 
     }
-</table>

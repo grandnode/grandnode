@@ -115,330 +115,304 @@
 
 @helper TabInfo()
 {
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Name)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Active)
-        </td>   
-        <td class="adminData">
-            @Html.EditorFor(model => model.Active)
-            @Html.ValidationMessageFor(model => model.Active)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StartDateTimeUtc)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.StartDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
-        </td>
-    </tr>
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Active)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.StartDateTimeUtc)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.StartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+            </div>
+        </div>
 
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.EndDateTimeUtc)
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.EndDateTimeUtc)
-            @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
-        </td>
-    </tr>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.EndDateTimeUtc)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.EndDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+            </div>
+        </div>
 
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ActionTypeId)
-        </td>
-        <td class="adminData">
-            @if (Model.ConditionCount > 0)
-            {
-                @Html.DropDownListFor(model => model.ActionTypeId, Model.ActionType, new { @disabled = "disabled" })
-            }
-            else
-            {
-                @Html.DropDownListFor(model => model.ActionTypeId, Model.ActionType)
-            }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ActionTypeId)
+            <div class="col-md-9 col-sm-9">
+                @if (Model.ConditionCount > 0)
+                {
+                    @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType, new { @disabled = "disabled" })
+                }
+                else
+                {
+                    @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType)
+                }
 
-            @Html.ValidationMessageFor(model => model.ActionTypeId)
-            <em>
-                <p>@T("admin.customers.actiontype.helpText.AddToCart")</p>
-                <p>@T("admin.customers.actiontype.helpText.AddOrder")</p>
-                <p>@T("admin.customers.actiontype.helpText.Viewed")</p>
-                <p>@T("admin.customers.actiontype.helpText.Url")</p>
-                <p>@T("admin.customers.actiontype.helpText.Registration")</p>
-            </em>
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ConditionId)
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.ConditionId, ((Nop.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
-            @Html.ValidationMessageFor(model => model.ConditionId)
-            <em>
-                <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>
-                <p>@T("admin.customers.actiontype.helpText.AllOfThem")</p>
-            </em>
-        </td>
-    </tr>
-</table>
+                @Html.ValidationMessageFor(model => model.ActionTypeId)
+                <div class="note note-info margin-top-10">
+                    <p>@T("admin.customers.actiontype.helpText.AddToCart")</p>
+                    <p>@T("admin.customers.actiontype.helpText.AddOrder")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Viewed")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Url")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Registration")</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ConditionId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ConditionId, ((Nop.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ConditionId)
+                <div class="note note-info margin-top-10">
+                    <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>
+                    <p>@T("admin.customers.actiontype.helpText.AllOfThem")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 }
 
 @helper TabConditions()
 {
-    <table class="adminContent">
-        <tr>
-            <td>
-                @if (String.IsNullOrEmpty(Model.Id))
-                {
-                    @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
-                }
-            </td>
-        </tr>
-    @if (!String.IsNullOrEmpty(Model.Id))
-    {
-        <tr>
-            <td>
-                    @{ 
-                        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-                        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-                    }
-                    <div id="conditions-grid"></div>
-                    
-                    <script>
-                        $(document).ready(function () {
-                            $("#conditions-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("Conditions", "CustomerAction", new { customerActionId = Model.Id }))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                        destroy: {
-                                            url: "@Html.Raw(Url.Action("ConditionDelete", "CustomerAction", new { customerActionId = Model.Id }))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors",
-                                        model: {
-                                            id: "Id",
-                                        }
-                                    },
-                                    error: function (e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false
-                                },
-                                editable: {
-                                    confirmation: false,
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "Name",
-                                    title: "@T("Admin.Customers.CustomerAction.Fields.Name")",
-                                    width: 300,
-                                    filterable: false,
-                                    sortable: false
-                                },
-                                {
-                                    field: "Condition",
-                                    title: "@T("Admin.Customers.CustomerAction.Fields.ConditionType")",
-                                    width: 100,
-                                },
-                                {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 100,
-                                    template: '<a href="@Url.Content("~/Admin/CustomerAction/EditCondition")?customerActionId=@(Model.Id)&cid=#=Id#">@T("Admin.Common.Edit")</a>'
-                                },
-                                {
-                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                    title: "@T("Admin.Common.Delete")",
-                                    width: 100
-                                }]
-                            });
-                        });
-                </script>                                        
-            </td>
-        </tr>
-        <tr>
-            <td class="adminData">
-                <input type="submit" id="btnAddNewCondition" name="btnAddNewCondition" value="@T("Admin.Customers.CustomerAction.Conditions.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddCondition", "CustomerAction", new { customerActionId = Model.Id }))'); return false;" class="k-button" />
-            </td>
-        </tr>
 
-                        }
-    </table>
+    if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
+        </div>
+    }
+
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="conditions-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewCondition" name="btnAddNewCondition" value="@T("Admin.Customers.CustomerAction.Conditions.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddCondition", "CustomerAction", new { customerActionId = Model.Id }))'); return false;" class="btn default" />
+            </div>
+        </div>
+
+            var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+            var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+                    
+                    
+        <script>
+            $(document).ready(function () {
+                $("#conditions-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("Conditions", "CustomerAction", new { customerActionId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ConditionDelete", "CustomerAction", new { customerActionId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+                    {
+                        field: "Name",
+                        title: "@T("Admin.Customers.CustomerAction.Fields.Name")",
+                        width: 300,
+                        filterable: false,
+                        sortable: false
+                    },
+                    {
+                        field: "Condition",
+                        title: "@T("Admin.Customers.CustomerAction.Fields.ConditionType")",
+                        width: 100,
+                    },
+                    {
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: '<a href="@Url.Content("~/Admin/CustomerAction/EditCondition")?customerActionId=@(Model.Id)&cid=#=Id#">@T("Admin.Common.Edit")</a>'
+                    },
+                    {
+                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }]
+                });
+            });
+    </script>                                        
+           
+    }
 }
 @helper TabReaction()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ReactionTypeId)
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.ReactionTypeId, ((Nop.Core.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.ReactionTypeId)
-                <em>
-                    <p>@T("admin.customers.actiontype.helpText.Banner")</p>
-                    <p>@T("admin.customers.actiontype.helpText.Email")</p>
-                    <p>@T("admin.customers.actiontype.helpText.Customerrole")</p>
-                    <p>@T("admin.customers.actiontype.helpText.Customertag")</p>
-                </em>
-            </td>
-        </tr>
-        <tr id="plnBanner">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.BannerId)
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.BannerId, Model.Banners)
-                @Html.ValidationMessageFor(model => model.BannerId)
-            </td>
-        </tr>
-        <tr id="plnMessage">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MessageTemplateId)
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.MessageTemplateId, Model.MessageTemplates)
-                @Html.ValidationMessageFor(model => model.MessageTemplateId)
-            </td>
-        </tr>
-        <tr id="plnRole">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerRoleId)
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.CustomerRoleId, Model.CustomerRoles)
-                @Html.ValidationMessageFor(model => model.CustomerRoleId)
-            </td>
-        </tr>
-        <tr id="plnTag">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerTagId)
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.CustomerTagId, Model.CustomerTags)
-                @Html.ValidationMessageFor(model => model.CustomerTagId)
-            </td>
-        </tr>
-    </table>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.ReactionTypeId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.ReactionTypeId, ((Nop.Core.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList())
+                    @Html.ValidationMessageFor(model => model.ReactionTypeId)
+                    <div class="note note-info margin-top-10">
+                        <p>@T("admin.customers.actiontype.helpText.Banner")</p>
+                        <p>@T("admin.customers.actiontype.helpText.Email")</p>
+                        <p>@T("admin.customers.actiontype.helpText.Customerrole")</p>
+                        <p>@T("admin.customers.actiontype.helpText.Customertag")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" id="plnBanner">
+                @Html.GrandLabelFor(model => model.BannerId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.BannerId, Model.Banners)
+                    @Html.ValidationMessageFor(model => model.BannerId)
+                </div>
+            </div>
+            <div class="form-group" id="plnMessage">
+                @Html.GrandLabelFor(model => model.MessageTemplateId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.MessageTemplateId, Model.MessageTemplates)
+                    @Html.ValidationMessageFor(model => model.MessageTemplateId)
+                </div>
+            </div>
+            <div class="form-group" id="plnRole">
+                @Html.GrandLabelFor(model => model.CustomerRoleId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.CustomerRoleId, Model.CustomerRoles)
+                    @Html.ValidationMessageFor(model => model.CustomerRoleId)
+                </div>
+            </div>
+            <div class="form-group" id="plnTag">
+                @Html.GrandLabelFor(model => model.CustomerTagId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.CustomerTagId, Model.CustomerTags)
+                    @Html.ValidationMessageFor(model => model.CustomerTagId)
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 
 
 @helper TabHistory()
 {
-    <table class="adminContent">
-        <tr>
-            <td>
-                @if (String.IsNullOrEmpty(Model.Id))
+
+if (String.IsNullOrEmpty(Model.Id))
+{
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
+        </div>
+}
+if (!String.IsNullOrEmpty(Model.Id))
+{
+
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+       
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="history-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#history-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("History", "CustomerAction", new { customerActionId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                    },
+                schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
                 {
-                    @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
-                }
-            </td>
-        </tr>
-        @if (!String.IsNullOrEmpty(Model.Id))
-    {
-            <tr>
-                <td>
-                    @{
-                        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-                        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-                    }
-                    <div id="history-grid"></div>
+                    field: "CreateDateUtc",
+                    title: "@T("Admin.Customers.CustomerAction.History.Fields.CreateDateUtc")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                },
+                {
+                    field: "Email",
+                    title: "@T("Admin.Customers.CustomerAction.History.Fields.Customer")",
+                    width: 100,
+                }]
+            });
+        });
+    </script>
 
-                    <script>
-                        $(document).ready(function () {
-                            $("#history-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("History", "CustomerAction", new { customerActionId = Model.Id }))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        },
-                                    },
-                              schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(defaultGridPageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(gridPageSizes)]
-                                },
-                                editable: {
-                                    confirmation: false,
-                                    mode: "inline"
-                                },
-                                scrollable: false,
-                                columns: [
-                                {
-                                    field: "CreateDateUtc",
-                                    title: "@T("Admin.Customers.CustomerAction.History.Fields.CreateDateUtc")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                },
-                                {
-                                    field: "Email",
-                                    title: "@T("Admin.Customers.CustomerAction.History.Fields.Customer")",
-                                    width: 100,
-                                }]
-                            });
-                        });
-                    </script>
-                </td>
-            </tr>
-
-
-                        }
-    </table>
+        }
 }
 
 

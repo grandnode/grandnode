@@ -184,7 +184,7 @@ namespace Nop.Admin.Controllers
                         throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
 
                     if (SystemCustomerRoleNames.Registered.Equals(customerRole.SystemName, StringComparison.InvariantCultureIgnoreCase) &&
-                        model.PurchasedWithProductId > 0)
+                        !String.IsNullOrEmpty(model.PurchasedWithProductId))
                         throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Registered"));
                     
                     customerRole = model.ToEntity(customerRole);
