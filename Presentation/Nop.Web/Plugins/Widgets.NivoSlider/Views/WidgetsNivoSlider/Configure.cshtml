@@ -5,195 +5,194 @@
 @using Nop.Web.Framework;
 @Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
-{
+{	
     @Html.AntiForgeryToken()
+	
+	<div class="form-horizontal">	
     <fieldset>
         <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture1")</strong></legend>
-        <table class="adminContent">
-            <tr>
-                <td class="adminTitle">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Picture1Id_OverrideForStore, model => model.Picture1Id, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Picture1Id):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Picture1Id)
+                    @Html.GrandLabelFor(model => model.Picture1Id, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Picture1Id)
                     @Html.ValidationMessageFor(model => model.Picture1Id)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Text1_OverrideForStore, model => model.Text1, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Text1):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Text1)
+                    @Html.GrandLabelFor(model => model.Text1, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Text1)
                     @Html.ValidationMessageFor(model => model.Text1)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Link1_OverrideForStore, model => model.Link1, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Link1):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Link1)
+                    @Html.GrandLabelFor(model => model.Link1, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Link1)
                     @Html.ValidationMessageFor(model => model.Link1)
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
     </fieldset>
-    <br />
-    
     <fieldset>
         <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture2")</strong></legend>
-        <table class="adminContent">
-            <tr>
-                <td class="adminTitle">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Picture2Id_OverrideForStore, model => model.Picture2Id, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Picture2Id):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Picture2Id)
+                    @Html.GrandLabelFor(model => model.Picture2Id, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Picture2Id)
                     @Html.ValidationMessageFor(model => model.Picture2Id)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Text2_OverrideForStore, model => model.Text2, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Text2):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Text2)
+                    @Html.GrandLabelFor(model => model.Text2, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Text2)
                     @Html.ValidationMessageFor(model => model.Text2)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Link2_OverrideForStore, model => model.Link2, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Link2):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Link2)
+                    @Html.GrandLabelFor(model => model.Link2, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Link2)
                     @Html.ValidationMessageFor(model => model.Link2)
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
     </fieldset>
-    <br />
     
     <fieldset>
         <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture3")</strong></legend>
-        <table class="adminContent">
-            <tr>
-                <td class="adminTitle">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Picture3Id_OverrideForStore, model => model.Picture3Id, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Picture3Id):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Picture3Id)
+                    @Html.GrandLabelFor(model => model.Picture3Id, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Picture3Id)
                     @Html.ValidationMessageFor(model => model.Picture3Id)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Text3_OverrideForStore, model => model.Text3, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Text3):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Text3)
+                    @Html.GrandLabelFor(model => model.Text3, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Text3)
                     @Html.ValidationMessageFor(model => model.Text3)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Link3_OverrideForStore, model => model.Link3, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Link3):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Link3)
+                    @Html.GrandLabelFor(model => model.Link3, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Link3)
                     @Html.ValidationMessageFor(model => model.Link3)
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
     </fieldset>
-    <br />
     <fieldset>
         <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture4")</strong></legend>
-        <table class="adminContent">
-            <tr>
-                <td class="adminTitle">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Picture4Id_OverrideForStore, model => model.Picture4Id, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Picture4Id):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Picture4Id)
+                    @Html.GrandLabelFor(model => model.Picture4Id, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Picture4Id)
                     @Html.ValidationMessageFor(model => model.Picture4Id)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Text4_OverrideForStore, model => model.Text4, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Text4):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Text4)
+                    @Html.GrandLabelFor(model => model.Text4, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Text4)
                     @Html.ValidationMessageFor(model => model.Text4)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Link4_OverrideForStore, model => model.Link4, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Link4):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Link4)
+                    @Html.GrandLabelFor(model => model.Link4, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Link4)
                     @Html.ValidationMessageFor(model => model.Link4)
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
     </fieldset>
-    <br />
     <fieldset>
         <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture5")</strong></legend>
-        <table class="adminContent">
-            <tr>
-                <td class="adminTitle">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Picture5Id_OverrideForStore, model => model.Picture5Id, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Picture5Id):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Picture5Id)
+                    @Html.GrandLabelFor(model => model.Picture5Id, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Picture5Id)
                     @Html.ValidationMessageFor(model => model.Picture5Id)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Text5_OverrideForStore, model => model.Text5, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Text5):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Text5)
+                    @Html.GrandLabelFor(model => model.Text5, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Text5)
                     @Html.ValidationMessageFor(model => model.Text5)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 text-right">
                 @Html.OverrideStoreCheckboxFor(model => model.Link5_OverrideForStore, model => model.Link5, Model.ActiveStoreScopeConfiguration)
-                    @Html.NopLabelFor(model => model.Link5):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Link5)
+                    @Html.GrandLabelFor(model => model.Link5, null, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Link5)
                     @Html.ValidationMessageFor(model => model.Link5)
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
     </fieldset>
-    <br />
-    <table class="adminContent">
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            </td>
-        </tr>
-    </table>
+   
+   <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                </div>
+            </div>
+        </div>
+   </div>
+
 }

@@ -188,7 +188,7 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static MvcHtmlString GrandLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes = null)
+        public static MvcHtmlString GrandLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes = null, bool withColumns = true)
         {
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
@@ -201,7 +201,8 @@ namespace Nop.Web.Framework
             TagBuilder tag = new TagBuilder("label");
             tag.MergeAttributes(htmlAttributes);
             tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
-            tag.AddCssClass("control-label col-md-3 col-sm-3");
+            if(withColumns)
+                tag.AddCssClass("control-label col-md-3 col-sm-3");
             tag.SetInnerText(labelText);
 
             object value;

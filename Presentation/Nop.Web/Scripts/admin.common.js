@@ -27,7 +27,7 @@ $(document).ready(function () {
 
 function checkAllOverriddenStoreValue(item) {
     $('.multi-store-override-option').each(function (k, v) {
-        $(v).attr('checked', item.checked);
+        $(v).prop('checked', item.checked);
         checkOverriddenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
 }
