@@ -48,103 +48,89 @@
 @helper TabInfo()
 {
 
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LanguageId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SystemKeyword):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SystemKeyword)
-                @Html.ValidationMessageFor(model => model.SystemKeyword)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Published):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Published)
-                @Html.ValidationMessageFor(model => model.Published)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShowOnHomePage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowOnHomePage)
-                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowGuestsToVote):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowGuestsToVote)
-                @Html.ValidationMessageFor(model => model.AllowGuestsToVote)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StartDate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StartDate)
-                @Html.ValidationMessageFor(model => model.StartDate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.EndDate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EndDate)
-                @Html.ValidationMessageFor(model => model.EndDate)
-            </td>
-        </tr>
-    </table>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.LanguageId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SystemKeyword)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SystemKeyword)
+                    @Html.ValidationMessageFor(model => model.SystemKeyword)
+                </div>
+            </div>
+            <div class="form-group">                
+                    @Html.GrandLabelFor(model => model.Published)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.Published)
+                    @Html.ValidationMessageFor(model => model.Published)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.ShowOnHomePage)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.ShowOnHomePage)
+                    @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.AllowGuestsToVote)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.AllowGuestsToVote)
+                    @Html.ValidationMessageFor(model => model.AllowGuestsToVote)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.DisplayOrder)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.StartDate)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.StartDate)
+                    @Html.ValidationMessageFor(model => model.StartDate)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.EndDate)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.EndDate)
+                    @Html.ValidationMessageFor(model => model.EndDate)
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabAnswers()
 {
 if (!String.IsNullOrEmpty(Model.Id))
 {
-        <table class="adminContent">
-            <tr>
-                <td>
-                    <div id="answers-grid"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="answers-grid"></div>
+            </div>
+        </div>
+
+
 
                     <script>
                     $(document).ready(function () {
                         $("#answers-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
+                            dataSource: {                                
                                 transport: {
                                     read: {
                                         url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new { pollId = Model.Id }))",
@@ -243,12 +229,11 @@ if (!String.IsNullOrEmpty(Model.Id))
                     });
 
                     </script>
-                </td>
-            </tr>
-        </table>
 }
 else
 {
-        @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
+        <div class="note note-info">
+            @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
+        </div>
 }
 }
