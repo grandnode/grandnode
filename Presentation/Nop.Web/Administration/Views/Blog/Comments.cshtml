@@ -9,18 +9,31 @@
     int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
-        @T("Admin.ContentManagement.Blog.Comments")
-    </div>
-    <div class="options">
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-comment"></i>
+                    @T("Admin.ContentManagement.Blog.Comments")
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="comments-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="comments-grid"></div>
+
+
+            
             @{
                 string readUrl = "";
                 if (filterByBlogPostId.HasValue)
@@ -36,7 +49,6 @@
                 $(document).ready(function () {
                     $("#comments-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@readUrl",
@@ -116,6 +128,3 @@
                     });
                 });
             </script>
-        </td>
-    </tr>
-</table>
