@@ -14,12 +14,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
-            @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
-        </div>
-    </div>    
+    
     
        if (ViewBag.RefreshPage == true)
        {
@@ -28,34 +23,48 @@
             catch (e){} 
             window.close();
         </script>
-       }
+    }
 
-    
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchCategoryName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchCategoryName)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-categories" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="categories-grid"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchCategoryName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.SearchCategoryName)
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-1 col-md-11 col-sm-11 btn-group btn-group-devided">
+                                        <input type="button" id="search-categories" class="btn default" value="@T("Admin.Common.Search")" />
+                                        <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="categories-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
                 <script>
                 $(document).ready(function () {
                     $("#categories-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("CategoryAddPopupList", "Discount"))",
@@ -153,12 +162,5 @@
                     }
 
                 </script>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            </td>
-        </tr>
-    </table>
+           
 }

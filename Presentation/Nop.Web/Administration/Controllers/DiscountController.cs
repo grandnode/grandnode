@@ -627,7 +627,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        public ActionResult CategoryAddPopup(int discountId)
+        public ActionResult CategoryAddPopup(string discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();

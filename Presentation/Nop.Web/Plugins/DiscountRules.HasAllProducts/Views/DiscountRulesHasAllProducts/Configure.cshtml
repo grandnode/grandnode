@@ -10,9 +10,9 @@
             var productIds = $("#@Html.FieldIdFor(model => model.Products)").val();
             var discountId = '@Model.DiscountId';
             var requirementId = '@Model.RequirementId';
-                
+
             var postData = {
-                discountId: discountId, 
+                discountId: discountId,
                 discountRequirementId: requirementId,
                 productIds: productIds
             };
@@ -33,25 +33,28 @@
                 },
                 error:function (xhr, ajaxOptions, thrownError){
                     alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
-                }  
+                }
             });
         });
     });
 </script>
-    
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Products):
-        </td>
-        <td class="adminData">
-            <div>@Html.EditorFor(model => model.Products) <input type="button" id="saveHasAllProductsrequirement@(Model.RequirementId)" class="k-button" value="@T("Admin.Common.Save")" /></div>
-            <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
 
-            <span id="discountrequirement-products-check-progress@(Model.RequirementId)" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-            <input type="submit" id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)" value="@T("Plugins.DiscountRules.HasAllProducts.Fields.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasAllProducts.ProductAddPopup", new { btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.FieldIdFor(model => model.Products) }))', 800, 800, true); return false;" class="k-button" />
-            <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none" />
-            <script type="text/javascript">
+<div class="form-body">
+    @Html.GrandLabelFor(model => model.Products)
+
+    <div class="col-md-8 col-sm-8">
+        @Html.GrandEditorFor(model => model.Products)
+        <span class="control-label" style="text-align:left" id="discountrequirement-product-names@(Model.RequirementId)"></span>
+        <div class="group-btn btn-group-devided margin-top-10">
+            <input type="button" id="saveHasAllProductsrequirement@(Model.RequirementId)" class="btn default" value="@T("Admin.Common.Save")" />
+            <input type="submit" id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)" value="@T("Plugins.DiscountRules.HasAllProducts.Fields.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasAllProducts.ProductAddPopup", new { btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.FieldIdFor(model => model.Products) }))', 800, 800, true); return false;" class="btn default" />
+        </div>
+        <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
+
+        <span id="discountrequirement-products-check-progress@(Model.RequirementId)" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+
+        <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none" />
+        <script type="text/javascript">
                 $(document).ready(function () {
                     $('#btnRefreshDiscountRequirementProducts@(Model.RequirementId)').click(function () {
                         //refresh product list
@@ -79,7 +82,7 @@
                     if (inputValue) {
                         //load friendly names
                         $('#discountrequirement-products-check-progress@(Model.RequirementId)').show();
-                            
+
                         var postData = {
                             productIds: inputValue
                         };
@@ -104,8 +107,6 @@
                         $('#discountrequirement-product-names@(Model.RequirementId)').text('');
                     }
                 }
-            </script>
-            <span id="discountrequirement-product-names@(Model.RequirementId)"></span>
-        </td>
-    </tr>
-</table>
+        </script>
+    </div>
+</div>
