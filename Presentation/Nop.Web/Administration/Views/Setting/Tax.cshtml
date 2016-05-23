@@ -70,258 +70,261 @@
         }
     </script>
     
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.Settings.Tax")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+    @Html.ValidationSummary(false)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.Tax")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @Html.Action("StoreScopeConfiguration", "Setting")
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PricesIncludeTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.PricesIncludeTax)
+                                    @Html.ValidationMessageFor(model => model.PricesIncludeTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, model => model.AllowCustomersToSelectTaxDisplayType, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowCustomersToSelectTaxDisplayType, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlTaxDisplayType">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.TaxDisplayType_OverrideForStore, model => model.TaxDisplayType, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.TaxDisplayType, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.TaxDisplayType, Model.TaxDisplayTypeValues)
+                                    @Html.ValidationMessageFor(model => model.TaxDisplayType)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxSuffix_OverrideForStore, model => model.DisplayTaxSuffix, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DisplayTaxSuffix, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.DisplayTaxSuffix)
+                                    @Html.ValidationMessageFor(model => model.DisplayTaxSuffix)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxRates_OverrideForStore, model => model.DisplayTaxRates, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DisplayTaxRates, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.DisplayTaxRates)
+                                    @Html.ValidationMessageFor(model => model.DisplayTaxRates)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.HideZeroTax_OverrideForStore, model => model.HideZeroTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.HideZeroTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.HideZeroTax)
+                                    @Html.ValidationMessageFor(model => model.HideZeroTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.HideTaxInOrderSummary_OverrideForStore, model => model.HideTaxInOrderSummary, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.HideTaxInOrderSummary, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.HideTaxInOrderSummary)
+                                    @Html.ValidationMessageFor(model => model.HideTaxInOrderSummary)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, model => model.ForceTaxExclusionFromOrderSubtotal, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ForceTaxExclusionFromOrderSubtotal, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                                    @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.TaxBasedOn, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
+                                    @Html.ValidationMessageFor(model => model.TaxBasedOn)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
+                                    <strong>@Html.GrandLabelFor(model => model.DefaultTaxAddress, new Dictionary<string, object> { { "class", "control-label" } }, false)</strong>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div id="pnlDefaultTaxAddress">
+                                    @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShippingIsTaxable_OverrideForStore, model => model.ShippingIsTaxable, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShippingIsTaxable, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ShippingIsTaxable)
+                                    @Html.ValidationMessageFor(model => model.ShippingIsTaxable)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlShippingPriceIncludesTax">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShippingPriceIncludesTax_OverrideForStore, model => model.ShippingPriceIncludesTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShippingPriceIncludesTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ShippingPriceIncludesTax)
+                                    @Html.ValidationMessageFor(model => model.ShippingPriceIncludesTax)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlShippingTaxClass">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShippingTaxClassId_OverrideForStore, model => model.ShippingTaxClassId, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShippingTaxClassId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.ShippingTaxClassId, Model.ShippingTaxCategories)
+                                    @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, model => model.PaymentMethodAdditionalFeeIsTaxable, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeIsTaxable, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlPaymentMethodAdditionalFeeIncludesTax">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore, model => model.PaymentMethodAdditionalFeeIncludesTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeIncludesTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlPaymentMethodAdditionalFeeTaxClass">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, model => model.PaymentMethodAdditionalFeeTaxClassId, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeTaxClassId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.PaymentMethodAdditionalFeeTaxClassId, Model.PaymentMethodAdditionalFeeTaxCategories)
+                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatEnabled_OverrideForStore, model => model.EuVatEnabled, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.EuVatEnabled)
+                                    @Html.ValidationMessageFor(model => model.EuVatEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatShopCountry">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatShopCountryId_OverrideForStore, model => model.EuVatShopCountryId, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatShopCountryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.EuVatShopCountryId, Model.EuVatShopCountries)
+                                    @Html.ValidationMessageFor(model => model.EuVatShopCountryId)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatAllowVATExemption">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatAllowVatExemption_OverrideForStore, model => model.EuVatAllowVatExemption, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatAllowVatExemption, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.EuVatAllowVatExemption)
+                                    @Html.ValidationMessageFor(model => model.EuVatAllowVatExemption)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatAssumeValid">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatAssumeValid_OverrideForStore, model => model.EuVatAssumeValid, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatAssumeValid, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.EuVatAssumeValid)
+                                    @Html.ValidationMessageFor(model => model.EuVatAssumeValid)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatUseWebService">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatUseWebService, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.EuVatUseWebService)
+                                    @Html.ValidationMessageFor(model => model.EuVatUseWebService)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatEmailAdminWhenNewVATSubmitted">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, model => model.EuVatEmailAdminWhenNewVatSubmitted, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatEmailAdminWhenNewVatSubmitted, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                                    @Html.ValidationMessageFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    @Html.Action("StoreScopeConfiguration", "Setting")
-    @Html.ValidationSummary(false)
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PricesIncludeTax):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PricesIncludeTax)
-                @Html.ValidationMessageFor(model => model.PricesIncludeTax)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, model => model.AllowCustomersToSelectTaxDisplayType, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowCustomersToSelectTaxDisplayType):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowCustomersToSelectTaxDisplayType)
-                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectTaxDisplayType)
-            </td>
-        </tr>
-        <tr id="pnlTaxDisplayType">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.TaxDisplayType_OverrideForStore, model => model.TaxDisplayType, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.TaxDisplayType):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.TaxDisplayType, Model.TaxDisplayTypeValues)
-                @Html.ValidationMessageFor(model => model.TaxDisplayType)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxSuffix_OverrideForStore, model => model.DisplayTaxSuffix, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayTaxSuffix):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayTaxSuffix)
-                @Html.ValidationMessageFor(model => model.DisplayTaxSuffix)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxRates_OverrideForStore, model => model.DisplayTaxRates, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayTaxRates):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayTaxRates)
-                @Html.ValidationMessageFor(model => model.DisplayTaxRates)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.HideZeroTax_OverrideForStore, model => model.HideZeroTax, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.HideZeroTax):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.HideZeroTax)
-                @Html.ValidationMessageFor(model => model.HideZeroTax)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.HideTaxInOrderSummary_OverrideForStore, model => model.HideTaxInOrderSummary, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.HideTaxInOrderSummary):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.HideTaxInOrderSummary)
-                @Html.ValidationMessageFor(model => model.HideTaxInOrderSummary)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, model => model.ForceTaxExclusionFromOrderSubtotal, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ForceTaxExclusionFromOrderSubtotal):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ForceTaxExclusionFromOrderSubtotal)
-                @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.TaxBasedOn):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
-                @Html.ValidationMessageFor(model => model.TaxBasedOn)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle" colspan="2">
-                @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
-                <strong>@Html.LabelFor(model => model.DefaultTaxAddress):</strong>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" id="pnlDefaultTaxAddress">
-                @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShippingIsTaxable_OverrideForStore, model => model.ShippingIsTaxable, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShippingIsTaxable):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShippingIsTaxable)
-                @Html.ValidationMessageFor(model => model.ShippingIsTaxable)
-            </td>
-        </tr>
-        <tr id="pnlShippingPriceIncludesTax">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShippingPriceIncludesTax_OverrideForStore, model => model.ShippingPriceIncludesTax, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShippingPriceIncludesTax):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShippingPriceIncludesTax)
-                @Html.ValidationMessageFor(model => model.ShippingPriceIncludesTax)
-            </td>
-        </tr>
-        <tr id="pnlShippingTaxClass">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShippingTaxClassId_OverrideForStore, model => model.ShippingTaxClassId, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShippingTaxClassId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.ShippingTaxClassId, Model.ShippingTaxCategories)
-                @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, model => model.PaymentMethodAdditionalFeeIsTaxable, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIsTaxable):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
-                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
-            </td>
-        </tr>
-        <tr id="pnlPaymentMethodAdditionalFeeIncludesTax">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore, model => model.PaymentMethodAdditionalFeeIncludesTax, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeIncludesTax):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
-                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
-            </td>
-        </tr>
-        <tr id="pnlPaymentMethodAdditionalFeeTaxClass">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, model => model.PaymentMethodAdditionalFeeTaxClassId, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeTaxClassId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.PaymentMethodAdditionalFeeTaxClassId, Model.PaymentMethodAdditionalFeeTaxCategories)
-                @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EuVatEnabled_OverrideForStore, model => model.EuVatEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EuVatEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EuVatEnabled)
-                @Html.ValidationMessageFor(model => model.EuVatEnabled)
-            </td>
-        </tr>
-        <tr id="pnlEuVatShopCountry">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EuVatShopCountryId_OverrideForStore, model => model.EuVatShopCountryId, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EuVatShopCountryId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.EuVatShopCountryId, Model.EuVatShopCountries)
-                @Html.ValidationMessageFor(model => model.EuVatShopCountryId)
-            </td>
-        </tr>
-        <tr id="pnlEuVatAllowVATExemption">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EuVatAllowVatExemption_OverrideForStore, model => model.EuVatAllowVatExemption, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EuVatAllowVatExemption):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EuVatAllowVatExemption)
-                @Html.ValidationMessageFor(model => model.EuVatAllowVatExemption)
-            </td>
-        </tr>
-        <tr id="pnlEuVatAssumeValid">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EuVatAssumeValid_OverrideForStore, model => model.EuVatAssumeValid, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EuVatAssumeValid):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EuVatAssumeValid)
-                @Html.ValidationMessageFor(model => model.EuVatAssumeValid)
-            </td>
-        </tr>
-        <tr id="pnlEuVatUseWebService">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EuVatUseWebService):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EuVatUseWebService)
-                @Html.ValidationMessageFor(model => model.EuVatUseWebService)
-            </td>
-        </tr>
-        <tr id="pnlEuVatEmailAdminWhenNewVATSubmitted">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, model => model.EuVatEmailAdminWhenNewVatSubmitted, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EuVatEmailAdminWhenNewVatSubmitted):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
-                @Html.ValidationMessageFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
-            </td>
-        </tr>
-    </table>
+
+
 }
