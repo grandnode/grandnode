@@ -3048,7 +3048,7 @@ namespace Nop.Admin.Controllers
                 model.Value = model.Value.Trim();
 
             if (model.StoreId != null)
-                model.Value = model.StoreId.Trim();
+                model.StoreId = model.StoreId.Trim();
             else
                 model.StoreId = "";
 
