@@ -72,251 +72,206 @@
         }
     </script>
     @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Title):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Title)
-                @Html.ValidationMessageFor(model => model.Locales[item].Title)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Body):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Locales[item].Body)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].Title)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].Title)
+                     @Html.ValidationMessageFor(model => model.Locales[item].Title)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].Body)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
+                     @Html.ValidationMessageFor(model => model.Locales[item].Body)
+                 </div>
+             </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+         </div>
+    </div>
         ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Title):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Title)
-                @Html.ValidationMessageFor(model => model.Title)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Body):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.Body, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Body)
-            </td>
-        </tr>
-    </table>
-          ))
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SystemName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SystemName)
-                @Html.ValidationMessageFor(model => model.SystemName)
-            </td>
-        </tr>
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Url):
-                </td>
-                <td class="adminData">
-                    <a href="@Model.Url">@Model.Url</a>
-                </td>
-            </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IsPasswordProtected):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IsPasswordProtected)
-                @Html.ValidationMessageFor(model => model.IsPasswordProtected)
-            </td>
-        </tr>
-        <tr id="pnlPasswordEnabled">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Password):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Password)
-                @Html.ValidationMessageFor(model => model.Password)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IncludeInSitemap):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.IncludeInSitemap)
-                @Html.ValidationMessageFor(model => model.IncludeInSitemap)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IncludeInTopMenu):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.IncludeInTopMenu)
-                @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IncludeInFooterColumn1):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.IncludeInFooterColumn1)
-                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn1)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IncludeInFooterColumn2):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.IncludeInFooterColumn2)
-                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn2)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IncludeInFooterColumn3):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.IncludeInFooterColumn3)
-                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AccessibleWhenStoreClosed):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.AccessibleWhenStoreClosed)
-                @Html.ValidationMessageFor(model => model.AccessibleWhenStoreClosed)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TopicTemplateId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.TopicTemplateId, Model.AvailableTopicTemplates)
-                @Html.ValidationMessageFor(model => model.TopicTemplateId)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Title)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Title)
+                     @Html.ValidationMessageFor(model => model.Title)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Body)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.EditorFor(x => x.Body, "RichEditor")
+                     @Html.ValidationMessageFor(model => model.Body)
+                 </div>
+             </div>
+         </div>
+    </div>
+    ))
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SystemName)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SystemName)
+                    @Html.ValidationMessageFor(model => model.SystemName)
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                        @Html.GrandLabelFor(model => model.Url)
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label"><a href="@Model.Url">@Model.Url</a></label>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.IsPasswordProtected)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.IsPasswordProtected)
+                    @Html.ValidationMessageFor(model => model.IsPasswordProtected)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPasswordEnabled">
+                    @Html.GrandLabelFor(model => model.Password)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Password)
+                    @Html.ValidationMessageFor(model => model.Password)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.IncludeInSitemap)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.IncludeInSitemap)
+                    @Html.ValidationMessageFor(model => model.IncludeInSitemap)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.IncludeInTopMenu)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.IncludeInTopMenu)
+                    @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.IncludeInFooterColumn1)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.IncludeInFooterColumn1)
+                    @Html.ValidationMessageFor(model => model.IncludeInFooterColumn1)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.IncludeInFooterColumn2)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.IncludeInFooterColumn2)
+                    @Html.ValidationMessageFor(model => model.IncludeInFooterColumn2)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.IncludeInFooterColumn3)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.IncludeInFooterColumn3)
+                    @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.DisplayOrder)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(x => x.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.AccessibleWhenStoreClosed)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.AccessibleWhenStoreClosed)
+                    @Html.ValidationMessageFor(model => model.AccessibleWhenStoreClosed)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.TopicTemplateId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.TopicTemplateId, Model.AvailableTopicTemplates)
+                    @Html.ValidationMessageFor(model => model.TopicTemplateId)
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabSeo()
 {
     @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaKeywords):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].MetaKeywords)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.Locales[item].MetaDescription)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].MetaTitle):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].MetaTitle)
-                @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].SeName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].SeName)
-                @Html.ValidationMessageFor(model => model.Locales[item].SeName)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].MetaKeywords)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].MetaKeywords)
+                     @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].MetaDescription)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandTextAreaFor(model => model.Locales[item].MetaDescription)
+                     @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].MetaTitle)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.EditorFor(model => model.Locales[item].MetaTitle)
+                     @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].SeName)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].SeName)
+                     @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                 </div>
+             </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+         </div>
+    </div>
                ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaKeywords):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaKeywords)
-                @Html.ValidationMessageFor(model => model.MetaKeywords)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(x => x.MetaDescription)
-                @Html.ValidationMessageFor(model => model.MetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MetaTitle):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.MetaTitle)
-                @Html.ValidationMessageFor(model => model.MetaTitle)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SeName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.SeName)
-                @Html.ValidationMessageFor(model => model.SeName)
-            </td>
-        </tr>
-    </table>))
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.MetaKeywords)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(x => x.MetaKeywords)
+                     @Html.ValidationMessageFor(model => model.MetaKeywords)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.MetaDescription)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandTextAreaFor(x => x.MetaDescription)
+                     @Html.ValidationMessageFor(model => model.MetaDescription)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.MetaTitle)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(x => x.MetaTitle)
+                     @Html.ValidationMessageFor(model => model.MetaTitle)
+                 </div>
+             </div>
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.SeName)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(x => x.SeName)
+                     @Html.ValidationMessageFor(model => model.SeName)
+                 </div>
+             </div>
+         </div>
+    </div>
+    ))
 }
 
 @helper TabAcl()
@@ -340,38 +295,42 @@
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SubjectToAcl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SubjectToAcl)
-                @Html.ValidationMessageFor(model => model.SubjectToAcl)
-            </td>
-        </tr>
-        <tr id="pnl-acl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableCustomerRoles):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
-                {
-                    @Html.Action("AclDisabledWarning", "Common")
-                    foreach (var customerRole in Model.AvailableCustomerRoles)
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SubjectToAcl)
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.SubjectToAcl)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.SubjectToAcl)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-acl">
+                @Html.GrandLabelFor(model => model.AvailableCustomerRoles)
+                <div class="col-md-9 col-sm-9">
+                    @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
                     {
-                        <div>
-                            <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                        @Html.Action("AclDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var customerRole in Model.AvailableCustomerRoles)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds!=null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                                    <span></span>
+                                </label>
+                            }
                         </div>
                     }
-                }
-                else
-                {
-                    <div>No customer roles defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    else
+                    {
+                        <div class="note note-info">No customer roles defined</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @helper TabStores()
@@ -395,36 +354,43 @@
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitedToStores):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitedToStores)
-                @Html.ValidationMessageFor(model => model.LimitedToStores)
-            </td>
-        </tr>
-        <tr id="pnl-available-stores">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableStores):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                {
-                    @Html.Action("MultistoreDisabledWarning", "Common")
-                    foreach (var store in Model.AvailableStores)
+
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LimitedToStores)
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.LimitedToStores)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.LimitedToStores)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-available-stores">
+                @Html.GrandLabelFor(model => model.AvailableStores)
+                <div class="col-md-9 col-sm-9">
+                    @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                     {
-                        <div>
-                            <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                        @Html.Action("MultistoreDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var store in Model.AvailableStores)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    <span></span>
+                                </label>
+                            }
                         </div>
                     }
-                }
-                else
-                {
-                    <div>No stores defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    else
+                    {
+                        <div class="note note-info">
+                            No stores defined
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }

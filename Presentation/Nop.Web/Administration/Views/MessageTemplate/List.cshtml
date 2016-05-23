@@ -4,40 +4,52 @@
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
-        @T("Admin.ContentManagement.MessageTemplates")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-envelope-o"></i>
+                    @T("Admin.ContentManagement.MessageTemplates")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i>@T("Admin.Common.AddNew")</a>
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchStoreId)
+                            <div class="col-md-4 col-sm-6">
+                                @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <input type="button" id="search-templates" class="btn green" value="@T("Admin.Common.Search")" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="templates-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchStoreId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("SearchStoreId", Model.AvailableStores)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-templates" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="templates-grid"></div>
+
+
 
             <script>
                 $(document).ready(function () {
                     $("#templates-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "MessageTemplate"))",
@@ -73,20 +85,19 @@
                         scrollable: false,
                         columns: [{
                             field: "Name",
-                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Name")"
+                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Name")",
+                            width: 200,
                         }, {
                             field: "Subject",
-                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Subject")"
+                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Subject")",
+                            width: 100,
                         }, {
                             field: "IsActive",
                             title: "@T("Admin.ContentManagement.MessageTemplates.Fields.IsActive")",
-                            width: 100,
+                            width: 50,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
                             template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
-                        }, {
-                            field: "ListOfStores",
-                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")"
                         }, {
                             field: "Id",
                             title: "@T("Admin.Common.Edit")",
@@ -116,6 +127,3 @@
                     return data;
                 }
             </script>
-        </td>
-    </tr>
-</table>

@@ -200,7 +200,7 @@ namespace Nop.Admin.Controllers
                 _forumService.UpdateForumGroup(forumGroup);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Updated"));
-                return continueEditing ? RedirectToAction("EditForumGroup", forumGroup.Id) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("EditForumGroup", new { id = forumGroup.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -244,7 +244,7 @@ namespace Nop.Admin.Controllers
                 _forumService.UpdateForum(forum);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Updated"));
-                return continueEditing ? RedirectToAction("EditForum", forum.Id) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("EditForum", new { id = forum.Id }) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

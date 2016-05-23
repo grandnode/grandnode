@@ -148,3 +148,12 @@ label.mt-checkbox.mt-checkbox-outline{
         margin-top: 6px;
 }
 
+
+
+.k-grid  .k-grid-header  .k-header  .k-link {
+    height: auto;
+}
+  
+.k-grid  .k-grid-header  .k-header {
+    white-space: normal;
+}
