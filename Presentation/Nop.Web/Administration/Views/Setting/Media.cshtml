@@ -6,165 +6,188 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.Settings.Media")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+    @Html.ValidationSummary(false)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.Media")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @Html.Action("StoreScopeConfiguration", "Setting")
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.GrandLabelFor(model => model.PicturesStoredIntoDatabase, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    <div class="note note-info">
+                                        @if (Model.PicturesStoredIntoDatabase)
+                                        {
+                                            @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Database")
+                                        }
+                                        else
+                                        {
+                                            @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
+                                        }
+                                    </div>
+                                    <input type="submit" name="change-picture-storage" class="btn default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")" />
+                                    <br />
+                                    <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AvatarPictureSize_OverrideForStore, model => model.AvatarPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AvatarPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.AvatarPictureSize)
+                                    @Html.ValidationMessageFor(model => model.AvatarPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSize_OverrideForStore, model => model.ProductThumbPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ProductThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ProductThumbPictureSize)
+                                    @Html.ValidationMessageFor(model => model.ProductThumbPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ProductDetailsPictureSize_OverrideForStore, model => model.ProductDetailsPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ProductDetailsPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ProductDetailsPictureSize)
+                                    @Html.ValidationMessageFor(model => model.ProductDetailsPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, model => model.ProductThumbPictureSizeOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ProductThumbPictureSizeOnProductDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
+                                    @Html.ValidationMessageFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AssociatedProductPictureSize_OverrideForStore, model => model.AssociatedProductPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AssociatedProductPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.AssociatedProductPictureSize)
+                                    @Html.ValidationMessageFor(model => model.AssociatedProductPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.CategoryThumbPictureSize_OverrideForStore, model => model.CategoryThumbPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.CategoryThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.CategoryThumbPictureSize)
+                                    @Html.ValidationMessageFor(model => model.CategoryThumbPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ManufacturerThumbPictureSize_OverrideForStore, model => model.ManufacturerThumbPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ManufacturerThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ManufacturerThumbPictureSize)
+                                    @Html.ValidationMessageFor(model => model.ManufacturerThumbPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.VendorThumbPictureSize_OverrideForStore, model => model.VendorThumbPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.VendorThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.VendorThumbPictureSize)
+                                    @Html.ValidationMessageFor(model => model.VendorThumbPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.CartThumbPictureSize_OverrideForStore, model => model.CartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.CartThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.CartThumbPictureSize)
+                                    @Html.ValidationMessageFor(model => model.CartThumbPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MiniCartThumbPictureSize_OverrideForStore, model => model.MiniCartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MiniCartThumbPictureSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.MiniCartThumbPictureSize)
+                                    @Html.ValidationMessageFor(model => model.MiniCartThumbPictureSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MaximumImageSize_OverrideForStore, model => model.MaximumImageSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MaximumImageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.MaximumImageSize)
+                                    @Html.ValidationMessageFor(model => model.MaximumImageSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MultipleThumbDirectories_OverrideForStore, model => model.MultipleThumbDirectories, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MultipleThumbDirectories, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.MultipleThumbDirectories)
+                                    @Html.ValidationMessageFor(model => model.MultipleThumbDirectories)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DefaultImageQuality_OverrideForStore, model => model.DefaultImageQuality, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DefaultImageQuality, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.DefaultImageQuality)
+                                    @Html.ValidationMessageFor(model => model.DefaultImageQuality)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    @Html.Action("StoreScopeConfiguration", "Setting")
-    @Html.ValidationSummary(false)
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PicturesStoredIntoDatabase):
-            </td>
-            <td class="adminData">
-                @if (Model.PicturesStoredIntoDatabase)
-                {
-                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Database")
-                }
-                else
-                {
-                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
-                }
-                <input type="submit" name="change-picture-storage" class="k-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")" />
-                <br />
-                <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AvatarPictureSize_OverrideForStore, model => model.AvatarPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AvatarPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AvatarPictureSize)
-                @Html.ValidationMessageFor(model => model.AvatarPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSize_OverrideForStore, model => model.ProductThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductThumbPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductThumbPictureSize)
-                @Html.ValidationMessageFor(model => model.ProductThumbPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductDetailsPictureSize_OverrideForStore, model => model.ProductDetailsPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductDetailsPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductDetailsPictureSize)
-                @Html.ValidationMessageFor(model => model.ProductDetailsPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductThumbPictureSizeOnProductDetailsPage_OverrideForStore, model => model.ProductThumbPictureSizeOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductThumbPictureSizeOnProductDetailsPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
-                @Html.ValidationMessageFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AssociatedProductPictureSize_OverrideForStore, model => model.AssociatedProductPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AssociatedProductPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AssociatedProductPictureSize)
-                @Html.ValidationMessageFor(model => model.AssociatedProductPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.CategoryThumbPictureSize_OverrideForStore, model => model.CategoryThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.CategoryThumbPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CategoryThumbPictureSize)
-                @Html.ValidationMessageFor(model => model.CategoryThumbPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ManufacturerThumbPictureSize_OverrideForStore, model => model.ManufacturerThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ManufacturerThumbPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ManufacturerThumbPictureSize)
-                @Html.ValidationMessageFor(model => model.ManufacturerThumbPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.VendorThumbPictureSize_OverrideForStore, model => model.VendorThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.VendorThumbPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.VendorThumbPictureSize)
-                @Html.ValidationMessageFor(model => model.VendorThumbPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.CartThumbPictureSize_OverrideForStore, model => model.CartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.CartThumbPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CartThumbPictureSize)
-                @Html.ValidationMessageFor(model => model.CartThumbPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MiniCartThumbPictureSize_OverrideForStore, model => model.MiniCartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MiniCartThumbPictureSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MiniCartThumbPictureSize)
-                @Html.ValidationMessageFor(model => model.MiniCartThumbPictureSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MaximumImageSize_OverrideForStore, model => model.MaximumImageSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MaximumImageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MaximumImageSize)
-                @Html.ValidationMessageFor(model => model.MaximumImageSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MultipleThumbDirectories_OverrideForStore, model => model.MultipleThumbDirectories, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MultipleThumbDirectories):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MultipleThumbDirectories)
-                @Html.ValidationMessageFor(model => model.MultipleThumbDirectories)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DefaultImageQuality_OverrideForStore, model => model.DefaultImageQuality, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DefaultImageQuality):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DefaultImageQuality)
-                @Html.ValidationMessageFor(model => model.DefaultImageQuality)
-            </td>
-        </tr>
-    </table>
+
+    
 }
