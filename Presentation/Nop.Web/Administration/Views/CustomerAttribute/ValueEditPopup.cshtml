@@ -11,14 +11,22 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Customers.CustomerAttributes.Values.EditValueDetails")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list-alt"></i>
+                        @T("Admin.Customers.CustomerAttributes.Values.EditValueDetails")
+                    </div>
+                    <div class="actions">
+                        <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdateValue", Model)
+                </div>
+            </div>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdateValue", Model)
 }
