@@ -55,224 +55,203 @@
 @helper TabInfo()
     {        
     @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
-                @<table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Locales[item].Name):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.Locales[item].Name)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                        </td>
-                    </tr>
-                </table>
+                @<div class="form-horizontal">
+                     <div class="form-body">
+                         <div class="form-group">
+                                 @Html.GrandLabelFor(model => model.Locales[item].Name)
+                             <div class="col-md-9 col-sm-9">
+                                 @Html.GrandEditorFor(model => model.Locales[item].Name)
+                                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                             </div>
+                         </div>
+                                 @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                     </div>
+                </div>
                 ,
-                @<table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Name):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
-                        </td>
-                    </tr>
-                </table>
+                @<div class="form-horizontal">
+                     <div class="form-body">
+                         <div class="form-group">
+                                 @Html.GrandLabelFor(model => model.Name)
+                             <div class="col-md-9 col-sm-9">
+                                 @Html.GrandEditorFor(model => model.Name)
+                                 @Html.ValidationMessageFor(model => model.Name)
+                             </div>
+                         </div>
+                     </div>
+                </div>
             ))
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowsBilling):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowsBilling)
-                @Html.ValidationMessageFor(model => model.AllowsBilling)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowsShipping):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowsShipping)
-                @Html.ValidationMessageFor(model => model.AllowsShipping)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TwoLetterIsoCode):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TwoLetterIsoCode)
-                @Html.ValidationMessageFor(model => model.TwoLetterIsoCode)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ThreeLetterIsoCode):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ThreeLetterIsoCode)
-                @Html.ValidationMessageFor(model => model.ThreeLetterIsoCode)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.NumericIsoCode):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NumericIsoCode)
-                @Html.ValidationMessageFor(model => model.NumericIsoCode)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SubjectToVat):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SubjectToVat)
-                @Html.ValidationMessageFor(model => model.SubjectToVat)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Published):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Published)
-                @Html.ValidationMessageFor(model => model.Published)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-    </table>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.AllowsBilling)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AllowsBilling)
+                    @Html.ValidationMessageFor(model => model.AllowsBilling)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.AllowsShipping)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AllowsShipping)
+                    @Html.ValidationMessageFor(model => model.AllowsShipping)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.TwoLetterIsoCode)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.TwoLetterIsoCode)
+                    @Html.ValidationMessageFor(model => model.TwoLetterIsoCode)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.ThreeLetterIsoCode)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ThreeLetterIsoCode)
+                    @Html.ValidationMessageFor(model => model.ThreeLetterIsoCode)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.NumericIsoCode)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.NumericIsoCode)
+                    @Html.ValidationMessageFor(model => model.NumericIsoCode)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SubjectToVat)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SubjectToVat)
+                    @Html.ValidationMessageFor(model => model.SubjectToVat)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Published)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Published)
+                    @Html.ValidationMessageFor(model => model.Published)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.DisplayOrder)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabStates()
     {
-        if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <table class="adminContent">
-                <tr>
-                    <td>
-                        <div id="states-grid"></div>
+if (!String.IsNullOrEmpty(Model.Id))
+{
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="states-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewState" value="@T("Admin.Configuration.Countries.States.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 500, true); return false;" class="btn default" />
+                <input type="submit" id="btnRefresh" style="display: none" />
+            </div>
+        </div>
 
-                        <script>
-                            $(document).ready(function () {
-                                $("#states-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("States", "Country", new { countryId = Model.Id }))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            },
-                                            destroy: {
-                                                url: "@Html.Raw(Url.Action("StateDelete", "Country"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors",
-                                            model: {
-                                                id: "Id"
-                                            }
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
-                                    },
-                                    pageable: {
-                                        refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false
-                                    },
-                                    editable: {
-                                        confirmation: false,
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [{
-                                        field: "Name",
-                                        title: "@T("Admin.Configuration.Countries.States.Fields.Name")",
-                                        width: 300
-                                    }, {
-                                        field: "Abbreviation",
-                                        title: "@T("Admin.Configuration.Countries.States.Fields.Abbreviation")",
-                                        width: 150
-                                    }, {
-                                        field: "Published",
-                                        title: "@T("Admin.Configuration.Countries.States.Fields.Published")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                                    }, {
-                                        field: "DisplayOrder",
-                                        title: "@T("Admin.Configuration.Countries.States.Fields.DisplayOrder")",
-                                        width: 100
-                                    },{
-                                        field: "Id",
-                                        title: "@T("Admin.Common.Edit")",
-                                        width: 100,
-                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 250, true); return false;\" class='k-button' />"
-                                    }, {
-                                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
-                                        title: "@T("Admin.Common.Delete")",
-                                        width: 100
-                                    }]
-                                });
-                            });
-                        </script>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="100%">
-                        <input type="submit" id="btnAddNewState" value="@T("Admin.Configuration.Countries.States.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 250, true); return false;" class="k-button" />
-                        <input type="submit" id="btnRefresh" style="display: none" />
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#btnRefresh').click(function () {
-                                    //refresh grid
-                                    var grid = $("#states-grid").data('kendoGrid');
-                                   grid.dataSource.read();
+        <script>
+            $(document).ready(function () {
+                $("#states-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("States", "Country", new { countryId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("StateDelete", "Country"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id"
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.Configuration.Countries.States.Fields.Name")",
+                        width: 300
+                    }, {
+                        field: "Abbreviation",
+                        title: "@T("Admin.Configuration.Countries.States.Fields.Abbreviation")",
+                        width: 150
+                    }, {
+                        field: "Published",
+                        title: "@T("Admin.Configuration.Countries.States.Fields.Published")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Configuration.Countries.States.Fields.DisplayOrder")",
+                        width: 100
+                    },{
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 500, true); return false;\" class='k-button' />"
+                    }, {
+                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }]
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    var grid = $("#states-grid").data('kendoGrid');
+                    grid.dataSource.read();
 
-                                    //return false to don't reload a page
-                                    return false;
-                                });
-                            });
-                        </script>
-                    </td>
-                </tr>
-            </table>
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
 
         }
         else
         {
-    @T("Admin.Configuration.Countries.States.SaveBeforeEdit")
+        <div class="note note-info">
+            @T("Admin.Configuration.Countries.States.SaveBeforeEdit")
+        </div>
         }
 }
 @helper TabStores()
@@ -296,36 +275,42 @@
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitedToStores):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitedToStores)
-                @Html.ValidationMessageFor(model => model.LimitedToStores)
-            </td>
-        </tr>
-        <tr id="pnl-available-stores">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableStores):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                {
-                    @Html.Action("MultistoreDisabledWarning", "Common")
-                    foreach (var store in Model.AvailableStores)
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LimitedToStores)
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.LimitedToStores)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.LimitedToStores)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-available-stores">
+                @Html.GrandLabelFor(model => model.AvailableStores)
+                <div class="col-md-9 col-sm-9">
+                    @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                     {
-                        <div>
-                            <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                        @Html.Action("MultistoreDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var store in Model.AvailableStores)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    <span></span>
+                                </label>
+                            }
                         </div>
                     }
-                }
-                else
-                {
-                    <div>No stores defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    else
+                    {
+                        <div class="note note-info">
+                            No stores defined
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }

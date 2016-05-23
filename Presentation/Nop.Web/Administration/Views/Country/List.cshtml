@@ -3,130 +3,138 @@
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-        @T("Admin.Configuration.Countries")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
-        <input type="button" id="publish-selected" class="k-button" value="@T("Admin.Configuration.Countries.PublishSelected")" />
-        <input type="button" id="unpublish-selected" class="k-button" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
-        <a href="@Url.Action("ExportCsv")" class="k-button">@T("Admin.Configuration.Countries.ExportToCsv")</a>
-        <input type="submit" id="importcsv" name="importcsv" class="k-button" value="@T("Admin.Configuration.Countries.ImportFromCsv")" />
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-globe"></i>
+                    @T("Admin.Configuration.Countries")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i>@T("Admin.Common.AddNew")</a>
+                    <input type="button" id="publish-selected" class="btn default" value="@T("Admin.Configuration.Countries.PublishSelected")" />
+                    <input type="button" id="unpublish-selected" class="btn default" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
+                    <a href="@Url.Action("ExportCsv")" class="btn blue">@T("Admin.Configuration.Countries.ExportToCsv")</a>
+                    <input type="submit" id="importcsv" name="importcsv" class="btn yellow" value="@T("Admin.Configuration.Countries.ImportFromCsv")" />
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="countries-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="countries-grid"></div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#countries-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("CountryList", "Country"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function (e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
-                        },
-                        scrollable: false,
-                        dataBound: onDataBound,
-                        columns: [{
-                            field: "Id",
-                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                            width: 50
-                        }, {
-                            field: "Name",
-                            title: "@T("Admin.Configuration.Countries.Fields.Name")",
-                            width: 300
-                        }, {
-                            field: "AllowsBilling",
-                            title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsBilling#.gif" />'
-                        }, {
-                            field: "AllowsShipping",
-                            title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsShipping#.gif" />'
-                        }, {
-                            field: "TwoLetterIsoCode",
-                            title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
-                            width: 100
-                        }, {
-                            field: "ThreeLetterIsoCode",
-                            title: "@T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")",
-                            width: 100
-                        }, {
-                            field: "NumericIsoCode",
-                            title: "@T("Admin.Configuration.Countries.Fields.NumericIsoCode")",
-                            width: 100
-                        }, {
-                            field: "SubjectToVat",
-                            title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SubjectToVat#.gif" />'
-                        }, {
-                            field: "NumberOfStates",
-                            title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
-                            width: 100
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Published",
-                            title: "@T("Admin.Configuration.Countries.Fields.Published")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 50,
-                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-            </script>
-        </td>
-    </tr>
-</table>
+
+<script>
+    $(document).ready(function () {
+        $("#countries-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("CountryList", "Country"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            scrollable: false,
+            dataBound: onDataBound,
+            columns: [{
+                field: "Id",
+                headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                width: 50
+            }, {
+                field: "Name",
+                title: "@T("Admin.Configuration.Countries.Fields.Name")",
+                width: 300
+            }, {
+                field: "AllowsBilling",
+                title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsBilling#.gif" />'
+            }, {
+                field: "AllowsShipping",
+                title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsShipping#.gif" />'
+            }, {
+                field: "TwoLetterIsoCode",
+                title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
+                width: 100
+            }, {
+                field: "ThreeLetterIsoCode",
+                title: "@T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")",
+                width: 100
+            }, {
+                field: "NumericIsoCode",
+                title: "@T("Admin.Configuration.Countries.Fields.NumericIsoCode")",
+                width: 100
+            }, {
+                field: "SubjectToVat",
+                title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SubjectToVat#.gif" />'
+            }, {
+                field: "NumberOfStates",
+                title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
+                width: 100
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
+                width: 100
+            }, {
+                field: "Published",
+                title: "@T("Admin.Configuration.Countries.Fields.Published")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+            }, {
+                field: "Id",
+                title: "@T("Admin.Common.Edit")",
+                width: 50,
+                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+            }]
+        });
+    });
+</script>
 
 <script type="text/javascript">
         var selectedIds = [];
