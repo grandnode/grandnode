@@ -53,117 +53,102 @@
 @helper TabInfo()
 {
     @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
-                @<table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Locales[item].Name):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.Locales[item].Name)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                        </td>
-                    </tr>
-                </table>
+                @<div class="form-horizontal">
+                     <div class="form-body">
+                         <div class="form-group">
+                                 @Html.GrandLabelFor(model => model.Locales[item].Name)
+                            <div class="col-md-9 col-sm-9">
+                                 @Html.GrandEditorFor(model => model.Locales[item].Name)
+                                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                             </div>
+                         </div>
+                                 @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                     </div>
+                </div>
                 ,
-                @<table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Name):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
-                        </td>
-                    </tr>
-                </table>
+                @<div class="form-horizontal">
+                     <div class="form-body">
+                         <div class="form-group">
+                                 @Html.GrandLabelFor(model => model.Name)
+                            <div class="col-md-9 col-sm-9">
+                                 @Html.GrandEditorFor(model => model.Name)
+                                 @Html.ValidationMessageFor(model => model.Name)
+                             </div>
+                         </div>
+                     </div>
+                </div>
             ))
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CurrencyCode):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CurrencyCode)
-                @Html.ValidationMessageFor(model => model.CurrencyCode)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Rate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Rate)
-                @Html.ValidationMessageFor(model => model.Rate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayLocale):
-            </td>
-            <td class="adminData">
-                @{
-                    var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
-                        .OrderBy(x => x.EnglishName)
-                        .Select(x => new SelectListItem
-                                         {
-                                             Value = x.IetfLanguageTag,
-                                             Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
-                                         })
-                        .ToList();
-                    cultures.Insert(0, new SelectListItem
-                                           {
-                                             Value = "",
-                                             Text = @T("Admin.Configuration.Currencies.Fields.DisplayLocale.Select").Text
-                                           });
-                }
-                @Html.DropDownListFor(model => model.DisplayLocale, cultures)
-                @Html.ValidationMessageFor(model => model.DisplayLocale)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomFormatting):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CustomFormatting)
-                @Html.ValidationMessageFor(model => model.CustomFormatting)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Published):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Published)
-                @Html.ValidationMessageFor(model => model.Published)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.CreatedOn):
-                </td>
-                <td class="adminData">
-                    @Html.DisplayFor(model => model.CreatedOn)
-                </td>
-            </tr>
-        }
-    </table>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.CurrencyCode)
+               <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CurrencyCode)
+                    @Html.ValidationMessageFor(model => model.CurrencyCode)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Rate)
+               <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Rate)
+                    @Html.ValidationMessageFor(model => model.Rate)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.DisplayLocale)
+               <div class="col-md-9 col-sm-9">
+                    @{
+                        var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
+                            .OrderBy(x => x.EnglishName)
+                            .Select(x => new SelectListItem
+                            {
+                                Value = x.IetfLanguageTag,
+                                Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
+                            })
+                            .ToList();
+                        cultures.Insert(0, new SelectListItem
+                        {
+                            Value = "",
+                            Text = @T("Admin.Configuration.Currencies.Fields.DisplayLocale.Select").Text
+                        });
+                    }
+                    @Html.GrandDropDownListFor(model => model.DisplayLocale, cultures)
+                    @Html.ValidationMessageFor(model => model.DisplayLocale)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.CustomFormatting)
+               <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CustomFormatting)
+                    @Html.ValidationMessageFor(model => model.CustomFormatting)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Published)
+               <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Published)
+                    @Html.ValidationMessageFor(model => model.Published)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.DisplayOrder)
+               <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.Id))
+            {
+                <div class="form-group">
+                        @Html.GrandLabelFor(model => model.CreatedOn)
+                   <div class="col-md-9 col-sm-9">
+                        @Html.DisplayFor(model => model.CreatedOn)
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
 }
 
 @helper TabStores()
@@ -187,36 +172,42 @@
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitedToStores):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitedToStores)
-                @Html.ValidationMessageFor(model => model.LimitedToStores)
-            </td>
-        </tr>
-        <tr id="pnl-available-stores">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableStores):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                {
-                    @Html.Action("MultistoreDisabledWarning", "Common")
-                    foreach (var store in Model.AvailableStores)
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LimitedToStores)
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.LimitedToStores)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.LimitedToStores)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-available-stores">
+                @Html.GrandLabelFor(model => model.AvailableStores)
+                <div class="col-md-9 col-sm-9">
+                    @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                     {
-                    <div>
-                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
-                    </div>
+                        @Html.Action("MultistoreDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var store in Model.AvailableStores)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    <span></span>
+                                </label>
+                            }
+                        </div>
                     }
-                }
-                else
-                {
-                    <div>No stores defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    else
+                    {
+                        <div class="note note-info">
+                            No stores defined
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }

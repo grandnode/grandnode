@@ -7,46 +7,58 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.Currencies")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <a href="@Url.Action("List", "Currency", new {liveRates = true})" class="k-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
-            <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-globe"></i>
+                        @T("Admin.Configuration.Currencies")
+                    </div>
+                    <div class="actions btn-group btn-group-devided">
+                        <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
+                        <a href="@Url.Action("List", "Currency", new {liveRates = true})" class="btn blue">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
+                        <a href="@Url.Action("Create")" class="btn green">@T("Admin.Common.AddNew")</a>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3">
+                                    @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider")
+                                </label>
+                                <div class="col-md-9 col-sm-9">
+                                    @(Html.DropDownList("exchangeRateProvider", ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "class", "control-label" } }))
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3">
+                                    @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
+                                </label>
+                                <div class="col-md-9 col-sm-9">
+                                    @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="portlet-body">
+                                <div id="currencies-grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider"):
-            </td>
-            <td class="adminData">
-                @(Html.DropDownList("exchangeRateProvider", ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>))
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled"):
-            </td>
-            <td class="adminData">
-                @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled)
-                )
-            </td>
-        </tr>
-    </table>
 }
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="currencies-grid"></div>
             <script>
                 $(document).ready(function() {
                     $("#currencies-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("ListGrid", "Currency"))",
@@ -87,11 +99,11 @@
                             }, {
                                 field: "CurrencyCode",
                                 title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
-                                width: 200
+                                width: 50
                             }, {
                                 field: "Rate",
                                 title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
-                                width: 200
+                                width: 80
                             }, {
                                 field: "IsPrimaryExchangeRateCurrency",
                                 title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency")",
@@ -124,11 +136,11 @@
                             }, {
                                 field: "DisplayOrder",
                                 title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
-                                width: 100
+                                width: 50
                             }, {
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
-                                width: 100,
+                                width: 50,
                                 template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
                             }
                         ]
@@ -179,9 +191,7 @@
                 }
                 };
             </script>
-        </td>
-    </tr>
-</table>
+
 @if (rates != null)
 {
     <h4>@T("Admin.Configuration.Currencies.LiveRates")</h4>
