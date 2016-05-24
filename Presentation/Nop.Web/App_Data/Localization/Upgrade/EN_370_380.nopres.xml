@@ -1317,4 +1317,10 @@
   <LocaleResource Name="Admin.Common.Export">
     <Value>Export</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Header.Documentation">
+    <Value>Documentation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.Community">
+    <Value>Community</Value>
+  </LocaleResource>
 </Language>

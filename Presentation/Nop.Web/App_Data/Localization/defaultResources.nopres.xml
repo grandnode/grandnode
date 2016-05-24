@@ -9731,6 +9731,12 @@
   <LocaleResource Name="Admin.Header.ClearCache">
     <Value>Clear cache</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Header.Documentation">
+    <Value>Documentation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.Community">
+    <Value>Community</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Header.LoggedInAs">
     <Value>Logged in as: {0}</Value>
   </LocaleResource>
