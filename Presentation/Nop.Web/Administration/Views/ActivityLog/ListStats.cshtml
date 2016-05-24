@@ -8,52 +8,57 @@
 }
 
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-        @T("Admin.Configuration.ActivityLog.ActivityStats")
-    </div>   
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Admin.Configuration.ActivityLog.ActivityStats")
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CreatedOnFrom)
+                            <div class="col-md-4 col-sm-6">
+                                @Html.GrandEditorFor(model => model.CreatedOnFrom)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CreatedOnTo)
+                            <div class="col-md-4 col-sm-6">
+                                @Html.GrandEditorFor(model => model.CreatedOnTo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.ActivityLogTypeId)
+                            <div class="col-md-4 col-sm-6">
+                                @Html.GrandDropDownListFor(model => model.ActivityLogTypeId, Model.ActivityLogType)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <input type="button" id="search-log" class="btn green" value="@T("Admin.Common.Search")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="activityLog-grid"></div>
+            </div>
+        </div>
+    </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CreatedOnFrom):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.CreatedOnFrom)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CreatedOnTo):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.CreatedOnTo)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ActivityLogTypeId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("ActivityLogTypeId", Model.ActivityLogType)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-log" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table> 
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="activityLog-grid"></div>
+
             <script>
                 $(document).ready(function () {
                     $("#activityLog-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("ListStats", "ActivityLog"))",
@@ -126,6 +131,3 @@
                     return data;
                 }
             </script>
-        </td>
-    </tr>
-</table>

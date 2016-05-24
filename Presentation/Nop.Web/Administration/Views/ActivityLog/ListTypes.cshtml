@@ -6,19 +6,31 @@
 @using (Html.BeginForm("SaveTypes", "ActivityLog"))
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.ActivityLog.ActivityLogType")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-tags"></i>
+                        @T("Admin.Configuration.ActivityLog.ActivityLogType")
+                    </div>
+                    <div class="actions btn-group btn-group-devided">
+                        <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="portlet-body">
+                                <div id="activityLogType-grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="activityLogType-grid"></div>
+
 
                 <script>
 
@@ -109,7 +121,4 @@
                         $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                     }
                 </script>   
-            </td>
-        </tr>
-    </table> 
 }

@@ -54,141 +54,143 @@
             <div class="portlet-body">
                 <div id="categories-grid"></div>
             </div>
-            <script>
-                $(document).ready(function () {
-                    $("#categories-grid").kendoGrid({
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "Category"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Breadcrumb",
-                            title: "@T("Admin.Catalog.Categories.Fields.Name")"
-                        }, {
-                            field: "Published",
-                            title: "@T("Admin.Catalog.Categories.Fields.Published")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Catalog.Categories.Fields.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-            </script>
-
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    //search button
-                    $('#search-categories').click(function () {
-                        //search
-                        var grid = $('#categories-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
-
-                    $("#@Html.FieldIdFor(model => model.SearchCategoryName)").keydown(function (event) {
-                        if (event.keyCode == 13) {
-                            $("#search-categories").click();
-                            return false;
-                        }
-                    });
-                });
-
-                function additionalData() {
-                    var data = {
-                        SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val(),
-                        SearchStoreId: $('#SearchStoreId').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
-            </script>
-
-
-            @*import categories form*@
-            <div id="importexcel-window" style="display:none;">
-                @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                    @Html.AntiForgeryToken()
-                    <table style="text-align:left;">
-                        <tr>
-                            <td colspan="2">
-                                <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @T("Admin.Common.ExcelFile"):
-                            </td>
-                            <td>
-                                <input type="file" id="importexcelfile" name="importexcelfile" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
-                            </td>
-                        </tr>
-                    </table>
-                }
-            </div>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#importexcel").click(function (e) {
-            e.preventDefault();
-            var window = $("#importexcel-window");
-            if (!window.data("kendoWindow")) {
-                window.kendoWindow({
-                    modal: true,
-                    width: "400px",
-                    title: "@T("Admin.Common.ImportFromExcel")",
-                    actions: ["Close"]
-                });
-            }
-            window.data('kendoWindow').center().open();
-        });
 
+<script>
+    $(document).ready(function () {
+        $("#categories-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "Category"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: additionalData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Breadcrumb",
+                title: "@T("Admin.Catalog.Categories.Fields.Name")"
+            }, {
+                field: "Published",
+                title: "@T("Admin.Catalog.Categories.Fields.Published")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.Catalog.Categories.Fields.DisplayOrder")",
+                width: 100
+            }, {
+                field: "Id",
+                title: "@T("Admin.Common.Edit")",
+                width: 100,
+                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+            }]
+        });
     });
 </script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //search button
+        $('#search-categories').click(function () {
+            //search
+            var grid = $('#categories-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            //grid.dataSource.read(); we already loaded the grid above using "page" function
+            return false;
+        });
+
+        $("#@Html.FieldIdFor(model => model.SearchCategoryName)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#search-categories").click();
+                return false;
+            }
+        });
+    });
+
+    function additionalData() {
+        var data = {
+            SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val(),
+            SearchStoreId: $('#SearchStoreId').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+</script>
+
+
+@*import categories form*@
+<div id="importexcel-window" style="display:none;">
+    @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+        @Html.AntiForgeryToken()
+        <table style="text-align:left;">
+            <tr>
+                <td colspan="2">
+                    <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @T("Admin.Common.ExcelFile"):
+                </td>
+                <td>
+                    <input type="file" id="importexcelfile" name="importexcelfile" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#importexcel").click(function (e) {
+                e.preventDefault();
+                var window = $("#importexcel-window");
+                if (!window.data("kendoWindow")) {
+                    window.kendoWindow({
+                        modal: true,
+                        width: "400px",
+                        title: "@T("Admin.Common.ImportFromExcel")",
+                        actions: ["Close"]
+                    });
+                }
+                window.data('kendoWindow').center().open();
+            });
+
+        });
+    </script>
