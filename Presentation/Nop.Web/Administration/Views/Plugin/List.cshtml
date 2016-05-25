@@ -6,15 +6,66 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.Plugins.Local")
-        </div>
-        <div class="options">
-            <a href="@Url.Action("ReloadList")" class="k-button">@T("Admin.Configuration.Plugins.ReloadList")</a>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>
+                        @T("Admin.Configuration.Plugins.Local")
+                    </div>
+                    <div class="actions btn-group btn-group-devided">
+                        <a href="@Url.Action("ReloadList")" class="btn default">@T("Admin.Configuration.Plugins.ReloadList")</a>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="note note-info">
+                            <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
+                            <ol>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
+                            </ol>
+                        <p>
+                            You can download more nopCommerce plugins on our <a href="http://www.grandnode.com/extensions?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
+                        </p>
+
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchLoadModeId)
+                                <div class="col-md-4 col-sm-6">
+                                    @Html.GrandDropDownListFor(model => model.SearchLoadModeId, Model.AvailableLoadModes)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchGroup)
+                                <div class="col-md-4 col-sm-6">
+                                    @Html.GrandDropDownListFor(model => model.SearchGroup, Model.AvailableGroups)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                    <input type="button" id="search-plugins" class="btn green" value="@T("Admin.Common.Search")" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div id="plugins-grid"></div>
+                </div>
+            </div>
         </div>
     </div>
+
+
     <script type="text/javascript">
         $(document).ready(function () {
             //install a plugin
@@ -32,51 +83,12 @@
             });
         });
     </script>
-    <p>
-        <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
-        <ol>
-            <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
-            <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
-            <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
-            <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
-            <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
-        </ol>
-        <p>
-            You can download more nopCommerce plugins on our <a href="http://www.grandnode.com/extensions?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
-        </p>
-    </p>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchLoadModeId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchLoadModeId", Model.AvailableLoadModes)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchGroup):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchGroup", Model.AvailableGroups)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-plugins" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-        </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="plugins-grid"></div>
+
+
                 <script>
                     $(document).ready(function() {
                         $("#plugins-grid").kendoGrid({
                             dataSource: {
-                                type: "json",
                                 transport: {
                                     read: {
                                         url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
@@ -132,12 +144,12 @@
                                         '<br />@T("Admin.Configuration.Plugins.Fields.Installed"): <img src="@Url.Content("~/Administration/Content/images/")active-#=Installed#.gif" />' +
                                         '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled"): <img src="@Url.Content("~/Administration/Content/images/")active-#=IsEnabled#.gif" /> #} #' +
                                         //allow configuration only when a plugin has a configuration URL specified
-                                        '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="plugin-button plugin-button-configure" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
-                                        '<a class="plugin-button plugin-button-edit" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 300, true);">@T("Admin.Common.Edit")</a>'
+                                        '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn default" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
+                                        '<a class="btn default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>'
                                 }, {
                                     field: "Installed",
                                     title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                    template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="plugin-button uninstall-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="plugin-button install-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> #} #',
+                                    template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn red" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="btn green" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> #} #',
                                     headerAttributes: {style: "text-align:center" },
                                     attributes: { style: "text-align:center" }
                                 }
@@ -145,10 +157,6 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-        <tr>
-            <td width="100%">
                 <input type="submit" id="btnRefresh" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
@@ -184,7 +192,4 @@
                     }
 
                 </script>
-            </td>
-        </tr>
-    </table>
 }
