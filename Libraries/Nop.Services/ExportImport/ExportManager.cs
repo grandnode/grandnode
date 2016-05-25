@@ -942,8 +942,8 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("PasswordFormatId", null, customer.PasswordFormatId.ToString());
                 xmlWriter.WriteElementString("PasswordSalt", null, customer.PasswordSalt);
                 xmlWriter.WriteElementString("IsTaxExempt", null, customer.IsTaxExempt.ToString());
-                xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.ToString());
-                xmlWriter.WriteElementString("VendorId", null, customer.VendorId.ToString());
+                xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId);
+                xmlWriter.WriteElementString("VendorId", null, customer.VendorId);
                 xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
 
 
