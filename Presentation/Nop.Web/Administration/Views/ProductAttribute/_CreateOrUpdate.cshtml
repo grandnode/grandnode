@@ -115,7 +115,7 @@
     <script>
         $(document).ready(function () {
             $("#used-by-products-grid").kendoGrid({
-                dataSource: {                    
+                dataSource: {
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("UsedByProducts", "ProductAttribute", new { productAttributeId = Model.Id }))",
@@ -158,7 +158,7 @@
                     width: 100,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
-                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                 },
                 {
                     field: "Id",
@@ -257,7 +257,7 @@
                             width: 100,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                            template: '# if(IsPreSelected) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                         }, {
                             field: "DisplayOrder",
                             title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder")",

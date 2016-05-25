@@ -141,8 +141,8 @@
                                         '<br />@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#' +
                                         '<br />@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#' +
                                         '<br />@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#' +
-                                        '<br />@T("Admin.Configuration.Plugins.Fields.Installed"): <img src="@Url.Content("~/Administration/Content/images/")active-#=Installed#.gif" />' +
-                                        '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled"): <img src="@Url.Content("~/Administration/Content/images/")active-#=IsEnabled#.gif" /> #} #' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.Installed"): # if(Installed) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} # ' +
+                                        '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled"):  # if(IsEnabled) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} # #} #' +
                                         //allow configuration only when a plugin has a configuration URL specified
                                         '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn default" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
                                         '<a class="btn default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>'

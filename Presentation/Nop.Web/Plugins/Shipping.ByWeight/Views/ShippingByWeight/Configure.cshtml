@@ -12,32 +12,29 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
 {
     @Html.AntiForgeryToken()
-    <br />
-    <hr />
-    <br />
-    <table>
-        <tr>
-            <td class="adminTitle">
-                <strong>@T("Plugins.Shipping.ByWeight.Formula"):</strong>
-            </td>
-            <td class="adminData">
-                @T("Plugins.Shipping.ByWeight.Formula.Value")
-            </td>
-        </tr>
-    </table>
-    <br />
-    <hr />
-    <br />
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="shipping-byweight-grid"></div>
+    <div class="note note-info">
+        <strong>@T("Plugins.Shipping.ByWeight.Formula"):</strong>
+        @T("Plugins.Shipping.ByWeight.Formula.Value")
+    </div>
 
-                <script>
+    var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="shipping-byweight-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 550, true); return false;" class="btn default" />
+            <input type="submit" id="btnRefresh" style="display: none" />
+        </div>
+    </div>
+
+
+
+    <script>
                     $(document).ready(function () {
                         $("#shipping-byweight-grid").kendoGrid({
                             dataSource: {
-                                type: "json",
                                 transport: {
                                     read: {
                                         url: "@Html.Raw(Url.Action("RatesList", "ShippingByWeight", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
@@ -125,17 +122,8 @@
                             }]
                         });
                     });
-                </script>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @{
-    var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
-                }
-                <br />
-                <input type="submit" id="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 450, true); return false;" class="k-button" />
-                <input type="submit" id="btnRefresh" style="display: none" />
+    </script>
+
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('#btnRefresh').click(function () {
@@ -146,33 +134,28 @@
 
                             //return false to don't reload a page
                             return false;
-                        });                                
+                        });
                     });
                 </script>
-            </td>
-        </tr>
-    </table>
-    <br />
-    <hr />
-    <br />
-    <table>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitMethodsToCreated):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitMethodsToCreated)
-                @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <br/>
-                <input type="button" id="savegeneralsettings" class="k-button" value="@T("Admin.Common.Save")" />
-                <script type="text/javascript">
+
+                <table>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.LimitMethodsToCreated):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.LimitMethodsToCreated)
+                            @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <br />
+                            <input type="button" id="savegeneralsettings" class="btn default" value="@T("Admin.Common.Save")" />
+                            <script type="text/javascript">
                     $(function () {
                         $('#savegeneralsettings').click(function () {
-                            
+
                             var postData = $(this.form).serialize();
                             addAntiForgeryToken(postData);
 
@@ -192,11 +175,11 @@
                             return false;
                         });
                     });
-                </script>
-            </td>
-        </tr>
-    </table>
-    <br />
-    <hr />
-    <br />
+                            </script>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <hr />
+                <br />
 }

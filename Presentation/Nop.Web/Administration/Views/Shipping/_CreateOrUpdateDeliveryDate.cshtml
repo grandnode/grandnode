@@ -6,58 +6,52 @@
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 @(Html.LocalizedEditor<DeliveryDateModel, DeliveryDateLocalizedModel>("delivery-date-localized",
-                @<table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Locales[item].Name):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.Locales[item].Name)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                        </td>
-                    </tr>
-                </table>
+                @<div class="form-horizontal">
+                     <div class="form-body">
+                         <div class="form-group">
+                             @Html.GrandLabelFor(model => model.Locales[item].Name)
+                             <div class="col-md-9 col-sm-9">
+                                 @Html.GrandEditorFor(model => model.Locales[item].Name)
+                                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                             </div>
+                         </div>
+                         @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                     </div>
+                </div>
                 ,
-                @<table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Name):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
-                        </td>
-                    </tr>
-                </table>
+                @<div class="form-horizontal">
+                     <div class="form-body">
+                         <div class="form-group">
+                             @Html.GrandLabelFor(model => model.Name)
+                             <div class="col-md-9 col-sm-9">
+                                 @Html.GrandEditorFor(model => model.Name)
+                                 @Html.ValidationMessageFor(model => model.Name)
+                             </div>
+                         </div>
+                     </div>
+                </div>
             ))
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ColorSquaresRgb):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ColorSquaresRgb)
-            <div id="color-picker"></div>
-            <script type="text/javascript">
-                    $(document).ready(function(){
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ColorSquaresRgb)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ColorSquaresRgb)
+                <div id="color-picker"></div>
+                <script type="text/javascript">
+                    $(document).ready(function () {
                         $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
                     });
-            </script>
-            @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayOrder):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayOrder)
-            @Html.ValidationMessageFor(model => model.DisplayOrder)
-        </td>
-    </tr>
-</table>
+                </script>
+                @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+    </div>
+</div>

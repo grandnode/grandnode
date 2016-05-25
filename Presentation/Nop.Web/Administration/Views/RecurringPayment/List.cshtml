@@ -92,7 +92,7 @@
                     width: 100,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
-                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                    template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                 }, {
                     field: "StartDate",
                     title: "@T("Admin.RecurringPayments.Fields.StartDate")",

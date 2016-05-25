@@ -1,92 +1,109 @@
 ﻿@model ShippingMethodRestrictionModel
 @{
     //page title
-    ViewBag.Title = T("Admin.Configuration.Shipping.Restrictions").Text;   
+    ViewBag.Title = T("Admin.Configuration.Shipping.Restrictions").Text;
 }
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.Shipping.Restrictions")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-        </div>
-    </div>
-    
-    <table class="adminContent">
-        <tr>
-            <td>
-                @T("Admin.Configuration.Shipping.Restrictions.Description")
-                <br />
-                <br />
-                @if (Model.AvailableCountries.Count == 0)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-truck"></i>
+                        @T("Admin.Configuration.Shipping.Restrictions")
+                    </div>
+                    <div class="actions">
+                        <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12">
+                                    <div class="note note-info">
+                                        @T("Admin.Configuration.Shipping.Restrictions.Description")
+                                    </div>
+
+                                    <br />
+                                    @if (Model.AvailableCountries.Count == 0)
                 {
-                    <text>No countries defined</text>
-                }
-                else if (Model.AvailableShippingMethods.Count == 0)
-                {
-                    <text>No shipping methods available</text>
-                }
-                else
-                {
-                    
-                    
-                    <script type="text/javascript">
-        $(document).ready(function () {            
-            @foreach (var sm in Model.AvailableShippingMethods)
+                                        <text>No countries defined</text>
+                                    }
+                                    else if (Model.AvailableShippingMethods.Count == 0)
+                                    {
+                                        <text>No shipping methods available</text>
+                                    }
+                                    else
+                                    {
+
+
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                @foreach (var sm in Model.AvailableShippingMethods)
             {
             <text>
-                $('#selectall-@(sm.Id)').click(function () {
-                    $('.restrict_@(sm.Id)').attr('checked', $(this).is(':checked')).change();
-                });
+                                                $('#selectall-@(sm.Id)').click(function () {
+                                                    $('.restrict_@(sm.Id)').attr('checked', $(this).is(':checked')).change();
+                                                });
 
-            </text>
+                                                </text>
             }
-        });
-                    </script>
-                    
-                    <table class="tablestyle" cellspacing="0" rules="all" border="1" style="width: 100%;
-                        border-collapse: collapse;">
-                        <tbody>
-                            <tr class="headerstyle">
-                                <th scope="col">
-                                    <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
-                                </th>
-                                @foreach (var sm in Model.AvailableShippingMethods)
-                                {
-                                    <th scope="col">
-                                        <strong>@sm.Name</strong>
-                                        <input type="checkbox" id="selectall-@(sm.Id)" />
-                                    </th>
-                                }
-                            </tr>
-                            @{
-                                bool altRow = true;
-                            }
-                            @foreach (var c in Model.AvailableCountries)
-                            {
-                                altRow = !altRow;
-                                <tr class="@(altRow ? "altrowstyle" : "rowstyle")">
-                                    <td>
-                                        <span>@c.Name</span>
-                                    </td>
-                                    @foreach (var sm in Model.AvailableShippingMethods)
-                                    {
-                                        var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
-                                        <td>
-                                            <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            </td>
-        </tr>
-    </table>
+                                            });
+                                        </script>
+
+                                                    <table class="table table-bordered table-striped table-hover table-hover">
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="col">
+                                                                    <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
+                                                                </th>
+                                                                @foreach (var sm in Model.AvailableShippingMethods)
+                                                                {
+                                                                    <th scope="col">
+                                                                        <strong>@sm.Name</strong>
+                                                                        <input type="checkbox" id="selectall-@(sm.Id)" />
+                                                                    </th>
+                                                                }
+                                                            </tr>
+                                                            @{
+                                                                bool altRow = true;
+                                                            }
+                                                            @foreach (var c in Model.AvailableCountries)
+                                                            {
+                                                                altRow = !altRow;
+                                                                <tr class="@(altRow ? "altrowstyle" : "rowstyle")">
+                                                                    <td>
+                                                                        <span>@c.Name</span>
+                                                                    </td>
+                                                                    @foreach (var sm in Model.AvailableShippingMethods)
+                                                                    {
+                                                                        var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
+                                                                        <td style="text-align:center">
+                                                                            <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
+                                                                        </td>
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                                }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 }

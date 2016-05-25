@@ -76,7 +76,7 @@ $(document).ready(function () {
             width: 100,
             headerAttributes: { style: "text-align:center" },
             attributes: { style: "text-align:center" },
-            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryTaxProvider#.gif" />'
+            template: '# if(IsPrimaryTaxProvider) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
         }, {
             field: "SystemName",
             title: "@T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider")",

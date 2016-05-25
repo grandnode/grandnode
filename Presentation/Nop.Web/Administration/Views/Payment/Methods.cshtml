@@ -101,28 +101,28 @@
                 width: 100,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
-                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SupportCapture#.gif" />'
+                template: '# if(SupportCapture) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "SupportRefund",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportRefund")",
                 width: 100,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
-                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SupportRefund#.gif" />'
+                template: '# if(SupportRefund) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "SupportPartiallyRefund",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportPartiallyRefund")",
                 width: 100,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
-                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SupportPartiallyRefund#.gif" />'
+                template: '# if(SupportPartiallyRefund) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "SupportVoid",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.SupportVoid")",
                 width: 100,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
-                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SupportVoid#.gif" />'
+                template: '# if(SupportVoid) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "RecurringPaymentType",
                 title: "@T("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType")",
@@ -139,7 +139,7 @@
                 width: 100,
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
-                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
             }, {
                 field: "SystemName",
                 title: "@T("Admin.Configuration.Payment.Methods.Configure")",

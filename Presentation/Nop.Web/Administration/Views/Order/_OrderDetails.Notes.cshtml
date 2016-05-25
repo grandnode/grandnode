@@ -79,7 +79,7 @@
                     width: 100,
                     headerAttributes: { style: "text-align:center" },
                     attributes: { style: "text-align:center" },
-                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=DisplayToCustomer#.gif" />'
+                    template: '# if(DisplayToCustomer) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                 },  {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")",
