@@ -7,32 +7,36 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ClientKeyIdentifier_OverrideForStore, model => model.ClientKeyIdentifier, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ClientKeyIdentifier):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ClientKeyIdentifier)
-                @Html.ValidationMessageFor(model => model.ClientKeyIdentifier)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ClientSecret_OverrideForStore, model => model.ClientSecret, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ClientSecret):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ClientSecret)
-                @Html.ValidationMessageFor(model => model.ClientSecret)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            </td>
-        </tr>
-    </table>
-    
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ClientKeyIdentifier_OverrideForStore, model => model.ClientKeyIdentifier, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ClientKeyIdentifier, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ClientKeyIdentifier)
+                    @Html.ValidationMessageFor(model => model.ClientKeyIdentifier)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ClientSecret_OverrideForStore, model => model.ClientSecret, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ClientSecret, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ClientSecret)
+                    @Html.ValidationMessageFor(model => model.ClientSecret)
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                </div>
+            </div>
+        </div>
+    </div>
+
 }
