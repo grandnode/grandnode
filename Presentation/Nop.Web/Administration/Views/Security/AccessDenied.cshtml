@@ -1,7 +1,17 @@
-﻿<div class="section-title">
-    <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="@T("Admin.AccessDenied.Title")" />
-    @T("Admin.AccessDenied.Title")
-</div>
-<div class="message-box message-box-error">
-    @T("Admin.AccessDenied.Description")
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-list-alt"></i>
+                    @T("Admin.AccessDenied.Title")
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="note note-warning">
+                    @T("Admin.AccessDenied.Description")
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

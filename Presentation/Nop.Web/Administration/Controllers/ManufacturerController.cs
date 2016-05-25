@@ -271,7 +271,6 @@ namespace Nop.Admin.Controllers
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-            return View(model);
 
             return View(model);
         }

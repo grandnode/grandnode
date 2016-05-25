@@ -313,14 +313,14 @@ html .km-pane-wrapper .k-header {
 .k-pager-numbers .k-current-page .k-link:after,
 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
 .k-gantt-views > .k-current-view > .k-link:after {
-  background-image: url('http://kendo.cdn.telerik.com/2016.2.504/styles/Bootstrap/sprite.png');
+  background-image: url('http://kendo.cdn.telerik.com/2016.2.504/styles/HighContrast/sprite.png');
   border-color: transparent;
 }
 /* IE will ignore the above selectors if these are added too */
 .k-mobile-list .k-check:checked,
 .k-mobile-list .k-edit-field [type=checkbox]:checked,
 .k-mobile-list .k-edit-field [type=radio]:checked {
-  background-image: url('http://kendo.cdn.telerik.com/2016.2.504/styles/Bootstrap/sprite.png');
+  background-image: url('http://kendo.cdn.telerik.com/2016.2.504/styles/HighContrast/sprite.png');
   border-color: transparent;
 }
 .k-loading,

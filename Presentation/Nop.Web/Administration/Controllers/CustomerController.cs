@@ -851,9 +851,10 @@ namespace Nop.Admin.Controllers
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
-                AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
+                //AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
+                AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString() }).ToList(),
                 AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id.ToString() }).ToList(),
-                SearchCustomerRoleIds = defaultRoleIds,
+                //SearchCustomerRoleIds = defaultRoleIds,
             };
             return View(model);
         }
@@ -2184,7 +2185,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var customers = _customerService.GetAllCustomers(
-                customerRoleIds: model.SearchCustomerRoleIds,
+                customerRoleIds: model.SearchCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
@@ -2234,7 +2235,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var customers = _customerService.GetAllCustomers(
-                customerRoleIds: model.SearchCustomerRoleIds,
+                customerRoleIds: model.SearchCustomerRoleIds.ToArray(),
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,

@@ -32,12 +32,7 @@
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.SearchCustomerRoleIds)
                                 <div class="col-md-9 col-sm-9">
-                                    @foreach (var customerRole in Model.AvailableCustomerRoles)
-                                    {
-                                        <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
-                                               @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id)) { <text> checked="checked" </text>  } />@customerRole.Name
-                                            <br />
-                                    }
+                                    @Html.EditorFor(model => model.SearchCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -358,16 +353,17 @@
 
             function additionalData() {
                 var customerRoleIds = [];
-                $('[name=SearchCustomerRoleIds]:checked').each(function () {
-                    customerRoleIds.push($(this).val());
-                });
+                if($('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').val()!=null){
+                    customerRoleIds = $('#@Html.FieldIdFor(model => model.SearchCustomerRoleIds)').val();
+                }
+
                 var customerTagIds = [];
                 if($('#@Html.FieldIdFor(model => model.SearchCustomerTagIds)').val()!=null){
                     customerTagIds = $('#@Html.FieldIdFor(model => model.SearchCustomerTagIds)').val();
                 }
 
                 var data = {
-                    SearchCustomerRoleIds: customerRoleIds.join(","),
+                    SearchCustomerRoleIds: customerRoleIds,
                     SearchCustomerTagIds: customerTagIds,
                     SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
                     SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val(),

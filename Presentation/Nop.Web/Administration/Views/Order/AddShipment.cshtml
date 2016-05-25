@@ -11,15 +11,6 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            
-        </div>
-        <div class="options">
-           
-        </div>
-    </div>
     @Html.ValidationSummary(false)
    
 
