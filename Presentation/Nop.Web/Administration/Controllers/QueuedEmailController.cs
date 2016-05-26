@@ -18,18 +18,21 @@ namespace Nop.Admin.Controllers
 	public partial class QueuedEmailController : BaseAdminController
 	{
 		private readonly IQueuedEmailService _queuedEmailService;
+        private readonly IEmailAccountService _emailAccountService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
 
 		public QueuedEmailController(IQueuedEmailService queuedEmailService,
+            IEmailAccountService emailAccountService,
             IDateTimeHelper dateTimeHelper, 
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IWorkContext workContext)
 		{
             this._queuedEmailService = queuedEmailService;
+            this._emailAccountService = emailAccountService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
@@ -117,6 +120,7 @@ namespace Nop.Admin.Controllers
             var model = email.ToModel();
             model.PriorityName = email.Priority.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
+            model.EmailAccountName = _emailAccountService.GetEmailAccountById(email.EmailAccountId).DisplayName;
             if (email.SentOnUtc.HasValue)
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
             if (email.DontSendBeforeDateUtc.HasValue)
