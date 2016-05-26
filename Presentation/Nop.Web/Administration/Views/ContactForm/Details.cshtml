@@ -6,78 +6,72 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" alt="" />
-            @T("Admin.System.ContactForm.Details") @Html.ActionLink("(" + T("Admin.System.ContactForm.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <span id="contactform-delete" class="k-button">@T("Admin.Common.Delete")</span>
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-envelope-o"></i>
+                        @T("Admin.System.ContactForm.Details") 
+                        <small>@Html.ActionLink("(" + T("Admin.System.ContactForm.BackToList") + ")", "List")</small>
+                    </div>
+                    <div class="actions">
+                        <span id="contactform-delete" class="btn red">@T("Admin.Common.Delete")</span>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.CreatedOn)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Email)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.FullName) - @Html.DisplayFor(model => model.Email)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Subject)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.Subject)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Enquiry)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.Raw(Model.Enquiry)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.IpAddress)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.IpAddress)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Store)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.Store)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.EmailAccountName)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.EmailAccountName)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-
-    @Html.HiddenFor(model => model.Id)
-
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CreatedOn):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.CreatedOn)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Email):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.FullName)
-                <text>-</text>
-                @Html.DisplayFor(model => model.Email)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Subject):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.Subject)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Enquiry):
-            </td>
-            <td class="adminData">
-                @Html.Raw(Model.Enquiry)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IpAddress):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.IpAddress)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Store):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.Store)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.EmailAccountName):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.EmailAccountName)
-            </td>
-        </tr>
-    </table>
 }
 @Html.DeleteConfirmation("contactform-delete")
