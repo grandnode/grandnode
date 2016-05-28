@@ -316,11 +316,10 @@ html .km-pane-wrapper .k-header {
   background-image: url('http://kendo.cdn.telerik.com/2016.2.504/styles/Bootstrap/sprite.png');
   border-color: transparent;
 }
-.k-multiselect-wrap .k-i-close {
+.k-multiselect-wrap .k-i-close, .k-update {
   background-image: url('http://kendo.cdn.telerik.com/2016.2.504/styles/HighContrast/sprite.png');
   border-color: transparent;
 }
-
 
 /* IE will ignore the above selectors if these are added too */
 .k-mobile-list .k-check:checked,

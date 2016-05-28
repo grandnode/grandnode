@@ -3,36 +3,44 @@
     //page title
     ViewBag.Title = T("Admin.System.Warnings").Text;
 }
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-warnings.gif")" alt="" />
-        @T("Admin.System.Warnings")
-    </div>
-</div>
-<div class="system-warnings">
-    <ul>
-        @foreach (var warning in Model)
-        {
-            <li>
-                @switch (warning.Level)
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-tasks"></i>
+                    @T("Admin.System.Warnings")
+                </div>
+            </div>
+
+            @foreach (var warning in Model)
+            {
+                switch (warning.Level)
                 {
                     case SystemWarningLevel.Pass:
                         {
-                    <span class="pass">@warning.Text</span>
+                            <div class="note note-success">
+                                @warning.Text
+                            </div>
                         }
                         break;
                     case SystemWarningLevel.Warning:
                         {
-                    <span class="warning">@warning.Text</span>
+                            <div class="note note-warning">
+                                @warning.Text
+                            </div>
                         }
                         break;
                     case SystemWarningLevel.Fail:
                         {
-                    <span class="fail">@warning.Text</span>
+                            <div class="note note-danger">
+                                @warning.Text
+                            </div>
                         }
                         break;
                 }
-            </li>
-        }
-    </ul>
+            }
+
+        </div>
+    </div>
 </div>

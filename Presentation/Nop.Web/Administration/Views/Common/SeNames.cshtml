@@ -8,111 +8,112 @@
 }
 
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" alt="" />
-        @T("Admin.System.SeNames")
-    </div>
-    <div class="options">
-        <input type="button" id="delete-selected" class="k-button" value="@T("Admin.System.SeNames.DeleteSelected")" />
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-sitemap"></i>
+                    @T("Admin.System.SeNames")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <input type="button" id="delete-selected" class="btn red" value="@T("Admin.System.SeNames.DeleteSelected")" />
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SeName)
+                            <div class="col-md-4 col-sm-6">
+                                @Html.GrandEditorFor(model => model.SeName)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <input type="button" id="search-senames" class="btn green" value="@T("Admin.Common.Search")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="sename-grid"></div>
+            </div>
+        </div>
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SeName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SeName)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-senames" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="sename-grid"></div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#sename-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("SeNames", "Common"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        scrollable: false,
-                        dataBound: onDataBound,
-                        columns: [{
-                            field: "Id",
-                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                            width: 50
-                        }, {
-                            field: "Name",
-                            title: "@T("Admin.System.SeNames.Name")",
-                            width: 300
-                        }, {
-                            field: "EntityId",
-                            title: "@T("Admin.System.SeNames.EntityId")",
-                            width: 50
-                        }, {
-                            field: "EntityName",
-                            title: "@T("Admin.System.SeNames.EntityName")",
-                            width: 100
-                        }, {
-                            field: "IsActive",
-                            title: "@T("Admin.System.SeNames.IsActive")",
-                            width: 50,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
-                        }, {
-                            field: "Language",
-                            title: "@T("Admin.System.SeNames.Language")",
-                            width: 100
-                        }, {
-                            field: "DetailsUrl",
-                            title: "@T("Admin.System.SeNames.Details")",
-                            width: 100,
-                            template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a href="#=DetailsUrl#">@T("Admin.System.SeNames.Details")</a> #} #'
-                        }]
-                    });
-                });
-            </script>
-        </td>
-    </tr>
-</table>
+<script>
+    $(document).ready(function () {
+        $("#sename-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("SeNames", "Common"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: additionalData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            scrollable: false,
+            dataBound: onDataBound,
+            columns: [{
+                field: "Id",
+                headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                width: 50
+            }, {
+                field: "Name",
+                title: "@T("Admin.System.SeNames.Name")",
+                width: 300
+            }, {
+                field: "EntityName",
+                title: "@T("Admin.System.SeNames.EntityName")",
+                width: 100
+            }, {
+                field: "IsActive",
+                title: "@T("Admin.System.SeNames.IsActive")",
+                width: 50,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "Language",
+                title: "@T("Admin.System.SeNames.Language")",
+                width: 100
+            }, {
+                field: "DetailsUrl",
+                title: "@T("Admin.System.SeNames.Details")",
+                width: 100,
+                template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a href="#=DetailsUrl#">@T("Admin.System.SeNames.Details")</a> #} #'
+            }]
+        });
+    });
+</script>
     
 <script type="text/javascript">
     var selectedIds = [];
