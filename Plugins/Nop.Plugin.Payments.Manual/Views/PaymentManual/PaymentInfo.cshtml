@@ -6,7 +6,7 @@
 <table width="100%" cellspacing="2" cellpadding="1" border="0">
     <tr>
         <td>
-            @Html.NopLabelFor(model => model.CreditCardTypes, false):
+            @Html.GrandLabelFor(model => model.CreditCardTypes,null, false):
         </td>
         <td>
             @Html.DropDownListFor(model => model.CreditCardType, Model.CreditCardTypes, new { @class = "dropdownlists" })
@@ -14,7 +14,7 @@
     </tr>
     <tr>
         <td>
-            @Html.NopLabelFor(model => model.CardholderName, false):
+            @Html.GrandLabelFor(model => model.CardholderName, null, false):
         </td>
         <td>
             @Html.TextBoxFor(model => model.CardholderName, new { style = "Width: 165px;", autocomplete = "off" })
@@ -23,7 +23,7 @@
     </tr>
     <tr>
         <td>
-            @Html.NopLabelFor(model => model.CardNumber, false):
+            @Html.GrandLabelFor(model => model.CardNumber, null, false):
         </td>
         <td>
             @Html.TextBoxFor(model => model.CardNumber, new { style = "Width: 165px;", autocomplete = "off", maxlength = 22 })
@@ -32,7 +32,7 @@
     </tr>
     <tr>
         <td>
-            @Html.NopLabelFor(model => model.ExpireMonth, false):
+            @Html.GrandLabelFor(model => model.ExpireMonth, null, false):
         </td>
         <td>
             @Html.DropDownListFor(model => model.ExpireMonth, Model.ExpireMonths)
@@ -42,7 +42,7 @@
     </tr>
     <tr>
         <td>
-            @Html.NopLabelFor(model => model.CardCode, false):
+            @Html.GrandLabelFor(model => model.CardCode, null, false):
         </td>
         <td>
             @Html.TextBoxFor(model => model.CardCode, new { style = "Width: 60px;", autocomplete = "off", maxlength = 4 })

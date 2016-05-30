@@ -48,49 +48,44 @@
     @using (Html.BeginForm("SendEmail", "Customer", new {id = Model.Id}))
     {
         @Html.AntiForgeryToken()
-        <table style="text-align:left;">
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SendEmail.Subject):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SendEmail.Subject)
-                    @Html.ValidationMessageFor(model => model.SendEmail.Subject)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SendEmail.Body):
-                </td>
-                <td class="adminData">
-                    @Html.TextAreaFor(model => model.SendEmail.Body, new {style = "Width: 450px; Height: 350px;"})
-                    @Html.ValidationMessageFor(model => model.SendEmail.Body)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SendEmail.SendImmediately):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SendEmail.SendImmediately)
-                    @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
-                </td>
-            </tr>
-            <tr id="pnl-send-date">
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SendEmail.DontSendBeforeDate):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SendEmail.DontSendBeforeDate)
-                    @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="k-button" value="@T("Admin.Customers.Customers.SendEmail")" />
-                </td>
-            </tr>
-        </table>
+        <div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SendEmail.Subject)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.SendEmail.Subject)
+                        @Html.ValidationMessageFor(model => model.SendEmail.Subject)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SendEmail.Body)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandTextAreaFor(model => model.SendEmail.Body, new { style = "Height: 100px;" })
+                        @Html.ValidationMessageFor(model => model.SendEmail.Body)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SendEmail.SendImmediately)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.SendEmail.SendImmediately)
+                        @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
+                    </div>
+                </div>
+                <div class="form-group" id="pnl-send-date">
+                    @Html.GrandLabelFor(model => model.SendEmail.DontSendBeforeDate)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.SendEmail.DontSendBeforeDate)
+                        @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                    <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                        <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendEmail")" />
+                    </div>
+            </div>
+
+        </div>
     }
 </div>
 <script type="text/javascript">
@@ -117,31 +112,29 @@
     @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
     {
     @Html.AntiForgeryToken()
-    <table style="text-align: left;">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SendPm.Subject):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SendPm.Subject)
-                @Html.ValidationMessageFor(model => model.SendPm.Subject)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SendPm.Message):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.SendPm.Message, new { style = "Width: 350px; Height: 250px;" })
-                @Html.ValidationMessageFor(model => model.SendPm.Message)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" class="k-button" value="@T("Admin.Customers.Customers.SendPM")" />
-            </td>
-        </tr>
-    </table>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SendPm.Subject)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SendPm.Subject)
+                    @Html.ValidationMessageFor(model => model.SendPm.Subject)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SendPm.Message)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(model => model.SendPm.Message, new { style = "Height: 100px;" })
+                    @Html.ValidationMessageFor(model => model.SendPm.Message)
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendPM")" />
+            </div>
+        </div>
+    </div>
     }
 </div>
 <script type="text/javascript">

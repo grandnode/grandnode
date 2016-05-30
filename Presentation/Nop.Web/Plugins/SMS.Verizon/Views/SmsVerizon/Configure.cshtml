@@ -6,55 +6,53 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Enabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Enabled)
-                @Html.ValidationMessageFor(model => model.Enabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Email):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <p>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Enabled)
+                    @Html.ValidationMessageFor(model => model.Enabled)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.Email, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Email)
+                    @Html.ValidationMessageFor(model => model.Email)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="note note-info">
                     <strong>@T("Plugins.Sms.Verizon.SendTest.Hint")</strong>
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TestMessage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TestMessage)
-                @Html.ValidationMessageFor(model => model.TestMessage)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="test-sms" class="k-button" value="@T("Plugins.Sms.Verizon.SendTest")" />
-            </td>
-        </tr>
-    </table>
+                </div>
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.TestMessage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.TestMessage)
+                    @Html.ValidationMessageFor(model => model.TestMessage)
+                </div>
+            </div>            
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                    <input type="submit" name="test-sms" class="btn default" value="@T("Plugins.Sms.Verizon.SendTest")" />
+                </div>
+            </div>
+        </div>
+    </div>
 }

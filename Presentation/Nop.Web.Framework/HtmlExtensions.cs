@@ -22,23 +22,6 @@ namespace Nop.Web.Framework
     {
         #region Admin area extensions
 
-        public static MvcHtmlString Hint(this HtmlHelper helper, string value)
-        {
-            // Create tag builder
-            var builder = new TagBuilder("img");
-
-            // Add attributes
-            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
-            var url = MvcHtmlString.Create(urlHelper.Content("~/Administration/Content/images/ico-help.gif")).ToHtmlString();
-
-            builder.MergeAttribute("src", url);
-            builder.MergeAttribute("alt", value);
-            builder.MergeAttribute("title", value);
-
-            // Render tag
-            return MvcHtmlString.Create(builder.ToString());
-        }
-
         public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
@@ -166,28 +149,7 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(window.ToString());
         }
 
-        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)
-        {
-            var result = new StringBuilder();
-            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
-            var hintResource = string.Empty;
-            object value;
-            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
-            {
-                var resourceDisplayName = value as NopResourceDisplayName;
-                if (resourceDisplayName != null && displayHint)
-                {
-                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
-                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
-
-                    result.Append(helper.Hint(hintResource).ToHtmlString());
-                }
-            }
-            result.Append(helper.LabelFor(expression, new { title = hintResource }));
-            return MvcHtmlString.Create(result.ToString());
-        }
-
+        
         public static MvcHtmlString GrandLabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes = null, bool withColumns = true)
         {
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);

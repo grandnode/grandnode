@@ -239,7 +239,6 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\QueuedEmailController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
-    <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
@@ -715,9 +714,6 @@
     </Content>
     <Content Include="Content\styles.rtl.css" />
     <Content Include="Content\images\google-maps.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\images\ico-content.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\images\ico-help.gif">

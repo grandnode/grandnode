@@ -6,7 +6,7 @@
 <table width="100%" cellspacing="2" cellpadding="1" border="0">
     <tr>
         <td width="100px">
-            @Html.NopLabelFor(model => model.PurchaseOrderNumber, false):
+            @Html.GrandLabelFor(model => model.PurchaseOrderNumber, null, false):
         </td>
         <td>
             @Html.TextBoxFor(model => model.PurchaseOrderNumber, new { style = "Width: 165px;", autocomplete = "off" })

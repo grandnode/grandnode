@@ -330,7 +330,6 @@ namespace Nop.Admin.Controllers
                                  id = x.Id,
                                  Name = x.Name,
                                  hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
-                                 imageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
                              });
 
             return Json(categories);
