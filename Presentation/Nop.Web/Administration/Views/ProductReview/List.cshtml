@@ -46,7 +46,7 @@
                         <div class="form-group">
                             @Html.GrandLabelFor(model => model.SearchProductId)
                             <div class="col-md-4 col-sm-6">
-                                <input type="text" class="text-box single-line" id="search-product-name" autocomplete="off" />
+                                <input type="text" class="form-control text-box single-line" id="search-product-name" autocomplete="off" />
                                 <span id="search-product-friendly-name"></span>
                                 <input type="button" id="search-product-clear" class="k-button" style="display: none;" value="@T("Admin.Common.Clear")" />
                                 @Html.TextBoxFor(model => model.SearchProductId, new { autocomplete = "off", style = "display:none;" })
@@ -85,7 +85,9 @@
                     <div class="form-actions">
                         <div class="row">
                             <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
-                                <input type="button" id="search-productreviews" class="btn default" value="@T("Admin.Common.Search")" />
+                                <button class="btn btn-sm btn-success filter-submit" id="search-productreviews">
+                                    <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -107,7 +109,6 @@
                 $(document).ready(function () {
                     $("#productreviews-grid").kendoGrid({
                         dataSource: {
-                            type: "json",
                             transport: {
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "ProductReview"))",
