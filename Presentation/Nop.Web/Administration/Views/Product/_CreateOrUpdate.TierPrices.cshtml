@@ -152,6 +152,7 @@
                         }
                         </text>
             }
+
         ];
 
         var allCustomerRoles = [
@@ -178,8 +179,8 @@
             $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
                 .appendTo(container)
                 .kendoDropDownList({
-                    autoBind: false,
-                    dataSource: allStores
+                    autoBind: true,
+                    dataSource: allStores,
                 });
         }
 
@@ -187,8 +188,9 @@
             $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRoleId"/>')
                 .appendTo(container)
                 .kendoDropDownList({
-                    autoBind: false,
-                    dataSource: allCustomerRoles
+                    autoBind: true,
+                    dataSource: allCustomerRoles,
+                    
                 });
         }
     </script>

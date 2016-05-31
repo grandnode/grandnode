@@ -3243,11 +3243,11 @@ namespace Nop.Admin.Controllers
                     return new ProductModel.TierPriceModel
                     {
                         Id = x.Id,
-                        StoreId = x.StoreId,
+                        StoreId = !String.IsNullOrEmpty(x.StoreId) ? x.StoreId : " ",
                         Store = storeName,
                         CustomerRole = !String.IsNullOrEmpty(x.CustomerRoleId) ? _customerService.GetCustomerRoleById(x.CustomerRoleId).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
                         ProductId = product.Id,
-                        CustomerRoleId = !String.IsNullOrEmpty(x.CustomerRoleId) ? x.CustomerRoleId : "",
+                        CustomerRoleId = !String.IsNullOrEmpty(x.CustomerRoleId) ? x.CustomerRoleId : " ",
                         Quantity = x.Quantity,
                         Price = x.Price
                     };
