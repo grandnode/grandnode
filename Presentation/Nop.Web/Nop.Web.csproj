@@ -1276,6 +1276,7 @@
     <Content Include="Content\Roxy_Fileman\images\rename.png" />
     <Content Include="Content\Roxy_Fileman\images\search.png" />
     <Content Include="Content\Roxy_Fileman\images\select.png" />
+    <Content Include="Content\Roxy_Fileman\images\sprite.png" />
     <Content Include="Content\Roxy_Fileman\images\upload-big.png" />
     <Content Include="Content\Roxy_Fileman\images\view-list.png" />
     <Content Include="Content\Roxy_Fileman\images\view-tile.png" />
