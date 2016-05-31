@@ -19,7 +19,7 @@
                         @T("Admin.Customers.Customers")
                     </div>
                     <div class="actions btn-group btn-group-devided">
-                        <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i>@T("Admin.Common.AddNew")</a>
+                        <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
                         <input type="submit" name="exportxml-all" class="btn default" value="@T("Admin.Common.ExportToXml.All")" />
                         <input type="button" id="exportxml-selected" class="btn default" value="@T("Admin.Common.ExportToXml.Selected")" />
                         <input type="submit" name="exportexcel-all" class="btn default" value="@T("Admin.Common.ExportToExcel.All")" />
