@@ -23,7 +23,6 @@
                         $(document).ready(function () {
                             $("#categories-grid").kendoGrid({
                                 dataSource: {
-                                    type: "json",
                                     transport: {
                                         read: {
                                             url: "@Html.Raw(Url.Action("ConditionCategory", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id }))",

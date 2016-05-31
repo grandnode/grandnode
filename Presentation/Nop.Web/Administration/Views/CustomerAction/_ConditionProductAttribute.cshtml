@@ -22,7 +22,6 @@
         $(document).ready(function () {
         $("#productattribute-grid").kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("ConditionProductAttribute", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
@@ -125,7 +124,6 @@
                 autoBind: false,
                 dataSource:
                 {
-                    type: "json",
                     transport: {
                         read: "@Html.Raw(Url.Action("ProductAttributes", "CustomerAction"))"
                     }

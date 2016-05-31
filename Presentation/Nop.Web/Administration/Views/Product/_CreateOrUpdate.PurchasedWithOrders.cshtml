@@ -15,7 +15,6 @@
         $(document).ready(function () {
             $("#purchased-with-orders-grid").kendoGrid({
                 dataSource: {
-                    type: "json",
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("PurchasedWithOrders", "Product", new { productId = Model.Id }))",

@@ -147,7 +147,6 @@
         $(document).ready(function() {
             $("#products-grid").kendoGrid({
                 dataSource: {
-                    type: "json",
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("ProductList", "Product"))",

@@ -84,7 +84,6 @@
                     $(document).ready(function () {
                         $("#shipments-grid").kendoGrid({
                             dataSource: {
-                                type: "json",
                                 transport: {
                                     read: {
                                         url: "@Html.Raw(Url.Action("ShipmentListSelect", "Order"))",
@@ -164,7 +163,6 @@
                     function detailInit(e) {
                         $("<div/>").appendTo(e.detailCell).kendoGrid({
                             dataSource: {
-                                type: "json",
                                 transport: {
                                     read: {
                                         url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,

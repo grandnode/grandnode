@@ -35,7 +35,6 @@
         $(document).ready(function() {
             $("#returnrequests-grid").kendoGrid({
                 dataSource: {
-                    type: "json",
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("List", "ReturnRequest"))",

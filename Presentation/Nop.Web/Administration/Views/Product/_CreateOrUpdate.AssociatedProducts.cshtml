@@ -18,7 +18,6 @@
         $(document).ready(function () {
             $("#associatedproducts-grid").kendoGrid({
                 dataSource: {
-                    type: "json",
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("AssociatedProductList", "Product", new { productId = Model.Id }))",

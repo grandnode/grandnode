@@ -34,7 +34,6 @@
         $(document).ready(function () {
             $("#productattributevalues-grid").kendoGrid({
                 dataSource: {
-                    type: "json",
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("ProductAttributeValueList", "Product", new { productAttributeMappingId = Model.ProductAttributeMappingId, productId = Model.ProductId }))",

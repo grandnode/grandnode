@@ -213,7 +213,6 @@
             $(document).ready(function () {
                 $("#conditions-grid").kendoGrid({
                     dataSource: {
-                        type: "json",
                         transport: {
                             read: {
                                 url: "@Html.Raw(Url.Action("Conditions", "CustomerAction", new { customerActionId = Model.Id }))",

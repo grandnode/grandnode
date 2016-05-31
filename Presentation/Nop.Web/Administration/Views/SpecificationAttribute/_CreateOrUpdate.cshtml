@@ -106,7 +106,6 @@ if (!String.IsNullOrEmpty(Model.Id))
             $(document).ready(function () {
                 $("#specificationattributeoptions-grid").kendoGrid({
                     dataSource: {
-                        type: "json",
                         transport: {
                             read: {
                                 url: "@Html.Raw(Url.Action("OptionList", "SpecificationAttribute", new { specificationAttributeId = Model.Id }))",

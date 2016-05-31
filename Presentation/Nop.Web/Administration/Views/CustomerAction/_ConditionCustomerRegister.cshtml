@@ -21,7 +21,6 @@
     $(document).ready(function () {
     $("#customerregister-grid").kendoGrid({
         dataSource: {
-            type: "json",
             transport: {
                 read: {
                     url: "@Html.Raw(Url.Action("ConditionCustomerRegister", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
@@ -124,7 +123,6 @@ function crDropDownEditor(container, options) {
             autoBind: false,
             dataSource:
             {
-                type: "json",
                 transport: {
                     read: "@Html.Raw(Url.Action("CustomerRegisterFields", "CustomerAction"))"
                 }

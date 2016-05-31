@@ -23,7 +23,6 @@
         $(document).ready(function () {
         $("#vendor-grid").kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("ConditionVendor", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
@@ -109,7 +108,6 @@
                 autoBind: false,
                 dataSource:
                 {
-                    type: "json",
                     transport: {
                         read: "@Html.Raw(Url.Action("Vendors", "CustomerAction"))"
                     }

@@ -335,8 +335,12 @@ namespace Nop.Services.Orders
                 shippingStatusId = (int)ss.Value;
 
             var builder = Builders<Order>.Filter;
+            var builderItem = Builders<UnwindedOrderItem>.Filter;
 
             var filter = builder.Where(o => !o.Deleted);
+            var filterItem = builderItem.Where(x => true);
+
+
             if (!String.IsNullOrEmpty(storeId))
                 filter = filter & builder.Where(o => o.StoreId == storeId);
             
@@ -360,15 +364,16 @@ namespace Nop.Services.Orders
                 filter = filter & builder.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 filter = filter & builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-            if(!String.IsNullOrEmpty(manufacturerId))
-                filter = filter & builder.Where( o=> o.OrderItems.Any(x => x.Product.ProductManufacturers.Any(pm => pm.ManufacturerId == manufacturerId)));
+            if (!String.IsNullOrEmpty(manufacturerId))
+                filterItem = filterItem & builderItem.Where(o => o.OrderItems.Product.ProductManufacturers.Any(pm => pm.ManufacturerId == manufacturerId));
             if (!String.IsNullOrEmpty(categoryId))
-                filter = filter & builder.Where(o => o.OrderItems.Any(x => x.Product.ProductCategories.Any(pc => pc.CategoryId == categoryId)));
+                filterItem = filterItem & builderItem.Where(o => o.OrderItems.Product.ProductCategories.Any(pc => pc.CategoryId == categoryId));
 
             var query = _orderRepository.Collection
                     .Aggregate()
                     .Match(filter)
                     .Unwind<Order, UnwindedOrderItem>(x => x.OrderItems)
+                    .Match(filterItem)
                     .Group(x => x.OrderItems.ProductId, g => new BestsellersReportLine
                     {
                         ProductId = g.Key,

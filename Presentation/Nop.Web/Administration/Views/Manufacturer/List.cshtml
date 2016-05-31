@@ -61,7 +61,6 @@
     $(document).ready(function () {
         $("#manufacturers-grid").kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("List", "Manufacturer"))",

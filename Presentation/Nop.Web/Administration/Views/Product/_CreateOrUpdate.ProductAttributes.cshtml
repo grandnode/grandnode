@@ -62,7 +62,6 @@ else
         $(document).ready(function() {
             $("#productattributemappings-grid").kendoGrid({
                 dataSource: {
-                    type: "json",
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("ProductAttributeMappingList", "Product", new { productId = Model.Id }))",
@@ -318,7 +317,6 @@ else
             $(document).ready(function() {
                 $("#attributecombinations-grid").kendoGrid({
                     dataSource: {
-                        type: "json",
                         transport: {
                             read: {
                                 url: "@Html.Raw(Url.Action("ProductAttributeCombinationList", "Product", new { productId = Model.Id }))",

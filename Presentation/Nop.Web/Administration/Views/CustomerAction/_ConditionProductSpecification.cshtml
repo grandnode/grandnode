@@ -108,7 +108,6 @@
     });
 
     var dataSourceValue = new kendo.data.DataSource({
-            type: "json",
             transport: {
                 read: "@Html.Raw(Url.Action("ProductSpecificationValue", "CustomerAction", new { specificationId = 0 }))"
             }
@@ -122,7 +121,6 @@
                 change: onChange,
                 dataSource:
                 {
-                    type: "json",
                     transport: {
                         read: "@Html.Raw(Url.Action("ProductSpecification", "CustomerAction"))"
                     }
@@ -149,7 +147,6 @@
         else {
             var url = "@Html.Raw(Url.Action("ProductSpecificationValue", "CustomerAction"))?specificationId=" + specValId;
             var dataSourceValue = new kendo.data.DataSource({
-                type: "json",
                 transport: {
                     read: url,
                 }

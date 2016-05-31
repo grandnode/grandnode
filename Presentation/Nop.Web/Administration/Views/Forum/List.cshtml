@@ -95,7 +95,6 @@
     function detailInit(e) {
         $("<div/>").appendTo(e.detailCell).kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("ForumList", "Forum"))?forumGroupId=" + e.data.Id,

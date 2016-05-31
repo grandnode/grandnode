@@ -70,7 +70,6 @@
     $(document).ready(function () {
         $("#categories-grid").kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("CategoryAddPopupList", "CustomerAction"))",

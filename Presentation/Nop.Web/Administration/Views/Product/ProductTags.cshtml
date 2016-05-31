@@ -34,7 +34,6 @@
         $(document).ready(function () {
             $("#product-tags-grid").kendoGrid({
                 dataSource: {
-                    type: "json",
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("ProductTags", "Product"))",

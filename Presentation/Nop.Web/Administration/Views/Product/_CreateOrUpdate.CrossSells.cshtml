@@ -17,7 +17,6 @@
         $(document).ready(function () {
             $("#crosssellproducts-grid").kendoGrid({
                 dataSource: {
-                    type: "json",
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("CrossSellProductList", "Product", new { productId = Model.Id }))",
