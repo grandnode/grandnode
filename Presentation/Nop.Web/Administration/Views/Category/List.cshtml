@@ -19,9 +19,15 @@
                 </div>
                 <div class="actions btn-group btn-group-devided">
                     <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
-                    <a href="@Url.Action("ExportXml")" class="btn default">@T("Admin.Common.ExportToXml")</a>
-                    <a href="@Url.Action("ExportXlsx")" class="btn default">@T("Admin.Common.ExportToExcel")</a>
-                    <input type="button" id="importexcel" name="importexcel" class="btn default" value="@T("Admin.Common.ImportFromExcel")" />
+                    <a href="@Url.Action("ExportXml")" class="btn default">
+                    <i class="fa fa-file-code-o"></i> @T("Admin.Common.ExportToXml")</a>
+                    <a href="@Url.Action("ExportXlsx")" class="btn default">
+                    <i class="fa fa-file-excel-o"></i> @T("Admin.Common.ExportToExcel")</a>
+                    <button type="button" name="importexcel" id="importexcel" class="btn blue">
+                        <i class="fa fa-upload"></i>
+                        @T("Admin.Common.ImportFromExcel")
+                    </button>
+
                 </div>
             </div>
             <div class="portlet-body form">
@@ -43,7 +49,7 @@
                     <div class="form-actions">
                         <div class="row">
                             <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
-                                <button class="btn btn-sm btn-success filter-submit" id="search-categories">
+                                <button class="btn btn-success filter-submit" id="search-categories">
                                     <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                 </button>
                             </div>

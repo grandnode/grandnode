@@ -19,11 +19,12 @@
                         <div class="btn-group btn-group-devided">
                             @if (!Model.IsLoggedInAsVendor)
                             {
-                                <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="btn default">@T("Admin.Orders.PdfInvoice")</a>
+                                <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="btn purple">
+                                    <i class="fa fa-file-pdf-o"></i> @T("Admin.Orders.PdfInvoice")</a>
                             }
                             @if (!Model.IsLoggedInAsVendor)
                             {
-                                <span id="order-delete" class="btn red">@T("Admin.Common.Delete")</span>
+                                <span id="order-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                             }
                             <input type="submit" id="btnRefreshPage" style="display: none" />
                             <script type="text/javascript">

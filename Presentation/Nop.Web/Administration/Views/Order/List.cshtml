@@ -23,6 +23,7 @@
                         {
                             <div class="btn-group btn-group-devided">
                                 <a class="btn default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <i class="fa fa-download"></i>
                                     @T("Admin.Common.Export")
                                     <i class="fa fa-angle-down"></i>
                                 </a>
@@ -42,8 +43,14 @@
                                 </ul>
                             </div>
                         }
-                        <input type="submit" name="pdf-invoice-all" class="k-button" value="@T("Admin.Orders.PdfInvoice.All")" />
-                        <input type="button" id="pdf-invoice-selected" class="k-button" value="@T("Admin.Orders.PdfInvoice.Selected")" />
+                        <button type="submit" name="pdf-invoice-all" class="btn green">
+                            <i class="fa fa-file-pdf-o"></i>
+                            @T("Admin.Orders.PdfInvoice.All")
+                        </button>
+                        <button type="button" id="pdf-invoice-selected" class="btn green">
+                            <i class="fa fa-file-pdf-o"></i>
+                            @T("Admin.Orders.PdfInvoice.Selected")
+                        </button>
                     </div>
 
                 </div>
@@ -176,8 +183,8 @@
                         </div>
                         <div class="form-actions">
                             <div class="row">
-                                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
-                                    <button class="btn btn-sm btn-success filter-submit" id="search-orders">
+                                <div class="col-md-offset-5 col-sm-offset-5 col-md-7 col-sm-7">
+                                    <button class="btn btn-success filter-submit" id="search-orders">
                                         <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                     </button>
                                 </div>

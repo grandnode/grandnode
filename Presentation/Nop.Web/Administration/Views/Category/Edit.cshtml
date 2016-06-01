@@ -17,10 +17,13 @@
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
-                            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Category", new { SeName = Model.SeName })', 800, 600, true); return false;" class="btn green" />
-                            <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
-                            <input type="submit" name="save-continue" class="btn default" value="@T("Admin.Common.SaveContinue")" />
-                            <span id="category-delete" class="btn red">@T("Admin.Common.Delete")</span>
+                            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Category", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn purple">
+                                <i class="fa fa-eye"></i>
+                                @T("Admin.Common.Preview")
+                            </button>
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <span id="category-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                         </div>
                     </div>
                 </div>

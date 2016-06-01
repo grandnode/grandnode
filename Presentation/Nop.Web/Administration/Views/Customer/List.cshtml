@@ -20,59 +20,79 @@
                     </div>
                     <div class="actions btn-group btn-group-devided">
                         <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
-                        <input type="submit" name="exportxml-all" class="btn default" value="@T("Admin.Common.ExportToXml.All")" />
-                        <input type="button" id="exportxml-selected" class="btn default" value="@T("Admin.Common.ExportToXml.Selected")" />
-                        <input type="submit" name="exportexcel-all" class="btn default" value="@T("Admin.Common.ExportToExcel.All")" />
-                        <input type="button" id="exportexcel-selected" class="btn default" value="@T("Admin.Common.ExportToExcel.Selected")" />
+
+                        <div class="btn-group btn-group-devided">
+                            <a class="btn default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <i class="fa fa-download"></i>
+                                @T("Admin.Common.Export")
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right">
+                                <li>
+                                    <input type="submit" name="exportxml-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.All")" />
+                                </li>
+                                <li>
+                                    <input type="button" id="exportxml-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.Selected")" />
+                                </li>
+                                <li>
+                                    <input type="submit" name="exportexcel-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.All")" />
+                                </li>
+                                <li>
+                                    <input type="button" id="exportexcel-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.Selected")" />
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="portlet-body form">
                     <div class="form-horizontal">
-                        <div class="form-body">
+                        <div class="form-body col-md-6">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCustomerRoleIds)
-                                <div class="col-md-9 col-sm-9">
+                                @Html.GrandLabelFor(model => model.SearchCustomerRoleIds, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                <div class="col-md-8 col-sm-8">
                                     @Html.EditorFor(model => model.SearchCustomerRoleIds, new { SelectList = Model.AvailableCustomerRoles })
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchCustomerTagIds)
-                                <div class="col-md-9 col-sm-9">
+                                @Html.GrandLabelFor(model => model.SearchCustomerTagIds, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                <div class="col-md-8 col-sm-8">
                                     @Html.EditorFor(model => model.SearchCustomerTagIds, new { SelectList = Model.AvailableCustomerTags })
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchEmail)
-                                <div class="col-md-9 col-sm-9">
+                                @Html.GrandLabelFor(model => model.SearchEmail, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                <div class="col-md-8 col-sm-8">
                                     @Html.GrandEditorFor(model => model.SearchEmail)
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-body col-md-6">
                             @if (Model.UsernamesEnabled)
                             {
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SearchUsername)
-                                    <div class="col-md-9 col-sm-9">
+                                    @Html.GrandLabelFor(model => model.SearchUsername, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                    <div class="col-md-8 col-sm-8">
                                         @Html.GrandEditorFor(model => model.SearchUsername)
                                     </div>
                                 </div>
                             }
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchFirstName)
-                                <div class="col-md-9 col-sm-9">
+                                @Html.GrandLabelFor(model => model.SearchFirstName, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                <div class="col-md-8 col-sm-8">
                                     @Html.GrandEditorFor(model => model.SearchFirstName)
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchLastName)
-                                <div class="col-md-9 col-sm-9">
+                                @Html.GrandLabelFor(model => model.SearchLastName, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                <div class="col-md-8 col-sm-8">
                                     @Html.GrandEditorFor(model => model.SearchLastName)
                                 </div>
                             </div>
                             @if (Model.CompanyEnabled)
                             {
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SearchCompany)
-                                    <div class="col-md-9 col-sm-9">
+                                    @Html.GrandLabelFor(model => model.SearchCompany, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                    <div class="col-md-8 col-sm-8">
                                         @Html.GrandEditorFor(model => model.SearchCompany)
                                     </div>
                                 </div>
@@ -80,8 +100,8 @@
                             @if (Model.PhoneEnabled)
                             {
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SearchPhone)
-                                    <div class="col-md-9 col-sm-9">
+                                    @Html.GrandLabelFor(model => model.SearchPhone, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                    <div class="col-md-8 col-sm-8">
                                         @Html.GrandEditorFor(model => model.SearchPhone)
                                     </div>
                                 </div>
@@ -89,18 +109,17 @@
                             @if (Model.ZipPostalCodeEnabled)
                             {
                                 <div class="form-group">
-                                    @Html.GrandLabelFor(model => model.SearchZipPostalCode)
-                                    <div class="col-md-9 col-sm-9">
+                                    @Html.GrandLabelFor(model => model.SearchZipPostalCode, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                                    <div class="col-md-8 col-sm-8">
                                         @Html.GrandEditorFor(model => model.SearchZipPostalCode)
                                     </div>
                                 </div>
                             }
                         </div>
-
                         <div class="form-actions">
                             <div class="row">
-                                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
-                                    <button class="btn btn-sm btn-success filter-submit" id="search-customers">
+                                <div class="col-md-offset-3 col-sm-offset-3 col-md-8 col-sm-8">
+                                    <button class="btn btn-success filter-submit" id="search-customers">
                                         <i class="fa fa-search"></i> @T("Admin.Common.Search")
                                     </button>
                                 </div>

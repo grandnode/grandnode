@@ -19,9 +19,9 @@
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
                             <input type="submit" name="requeue" class="btn blue" value="@T("Admin.System.QueuedEmails.Requeue")" />
-                            <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
-                            <input type="submit" name="save-continue" class="btn default" value="@T("Admin.Common.SaveContinue")" />
-                            <span id="queuedEmail-delete" class="btn red">@T("Admin.Common.Delete")</span>
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <span id="queuedEmail-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                         </div>
                     </div>
                 </div>

@@ -17,11 +17,17 @@
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
-                            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new { SeName = Model.SeName })', 800, 600, true); return false;" class="btn green" />
-                            <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
-                            <input type="submit" name="save-continue" class="btn default" value="@T("Admin.Common.SaveContinue")" />
-                            <input type="submit" id="copyproduct" name="copyproduct" class="btn blue" value="@T("Admin.Catalog.Products.Copy")" />
-                            <span id="product-delete" class="btn red">@T("Admin.Common.Delete")</span>
+                            <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn purple">
+                                <i class="fa fa-eye"></i>
+                                @T("Admin.Common.Preview")
+                            </button>
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <button type="button" name="copyproduct" class="btn blue" data-toggle="modal" data-target="#copyproduct-window">
+                                <i class="fa fa-clone"></i>
+                                @T("Admin.Catalog.Products.Copy")
+                            </button>
+                            <span id="product-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                         </div>
                     </div>
                 </div>

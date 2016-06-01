@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Nop.Web.Framework.Controllers
@@ -6,7 +7,7 @@ namespace Nop.Web.Framework.Controllers
     /// <summary>
     /// If form name exists, then specified "actionParameterName" will be set to "true"
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)] 
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class ParameterBasedOnFormNameAttribute : FilterAttribute, IActionFilter
     {
         private readonly string _name;
@@ -24,8 +25,11 @@ namespace Nop.Web.Framework.Controllers
 
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var formValue = filterContext.RequestContext.HttpContext.Request.Form[_name];
-            filterContext.ActionParameters[_actionParameterName] = !string.IsNullOrEmpty(formValue);
+            //we check "name" only. uncomment the code below if you want to check whether "value" attribute is specified
+            //var formValue = filterContext.RequestContext.HttpContext.Request.Form[_name];
+            //filterContext.ActionParameters[_actionParameterName] = !string.IsNullOrEmpty(formValue);
+            filterContext.ActionParameters[_actionParameterName] = filterContext.RequestContext
+                .HttpContext.Request.Form.AllKeys.Any(x => x.Equals(_name));
         }
     }
 }
