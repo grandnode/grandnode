@@ -199,6 +199,10 @@ namespace Nop.Services.Catalog
             var filterCrp = filtersCrp.Eq(x => x.ProductId, product.Id);            
             _customerRoleProductRepository.Collection.DeleteManyAsync(filterCrp);
 
+            var filtersProductReview = Builders<ProductReview>.Filter;
+            var filterProdReview = filtersProductReview.Eq(x => x.ProductId, product.Id);
+            _productReviewRepository.Collection.DeleteManyAsync(filterProdReview);
+
             var filters = Builders<UrlRecord>.Filter;
             var filter = filters.Eq(x => x.EntityId, product.Id);
             filter = filter & filters.Eq(x=>x.EntityName, "Product");
