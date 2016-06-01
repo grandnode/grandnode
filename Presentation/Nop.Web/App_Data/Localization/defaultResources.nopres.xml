@@ -11703,7 +11703,7 @@
   <LocaleResource Name="Admin.System.ContactForm.Delete">
     <Value>Delete</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.ContactForm.DeleteAll">
+  <LocaleResource Name="Admin.System.ContactForm.deletedall">
     <Value>Delete all</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ContactForm.Details">

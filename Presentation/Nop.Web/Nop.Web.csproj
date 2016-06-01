@@ -2696,6 +2696,8 @@
     <Content Include="Themes\GrandNodeTheme\Views\Boards\_CreateUpdateTopic.cshtml" />
     <Content Include="Views\Product\_ProductAskQuestionButton.cshtml" />
     <Content Include="Views\Product\AskQuestion.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Product\_ProductAskQuestionButton.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Product\AskQuestion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
