@@ -115,15 +115,15 @@
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.SendPm.Subject)
-                <div class="col-md-9 col-sm-9">
+                @Html.GrandLabelFor(model => model.SendPm.Subject, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                <div class="col-md-8 col-sm-8">
                     @Html.GrandEditorFor(model => model.SendPm.Subject)
                     @Html.ValidationMessageFor(model => model.SendPm.Subject)
                 </div>
             </div>
             <div class="form-group">
-                @Html.GrandLabelFor(model => model.SendPm.Message)
-                <div class="col-md-9 col-sm-9">
+                @Html.GrandLabelFor(model => model.SendPm.Message, new Dictionary<string, object> { { "class", "control-label col-md-4" } }, false)
+                <div class="col-md-8 col-sm-8">
                     @Html.GrandTextAreaFor(model => model.SendPm.Message, new { style = "Height: 100px;" })
                     @Html.ValidationMessageFor(model => model.SendPm.Message)
                 </div>
