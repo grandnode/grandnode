@@ -66,12 +66,10 @@ namespace Nop.Services.Catalog
 
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
-        //private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
         private readonly IRepository<AclRecord> _aclRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<ProductAlsoPurchased> _productalsopurchasedRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -116,7 +114,6 @@ namespace Nop.Services.Catalog
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductReview> productReviewRepository,
-            //IRepository<LocalizedProperty> localizedPropertyRepository,
             IRepository<AclRecord> aclRepository,
             IRepository<UrlRecord> urlRecordRepository,
             IRepository<Customer> customerRepository,
@@ -134,13 +131,12 @@ namespace Nop.Services.Catalog
             IEventPublisher eventPublisher,
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            IRepository<ProductTag> productTagRepository,
-            IRepository<ProductAlsoPurchased> productalsopurchasedRepository)
+            IRepository<ProductTag> productTagRepository
+            )
         {
             this._cacheManager = cacheManager;
             this._productRepository = productRepository;
             this._productReviewRepository = productReviewRepository;
-            //this._localizedPropertyRepository = localizedPropertyRepository;
             this._aclRepository = aclRepository;
             this._urlRecordRepository = urlRecordRepository;
             this._customerRepository = customerRepository;
@@ -159,7 +155,6 @@ namespace Nop.Services.Catalog
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._productTagRepository = productTagRepository;
-            this._productalsopurchasedRepository = productalsopurchasedRepository;
         }
 
         #endregion
@@ -188,12 +183,6 @@ namespace Nop.Services.Catalog
             var builderCross = Builders<Product>.Update;
             var updatefilterCross = builderCross.Pull(x => x.CrossSellProduct, product.Id);
             var resultCross = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterCross).Result;
-
-            var builderPurchased = Builders<ProductAlsoPurchased>.Update;
-            var updatefilterPurchased = builderPurchased.PullFilter(x => x.Purchased, y => y.ProductId == product.Id);
-            var resultPurchased = _productalsopurchasedRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterPurchased).Result;
-            var filtersPurchased = Builders<ProductAlsoPurchased>.Filter.Eq(x => x.ProductId, product.Id);
-            _productalsopurchasedRepository.Collection.DeleteManyAsync(filtersPurchased);
 
             var filtersCrp = Builders<CustomerRoleProduct>.Filter;
             var filterCrp = filtersCrp.Eq(x => x.ProductId, product.Id);            

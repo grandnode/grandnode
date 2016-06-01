@@ -13,6 +13,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Orders
 {
@@ -140,9 +141,9 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var updateproduct = Builders<ProductAlsoPurchased>.Update;
-            var updatefilterproduct = updateproduct.PullFilter(x => x.Purchased, y => y.OrderId == order.Id);
-            var resultproduct = _productAlsoPurchasedRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterproduct).Result;
+            var filters = Builders<ProductAlsoPurchased>.Filter;
+            var filter = filters.Where(x => x.OrderId == order.Id);
+            _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
 
             order.Deleted = true;
             UpdateOrder(order);
@@ -295,35 +296,23 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            foreach(var item in order.OrderItems)
+            Task.Run(() =>
             {
-                var product = (from p in _productAlsoPurchasedRepository.Table
-                             where p.ProductId == item.ProductId
-                             select p).FirstOrDefault();
-                if(product == null)
+                foreach (var item in order.OrderItems)
                 {
-                    product = new ProductAlsoPurchased();
-                    product.ProductId = item.ProductId;
-                    _productAlsoPurchasedRepository.Insert(product);
-                }
-                foreach (var it in order.OrderItems.Where(x => x.ProductId != item.ProductId))
-                {
-                    var purchase = new Purchase()
+                    foreach (var it in order.OrderItems.Where(x => x.ProductId != item.ProductId))
                     {
-                        OrderId = order.Id,
-                        CreatedOrderOnUtc = order.CreatedOnUtc,
-                        Quantity = it.Quantity,
-                        StoreId = order.StoreId,
-                        ProductId = it.ProductId
-                    };
-
-                    var updatebuilder = Builders<ProductAlsoPurchased>.Update;
-                    var update = updatebuilder.AddToSet(p => p.Purchased, purchase);
-                    _productAlsoPurchasedRepository.Collection.UpdateOneAsync(new BsonDocument("_id", product.Id), update);
+                        var productPurchase = new ProductAlsoPurchased();
+                        productPurchase.ProductId = item.ProductId;
+                        productPurchase.OrderId = order.Id;
+                        productPurchase.CreatedOrderOnUtc = order.CreatedOnUtc;
+                        productPurchase.Quantity = it.Quantity;
+                        productPurchase.StoreId = order.StoreId;
+                        productPurchase.ProductId2 = it.ProductId;
+                        _productAlsoPurchasedRepository.Insert(productPurchase);
+                    }
                 }
-
-            }
-
+            });
         }
 
         /// <summary>
@@ -476,9 +465,9 @@ namespace Nop.Services.Orders
             var updatefilter = updatebuilder.PullFilter(x => x.OrderItems, y => y.Id == orderItem.Id);
             var result = _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderItem.OrderId), updatefilter).Result;
 
-            var updateproduct = Builders<ProductAlsoPurchased>.Update;
-            var updatefilterproduct = updateproduct.PullFilter(x => x.Purchased, y => y.OrderId == orderItem.OrderId && y.ProductId == orderItem.ProductId);
-            var resultproduct = _productAlsoPurchasedRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterproduct).Result;
+            var filters = Builders<ProductAlsoPurchased>.Filter;
+            var filter = filters.Where(x => x.OrderId == orderItem.OrderId && (x.ProductId == orderItem.ProductId || x.ProductId2 == orderItem.ProductId));
+            _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
 
             //event notification
             _eventPublisher.EntityDeleted(orderItem);

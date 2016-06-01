@@ -10581,7 +10581,7 @@ namespace Nop.Services.Installation
 
             //Product also purchased
             _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "ProductId", Unique = true });
+            _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "ProductId", Unique = false });
 
             //url record
             _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

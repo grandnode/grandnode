@@ -409,29 +409,24 @@ namespace Nop.Services.Orders
         public virtual string[] GetAlsoPurchasedProductsIds(string storeId, string productId,
             int recordsToReturn = 5, bool showHidden = false)
         {
-            var query = _productAlsoPurchasedRepository.Collection.Find(x => x.ProductId == productId).FirstOrDefaultAsync().Result;
+            var product = from p in _productAlsoPurchasedRepository.Table
+                          where p.ProductId == productId
+                            group p by p.ProductId2 into g
+                            select new
+                            {
+                                ProductId = g.Key,
+                                ProductsPurchased = g.Sum(x => x.Quantity),
+                            };
+            product = product.OrderByDescending(x => x.ProductsPurchased);
+            if (recordsToReturn > 0)
+                product = product.Take(recordsToReturn);
 
-            if (query != null)
-            {
-                var product = from p in query.Purchased
-                              group p by p.ProductId into g
-                              select new
-                              {
-                                  ProductId = g.Key,
-                                  ProductsPurchased = g.Sum(x => x.Quantity),
-                              };
-                product = product.OrderByDescending(x => x.ProductsPurchased);
-                if (recordsToReturn > 0)
-                    product = product.Take(recordsToReturn);
+            var report = product.ToList();
+            var ids = new List<string>();
+            foreach (var reportLine in report)
+                ids.Add(reportLine.ProductId);
 
-                var report = product.ToList();
-                var ids = new List<string>();
-                foreach (var reportLine in report)
-                    ids.Add(reportLine.ProductId);
-
-                return ids.ToArray();
-            }
-            return null;
+            return ids.ToArray();
         }
 
         /// <summary>
