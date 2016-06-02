@@ -583,7 +583,7 @@ Horizontal Menu
   /* 991px */
   /* Page header */
   .page-header.navbar {
-    padding: 0 20px 0 20px;
+    padding: 0 0px 0 0px;
     position: relative;
     clear: both;
     /* Page logo */
@@ -635,7 +635,7 @@ Horizontal Menu
   /* 767px */
   /* Page header */
   .page-header.navbar {
-    padding: 0 10px 0 10px;
+    padding: 0 0px 0 0px;
     /* Header logo */
     /* Search box */
     /* Top navigation menu*/ }

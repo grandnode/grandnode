@@ -3798,17 +3798,6 @@ namespace Nop.Admin.Controllers
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
 
-            //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
-
-            //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
-            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
-
             //billing countries
             foreach (var c in _countryService.GetAllCountriesForBilling(showHidden:true))
             {
@@ -3853,8 +3842,6 @@ namespace Nop.Admin.Controllers
                 billingCountryId: model.BillingCountryId,
                 orderBy: 2,
                 vendorId: model.VendorId,
-                categoryId: model.CategoryId,
-                manufacturerId: model.ManufacturerId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true,

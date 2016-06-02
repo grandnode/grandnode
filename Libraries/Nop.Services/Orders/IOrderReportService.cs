@@ -79,8 +79,7 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
-        IPagedList<BestsellersReportLine> BestSellersReport(
-            string categoryId = "", string manufacturerId = "", 
+        IPagedList<BestsellersReportLine> BestSellersReport(            
             string storeId = "", string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,

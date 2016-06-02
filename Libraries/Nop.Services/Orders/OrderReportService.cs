@@ -311,7 +311,6 @@ namespace Nop.Services.Orders
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Result</returns>
         public virtual IPagedList<BestsellersReportLine> BestSellersReport(
-            string categoryId = "", string manufacturerId = "",
             string storeId = "", string vendorId = "",
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
@@ -364,11 +363,6 @@ namespace Nop.Services.Orders
                 filter = filter & builder.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 filter = filter & builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-            //if (!String.IsNullOrEmpty(manufacturerId))
-            //    filterItem = filterItem & builderItem.Where(o => o.OrderItems.Product.ProductManufacturers.Any(pm => pm.ManufacturerId == manufacturerId));
-            //if (!String.IsNullOrEmpty(categoryId))
-            //    filterItem = filterItem & builderItem.Where(o => o.OrderItems.Product.ProductCategories.Any(pc => pc.CategoryId == categoryId));
-
             var query = _orderRepository.Collection
                     .Aggregate()
                     .Match(filter)

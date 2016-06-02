@@ -13,6 +13,10 @@
 
 <script>
     $(document).ready(function() {
+        var tabPos = 'left';
+        if (window.devicePixelRatio == 2)
+            tabPos = 'top';
+
         $('#customer-edit').show();
         $("#customer-edit").kendoTabStrip({
             animation:  {
@@ -20,7 +24,7 @@
                     effects: "fadeIn"
                 }
             },
-            tabPosition: "left",
+            tabPosition: tabPos,
             select: tabstrip_on_tab_select
         });
     });

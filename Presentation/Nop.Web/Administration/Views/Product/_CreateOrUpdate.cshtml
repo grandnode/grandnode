@@ -5,6 +5,9 @@
 <script>
     $('body').addClass('page-sidebar-closed');
     $('.page-sidebar-menu').addClass('page-sidebar-menu-closed');
+    var tabPos = 'left';
+    if (window.devicePixelRatio == 2)
+        tabPos = 'top';
     $(document).ready(function () {
         $('#product-edit').show();
         $("#product-edit").kendoTabStrip({
@@ -13,7 +16,7 @@
                     effects: "fadeIn"
                 }
             },            
-            tabPosition: "left",
+            tabPosition: tabPos,
             select: tabstrip_on_tab_select
         });
     });

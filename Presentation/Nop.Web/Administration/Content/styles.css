@@ -34,6 +34,10 @@
     box-sizing: border-box;
 }
 
+.k-grid.k-widget {
+    overflow-x: auto;
+}
+
 /* end Kedno*/
 
 /* spinner */
@@ -148,7 +152,13 @@ label.mt-checkbox.mt-checkbox-outline{
         margin-top: 6px;
 }
 
+a span.username {
+    color: #a4aebb;
+}
 
+.page-header-inner {
+    padding: 0px 10px 0px 0px;
+}
 
 .k-grid  .k-grid-header  .k-header  .k-link {
     height: auto;

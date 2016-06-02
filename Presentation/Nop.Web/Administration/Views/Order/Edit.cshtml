@@ -16,7 +16,7 @@
                         <small>@Html.ActionLink("(" + T("Admin.Orders.BackToList") + ")", "List")</small>
                     </div>
                     <div class="actions">
-                        <div class="btn-group btn-group-devided">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
                             @if (!Model.IsLoggedInAsVendor)
                             {
                                 <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="btn purple">

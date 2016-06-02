@@ -3,7 +3,7 @@
 @if (Model.AvailableLanguages.Count > 1)
 {
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-    <li class="dropdown dropdown-user">
+    <li class="dropdown dropdown-extended dropdown-notification">
         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
             <i class="fa fa-language"></i><span class="username username-hide-on-mobile">
                 @Model.AvailableLanguages.FirstOrDefault(x => x.Id == Model.CurrentLanguage.Id).UniqueSeoCode

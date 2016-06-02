@@ -59,7 +59,8 @@
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
-                            <a href="@Url.Action("PdfPackagingSlip", new { shipmentId = Model.Id })" class="btn default">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
+                            <a href="@Url.Action("PdfPackagingSlip", new { shipmentId = Model.Id })" class="btn purple">
+                            <i class="fa fa-file-pdf-o"></i> @T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
                             <span id="shipment-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                         </div>
                     </div>

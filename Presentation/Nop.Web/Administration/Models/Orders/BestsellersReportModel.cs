@@ -14,8 +14,6 @@ namespace Nop.Admin.Models.Orders
             AvailableStores = new List<SelectListItem>();
             AvailableOrderStatuses = new List<SelectListItem>();
             AvailablePaymentStatuses = new List<SelectListItem>();
-            AvailableCategories = new List<SelectListItem>();
-            AvailableManufacturers = new List<SelectListItem>();
             AvailableCountries = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
 
@@ -37,10 +35,6 @@ namespace Nop.Admin.Models.Orders
         public int OrderStatusId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
         public int PaymentStatusId { get; set; }
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Category")]
-        public string CategoryId { get; set; }
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Manufacturer")]
-        public string ManufacturerId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
         public string BillingCountryId { get; set; }
 
@@ -50,8 +44,6 @@ namespace Nop.Admin.Models.Orders
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
-        public IList<SelectListItem> AvailableCategories { get; set; }
-        public IList<SelectListItem> AvailableManufacturers { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
         public bool IsLoggedInAsVendor { get; set; }

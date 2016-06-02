@@ -55,18 +55,6 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.CategoryId)
-                                        <div class="col-md-9 col-sm-9">
-                                            @Html.GrandDropDownListFor(model => model.CategoryId, Model.AvailableCategories)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        @Html.GrandLabelFor(model => model.ManufacturerId)
-                                        <div class="col-md-9 col-sm-9">
-                                            @Html.GrandDropDownListFor(model => model.ManufacturerId, Model.AvailableManufacturers)
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
                                         @Html.GrandLabelFor(model => model.BillingCountryId)
                                         <div class="col-md-9 col-sm-9">
                                             @Html.GrandDropDownListFor(model => model.BillingCountryId, Model.AvailableCountries)
@@ -174,8 +162,6 @@
             StoreId: $('#StoreId').val(),
             OrderStatusId: $('#OrderStatusId').val(),
             PaymentStatusId: $('#PaymentStatusId').val(),
-            CategoryId: $('#CategoryId').val(),
-            ManufacturerId: $('#ManufacturerId').val(),
             BillingCountryId: $('#BillingCountryId').val(),
             VendorId: $('#VendorId').val()
         };
