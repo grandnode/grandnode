@@ -28,6 +28,7 @@ namespace Nop.Web.Controllers
 
         private readonly IReturnRequestService _returnRequestService;
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly ICurrencyService _currencyService;
@@ -46,6 +47,7 @@ namespace Nop.Web.Controllers
 
         public ReturnRequestController(IReturnRequestService returnRequestService,
             IOrderService orderService,
+            IProductService productService,
             IWorkContext workContext,
             IStoreContext storeContext,
             ICurrencyService currencyService,
@@ -71,6 +73,7 @@ namespace Nop.Web.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._localizationSettings = localizationSettings;
             this._cacheManager = cacheManager;
+            this._productService = productService;
         }
 
         #endregion
@@ -120,12 +123,13 @@ namespace Nop.Web.Controllers
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
             foreach (var orderItem in orderItems)
             {
+                var product = _productService.GetProductById(orderItem.ProductId);
                 var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
                 {
                     Id = orderItem.Id,
-                    ProductId = orderItem.Product.Id,
-                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                    ProductSeName = orderItem.Product.GetSeName(),
+                    ProductId = orderItem.ProductId,
+                    ProductName = product.GetLocalized(x => x.Name),
+                    ProductSeName = product.GetSeName(),
                     AttributeInfo = orderItem.AttributeDescription,
                     Quantity = orderItem.Quantity
                 };
@@ -169,7 +173,7 @@ namespace Nop.Web.Controllers
                 var orderItem = order.OrderItems.Where(x => x.Id == returnRequest.OrderItemId).FirstOrDefault();
                 if (orderItem != null)
                 {
-                    var product = orderItem.Product;
+                    var product = _productService.GetProductById(orderItem.ProductId);
 
                     var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
                     {

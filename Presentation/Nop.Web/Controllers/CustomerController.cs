@@ -40,6 +40,7 @@ using WebGrease.Css.Extensions;
 using MongoDB.Bson;
 using Nop.Services.Events;
 using Nop.Core.Domain;
+using Nop.Services.Catalog;
 
 namespace Nop.Web.Controllers
 {
@@ -1652,24 +1653,26 @@ namespace Nop.Web.Controllers
             var model = new CustomerDownloadableProductsModel();
             var items = _orderService.GetAllOrderItems(null, customer.Id, null, null,
                 null, null, null, true);
+            var productService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
             foreach (var item in items)
             {
-                var order = _orderService.GetOrderById(item.OrderId);
+                var order = _orderService.GetOrderByOrderItemId(item.Id);
+                var product = productService.GetProductById(item.ProductId);
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
                 {
                     OrderItemGuid = item.OrderItemGuid,
-                    OrderId = item.OrderId,
+                    OrderId = order.Id,
                     OrderNumber = order.OrderNumber,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc),
-                    ProductName = item.Product.GetLocalized(x => x.Name),
-                    ProductSeName = item.Product.GetSeName(),
+                    ProductName = product.GetLocalized(x => x.Name),
+                    ProductSeName = product.GetSeName(),
                     ProductAttributes = item.AttributeDescription,
                     ProductId = item.ProductId
                 };
                 model.Items.Add(itemModel);
 
                 if (_downloadService.IsDownloadAllowed(item))
-                    itemModel.DownloadId = item.Product.DownloadId;
+                    itemModel.DownloadId = product.DownloadId;
 
                 if (_downloadService.IsLicenseDownloadAllowed(item))
                     itemModel.LicenseId = !String.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
@@ -1684,7 +1687,7 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return RedirectToRoute("HomePage");
 
-            var product = orderItem.Product;
+            var product = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
             if (product == null || !product.HasUserAgreement)
                 return RedirectToRoute("HomePage");
 

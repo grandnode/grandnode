@@ -79,6 +79,20 @@ namespace Nop.Services.Orders
             return _orderRepository.GetById(orderId);
         }
 
+
+        /// <summary>
+        /// Gets an order
+        /// </summary>
+        /// <param name="orderId">The order item identifier</param>
+        /// <returns>Order</returns>
+        public virtual Order GetOrderByOrderItemId(string orderItemId)
+        {
+            var query = from o in _orderRepository.Table
+                        where o.OrderItems.Any(x => x.Id == orderItemId)
+                        select o;
+
+            return query.FirstOrDefault();
+        }
         /// <summary>
         /// Gets an order
         /// </summary>
@@ -199,7 +213,7 @@ namespace Nop.Services.Orders
             {
                 query = query
                     .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                    .Any(orderItem => orderItem.VendorId == vendorId));
             }
             if (!String.IsNullOrEmpty(customerId))
                 query = query.Where(o => o.CustomerId == customerId);
@@ -207,26 +221,15 @@ namespace Nop.Services.Orders
             {
                 query = query
                     .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.Id == productId));
+                    .Any(orderItem => orderItem.ProductId == productId));
             }
             if (!String.IsNullOrEmpty(warehouseId))
             {
-                var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
                 query = query
                     .Where(o => o.OrderItems
                     .Any(orderItem =>
-                        //"Use multiple warehouses" enabled
-                        //we search in each warehouse
-                        (orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId &&
-                        orderItem.Product.UseMultipleWarehouses &&
-                        orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId))
-                        ||
-                        //"Use multiple warehouses" disabled
-                        //we use standard "warehouse" property
-                        ((orderItem.Product.ManageInventoryMethodId != manageStockInventoryMethodId ||
-                        !orderItem.Product.UseMultipleWarehouses) &&
-                        orderItem.Product.WarehouseId == warehouseId))
-                        );
+                        orderItem.WarehouseId == warehouseId
+                        ));
             }
             if (!String.IsNullOrEmpty(billingCountryId))
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
@@ -368,7 +371,6 @@ namespace Nop.Services.Orders
 
             var query = from order in _orderRepository.Table
                         from orderItem in order.OrderItems
-                        //where orderItem.OrderItemGuid == orderItemGuid
                         select orderItem;
 
             query = from orderItem in query
@@ -442,7 +444,6 @@ namespace Nop.Services.Orders
                     var product = _productRepository.GetById(item.OrderItems.ProductId);
                     if (product.IsDownload)
                     {
-                        item.OrderItems.Product = product;
                         items.Add(item.OrderItems);
                     }
                 }
@@ -461,12 +462,14 @@ namespace Nop.Services.Orders
             if (orderItem == null)
                 throw new ArgumentNullException("orderItem");
 
+            var order = GetOrderByOrderItemId(orderItem.Id);
+
             var updatebuilder = Builders<Order>.Update;
             var updatefilter = updatebuilder.PullFilter(x => x.OrderItems, y => y.Id == orderItem.Id);
-            var result = _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderItem.OrderId), updatefilter).Result;
+            var result = _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", order.Id), updatefilter).Result;
 
             var filters = Builders<ProductAlsoPurchased>.Filter;
-            var filter = filters.Where(x => x.OrderId == orderItem.OrderId && (x.ProductId == orderItem.ProductId || x.ProductId2 == orderItem.ProductId));
+            var filter = filters.Where(x => x.OrderId == order.Id && (x.ProductId == orderItem.ProductId || x.ProductId2 == orderItem.ProductId));
             _productAlsoPurchasedRepository.Collection.DeleteManyAsync(filter);
 
             //event notification

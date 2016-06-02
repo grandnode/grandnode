@@ -17,6 +17,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using System.Linq;
 using Nop.Core.Data;
+using Nop.Services.Catalog;
 
 namespace Nop.Admin.Controllers
 {
@@ -25,6 +26,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerService _customerService;
         private readonly ILocalizationService _localizationService;
@@ -40,6 +42,7 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public ReturnRequestController(IOrderService orderService,
+            IProductService productService,
             ICustomerService customerService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, IWorkContext workContext,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
@@ -48,6 +51,7 @@ namespace Nop.Admin.Controllers
             IReturnRequestService returnRequestService)
         {
             this._orderService = orderService;
+            this._productService = productService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
@@ -78,11 +82,11 @@ namespace Nop.Admin.Controllers
             var orderItem = order.OrderItems.Where(x=>x.Id == returnRequest.OrderItemId).FirstOrDefault();
             if (orderItem == null)
                 return false;
-
+            var product = _productService.GetProductById(orderItem.ProductId);
             model.Id = returnRequest.Id;
             model.ProductId = orderItem.ProductId;
-            model.ProductName = orderItem.Product.Name;
-            model.OrderId = orderItem.OrderId;
+            model.ProductName = product.Name;
+            model.OrderId = order.Id;
             model.CustomerId = returnRequest.CustomerId;
             var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");

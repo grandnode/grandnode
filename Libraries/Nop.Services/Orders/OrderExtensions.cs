@@ -4,6 +4,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Shipping;
+using Nop.Services.Catalog;
 
 namespace Nop.Services.Orders
 {
@@ -40,8 +41,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("orderItem");
 
             var totalInShipments = 0;
-            //var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(orderItem.OrderId);
-            var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(orderItem.OrderId); //order.Shipments.ToList();
+            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
+            var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(order.Id);
             for (int i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -85,8 +86,10 @@ namespace Nop.Services.Orders
             if (orderItem == null)
                 throw new ArgumentNullException("orderItem");
 
+            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
+
             var result = 0;
-            var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(orderItem.OrderId);
+            var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(order.Id);
             for (int i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -116,7 +119,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("orderItem");
 
             var result = 0;
-            var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(orderItem.OrderId);
+            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
+            var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(order.Id);
             for (int i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -146,7 +150,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("orderItem");
 
             var result = 0;
-            var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(orderItem.OrderId);
+            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
+            var shipments = EngineContext.Current.Resolve<IShipmentService>().GetShipmentsByOrder(order.Id);
             for (int i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
@@ -180,7 +185,8 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                if (!orderItem.Product.IsShipEnabled)
+                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
+                if (!product.IsShipEnabled)
                     continue;
 
                 var totalNumberOfItemsCanBeAddedToShipment = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
@@ -205,7 +211,8 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                if (!orderItem.Product.IsShipEnabled)
+                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
+                if (!product.IsShipEnabled)
                     continue;
 
                 var totalNumberOfNotYetShippedItems = orderItem.GetTotalNumberOfNotYetShippedItems();
@@ -230,7 +237,8 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                if (!orderItem.Product.IsShipEnabled)
+                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
+                if (!product.IsShipEnabled)
                     continue;
 
                 var totalNumberOfShippedItems = orderItem.GetTotalNumberOfShippedItems();

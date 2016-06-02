@@ -936,7 +936,8 @@ namespace Nop.Services.Orders
                 purchasedProductIds.Add(orderItem.ProductId);
 
                 //bundled (associated) products
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(orderItem.Product, orderItem.AttributesXml);
+                var product = _productService.GetProductById(orderItem.ProductId);
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(product, orderItem.AttributesXml);
                 foreach (var attributeValue in attributeValues)
                 {
                     if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
@@ -994,13 +995,12 @@ namespace Nop.Services.Orders
             var vendors = new List<Vendor>();
             foreach (var orderItem in order.OrderItems)
             {
-                var vendorId = orderItem.Product.VendorId;
                 //find existing
-                var vendor = vendors.FirstOrDefault(v => v.Id == vendorId);
+                var vendor = vendors.FirstOrDefault(v => v.Id == orderItem.VendorId);
                 if (vendor == null)
                 {
                     //not found. load by Id
-                    vendor = _vendorService.GetVendorById(vendorId);
+                    vendor = _vendorService.GetVendorById(orderItem.VendorId);
                     if (vendor != null && !vendor.Deleted && vendor.Active)
                     {
                         vendors.Add(vendor);
@@ -1268,9 +1268,8 @@ namespace Nop.Services.Orders
                             var orderItem = new OrderItem
                             {
                                 OrderItemGuid = Guid.NewGuid(),
-                                OrderId = order.Id,
                                 ProductId = sc.ProductId,
-                                Product = product,
+                                VendorId = product.VendorId,
                                 UnitPriceInclTax = scUnitPriceInclTax,
                                 UnitPriceExclTax = scUnitPriceExclTax,
                                 PriceInclTax = scSubTotalInclTax,
@@ -1337,7 +1336,6 @@ namespace Nop.Services.Orders
                             details.Customer.IsHasOrders = true;
                             _customerService.UpdateHasOrders(details.Customer.Id);
                         }
-                        //_customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
                     }
                     else
@@ -1351,9 +1349,8 @@ namespace Nop.Services.Orders
                             {
 
                                 OrderItemGuid = Guid.NewGuid(),
-                                OrderId = order.Id,
-                                Product = orderItem.Product,
                                 ProductId = orderItem.ProductId,
+                                VendorId = orderItem.VendorId,
                                 UnitPriceInclTax = orderItem.UnitPriceInclTax,
                                 UnitPriceExclTax = orderItem.UnitPriceExclTax,
                                 PriceInclTax = orderItem.PriceInclTax,
@@ -1376,7 +1373,8 @@ namespace Nop.Services.Orders
                             _orderService.UpdateOrder(order);
 
                             //gift cards
-                            if (orderItem.Product.IsGiftCard)
+                            var product = _productService.GetProductById(orderItem.ProductId);
+                            if (product.IsGiftCard)
                             {
                                 string giftCardRecipientName, giftCardRecipientEmail,
                                     giftCardSenderName, giftCardSenderEmail, giftCardMessage;
@@ -1388,7 +1386,7 @@ namespace Nop.Services.Orders
                                 {
                                     var gc = new GiftCard
                                     {
-                                        GiftCardType = orderItem.Product.GiftCardType,
+                                        GiftCardType = product.GiftCardType,
                                         PurchasedWithOrderItem = newOrderItem,
                                         Amount = orderItem.UnitPriceExclTax,
                                         IsGiftCardActivated = false,
@@ -1406,7 +1404,7 @@ namespace Nop.Services.Orders
                             }
 
                             //inventory
-                            _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
+                            _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml);
                         }
                     }
 
@@ -1692,7 +1690,8 @@ namespace Nop.Services.Orders
                 //Adjust inventory
                 foreach (var orderItem in order.OrderItems)
                 {
-                    _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                    var product = _productService.GetProductById(orderItem.ProductId);
+                    _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
                 }
 
             }
@@ -2108,7 +2107,8 @@ namespace Nop.Services.Orders
             //Adjust inventory
             foreach (var orderItem in order.OrderItems)
             {
-                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                var product = _productService.GetProductById(orderItem.ProductId);
+                _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
             }
 
             _eventPublisher.Publish(new OrderCancelledEvent(order));
@@ -2970,7 +2970,7 @@ namespace Nop.Services.Orders
 
             foreach (var orderItem in order.OrderItems)
             {
-                _shoppingCartService.AddToCart(customer, orderItem.Product,
+                _shoppingCartService.AddToCart(customer, orderItem.ProductId,
                     ShoppingCartType.ShoppingCart, order.StoreId, 
                     orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,

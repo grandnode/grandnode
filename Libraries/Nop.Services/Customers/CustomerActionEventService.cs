@@ -15,6 +15,7 @@ using Nop.Services.Messages;
 using Nop.Services.Localization;
 using System.Web;
 using Nop.Core.Domain.Logging;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Customers
 {
@@ -667,17 +668,21 @@ namespace Nop.Services.Customers
 
                 foreach (var item in query.ToList())
                 {
-                    if (!UsedAction(item.Id, order.CustomerId))
+                    Task.Run(() =>
                     {
-                        foreach(var orderItem in order.OrderItems)
+                        if (!UsedAction(item.Id, order.CustomerId))
                         {
-                            if (Condition(item, orderItem.Product, orderItem.AttributesXml, customer, null, null))
+                            foreach (var orderItem in order.OrderItems)
                             {
-                                Reaction(item, customer, null, order);
-                                break;
+                                var product = _productService.GetProductById(orderItem.ProductId);
+                                if (Condition(item, product, orderItem.AttributesXml, customer, null, null))
+                                {
+                                    Reaction(item, customer, null, order);
+                                    break;
+                                }
                             }
                         }
-                    }
+                    });
                 }
 
             }

@@ -1156,7 +1156,7 @@ namespace Nop.Services.Messages
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(orderItem.OrderId);
+            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
@@ -1194,7 +1194,7 @@ namespace Nop.Services.Messages
         {
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(orderItem.OrderId);
+            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
             var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
             languageId = EnsureLanguageIsActive(languageId, store.Id);
 
@@ -1416,7 +1416,7 @@ namespace Nop.Services.Messages
 
             Store store = null;
             var order = giftCard.PurchasedWithOrderItem != null ?
-                EngineContext.Current.Resolve<IOrderService>().GetOrderById(giftCard.PurchasedWithOrderItem.OrderId) : 
+                EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id) : 
                 null;
             if (order != null)
                 store = _storeService.GetStoreById(order.StoreId);

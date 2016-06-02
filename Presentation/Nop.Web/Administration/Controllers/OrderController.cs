@@ -212,7 +212,7 @@ namespace Nop.Admin.Controllers
                 return true;
 
             var vendorId = _workContext.CurrentVendor.Id;
-            var hasVendorProducts = order.OrderItems.Any(orderItem => orderItem.Product.VendorId == vendorId);
+            var hasVendorProducts = order.OrderItems.Any(orderItem => orderItem.VendorId == vendorId);
             return hasVendorProducts;
         }
 
@@ -227,7 +227,7 @@ namespace Nop.Admin.Controllers
                 return true;
 
             var vendorId = _workContext.CurrentVendor.Id;
-            return orderItem.Product.VendorId == vendorId;
+            return orderItem.VendorId == vendorId;
         }
 
         [NonAction]
@@ -262,7 +262,7 @@ namespace Nop.Admin.Controllers
                 var orderItem = order.OrderItems.Where(x=>x.Id == shipmentItem.OrderItemId).FirstOrDefault();
                 if (orderItem != null)
                 {
-                    if (orderItem.Product.VendorId == vendorId)
+                    if (orderItem.VendorId == vendorId)
                     {
                         hasVendorProducts = true;
                         break;
@@ -560,28 +560,29 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
             {
                 products = products
-                    .Where(orderItem => orderItem.Product.VendorId == _workContext.CurrentVendor.Id)
+                    .Where(orderItem => orderItem.VendorId == _workContext.CurrentVendor.Id)
                     .ToList();
             }
             foreach (var orderItem in products)
             {
-                if (orderItem.Product.IsDownload)
+                var product = _productService.GetProductById(orderItem.ProductId);
+                if (product.IsDownload)
                     hasDownloadableItems = true;
 
                 var orderItemModel = new OrderModel.OrderItemModel
                 {
                     Id = orderItem.Id,
                     ProductId = orderItem.ProductId,
-                    ProductName = orderItem.Product.Name,
-                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductName = product.Name,
+                    Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     Quantity = orderItem.Quantity,
-                    IsDownload = orderItem.Product.IsDownload,
+                    IsDownload = product.IsDownload,
                     DownloadCount = orderItem.DownloadCount,
-                    DownloadActivationType = orderItem.Product.DownloadActivationType,
+                    DownloadActivationType = product.DownloadActivationType,
                     IsDownloadActivated = orderItem.IsDownloadActivated
                 };
                 //picture
-                var orderItemPicture = orderItem.Product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
+                var orderItemPicture = product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
                 orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
 
                 //license file
@@ -594,7 +595,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 //vendor
-                var vendor = _vendorService.GetVendorById(orderItem.Product.VendorId);
+                var vendor = _vendorService.GetVendorById(orderItem.VendorId);
                 orderItemModel.VendorName = vendor != null ? vendor.Name : "";
 
                 //unit price
@@ -614,13 +615,13 @@ namespace Nop.Admin.Controllers
                 orderItemModel.SubTotalExclTax = _priceFormatter.FormatPrice(orderItem.PriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
 
                 orderItemModel.AttributeInfo = orderItem.AttributeDescription;
-                if (orderItem.Product.IsRecurring)
-                    orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), orderItem.Product.RecurringCycleLength, orderItem.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                if (product.IsRecurring)
+                    orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                     orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                 }
@@ -688,7 +689,7 @@ namespace Nop.Admin.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = attribute.ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(attribute.Id);
+                    var attributeValues = attribute.ProductAttributeValues; 
                     foreach (var attributeValue in attributeValues)
                     {
                         var attributeValueModel = new OrderModel.AddOrderProductModel.ProductAttributeValueModel
@@ -746,7 +747,7 @@ namespace Nop.Admin.Controllers
                 foreach (var shipmentItem in shipment.ShipmentItems)
                 {
 
-                    var orderItem = order.OrderItems.Where(x => x.Id == shipmentItem.OrderItemId).FirstOrDefault(); //_orderService.GetOrderItemById(shipmentItem.OrderItemId);
+                    var orderItem = order.OrderItems.Where(x => x.Id == shipmentItem.OrderItemId).FirstOrDefault(); 
                     if (orderItem == null)
                         continue;
 
@@ -755,6 +756,7 @@ namespace Nop.Admin.Controllers
                     var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
                     var qtyOrdered = shipmentItem.Quantity;
                     var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
+                    var product = _productService.GetProductById(orderItem.ProductId);
 
                     var warehouse = _shippingService.GetWarehouseById(shipmentItem.WarehouseId);
                     var shipmentItemModel = new ShipmentModel.ShipmentItemModel
@@ -762,23 +764,23 @@ namespace Nop.Admin.Controllers
                         Id = shipmentItem.Id,
                         OrderItemId = orderItem.Id,
                         ProductId = orderItem.ProductId,
-                        ProductName = orderItem.Product.Name,
-                        Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                        ProductName = product.Name,
+                        Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                         AttributeInfo = orderItem.AttributeDescription,
                         ShippedFromWarehouse = warehouse != null ? warehouse.Name : null,
-                        ShipSeparately = orderItem.Product.ShipSeparately,
+                        ShipSeparately = product.ShipSeparately,
                         ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
-                        ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
+                        ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", product.Length, product.Width, product.Height, baseDimensionIn),
                         QuantityOrdered = qtyOrdered,
                         QuantityInThisShipment = qtyInThisShipment,
                         QuantityInAllShipments = qtyInAllShipments,
                         QuantityToAdd = maxQtyToAdd,
                     };
                     //rental info
-                    if (orderItem.Product.IsRental)
+                    if (product.IsRental)
                     {
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                         shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                             rentalStartDate, rentalEndDate);
                     }
@@ -1916,6 +1918,7 @@ namespace Nop.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
+            var product = _productService.GetProductById(orderItem.ProductId);
 
             decimal unitPriceInclTax, unitPriceExclTax, discountInclTax, discountExclTax,priceInclTax,priceExclTax;
             int quantity;
@@ -1947,13 +1950,13 @@ namespace Nop.Admin.Controllers
                 orderItem.PriceExclTax = priceExclTax;
                 _orderService.UpdateOrder(order);
                 //adjust inventory
-                _productService.AdjustInventory(orderItem.Product, qtyDifference, orderItem.AttributesXml);
+                _productService.AdjustInventory(product, qtyDifference, orderItem.AttributesXml);
 
             }
             else
             {
                 //adjust inventory
-                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
                 _orderService.DeleteOrderItem(orderItem);
             }
 
@@ -2004,7 +2007,7 @@ namespace Nop.Admin.Controllers
             var orderItem = order.OrderItems.FirstOrDefault(x => x.Id == orderItemId);
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
-
+            var product = _productService.GetProductById(orderItem.ProductId);
             if (_giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id).Count > 0)
             {
                 //we cannot delete an order item with associated gift cards
@@ -2034,7 +2037,7 @@ namespace Nop.Admin.Controllers
                 _orderService.UpdateOrder(order);
 
                 //adjust inventory
-                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
 
                 _orderService.DeleteOrderItem(orderItem);
                 order = _orderService.GetOrderById(id);
@@ -2141,7 +2144,9 @@ namespace Nop.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
-            if (!orderItem.Product.IsDownload)
+            var product = _productService.GetProductById(orderItem.ProductId);
+
+            if (!product.IsDownload)
                 throw new ArgumentException("Product is not downloadable");
 
             //ensure a vendor has access only to his products 
@@ -2552,9 +2557,8 @@ namespace Nop.Admin.Controllers
                 var orderItem = new OrderItem
                 {
                     OrderItemGuid = Guid.NewGuid(),
-                    OrderId = order.Id,
-                    Product = product,
                     ProductId = product.Id,
+                    VendorId = product.VendorId,
                     UnitPriceInclTax = unitPriceInclTax,
                     UnitPriceExclTax = unitPriceExclTax,
                     PriceInclTax = priceInclTax,
@@ -2577,7 +2581,7 @@ namespace Nop.Admin.Controllers
                 _orderService.UpdateOrder(order);
                 LogEditOrder(order.Id);
                 //adjust inventory
-                _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml);
 
                 //add a note
                 order.OrderNotes.Add(new OrderNote
@@ -2966,8 +2970,9 @@ namespace Nop.Admin.Controllers
 
             foreach (var orderItem in orderItems)
             {
+                var product = _productService.GetProductById(orderItem.ProductId);
                 //we can ship only shippable products
-                if (!orderItem.Product.IsShipEnabled)
+                if (!product.IsShipEnabled)
                     continue;
 
                 //quantities
@@ -2984,32 +2989,32 @@ namespace Nop.Admin.Controllers
                 {
                     OrderItemId = orderItem.Id,
                     ProductId = orderItem.ProductId,
-                    ProductName = orderItem.Product.Name,
-                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductName = product.Name,
+                    Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     AttributeInfo = orderItem.AttributeDescription,
-                    ShipSeparately = orderItem.Product.ShipSeparately,
+                    ShipSeparately = product.ShipSeparately,
                     ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
-                    ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
+                    ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", product.Length, product.Width, product.Height, baseDimensionIn),
                     QuantityOrdered = qtyOrdered,
                     QuantityInThisShipment = qtyInThisShipment,
                     QuantityInAllShipments = qtyInAllShipments,
                     QuantityToAdd = maxQtyToAdd,
                 };
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                     shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                 }
 
-                if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                    orderItem.Product.UseMultipleWarehouses)
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    product.UseMultipleWarehouses)
                 {
                     //multiple warehouses supported
                     shipmentItemModel.AllowToChooseWarehouse = true;
-                    foreach (var pwi in orderItem.Product.ProductWarehouseInventory
+                    foreach (var pwi in product.ProductWarehouseInventory
                         .OrderBy(w => w.WarehouseId).ToList())
                     {
                         
@@ -3022,7 +3027,7 @@ namespace Nop.Admin.Controllers
                                 WarehouseName = warehouse.Name,
                                 StockQuantity = pwi.StockQuantity,
                                 ReservedQuantity = pwi.ReservedQuantity,
-                                PlannedQuantity = _shipmentService.GetQuantityInShipments(orderItem.Product, warehouse.Id, true, true)
+                                PlannedQuantity = _shipmentService.GetQuantityInShipments(product, warehouse.Id, true, true)
                             });
                         }
                     }
@@ -3030,14 +3035,14 @@ namespace Nop.Admin.Controllers
                 else
                 {
                     //multiple warehouses are not supported
-                    var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
+                    var warehouse = _shippingService.GetWarehouseById(product.WarehouseId);
                     if (warehouse != null)
                     {
                         shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
                         {
                             WarehouseId = warehouse.Id,
                             WarehouseName = warehouse.Name,
-                            StockQuantity = orderItem.Product.StockQuantity
+                            StockQuantity = product.StockQuantity
                         });
                     }
                 }
@@ -3076,7 +3081,8 @@ namespace Nop.Admin.Controllers
             foreach (var orderItem in orderItems)
             {
                 //is shippable
-                if (!orderItem.Product.IsShipEnabled)
+                var product = _productService.GetProductById(orderItem.ProductId);
+                if (!product.IsShipEnabled)
                     continue;
                 
                 //ensure that this product can be shipped (have at least one item to ship)
@@ -3093,8 +3099,8 @@ namespace Nop.Admin.Controllers
                     }
 
                 string warehouseId = "";
-                if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                    orderItem.Product.UseMultipleWarehouses)
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    product.UseMultipleWarehouses)
                 {
                     //multiple warehouses supported
                     //warehouse is chosen by a store owner
@@ -3108,7 +3114,7 @@ namespace Nop.Admin.Controllers
                 else
                 {
                     //multiple warehouses are not supported
-                    warehouseId = orderItem.Product.WarehouseId;
+                    warehouseId = product.WarehouseId;
                 }
 
                 foreach (string formKey in form.AllKeys)

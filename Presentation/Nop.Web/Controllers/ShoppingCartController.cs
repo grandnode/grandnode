@@ -1458,7 +1458,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == cartType)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product);
+            var shoppingCartItem = _shoppingCartService.FindShoppingCartItemInTheCart(cart, cartType, product.Id);
             //if we already have the same product in the cart, then use the total quantity to validate
             var quantityToValidate = shoppingCartItem != null ? shoppingCartItem.Quantity + quantity : quantity;
             var addToCartWarnings = _shoppingCartService
@@ -1478,7 +1478,7 @@ namespace Nop.Web.Controllers
 
             //now let's try adding product to the cart (now including product attribute validation, etc)
             addToCartWarnings = _shoppingCartService.AddToCart(customer: _workContext.CurrentCustomer,
-                product: product,
+                productId: productId,
                 shoppingCartType: cartType,
                 storeId: _storeContext.CurrentStore.Id,
                 quantity: quantity);
@@ -1665,7 +1665,7 @@ namespace Nop.Web.Controllers
             {
                 //add to the cart
                 addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                    product, cartType, _storeContext.CurrentStore.Id,
+                    productId, cartType, _storeContext.CurrentStore.Id,
                     attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate, quantity, true));
             }
@@ -1676,7 +1676,7 @@ namespace Nop.Web.Controllers
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 var otherCartItemWithSameParameters = _shoppingCartService.FindShoppingCartItemInTheCart(
-                    cart, updatecartitem.ShoppingCartType, product, attributes, customerEnteredPriceConverted,
+                    cart, updatecartitem.ShoppingCartType, productId, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate);
                 if (otherCartItemWithSameParameters != null &&
                     otherCartItemWithSameParameters.Id == updatecartitem.Id)
@@ -2607,7 +2607,7 @@ namespace Nop.Web.Controllers
                 {
                     var product = _productService.GetProductById(sci.ProductId);
                     var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                        product, ShoppingCartType.ShoppingCart,
+                        sci.ProductId, ShoppingCartType.ShoppingCart,
                         _storeContext.CurrentStore.Id,
                         sci.AttributesXml, sci.CustomerEnteredPrice,
                         sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);

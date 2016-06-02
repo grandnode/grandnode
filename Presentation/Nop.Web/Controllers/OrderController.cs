@@ -34,6 +34,7 @@ namespace Nop.Web.Controllers
 		#region Fields
 
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
         private readonly IShipmentService _shipmentService;
         private readonly IWorkContext _workContext;
         private readonly ICurrencyService _currencyService;
@@ -65,7 +66,8 @@ namespace Nop.Web.Controllers
 
 		#region Constructors
 
-        public OrderController(IOrderService orderService, 
+        public OrderController(IOrderService orderService,
+            IProductService productService,
             IShipmentService shipmentService, 
             IWorkContext workContext,
             ICurrencyService currencyService,
@@ -94,6 +96,7 @@ namespace Nop.Web.Controllers
             PdfSettings pdfSettings)
         {
             this._orderService = orderService;
+            this._productService = productService;
             this._shipmentService = shipmentService;
             this._workContext = workContext;
             this._currencyService = currencyService;
@@ -386,23 +389,23 @@ namespace Nop.Web.Controllers
             //var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
             foreach (var orderItem in order.OrderItems)
             {
-                
+                var product = _productService.GetProductById(orderItem.ProductId);
                 var orderItemModel = new OrderDetailsModel.OrderItemModel
                 {
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
-                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
-                    ProductId = orderItem.Product.Id,
-                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                    ProductSeName = orderItem.Product.SeName,
+                    Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductId = product.Id,
+                    ProductName = product.GetLocalized(x => x.Name),
+                    ProductSeName = product.SeName,
                     Quantity = orderItem.Quantity,
                     AttributeInfo = orderItem.AttributeDescription,
                 };
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                     orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                 }
@@ -430,7 +433,7 @@ namespace Nop.Web.Controllers
 
                 //downloadable products
                 if (_downloadService.IsDownloadAllowed(orderItem))
-                    orderItemModel.DownloadId = orderItem.Product.DownloadId;
+                    orderItemModel.DownloadId = product.DownloadId;
                 if (_downloadService.IsLicenseDownloadAllowed(orderItem))
                     orderItemModel.LicenseId = !String.IsNullOrEmpty(orderItem.LicenseDownloadId) ? orderItem.LicenseDownloadId: "";
             }
@@ -496,26 +499,26 @@ namespace Nop.Web.Controllers
             model.ShowSku = _catalogSettings.ShowProductSku;
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
-                var orderItem = order.OrderItems.Where(x => x.Id == shipmentItem.OrderItemId).FirstOrDefault(); // _orderService.GetOrderItemById(shipmentItem.OrderItemId);
+                var orderItem = order.OrderItems.Where(x => x.Id == shipmentItem.OrderItemId).FirstOrDefault(); 
                 if (orderItem == null)
                     continue;
-
+                var product = _productService.GetProductById(orderItem.ProductId);
                 var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel
                 {
                     Id = shipmentItem.Id,
-                    Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
-                    ProductId = orderItem.Product.Id,
-                    ProductName = orderItem.Product.GetLocalized(x => x.Name),
-                    ProductSeName = orderItem.Product.GetSeName(),
+                    Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                    ProductId = orderItem.ProductId,
+                    ProductName = product.GetLocalized(x => x.Name),
+                    ProductSeName = product.GetSeName(),
                     AttributeInfo = orderItem.AttributeDescription,
                     QuantityOrdered = orderItem.Quantity,
                     QuantityShipped = shipmentItem.Quantity,
                 };
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                     shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                 }

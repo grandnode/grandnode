@@ -484,10 +484,10 @@ namespace Nop.Services.Common
                     pAttribTable.RunDirection = GetDirection(lang);
                     pAttribTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
-                    var p = orderItem.Product;
+                    var product = _productService.GetProductById(orderItem.ProductId);
 
                     //product name
-                    string name = p.GetLocalized(x => x.Name, lang.Id);
+                    string name = product.GetLocalized(x => x.Name, lang.Id);
                     pAttribTable.AddCell(new Paragraph(name, font));
                     cellProductItem.AddElement(new Paragraph(name, font));
                     //attributes
@@ -497,10 +497,10 @@ namespace Nop.Services.Common
                         pAttribTable.AddCell(attributesParagraph);
                     }
                     //rental info
-                    if (orderItem.Product.IsRental)
+                    if (product.IsRental)
                     {
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                         var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                             rentalStartDate, rentalEndDate);
 
@@ -512,7 +512,7 @@ namespace Nop.Services.Common
                     //SKU
                     if (_catalogSettings.ShowProductSku)
                     {
-                        var sku = p.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+                        var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                         cellProductItem = new PdfPCell(new Phrase(sku ?? String.Empty, font));
                         cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cellProductItem);
@@ -1098,8 +1098,8 @@ namespace Nop.Services.Common
                     if (orderItem == null)
                         continue;
 
-                    var p = orderItem.Product;
-                    string name = p.GetLocalized(x => x.Name, lang.Id);
+                    var product = _productService.GetProductById(orderItem.ProductId);
+                    string name = product.GetLocalized(x => x.Name, lang.Id);
                     productAttribTable.AddCell(new Paragraph(name, font));
                     //attributes
                     if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
@@ -1108,10 +1108,10 @@ namespace Nop.Services.Common
                         productAttribTable.AddCell(attributesParagraph);
                     }
                     //rental info
-                    if (orderItem.Product.IsRental)
+                    if (product.IsRental)
                     {
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                         var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                             rentalStartDate, rentalEndDate);
 
@@ -1121,7 +1121,7 @@ namespace Nop.Services.Common
                     productsTable.AddCell(productAttribTable);
 
                     //SKU
-                    var sku = p.FormatSku(orderItem.AttributesXml, _productAttributeParser);
+                    var sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser);
                     cell = new PdfPCell(new Phrase(sku ?? String.Empty, font));
                     cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cell);

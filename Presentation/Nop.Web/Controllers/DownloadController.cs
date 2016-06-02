@@ -64,8 +64,8 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = _orderService.GetOrderById(orderItem.OrderId);
-            var product = orderItem.Product;
+            var order = _orderService.GetOrderByOrderItemId(orderItem.Id);
+            var product = _productService.GetProductById(orderItem.ProductId);
             if (!_downloadService.IsDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 
@@ -123,8 +123,8 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return InvokeHttp404();
 
-            var order = _orderService.GetOrderById(orderItem.OrderId);
-            var product = orderItem.Product;
+            var order = _orderService.GetOrderByOrderItemId(orderItem.Id);
+            var product = _productService.GetProductById(orderItem.ProductId);
             if (!_downloadService.IsLicenseDownloadAllowed(orderItem))
                 return Content("Downloads are not allowed");
 

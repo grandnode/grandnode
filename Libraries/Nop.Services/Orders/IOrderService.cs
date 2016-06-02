@@ -24,6 +24,13 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets an order
         /// </summary>
+        /// <param name="orderItemId">The order item identifier</param>
+        /// <returns>Order</returns>
+        Order GetOrderByOrderItemId(string orderItemId);
+
+        /// <summary>
+        /// Gets an order
+        /// </summary>
         /// <param name="orderNumber">The order number</param>
         /// <returns>Order</returns>
         Order GetOrderByNumber(int orderNumber);

@@ -3,14 +3,12 @@
 }
 @Html.AntiForgeryToken()
 
-
 <div id="tax-categories-grid"></div>
 
 <script>
     $(document).ready(function () {
         $("#tax-categories-grid").kendoGrid({
             dataSource: {
-                type: "json",
                 transport: {
                     read: {
                         url: "@Html.Raw(Url.Action("Configure", "TaxFixedRate", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",

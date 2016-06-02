@@ -142,10 +142,11 @@ namespace Nop.Services.Messages
             sb.AppendLine("</tr>");
 
             var table = order.OrderItems.ToList();
+            var productService = EngineContext.Current.Resolve<IProductService>();
             for (int i = 0; i <= table.Count - 1; i++)
             {
                 var orderItem = table[i];
-                var product = orderItem.Product;
+                var product = productService.GetProductById(orderItem.ProductId);
                 if (product == null)
                     continue;
 
@@ -182,10 +183,10 @@ namespace Nop.Services.Messages
                     sb.AppendLine(orderItem.AttributeDescription);
                 }
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                     var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                     sb.AppendLine("<br />");
@@ -469,6 +470,7 @@ namespace Nop.Services.Messages
 
             var table = shipment.ShipmentItems.ToList();
             var order = _orderService.GetOrderById(shipment.OrderId);
+            var productService = EngineContext.Current.Resolve<IProductService>();
             for (int i = 0; i <= table.Count - 1; i++)
             {
                 var si = table[i];
@@ -476,7 +478,7 @@ namespace Nop.Services.Messages
                 if (orderItem == null)
                     continue;
 
-                var product = orderItem.Product;
+                var product = productService.GetProductById(orderItem.ProductId);
                 if (product == null)
                     continue;
 
@@ -492,10 +494,10 @@ namespace Nop.Services.Messages
                     sb.AppendLine(orderItem.AttributeDescription);
                 }
                 //rental info
-                if (orderItem.Product.IsRental)
+                if (product.IsRental)
                 {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
                     var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
                         rentalStartDate, rentalEndDate);
                     sb.AppendLine("<br />");
@@ -768,10 +770,12 @@ namespace Nop.Services.Messages
 
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderItem orderItem)
         {
+            var productService = EngineContext.Current.Resolve<IProductService>();
+            var orderService = EngineContext.Current.Resolve<IOrderService>();
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
-            tokens.Add(new Token("ReturnRequest.OrderId", orderItem.OrderId.ToString()));
+            tokens.Add(new Token("ReturnRequest.OrderId", orderService.GetOrderByOrderItemId(orderItem.Id).OrderNumber.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
-            tokens.Add(new Token("ReturnRequest.Product.Name", orderItem.Product.Name));
+            tokens.Add(new Token("ReturnRequest.Product.Name", productService.GetProductById(orderItem.ProductId).Name));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));

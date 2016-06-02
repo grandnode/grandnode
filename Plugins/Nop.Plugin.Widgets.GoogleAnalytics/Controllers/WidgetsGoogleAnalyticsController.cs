@@ -25,6 +25,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly IOrderService _orderService;
+        private readonly IProductService _productService;
         private readonly ILogger _logger;
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -37,6 +38,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             IOrderService orderService, 
             ILogger logger, 
             ICategoryService categoryService,
+            IProductService productService,
             IProductAttributeParser productAttributeParser,
             ILocalizationService localizationService)
         {
@@ -45,6 +47,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             this._storeService = storeService;
             this._settingService = settingService;
             this._orderService = orderService;
+            this._productService = productService;
             this._logger = logger;
             this._categoryService = categoryService;
             this._productAttributeParser = productAttributeParser;
@@ -250,19 +253,20 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 var sb = new StringBuilder();
                 foreach (var item in order.OrderItems)
                 {
+                    var product = _productService.GetProductById(item.ProductId);
                     string analyticsEcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
                     //get category
                     string category = "";
-                    if (item.Product.ProductCategories.FirstOrDefault() != null)
+                    if (product.ProductCategories.FirstOrDefault() != null)
                     {
-                        var defaultProductCategory = _categoryService.GetCategoryById(item.Product.ProductCategories.FirstOrDefault().CategoryId); //_categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault();
+                        var defaultProductCategory = _categoryService.GetCategoryById(product.ProductCategories.FirstOrDefault().CategoryId); //_categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault();
                         if (defaultProductCategory != null)
                             category = defaultProductCategory.Name;
                     }
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{ORDERID}", item.OrderId.ToString());
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{ORDERID}", order.Id.ToString());
                     //The SKU code is a required parameter for every item that is added to the transaction
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(item.Product.FormatSku(item.AttributesXml, _productAttributeParser)));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.Product.Name));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(product.FormatSku(item.AttributesXml, _productAttributeParser)));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(product.Name));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
                     var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", unitPrice.ToString("0.00", usCulture));

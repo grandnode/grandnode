@@ -228,7 +228,7 @@ namespace Nop.Services.Orders
                             {
                                 //pass 'false' for 'automaticallyAddRequiredProductsIfEnabled' to prevent circular references
                                 var addToCartWarnings = AddToCart(customer: customer,
-                                    product: rp, 
+                                    productId: rp.Id, 
                                     shoppingCartType: shoppingCartType,
                                     storeId: storeId,
                                     automaticallyAddRequiredProductsIfEnabled: false);
@@ -940,7 +940,7 @@ namespace Nop.Services.Orders
         /// <returns>Found shopping cart item</returns>
         public virtual ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
-            Product product,
+            string productId,
             string attributesXml = "",
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, 
@@ -949,18 +949,15 @@ namespace Nop.Services.Orders
             if (shoppingCart == null)
                 throw new ArgumentNullException("shoppingCart");
 
-            if (product == null)
-                throw new ArgumentNullException("product");
-
             foreach (var sci in shoppingCart.Where(a => a.ShoppingCartType == shoppingCartType))
             {
-                if (sci.ProductId == product.Id)
+                if (sci.ProductId == productId)
                 {
                     //attributes
-                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(product, sci.AttributesXml, attributesXml, false);
+                    var _product = _productService.GetProductById(sci.ProductId);
+                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(_product, sci.AttributesXml, attributesXml, false);
 
                     //gift cards
-                    var _product = _productService.GetProductById(sci.ProductId);
                     bool giftCardInfoSame = true;
                     if (_product.IsGiftCard)
                     {
@@ -1023,7 +1020,7 @@ namespace Nop.Services.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> AddToCart(Customer customer, Product product,
+        public virtual IList<string> AddToCart(Customer customer, string productId,
             ShoppingCartType shoppingCartType, string storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
@@ -1032,7 +1029,11 @@ namespace Nop.Services.Orders
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
+            var product = _productService.GetProductById(productId);
             if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (String.IsNullOrEmpty(productId))
                 throw new ArgumentNullException("product");
 
             var warnings = new List<string>();
@@ -1067,7 +1068,7 @@ namespace Nop.Services.Orders
                 .ToList();
 
             var shoppingCartItem = FindShoppingCartItemInTheCart(cart,
-                shoppingCartType, product, attributesXml, customerEnteredPrice,
+                shoppingCartType, productId, attributesXml, customerEnteredPrice,
                 rentalStartDate, rentalEndDate);
 
             if (shoppingCartItem != null)
@@ -1125,11 +1126,12 @@ namespace Nop.Services.Orders
                     }
 
                     DateTime now = DateTime.UtcNow;
+                    
                     shoppingCartItem = new ShoppingCartItem
                     {
                         ShoppingCartType = shoppingCartType,
                         StoreId = storeId,
-                        ProductId = product.Id,
+                        ProductId = productId,
                         CustomerId = customer.Id,
                         AttributesXml = attributesXml,
                         CustomerEnteredPrice = customerEnteredPrice,
@@ -1253,8 +1255,7 @@ namespace Nop.Services.Orders
             for (int i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                var product = _productService.GetProductById(sci.ProductId);
-                AddToCart(toCustomer, product, sci.ShoppingCartType, sci.StoreId, 
+                AddToCart(toCustomer, sci.ProductId, sci.ShoppingCartType, sci.StoreId, 
                     sci.AttributesXml, sci.CustomerEnteredPrice,
                     sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
             }
@@ -1276,9 +1277,6 @@ namespace Nop.Services.Orders
                 foreach (var gcCode in fromCustomer.ParseAppliedGiftCardCouponCodes())
                     toCustomer.ApplyGiftCardCouponCode(gcCode);
 
-                //save customer
-                //_customerService.UpdateCustomer(toCustomer);
-                 
             }
         }
 

@@ -9,6 +9,7 @@ using Nop.Services.Events;
 using Nop.Core.Infrastructure;
 using Nop.Services.Orders;
 using MongoDB.Bson;
+using Nop.Services.Catalog;
 
 namespace Nop.Services.Media
 {
@@ -144,7 +145,7 @@ namespace Nop.Services.Media
             if (orderItem == null)
                 return false;
 
-            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderById(orderItem.OrderId);
+            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
             if (order == null || order.Deleted)
                 return false;
 
@@ -152,7 +153,7 @@ namespace Nop.Services.Media
             if (order.OrderStatus == OrderStatus.Cancelled)
                 return false;
 
-            var product = orderItem.Product;
+            var product = EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
             if (product == null || !product.IsDownload)
                 return false;
 

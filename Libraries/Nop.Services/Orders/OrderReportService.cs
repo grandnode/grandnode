@@ -166,7 +166,7 @@ namespace Nop.Services.Orders
             {
                 filter = filter & builder
                     .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                    .Any(orderItem => orderItem.VendorId == vendorId));
             }
             if (!String.IsNullOrEmpty(billingCountryId))
                 filter = filter & builder.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
@@ -348,7 +348,7 @@ namespace Nop.Services.Orders
             {
                 filter = filter & builder
                     .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                    .Any(orderItem => orderItem.VendorId == vendorId));
             }
             if (!String.IsNullOrEmpty(billingCountryId))
                 filter = filter & builder.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
@@ -364,10 +364,10 @@ namespace Nop.Services.Orders
                 filter = filter & builder.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 filter = filter & builder.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-            if (!String.IsNullOrEmpty(manufacturerId))
-                filterItem = filterItem & builderItem.Where(o => o.OrderItems.Product.ProductManufacturers.Any(pm => pm.ManufacturerId == manufacturerId));
-            if (!String.IsNullOrEmpty(categoryId))
-                filterItem = filterItem & builderItem.Where(o => o.OrderItems.Product.ProductCategories.Any(pc => pc.CategoryId == categoryId));
+            //if (!String.IsNullOrEmpty(manufacturerId))
+            //    filterItem = filterItem & builderItem.Where(o => o.OrderItems.Product.ProductManufacturers.Any(pm => pm.ManufacturerId == manufacturerId));
+            //if (!String.IsNullOrEmpty(categoryId))
+            //    filterItem = filterItem & builderItem.Where(o => o.OrderItems.Product.ProductCategories.Any(pc => pc.CategoryId == categoryId));
 
             var query = _orderRepository.Collection
                     .Aggregate()
@@ -516,7 +516,7 @@ namespace Nop.Services.Orders
             {
                 query = query
                     .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.VendorId == vendorId));
+                    .Any(orderItem => orderItem.VendorId == vendorId));
             }
             if (!String.IsNullOrEmpty(billingCountryId))
                 query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);

@@ -21,6 +21,7 @@ using Nop.Services.Payments;
 using Nop.Services.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
+using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Payments.PayPalStandard
 {
@@ -38,6 +39,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         private readonly IWebHelper _webHelper;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ITaxService _taxService;
+        private readonly IProductService _productService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly HttpContextBase _httpContext;
         #endregion
@@ -47,7 +49,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public PayPalStandardPaymentProcessor(PayPalStandardPaymentSettings paypalStandardPaymentSettings,
             ISettingService settingService, ICurrencyService currencyService,
             CurrencySettings currencySettings, IWebHelper webHelper,
-            ICheckoutAttributeParser checkoutAttributeParser, ITaxService taxService, 
+            ICheckoutAttributeParser checkoutAttributeParser, ITaxService taxService, IProductService productService,
             IOrderTotalCalculationService orderTotalCalculationService, HttpContextBase httpContext)
         {
             this._paypalStandardPaymentSettings = paypalStandardPaymentSettings;
@@ -57,6 +59,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             this._webHelper = webHelper;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._taxService = taxService;
+            this._productService = productService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._httpContext = httpContext;
         }
@@ -205,11 +208,12 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 int x = 1;
                 foreach (var item in cartItems)
                 {
+                    var product = _productService.GetProductById(item.ProductId);
                     var unitPriceExclTax = item.UnitPriceExclTax;
                     var priceExclTax = item.PriceExclTax;
                     //round
                     var unitPriceExclTaxRounded = Math.Round(unitPriceExclTax, 2);
-                    builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(item.Product.Name));
+                    builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(product.Name));
                     builder.AppendFormat("&amount_" + x + "={0}", unitPriceExclTaxRounded.ToString("0.00", CultureInfo.InvariantCulture));
                     builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
                     x++;

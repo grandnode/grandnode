@@ -12,22 +12,26 @@ namespace Nop.Core.Domain.Orders
     [BsonIgnoreExtraElements]
     public partial class OrderItem : SubBaseEntity
     {
-        private ICollection<GiftCard> _associatedGiftCards;
 
         /// <summary>
         /// Gets or sets the order item identifier
         /// </summary>
-        public Guid OrderItemGuid { get; set; }
-
-        /// <summary>
-        /// Gets or sets the order identifier
-        /// </summary>
-        public string OrderId { get; set; }
+        public Guid OrderItemGuid { get; set; }       
 
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
         public string ProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the vendor identifier
+        /// </summary>
+        public string VendorId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the warehouse identifier
+        /// </summary>
+        public string WarehouseId { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity
@@ -119,27 +123,10 @@ namespace Nop.Core.Domain.Orders
         public DateTime? RentalEndDateUtc { get; set; }
 
         /// <summary>
-        /// Gets the order
-        /// </summary>
-        //public virtual Order Order { get; set; }
-
-        /// <summary>
-        /// Gets the product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
         /// Gets or sets the date and time of order creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
-        /// <summary>
-        /// Gets or sets the associated gift card
-        /// </summary>
-        public virtual ICollection<GiftCard> AssociatedGiftCards
-        {
-            get { return _associatedGiftCards ?? (_associatedGiftCards = new List<GiftCard>()); }
-            protected set { _associatedGiftCards = value; }
-        }
+        
     }
 }

@@ -27,6 +27,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly IGiftCardService _giftCardService;
+        private readonly IOrderService _orderService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDateTimeHelper _dateTimeHelper;
@@ -42,7 +43,7 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public GiftCardController(IGiftCardService giftCardService,
+        public GiftCardController(IGiftCardService giftCardService, IOrderService orderService,
             IPriceFormatter priceFormatter, IWorkflowMessageService workflowMessageService,
             IDateTimeHelper dateTimeHelper, LocalizationSettings localizationSettings,
             ICurrencyService currencyService, CurrencySettings currencySettings,
@@ -50,6 +51,7 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService, IPermissionService permissionService)
         {
             this._giftCardService = giftCardService;
+            this._orderService = orderService;
             this._priceFormatter = priceFormatter;
             this._workflowMessageService = workflowMessageService;
             this._dateTimeHelper = dateTimeHelper;
@@ -173,7 +175,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = giftCard.ToModel();
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.OrderId : null;
+            var order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -190,8 +193,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
-
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.OrderId : null;
+            var order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -237,7 +240,8 @@ namespace Nop.Admin.Controllers
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
             model = giftCard.ToModel();
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? giftCard.PurchasedWithOrderItem.OrderId : null;
+            var order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -251,7 +255,6 @@ namespace Nop.Admin.Controllers
                     throw new NopException("Sender email is not valid");
 
                 var languageId = "";
-                var order = giftCard.PurchasedWithOrderItem != null ? EngineContext.Current.Resolve<IOrderService>().GetOrderById(giftCard.PurchasedWithOrderItem.OrderId) : null;
                 if (order != null)
                 {
                     var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
