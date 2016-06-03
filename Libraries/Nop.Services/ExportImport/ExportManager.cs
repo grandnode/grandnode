@@ -1086,7 +1086,7 @@ namespace Nop.Services.ExportImport
             int i = 0;
             foreach(var picture in product.ProductPictures.Take(3))
             {
-                var pic = _pictureService.GetPictureById(picture.Id);
+                var pic = _pictureService.GetPictureById(picture.PictureId);
                 var pictureLocalPath = _pictureService.GetThumbLocalPath(pic);
                 switch (i)
                 {

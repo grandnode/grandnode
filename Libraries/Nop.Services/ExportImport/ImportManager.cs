@@ -15,6 +15,8 @@ using OfficeOpenXml;
 using MongoDB.Bson;
 using Nop.Services.ExportImport.Help;
 using Nop.Core.Domain.Media;
+using System.Collections.Generic;
+using System.Web.WebPages;
 
 namespace Nop.Services.ExportImport
 {
@@ -451,7 +453,7 @@ namespace Nop.Services.ExportImport
                         if (!isNew)
                         {
                             //compare with existing product pictures
-                            var existingPictures = product.ProductPictures; 
+                            var existingPictures = product.ProductPictures;
                             foreach (var existingPicture in existingPictures)
                             {
                                 var pp = _pictureService.GetPictureById(existingPicture.PictureId);

@@ -582,7 +582,6 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(productCategory);
         }
-
         #endregion
 
         public class SerializeProductCategory: ProductCategory
