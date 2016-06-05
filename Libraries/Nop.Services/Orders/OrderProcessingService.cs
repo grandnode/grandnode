@@ -1927,7 +1927,7 @@ namespace Nop.Services.Orders
             foreach (var item in shipment.ShipmentItems)
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == item.OrderItemId).FirstOrDefault(); 
-                var product = _productService.GetProductById(orderItem.ProductId);
+                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 _productService.BookReservedInventory(product, item.WarehouseId, -item.Quantity);
             }
 
@@ -2970,11 +2970,14 @@ namespace Nop.Services.Orders
 
             foreach (var orderItem in order.OrderItems)
             {
-                _shoppingCartService.AddToCart(customer, orderItem.ProductId,
-                    ShoppingCartType.ShoppingCart, order.StoreId, 
-                    orderItem.AttributesXml, orderItem.UnitPriceExclTax,
-                    orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
-                    orderItem.Quantity, false);
+                if (_productService.GetProductById(orderItem.ProductId) != null)
+                {
+                    _shoppingCartService.AddToCart(customer, orderItem.ProductId,
+                        ShoppingCartType.ShoppingCart, order.StoreId,
+                        orderItem.AttributesXml, orderItem.UnitPriceExclTax,
+                        orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
+                        orderItem.Quantity, false);
+                }
             }
         }
         

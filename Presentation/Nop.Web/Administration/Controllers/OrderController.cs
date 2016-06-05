@@ -546,7 +546,20 @@ namespace Nop.Admin.Controllers
                 }
                 model.ShippingMethod = order.ShippingMethod;
 
-                model.CanAddNewShipments = order.HasItemsToAddToShipment();
+                model.CanAddNewShipments = false;
+
+                foreach (var orderItem in order.OrderItems)
+                {
+                    //we can ship only shippable products
+                    var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
+                    if (!product.IsShipEnabled)
+                        continue;
+                    var totalNumberOfItemsCanBeAddedToShipment = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+                    if (totalNumberOfItemsCanBeAddedToShipment <= 0)
+                        continue;
+                    model.CanAddNewShipments = true;
+                }
+
             }
 
             #endregion
@@ -565,7 +578,7 @@ namespace Nop.Admin.Controllers
             }
             foreach (var orderItem in products)
             {
-                var product = _productService.GetProductById(orderItem.ProductId);
+                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 if (product.IsDownload)
                     hasDownloadableItems = true;
 
@@ -756,7 +769,7 @@ namespace Nop.Admin.Controllers
                     var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
                     var qtyOrdered = shipmentItem.Quantity;
                     var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
-                    var product = _productService.GetProductById(orderItem.ProductId);
+                    var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
 
                     var warehouse = _shippingService.GetWarehouseById(shipmentItem.WarehouseId);
                     var shipmentItemModel = new ShipmentModel.ShipmentItemModel
@@ -1918,7 +1931,7 @@ namespace Nop.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
-            var product = _productService.GetProductById(orderItem.ProductId);
+            var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
 
             decimal unitPriceInclTax, unitPriceExclTax, discountInclTax, discountExclTax,priceInclTax,priceExclTax;
             int quantity;
@@ -2144,7 +2157,7 @@ namespace Nop.Admin.Controllers
             if (orderItem == null)
                 throw new ArgumentException("No order item found with the specified id");
 
-            var product = _productService.GetProductById(orderItem.ProductId);
+            var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
 
             if (!product.IsDownload)
                 throw new ArgumentException("Product is not downloadable");
@@ -2970,7 +2983,7 @@ namespace Nop.Admin.Controllers
 
             foreach (var orderItem in orderItems)
             {
-                var product = _productService.GetProductById(orderItem.ProductId);
+                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 //we can ship only shippable products
                 if (!product.IsShipEnabled)
                     continue;
@@ -3081,7 +3094,7 @@ namespace Nop.Admin.Controllers
             foreach (var orderItem in orderItems)
             {
                 //is shippable
-                var product = _productService.GetProductById(orderItem.ProductId);
+                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 if (!product.IsShipEnabled)
                     continue;
                 

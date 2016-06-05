@@ -123,7 +123,7 @@ namespace Nop.Web.Controllers
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
             foreach (var orderItem in orderItems)
             {
-                var product = _productService.GetProductById(orderItem.ProductId);
+                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
                 {
                     Id = orderItem.Id,
@@ -173,7 +173,7 @@ namespace Nop.Web.Controllers
                 var orderItem = order.OrderItems.Where(x => x.Id == returnRequest.OrderItemId).FirstOrDefault();
                 if (orderItem != null)
                 {
-                    var product = _productService.GetProductById(orderItem.ProductId);
+                    var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
 
                     var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
                     {

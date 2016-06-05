@@ -484,7 +484,7 @@ namespace Nop.Services.Common
                     pAttribTable.RunDirection = GetDirection(lang);
                     pAttribTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
-                    var product = _productService.GetProductById(orderItem.ProductId);
+                    var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
 
                     //product name
                     string name = product.GetLocalized(x => x.Name, lang.Id);
@@ -1098,7 +1098,7 @@ namespace Nop.Services.Common
                     if (orderItem == null)
                         continue;
 
-                    var product = _productService.GetProductById(orderItem.ProductId);
+                    var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                     string name = product.GetLocalized(x => x.Name, lang.Id);
                     productAttribTable.AddCell(new Paragraph(name, font));
                     //attributes

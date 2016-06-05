@@ -26,6 +26,7 @@ using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using MongoDB.Bson;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Nop.Services.Catalog
 {
@@ -71,6 +72,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
+        private readonly IRepository<ProductDeleted> _productDeletedRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILanguageService _languageService;
@@ -118,6 +120,7 @@ namespace Nop.Services.Catalog
             IRepository<UrlRecord> urlRecordRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
+            IRepository<ProductDeleted> productDeletedRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
@@ -141,6 +144,7 @@ namespace Nop.Services.Catalog
             this._urlRecordRepository = urlRecordRepository;
             this._customerRepository = customerRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
+            this._productDeletedRepository = productDeletedRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._languageService = languageService;
@@ -172,31 +176,43 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
+            //delete from shopping cart
             var builder = Builders<Customer>.Update;
             var updatefilter = builder.PullFilter(x => x.ShoppingCartItems, y => y.ProductId == product.Id);
             var result = _customerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
 
+            //delete related product
             var builderRelated = Builders<Product>.Update;
             var updatefilterRelated = builderRelated.PullFilter(x => x.RelatedProducts, y => y.ProductId2 == product.Id);
             var resultRelated = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterRelated).Result;
-
+            
+            //delete cross sales product
             var builderCross = Builders<Product>.Update;
             var updatefilterCross = builderCross.Pull(x => x.CrossSellProduct, product.Id);
             var resultCross = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilterCross).Result;
 
+            //delete customer role product
             var filtersCrp = Builders<CustomerRoleProduct>.Filter;
             var filterCrp = filtersCrp.Eq(x => x.ProductId, product.Id);            
             _customerRoleProductRepository.Collection.DeleteManyAsync(filterCrp);
 
+            //delete review
             var filtersProductReview = Builders<ProductReview>.Filter;
             var filterProdReview = filtersProductReview.Eq(x => x.ProductId, product.Id);
             _productReviewRepository.Collection.DeleteManyAsync(filterProdReview);
 
+            //delete url
             var filters = Builders<UrlRecord>.Filter;
             var filter = filters.Eq(x => x.EntityId, product.Id);
             filter = filter & filters.Eq(x=>x.EntityName, "Product");
             _urlRecordRepository.Collection.DeleteManyAsync(filter);
 
+            //insert to deleted products
+            var productDeleted = JsonConvert.DeserializeObject<ProductDeleted>(JsonConvert.SerializeObject(product));
+            productDeleted.DeletedOnUtc = DateTime.UtcNow;
+            _productDeletedRepository.Insert(productDeleted);
+
+            //deleted product
             _productRepository.Delete(product);
 
             //cache
@@ -235,6 +251,22 @@ namespace Nop.Services.Catalog
             string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
             return _cacheManager.Get(key, () => _productRepository.GetById(productId));
         }
+
+        /// <summary>
+        /// Gets product for order
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Product</returns>
+        public virtual Product GetProductByIdIncludeArch(string productId)
+        {
+            if (String.IsNullOrEmpty(productId))
+                return null;
+            var product = _productRepository.GetById(productId);
+            if (product == null)
+                product = _productDeletedRepository.GetById(productId) as Product;
+            return product;
+        }
+
 
         /// <summary>
         /// Get products by identifiers
@@ -1003,7 +1035,6 @@ namespace Nop.Services.Catalog
             var query = from p in _productRepository.Table
                         select p;
             query = query.Where(x => x.ProductAttributeMappings.Any(y => y.ProductAttributeId == productAttributeId));
-            //query = query.Where(x => !x.Deleted);
             query = query.OrderBy(x => x.Name);
 
             var products = new PagedList<Product>(query, pageIndex, pageSize);
@@ -1042,7 +1073,6 @@ namespace Nop.Services.Catalog
             {
                 query = query.Where(p => p.VendorId == vendorId);
             }
-            //query = query.Where(x => !x.Deleted);
             query = query.OrderBy(x => x.DisplayOrder);
 
             var products = query.ToList();
@@ -1640,11 +1670,6 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(product);
-
-
-            //UpdateProduct(product);
-
-            //TODO add support for bundled products (AttributesXml)
 
             return qty;
         }

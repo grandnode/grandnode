@@ -146,7 +146,7 @@ namespace Nop.Services.Messages
             for (int i = 0; i <= table.Count - 1; i++)
             {
                 var orderItem = table[i];
-                var product = productService.GetProductById(orderItem.ProductId);
+                var product = productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 if (product == null)
                     continue;
 
@@ -478,7 +478,7 @@ namespace Nop.Services.Messages
                 if (orderItem == null)
                     continue;
 
-                var product = productService.GetProductById(orderItem.ProductId);
+                var product = productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 if (product == null)
                     continue;
 
@@ -775,7 +775,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
             tokens.Add(new Token("ReturnRequest.OrderId", orderService.GetOrderByOrderItemId(orderItem.Id).OrderNumber.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
-            tokens.Add(new Token("ReturnRequest.Product.Name", productService.GetProductById(orderItem.ProductId).Name));
+            tokens.Add(new Token("ReturnRequest.Product.Name", productService.GetProductByIdIncludeArch(orderItem.ProductId).Name));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));

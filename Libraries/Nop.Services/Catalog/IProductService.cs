@@ -39,7 +39,14 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <returns>Product</returns>
         Product GetProductById(string productId);
-        
+
+        /// <summary>
+        /// Gets product from product or product deleted
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <returns>Product</returns>
+        Product GetProductByIdIncludeArch(string productId);
+
         /// <summary>
         /// Gets products by identifier
         /// </summary>

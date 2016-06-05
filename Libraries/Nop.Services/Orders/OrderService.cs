@@ -26,6 +26,7 @@ namespace Nop.Services.Orders
 
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<ProductDeleted> _productDeletedRepository;
         private readonly IRepository<ProductAlsoPurchased> _productAlsoPurchasedRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IRepository<Customer> _customerRepository;
@@ -52,7 +53,8 @@ namespace Nop.Services.Orders
             IRepository<Customer> customerRepository, 
             IRepository<ReturnRequest> returnRequestRepository,
             IEventPublisher eventPublisher,
-            IRepository<ProductAlsoPurchased> productAlsoPurchasedRepository)
+            IRepository<ProductAlsoPurchased> productAlsoPurchasedRepository,
+            IRepository<ProductDeleted> productDeletedRepository)
         {
             this._orderRepository = orderRepository;
             this._productRepository = productRepository;
@@ -61,6 +63,7 @@ namespace Nop.Services.Orders
             this._returnRequestRepository = returnRequestRepository;
             this._eventPublisher = eventPublisher;
             this._productAlsoPurchasedRepository = productAlsoPurchasedRepository;
+            this._productDeletedRepository = productDeletedRepository;
         }
 
         #endregion
@@ -442,9 +445,14 @@ namespace Nop.Services.Orders
                 if(loadDownloableProductsOnly)
                 {
                     var product = _productRepository.GetById(item.OrderItems.ProductId);
-                    if (product.IsDownload)
+                    if(product==null)
+                        product = _productDeletedRepository.GetById(item.OrderItems.ProductId) as Product;
+                    if (product != null)
                     {
-                        items.Add(item.OrderItems);
+                        if (product.IsDownload)
+                        {
+                            items.Add(item.OrderItems);
+                        }
                     }
                 }
                 else

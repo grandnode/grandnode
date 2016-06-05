@@ -1657,7 +1657,7 @@ namespace Nop.Web.Controllers
             foreach (var item in items)
             {
                 var order = _orderService.GetOrderByOrderItemId(item.Id);
-                var product = productService.GetProductById(item.ProductId);
+                var product = productService.GetProductByIdIncludeArch(item.ProductId);
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
                 {
                     OrderItemGuid = item.OrderItemGuid,

@@ -185,7 +185,7 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
+                var product = EngineContext.Current.Resolve<IProductService>().GetProductByIdIncludeArch(orderItem.ProductId);
                 if (!product.IsShipEnabled)
                     continue;
 
@@ -211,7 +211,7 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
+                var product = EngineContext.Current.Resolve<IProductService>().GetProductByIdIncludeArch(orderItem.ProductId);
                 if (!product.IsShipEnabled)
                     continue;
 
@@ -237,7 +237,7 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 //we can ship only shippable products
-                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
+                var product = EngineContext.Current.Resolve<IProductService>().GetProductByIdIncludeArch(orderItem.ProductId);
                 if (!product.IsShipEnabled)
                     continue;
 

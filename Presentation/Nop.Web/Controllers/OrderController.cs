@@ -386,10 +386,9 @@ namespace Nop.Web.Controllers
 
             //purchased products
             model.ShowSku = _catalogSettings.ShowProductSku;
-            //var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
             foreach (var orderItem in order.OrderItems)
             {
-                var product = _productService.GetProductById(orderItem.ProductId);
+                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 var orderItemModel = new OrderDetailsModel.OrderItemModel
                 {
                     Id = orderItem.Id,
@@ -502,7 +501,7 @@ namespace Nop.Web.Controllers
                 var orderItem = order.OrderItems.Where(x => x.Id == shipmentItem.OrderItemId).FirstOrDefault(); 
                 if (orderItem == null)
                     continue;
-                var product = _productService.GetProductById(orderItem.ProductId);
+                var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel
                 {
                     Id = shipmentItem.Id,

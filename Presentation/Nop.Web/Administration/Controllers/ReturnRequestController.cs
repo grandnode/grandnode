@@ -82,7 +82,7 @@ namespace Nop.Admin.Controllers
             var orderItem = order.OrderItems.Where(x=>x.Id == returnRequest.OrderItemId).FirstOrDefault();
             if (orderItem == null)
                 return false;
-            var product = _productService.GetProductById(orderItem.ProductId);
+            var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
             model.Id = returnRequest.Id;
             model.ProductId = orderItem.ProductId;
             model.ProductName = product.Name;
