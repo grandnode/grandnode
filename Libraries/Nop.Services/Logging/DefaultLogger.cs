@@ -105,9 +105,7 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearLog()
         {
-                var log = _logRepository.Table.ToList();
-                foreach (var logItem in log)
-                    _logRepository.Delete(logItem);
+            _logRepository.Collection.DeleteMany(new MongoDB.Bson.BsonDocument());
         }
 
         /// <summary>
