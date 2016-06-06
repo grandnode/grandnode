@@ -10,6 +10,7 @@ using Nop.Core.Domain.Logging;
 using Nop.Data;
 using MongoDB.Driver.Linq;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Logging
 {
@@ -190,10 +191,13 @@ namespace Nop.Services.Logging
         /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, string entityKeyId,
+        public virtual void InsertActivity(string systemKeyword, string entityKeyId,
             string comment, params object[] commentParams)
         {
-            return InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer, commentParams);
+            Task.Run(()=>
+            {
+                InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer, commentParams);
+            });
         }
         
 

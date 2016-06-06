@@ -40,7 +40,7 @@ namespace Nop.Web.Extensions
                 product.ProductSpecificationAttributes.Where(x=>x.ShowOnProductPage)
                 .Select(psa =>
                 {
-                    var specificationAttribute = EngineContext.Current.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(psa.SpecificationAttributeId);
+                    var specificationAttribute = specificationAttributeService.GetSpecificationAttributeById(psa.SpecificationAttributeId);
                     var m = new ProductSpecificationModel
                     {
                         SpecificationAttributeId = psa.SpecificationAttributeId,
@@ -105,6 +105,7 @@ namespace Nop.Web.Extensions
                     ShortDescription = product.GetLocalized(x => x.ShortDescription),
                     FullDescription = product.GetLocalized(x => x.FullDescription),
                     SeName = product.GetSeName(),
+                    ProductType = product.ProductType,
                     MarkAsNew = product.MarkAsNew &&
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)

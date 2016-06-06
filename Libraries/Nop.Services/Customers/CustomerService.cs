@@ -1212,6 +1212,21 @@ namespace Nop.Services.Customers
 
         }
 
+        public virtual void ClearShoppingCartItem(string customerId, string storeId, ShoppingCartType shoppingCartType)
+        {
+
+            var updatebuilder = Builders<Customer>.Update;
+            var update = updatebuilder.PullFilter(p => p.ShoppingCartItems, p=>p.StoreId == storeId && p.ShoppingCartTypeId == (int)shoppingCartType);
+            _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", customerId), update);
+
+            if (shoppingCartType == ShoppingCartType.ShoppingCart)
+                UpdateCustomerLastUpdateCartDate(customerId, DateTime.UtcNow);
+            else
+                UpdateCustomerLastUpdateWishList(customerId, DateTime.UtcNow);
+
+        }
+
+
         public virtual void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)

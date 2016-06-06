@@ -882,7 +882,7 @@ label, label + * {
 
 .header-links li {
 	display: inline-flex;
-	margin: 0 10px;
+	margin: 0px 10px 5px 0px;
 }
 .header-links a {
 	/*display: inline-block;*/
@@ -894,7 +894,7 @@ label, label + * {
     line-height: 26px;
 }
 .header-links span.material-icons.tiny {
-    margin-right: 15px;
+    margin-right: 10px;
     font-size: 1rem;
 }
 .header-links a:hover {

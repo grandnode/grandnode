@@ -1231,8 +1231,9 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomepageProducts(int? productThumbPictureSize)
         {
+
             var products = _productService.GetAllProductsDisplayedOnHomePage();
-            
+
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
             //availability dates

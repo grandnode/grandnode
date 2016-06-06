@@ -367,6 +367,7 @@ namespace Nop.Services.Customers
 
         #region Shopping cart 
 
+        void ClearShoppingCartItem(string customerId, string storeId, ShoppingCartType shoppingCartType);
         void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem);
         void InsertShoppingCartItem(ShoppingCartItem shoppingCartItem);
         void UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem);

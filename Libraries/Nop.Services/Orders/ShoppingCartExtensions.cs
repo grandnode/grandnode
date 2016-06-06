@@ -70,7 +70,7 @@ namespace Nop.Services.Orders
         /// <param name="totalCycles">Total cycles</param>
         /// <returns>Error (if exists); otherwise, empty string</returns>
         public static string GetRecurringCycleInfo(this IList<ShoppingCartItem> shoppingCart,
-            ILocalizationService localizationService,
+            ILocalizationService localizationService, IProductService productService,
             out int cycleLength, out RecurringProductCyclePeriod cyclePeriod, out int totalCycles)
         {
             cycleLength = 0;
@@ -84,7 +84,7 @@ namespace Nop.Services.Orders
             foreach (var sci in shoppingCart)
             {
 
-                var product = Core.Infrastructure.EngineContext.Current.Resolve<IProductService>().GetProductById(sci.ProductId);
+                var product = productService.GetProductById(sci.ProductId);
                 if (product == null)
                 {
                     throw new NopException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));

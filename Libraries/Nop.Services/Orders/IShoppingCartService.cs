@@ -20,6 +20,14 @@ namespace Nop.Services.Orders
         void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
             bool ensureOnlyActiveCheckoutAttributes = false);
 
+
+        /// <summary>
+        /// Clear shopping cart items
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        void ClearShoppingCartItems(Customer customer, string storeId, bool resetCheckoutData = true);
+
         /// <summary>
         /// Validates required products (products which require some other products to be added to the cart)
         /// </summary>

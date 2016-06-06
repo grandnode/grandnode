@@ -658,7 +658,7 @@ namespace Nop.Services.Orders
                     int recurringCycleLength;
                     RecurringProductCyclePeriod recurringCyclePeriod;
                     int recurringTotalCycles;
-                    string recurringCyclesError = details.Cart.GetRecurringCycleInfo(_localizationService,
+                    string recurringCyclesError = details.Cart.GetRecurringCycleInfo(_localizationService, _productService,
                         out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
                     if (!string.IsNullOrEmpty(recurringCyclesError))
                         throw new NopException(recurringCyclesError);
@@ -1326,11 +1326,10 @@ namespace Nop.Services.Orders
                         }
 
                         //clear shopping cart
-                        details.Cart.ToList().ForEach(sci => _shoppingCartService.DeleteShoppingCartItem(sci, false));
+                        _customerService.ClearShoppingCartItem(details.Customer.Id, processPaymentRequest.StoreId, ShoppingCartType.ShoppingCart);
+                        //product also purchased
                         _orderService.InsertProductAlsoPurchased(order);
 
-                        details.Customer.HasShoppingCartItems = false;
-                        _customerService.UpdateHasShoppingCartItems(details.Customer);
                         if(!details.Customer.IsHasOrders)
                         {
                             details.Customer.IsHasOrders = true;

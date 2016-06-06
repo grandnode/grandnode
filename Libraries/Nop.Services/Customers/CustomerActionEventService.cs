@@ -633,94 +633,133 @@ namespace Nop.Services.Customers
 
         public virtual void AddToCart(ShoppingCartItem cart, Product product, Customer customer)
         {
-            var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddToCart.ToString()).FirstOrDefault();
-            if (actionType.Enabled)
+            Task.Run(() =>
             {
-                var datetimeUtcNow = DateTime.UtcNow;
-                var query = from a in _customerActionRepository.Table
-                            where a.Active == true && a.ActionTypeId == actionType.Id
-                                    && datetimeUtcNow >= a.StartDateTimeUtc  && datetimeUtcNow <= a.EndDateTimeUtc 
-                            select a;
-
-                foreach (var item in query.ToList())
+                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddToCart.ToString()).FirstOrDefault();
+                if (actionType.Enabled)
                 {
-                    if (!UsedAction(item.Id, cart.CustomerId))
+                    var datetimeUtcNow = DateTime.UtcNow;
+                    var query = from a in _customerActionRepository.Table
+                                where a.Active == true && a.ActionTypeId == actionType.Id
+                                        && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                                select a;
+
+                    foreach (var item in query.ToList())
                     {
-                        if (Condition(item, product, cart.AttributesXml, customer, null, null))
+                        if (!UsedAction(item.Id, cart.CustomerId))
                         {
-                            Reaction(item, customer, cart, null);
+                            if (Condition(item, product, cart.AttributesXml, customer, null, null))
+                            {
+                                Reaction(item, customer, cart, null);
+                            }
                         }
                     }
                 }
-            }
+            });
         }
 
         public virtual void AddOrder(Order order, Customer customer)
         {
-            var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
-            if (actionType.Enabled)
+            Task.Run(() =>
             {
-                var datetimeUtcNow = DateTime.UtcNow;
-                var query = from a in _customerActionRepository.Table
-                            where a.Active == true && a.ActionTypeId == actionType.Id
-                                    && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
-                            select a;
-
-                foreach (var item in query.ToList())
+                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
+                if (actionType.Enabled)
                 {
-                    Task.Run(() =>
+                    var datetimeUtcNow = DateTime.UtcNow;
+                    var query = from a in _customerActionRepository.Table
+                                where a.Active == true && a.ActionTypeId == actionType.Id
+                                        && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                                select a;
+
+                    foreach (var item in query.ToList())
                     {
-                        if (!UsedAction(item.Id, order.CustomerId))
+                        Task.Run(() =>
                         {
-                            foreach (var orderItem in order.OrderItems)
+                            if (!UsedAction(item.Id, order.CustomerId))
                             {
-                                var product = _productService.GetProductById(orderItem.ProductId);
-                                if (Condition(item, product, orderItem.AttributesXml, customer, null, null))
+                                foreach (var orderItem in order.OrderItems)
                                 {
-                                    Reaction(item, customer, null, order);
-                                    break;
+                                    var product = _productService.GetProductById(orderItem.ProductId);
+                                    if (Condition(item, product, orderItem.AttributesXml, customer, null, null))
+                                    {
+                                        Reaction(item, customer, null, order);
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                    });
-                }
+                        });
+                    }
 
-            }
+                }
+            });
         }
 
         public virtual void Url(Customer customer, string currentUrl, string previousUrl)
         {
-            if (!customer.IsSystemAccount)
+            Task.Run(() =>
             {
-                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
-                if (actionType.Enabled)
+                if (!customer.IsSystemAccount)
                 {
-                    var datetimeUtcNow = DateTime.UtcNow;
-                    var query = from a in _customerActionRepository.Table
-                                where a.Active == true && a.ActionTypeId == actionType.Id
-                                        && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
-                                select a;
-
-                    foreach (var item in query.ToList())
+                    var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
+                    if (actionType.Enabled)
                     {
-                        if (!UsedAction(item.Id, customer.Id))
+                        var datetimeUtcNow = DateTime.UtcNow;
+                        var query = from a in _customerActionRepository.Table
+                                    where a.Active == true && a.ActionTypeId == actionType.Id
+                                            && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                                    select a;
+
+                        foreach (var item in query.ToList())
                         {
-                            if (Condition(item, null, null, customer, currentUrl, previousUrl))
+                            if (!UsedAction(item.Id, customer.Id))
                             {
-                                Reaction(item, customer, null, null);
+                                if (Condition(item, null, null, customer, currentUrl, previousUrl))
+                                {
+                                    Reaction(item, customer, null, null);
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
-            }
+            });
         }
 
         public virtual void Viewed(Customer customer, string currentUrl, string previousUrl)
         {
-            if (!customer.IsSystemAccount)
+            Task.Run(() =>
             {
-                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
+                if (!customer.IsSystemAccount)
+                {
+                    var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
+                    if (actionType.Enabled)
+                    {
+                        var datetimeUtcNow = DateTime.UtcNow;
+                        var query = from a in _customerActionRepository.Table
+                                    where a.Active == true && a.ActionTypeId == actionType.Id
+                                            && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                                    select a;
+
+                        foreach (var item in query.ToList())
+                        {
+                            if (!UsedAction(item.Id, customer.Id))
+                            {
+                                if (Condition(item, null, null, customer, currentUrl, previousUrl))
+                                {
+                                    Reaction(item, customer, null, null);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            });
+        }
+        public virtual void Registration(Customer customer)
+        {
+            Task.Run(() =>
+            {
+                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
                 if (actionType.Enabled)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;
@@ -733,7 +772,7 @@ namespace Nop.Services.Customers
                     {
                         if (!UsedAction(item.Id, customer.Id))
                         {
-                            if (Condition(item, null, null, customer, currentUrl, previousUrl))
+                            if (Condition(item, null, null, customer, null, null))
                             {
                                 Reaction(item, customer, null, null);
                             }
@@ -741,31 +780,7 @@ namespace Nop.Services.Customers
                     }
 
                 }
-            }
-        }
-        public virtual void Registration(Customer customer)
-        {
-            var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
-            if (actionType.Enabled)
-            {
-                var datetimeUtcNow = DateTime.UtcNow;
-                var query = from a in _customerActionRepository.Table
-                            where a.Active == true && a.ActionTypeId == actionType.Id
-                                    && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
-                            select a;
-
-                foreach (var item in query.ToList())
-                {
-                    if (!UsedAction(item.Id, customer.Id))
-                    {
-                        if (Condition(item, null, null, customer, null, null))
-                        {
-                            Reaction(item, customer, null, null);
-                        }
-                    }
-                }
-
-            }
+            });
         }
         #endregion
     }

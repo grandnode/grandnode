@@ -49,7 +49,7 @@ namespace Nop.Services.Logging
         /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        ActivityLog InsertActivity(string systemKeyword, string entityKeyId, string comment, params object[] commentParams);
+        void InsertActivity(string systemKeyword, string entityKeyId, string comment, params object[] commentParams);
 
         /// <summary>
         /// Inserts an activity log item

@@ -169,6 +169,29 @@ namespace Nop.Services.Orders
             _eventPublisher.EntityDeleted(shoppingCartItem);
         }
 
+
+        /// <summary>
+        /// Delete shopping cart item
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        public virtual void ClearShoppingCartItems(Customer customer, string storeId, bool resetCheckoutData = true)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            //reset checkout data
+            if (resetCheckoutData)
+            {
+                _customerService.ResetCheckoutData(customer, storeId);
+            }
+
+            _customerService.ClearShoppingCartItem(customer.Id, storeId, ShoppingCartType.ShoppingCart);
+            customer.HasShoppingCartItems = false;
+            _customerService.UpdateHasShoppingCartItems(customer);
+
+        }
+
         /// <summary>
         /// Validates required products (products which require some other products to be added to the cart)
         /// </summary>
@@ -519,7 +542,6 @@ namespace Nop.Services.Orders
                     //if not found
                     if (!found)
                     {
-                        //var product = EngineContext.Current.Resolve<IProductService>().GetProductById(combination.ProductId);
                         var paa = _productAttributeService.GetProductAttributeById(a2.ProductAttributeId);
                         var notFoundWarning = !string.IsNullOrEmpty(a2.TextPrompt) ?
                             a2.TextPrompt : 
@@ -836,7 +858,7 @@ namespace Nop.Services.Orders
                 int cycleLength;
                 RecurringProductCyclePeriod cyclePeriod;
                 int totalCycles;
-                string cyclesError = shoppingCart.GetRecurringCycleInfo(_localizationService,
+                string cyclesError = shoppingCart.GetRecurringCycleInfo(_localizationService, _productService,
                     out cycleLength, out cyclePeriod, out totalCycles);
                 if (!string.IsNullOrEmpty(cyclesError))
                 {

@@ -470,10 +470,12 @@ namespace Nop.Web.Controllers
             var scWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
             if (scWarnings.Count > 0)
                 return RedirectToRoute("ShoppingCart");
+
+            var productService = EngineContext.Current.Resolve<IProductService>();
             //validation (each shopping cart item)
             foreach (ShoppingCartItem sci in cart)
             {
-                var product = EngineContext.Current.Resolve<IProductService>().GetProductById(sci.ProductId);
+                var product = productService.GetProductById(sci.ProductId);
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
                     sci.ShoppingCartType,
                     product,
