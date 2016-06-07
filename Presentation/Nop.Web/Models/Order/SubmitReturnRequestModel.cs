@@ -15,6 +15,7 @@ namespace Nop.Web.Models.Order
         }
 
         public string OrderId { get; set; }
+        public int OrderNumber { get; set; }
 
         public IList<OrderItemModel> Items { get; set; }
 

@@ -10,6 +10,7 @@ namespace Nop.Core.Domain.Orders
     [BsonIgnoreExtraElements]
     public partial class ReturnRequest : BaseEntity
     {
+        public int ReturnNumber { get; set; }
         /// <summary>
         /// Gets or sets the store identifier
         /// </summary>

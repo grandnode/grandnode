@@ -18,7 +18,7 @@ namespace Nop.Services.Orders
     public partial class ReturnRequestService : IReturnRequestService
     {
         #region Fields
-
+        private static readonly Object _locker = new object();
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
@@ -171,7 +171,13 @@ namespace Nop.Services.Orders
             if (returnRequest == null)
                 throw new ArgumentNullException("returnRequest");
 
-            _returnRequestRepository.Insert(returnRequest);
+            lock (_locker)
+            {
+                var requestExists = _returnRequestRepository.Table.FirstOrDefault();
+                var requestNumber = requestExists != null ? _returnRequestRepository.Table.Max(x => x.ReturnNumber) + 1 : 1;
+                returnRequest.ReturnNumber = requestNumber;
+                _returnRequestRepository.Insert(returnRequest);
+            }
 
             //event notification
             _eventPublisher.EntityInserted(returnRequest);

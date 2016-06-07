@@ -90,7 +90,7 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException("model");
 
             model.OrderId = order.Id;
-
+            model.OrderNumber = _orderService.GetOrderById(order.Id).OrderNumber;
             //return reasons
             model.AvailableReturnReasons = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
                 () =>
@@ -178,6 +178,7 @@ namespace Nop.Web.Controllers
                     var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
                     {
                         Id = returnRequest.Id,
+                        ReturnNumber = returnRequest.ReturnNumber,
                         ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ProductId = product.Id,
                         ProductName = product.GetLocalized(x => x.Name),

@@ -87,6 +87,7 @@ namespace Nop.Admin.Controllers
             model.ProductId = orderItem.ProductId;
             model.ProductName = product.Name;
             model.OrderId = order.Id;
+            model.ReturnNumber = returnRequest.ReturnNumber;
             model.CustomerId = returnRequest.CustomerId;
             var customer = _customerService.GetCustomerById(returnRequest.CustomerId);
             model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");

@@ -10,6 +10,9 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.ID")]
         public override string Id { get; set; }
 
+        [NopResourceDisplayName("Admin.ReturnRequests.Fields.ID")]
+        public int ReturnNumber { get; set; }
+
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.Order")]
         public string OrderId { get; set; }
 

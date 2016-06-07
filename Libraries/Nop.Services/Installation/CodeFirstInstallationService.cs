@@ -10702,6 +10702,7 @@ namespace Nop.Services.Installation
             _returnRequestActionRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _returnRequestReasonRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestReason>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _returnrequestRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _returnrequestRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true });
 
             //contactus
             _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
