@@ -300,6 +300,7 @@
     <Compile Include="Messages\IContactUsService.cs" />
     <Compile Include="Orders\IReturnRequestService.cs" />
     <Compile Include="Orders\IRewardPoints.cs" />
+    <Compile Include="Orders\ReportPeriodOrder.cs" />
     <Compile Include="Orders\ReturnRequestService.cs" />
     <Compile Include="Orders\RewardPointsService.cs" />
     <Compile Include="Helpers\IUserAgentHelper.cs" />

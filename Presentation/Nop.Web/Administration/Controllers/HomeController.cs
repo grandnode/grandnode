@@ -49,7 +49,13 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        
+        public ActionResult Statistics()
+        {
+            var model = new DashboardModel();
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            return View(model);
+        }
+
 
         #endregion
     }

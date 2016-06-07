@@ -3882,6 +3882,72 @@ namespace Nop.Admin.Controllers
 
 
 
+        [ChildActionOnly]
+        public ActionResult OrderPeriodReport()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+
+        [HttpPost]
+        public ActionResult ReportOrderPeriodList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            var model = GetReportOrderPeriodModel();
+            var gridModel = new DataSourceResult
+            {
+                Data = model,
+                Total = model.Count
+            };
+
+            return Json(gridModel);
+        }
+
+
+        [NonAction]
+        protected virtual IList<OrderPeriodReportLineModel> GetReportOrderPeriodModel()
+        {
+            var report = new List<OrderPeriodReportLineModel>();
+            var reportperiod7days = _orderReportService.GetOrderPeriodReport(7);
+            report.Add(new OrderPeriodReportLineModel
+            {
+                Period = _localizationService.GetResource("Admin.SalesReport.Period.7days"),
+                Count = reportperiod7days.Count,
+                Amount = reportperiod7days.Amount
+            });
+
+            var reportperiod14days = _orderReportService.GetOrderPeriodReport(14);
+            report.Add(new OrderPeriodReportLineModel
+            {
+                Period = _localizationService.GetResource("Admin.SalesReport.Period.14days"),
+                Count = reportperiod14days.Count,
+                Amount = reportperiod14days.Amount
+            });
+
+            var reportperiodmonth = _orderReportService.GetOrderPeriodReport(30);
+            report.Add(new OrderPeriodReportLineModel
+            {
+                Period = _localizationService.GetResource("Admin.SalesReport.Period.month"),
+                Count = reportperiodmonth.Count,
+                Amount = reportperiodmonth.Amount
+            });
+
+            var reportperiodyear = _orderReportService.GetOrderPeriodReport(365);
+            report.Add(new OrderPeriodReportLineModel
+            {
+                Period = _localizationService.GetResource("Admin.SalesReport.Period.year"),
+                Count = reportperiodyear.Count,
+                Amount = reportperiodyear.Amount
+            });
+
+            return report;
+        }
+
+
         public ActionResult NeverSoldReport()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))

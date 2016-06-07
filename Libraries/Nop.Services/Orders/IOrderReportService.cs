@@ -87,7 +87,15 @@ namespace Nop.Services.Orders
             int orderBy = 1,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false);
-        
+
+
+        /// <summary>
+        /// Gets a report of orders in the last days
+        /// </summary>
+        /// <param name="days">Orders in the last days</param>
+        /// <returns>ReportPeriodOrder</returns>
+        ReportPeriodOrder GetOrderPeriodReport(int days);
+
         /// <summary>
         /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product
         /// </summary>

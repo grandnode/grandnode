@@ -9557,6 +9557,9 @@
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.Statistics">
+    <Value>Statistics</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.StoreStatistics">
     <Value>Store Statistics</Value>
   </LocaleResource>
@@ -11524,6 +11527,30 @@
   </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.NeverSold.StartDate.Hint">
     <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Period">
+    <Value>Sales report in period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Period.7days">
+    <Value>In the last 7 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Period.14days">
+    <Value>In the last 14 days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Period.month">
+    <Value>In the last month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Period.year">
+    <Value>In the last year</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Period.Name">
+    <Value>Period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Period.Count">
+    <Value>Count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Period.Amount">
+    <Value>Amount</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.SearchTermReport">
     <Value>Popular search keywords</Value>

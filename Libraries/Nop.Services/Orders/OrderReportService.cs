@@ -392,6 +392,28 @@ namespace Nop.Services.Orders
 
         }
 
+
+        /// <summary>
+        /// Gets a report of orders in the last days
+        /// </summary>
+        /// <param name="days">Orders in the last days</param>
+        /// <returns>ReportPeriodOrder</returns>
+        public virtual ReportPeriodOrder GetOrderPeriodReport(int days)
+        {
+            DateTime date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
+
+            var query = from o in _orderRepository.Table
+                        where !o.Deleted &&
+                        o.CreatedOnUtc >= date
+                        group o by 1 into g
+                        select new ReportPeriodOrder() { Amount = g.Sum(x => x.OrderTotal), Count = g.Count() };
+            var report = query.ToList().FirstOrDefault();
+            report.Date = date;
+            return report;
+        }
+
+
+
         /// <summary>
         /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product
         /// </summary>
@@ -561,7 +583,6 @@ namespace Nop.Services.Orders
         {
             public OrderItem OrderItems { get; set; }
         }
-
 
 
         #endregion
