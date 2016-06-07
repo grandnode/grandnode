@@ -31,6 +31,7 @@ namespace Nop.Services.ExportImport.Tests {
         private INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private IExportManager _exportManager;
         private IStoreService _storeService;
+        private IProductService _productService;
 
         [TestInitialize()]
         public void TestInitialize() {
@@ -39,12 +40,13 @@ namespace Nop.Services.ExportImport.Tests {
             _manufacturerService = new Mock<IManufacturerService>().Object;
             _productAttributeService = new Mock<IProductAttributeService>().Object;
             _pictureService = new Mock<IPictureService>().Object;
+            _productService = new Mock<IProductService>().Object;
             _newsLetterSubscriptionService = new Mock<INewsLetterSubscriptionService>().Object;
 
             _exportManager = new ExportManager(_categoryService,
                 _manufacturerService, _productAttributeService,
                 _pictureService, _newsLetterSubscriptionService,
-                _storeService);
+                _storeService, _productService);
         }
 
         [TestMethod()]
