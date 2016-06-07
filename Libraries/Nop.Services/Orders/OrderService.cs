@@ -24,6 +24,7 @@ namespace Nop.Services.Orders
     {
         #region Fields
 
+        private static readonly Object _locker = new object();
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductDeleted> _productDeletedRepository;
@@ -283,11 +284,14 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            var orderExists = _orderRepository.Table.FirstOrDefault();
-            var orderNumber = orderExists!=null ? _orderRepository.Table.Max(x=>x.OrderNumber)+1 : 1;
-            order.OrderNumber = orderNumber;
+            lock (_locker)
+            {
+                var orderExists = _orderRepository.Table.FirstOrDefault();
+                var orderNumber = orderExists != null ? _orderRepository.Table.Max(x => x.OrderNumber) + 1 : 1;
+                order.OrderNumber = orderNumber;
 
-            _orderRepository.Insert(order);
+                _orderRepository.Insert(order);
+            }
 
             //event notification
             _eventPublisher.EntityInserted(order);

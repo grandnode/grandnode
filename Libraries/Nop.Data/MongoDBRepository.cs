@@ -64,7 +64,7 @@ namespace Nop.Data
         public MongoDBRepository(IMongoClient client)
         {
             string connectionString = DataSettingsHelper.ConnectionString();
-            var databaseName = new MongoUrl(connectionString).DatabaseName;
+            var databaseName = new MongoUrl(connectionString).DatabaseName;            
             _database = client.GetDatabase(databaseName);
             _collection = _database.GetCollection<T>(typeof(T).Name);
         }

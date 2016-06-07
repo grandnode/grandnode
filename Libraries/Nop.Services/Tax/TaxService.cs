@@ -451,6 +451,120 @@ namespace Nop.Services.Tax
             return price;
         }
 
+        public virtual TaxProductPrice GetTaxProductPrice(
+            Product product,
+            Customer customer,
+            out decimal taxRate,
+            decimal unitPrice,
+            decimal subTotal,
+            decimal discountAmount,
+            bool priceIncludesTax
+            )
+        {
+
+            //no need to calculate tax rate if passed "price" is 0
+            if (unitPrice == decimal.Zero)
+            {
+                taxRate = decimal.Zero;
+                return new TaxProductPrice();
+            }
+
+            string taxCategoryId = ""; //it seems to be strange, but this way was used above
+            var productPrice = new TaxProductPrice();
+
+            //----------------------------------------------------------------------------------------------------
+            bool isTaxable = default(bool);
+            GetTaxRate(product, taxCategoryId, customer, 0, out taxRate, out isTaxable);
+            if (priceIncludesTax)
+            {
+                if (isTaxable)
+                {
+                    productPrice.UnitPriceInclTax = unitPrice;
+                    productPrice.UnitPriceExclTax = CalculatePrice(unitPrice, taxRate, false);
+                }
+                else
+                {
+                    productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, false);
+                    productPrice.UnitPriceExclTax = CalculatePrice(unitPrice, taxRate, false);
+                }
+            }
+            else
+            {
+                if (isTaxable)
+                {
+                    productPrice.UnitPriceInclTax = CalculatePrice(unitPrice, taxRate, true);
+                    productPrice.UnitPriceExclTax = unitPrice;
+                }
+                else
+                {
+                    productPrice.UnitPriceInclTax = unitPrice;
+                    productPrice.UnitPriceExclTax = unitPrice;
+                }
+            }
+            //----------------------------------------------------------------------------------------------------
+            if (priceIncludesTax)
+            {
+                if (isTaxable)
+                {
+                    productPrice.SubTotalInclTax = subTotal;
+                    productPrice.SubTotalExclTax = CalculatePrice(subTotal, taxRate, false);
+                }
+                else
+                {
+                    productPrice.SubTotalInclTax = CalculatePrice(subTotal, taxRate, false);
+                    productPrice.SubTotalExclTax = CalculatePrice(subTotal, taxRate, false);
+                }
+            }
+            else
+            {
+                if (isTaxable)
+                {
+                    productPrice.SubTotalInclTax = CalculatePrice(subTotal, taxRate, true);
+                    productPrice.SubTotalExclTax = subTotal;
+                }
+                else
+                {
+                    productPrice.SubTotalInclTax = subTotal;
+                    productPrice.SubTotalExclTax = subTotal;
+                }
+            }
+
+            //----------------------------------------------------------------------------------------------------
+            if (priceIncludesTax)
+            {
+                if (isTaxable)
+                {
+                    productPrice.discountAmountInclTax = discountAmount;
+                    productPrice.discountAmountExclTax = CalculatePrice(discountAmount, taxRate, false);
+                }
+                else
+                {
+                    productPrice.discountAmountInclTax = CalculatePrice(discountAmount, taxRate, false);
+                    productPrice.discountAmountExclTax = CalculatePrice(discountAmount, taxRate, false);
+                }
+            }
+            else
+            {
+                if (isTaxable)
+                {
+                    productPrice.discountAmountInclTax = CalculatePrice(discountAmount, taxRate, true);
+                    productPrice.discountAmountExclTax = discountAmount;
+                }
+                else
+                {
+                    productPrice.discountAmountInclTax = discountAmount;
+                    productPrice.discountAmountExclTax = discountAmount;
+                }
+            }
+
+            if (!isTaxable)
+            {
+                //we return 0% tax rate in case a request is not taxable
+                taxRate = decimal.Zero;
+            }
+            return productPrice;
+        }
+
 
 
 
