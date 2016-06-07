@@ -23,7 +23,7 @@
                             </button>
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
-                            <button type="button" name="copyproduct" class="btn blue" data-toggle="modal" data-target="#copyproduct-window">
+                            <button type="button" name="copyproduct" class="btn blue" id="copyproduct">
                                 <i class="fa fa-clone"></i>
                                 @T("Admin.Catalog.Products.Copy")
                             </button>
@@ -45,34 +45,35 @@
 <div id="copyproduct-window" style="display:none;">
             @using (Html.BeginForm("CopyProduct", "Product"))
             {
-                <div class="form-horizontal">
-                    @Html.AntiForgeryToken()
-                    @Html.HiddenFor(model => model.CopyProductModel.Id)
-                    <div class="form-body">
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CopyProductModel.Name, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false )
-                            <div class="col-md-8 col-sm-8">
-                                @Html.GrandEditorFor(model => model.CopyProductModel.Name)
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.CopyProductModel.Id)
+                        <div class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.CopyProductModel.Name, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false)
+                                    <div class="col-md-8 col-sm-8">
+                                        @Html.GrandEditorFor(model => model.CopyProductModel.Name)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.CopyProductModel.Published, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false)
+                                    <div class="col-md-8 col-sm-8">
+                                        @Html.EditorFor(model => model.CopyProductModel.Published)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.CopyProductModel.CopyImages, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false)
+                                    <div class="col-md-8 col-sm-8">
+                                        @Html.GrandEditorFor(model => model.CopyProductModel.CopyImages)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                                    <input type="submit" class="btn green" value="@T("Admin.Catalog.Products.Copy")" />
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CopyProductModel.Published, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false)
-                            <div class="col-md-8 col-sm-8">
-                                @Html.EditorFor(model => model.CopyProductModel.Published)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.GrandLabelFor(model => model.CopyProductModel.CopyImages, new Dictionary<string, object> { { "class", "col-sm-4 col-md-4 control-label" } }, false)
-                            <div class="col-md-8 col-sm-8">
-                                @Html.GrandEditorFor(model => model.CopyProductModel.CopyImages)
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <input type="submit" class="btn green" value="@T("Admin.Catalog.Products.Copy")" />
-                    </div>
-
-                </div>
             }
 </div>
 <script type="text/javascript">
