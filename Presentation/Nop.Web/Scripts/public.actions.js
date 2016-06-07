@@ -58,7 +58,7 @@ var CustomerAction = {
         })
     },
     ajaxFailure: function (failureResponse) {
-        alert('Error: ' + failureResponse.responseText);
+        console.log('Error: ' + failureResponse.responseText);
     },
 
 }

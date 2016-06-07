@@ -16,12 +16,14 @@ using Nop.Services.Localization;
 using System.Web;
 using Nop.Core.Domain.Logging;
 using System.Threading.Tasks;
+using Nop.Core.Caching;
 
 namespace Nop.Services.Customers
 {
     public partial class CustomerActionEventService : ICustomerActionEventService
     {
         #region Fields
+        private const string CUSTOMER_ACTION_TYPE = "Nop.customer.action.type";
 
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
@@ -41,6 +43,8 @@ namespace Nop.Services.Customers
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerTagService _customerTagService;
         private readonly HttpContextBase _httpContext;
+        private readonly ICacheManager _cacheManager;
+
         #endregion
 
         #region Ctor
@@ -62,7 +66,8 @@ namespace Nop.Services.Customers
             ICustomerAttributeService customerAttributeService,
             ICustomerAttributeParser customerAttributeParser,
             ICustomerTagService customerTagService,
-            HttpContextBase httpContext)
+            HttpContextBase httpContext,
+            ICacheManager cacheManager)
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
@@ -82,11 +87,21 @@ namespace Nop.Services.Customers
             this._customerAttributeParser = customerAttributeParser;
             this._customerTagService = customerTagService;
             this._httpContext = httpContext;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
 
         #region Utilities
+        protected IList<CustomerActionType> GetAllCustomerActionType()
+        {
+            return _cacheManager.Get(CUSTOMER_ACTION_TYPE, () =>
+            {                
+                return _customerActionTypeRepository.Table.AsQueryable().ToList();
+            });
+        }
+
+
 
         #region Action
         protected bool UsedAction(string actionId, string customerId)
@@ -109,7 +124,7 @@ namespace Nop.Services.Customers
         #region Condition
         protected bool Condition(CustomerAction action, Product product, string attributesXml, Customer customer, string currentUrl, string previousUrl)
         {
-            var _cat = _customerActionTypeRepository.Table.AsQueryable().ToList();
+            var _cat = GetAllCustomerActionType();
             if (action.Conditions.Count() == 0)
                 return true;
 
@@ -553,7 +568,7 @@ namespace Nop.Services.Customers
                     PrepareBanner(action, banner, customer.Id);
             }
 
-            var _cat = _customerActionTypeRepository.Table.AsQueryable().ToList();
+            var _cat = GetAllCustomerActionType();
 
             if (action.ReactionType == CustomerReactionTypeEnum.Email)
             {
@@ -635,7 +650,7 @@ namespace Nop.Services.Customers
         {
             Task.Run(() =>
             {
-                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddToCart.ToString()).FirstOrDefault();
+                var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddToCart.ToString()).FirstOrDefault();
                 if (actionType.Enabled)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;
@@ -662,7 +677,7 @@ namespace Nop.Services.Customers
         {
             Task.Run(() =>
             {
-                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
+                var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.AddOrder.ToString()).FirstOrDefault();
                 if (actionType.Enabled)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;
@@ -700,7 +715,7 @@ namespace Nop.Services.Customers
             {
                 if (!customer.IsSystemAccount)
                 {
-                    var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
+                    var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
                     if (actionType.Enabled)
                     {
                         var datetimeUtcNow = DateTime.UtcNow;
@@ -731,7 +746,7 @@ namespace Nop.Services.Customers
             {
                 if (!customer.IsSystemAccount)
                 {
-                    var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
+                    var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.Viewed.ToString()).FirstOrDefault();
                     if (actionType.Enabled)
                     {
                         var datetimeUtcNow = DateTime.UtcNow;
@@ -759,7 +774,7 @@ namespace Nop.Services.Customers
         {
             Task.Run(() =>
             {
-                var actionType = _customerActionTypeRepository.Table.Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
+                var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.Registration.ToString()).FirstOrDefault();
                 if (actionType.Enabled)
                 {
                     var datetimeUtcNow = DateTime.UtcNow;
