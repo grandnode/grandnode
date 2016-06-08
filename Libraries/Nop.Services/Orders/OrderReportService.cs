@@ -400,7 +400,7 @@ namespace Nop.Services.Orders
         /// <returns>ReportPeriodOrder</returns>
         public virtual ReportPeriodOrder GetOrderPeriodReport(int days)
         {
-            DateTime date = _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days);
+            DateTime date = days != 0 ? _dateTimeHelper.ConvertToUserTime(DateTime.Now).AddDays(-days).Date : _dateTimeHelper.ConvertToUserTime(DateTime.Now).Date ;
 
             var query = from o in _orderRepository.Table
                         where !o.Deleted &&
@@ -408,6 +408,8 @@ namespace Nop.Services.Orders
                         group o by 1 into g
                         select new ReportPeriodOrder() { Amount = g.Sum(x => x.OrderTotal), Count = g.Count() };
             var report = query.ToList().FirstOrDefault();
+            if (report == null)
+                report = new ReportPeriodOrder();
             report.Date = date;
             return report;
         }

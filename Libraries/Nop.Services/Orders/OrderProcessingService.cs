@@ -1616,6 +1616,8 @@ namespace Nop.Services.Orders
                         //Update field Last purchase date after added a new order
                         _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
 
+                        //Update field last update cart
+                        _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
                         //raise event       
                         _eventPublisher.Publish(new OrderPlacedEvent(order));
                         _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);

@@ -256,6 +256,15 @@ namespace Nop.Services.Customers
             return customers;
         }
 
+
+        public virtual int GetCountOnlineShoppingCart(DateTime lastActivityFromUtc)
+        {
+            var query = _customerRepository.Table;
+            query = query.Where(c => lastActivityFromUtc <= c.LastUpdateCartDateUtc);
+            return query.Count();
+        }
+
+
         /// <summary>
         /// Delete a customer
         /// </summary>
@@ -674,7 +683,7 @@ namespace Nop.Services.Customers
                 .Set(x => x.LastPurchaseDateUtc, date);
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
-        public virtual void UpdateCustomerLastUpdateCartDate(string customerId, DateTime date)
+        public virtual void UpdateCustomerLastUpdateCartDate(string customerId, DateTime? date)
         {
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customerId);

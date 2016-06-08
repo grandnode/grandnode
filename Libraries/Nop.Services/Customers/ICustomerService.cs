@@ -62,6 +62,8 @@ namespace Nop.Services.Customers
         IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
             string[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue);
 
+        int GetCountOnlineShoppingCart(DateTime lastActivityFromUtc);
+
         /// <summary>
         /// Delete a customer
         /// </summary>
@@ -222,7 +224,7 @@ namespace Nop.Services.Customers
         /// Updates the customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void UpdateCustomerLastUpdateCartDate(string customerId, DateTime date);
+        void UpdateCustomerLastUpdateCartDate(string customerId, DateTime? date);
         /// <summary>
         /// Updates the customer
         /// </summary>

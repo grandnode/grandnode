@@ -849,7 +849,7 @@ namespace Nop.Admin.Controllers
         }
 
         public ActionResult List(int? orderStatusId = null,
-            int? paymentStatusId = null, int? shippingStatusId = null)
+            int? paymentStatusId = null, int? shippingStatusId = null, DateTime? startDate = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -917,6 +917,8 @@ namespace Nop.Admin.Controllers
 
             //a vendor should have access only to orders with his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            if (startDate.HasValue)
+                model.StartDate = startDate.Value;
 
             return View(model);
 		}

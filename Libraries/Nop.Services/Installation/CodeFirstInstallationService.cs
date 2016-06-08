@@ -4985,6 +4985,7 @@ namespace Nop.Services.Installation
                 RegistrationFreeShipping = false,
                 NewsletterBlockAllowToUnsubscribe = false,
                 OnlineCustomerMinutes = 20,
+                OnlineShoppingCartMinutes = 60,
                 StoreLastVisitedPage = false,
                 SuffixDeletedCustomers = false,
             });
