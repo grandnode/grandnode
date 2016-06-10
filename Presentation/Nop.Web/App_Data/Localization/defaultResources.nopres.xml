@@ -9578,6 +9578,9 @@
   <LocaleResource Name="Admin.Dashboard.ActivityOverview.TodayRegisteredCustomers">
     <Value>Today Registered Customers</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.GoogleAnalytics">
+    <Value>Google Analytics</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.OnlineCustomers">
     <Value>Online Visitors</Value>
   </LocaleResource>
@@ -9590,6 +9593,9 @@
   <LocaleResource Name="Admin.Dashboard.Reportcustomertime.Titlechart">
     <Value>Number of registered customers in time</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ReportLatestOrder">
+    <Value>Latest orders</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Dashboard.ReportOverviewHelper">
     <Value>report overview...</Value>
   </LocaleResource>
@@ -11780,7 +11786,6 @@
   <LocaleResource Name="Admin.System.ContactForm.BackToList">
     <Value>Back to list</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.System.ContactForm.Delete">
     <Value>Delete</Value>
   </LocaleResource>
