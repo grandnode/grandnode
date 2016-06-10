@@ -475,6 +475,7 @@
     <Content Include="Content\bootstrap\css\bootstrap.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\bootstrap\css\daterangepicker.min.css" />
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -484,6 +485,7 @@
     <Content Include="Content\bootstrap\js\bootstrap.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\bootstrap\js\daterangepicker.min.js" />
     <Content Include="Content\font-awesome\css\font-awesome.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -523,6 +525,7 @@
     <Content Include="Content\global\css\plugins.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\global\img\syncfusion-icons-white.png" />
     <Content Include="Content\global\js\app.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -533,6 +536,8 @@
     <Content Include="Content\global\js\jquery.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\global\js\moment.min.js" />
+    <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1831,6 +1836,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\OrderPeriodReport.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\ReportOrderTimeChar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\DashboardActivity.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

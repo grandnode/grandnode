@@ -27,10 +27,12 @@
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
 
+    Html.AppendCssFileParts("~/Administration/Content/global/css/plugins.min.css");
     Html.AppendCssFileParts("~/Administration/Content/layout/custom.min.css");
     Html.AppendCssFileParts("~/Administration/Content/layout/themes/darkblue.min.css");
     Html.AppendCssFileParts("~/Administration/Content/layout/layout.min.css");
     Html.AppendCssFileParts("~/Administration/Content/global/css/components.min.css");
+    Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/daterangepicker.min.css");
 
     Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/bootstrap.min.css");
     Html.AppendCssFileParts("~/Administration/Content/simple-line-icons/simple-line-icons.min.css");
@@ -47,6 +49,8 @@
     Html.AppendScriptParts("~/Administration/Content/layout/js/layout.js");
     Html.AppendScriptParts("~/Administration/Content/global/js/jquery.cookieBar.min.js");
     Html.AppendScriptParts("~/Administration/Content/global/js/app.js");
+    Html.AppendScriptParts("~/Administration/Content/bootstrap/js/daterangepicker.min.js");
+    Html.AppendScriptParts("~/Administration/Content/global/js/moment.min.js");
     Html.AppendScriptParts("~/Administration/Content/bootstrap/js/bootstrap.min.js");
     Html.AppendScriptParts("~/Administration/Content/global/js/jquery.min.js");
 

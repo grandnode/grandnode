@@ -23,9 +23,10 @@
 @Html.AntiForgeryToken()
 <div class="page-bar" style="height:43px;">
     <div class="page-toolbar">
-        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-fit-height green" data-placement="top" data-original-title="Change dashboard date range">
             <i class="icon-calendar"></i>&nbsp;
-            <span class="thin uppercase">@DateTime.Now.ToLongDateString() @DateTime.Now.ToLongTimeString()</span>&nbsp;
+            <span class="thin uppercase hidden-xs"></span>&nbsp;
+            <i class="fa fa-angle-down"></i>
         </div>
     </div>
 </div>
@@ -49,11 +50,11 @@
                         </div>
                         <div class="details">
                             <div class="number" style="padding-top:15px;"> @customersOnline </div>
-                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboards.OnlineCustomers")</div>
-                            <div class="desc" style="font-size:14px;"> @T("Admin.Dashboards.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes) </div>
+                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboard.OnlineCustomers")</div>
+                            <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes) </div>
                         </div>
                         <a class="more" href="@Url.Action("List", "OnlineCustomer")">
-                            @T("Admin.Dashboards.ViewMore")
+                            @T("Admin.Dashboard.ViewMore")
                             <i class="m-icon-swapright m-icon-white"></i>
                         </a>
                     </div>
@@ -65,11 +66,11 @@
                         </div>
                         <div class="details">
                             <div class="number" style="padding-top:15px;"> @customersShoppingCart </div>
-                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboards.ActiveShoppingCarts") </div>
-                            <div class="desc" style="font-size:14px;"> @T("Admin.Dashboards.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes) </div>
+                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboard.ActiveShoppingCarts") </div>
+                            <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes) </div>
                         </div>
                         <a class="more" href="@Url.Action("CurrentCarts", "ShoppingCart")">
-                            @T("Admin.Dashboards.ViewMore")
+                            @T("Admin.Dashboard.ViewMore")
                             <i class="m-icon-swapright m-icon-white"></i>
                         </a>
                     </div>
@@ -81,13 +82,36 @@
                         </div>
                         <div class="details">
                             <div class="number" style="padding-top:15px;"> @ordersAmount / @ordersToday.Count</div>
-                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboards.TodayOrders") </div>
-                            <div class="desc" style="font-size:14px;"> @T("Admin.Dashboards.TodayOrders.AmountCount") </div>
+                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboard.TodayOrders") </div>
+                            <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.TodayOrders.AmountCount") </div>
                         </div>
                         <a class="more" href="@Url.Action("List", "Order", new { startDate = DateTime.UtcNow.ToShortDateString() })">
-                            @T("Admin.Dashboards.ViewMore")
+                            @T("Admin.Dashboard.ViewMore")
                             <i class="m-icon-swapright m-icon-white"></i>
                         </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="icon-share font-blue"></i>
+                                    <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ActivityOverview")</span>
+                                    <span class="caption-helper">@T("Admin.Dashboard.ReportOverviewHelper")</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
+                                    <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        @Html.Action("ReportOrderTimeChar", "Order")
                     </div>
                 </div>
             </div>
@@ -95,3 +119,96 @@
         @Html.Widget("admin_dashboard_bottom")
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        var site = site || {};
+        site.baseUrl = site.baseUrl || "";
+        $(".partialContents").each(function (index, item) {
+            var url = site.baseUrl + $(item).data("url");
+            if (url && url.length > 0) {
+                $(item).load(url);
+            }
+        });
+    });
+
+
+    var Dashboard = function () {
+        return {
+            initDashboardDaterange: function () {
+                if (!jQuery().daterangepicker) {
+                    return;
+                }
+
+                $('#dashboard-report-range').daterangepicker({
+                    startDate: moment().startOf('month'),
+                    "ranges": {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                        'Last 7 Days': [moment().subtract('days', 6), moment()],
+                        'Last 30 Days': [moment().subtract('days', 29), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                    },
+                    "locale": {
+                        "format": "MM/DD/YYYY",
+                        "separator": " - ",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Su",
+                            "Mo",
+                            "Tu",
+                            "We",
+                            "Th",
+                            "Fr",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "January",
+                            "February",
+                            "March",
+                            "April",
+                            "May",
+                            "June",
+                            "July",
+                            "August",
+                            "September",
+                            "October",
+                            "November",
+                            "December"
+                        ],
+                        "firstDay": 1
+                    },
+                    opens: (App.isRTL() ? 'right' : 'left'),
+                }, function (start, end, label) {
+                    $('#dashboard-report-range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                });
+
+                $('#dashboard-report-range span').html(moment().startOf('month').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+                $('#dashboard-report-range').show();
+            },
+
+            init: function () {
+                this.initDashboardDaterange();
+            }
+        }
+    }();
+
+
+    //jQuery(document).ready(function () {
+    Dashboard.init(); 
+    //});
+
+    $('#dashboard-report-range').on('apply.daterangepicker', function (ev, picker) {
+        var chartOrderTime = $('#order-time-char').data('kendoChart');
+        if(chartOrderTime!=undefined)
+        {
+            chartOrderTime.dataSource.read();
+        }
+    });
+
+</script>

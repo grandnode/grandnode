@@ -27,6 +27,16 @@ namespace Nop.Services.Orders
             PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null);
 
+
+        /// <summary>
+        /// Get "order by time" report
+        /// </summary>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <returns>Result</returns>
+        IList<OrderByTimeReportLine> GetOrderByTimeReport(DateTime? startTimeUtc = null, 
+            DateTime? endTimeUtc = null);
+
         /// <summary>
         /// Get order average report
         /// </summary>

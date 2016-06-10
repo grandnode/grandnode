@@ -117,6 +117,64 @@ namespace Nop.Services.Orders
             return report;
         }
 
+
+        /// <summary>
+        /// Get "order by time" report
+        /// </summary>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <returns>Result</returns>
+        public virtual IList<OrderByTimeReportLine> GetOrderByTimeReport(DateTime? startTimeUtc = null,
+            DateTime? endTimeUtc = null)
+        {
+            List<OrderByTimeReportLine> report = new List<OrderByTimeReportLine>();
+            if (!startTimeUtc.HasValue)
+                startTimeUtc = DateTime.MinValue;
+            if (!endTimeUtc.HasValue)
+                endTimeUtc = DateTime.UtcNow; ;
+
+            var builder = Builders<Order>.Filter;
+
+            var filter = builder.Where(o => !o.Deleted);
+            filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc && o.CreatedOnUtc <= endTimeUtc);
+
+            var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
+            if(daydiff > 32)
+            {
+                var query = _orderRepository.Collection.Aggregate().Match(filter).Group(x =>
+                    new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month },
+                    g => new { Okres = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x=>x.Okres).ToList();
+                foreach (var item in query)
+                {
+                    report.Add(new OrderByTimeReportLine()
+                    {
+                        Time = item.Okres.Year.ToString() + "-" + item.Okres.Month.ToString(),
+                        SumOrders = item.Amount,
+                        TotalOrders = item.Count,
+                    });
+                }
+            }
+            else
+            {
+                var query = _orderRepository.Collection.Aggregate().Match(filter).Group(x=>
+                    new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month, Day = x.CreatedOnUtc.Day },
+                    g => new { Okres = g.Key, Amount = g.Sum(x => x.OrderTotal), Count = g.Count() }).SortBy(x => x.Okres).ToList();
+                foreach (var item in query)
+                {
+                    report.Add(new OrderByTimeReportLine()
+                    {
+                        Time = item.Okres.Year.ToString() + "-" + item.Okres.Month.ToString()+"-" + item.Okres.Day.ToString(),
+                        SumOrders = item.Amount,
+                        TotalOrders = item.Count,
+                    });
+                }
+            }
+
+
+            
+            return report;
+        }
+
         /// <summary>
         /// Get order average report
         /// </summary>

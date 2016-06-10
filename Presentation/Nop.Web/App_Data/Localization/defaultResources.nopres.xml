@@ -9557,11 +9557,62 @@
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActiveShoppingCarts">
+    <Value>Active Shopping Carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActivityOverview">
+    <Value>Activity Overview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActivityOverview.AbandonedCarts">
+    <Value>Abandoned carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActivityOverview.LowStockProducts">
+    <Value>Low Stock Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActivityOverview.OrderPending">
+    <Value>Order Pending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActivityOverview.ReturnRequests">
+    <Value>Return Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ActivityOverview.TodayRegisteredCustomers">
+    <Value>Today Registered Customers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.OnlineCustomers">
+    <Value>Online Visitors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.OnlineCustomerMinutes">
+    <Value>in the last {0} minutes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.OnlineShoppingCart">
+    <Value>in the last {0} minutes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ReportOverviewHelper">
+    <Value>report overview...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ReportOrderTime.Count">
+    <Value>Number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ReportOrderTime.TotalSales">
+    <Value>Total sales</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ReportOrderTime.TitleChart">
+    <Value>Orders in time</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.Statistics">
     <Value>Statistics</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Dashboard.StoreStatistics">
     <Value>Store Statistics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.TodayOrders">
+    <Value>Today orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.TodayOrders.AmountCount">
+    <Value>Amount / Count</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.ViewMore">
+    <Value>View more</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Download.DownloadUploadedFile">
     <Value>Download uploaded file</Value>

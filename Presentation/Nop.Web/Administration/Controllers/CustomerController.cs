@@ -843,18 +843,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            //load registered customers by default
-            var defaultRoleIds = new[] {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id};
             var model = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
-                //AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
-                AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString() }).ToList(),
+                AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString(), Selected = (cr.Id == _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id) }).ToList(),
                 AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id.ToString() }).ToList(),
-                //SearchCustomerRoleIds = defaultRoleIds,
             };
             return View(model);
         }

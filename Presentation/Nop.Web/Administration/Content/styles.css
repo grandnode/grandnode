@@ -10,6 +10,13 @@
     box-sizing: content-box;
 }
 
+.daterangepicker *
+{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 /* set a border-box model only to elements that need it */
 
 .form-control, /* if this class is applied to a Kendo UI widget, its layout may change */
@@ -166,4 +173,19 @@ a span.username {
   
 .k-grid  .k-grid-header  .k-header {
     white-space: normal;
+}
+
+
+.feeds li .col1 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+.feeds li .col2>.date {
+    padding-top: 15px;
+    color: #337ab7;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
 }

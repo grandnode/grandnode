@@ -3908,6 +3908,30 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+        [ChildActionOnly]
+        public ActionResult ReportOrderTimeChar()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult ReportOrderTimeChar(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            var model = _orderReportService.GetOrderByTimeReport(startDate, endDate);
+            var gridModel = new DataSourceResult
+            {
+                Data = model
+            };
+            return new JsonResult
+            {
+                Data = gridModel.Data
+            };
+        }
 
 
         [NonAction]
