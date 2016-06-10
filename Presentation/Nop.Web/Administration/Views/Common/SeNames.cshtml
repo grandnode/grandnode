@@ -17,7 +17,7 @@
                     @T("Admin.System.SeNames")
                 </div>
                 <div class="actions btn-group btn-group-devided">
-                    <input type="button" id="delete-selected" class="btn red" value="@T("Admin.System.SeNames.DeleteSelected")" />
+                    <span id="delete-selected" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.System.SeNames.DeleteSelected")</span>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -111,7 +111,7 @@
                 field: "DetailsUrl",
                 title: "@T("Admin.System.SeNames.Details")",
                 width: 100,
-                template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a href="#=DetailsUrl#">@T("Admin.System.SeNames.Details")</a> #} #'
+                template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a class="btn btn-sm btn-default" href="#=DetailsUrl#"><i class="fa fa-pencil"></i>  @T("Admin.System.SeNames.Details")</a> #} #'
             }]
         });
     });

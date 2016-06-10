@@ -14,7 +14,8 @@
                 },
                 theme: "Bootstrap",
                 title: {
-                    text: "@T("Admin.Dashboard.ReportOrderTime.TitleChart")"
+                    text: "@T("Admin.Dashboard.ReportOrderTime.TitleChart")",
+                    font: " 14px Open Sans, sans-serif",
                 },
                 legend: {
                     visible: true
@@ -25,7 +26,7 @@
                         line: {
                             style: "smooth"
                         }
-                    }
+                    },
                 },
                 series: [{
                     field: "SumOrders",
@@ -50,20 +51,26 @@
                 valueAxis: [
                     {
                         name: "sal",
-                        title: { text: "@T("Admin.Dashboard.ReportOrderTime.TotalSales")", },
+                        title: {
+                            text: "@T("Admin.Dashboard.ReportOrderTime.TotalSales")",
+                            font: " 14px Open Sans, sans-serif",
+                        },
                         format: '{0:N2}',
                         visible: true
                     },
                     {
                         name: "qty",
-                        title: { text: "@T("Admin.Dashboard.ReportOrderTime.Count")", },
+                        title: {
+                            text: "@T("Admin.Dashboard.ReportOrderTime.Count")",
+                            font: " 14px Open Sans, sans-serif",
+                        },
                         visible: true
                 }],
                 categoryAxis: {
                     field: "Time",
                     visible: true,
                     labels: {
-                            rotation:-45,
+                        rotation: -45,
                     },
                     axisCrossingValues: [0, 100],
                     crosshair: {

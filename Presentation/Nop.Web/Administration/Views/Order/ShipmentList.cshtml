@@ -23,10 +23,16 @@
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
-                            <input type="submit" name="exportpackagingslips-all" class="btn default" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.All")" />
-                            <input type="button" id="exportpackagingslips-selected" class="btn default" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
-                            <input type="button" id="ship-selected" class="btn default" value="@T("Admin.Orders.Shipments.ShipSelected")" />
-                            <input type="button" id="deliver-selected" class="btn default" value="@T("Admin.Orders.Shipments.DeliverySelected")" />
+                            <button type="submit" name="exportpackagingslips-all"  class="btn purple">
+                                <i class="fa fa-file-pdf-o"></i>
+                                @T("Admin.Orders.Shipments.PrintPackagingSlip.All")
+                            </button>
+                            <button type="submit" id="exportpackagingslips-selected" class="btn blue">
+                                <i class="fa fa-file-pdf-o"></i>
+                                @T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")
+                            </button>
+                            <button class="btn btn-success" type="submit" id="ship-selected" ><i class="fa fa-check"></i> @T("Admin.Orders.Shipments.ShipSelected") </button>
+                            <button class="btn btn-success" type="submit" id="deliver-selected" ><i class="fa fa-check-circle"></i> @T("Admin.Orders.Shipments.DeliverySelected") </button>
                         </div>
                     </div>
                 </div>
