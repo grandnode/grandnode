@@ -8,6 +8,8 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Helpers;
 using MongoDB.Driver.Linq;
+using System.Collections.Generic;
+using MongoDB.Driver;
 
 namespace Nop.Services.Customers
 {
@@ -22,11 +24,11 @@ namespace Nop.Services.Customers
         private readonly IRepository<Order> _orderRepository;
         private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        
+
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -115,11 +117,11 @@ namespace Nop.Services.Customers
 
             var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);
             return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
-                {
-                    CustomerId = x.CustomerId,
-                    OrderTotal = x.OrderTotal,
-                    OrderCount = x.OrderCount
-                }),
+            {
+                CustomerId = x.CustomerId,
+                OrderTotal = x.OrderTotal,
+                OrderCount = x.OrderCount
+            }),
                 tmp.PageIndex, tmp.PageSize, tmp.TotalCount);
         }
 
@@ -138,12 +140,72 @@ namespace Nop.Services.Customers
 
             var query = from c in _customerRepository.Table
                         where !c.Deleted &&
-                        c.CustomerRoles.Any(cr=> cr.Id == registeredCustomerRole.Id) &&
-                        c.CreatedOnUtc >= date 
+                        c.CustomerRoles.Any(cr => cr.Id == registeredCustomerRole.Id) &&
+                        c.CreatedOnUtc >= date
                         //&& c.CreatedOnUtc <= DateTime.UtcNow
                         select c;
             int count = query.Count();
             return count;
+        }
+
+
+        /// <summary>
+        /// Get "customer by time" report
+        /// </summary>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <returns>Result</returns>
+        public virtual IList<CustomerByTimeReportLine> GetCustomerByTimeReport(DateTime? startTimeUtc = null,
+            DateTime? endTimeUtc = null)
+
+        {
+            List<CustomerByTimeReportLine> report = new List<CustomerByTimeReportLine>();
+            if (!startTimeUtc.HasValue)
+                startTimeUtc = DateTime.MinValue;
+            if (!endTimeUtc.HasValue)
+                endTimeUtc = DateTime.UtcNow;
+
+            var endTime = new DateTime(endTimeUtc.Value.Year, endTimeUtc.Value.Month, endTimeUtc.Value.Day, 23, 59, 00);
+
+            var builder = Builders<Customer>.Filter;
+            var customerRoleRegister = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id;
+            var filter = builder.Where(o => !o.Deleted);
+            filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc && o.CreatedOnUtc <= endTime);
+            filter = filter & builder.Where(o => o.CustomerRoles.Any(y => y.Id == customerRoleRegister));
+
+            var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
+            if (daydiff > 32)
+            {
+                var query = _customerRepository.Collection.Aggregate().Match(filter).Group(x =>
+                    new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month },
+                    g => new { Okres = g.Key, Count = g.Count() }).SortBy(x => x.Okres).ToList();
+                foreach (var item in query)
+                {
+                    report.Add(new CustomerByTimeReportLine()
+                    {
+                        Time = item.Okres.Year.ToString() + "-" + item.Okres.Month.ToString(),
+                        Registered = item.Count,
+                    });
+                }
+            }
+            else
+            {
+                var query = _customerRepository.Collection.Aggregate().Match(filter).Group(x =>
+                    new { Year = x.CreatedOnUtc.Year, Month = x.CreatedOnUtc.Month, Day = x.CreatedOnUtc.Day },
+                    g => new { Okres = g.Key, Count = g.Count() }).SortBy(x => x.Okres).ToList();
+                foreach (var item in query)
+                {
+                    report.Add(new CustomerByTimeReportLine()
+                    {
+                        Time = item.Okres.Year.ToString() + "-" + item.Okres.Month.ToString() + "-" + item.Okres.Day.ToString(),
+                        Registered = item.Count,
+                    });
+                }
+            }
+
+
+
+            return report;
         }
 
         #endregion

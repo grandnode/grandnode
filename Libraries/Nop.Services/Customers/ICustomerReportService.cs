@@ -4,6 +4,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using System.Collections.Generic;
 
 namespace Nop.Services.Customers
 {
@@ -34,5 +35,14 @@ namespace Nop.Services.Customers
         /// <param name="days">Customers registered in the last days</param>
         /// <returns>Number of registered customers</returns>
         int GetRegisteredCustomersReport(int days);
+
+        /// <summary>
+        /// Get "customer by time" report
+        /// </summary>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <returns>Result</returns>
+        IList<CustomerByTimeReportLine> GetCustomerByTimeReport(DateTime? startTimeUtc = null,
+            DateTime? endTimeUtc = null);
     }
 }

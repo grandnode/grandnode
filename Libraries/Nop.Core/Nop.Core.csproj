@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Catalog\ProductDeleted.cs" />
+    <Compile Include="Domain\Customers\CustomerByTimeReportLine.cs" />
     <Compile Include="Domain\Customers\CustomerReminderHistory.cs" />
     <Compile Include="Domain\Messages\BannerArchive.cs" />
     <Compile Include="Domain\Orders\OrderByTimeReportLine.cs" />

@@ -2020,7 +2020,33 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
+
+        [ChildActionOnly]
+        public ActionResult ReportCustomerTimeChar()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            return PartialView();
+        }
+        [HttpPost]
+        public ActionResult ReportCustomerTimeChar(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            var model = _customerReportService.GetCustomerByTimeReport(startDate, endDate);
+            var gridModel = new DataSourceResult
+            {
+                Data = model
+            };
+            return new JsonResult
+            {
+                Data = gridModel.Data
+            };
+        }
+
         #endregion
 
         #region Current shopping cart/ wishlist

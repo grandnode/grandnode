@@ -9587,6 +9587,9 @@
   <LocaleResource Name="Admin.Dashboard.OnlineShoppingCart">
     <Value>in the last {0} minutes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.Reportcustomertime.Titlechart">
+    <Value>Number of registered customers in time</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Dashboard.ReportOverviewHelper">
     <Value>report overview...</Value>
   </LocaleResource>

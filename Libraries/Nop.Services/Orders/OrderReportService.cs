@@ -131,12 +131,14 @@ namespace Nop.Services.Orders
             if (!startTimeUtc.HasValue)
                 startTimeUtc = DateTime.MinValue;
             if (!endTimeUtc.HasValue)
-                endTimeUtc = DateTime.UtcNow; ;
+                endTimeUtc = DateTime.UtcNow;
+
+            var endTime = new DateTime(endTimeUtc.Value.Year, endTimeUtc.Value.Month, endTimeUtc.Value.Day, 23, 59, 00);
 
             var builder = Builders<Order>.Filter;
 
             var filter = builder.Where(o => !o.Deleted);
-            filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc && o.CreatedOnUtc <= endTimeUtc);
+            filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc && o.CreatedOnUtc <= endTime);
 
             var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
             if(daydiff > 32)

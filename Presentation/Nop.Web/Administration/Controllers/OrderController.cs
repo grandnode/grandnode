@@ -4060,6 +4060,59 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+
+        [ChildActionOnly]
+        public ActionResult ReportLatestOrder()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            return PartialView();
+        }
+
+        [HttpPost]
+        public ActionResult ReportLatestOrder(DataSourceRequest command, DateTime? startDate, DateTime? endDate)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return Content("");
+
+            //a vendor does have access to this report
+            if (_workContext.CurrentVendor != null)
+                return Content("");
+
+
+            //load orders
+            var orders = _orderService.SearchOrders(
+                createdFromUtc: startDate,
+                createdToUtc: endDate,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = orders.Select(x =>
+                {
+                    var store = _storeService.GetStoreById(x.StoreId);
+                    return new OrderModel
+                    {
+                        Id = x.Id,
+                        OrderNumber = x.OrderNumber,
+                        StoreName = store != null ? store.Name : "Unknown",
+                        OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
+                        OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        CustomerEmail = x.BillingAddress.Email,
+                        CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    };
+                }),
+                Total = orders.TotalCount
+            };
+
+
+            return Json(gridModel);
+        }
+
         [ChildActionOnly]
         public ActionResult OrderIncompleteReport()
         {
