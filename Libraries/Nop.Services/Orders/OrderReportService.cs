@@ -264,7 +264,6 @@ namespace Nop.Services.Orders
             var query = _orderRepository.Collection
                     .Aggregate()
                     .Match(filter)
-                    .Unwind<Order, Order>(x => x.OrderItems)
                     .Group(x => 1, g => new OrderAverageReportLine
                     {
                         CountOrders = g.Count(),
