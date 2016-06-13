@@ -17,6 +17,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using System.Threading.Tasks;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Admin.Controllers
 {
@@ -73,7 +74,7 @@ namespace Nop.Admin.Controllers
             model.LowStockProducts = _productRepository.Collection.Find(new CommandDocument(doc)).ToListAsync().Result.Count;
 
             model.ReturnRequests = (int)_returnRequestRepository.Collection.Count(new BsonDocument());
-            model.TodayRegisteredCustomers = _customerService.GetAllCustomers(createdFromUtc: DateTime.UtcNow.Date, pageSize: 1).TotalCount;
+            model.TodayRegisteredCustomers = _customerService.GetAllCustomers(customerRoleIds: new string[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1).TotalCount;
             return model;
 
         }
