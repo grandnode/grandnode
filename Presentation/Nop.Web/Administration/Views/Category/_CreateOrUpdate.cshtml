@@ -5,6 +5,7 @@
 
 <script>
     $(document).ready(function() {
+        $('#category-edit').show();
         $("#category-edit").kendoTabStrip({
             animation:  {
                 open: {
@@ -16,7 +17,7 @@
     });
 </script>
 
-<div id="category-edit">
+<div id="category-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Catalog.Categories.Info")

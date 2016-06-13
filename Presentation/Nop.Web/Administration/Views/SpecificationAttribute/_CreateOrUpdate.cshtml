@@ -4,6 +4,7 @@
 
 <script>
     $(document).ready(function () {
+        $('#specificationattribute-edit').show();
         $("#specificationattribute-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -16,7 +17,7 @@
 </script>
 
 
-<div id="specificationattribute-edit">
+<div id="specificationattribute-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.SpecificationAttributes.Info")
@@ -163,7 +164,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                         field: "Id",
                         title: "@T("Admin.Common.Edit")",
                         width: 100,
-                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?specificationAttributeId=#=SpecificationAttributeId#&btnId=btnRefresh&formId=specificationattribute-form', 800, 350, true); return false;\" class='k-button' />"
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?specificationAttributeId=#=SpecificationAttributeId#&btnId=btnRefresh&formId=specificationattribute-form', 800, 450, true); return false;\" class='k-button' />"
                     }, {
                         command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
                         title: "@T("Admin.Common.Delete")",

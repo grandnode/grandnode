@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    <div id="ordersettings-edit">
+                    <div id="ordersettings-edit" style="display:none">
                         <ul>
                             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
                                 @T("Admin.Configuration.Settings.Order.OrderSettings")
@@ -52,7 +52,8 @@
     </div>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
+            $("#ordersettings-edit").show();
             $("#ordersettings-edit").kendoTabStrip({
                 animation:  {
                     open: {

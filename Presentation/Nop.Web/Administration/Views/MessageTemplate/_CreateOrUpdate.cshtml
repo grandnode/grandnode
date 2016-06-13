@@ -7,6 +7,7 @@
 
 <script>
     $(document).ready(function () {
+        $("#template-edit").show();
         $("#template-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -17,7 +18,7 @@
         });
     });
 </script>
-<div id="template-edit">
+<div id="template-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.ContentManagement.MessageTemplates.Info")

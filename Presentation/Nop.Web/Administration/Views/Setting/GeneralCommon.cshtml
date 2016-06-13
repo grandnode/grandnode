@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    <div id="generalsettings-edit">
+                    <div id="generalsettings-edit" style="display:none">
                         <ul>
                             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
                                 @T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings")
@@ -78,7 +78,8 @@
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
+            $("#generalsettings-edit").show();
             $("#generalsettings-edit").kendoTabStrip({
                 animation:  {
                     open: {

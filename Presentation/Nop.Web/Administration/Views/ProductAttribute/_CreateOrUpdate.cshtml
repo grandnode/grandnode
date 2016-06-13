@@ -3,6 +3,7 @@
 @Html.HiddenFor(model => model.Id)
 <script>
     $(document).ready(function() {
+        $('#product-attribute-edit').show();
         $("#product-attribute-edit").kendoTabStrip({
             animation:  {
                 open: {
@@ -15,7 +16,7 @@
 </script>
 
 
-<div id="product-attribute-edit">
+<div id="product-attribute-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Catalog.Attributes.ProductAttributes.Info")

@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="portlet-body form">
-                    <div id="catalogsettings-edit">
+                    <div id="catalogsettings-edit" style="display:none">
                         <ul>
                             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
                                 @T("Admin.Configuration.Settings.Catalog.General")
@@ -84,6 +84,7 @@
 
     <script>
         $(document).ready(function () {
+            $("#catalogsettings-edit").show();
             $("#catalogsettings-edit").kendoTabStrip({
                 animation: {
                     open: {

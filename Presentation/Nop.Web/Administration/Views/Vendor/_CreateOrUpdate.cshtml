@@ -5,6 +5,7 @@
 
 <script>
     $(document).ready(function () {
+        $("#vendor-edit").show();
         $("#vendor-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -15,7 +16,7 @@
         });
     });
 </script>
-<div id="vendor-edit">
+<div id="vendor-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Vendors.Info")

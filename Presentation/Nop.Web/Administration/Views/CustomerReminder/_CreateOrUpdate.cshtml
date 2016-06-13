@@ -5,6 +5,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $("#customerreminder-edit").show();
         $("#customerreminder-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -31,7 +32,7 @@
 
 
    
-<div id="customerreminder-edit">
+<div id="customerreminder-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Customers.CustomerReminder.Info")

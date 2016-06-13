@@ -3,6 +3,7 @@
 @Html.HiddenFor(model => model.Id)
 <script>
     $(document).ready(function () {
+        $("#topic-edit").show();
         $("#topic-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -13,7 +14,7 @@
         });
     });
 </script>
-<div id="topic-edit">
+<div id="topic-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.ContentManagement.Topics.Info")

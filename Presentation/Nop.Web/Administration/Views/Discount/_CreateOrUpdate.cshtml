@@ -10,6 +10,7 @@
 
 <script>
     $(document).ready(function() {
+        $("#discount-edit").show();
         $("#discount-edit").kendoTabStrip({
             animation:  {
                 open: {
@@ -21,7 +22,7 @@
     });
 </script>
 
-<div id="discount-edit">
+<div id="discount-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Promotions.Discounts.Info")
