@@ -7,17 +7,19 @@ using System.Collections.Generic;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 
 namespace Nop.Services.Customers
 {
     public partial class CustomerActionService: ICustomerActionService
     {
         #region Fields
-
+        private const string CUSTOMER_ACTION_TYPE = "Nop.customer.action.type";
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -26,12 +28,14 @@ namespace Nop.Services.Customers
         public CustomerActionService(IRepository<CustomerAction> customerActionRepository,
             IRepository<CustomerActionType> customerActionTypeRepository,
             IRepository<CustomerActionHistory> customerActionHistoryRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            ICacheManager cacheManager)
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
             this._customerActionHistoryRepository = customerActionHistoryRepository;
             this._eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -138,6 +142,8 @@ namespace Nop.Services.Customers
 
             _customerActionTypeRepository.Update(customerActionType);
 
+            //clear cache
+            _cacheManager.Remove(CUSTOMER_ACTION_TYPE);
             //event notification
             _eventPublisher.EntityUpdated(customerActionType);
         }
