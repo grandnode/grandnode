@@ -411,6 +411,7 @@ namespace Nop.Services.Catalog
                 .Set(x => x.NotApprovedRatingSum, product.NotApprovedRatingSum)
                 .Set(x => x.NotApprovedTotalReviews, product.NotApprovedTotalReviews)
                 .Set(x => x.NotifyAdminForQuantityBelow, product.NotifyAdminForQuantityBelow)
+                .Set(x => x.OnSale, product.OnSale)
                 .Set(x => x.OldPrice, product.OldPrice)
                 .Set(x => x.OrderMaximumQuantity, product.OrderMaximumQuantity)
                 .Set(x => x.OrderMinimumQuantity, product.OrderMinimumQuantity)
@@ -508,6 +509,24 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(product);
+        }
+
+        public virtual void UpdateMostView(string productId, int qty)
+        {
+            Task.Run(() =>
+            {
+                var update = new UpdateDefinitionBuilder<Product>().Inc(x => x.Viewed, qty);
+                var result = _productRepository.Collection.UpdateManyAsync(x => x.Id == productId, update).Result;
+            });
+        }
+
+        public virtual void UpdateSold(string productId, int qty)
+        {
+            Task.Run(() =>
+            {
+                var update = new UpdateDefinitionBuilder<Product>().Inc(x => x.Sold, qty);
+                var result = _productRepository.Collection.UpdateManyAsync(x => x.Id == productId, update).Result;
+            });
         }
 
         /// <summary>
@@ -890,9 +909,6 @@ namespace Nop.Services.Catalog
             //warehouse filtering
             if (!String.IsNullOrEmpty(warehouseId))
             {
-                //var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
-                //   filter = filter & (builder.Where(x => x.ManageInventoryMethodId == manageStockInventoryMethodId && x.UseMultipleWarehouses && x.ProductWarehouseInventory.Any(y=>y.WarehouseId == warehouseId)) |
-                //    builder.Where(x => x.ManageInventoryMethodId != manageStockInventoryMethodId && !x.UseMultipleWarehouses && x.WarehouseId == warehouseId));
                 filter = filter & (builder.Where(x => x.UseMultipleWarehouses && x.ProductWarehouseInventory.Any(y=>y.WarehouseId == warehouseId)) |
                     builder.Where(x => !x.UseMultipleWarehouses && x.WarehouseId == warehouseId));
 
@@ -946,6 +962,21 @@ namespace Nop.Services.Catalog
             {
                 //creation date
                 builderSort = Builders<Product>.Sort.Ascending(x => x.CreatedOnUtc);
+            }
+            else if (orderBy == ProductSortingEnum.OnSale)
+            {
+                //on sale
+                builderSort = Builders<Product>.Sort.Descending(x => x.OnSale);
+            }
+            else if (orderBy == ProductSortingEnum.MostViewed)
+            {
+                //most viewed
+                builderSort = Builders<Product>.Sort.Descending(x => x.Viewed);
+            }
+            else if (orderBy == ProductSortingEnum.BestSellers)
+            {
+                //best seller
+                builderSort = Builders<Product>.Sort.Descending(x => x.Sold);
             }
             else
             {

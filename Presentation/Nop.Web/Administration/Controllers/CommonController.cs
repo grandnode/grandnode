@@ -34,6 +34,8 @@ using Nop.Web.Framework.Security;
 using Nop.Core.Infrastructure;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Data;
+using Nop.Services.Catalog;
+using MongoDB.Driver;
 
 namespace Nop.Admin.Controllers
 {
@@ -60,6 +62,7 @@ namespace Nop.Admin.Controllers
         private readonly ISearchTermService _searchTermService;
         private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
+        private readonly IRepository<Product> _repositoryProduct;
         private readonly CatalogSettings _catalogSettings;
         private readonly HttpContextBase _httpContext;
 
@@ -86,6 +89,7 @@ namespace Nop.Admin.Controllers
             ISearchTermService searchTermService,
             ISettingService settingService,
             IStoreService storeService,
+            IRepository<Product> repositoryProduct,
             CatalogSettings catalogSettings,
             HttpContextBase httpContext)
         {
@@ -108,6 +112,7 @@ namespace Nop.Admin.Controllers
             this._searchTermService = searchTermService;
             this._settingService = settingService;
             this._storeService = storeService;
+            this._repositoryProduct = repositoryProduct;
             this._catalogSettings = catalogSettings;
             this._httpContext = httpContext;
         }
@@ -449,6 +454,18 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DeleteGuests.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             model.DeleteGuests.NumberOfDeletedCustomers = _customerService.DeleteGuestCustomers(startDateValue, endDateValue, model.DeleteGuests.OnlyWithoutShoppingCart);
+
+            return View(model);
+        }
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("clear-most-view")]
+        public ActionResult MaintenanceClearMostViewed(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var update = new UpdateDefinitionBuilder<Product>().Set(x => x.Viewed, 0);
+            var result = _repositoryProduct.Collection.UpdateManyAsync(x => x.Viewed != 0, update).Result;
 
             return View(model);
         }

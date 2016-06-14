@@ -532,6 +532,13 @@
             </div>
         </div>
         <div class="form-group">
+            @Html.GrandLabelFor(model => model.OnSale)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.OnSale)
+                @Html.ValidationMessageFor(model => model.OnSale)
+            </div>
+        </div>
+        <div class="form-group">
             @Html.GrandLabelFor(model => model.AllowCustomerReviews)
             <div class="col-md-9 col-sm-9">
                 @Html.EditorFor(model => model.AllowCustomerReviews)

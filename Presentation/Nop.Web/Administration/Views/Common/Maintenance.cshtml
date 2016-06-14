@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                             <div class="form-actions">
-                                    <input type="submit" name="delete-guests" class="btn green" value="@T("Admin.Common.Delete")" />                                
+                                    <input type="submit" name="delete-guests" class="btn red" value="@T("Admin.Common.Delete")" />                                
                             </div>
                             @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
                             {
@@ -50,6 +50,16 @@
                                     <strong>@string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)</strong>                                    
                                 </div>
                             }
+                        </div>
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="note note-info">
+                                    <strong>@T("Admin.System.Maintenance.ClearMostViewed")</strong>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <input type="submit" name="clear-most-view" class="btn red" value="@T("Admin.Common.Delete")" />
+                            </div>
                         </div>
                         <div class="form-body">
                             <div class="form-group">

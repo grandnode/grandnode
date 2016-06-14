@@ -29,5 +29,18 @@
         /// Product creation date
         /// </summary>
         CreatedOn = 15,
+        /// <summary>
+        /// Product sold
+        /// </summary>
+        BestSellers = 20,
+        /// <summary>
+        /// Product most viewed
+        /// </summary>
+        MostViewed = 25,
+        /// <summary>
+        /// Product most onsale
+        /// </summary>
+        OnSale = 30,
+
     }
 }

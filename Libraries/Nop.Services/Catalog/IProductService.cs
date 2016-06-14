@@ -78,6 +78,21 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateStockProduct(Product product);
+
+        /// <summary>
+        /// Updates most view on the product
+        /// </summary>
+        /// <param name="productId">ProductId</param>
+        /// <param name="qty">Count</param>
+        void UpdateMostView(string productId, int qty);
+
+        /// <summary>
+        /// Updates best sellers on the product
+        /// </summary>
+        /// <param name="productId">ProductId</param>
+        /// <param name="qty">Count</param>
+        void UpdateSold(string productId, int qty);
+
         /// <summary>
         /// Get (visible) product number in certain category
         /// </summary>

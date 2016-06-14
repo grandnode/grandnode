@@ -366,6 +366,9 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrderManufacturer")]
         public int DisplayOrderManufacturer { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrderOnSale")]
+        public int OnSale { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
 

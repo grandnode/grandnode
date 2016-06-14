@@ -10569,6 +10569,10 @@ namespace Nop.Services.Installation
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_desc" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Price), new CreateIndexOptions() { Name = "Price_asc" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Price), new CreateIndexOptions() { Name = "Price_desc" });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.OnSale), new CreateIndexOptions() { Name = "OnSale_desc" });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Viewed), new CreateIndexOptions() { Name = "Viewed_desc" });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Sold), new CreateIndexOptions() { Name = "Sold_desc" });
+
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductTags.Id").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "Tags" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "ProductCategories" });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "ProductManufacturers" });

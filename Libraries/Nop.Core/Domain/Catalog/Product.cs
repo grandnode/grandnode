@@ -510,6 +510,21 @@ namespace Nop.Core.Domain.Catalog
         public DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the sold
+        /// </summary>
+        public int Sold { get; set; }
+
+        /// <summary>
+        /// Gets or sets the viewed
+        /// </summary>
+        public Int64 Viewed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the onsale
+        /// </summary>
+        public int OnSale { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }
@@ -641,11 +656,6 @@ namespace Nop.Core.Domain.Catalog
                 this.RentalPricePeriodId = (int)value;
             }
         }
-
-
-
-
-
 
         /// <summary>
         /// Gets or sets the collection of ProductCategory

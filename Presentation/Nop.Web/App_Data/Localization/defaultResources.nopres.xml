@@ -2496,6 +2496,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrderManufacturer.Hint">
     <Value>Display order of the product for manufacturer page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrderOnSale">
+    <Value>Sort product on sale</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayOrderOnSale.Hint">
+    <Value>Sort product on sale.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.DisplayStockAvailability">
     <Value>Display stock availability</Value>
   </LocaleResource>
@@ -11720,6 +11726,9 @@
   <LocaleResource Name="Admin.System.Maintenance">
     <Value>Maintenance</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.ClearMostViewed">
+    <Value>Clear field Most Viewed on the product</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteActivityLog">
     <Value>Deleting activity Log</Value>
   </LocaleResource>
@@ -13133,14 +13142,23 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ManageInventoryMethod.ManageStockByAttributes">
     <Value>Track inventory by product attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.BestSellers">
+    <Value>Best Sellers</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.CreatedOn">
     <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.MostViewed">
+    <Value>Most Viewed</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.NameAsc">
     <Value>Name: A to Z</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.NameDesc">
     <Value>Name: Z to A</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.OnSale">
+    <Value>On Sale</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.Position">
     <Value>Position</Value>

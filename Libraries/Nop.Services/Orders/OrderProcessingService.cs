@@ -1267,6 +1267,7 @@ namespace Nop.Services.Orders
                             decimal discountAmountInclTax = _taxService.GetProductPrice(product, discountAmount, true, details.Customer, out taxRate);
                             decimal discountAmountExclTax = _taxService.GetProductPrice(product, discountAmount, false, details.Customer, out taxRate);
                             */
+
                             if (scDiscount != null && !details.AppliedDiscounts.ContainsDiscount(scDiscount))
                                 details.AppliedDiscounts.Add(scDiscount);
 
@@ -1301,6 +1302,7 @@ namespace Nop.Services.Orders
                             };
                             order.OrderItems.Add(orderItem);
                             _orderService.UpdateOrder(order);
+                            _productService.UpdateSold(sc.ProductId, sc.Quantity);
 
                             //gift cards
                             if (product.IsGiftCard)
