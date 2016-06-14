@@ -50,7 +50,7 @@
                         </div>
                         <div class="details">
                             <div class="number" style="padding-top:15px;"> @customersOnline </div>
-                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboard.OnlineCustomers")</div>
+                            <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.OnlineCustomers")</div>
                             <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes) </div>
                         </div>
                         <a class="more" href="@Url.Action("List", "OnlineCustomer")">
@@ -66,7 +66,7 @@
                         </div>
                         <div class="details">
                             <div class="number" style="padding-top:15px;"> @customersShoppingCart </div>
-                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboard.ActiveShoppingCarts") </div>
+                            <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.ActiveShoppingCarts") </div>
                             <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes) </div>
                         </div>
                         <a class="more" href="@Url.Action("CurrentCarts", "ShoppingCart")">
@@ -82,7 +82,7 @@
                         </div>
                         <div class="details">
                             <div class="number" style="padding-top:15px;"> @ordersAmount / @ordersToday.Count</div>
-                            <div class="desc" style="font-size:24px;"> @T("Admin.Dashboard.TodayOrders") </div>
+                            <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.TodayOrders") </div>
                             <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.TodayOrders.AmountCount") </div>
                         </div>
                         <a class="more" href="@Url.Action("List", "Order", new { startDate = DateTime.UtcNow.ToShortDateString() })">
@@ -94,7 +94,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-4">
+                    <div class="col-sm-12 col-lg-4 col-md-12">
                         <div class="portlet light bordered">
                             <div class="portlet-title">
                                 <div class="caption">
@@ -110,14 +110,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-sm-12 col-lg-8 col-md-12">
                         @Html.Action("ReportOrderTimeChar", "Order")
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-4">
+                    <div class="col-sm-12 col-lg-4 col-md-12">
                         <div class="portlet light bordered">
                             <div class="portlet-title">
                                 <div class="caption">
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-sm-12 col-lg-8 col-md-12">
                         @Html.Action("ReportCustomerTimeChar", "Customer")
                     </div>
                 </div>
