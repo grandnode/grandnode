@@ -189,3 +189,7 @@ a span.username {
     font-weight: 600;
     font-size: 15px;
 }
+
+.mce-container label {
+    max-width: inherit;
+}

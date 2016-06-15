@@ -57,6 +57,25 @@ namespace Nop.Core
         {
             Init(source, pageIndex, pageSize, totalCount);
         }       
+
+        private void Init(IMongoQueryable<T> source, int pageIndex, int pageSize, int? totalCount = null)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (pageSize <= 0)
+                throw new ArgumentException("pageSize must be greater than zero");
+
+            TotalCount = totalCount ?? source.Count();
+            TotalPages = TotalCount / pageSize;
+
+            if (TotalCount % pageSize > 0)
+                TotalPages++;
+
+            PageSize = pageSize;
+            PageIndex = pageIndex;
+            source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
+            AddRange(source);
+        }
         private void Init(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount = null)
         {
             if (source == null)
@@ -75,6 +94,8 @@ namespace Nop.Core
             source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
             AddRange(source);
         }
+
+
         public int PageIndex { get; private set; }
         public int PageSize { get; private set; }
         public int TotalCount { get; private set; }

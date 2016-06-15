@@ -162,7 +162,7 @@
             </td>
         </tr>
         <tr>
-            <td class="adminData">
+            <td >
                 <table class="table table-bordered table-striped table-hover">
 
                     <thead>
@@ -236,18 +236,15 @@
     </table>
     if (Model.ShipmentStatusEvents.Count > 0)
     {
-        <table class="adminContent">
-            <tr>
-                <td class="adminData">
-                    <strong>@T("Admin.Orders.Shipments.ShipmentStatusEvents")</strong>
-                </td>
-            </tr>
-            <tr>
-                <td class="adminData">
-                    <table class="tablestyle" border="1" cellspacing="0" style="width:100%;border-collapse:collapse;">
-
+        <div class="form-horizontal">
+            <div class="note note-info">
+                @T("Admin.Orders.Shipments.ShipmentStatusEvents")
+            </div>
+            <div class="form-body">
+                <div class="form-group">
+                    <table class="table table-bordered table-striped table-hover">
                         <thead>
-                            <tr class="headerstyle">
+                            <tr>
                                 <th align="center">
                                     @T("Admin.Orders.Shipments.ShipmentStatusEvents.Event")
                                 </th>
@@ -293,9 +290,9 @@
                             }
                         </tbody>
                     </table>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </div>
     }
 }
 @Html.DeleteConfirmation("DeleteShipment", "shipment-delete")

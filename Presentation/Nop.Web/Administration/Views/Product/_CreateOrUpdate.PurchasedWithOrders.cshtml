@@ -48,9 +48,9 @@
                 },
                 scrollable: false,
                 columns: [{
-                    field: "Id",
+                    field: "OrderNumber",
                     title: "@T("Admin.Orders.Fields.ID")",
-                    width: 50
+                    width: 80
                 }, {
                     field: "CustomerEmail",
                     title: "@T("Admin.Orders.Fields.CustomerEmail")",
@@ -83,8 +83,8 @@
                 {
                     field: "Id",
                     title: "@T("Admin.Common.View")",
-                    width: 200,
-                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                    width: 100,
+                    template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                 }]
             });
         });

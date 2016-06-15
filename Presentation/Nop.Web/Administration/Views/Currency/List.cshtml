@@ -195,74 +195,72 @@
 @if (rates != null)
 {
     <h4>@T("Admin.Configuration.Currencies.LiveRates")</h4>
-    <table class="adminContent" style="width: 300px">
-        <tr>
-            <td>
+    <div class="form-horizontal">
+        <div class="form-body">            
                 <div id="rate-grid"></div>
-                <script>
-                    //local datasource
-                    var rates = [
-                        @for (int i = 0; i < rates.Count; i++)
+                    <script>
+                        //local datasource
+                        var rates = [
+                            @for (int i = 0; i < rates.Count; i++)
                         {
                             var rate = rates[i];
                             <text>
-{
-    CurrencyCode: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.CurrencyCode)))",
-    Rate: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.Rate.ToString())))"
-}
-</text>
+    {
+        CurrencyCode: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.CurrencyCode)))",
+        Rate: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.Rate.ToString())))"
+    }
+    </text>
                             if (i != rates.Count - 1)
                             {
                                 <text>,</text>
                             }
                         }
-                    ];
-                    $(document).ready(function() {
-                        $("#rate-grid").kendoGrid({
-                            dataSource: {
-                                data: rates,
-                                schema: {
-                                    model: {
-                                        fields: {
-                                            CurrencyCode: { type: "string" },
-                                            Rate: { type: "number" }
+                        ];
+                        $(document).ready(function () {
+                            $("#rate-grid").kendoGrid({
+                                dataSource: {
+                                    data: rates,
+                                    schema: {
+                                        model: {
+                                            fields: {
+                                                CurrencyCode: { type: "string" },
+                                                Rate: { type: "number" }
+                                            }
                                         }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
                                     }
                                 },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                }
-                            },
-                            pageable: {
-                                refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "CurrencyCode",
-                                    title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
-                                    width: 100
-                                }, {
-                                    field: "Rate",
-                                    title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
-                                    width: 100
-                                }, {
-                                    field: "CurrencyCode",
-                                    title: "@T("Admin.Configuration.Currencies.ApplyRate")",
-                                    template: '<a onclick="applyCurrencyRate(\'#=Rate#\', \'#=CurrencyCode#\')" class="k-button">@T("Admin.Configuration.Currencies.ApplyRate")</a>'
-                                }
-                            ]
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "CurrencyCode",
+                                        title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
+                                        width: 100
+                                    }, {
+                                        field: "Rate",
+                                        title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
+                                        width: 100
+                                    }, {
+                                        field: "CurrencyCode",
+                                        title: "@T("Admin.Configuration.Currencies.ApplyRate")",
+                                        template: '<a onclick="applyCurrencyRate(\'#=Rate#\', \'#=CurrencyCode#\')" class="k-button">@T("Admin.Configuration.Currencies.ApplyRate")</a>'
+                                    }
+                                ]
+                            });
                         });
-                    });
-                </script>
-            </td>
-        </tr>
-    </table>
+                    </script>
+        </div>
+    </div>
     <script>
         function applyCurrencyRate(rate, currencyCode) {
             var postData = {

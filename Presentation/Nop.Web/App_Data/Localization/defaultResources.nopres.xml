@@ -8834,6 +8834,9 @@
   <LocaleResource Name="Admin.Customers.CustomerRoles.Products.AddNew">
     <Value>Recommended products assigned to the Customer Role</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Products.Info">
+    <Value>In order to use this functionality you have to enable the following setting: Configuration > Catalog settings > General > 'Recommended products' enabled</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Products.Fields.AddNew">
     <Value>Add new</Value>
   </LocaleResource>

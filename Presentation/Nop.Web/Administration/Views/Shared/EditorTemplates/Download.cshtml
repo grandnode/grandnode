@@ -57,55 +57,53 @@
 <div id="@(clientId + "value")">
     @Html.HiddenFor(x => x)
 </div>
-<table class="adminContent" border="1" style="width:500px">
-    @if (!disableUrl)
-    {
-        <tr>
-            <td class="adminTitle">
-                @T("Admin.Download.UseDownloadURL"):
-            </td>
-            <td class="adminData">
-                <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
-                       @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text>   } />
-            </td>
-        </tr>
-    }
-    <tr id="pnlDownloadURL@(randomNumber)">
-        <td class="adminTitle">
-            @T("Admin.Download.DownloadURL"):
-        </td>
-        <td class="adminData">
-            <input type="text" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
-                @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl))
-                {
-                    <text>value="@(download.DownloadUrl)"</text>
-                }
-                />
-            <input type="button" id="saveDownloadUrl@(randomNumber)" class="k-button" value="@T("Admin.Download.SaveDownloadURL")" />
-            <div id="pnlDownloadURLResult@(randomNumber)" style="display:none;">@T("Admin.Download.DownloadURLSaved")</div>
-        </td>
-    </tr>
-    <tr id="pnlDownloadFile@(randomNumber)">
-        <td class="adminTitle">
-            @T("Admin.Download.UploadFile"):
-        </td>
-        <td class="adminData">
-            <div>
-                @*fine uploader container*@
-                <div id="@clientId">
-                    <noscript>
-                        <p>
-                            Please enable JavaScript to use file uploader.</p>
-                        <!-- or put a simple form for upload here -->
-                    </noscript>
-                </div>                    
-                @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
-                <script type="text/template" id="@(clientId)-qq-template">
+<div class="form-horizontal form-horizontal  portlet light bg-inverse form-bordered box green" style="border-top: 1px solid #5cd1db;">
+    <div class="form-body">
+        @if (!disableUrl)
+        {
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3">
+                    @T("Admin.Download.UseDownloadURL"):
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
+                           @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text>    } />
+                </div>
+            </div>
+        }
+        <div class="form-group" id="pnlDownloadURL@(randomNumber)">
+            <div class="col-md-3 col-sm-3">
+                @T("Admin.Download.DownloadURL"):
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <input type="text" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
+                       @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text>  } />
+                <input type="button" id="saveDownloadUrl@(randomNumber)" class="k-button" value="@T("Admin.Download.SaveDownloadURL")" />
+                <div id="pnlDownloadURLResult@(randomNumber)" style="display:none;">@T("Admin.Download.DownloadURLSaved")</div>
+            </div>
+        </div>
+        <div class="form-group"  id="pnlDownloadFile@(randomNumber)">
+            <div class="col-md-3 col-sm-3">
+                @T("Admin.Download.UploadFile"):
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div>
+                    @*fine uploader container*@
+                    <div id="@clientId">
+                        <noscript>
+                            <p>
+                                Please enable JavaScript to use file uploader.
+                            </p>
+                            <!-- or put a simple form for upload here -->
+                        </noscript>
+                    </div>
+                    @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
+                    <script type="text/template" id="@(clientId)-qq-template">
                         <div class="qq-uploader-selector qq-uploader">
                             <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
                                 <span>@T("Common.FileUploader.DropFiles")</span>
                             </div>
-                            <div class="qq-upload-button-selector qq-upload-button">
+                            <div class="qq-upload-button-selector btn yellow">
                                 <div>@T("Common.FileUploader.Upload")</div>
                             </div>
                             <span class="qq-drop-processing-selector qq-drop-processing">
@@ -131,50 +129,51 @@
                         </div>
                     </script>
 
-                <script type="text/javascript">
+                    <script type="text/javascript">
 
-                    $(document).ready(function () {
-                        $("#@clientId").fineUploader({
-                            request: {
-                                endpoint: '@(Url.Content("~/Admin/Download/AsyncUpload"))'
-                            },
-                            template: "@(clientId)-qq-template",
-                            multiple: false
-                        }).on("complete", function (event, id, name, responseJSON, xhr) {
-                            $("#@(clientId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Admin.Download.DownloadUploadedFile")</a>");
-                            $("#@(clientId + "value") input").val(responseJSON.downloadId);
-                            $("#@(clientId + "remove")").show();
+                        $(document).ready(function () {
+                            $("#@clientId").fineUploader({
+                                request: {
+                                    endpoint: '@(Url.Content("~/Admin/Download/AsyncUpload"))'
+                                },
+                                template: "@(clientId)-qq-template",
+                                multiple: false
+                            }).on("complete", function (event, id, name, responseJSON, xhr) {
+                                $("#@(clientId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Admin.Download.DownloadUploadedFile")</a>");
+                                $("#@(clientId + "value") input").val(responseJSON.downloadId);
+                                $("#@(clientId + "remove")").show();
+                            });
+
+
+                            $("#@(clientId + "remove")").click(function (e) {
+                                $("#@(clientId + "downloadurl")").html("");
+                                $("#@(clientId + "value") input").val(0);
+                                $(this).hide();
+                            });
                         });
 
-        
-                        $("#@(clientId + "remove")").click(function(e){
-                            $("#@(clientId + "downloadurl")").html("");
-                            $("#@(clientId + "value") input").val(0);
-                            $(this).hide();
-                        });
-                    });
+                    </script>
 
-                </script>
-
+                </div>
+                <div id="@(clientId + "downloadurl")">
+                    @if (download != null)
+                    {
+                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid }))">@T("Admin.Download.DownloadUploadedFile")</a>
+                    }
+                </div>
+                <div>
+                    @if (download != null)
+                    {
+                        <span id="@(clientId + "remove")" class="k-button">@T("Admin.Download.RemoveDownload")</span>
+                    }
+                    else
+                    {
+                        <span id="@(clientId + "remove")" class="k-button" style="display:none;">@T("Admin.Download.RemoveDownload")</span>
+                    }
+                </div>
             </div>
-            <div id="@(clientId + "downloadurl")">
-                @if (download != null)
-                {
-                    <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid }))">@T("Admin.Download.DownloadUploadedFile")</a>
-                }
-            </div>
-            <div>
-                @if (download != null)
-                {
-                    <span id="@(clientId + "remove")" class="k-button">@T("Admin.Download.RemoveDownload")</span>
-                }
-                else
-                {
-                    <span id="@(clientId + "remove")" class="k-button" style="display:none;">@T("Admin.Download.RemoveDownload")</span>
-                }
-            </div>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+</div>
 
 

@@ -2724,6 +2724,7 @@ namespace Nop.Admin.Controllers
                     return new OrderModel
                     {
                         Id = x.Id,
+                        OrderNumber = x.OrderNumber,
                         StoreName = store != null ? store.Name : "Unknown",
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
