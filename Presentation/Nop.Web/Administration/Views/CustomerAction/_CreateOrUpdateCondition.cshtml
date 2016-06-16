@@ -5,6 +5,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $("#customeractioncondition-edit").show();
         $("#customeractioncondition-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -16,7 +17,7 @@
     });
 </script>
 
-<div id="customeractioncondition-edit">
+<div id="customeractioncondition-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex()) id="tab-info">
             @T("Admin.Customers.CustomerActionCondition.Info")
