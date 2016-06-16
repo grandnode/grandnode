@@ -137,7 +137,9 @@ namespace Nop.Services.Helpers
                 //could not convert
                 return dt;
             }
-            
+            if (dt.Kind == DateTimeKind.Utc)
+                return dt;
+
             return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
         }
 
