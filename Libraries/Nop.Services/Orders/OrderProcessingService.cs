@@ -802,15 +802,13 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //order notes, notifications
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("Order status has been changed to {0}", os.ToString()),
                     DisplayToCustomer = false,
                     OrderId = order.Id,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-            _orderService.UpdateOrder(order);
-
 
             if (prevOrderStatus != OrderStatus.Complete &&
                 os == OrderStatus.Complete
@@ -826,14 +824,13 @@ namespace Nop.Services.Orders
                     orderCompletedAttachmentFileName);
                 if (orderCompletedCustomerNotificationQueuedEmailId > 0)
                 {
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = string.Format("\"Order completed\" email (to customer) has been queued. Queued email identifier: {0}.", orderCompletedCustomerNotificationQueuedEmailId),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
                     });
-                    _orderService.UpdateOrder(order);
                 }
             }
 
@@ -845,14 +842,13 @@ namespace Nop.Services.Orders
                 int orderCancelledCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
                 if (orderCancelledCustomerNotificationQueuedEmailId > 0)
                 {
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = string.Format("\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {0}.", orderCancelledCustomerNotificationQueuedEmailId),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
                     });
-                    _orderService.UpdateOrder(order);
                 }
             }
 
@@ -1519,7 +1515,7 @@ namespace Nop.Services.Orders
                         if (_workContext.OriginalCustomerIfImpersonated != null)
                         {
                             //this order is placed by a store administrator impersonating a customer
-                            order.OrderNotes.Add(new OrderNote
+                            _orderService.InsertOrderNote(new OrderNote
                             {
                                 Note = string.Format("Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
                                     _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
@@ -1527,11 +1523,10 @@ namespace Nop.Services.Orders
                                 CreatedOnUtc = DateTime.UtcNow,
                                 OrderId = order.Id,
                             });
-                            _orderService.UpdateOrder(order);
                         }
                         else
                         {
-                            order.OrderNotes.Add(new OrderNote
+                            _orderService.InsertOrderNote(new OrderNote
                             {
                                 Note = "Order placed",
                                 DisplayToCustomer = false,
@@ -1539,7 +1534,6 @@ namespace Nop.Services.Orders
                                 OrderId = order.Id,
 
                             });
-                            _orderService.UpdateOrder(order);
                         }
 
 
@@ -1547,7 +1541,7 @@ namespace Nop.Services.Orders
                         int orderPlacedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
                         if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
                         {
-                            order.OrderNotes.Add(new OrderNote
+                            _orderService.InsertOrderNote(new OrderNote
                             {
                                 Note = string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId),
                                 DisplayToCustomer = false,
@@ -1555,7 +1549,6 @@ namespace Nop.Services.Orders
                                 OrderId = order.Id,
 
                             });
-                            _orderService.UpdateOrder(order);
                         }
 
                         var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
@@ -1566,7 +1559,7 @@ namespace Nop.Services.Orders
                             .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
                         if (orderPlacedCustomerNotificationQueuedEmailId > 0)
                         {
-                            order.OrderNotes.Add(new OrderNote
+                            _orderService.InsertOrderNote(new OrderNote
                             {
                                 Note = string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId),
                                 DisplayToCustomer = false,
@@ -1574,7 +1567,6 @@ namespace Nop.Services.Orders
                                 OrderId = order.Id,
 
                             });
-                            _orderService.UpdateOrder(order);
                         }
 
                         var vendors = GetVendorsInOrder(order);
@@ -1583,14 +1575,13 @@ namespace Nop.Services.Orders
                             int orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, order.CustomerLanguageId);
                             if (orderPlacedVendorNotificationQueuedEmailId > 0)
                             {
-                                order.OrderNotes.Add(new OrderNote
+                                _orderService.InsertOrderNote(new OrderNote
                                 {
                                     Note = string.Format("\"Order placed\" email (to vendor) has been queued. Queued email identifier: {0}.", orderPlacedVendorNotificationQueuedEmailId),
                                     DisplayToCustomer = false,
                                     CreatedOnUtc = DateTime.UtcNow,
                                     OrderId = order.Id,
                                 });
-                                _orderService.UpdateOrder(order);
                             }
                         }
 
@@ -1714,7 +1705,7 @@ namespace Nop.Services.Orders
             }
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Order has been deleted",
                 DisplayToCustomer = false,
@@ -1722,7 +1713,6 @@ namespace Nop.Services.Orders
                 OrderId = order.Id,
 
             });
-            _orderService.UpdateOrder(order);
             
             //now delete an order
             _orderService.DeleteOrder(order);
@@ -1829,7 +1819,7 @@ namespace Nop.Services.Orders
 
 
                     //add a note
-                    initialOrder.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = "Recurring payment has been cancelled",
                         DisplayToCustomer = false,
@@ -1837,7 +1827,6 @@ namespace Nop.Services.Orders
                         OrderId = initialOrder.Id,
 
                     });
-                    _orderService.UpdateOrder(initialOrder);
 
                     //notify a store owner
                     _workflowMessageService
@@ -1864,7 +1853,7 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                initialOrder.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("Unable to cancel recurring payment. {0}", error),
                     DisplayToCustomer = false,
@@ -1872,7 +1861,6 @@ namespace Nop.Services.Orders
                     OrderId = initialOrder.Id,
 
                 });
-                _orderService.UpdateOrder(initialOrder);
 
                 //log it
                 string logError = string.Format("Error cancelling recurring payment. Order #{0}. Error: {1}", initialOrder.Id, error);
@@ -1956,15 +1944,13 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("Shipment# {0} has been sent", shipment.Id),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
-
-            });
-            _orderService.UpdateOrder(order);
+                });
 
             if (notifyCustomer)
             {
@@ -1972,15 +1958,13 @@ namespace Nop.Services.Orders
                 int queuedEmailId = _workflowMessageService.SendShipmentSentCustomerNotification(shipment, order.CustomerLanguageId);
                 if (queuedEmailId > 0)
                 {
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = string.Format("\"Shipped\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
-
                     });
-                    _orderService.UpdateOrder(order);
                 }
             }
 
@@ -2019,15 +2003,13 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = string.Format("Shipment# {0} has been delivered", shipment.Id),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
-
             });
-            _orderService.UpdateOrder(order);
 
             if (notifyCustomer)
             {
@@ -2035,14 +2017,13 @@ namespace Nop.Services.Orders
                 int queuedEmailId = _workflowMessageService.SendShipmentDeliveredCustomerNotification(shipment, order.CustomerLanguageId);
                 if (queuedEmailId > 0)
                 {
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = string.Format("\"Delivered\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
                     });
-                    _orderService.UpdateOrder(order);
                 }
             }
 
@@ -2088,7 +2069,7 @@ namespace Nop.Services.Orders
             SetOrderStatus(order, OrderStatus.Cancelled, notifyCustomer);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Order has been cancelled",
                 DisplayToCustomer = false,
@@ -2096,7 +2077,6 @@ namespace Nop.Services.Orders
                 OrderId = order.Id,
 
             });
-            _orderService.UpdateOrder(order);
 
             //return (add) back redeemded reward points
             ReturnBackRedeemedRewardPoints(order);
@@ -2164,14 +2144,13 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Order has been marked as authorized",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
-            _orderService.UpdateOrder(order);
 
             //check order status
             CheckOrderStatus(order);
@@ -2234,7 +2213,7 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     //add a note
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = "Order has been captured",
                         DisplayToCustomer = false,
@@ -2242,7 +2221,6 @@ namespace Nop.Services.Orders
                         OrderId = order.Id,
 
                     });
-                    _orderService.UpdateOrder(order);
 
                     CheckOrderStatus(order);
      
@@ -2271,15 +2249,13 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("Unable to capture order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
-
                 });
-                _orderService.UpdateOrder(order);
 
                 //log it
                 string logError = string.Format("Error capturing order #{0}. Error: {1}", order.Id, error);
@@ -2326,7 +2302,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Order has been marked as paid",
                 DisplayToCustomer = false,
@@ -2334,7 +2310,6 @@ namespace Nop.Services.Orders
                 OrderId = order.Id,
 
             });
-            _orderService.UpdateOrder(order);
 
             CheckOrderStatus(order);
    
@@ -2402,15 +2377,13 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     //add a note
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = string.Format("Order has been refunded. Amount = {0}", request.AmountToRefund),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
-
                     });
-                    _orderService.UpdateOrder(order);
 
                     //check order status
                     CheckOrderStatus(order);
@@ -2419,30 +2392,26 @@ namespace Nop.Services.Orders
                     var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, request.AmountToRefund, _localizationSettings.DefaultAdminLanguageId);
                     if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
                     {
-                        order.OrderNotes.Add(new OrderNote
+                        _orderService.InsertOrderNote(new OrderNote
                         {
                             Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
                             OrderId = order.Id,
-
                         });
-                        _orderService.UpdateOrder(order);
                     }
 
                     //notifications
                     var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, request.AmountToRefund, order.CustomerLanguageId);
                     if (orderRefundedCustomerNotificationQueuedEmailId > 0)
                     {
-                        order.OrderNotes.Add(new OrderNote
+                        _orderService.InsertOrderNote(new OrderNote
                         {
                             Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
                             OrderId = order.Id,
-
                         });
-                        _orderService.UpdateOrder(order);
                     }
 
                     //raise event       
@@ -2468,15 +2437,13 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("Unable to refund order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
-
                 });
-                _orderService.UpdateOrder(order);
 
                 //log it
                 string logError = string.Format("Error refunding order #{0}. Error: {1}", order.Id, error);
@@ -2532,15 +2499,13 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = string.Format("Order has been marked as refunded. Amount = {0}", amountToRefund),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
-
             });
-            _orderService.UpdateOrder(order);
 
             //check order status
             CheckOrderStatus(order);
@@ -2549,14 +2514,13 @@ namespace Nop.Services.Orders
             var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
             if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
             {
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
 
             }
 
@@ -2564,14 +2528,13 @@ namespace Nop.Services.Orders
             var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
             if (orderRefundedCustomerNotificationQueuedEmailId > 0)
             {
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
             }
 
             //raise event       
@@ -2647,14 +2610,13 @@ namespace Nop.Services.Orders
 
 
                     //add a note
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = string.Format("Order has been partially refunded. Amount = {0}", amountToRefund),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
                     });
-                    _orderService.UpdateOrder(order);
 
                     //check order status
                     CheckOrderStatus(order);
@@ -2663,27 +2625,25 @@ namespace Nop.Services.Orders
                     var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
                     if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
                     {
-                        order.OrderNotes.Add(new OrderNote
+                        _orderService.InsertOrderNote(new OrderNote
                         {
                             Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
-                        _orderService.UpdateOrder(order);
                     }
 
 
                     var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
                     if (orderRefundedCustomerNotificationQueuedEmailId > 0)
                     {
-                        order.OrderNotes.Add(new OrderNote
+                        _orderService.InsertOrderNote(new OrderNote
                         {
                             Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
                             OrderId = order.Id,
                         });
-                        _orderService.UpdateOrder(order);
                     }
 
                     //raise event       
@@ -2708,14 +2668,13 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("Unable to partially refund order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
 
                 //log it
                 string logError = string.Format("Error refunding order #{0}. Error: {1}", order.Id, error);
@@ -2779,14 +2738,13 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = string.Format("Order has been marked as partially refunded. Amount = {0}", amountToRefund),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
-            _orderService.UpdateOrder(order);
 
             //check order status
             CheckOrderStatus(order);
@@ -2795,7 +2753,7 @@ namespace Nop.Services.Orders
             var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
             if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
             {
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
                     DisplayToCustomer = false,
@@ -2807,14 +2765,13 @@ namespace Nop.Services.Orders
             var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
             if (orderRefundedCustomerNotificationQueuedEmailId > 0)
             {
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
             }
             //raise event       
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
@@ -2873,14 +2830,13 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     //add a note
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = "Order has been voided",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
                     });
-                    _orderService.UpdateOrder(order);
 
                     //check order status
                     CheckOrderStatus(order);
@@ -2904,14 +2860,13 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("Unable to voiding order. {0}", error),
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
 
                 //log it
                 string logError = string.Format("Error voiding order #{0}. Error: {1}", order.Id, error);
@@ -2959,15 +2914,13 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Order has been marked as voided",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
-            _orderService.UpdateOrder(order);
-
             //check orer status
             CheckOrderStatus(order);
         }

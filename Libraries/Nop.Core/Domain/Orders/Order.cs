@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Globalization;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -20,7 +19,6 @@ namespace Nop.Core.Domain.Orders
     public partial class Order : BaseEntity
     {
 
-        private ICollection<OrderNote> _orderNotes;
         private ICollection<OrderItem> _orderItems;
 
         #region Utilities
@@ -355,15 +353,6 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the reward points history record
         /// </summary>
         public virtual RewardPointsHistory RedeemedRewardPointsEntry { get; set; }
-
-        /// <summary>
-        /// Gets or sets order notes
-        /// </summary>
-        public virtual ICollection<OrderNote> OrderNotes
-        {
-            get { return _orderNotes ?? (_orderNotes = new List<OrderNote>()); }
-            protected set { _orderNotes = value; }
-        }
 
         /// <summary>
         /// Gets or sets order items

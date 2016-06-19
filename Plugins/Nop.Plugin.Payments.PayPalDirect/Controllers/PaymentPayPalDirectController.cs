@@ -394,14 +394,13 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                             {
 
                                 //order note
-                                order.OrderNotes.Add(new OrderNote
+                                _orderService.InsertOrderNote(new OrderNote
                                 {
                                     Note = sb.ToString(),
                                     DisplayToCustomer = false,
                                     CreatedOnUtc = DateTime.UtcNow,
                                     OrderId = order.Id,
                                 });
-                                _orderService.UpdateOrder(order);
 
                                 switch (newPaymentStatus)
                                 {
@@ -427,13 +426,12 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
-                                                order.OrderNotes.Add(new OrderNote
+                                                _orderService.InsertOrderNote(new OrderNote
                                                 {
                                                     Note = errorStr,
                                                     DisplayToCustomer = false,
                                                     CreatedOnUtc = DateTime.UtcNow
                                                 });
-                                                _orderService.UpdateOrder(order);
                                             }
                                         }
                                         break;
@@ -458,13 +456,12 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
-                                                order.OrderNotes.Add(new OrderNote
+                                                _orderService.InsertOrderNote(new OrderNote
                                                 {
                                                     Note = errorStr,
                                                     DisplayToCustomer = false,
                                                     CreatedOnUtc = DateTime.UtcNow
                                                 });
-                                                _orderService.UpdateOrder(order);
                                             }
                                         }
                                         break;

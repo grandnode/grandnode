@@ -7,6 +7,7 @@ using Nop.Services.Events;
 using Moq;
 using System.Collections.Generic;
 using Nop.Services.Tests;
+using Nop.Core.Caching;
 
 namespace Nop.Services.Customers.Tests
 {
@@ -93,7 +94,7 @@ namespace Nop.Services.Customers.Tests
             _customerActionRepository.Insert(customerActions);
 
             _customerActionService = new CustomerActionService(_customerActionRepository, _customerActionTypeRepository,
-            _customerActionHistoryRepository, _eventPublisher);
+            _customerActionHistoryRepository, _eventPublisher, new NopNullCache());
         }
       
         [TestMethod()]

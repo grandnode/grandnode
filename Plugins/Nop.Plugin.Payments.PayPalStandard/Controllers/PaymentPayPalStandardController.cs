@@ -285,14 +285,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     sb.AppendLine("New payment status: " + newPaymentStatus);
 
                     //order note
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = sb.ToString(),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
                     });
-                    _orderService.UpdateOrder(order);
 
                     //load settings for a chosen store scope
                     var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
@@ -305,13 +304,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                         _logger.Error(errorStr);
 
                         //order note
-                        order.OrderNotes.Add(new OrderNote
+                        _orderService.InsertOrderNote(new OrderNote
                         {
                             Note = errorStr,
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
                         });
-                        _orderService.UpdateOrder(order);
 
                         return RedirectToAction("Index", "Home", new { area = "" });
                     }
@@ -345,14 +343,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 if (order != null)
                 {
                     //order note
-                    order.OrderNotes.Add(new OrderNote
+                    _orderService.InsertOrderNote(new OrderNote
                     {
                         Note = "PayPal PDT failed. " + response,
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
                     });
-                    _orderService.UpdateOrder(order);
                 }
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
@@ -497,14 +494,13 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                             {
 
                                 //order note
-                                order.OrderNotes.Add(new OrderNote
+                                _orderService.InsertOrderNote(new OrderNote
                                 {
                                     Note = sb.ToString(),
                                     DisplayToCustomer = false,
                                     CreatedOnUtc = DateTime.UtcNow,
                                     OrderId = order.Id,
                                 });
-                                _orderService.UpdateOrder(order);
 
                                 switch (newPaymentStatus)
                                 {
@@ -530,13 +526,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
-                                                order.OrderNotes.Add(new OrderNote
+                                                _orderService.InsertOrderNote(new OrderNote
                                                 {
                                                     Note = errorStr,
                                                     DisplayToCustomer = false,
                                                     CreatedOnUtc = DateTime.UtcNow
                                                 });
-                                                _orderService.UpdateOrder(order);
                                             }
                                         }
                                         break;
@@ -561,13 +556,12 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 //log
                                                 _logger.Error(errorStr);
                                                 //order note
-                                                order.OrderNotes.Add(new OrderNote
+                                                _orderService.InsertOrderNote(new OrderNote
                                                 {
                                                     Note = errorStr,
                                                     DisplayToCustomer = false,
                                                     CreatedOnUtc = DateTime.UtcNow
                                                 });
-                                                _orderService.UpdateOrder(order);
                                             }
                                         }
                                         break;

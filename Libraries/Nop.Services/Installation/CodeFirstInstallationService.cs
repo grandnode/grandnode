@@ -59,6 +59,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Download> _downloadRepository;
         private readonly IRepository<GiftCard> _giftcardRepository;
         private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<ReturnRequest> _returnrequestRepository;
         private readonly IRepository<Store> _storeRepository;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
@@ -145,6 +146,7 @@ namespace Nop.Services.Installation
             IRepository<Download> downloadRepository,
             IRepository<GiftCard> giftcardRepository,
             IRepository<Order> orderRepository,
+            IRepository<OrderNote> orderNoteRepository,
             IRepository<Store> storeRepository,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
@@ -223,6 +225,7 @@ namespace Nop.Services.Installation
             this._campaignRepository = campaignRepository;
             this._downloadRepository = downloadRepository;
             this._orderRepository = orderRepository;
+            this._orderNoteRepository = orderNoteRepository;
             this._giftcardRepository = giftcardRepository;
             this._storeRepository = storeRepository;
             this._measureDimensionRepository = measureDimensionRepository;
@@ -10592,6 +10595,7 @@ namespace Nop.Services.Installation
             //url record
             _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Slug), new CreateIndexOptions() { Name = "Slug" });
+            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.EntityId).Ascending(x=>x.EntityName).Ascending(x=>x.LanguageId).Ascending(x=>x.IsActive).Descending(x=>x.Id), new CreateIndexOptions() { Name = "Slug2" });
 
             //email
             _emailAccountRepository.Collection.Indexes.CreateOneAsync(Builders<EmailAccount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10693,6 +10697,9 @@ namespace Nop.Services.Installation
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending("OrderItem.ProductId"), new CreateIndexOptions() { Name = "OrderItemProductId" });
+
+            _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.OrderId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true });
 
             //permision
             _permissionRepository.Collection.Indexes.CreateOneAsync(Builders<PermissionRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

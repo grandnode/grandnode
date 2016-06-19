@@ -26,6 +26,7 @@ namespace Nop.Services.Orders
 
         private static readonly Object _locker = new object();
         private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<ProductDeleted> _productDeletedRepository;
         private readonly IRepository<ProductAlsoPurchased> _productAlsoPurchasedRepository;
@@ -42,6 +43,7 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="orderRepository">Order repository</param>
+        /// <param name="orderNoteRepository">Order note repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
         /// <param name="customerRepository">Customer repository</param>
@@ -49,6 +51,7 @@ namespace Nop.Services.Orders
         /// <param name="eventPublisher">Event published</param>
         /// <param name="productAlsoPurchasedRepository">Product also purchased repository</param>
         public OrderService(IRepository<Order> orderRepository,
+            IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<Customer> customerRepository, 
@@ -58,6 +61,7 @@ namespace Nop.Services.Orders
             IRepository<ProductDeleted> productDeletedRepository)
         {
             this._orderRepository = orderRepository;
+            this._orderNoteRepository = orderNoteRepository;
             this._productRepository = productRepository;
             this._recurringPaymentRepository = recurringPaymentRepository;
             this._customerRepository = customerRepository;
@@ -195,7 +199,7 @@ namespace Nop.Services.Orders
             string billingCountryId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            string billingEmail = null, string billingLastName = "", string orderNotes = null, string orderGuid = null,
+            string billingEmail = null, string billingLastName = "", string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             int? orderStatusId = null;
@@ -256,8 +260,6 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(billingLastName))
                 query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
 
-            if (!String.IsNullOrEmpty(orderNotes))
-                query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
             query = query.Where(o => !o.Deleted);
             query = query.OrderByDescending(o => o.CreatedOnUtc);
 
@@ -501,12 +503,35 @@ namespace Nop.Services.Orders
             if (orderNote == null)
                 throw new ArgumentNullException("orderNote");
 
-            var updatebuilder = Builders<Order>.Update;
-            var update = updatebuilder.Pull(p => p.OrderNotes, orderNote);
-            _orderRepository.Collection.UpdateOneAsync(new BsonDocument("_id", orderNote.OrderId), update);
+            _orderNoteRepository.Delete(orderNote);
 
             //event notification
             _eventPublisher.EntityDeleted(orderNote);
+        }
+
+        /// <summary>
+        /// Deletes an order note
+        /// </summary>
+        /// <param name="orderNote">The order note</param>
+        public virtual void InsertOrderNote(OrderNote orderNote)
+        {
+            if (orderNote == null)
+                throw new ArgumentNullException("orderNote");
+
+            _orderNoteRepository.Insert(orderNote);
+
+            //event notification
+            _eventPublisher.EntityInserted(orderNote);
+        }
+
+        public virtual IList<OrderNote> GetOrderNotes(string orderId)
+        {
+            var query = from orderNote in _orderNoteRepository.Table
+                        where orderNote.OrderId == orderId
+                        orderby orderNote.CreatedOnUtc descending
+                        select orderNote;
+
+            return query.ToList();
         }
 
         #endregion

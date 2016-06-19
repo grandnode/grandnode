@@ -50,14 +50,13 @@ namespace Nop.Plugin.SMS.Verizon
             //send SMS
             if (plugin.SendSms(String.Format("New order(#{0}) has been placed.", order.Id)))
             {
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = "\"Order placed\" SMS alert (to store owner) has been sent",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
             }
         }
     }

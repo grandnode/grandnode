@@ -7,12 +7,11 @@ namespace Nop.Core.Domain.Orders
     /// Represents an order note
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class OrderNote : SubBaseEntity
+    public partial class OrderNote : BaseEntity
     {
         /// <summary>
         /// Gets or sets the order identifier
         /// </summary>
-        [BsonIgnore]
         public string OrderId { get; set; }
 
         /// <summary>

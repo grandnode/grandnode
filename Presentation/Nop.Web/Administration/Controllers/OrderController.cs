@@ -964,7 +964,6 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
                 orderGuid: model.OrderGuid,
                 pageIndex: command.Page - 1, 
                 pageSize: command.PageSize);
@@ -1122,7 +1121,6 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
                 orderGuid: model.OrderGuid);
 
             try
@@ -1201,7 +1199,6 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
                 orderGuid: model.OrderGuid);
 
             try
@@ -1592,7 +1589,7 @@ namespace Nop.Admin.Controllers
                 _orderService.UpdateOrder(order);
 
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = string.Format("Order status has been edited. New status: {0}", order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext)),
                     DisplayToCustomer = false,
@@ -1600,7 +1597,6 @@ namespace Nop.Admin.Controllers
                     OrderId = order.Id,
 
                 });
-                _orderService.UpdateOrder(order);
                 LogEditOrder(order.Id);
                 model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
@@ -1724,7 +1720,6 @@ namespace Nop.Admin.Controllers
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
-                orderNotes: model.OrderNotes,
                 orderGuid: model.OrderGuid);
 
             byte[] bytes;
@@ -1810,14 +1805,13 @@ namespace Nop.Admin.Controllers
             }
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Credit card info has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
-            _orderService.UpdateOrder(order);
             LogEditOrder(order.Id);
 
             PrepareOrderDetailsModel(model, order);
@@ -1855,14 +1849,14 @@ namespace Nop.Admin.Controllers
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Order totals have been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
-            _orderService.UpdateOrder(order);
+
             LogEditOrder(order.Id);
             PrepareOrderDetailsModel(model, order);
             return View(model);
@@ -1888,15 +1882,13 @@ namespace Nop.Admin.Controllers
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Shipping method has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
-
             });
-            _orderService.UpdateOrder(order);
             LogEditOrder(order.Id);
             PrepareOrderDetailsModel(model, order);
 
@@ -1977,15 +1969,14 @@ namespace Nop.Admin.Controllers
 
             order = _orderService.GetOrderById(id);
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "Order item has been edited",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
-
             });
-            _orderService.UpdateOrder(order);
+
             LogEditOrder(order.Id);
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
@@ -2042,14 +2033,13 @@ namespace Nop.Admin.Controllers
             else
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = "Order item has been deleted",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
 
                 //adjust inventory
                 _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
@@ -2599,14 +2589,13 @@ namespace Nop.Admin.Controllers
                 _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml);
 
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = "A new order item has been added",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
 
                 //gift cards
                 if (product.IsGiftCard)
@@ -2762,14 +2751,14 @@ namespace Nop.Admin.Controllers
                 //_addressService.UpdateAddress(address);
 
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = "Address has been edited",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
+
                 LogEditOrder(order.Id);
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
             }
@@ -3187,14 +3176,14 @@ namespace Nop.Admin.Controllers
                 _shipmentService.InsertShipment(shipment);
 
                 //add a note
-                order.OrderNotes.Add(new OrderNote
+                _orderService.InsertOrderNote(new OrderNote
                 {
                     Note = "A shipment has been added",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
                 });
-                _orderService.UpdateOrder(order);
+
                 LogEditOrder(order.Id);
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
@@ -3251,14 +3240,14 @@ namespace Nop.Admin.Controllers
 
             _shipmentService.DeleteShipment(shipment);
             //add a note
-            order.OrderNotes.Add(new OrderNote
+            _orderService.InsertOrderNote(new OrderNote
             {
                 Note = "A shipment has been deleted",
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow,
                 OrderId = order.Id,
             });
-            _orderService.UpdateOrder(order);
+
             LogEditOrder(order.Id);
             SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
             return RedirectToAction("Edit", new { id = orderId });
@@ -3627,7 +3616,7 @@ namespace Nop.Admin.Controllers
 
             //order notes
             var orderNoteModels = new List<OrderModel.OrderNote>();
-            foreach (var orderNote in order.OrderNotes
+            foreach (var orderNote in _orderService.GetOrderNotes(order.Id)
                 .OrderByDescending(on => on.CreatedOnUtc))
             {
                 var download = _downloadService.GetDownloadById(orderNote.DownloadId);
@@ -3673,10 +3662,8 @@ namespace Nop.Admin.Controllers
                 DownloadId = downloadId,
                 OrderId = orderId,
                 CreatedOnUtc = DateTime.UtcNow,
-
             };
-            order.OrderNotes.Add(orderNote);
-            _orderService.UpdateOrder(order);
+            _orderService.InsertOrderNote(orderNote);
 
             //new order notification
             if (displayToCustomer)
@@ -3704,7 +3691,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return RedirectToAction("Edit", "Order", new { id = orderId });
 
-            var orderNote = order.OrderNotes.FirstOrDefault(on => on.Id == id);
+            var orderNote = _orderService.GetOrderNotes(orderId).FirstOrDefault(on => on.Id == id);
             if (orderNote == null)
                 throw new ArgumentException("No order note found with the specified id");
 

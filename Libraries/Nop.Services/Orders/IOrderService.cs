@@ -83,7 +83,7 @@ namespace Nop.Services.Orders
             string billingCountryId = "", string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            string billingEmail = null, string billingLastName = "", string orderNotes = null, string orderGuid = null,
+            string billingEmail = null, string billingLastName = "", string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue);
         
         /// <summary>
@@ -155,6 +155,21 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="orderNote">The order note</param>
         void DeleteOrderNote(OrderNote orderNote);
+
+        /// <summary>
+        /// Insert an order note
+        /// </summary>
+        /// <param name="orderNote">The order note</param>
+        void InsertOrderNote(OrderNote orderNote);
+
+
+        /// <summary>
+        /// Get ordernotes for order
+        /// </summary>
+        /// <param name="orderId">Order identifier</param>
+        /// <returns>OrderNote</returns>
+        IList<OrderNote> GetOrderNotes(string orderId);
+
 
         #endregion
 

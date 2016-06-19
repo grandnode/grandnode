@@ -804,7 +804,7 @@ namespace Nop.Services.Common
 
                 if (pdfSettingsByStore.RenderOrderNotes)
                 {
-                    var orderNotes = order.OrderNotes
+                    var orderNotes = _orderService.GetOrderNotes(order.Id)
                         .Where(on => on.DisplayToCustomer)
                         .OrderByDescending(on => on.CreatedOnUtc)
                         .ToList();

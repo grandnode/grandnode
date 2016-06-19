@@ -368,7 +368,7 @@ namespace Nop.Web.Controllers
             model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
 
             //order notes
-            foreach (var orderNote in order.OrderNotes
+            foreach (var orderNote in _orderService.GetOrderNotes(order.Id)
                 .Where(on => on.DisplayToCustomer)
                 .OrderByDescending(on => on.CreatedOnUtc)
                 .ToList())

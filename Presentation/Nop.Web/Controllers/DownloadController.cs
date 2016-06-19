@@ -174,7 +174,7 @@ namespace Nop.Web.Controllers
         {
             var order = _orderService.GetOrderById(orderId);
 
-            var orderNote = order.OrderNotes.FirstOrDefault(x=>x.Id == orderNoteId);
+            var orderNote = _orderService.GetOrderNotes(order.Id).FirstOrDefault(x=>x.Id == orderNoteId);
             if (orderNote == null)
                 return InvokeHttp404();
 
