@@ -7,6 +7,7 @@ using Nop.Core.Infrastructure;
 using Nop.Services.Events;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Localization;
+using System.Net;
 
 namespace Nop.Web.Framework.Seo
 {

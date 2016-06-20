@@ -123,7 +123,9 @@ namespace Nop.Services.Installation
         private readonly IRepository<ContactUs> _contactUsRepository;
         private readonly IRepository<CustomerAction> _customerAction;
         private readonly IRepository<CustomerActionType> _customerActionType;
+        private readonly IRepository<CustomerActionHistory> _customerActionHistory;
         private readonly IRepository<Banner> _banner;
+        private readonly IRepository<BannerArchive> _bannerArchive;
         private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly ICustomerActionService _customerActionService;
@@ -210,7 +212,9 @@ namespace Nop.Services.Installation
             IRepository<ContactUs> contactUsRepository,
             IRepository<CustomerAction> customerAction,
             IRepository<CustomerActionType> customerActionType,
+            IRepository<CustomerActionHistory> customerActionHistory,
             IRepository<Banner> banner,
+            IRepository<BannerArchive> bannerArchive,
             IRepository<CustomerReminder> customerReminder,
             IRepository<CustomerReminderHistory> customerReminderHistoryRepository,
             IGenericAttributeService genericAttributeService,
@@ -292,10 +296,12 @@ namespace Nop.Services.Installation
             this._returnRequestActionRepository = returnRequestActionRepository;
             this._customerAction = customerAction;
             this._customerActionType = customerActionType;
+            this._customerActionHistory = customerActionHistory;
             this._customerReminder = customerReminder;
             this._customerReminderHistoryRepository = customerReminderHistoryRepository; ;
             this._customerActionService = customerActionService;
             this._banner = banner;
+            this._bannerArchive = bannerArchive;
         }
 
         #endregion
@@ -10725,8 +10731,16 @@ namespace Nop.Services.Installation
             //customer action
             _customerActionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.ActionTypeId), new CreateIndexOptions() { Name = "ActionTypeId", Unique = false });
 
+            _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
+            
+
+            //banner
             _banner.Collection.Indexes.CreateOneAsync(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _bannerArchive.Collection.Indexes.CreateOneAsync(Builders<BannerArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _bannerArchive.Collection.Indexes.CreateOneAsync(Builders<BannerArchive>.IndexKeys.Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "CustomerActionId", Unique = false });
 
             //customer reminder
             _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
