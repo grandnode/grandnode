@@ -193,3 +193,7 @@ a span.username {
 .mce-container label {
     max-width: inherit;
 }
+
+.page-header.navbar .page-logo .logo-default {
+    margin: 2px 0 0;
+}

@@ -12,7 +12,7 @@ Bootstrap Colorpicker
   cursor: pointer;
   width: 20px;
   height: 20px;
-  right: 6px; }
+  left: 6px; }
 
 .colorpicker.dropdown-menu {
   padding: 5px; }
@@ -34,13 +34,13 @@ Bootstrap Datepaginator
   filter: none !important; }
 
 #dp-calendar {
-  right: 4px !important; }
+  left: 4px !important; }
 
 .datepaginator .fa-angle-right:before {
-  content: ""/*rtl:""*/; }
+  content: ""; }
 
 .datepaginator .fa-angle-left:before {
-  content: ""/*rtl:""*/; }
+  content: ""; }
 
 /***
 Bootstrap Datepicker
@@ -64,7 +64,7 @@ Bootstrap Datepicker
   filter: none !important; }
 
 .datepicker .input-daterange input {
-  text-align: left; }
+  text-align: right; }
 
 /* change z-index when opened in modal */
 .modal-open .datepicker {
@@ -81,14 +81,14 @@ Bootstrap Datepicker
   font-weight: 400  !important; }
 
 .datepicker.dropdown-menu {
-  box-shadow: 5px 5px rgba(102, 102, 102, 0.1);
+  box-shadow: -5px 5px rgba(102, 102, 102, 0.1);
   border: 1px solid #efefef; }
 
 .datepicker .fa-angle-left:before {
-  content: ""/*rtl:""*/; }
+  content: ""; }
 
 .datepicker .fa-angle-right:before {
-  content: ""/*rtl:""*/; }
+  content: ""; }
 
 /***
 Bootstrap Daterangepicker
@@ -126,11 +126,11 @@ Bootstrap Daterangepicker
 .daterangepicker .ranges {
   width: 170px; }
   .daterangepicker .ranges ul > li.active {
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
-    border-radius: 2px; }
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px; }
 
 .daterangepicker .ranges .btn {
   margin-top: 10px; }
@@ -151,10 +151,10 @@ Bootstrap Daterangepicker
   margin-bottom: 0 !important; }
 
 .daterangepicker .fa-angle-right:before {
-  content: ""/*rtl:""*/; }
+  content: ""; }
 
 .daterangepicker .fa-angle-left:before {
-  content: ""/*rtl:""*/; }
+  content: ""; }
 
 /***
 Bootstrap  Datetimepicker
@@ -182,10 +182,10 @@ Bootstrap  Datetimepicker
   filter: none !important; }
 
 .datetimepicker .fa-angle-left:before {
-  content: ""/*rtl:""*/; }
+  content: ""; }
 
 .datetimepicker .fa-angle-right:before {
-  content: ""/*rtl:""*/; }
+  content: ""; }
 
 /* change z-index when opened in modal */
 .modal-open .datetimepicker {
@@ -220,25 +220,25 @@ Bootstrap Markdown
 .md-input {
   padding: 5px !important;
   border-bottom: 0 !important;
-  -webkit-border-radius: 0 0 2px 2px;
-  -moz-border-radius: 0 0 2px 2px;
-  -ms-border-radius: 0 0 2px 2px;
-  -o-border-radius: 0 0 2px 2px;
-  border-radius: 0 0 2px 2px; }
+  -webkit-border-radius: 0 0 4px 4px;
+  -moz-border-radius: 0 0 4px 4px;
+  -ms-border-radius: 0 0 4px 4px;
+  -o-border-radius: 0 0 4px 4px;
+  border-radius: 0 0 4px 4px; }
 
 .md-editor {
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px; }
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
   .md-editor .btn-toolbar {
-    margin-left: 0px;
-    -webkit-border-radius: 2px 2px 0 0;
-    -moz-border-radius: 2px 2px 0 0;
-    -ms-border-radius: 2px 2px 0 0;
-    -o-border-radius: 2px 2px 0 0;
-    border-radius: 2px 2px 0 0; }
+    margin-right: 0px;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -ms-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0; }
     .md-editor .btn-toolbar .btn-group .btn-sm.btn {
       padding-bottom: 3px; }
     .md-editor .btn-toolbar .btn-group .btn-primary {
@@ -285,30 +285,6 @@ Bootstrap Modal
   overflow: hidden !important;
   z-index: 10051;
   overflow-y: scroll !important; }
-
-.modal {
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px;
-  border: 0 !important; }
-  .modal .modal-body {
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
-    border-radius: 2px;
-    border: 0; }
-  .modal .modal-title {
-    font-weight: 400; }
-  .modal .modal-footer {
-    border: 0 !important; }
-
-.modal-backdrop,
-.modal-backdrop.fade.in {
-  opacity: 0.2 ;
-  filter: alpha(opacity=20) ; }
 
 /***
 Bootstrap Select
@@ -457,7 +433,7 @@ Toastr Notifications
 .toast .toast-close-button {
   display: inline-block;
   margin-top: 0px;
-  margin-right: 0px;
+  margin-left: 0px;
   text-indent: -100000px;
   width: 11px;
   height: 16px;
@@ -467,16 +443,16 @@ Toastr Notifications
 .toast-top-center {
   top: 12px;
   margin: 0 auto;
-  left: 50%;
-  margin-left: -150px; }
+  right: 50%;
+  margin-right: -150px; }
   .toast-top-center .toast {
     margin: 0 !important; }
 
 .toast-bottom-center {
   bottom: 12px;
   margin: 0 auto;
-  left: 50%;
-  margin-left: -150px; }
+  right: 50%;
+  margin-right: -150px; }
   .toast-bottom-center .toast {
     margin: 0 !important; }
 
@@ -509,7 +485,7 @@ Bootstrap Wizard
       font-size: 16px;
       font-weight: 300;
       padding: 11px 15px 13px 15px;
-      margin-right: 10px;
+      margin-left: 10px;
       height: 45px;
       width: 45px;
       -webkit-border-radius: 50% !important;
@@ -546,7 +522,7 @@ Bootstrap Wizard
 @media (max-width: 768px) {
   /* 768px */
   .form-wizard .steps > li > a {
-    text-align: left; } }
+    text-align: right; } }
 
 /*!
  * Tab drop for Bootstrap
@@ -562,12 +538,12 @@ Bootstrap Wizard
     font-size: 14px; }
 
 .tabbable-tabdrop .dropdown-menu:after {
-  right: 10px;
-  left: auto; }
+  left: 10px;
+  right: auto; }
 
 .tabbable-tabdrop .dropdown-menu:before {
-  right: 9px;
-  left: auto; }
+  left: 9px;
+  right: auto; }
 
 /***
 wysihtml5
@@ -599,38 +575,38 @@ Error state for WYSIWYG Editors
 ***/
 .note-editor {
   border: 1px solid #c2cad8;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px; }
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
   .note-editor .note-toolbar {
     border-bottom: 1px solid #c2cad8;
-    -webkit-border-radius: 2px 2px 0 0;
-    -moz-border-radius: 2px 2px 0 0;
-    -ms-border-radius: 2px 2px 0 0;
-    -o-border-radius: 2px 2px 0 0;
-    border-radius: 2px 2px 0 0; }
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -ms-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0; }
   .note-editor .note-statusbar {
-    -webkit-border-radius: 0 0 2px 2px;
-    -moz-border-radius: 0 0 2px 2px;
-    -ms-border-radius: 0 0 2px 2px;
-    -o-border-radius: 0 0 2px 2px;
-    border-radius: 0 0 2px 2px; }
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -ms-border-radius: 0 0 4px 4px;
+    -o-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px; }
     .note-editor .note-statusbar .note-resizebar {
       border-top: 1px solid #c2cad8; }
   .note-editor.note-frame.fullscreen {
     z-index: 10050;
     width: 100% !important; }
   .note-editor .dropdown-menu:before {
-    left: 9px;
-    right: auto; }
+    right: 9px;
+    left: auto; }
   .note-editor .dropdown-menu:after {
-    left: 10px;
-    right: auto; }
+    right: 10px;
+    left: auto; }
 
 .note-link-dialog .checkbox {
-  margin-left: 20px; }
+  margin-right: 20px; }
 
 .has-error .note-editor {
   border: 1px solid #fbe1e3 !important; }
@@ -678,14 +654,14 @@ Modify bootstrap-tagsinput plugin's css
 
 .fixed-table-toolbar .columns label {
   margin: 10px;
-  padding: 0 0 0 30px; }
+  padding: 0 30px 0 0; }
 
 .fixed-table-header th.bs-checkbox {
   outline: none; }
   .fixed-table-header th.bs-checkbox .th-inner {
     overflow: visible; }
     .fixed-table-header th.bs-checkbox .th-inner .mt-checkbox {
-      right: -5px; }
+      left: -5px; }
 
 /***
 Bootbox
@@ -816,23 +792,23 @@ Bootbox
 CKEditor css changes
 ***/
 .cke {
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -ms-border-radius: 2px;
-  -o-border-radius: 2px;
-  border-radius: 2px; }
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
   .cke .cke-top {
-    -webkit-border-radius: 2px 2px 0 0;
-    -moz-border-radius: 2px 2px 0 0;
-    -ms-border-radius: 2px 2px 0 0;
-    -o-border-radius: 2px 2px 0 0;
-    border-radius: 2px 2px 0 0; }
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -ms-border-radius: 4px 4px 0 0;
+    -o-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0; }
   .cke .cke-bottom {
-    -webkit-border-radius: 0 0 2px 2px;
-    -moz-border-radius: 0 0 2px 2px;
-    -ms-border-radius: 0 0 2px 2px;
-    -o-border-radius: 0 0 2px 2px;
-    border-radius: 0 0 2px 2px; }
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -ms-border-radius: 0 0 4px 4px;
+    -o-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px; }
 
 .cke_bottom,
 .cke_inner,
@@ -936,8 +912,8 @@ Datatables general customization
   text-align: center;
   max-width: 50px;
   min-width: 40px;
-  padding-left: 0;
-  padding-right: 0; }
+  padding-right: 0;
+  padding-left: 0; }
 
 table.dataTable thead th,
 table.dataTable thead td {
@@ -1025,8 +1001,8 @@ Datatables processing
   width: 200px;
   display: inline-block;
   padding: 7px;
-  left: 50%;
-  margin-left: -100px;
+  right: 50%;
+  margin-right: -100px;
   margin-top: 10px;
   text-align: center;
   color: #3f444a;
@@ -1046,7 +1022,7 @@ Tool Buttons
 div.dt-button-collection {
   border: 1px solid #eee;
   background: #ffffff;
-  box-shadow: 5px 5px rgba(102, 102, 102, 0.1);
+  box-shadow: -5px 5px rgba(102, 102, 102, 0.1);
   padding: 0; }
   div.dt-button-collection > a.dt-button {
     background: none;
@@ -1073,10 +1049,10 @@ a.dt-button {
   button.dt-button:last-child,
   div.dt-button:last-child,
   a.dt-button:last-child {
-    margin-right: 0; }
+    margin-left: 0; }
 
 .dataTables_wrapper .dt-buttons {
-  float: right; }
+  float: left; }
   .portlet.light .dataTables_wrapper .dt-buttons {
     margin-top: -64px; }
   .portlet.box .dataTables_wrapper .dt-buttons {
@@ -1159,7 +1135,7 @@ table.dataTable.dtr-column > tbody > tr > th.control {
   width: 14px; }
 
 table.dataTable.dtr-column > tbody > tr > td.control:before, table.dataTable.dtr-column > tbody > tr > th.control:before {
-  margin-left: -8px;
+  margin-right: -8px;
   text-align: center;
   text-indent: 0;
   line-height: 0; }
@@ -1231,7 +1207,7 @@ Dropzone css changes(new in v1.1.1)
   text-align: center; }
 
 .dz-hidden-input {
-  left: 0; }
+  right: 0; }
 
 @media (max-width: 768px) {
   /* 768px */
@@ -1255,15 +1231,15 @@ FuelUX Spinners
   margin: 0;
   height: 17px;
   width: 22px;
-  padding-left: 6px;
   padding-right: 6px;
+  padding-left: 6px;
   padding-top: 0px; }
   .page-style-rounded .spinner-buttons.btn-group-vertical .btn.spinner-up {
     border-radius: 0;
-    border-top-right-radius: 2px !important; }
+    border-top-left-radius: 4px !important; }
   .page-style-rounded .spinner-buttons.btn-group-vertical .btn.spinner-down {
     border-radius: 0;
-    border-bottom-right-radius: 2px; }
+    border-bottom-left-radius: 4px; }
 
 /***
 Fullcalendar
@@ -1273,7 +1249,7 @@ Fullcalendar
   display: inline-block;
   cursor: move;
   margin-bottom: 5px;
-  margin-left: 5px; }
+  margin-right: 5px; }
 
 .fc-scroller {
   overflow-y: auto;
@@ -1296,21 +1272,21 @@ Fullcalendar
   border: 0;
   height: 35px;
   padding: 5px 8px 8px 8px;
-  margin-left: 2px;
+  margin-right: 2px;
   border-top-style: none;
   border-bottom-style: none;
-  border-right-style: solid;
   border-left-style: solid;
+  border-right-style: solid;
   border-color: #ddd;
   background: transparent;
   color: #fff;
   top: -48px;
   outline: none !important;
-  -webkit-border-radius: 2px 2px 0 0;
-  -moz-border-radius: 2px 2px 0 0;
-  -ms-border-radius: 2px 2px 0 0;
-  -o-border-radius: 2px 2px 0 0;
-  border-radius: 2px 2px 0 0; }
+  -webkit-border-radius: 4px 4px 0 0;
+  -moz-border-radius: 4px 4px 0 0;
+  -ms-border-radius: 4px 4px 0 0;
+  -o-border-radius: 4px 4px 0 0;
+  border-radius: 4px 4px 0 0; }
 
 .portlet.calendar .fc-toolbar {
   margin-bottom: 0px; }
@@ -1322,12 +1298,12 @@ Fullcalendar
   margin-bottom: -21px; }
 
 .portlet.calendar .fc-button-prev {
-  padding-right: 10px;
-  padding-left: 8px; }
+  padding-left: 10px;
+  padding-right: 8px; }
 
 .portlet.calendar .fc-button-next {
-  padding-right: 8px;
-  padding-left: 10px; }
+  padding-left: 8px;
+  padding-right: 10px; }
 
 .portlet.calendar .fc-button .fc-icon {
   height: 20px;
@@ -1373,15 +1349,15 @@ Fullcalendar
     border: 0px;
     padding: 5px 7px; }
   .portlet.calendar .fc-event .fc-time {
-    float: left;
-    text-align: left;
+    float: right;
+    text-align: right;
     color: #fff;
     font-size: 14px;
     font-weight: 300;
-    padding-right: 5px; }
+    padding-left: 5px; }
   .portlet.calendar .fc-event .fc-title {
-    text-align: left;
-    float: left;
+    text-align: right;
+    float: right;
     color: #fff;
     font-size: 14px;
     font-weight: 300; }
@@ -1416,7 +1392,7 @@ Fullcalendar
 
 .portlet.calendar .mobile .fc-button {
   padding: 0px 6px 20px 6px;
-  margin-left: 2px;
+  margin-right: 2px;
   border: 0;
   background-color: #ddd;
   background-image: none;
@@ -1435,11 +1411,11 @@ Fullcalendar
     color: #bbb; }
 
 .portlet.calendar .mobile .fc-button-prev {
-  margin-right: 5px;
+  margin-left: 5px;
   margin-top: -2px; }
 
 .portlet.calendar .mobile .fc-button-next {
-  margin-right: -0px;
+  margin-left: -0px;
   margin-top: -2px; }
 
 .portlet.calendar .mobile .fc-header-space {
@@ -1455,15 +1431,12 @@ Fullcalendar
 
 .portlet.calendar .mobile .fc-header-right {
   position: relative;
-  right: 0; }
+  left: 0; }
   .portlet.calendar .mobile .fc-header-right .fc-button {
     top: 35px; }
 
 .portlet.calendar .mobile .fc-content {
   margin-top: 53px; }
-
-.portlet.calendar.light .fc-button {
-  top: -47px; }
 
 /***
 Google Maps
@@ -1490,11 +1463,11 @@ Google Maps
 Gritter notification modify
 ***/
 #gritter-notice-wrapper {
-  right: 1px !important; }
+  left: 1px !important; }
 
 .gritter-close {
-  left: auto !important;
-  right: 3px !important; }
+  right: auto !important;
+  left: 3px !important; }
 
 .gritter-title {
   font-family: 'Open Sans';
@@ -1524,7 +1497,7 @@ Dashboard Charts(new in v1.2.1)
   .easy-pie-chart .number canvas {
     position: absolute;
     top: 0;
-    left: 0; }
+    right: 0; }
 
 .sparkline-chart .number {
   width: 100px;
@@ -1618,7 +1591,7 @@ Password Strength(in v1.4)
 .password-strength .password-verdict {
   display: inline-block;
   margin-top: 6px;
-  margin-left: 5px; }
+  margin-right: 5px; }
 
 .password-strength .progress {
   margin-top: 5px;
@@ -1633,7 +1606,7 @@ jQuery Slimscroll
 .scroller {
   padding: 0px;
   margin: 0px;
-  padding-right: 12px;
+  padding-left: 12px;
   overflow: hidden; }
 
 .scroller-footer {
@@ -1645,7 +1618,7 @@ jQuery Slimscroll
     clear: both; }
 
 .portlet-body .slimScrollBar {
-  margin-right: 0px; }
+  margin-left: 0px; }
 
 /***
 jQuery Sparkline
@@ -1709,7 +1682,7 @@ jQuery UI Sliders(new in v1.1.1)
   top: -3px; }
 
 .ui-slider-vertical .ui-slider-handle {
-  left: -3px; }
+  right: -3px; }
 
 .ui-slider-vertical,
 .ui-slider-handle {
@@ -1760,7 +1733,7 @@ Jstree
   margin-top: 1px; }
 
 .jstree-open > .jstree-anchor > .fa-folder:before {
-  margin-left: 2px;
+  margin-right: 2px;
   content: "\f07c"; }
 
 .jstree-default.jstree-rtl .jstree-last {
@@ -1774,7 +1747,7 @@ Jstree
   background-color: #ffffff;
   font-size: 14px;
   font-family: "Segoe UI",Helvetica, Arial, sans-serif;
-  box-shadow: 5px 5px rgba(102, 102, 102, 0.1);
+  box-shadow: -5px 5px rgba(102, 102, 102, 0.1);
   border: 1px solid #efefef; }
 
 .vakata-context li {
@@ -1814,7 +1787,7 @@ Jstree
   border: 1px solid #e5e5e5 !important;
   outline: none !important;
   padding: 2px 6px !important;
-  margin-right: -4px !important; }
+  margin-left: -4px !important; }
 
 /***
 NoUIRangeSlider
@@ -1846,7 +1819,7 @@ Color variants
 /* Conect slider */
 /* For this slider, disable the 'origin' size. */
 .noui-connect .noUi-origin {
-  right: auto;
+  left: auto;
   width: 0; }
 
 /* Position the bar and color it. */
@@ -1860,8 +1833,8 @@ Color variants
 /* When the slider is moved by tap,
    transition the connect bar like the handle. */
 .noui-connect.noUi-state-tap .connect {
-  -webkit-transition: left 300ms, right 300ms;
-  transition: left 300ms, right 300ms; }
+  -webkit-transition: right 300ms, left 300ms;
+  transition: right 300ms, left 300ms; }
 
 /**
 noUI Tooltips
@@ -1875,7 +1848,7 @@ noUI Tooltips
   background: #fff;
   top: -55px;
   padding: 5px;
-  left: -10px;
+  right: -10px;
   text-align: center;
   min-width: 50px; }
   .noUi-handle .noUi-tooltip strong {
@@ -1905,7 +1878,7 @@ iframe[src="about:blank"] {
   cursor: pointer;
   display: inline-block;
   font-weight: 700;
-  margin-right: 3px; }
+  margin-left: 3px; }
 
 .select2-container--bootstrap .select2-results__group {
   display: block;
@@ -1931,9 +1904,9 @@ iframe[src="about:blank"] {
   padding-bottom: 3px; }
 
 .select2-result-repository__avatar {
-  float: left;
+  float: right;
   width: 60px;
-  margin-right: 10px; }
+  margin-left: 10px; }
 
 .select2-result-repository__avatar img {
   width: 100%;
@@ -1941,7 +1914,7 @@ iframe[src="about:blank"] {
   border-radius: 2px; }
 
 .select2-result-repository__meta {
-  margin-left: 70px; }
+  margin-right: 70px; }
 
 .select2-result-repository__title {
   color: black;
@@ -1951,7 +1924,7 @@ iframe[src="about:blank"] {
   margin-bottom: 4px; }
 
 .select2-result-repository__forks, .select2-result-repository__stargazers {
-  margin-right: 1em; }
+  margin-left: 1em; }
 
 .select2-result-repository__forks, .select2-result-repository__stargazers, .select2-result-repository__watchers {
   display: inline-block;
@@ -1973,25 +1946,25 @@ iframe[src="about:blank"] {
 Morris Charts
 ***/
 .portlet-body-morris-fit {
-  margin-right: -20px;
   margin-left: -20px;
+  margin-right: -20px;
   margin-bottom: -15px; }
   .portlet-body-morris-fit > svg {
-    -webkit-border-radius: 0 0 2px 2px;
-    -moz-border-radius: 0 0 2px 2px;
-    -ms-border-radius: 0 0 2px 2px;
-    -o-border-radius: 0 0 2px 2px;
-    border-radius: 0 0 2px 2px; }
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -ms-border-radius: 0 0 4px 4px;
+    -o-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px; }
 
 .morris-hover.morris-default-style .morris-hover-row-label {
-  text-align: left;
+  text-align: right;
   font-weight: 400;
   font-size: 15px;
   color: #7D8C9D;
   font-family: "Open Sans", sans-serif; }
 
 .morris-hover.morris-default-style .morris-hover-point {
-  text-align: left;
+  text-align: right;
   font-size: 14px;
   font-weight: 400;
   font-family: "Open Sans", sans-serif; }
@@ -2010,13 +1983,13 @@ iCheck
 
 .icheck-inline > label {
   display: inline-block;
-  margin-left: 15px; }
+  margin-right: 15px; }
   .icheck-inline > label:first-child {
-    margin-left: 0; }
+    margin-right: 0; }
 
 div[class*='icheckbox_'],
 div[class*='iradio_'] {
-  margin-right: 5px;
+  margin-left: 5px;
   top: -1px !important; }
 
 .icheck-colors {
@@ -2026,7 +1999,7 @@ div[class*='iradio_'] {
   .icheck-colors > li {
     padding: 0;
     margin: 4px;
-    float: left;
+    float: right;
     display: inline-block;
     height: 20px;
     width: 20px;
@@ -2034,7 +2007,7 @@ div[class*='iradio_'] {
     opacity: 0.6 ;
     filter: alpha(opacity=60) ; }
     .icheck-colors > li:first-child {
-      margin-left: 0; }
+      margin-right: 0; }
     .icheck-colors > li:hover {
       opacity: 1 ;
       filter: alpha(opacity=100) ;
@@ -2068,7 +2041,7 @@ AngularJS UI-select
 ***/
 .ui-select-match-close {
   margin-top: 5px !important;
-  margin-left: 5px !important; }
+  margin-right: 5px !important; }
 
 .minicolors-swatch {
   border: 0; }

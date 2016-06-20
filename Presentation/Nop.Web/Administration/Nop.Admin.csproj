@@ -463,6 +463,8 @@
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap\css\bootstrap-rtl.css" />
+    <Content Include="Content\bootstrap\css\bootstrap-rtl.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -495,30 +497,16 @@
     <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\global\css\components-md.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\global\css\components-md.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\global\css\components-rounded.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\global\css\components-rounded.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Content\global\css\components-rtl.css" />
+    <Content Include="Content\global\css\components-rtl.min.css" />
     <Content Include="Content\global\css\components.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\global\css\components.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\global\css\plugins-md.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\global\css\plugins-md.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Content\global\css\plugins-rtl.css" />
+    <Content Include="Content\global\css\plugins-rtl.min.css" />
     <Content Include="Content\global\css\plugins.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -541,6 +529,8 @@
     <Content Include="Content\images\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\layout\custom-rtl.css" />
+    <Content Include="Content\layout\custom-rtl.min.css" />
     <Content Include="Content\layout\custom.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -655,6 +645,8 @@
     <Content Include="Content\layout\js\layout.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\layout\layout-rtl.css" />
+    <Content Include="Content\layout\layout-rtl.min.css" />
     <Content Include="Content\layout\layout.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -667,6 +659,8 @@
     <Content Include="Content\layout\themes\blue.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\layout\themes\darkblue-rtl.css" />
+    <Content Include="Content\layout\themes\darkblue-rtl.min.css" />
     <Content Include="Content\layout\themes\darkblue.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -718,7 +712,6 @@
     <Content Include="Content\simple-line-icons\simple-line-icons.min.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\styles.rtl.css" />
     <Content Include="Content\images\google-maps.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
