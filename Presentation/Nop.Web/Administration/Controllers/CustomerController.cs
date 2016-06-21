@@ -1284,7 +1284,7 @@ namespace Nop.Admin.Controllers
 
                     //ensure that a customer in the Vendors role has a vendor account associated.
                     //otherwise, he will have access to ALL products
-                    if (customer.IsVendor() && !String.IsNullOrEmpty(customer.VendorId))
+                    if (customer.IsVendor() && String.IsNullOrEmpty(customer.VendorId))
                     {
                         var vendorRole = customer
                             .CustomerRoles
