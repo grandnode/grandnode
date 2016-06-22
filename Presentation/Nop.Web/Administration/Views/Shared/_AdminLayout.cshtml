@@ -49,7 +49,6 @@
     Html.AppendCssFileParts("~/Administration/Content/font-awesome/css/font-awesome.min.css");
 
     //js
-    //Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.all.min.js", kendoVersion));
     Html.AppendScriptParts("~/Scripts/admin.common.js");
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
@@ -167,7 +166,6 @@
                                 </li>
                             </ul>
                         </li>
-
                         <li class="dropdown" id="header_inbox_bar">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                 <i class="icon-info"></i>
@@ -192,10 +190,9 @@
                                 </li>
                             </ul>
                         </li>
-
-                        <li class="dropdown dropdown-quick-sidebar-toggler">
-                            <a href="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-toggle">
-                                <i class="icon-key"></i>
+                        <li class="dropdown" >
+                            <a href="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-toggle" style="padding-right:10px">
+                                <i class="icon-home"></i>
                             </a>
                         </li>
 

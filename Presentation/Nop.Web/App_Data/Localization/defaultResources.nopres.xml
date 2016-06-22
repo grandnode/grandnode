@@ -735,6 +735,9 @@
   <LocaleResource Name="ActivityLog.EditWidget">
     <Value>Edited a widget (ID = {0})</Value>
   </LocaleResource>
+    <LocaleResource Name="Activitylog.lastactivity">
+    <Value>Public store. Last Activity </Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
   </LocaleResource>
@@ -779,6 +782,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.ViewProduct">
     <Value>Public store. Viewed a product details page ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="Activitylog.Registeredcustomer">
+    <Value>Public store. Registered Customer </Value>
   </LocaleResource>
   <LocaleResource Name="Address">
     <Value>Address</Value>
@@ -8203,7 +8209,7 @@
     <Value>Edit condition</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customerreminders">
-    <Value>Customer Reminders</Value>
+    <Value>Customer reminders</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customerreminder.added">
     <Value>Reminder added</Value>
@@ -8391,13 +8397,13 @@
     <Value>Add new customer reminder</Value>
   </LocaleResource>
   <LocaleResource Name="activitylog.addnewcustomerreminderlevel">
-    <Value>Add new Customer Reminder Level</Value>
+    <Value>Add new customer reminder Level</Value>
   </LocaleResource>
   <LocaleResource Name="activitylog.deletecustomerreminder">
-    <Value>Delete Customer Reminder</Value>
+    <Value>Delete customer reminder</Value>
   </LocaleResource>
   <LocaleResource Name="activitylog.editcustomerreminder">
-    <Value>Edit Customer Reminder</Value>
+    <Value>Edit customer reminder</Value>
   </LocaleResource>
   <LocaleResource Name="activitylog.editcustomerremindercondition">
     <Value>Edit Customer Reminder Condition</Value>
