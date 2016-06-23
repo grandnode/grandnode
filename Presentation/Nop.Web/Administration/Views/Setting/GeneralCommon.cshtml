@@ -50,6 +50,9 @@
                             <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
                                 @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings")
                             </li>
+                            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics")
+                            </li>
                         </ul>
                         <div>
                             @TabStoreInformationSettings()
@@ -68,6 +71,9 @@
                         </div>
                         <div>
                             @TabFullTextSettings()
+                        </div>
+                        <div>
+                            @TabGoogleAnalyticsSettings()
                         </div>
                     </div>
 
@@ -762,5 +768,51 @@
                     <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="btn red" />
                 </div>
             </div>
+    </div>
+}
+
+@helper TabGoogleAnalyticsSettings()
+{
+    <div class="form-horizontal">
+        <div class="note note-info">
+            <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help1")</p>
+            <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help2")</p>
+            <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help3")</p>
+            <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help4")</p>
+            <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help5")</p>
+            <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help6")</p>
+        </div>
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaprivateKey_OverrideForStore, model => model.GoogleAnalyticsSettings.gaprivateKey, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.GoogleAnalyticsSettings.gaprivateKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(model => model.GoogleAnalyticsSettings.gaprivateKey, new { style = "Height: 100px;" })
+                    @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.gaprivateKey)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail_OverrideForStore, model => model.GoogleAnalyticsSettings.gaserviceAccountEmail, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail)
+                    @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaviewID_OverrideForStore, model => model.GoogleAnalyticsSettings.gaviewID, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.GoogleAnalyticsSettings.gaviewID, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.GoogleAnalyticsSettings.gaviewID)
+                    @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.gaviewID)
+                </div>
+            </div>
+        </div>
     </div>
 }

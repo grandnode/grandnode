@@ -116,6 +116,7 @@
     <Compile Include="Domain\Customers\CustomerReminderHistory.cs" />
     <Compile Include="Domain\Messages\BannerArchive.cs" />
     <Compile Include="Domain\Orders\OrderByTimeReportLine.cs" />
+    <Compile Include="Domain\Seo\SeoSettings.cs" />
     <Compile Include="ParentEntity.cs" />
     <Compile Include="SubBaseEntity.cs" />
     <Compile Include="Caching\IRedisConnectionWrapper.cs" />
@@ -197,7 +198,7 @@
     <Compile Include="Domain\Catalog\CategoryTemplate.cs" />
     <Compile Include="Domain\Catalog\ProductTemplate.cs" />
     <Compile Include="Domain\Common\AdminAreaSettings.cs" />
-    <Compile Include="Domain\Seo\SeoSettings.cs" />
+    <Compile Include="Domain\Seo\GoogleAnalyticsSettings.cs" />
     <Compile Include="Domain\Customers\ExternalAuthenticationSettings.cs" />
     <Compile Include="Domain\Customers\ExternalAuthenticationRecord.cs" />
     <Compile Include="Domain\Customers\SystemCustomerNames.cs" />

@@ -2383,6 +2383,8 @@ namespace Nop.Admin.Controllers
             //store information
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
+            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
+
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
             //themes
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
@@ -2524,6 +2526,10 @@ namespace Nop.Admin.Controllers
             model.FullTextSettings.SearchMode = (int)commonSettings.FullTextMode;
             model.FullTextSettings.SearchModeValues = commonSettings.FullTextMode.ToSelectList();
 
+            //google analytics
+            model.GoogleAnalyticsSettings.gaprivateKey = googleAnalyticsSettings.gaprivateKey;
+            model.GoogleAnalyticsSettings.gaserviceAccountEmail = googleAnalyticsSettings.gaserviceAccountEmail;
+            model.GoogleAnalyticsSettings.gaviewID = googleAnalyticsSettings.gaviewID;
 
             return View(model);
         }
@@ -2541,6 +2547,7 @@ namespace Nop.Admin.Controllers
             //store information settings
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
+
             storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
             storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
             storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
@@ -2615,10 +2622,6 @@ namespace Nop.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
             
-            //now clear settings cache
-            _settingService.ClearCache();
-
-
 
             //seo settings
             var seoSettings = _settingService.LoadSetting<SeoSettings>(storeScope);
@@ -2704,10 +2707,6 @@ namespace Nop.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(seoSettings, x => x.OpenGraphMetaTags, storeScope);
 
-            //now clear settings cache
-            _settingService.ClearCache();
-
-
             //security settings
             var securitySettings = _settingService.LoadSetting<SecuritySettings>(storeScope);
             var captchaSettings = _settingService.LoadSetting<CaptchaSettings>(storeScope);
@@ -2781,12 +2780,6 @@ namespace Nop.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(pdfSettings, x => x.InvoiceFooterTextColumn2, storeScope);
 
-            //now clear settings cache
-            _settingService.ClearCache();
-
-
-
-
             //localization settings
             var localizationSettings = _settingService.LoadSetting<LocalizationSettings>(storeScope);
             localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
@@ -2805,6 +2798,33 @@ namespace Nop.Admin.Controllers
             //full-text
             commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
             _settingService.SaveSetting(commonSettings);
+
+
+            //googleanalytics settings
+            var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(storeScope);
+            googleAnalyticsSettings.gaprivateKey = model.GoogleAnalyticsSettings.gaprivateKey;
+            googleAnalyticsSettings.gaserviceAccountEmail = model.GoogleAnalyticsSettings.gaserviceAccountEmail;
+            googleAnalyticsSettings.gaviewID = model.GoogleAnalyticsSettings.gaviewID;
+
+            if (model.GoogleAnalyticsSettings.gaprivateKey_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(googleAnalyticsSettings, x => x.gaprivateKey, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.gaprivateKey, storeScope);
+
+            if (model.GoogleAnalyticsSettings.gaserviceAccountEmail_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(googleAnalyticsSettings, x => x.gaserviceAccountEmail, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.gaserviceAccountEmail, storeScope);
+
+            if (model.GoogleAnalyticsSettings.gaviewID_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(googleAnalyticsSettings, x => x.gaviewID, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.gaviewID, storeScope);
+
+            _settingService.SaveSetting(googleAnalyticsSettings);
+
+            //now clear settings cache
+            _settingService.ClearCache();
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));

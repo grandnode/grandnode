@@ -5844,6 +5844,59 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GenerateProductMetaDescription.Hint">
     <Value>When enabled, product META descriptions will be automatically generated (if not specified on the product details page) based on product short description.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics">
+    <Value>Google Analytics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey">
+    <Value>Private Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey.hint">
+    <Value>Private Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsServiceAccountEmail">
+    <Value>Service AccountEmail</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsServiceAccountEmail.hint">
+    <Value>Service AccountEmail</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsViewID">
+    <Value>ViewID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsViewID.hint">
+    <Value>ViewID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help1">
+    <Value>
+      1. Register a Google Analytics account. Keep in mind that you need to wait 24h before GA can obtain some data to display.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help2">
+    <Value>
+      2. Go to https://console.cloud.google.com/apis/credentials > select credentials for your project > New Credentials > Service account key > download a .json file from your account, and open it with text editor.
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help3">
+    <Value>
+      3. Copy the value of "private_key" e.g. -----BEGIN PRIVATE KEY-----\n ... -----END PRIVATE KEY-----\n
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help4">
+    <Value>
+      4. Copy the value of "client_email" e.g. asymmetric-rite-000000@appspot.gserviceaccount.com
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help5">
+    <Value>
+      5. Get your view ID, https://analytics.google.com/analytics/web/ > Admin > View Settings > View ID. e.g. 412390048
+    </Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help6">
+    <Value>
+      6. If you changed your certificate password, then you will need it too -  but by default the value of certificate password is "notasecret".
+    </Value>
+  </LocaleResource>
+
+
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink">
     <Value>Google+ page URL</Value>
   </LocaleResource>

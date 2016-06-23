@@ -17,6 +17,7 @@ namespace Nop.Admin.Models.Settings
             PdfSettings = new PdfSettingsModel();
             LocalizationSettings = new LocalizationSettingsModel();
             FullTextSettings = new FullTextSettingsModel();
+            GoogleAnalyticsSettings = new GoogleAnalyticsSettingsModel();
         }
 
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
@@ -25,7 +26,7 @@ namespace Nop.Admin.Models.Settings
         public PdfSettingsModel PdfSettings { get; set; }
         public LocalizationSettingsModel LocalizationSettings { get; set; }
         public FullTextSettingsModel FullTextSettings { get; set; }
-
+        public GoogleAnalyticsSettingsModel GoogleAnalyticsSettings { get; set; }
 
         public string ActiveStoreScopeConfiguration { get; set; }
 
@@ -296,6 +297,22 @@ namespace Nop.Admin.Models.Settings
             public SelectList SearchModeValues { get; set; }
         }
         
+        public partial class GoogleAnalyticsSettingsModel: BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey")]
+            [AllowHtml]
+            public string gaprivateKey { get; set; }
+            public bool gaprivateKey_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsServiceAccountEmail")]
+            public string gaserviceAccountEmail { get; set; }
+            public bool gaserviceAccountEmail_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsViewID")]
+            public string gaviewID { get; set; }
+            public bool gaviewID_OverrideForStore { get; set; }
+
+        }
         #endregion
     }
 }
