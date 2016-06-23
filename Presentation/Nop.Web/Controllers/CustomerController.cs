@@ -1020,6 +1020,7 @@ namespace Nop.Web.Controllers
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = model.Email,
+                                    CustomerId = customer.Id,
                                     Active = true,
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow
@@ -1381,6 +1382,7 @@ namespace Nop.Web.Controllers
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
+                                    CustomerId = customer.Id,
                                     Active = true,
                                     StoreId = _storeContext.CurrentStore.Id,
                                     CreatedOnUtc = DateTime.UtcNow

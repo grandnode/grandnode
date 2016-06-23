@@ -997,6 +997,7 @@ namespace Nop.Admin.Controllers
                                 _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                    CustomerId = customer.Id,
                                     Email = customer.Email,
                                     Active = true,
                                     StoreId = store.Id,
@@ -1227,6 +1228,7 @@ namespace Nop.Admin.Controllers
                                     _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
                                     {
                                         NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                        CustomerId = customer.Id,
                                         Email = customer.Email,
                                         Active = true,
                                         StoreId = store.Id,

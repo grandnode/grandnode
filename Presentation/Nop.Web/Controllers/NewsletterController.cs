@@ -88,6 +88,7 @@ namespace Nop.Web.Controllers
                     {
                         NewsLetterSubscriptionGuid = Guid.NewGuid(),
                         Email = email,
+                        CustomerId = _workContext.CurrentCustomer.Id,
                         Active = false,
                         StoreId = _storeContext.CurrentStore.Id,
                         CreatedOnUtc = DateTime.UtcNow
