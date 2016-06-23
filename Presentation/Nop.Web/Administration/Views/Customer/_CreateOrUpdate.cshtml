@@ -399,7 +399,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.City)
                     <div class="col-md-9 col-sm-9">
-                        @Html.EditorFor(model => model.City)
+                        @Html.GrandEditorFor(model => model.City)
                         @Html.ValidationMessageFor(model => model.City)
                     </div>
                 </div>
@@ -429,7 +429,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.Phone)
                     <div class="col-md-9 col-sm-9">
-                        @Html.EditorFor(model => model.Phone)
+                        @Html.GrandEditorFor(model => model.Phone)
                         @Html.ValidationMessageFor(model => model.Phone)
                     </div>
                 </div>
