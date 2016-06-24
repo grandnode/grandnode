@@ -299,8 +299,7 @@ namespace Nop.Admin.Models.Settings
         
         public partial class GoogleAnalyticsSettingsModel: BaseNopModel
         {
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey")]
-            [AllowHtml]
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey")]            
             public string gaprivateKey { get; set; }
             public bool gaprivateKey_OverrideForStore { get; set; }
 

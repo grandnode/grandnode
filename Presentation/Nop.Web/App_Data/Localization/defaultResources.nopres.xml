@@ -5847,6 +5847,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics">
     <Value>Google Analytics</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics.help">
+    <Value>Please configure the settings: Configuration -> Settings -> General settings -> Tab Google Analytics</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey">
     <Value>Private Key</Value>
   </LocaleResource>

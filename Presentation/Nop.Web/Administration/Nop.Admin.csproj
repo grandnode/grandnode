@@ -214,6 +214,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminAreaRegistration.cs" />
+    <Compile Include="Controllers\GoogleAnalyticsController.cs" />
     <Compile Include="Controllers\BannerController.cs" />
     <Compile Include="Controllers\CustomerActionTypeController.cs" />
     <Compile Include="Controllers\ActivityLogController.cs" />
@@ -1865,6 +1866,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\ReportLatestOrder.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\GoogleAnalytics\DashboardGeneralData.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

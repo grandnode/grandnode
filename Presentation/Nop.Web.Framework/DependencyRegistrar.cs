@@ -312,7 +312,8 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<ExternalAuthorizer>().As<IExternalAuthorizer>().InstancePerLifetimeScope();
             builder.RegisterType<OpenAuthenticationService>().As<IOpenAuthenticationService>().InstancePerLifetimeScope();
-           
+            builder.RegisterType<GoogleAnalyticsService>().As<IGoogleAnalyticsService>().InstancePerLifetimeScope();
+
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
 
             //Register event consumers

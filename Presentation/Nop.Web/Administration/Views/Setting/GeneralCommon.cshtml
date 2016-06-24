@@ -789,7 +789,7 @@
                     @Html.GrandLabelFor(model => model.GoogleAnalyticsSettings.gaprivateKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandTextAreaFor(model => model.GoogleAnalyticsSettings.gaprivateKey, new { style = "Height: 100px;" })
+                    @Html.GrandEditorFor(model => model.GoogleAnalyticsSettings.gaprivateKey)
                     @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.gaprivateKey)
                 </div>
             </div>

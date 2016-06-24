@@ -101,7 +101,7 @@
                                     <i class="icon-share font-blue"></i>
                                     <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ActivityOverview")</span>
                                     <span class="caption-helper">@T("Admin.Dashboard.ReportOverviewHelper")</span>
-                                </div>
+                                </div>                               
                             </div>
                             <div class="portlet-body">
                                 <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
@@ -125,7 +125,10 @@
                                     <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics")</span>
                                 </div>
                             </div>
-                            <div class="portlet-body">                                
+                            <div class="portlet-body">         
+                                <div id="Dashboard_GoogleAnalytics_GeneralData" class="partialContents" data-url="@Url.Action("DashboardGeneralData", "GoogleAnalytics")">
+                                    <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -251,6 +254,16 @@
         if (gridOrders != undefined) {
             gridOrders.dataSource.read();
         }
+
+        $("#Dashboard_GoogleAnalytics_GeneralData").each(function (index, item) {
+            $(item).html('<img src="Administration/Content/Images/loading.gif" /> Loading ...');
+            var url = $(item).data("url") + '?startDate=' + $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD') + '&endDate=' + $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+            if (url && url.length > 0) {
+                $(item).load(url);
+            }
+        });
+
+
     });
 
 </script>
