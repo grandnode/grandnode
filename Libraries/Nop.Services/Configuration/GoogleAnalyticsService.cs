@@ -102,13 +102,21 @@ namespace Nop.Services.Configuration
             return result;
         }
 
+        private GoogleAnalyticsResult ReturnEmpty()
+        {
+            if (String.IsNullOrEmpty(_googleAnalyticsSettings.gaprivateKey))
+                return new GoogleAnalyticsResult() { Message = _localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics.help") };
+            else
+                return new GoogleAnalyticsResult() { Message = _localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics.help2") };
+        }
+
         #endregion
 
         public GoogleAnalyticsResult GetDataByGeneral(DateTime startDate, DateTime endDate)
         {
             if(_analyticsReportingService==null)
             {
-                return new GoogleAnalyticsResult() { Message = _localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics.help") };
+                return ReturnEmpty();
             }
 
             // metrics and dimensions below are tailored to suit current needings
@@ -123,11 +131,10 @@ namespace Nop.Services.Configuration
             dateRanges.Add(new DateRange() { StartDate = startDate.ToString("yyyy-MM-dd"), EndDate = endDate.ToString("yyyy-MM-dd") });
 
             //Metric
-            Metric metric = new Metric();
             IList<Metric> metrics = new List<Metric>();
-            metrics.Add(new Metric() { Expression = "ga:users", Alias = "users" });
-            metrics.Add(new Metric() { Expression = "ga:newUsers", Alias = "unique users" });
-            metrics.Add(new Metric() { Expression = "ga:pageviews", Alias = "page views" });
+            metrics.Add(new Metric() { Expression = "ga:users", Alias = "Users" });
+            metrics.Add(new Metric() { Expression = "ga:newUsers", Alias = "Unique users" });
+            metrics.Add(new Metric() { Expression = "ga:pageviews", Alias = "Views" });
 
             //Dimension
             IList<Dimension> dimensions = new List<Dimension>();
@@ -159,16 +166,184 @@ namespace Nop.Services.Configuration
         }
         public GoogleAnalyticsResult GetDataByLocalization(DateTime startDate, DateTime endDate)
         {
-            return new GoogleAnalyticsResult();
+            if (_analyticsReportingService == null)
+            {
+                return ReturnEmpty();
+            }
+
+            IList<DateRange> dateRanges = new List<DateRange>();
+            dateRanges.Add(new DateRange() { StartDate = startDate.ToString("yyyy-MM-dd"), EndDate = endDate.ToString("yyyy-MM-dd") });
+
+            //Metric
+            IList<Metric> metrics = new List<Metric>();
+            metrics.Add(new Metric() { Expression = "ga:users", Alias = "Users" });
+            metrics.Add(new Metric() { Expression = "ga:newUsers", Alias = "Unique users" });
+            metrics.Add(new Metric() { Expression = "ga:pageviews", Alias = "Views" });
+
+            //Dimension
+            IList<Dimension> dimensions = new List<Dimension>();
+            dimensions.Add(new Dimension() { Name = "ga:country" });
+            dimensions.Add(new Dimension() { Name = "ga:city" });
+
+            //OrderBy
+            IList<OrderBy> orderBys = new List<OrderBy>();
+            orderBys.Add(new OrderBy() { FieldName = "ga:pageviews", SortOrder = "DESCENDING", OrderType = "VALUE" });
+
+            //ReportRequest - final assembling
+            ReportRequest request = new ReportRequest()
+            {
+                ViewId = _googleAnalyticsSettings.gaviewID,
+                DateRanges = dateRanges,
+                Metrics = metrics,
+                Dimensions = dimensions,
+                OrderBys = orderBys,
+            };
+
+            List<ReportRequest> requests = new List<ReportRequest>();
+            requests.Add(request);
+
+            GetReportsRequest reportsRequest = new GetReportsRequest();
+            reportsRequest.ReportRequests = requests;
+
+            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+
+            return ParseResponse(response, startDate, endDate);
+
         }
         public GoogleAnalyticsResult GetDataBySource(DateTime startDate, DateTime endDate)
         {
-            return new GoogleAnalyticsResult();
+            if (_analyticsReportingService == null)
+            {
+                return ReturnEmpty();
+            }
+
+            IList<DateRange> dateRanges = new List<DateRange>();
+            dateRanges.Add(new DateRange() { StartDate = startDate.ToString("yyyy-MM-dd"), EndDate = endDate.ToString("yyyy-MM-dd") });
+
+            //Metric
+            IList<Metric> metrics = new List<Metric>();
+            metrics.Add(new Metric() { Expression = "ga:users", Alias = "Users" });
+            metrics.Add(new Metric() { Expression = "ga:newUsers", Alias = "Unique users" });
+            metrics.Add(new Metric() { Expression = "ga:pageviews", Alias = "Views" });
+
+            //Dimension
+            IList<Dimension> dimensions = new List<Dimension>();
+            dimensions.Add(new Dimension() { Name = "ga:sourceMedium" });
+
+            //OrderBy
+            IList<OrderBy> orderBys = new List<OrderBy>();
+            orderBys.Add(new OrderBy() { FieldName = "ga:pageviews", SortOrder = "DESCENDING", OrderType = "VALUE" });
+
+            //final assembling
+            ReportRequest request = new ReportRequest()
+            {
+                ViewId = _googleAnalyticsSettings.gaviewID,
+                DateRanges = dateRanges,
+                Metrics = metrics,
+                Dimensions = dimensions,
+                OrderBys = orderBys
+            };
+
+            List<ReportRequest> requests = new List<ReportRequest>();
+            requests.Add(request);
+
+            GetReportsRequest reportsRequest = new GetReportsRequest();
+            reportsRequest.ReportRequests = requests;
+
+            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+
+            return ParseResponse(response, startDate, endDate);
+
+        }
+        public GoogleAnalyticsResult GetDataByExit(DateTime startDate, DateTime endDate)
+        {
+            if (_analyticsReportingService == null)
+            {
+                return ReturnEmpty();
+            }
+
+            IList<DateRange> dateRanges = new List<DateRange>();
+            dateRanges.Add(new DateRange() { StartDate = startDate.ToString("yyyy-MM-dd"), EndDate = endDate.ToString("yyyy-MM-dd") });
+
+            //Metric
+            IList<Metric> metrics = new List<Metric>();
+            metrics.Add(new Metric() { Expression = "ga:users", Alias = "Users" });
+            metrics.Add(new Metric() { Expression = "ga:newUsers", Alias = "Unique users" });
+            metrics.Add(new Metric() { Expression = "ga:pageviews", Alias = "Views" });
+
+            //Dimension
+            IList<Dimension> dimensions = new List<Dimension>();
+            dimensions.Add(new Dimension() { Name = "ga:exitPagePath" });
+
+            //OrderBy
+            IList<OrderBy> orderBys = new List<OrderBy>();
+            orderBys.Add(new OrderBy() { FieldName = "ga:pageviews", SortOrder = "DESCENDING", OrderType = "VALUE" });
+
+            //final assembling
+            ReportRequest request = new ReportRequest()
+            {
+                ViewId = _googleAnalyticsSettings.gaviewID,
+                DateRanges = dateRanges,
+                Metrics = metrics,
+                Dimensions = dimensions,
+                OrderBys = orderBys
+            };
+
+            List<ReportRequest> requests = new List<ReportRequest>();
+            requests.Add(request);
+
+            GetReportsRequest reportsRequest = new GetReportsRequest();
+            reportsRequest.ReportRequests = requests;
+
+            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+
+            return ParseResponse(response, startDate, endDate);
 
         }
         public GoogleAnalyticsResult GetDataByDevice(DateTime startDate, DateTime endDate)
         {
-            return new GoogleAnalyticsResult();
+            if (_analyticsReportingService == null)
+            {
+                return ReturnEmpty();
+            }
+            IList<DateRange> dateRanges = new List<DateRange>();
+            dateRanges.Add(new DateRange() { StartDate = startDate.ToString("yyyy-MM-dd"), EndDate = endDate.ToString("yyyy-MM-dd") });
+
+            //Metric
+            IList<Metric> metrics = new List<Metric>();
+            metrics.Add(new Metric() { Expression = "ga:users", Alias = "Users" });
+            metrics.Add(new Metric() { Expression = "ga:newUsers", Alias = "Unique users" });
+            metrics.Add(new Metric() { Expression = "ga:pageviews", Alias = "Views" });
+
+            //Dimension
+            IList<Dimension> dimensions = new List<Dimension>();
+            dimensions.Add(new Dimension() { Name = "ga:browser" });
+            dimensions.Add(new Dimension() { Name = "ga:mobileDeviceInfo" });
+
+            //OrderBy
+            IList<OrderBy> orderBys = new List<OrderBy>();
+            orderBys.Add(new OrderBy() { FieldName = "ga:pageviews", SortOrder = "DESCENDING", OrderType = "VALUE" });
+
+            //final assembling
+            ReportRequest request = new ReportRequest()
+            {
+                ViewId = _googleAnalyticsSettings.gaviewID,
+                DateRanges = dateRanges,
+                Metrics = metrics,
+                Dimensions = dimensions,
+                OrderBys = orderBys
+            };
+
+            List<ReportRequest> requests = new List<ReportRequest>();
+            requests.Add(request);
+
+            GetReportsRequest reportsRequest = new GetReportsRequest();
+            reportsRequest.ReportRequests = requests;
+
+            var response = _analyticsReportingService.Reports.BatchGet(reportsRequest).Execute();
+
+            return ParseResponse(response, startDate, endDate);
+            
 
         }
     }

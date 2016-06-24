@@ -1870,6 +1870,18 @@
   <ItemGroup>
     <Content Include="Views\GoogleAnalytics\DashboardGeneralData.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\GoogleAnalytics\DashboardDataByDevice.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\GoogleAnalytics\DashboardDataBySource.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\GoogleAnalytics\DashboardDataByLocalization.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\GoogleAnalytics\DashboardDataByExit.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

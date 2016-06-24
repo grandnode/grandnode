@@ -52,6 +52,63 @@ namespace Nop.Admin.Controllers
             return PartialView(report);
         }
 
+        public ActionResult DashboardDataBySource(DateTime? startDate = null, DateTime? endDate = null)
+        {
+            if (!startDate.HasValue)
+            {
+                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+            if (!endDate.HasValue)
+            {
+                endDate = DateTime.UtcNow;
+            }
+
+            var report = _googleAnalyticsService.GetDataBySource(startDate.Value, endDate.Value);
+            return PartialView(report);
+        }
+        public ActionResult DashboardDataByDevice(DateTime? startDate = null, DateTime? endDate = null)
+        {
+            if (!startDate.HasValue)
+            {
+                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+            if (!endDate.HasValue)
+            {
+                endDate = DateTime.UtcNow;
+            }
+
+            var report = _googleAnalyticsService.GetDataByDevice(startDate.Value, endDate.Value);
+            return PartialView(report);
+        }
+        public ActionResult DashboardDataByLocalization(DateTime? startDate = null, DateTime? endDate = null)
+        {
+            if (!startDate.HasValue)
+            {
+                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+            if (!endDate.HasValue)
+            {
+                endDate = DateTime.UtcNow;
+            }
+
+            var report = _googleAnalyticsService.GetDataByLocalization(startDate.Value, endDate.Value);
+            return PartialView(report);
+        }
+        public ActionResult DashboardDataByExit(DateTime? startDate = null, DateTime? endDate = null)
+        {
+            if (!startDate.HasValue)
+            {
+                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+            if (!endDate.HasValue)
+            {
+                endDate = DateTime.UtcNow;
+            }
+
+            var report = _googleAnalyticsService.GetDataByExit(startDate.Value, endDate.Value);
+            return PartialView(report);
+        }
+
 
     }
 }

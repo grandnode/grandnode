@@ -5850,6 +5850,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics.help">
     <Value>Please configure the settings: Configuration -> Settings -> General settings -> Tab Google Analytics</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics.help2">
+    <Value>An error occurred, please check logs</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey">
     <Value>Private Key</Value>
   </LocaleResource>
@@ -9652,6 +9655,20 @@
   <LocaleResource Name="Admin.Dashboard.GoogleAnalytics">
     <Value>Google Analytics</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.GoogleAnalytics.Source">
+    <Value>Google Analytics - All Traffic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.GoogleAnalytics.Exit">
+    <Value>Google Analytics - Exit Pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.GoogleAnalytics.Device">
+    <Value>Google Analytics - Device</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.GoogleAnalytics.Localization">
+    <Value>Google Analytics - Localization</Value>
+  </LocaleResource>
+
+
   <LocaleResource Name="Admin.Dashboard.OnlineCustomers">
     <Value>Online Visitors</Value>
   </LocaleResource>
