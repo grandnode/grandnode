@@ -108,6 +108,13 @@ namespace Nop.Admin.Controllers
 
         }
 
+        [NonAction]
+        protected virtual void PrepareEmailAccounts(CampaignModel model)
+        {
+            //available email accounts
+            foreach (var ea in _emailAccountService.GetAllEmailAccounts())
+                model.AvailableEmailAccounts.Add(ea.ToModel());
+        }
 
         public ActionResult Index()
         {
@@ -213,6 +220,8 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //email
+            PrepareEmailAccounts(model);
             return View(model);
         }
 
@@ -238,6 +247,8 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //email
+            PrepareEmailAccounts(model);
 
             return View(model);
         }
@@ -258,6 +269,8 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //email
+            PrepareEmailAccounts(model);
             return View(model);
 		}
 
@@ -292,6 +305,8 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //email
+            PrepareEmailAccounts(model);
             return View(model);
 		}
 
@@ -313,6 +328,8 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //email
+            PrepareEmailAccounts(model);
 
             try
             {
@@ -365,10 +382,13 @@ namespace Nop.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //email
+            PrepareEmailAccounts(model);
+
             model.CustomerTags = campaign.CustomerTags.ToList();
             try
             {
-                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+                var emailAccount = _emailAccountService.GetEmailAccountById(campaign.EmailAccountId);
                 if (emailAccount == null)
                     throw new NopException("Email account could not be loaded");
 

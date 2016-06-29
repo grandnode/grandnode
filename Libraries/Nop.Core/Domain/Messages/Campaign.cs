@@ -59,6 +59,10 @@ namespace Nop.Core.Domain.Messages
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the used email account identifier
+        /// </summary>
+        public string EmailAccountId { get; set; }
+        /// <summary>
         /// Gets or sets the customer tags
         /// </summary>
         public virtual ICollection<string> CustomerTags

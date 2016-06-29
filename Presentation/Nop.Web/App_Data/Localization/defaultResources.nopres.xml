@@ -11040,6 +11040,9 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Email">
     <Value>Address email</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount">
+    <Value>Email account</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.SentDate">
     <Value>Sent date</Value>
   </LocaleResource>

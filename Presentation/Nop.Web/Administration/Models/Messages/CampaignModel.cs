@@ -17,6 +17,7 @@ namespace Nop.Admin.Models.Messages
             this.AvailableStores = new List<SelectListItem>();
             this.AvailableCustomerTags = new List<SelectListItem>();
             this.CustomerTags = new List<string>();
+            this.AvailableEmailAccounts = new List<EmailAccountModel>();
         }
 
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.Name")]
@@ -76,6 +77,10 @@ namespace Nop.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.AllowedTokens")]
         public string AllowedTokens { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.EmailAccount")]
+        public string EmailAccountId { get; set; }
+        public IList<EmailAccountModel> AvailableEmailAccounts { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.TestEmail")]
         [AllowHtml]
