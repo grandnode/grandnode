@@ -1014,7 +1014,11 @@ namespace Nop.Services.Messages
                 "%Store.CompanyVat%",
                 "%NewsLetterSubscription.Email%",
                 "%NewsLetterSubscription.ActivationUrl%",
-                "%NewsLetterSubscription.DeactivationUrl%"
+                "%NewsLetterSubscription.DeactivationUrl%",
+                "%ShoppingCart.Products%",
+                "%ShoppingCart.ProductsWithPictures%",
+                "%Wishlist.Products%",
+                "%Wishlist.ProductsWithPictures%"
             };
             return allowedTokens.ToArray();
         }

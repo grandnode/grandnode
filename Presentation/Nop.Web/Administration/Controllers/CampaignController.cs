@@ -14,6 +14,8 @@ using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Services.Customers;
+using Nop.Services.ExportImport;
 
 namespace Nop.Admin.Controllers
 {
@@ -29,6 +31,8 @@ namespace Nop.Admin.Controllers
         private readonly IStoreContext _storeContext;
         private readonly IStoreService _storeService;
         private readonly IPermissionService _permissionService;
+        private readonly ICustomerTagService _customerTagService;
+        private readonly IExportManager _exportManager;
 
         public CampaignController(ICampaignService campaignService,
             IDateTimeHelper dateTimeHelper, 
@@ -39,7 +43,9 @@ namespace Nop.Admin.Controllers
             IMessageTokenProvider messageTokenProvider,
             IStoreContext storeContext,
             IStoreService storeService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ICustomerTagService customerTagService,
+            IExportManager exportManager)
 		{
             this._campaignService = campaignService;
             this._dateTimeHelper = dateTimeHelper;
@@ -51,7 +57,10 @@ namespace Nop.Admin.Controllers
             this._storeContext = storeContext;
             this._storeService = storeService;
             this._permissionService = permissionService;
-		}
+            this._customerTagService = customerTagService;
+            this._exportManager = exportManager;
+
+        }
 
         [NonAction]
         protected virtual string FormatTokens(string[] tokens)
@@ -90,6 +99,16 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected virtual void PrepareCustomerTagsModel(CampaignModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+            model.AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerTags.Contains(ct.Id) }).ToList();
+
+        }
+
+
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -123,6 +142,66 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+        [HttpPost]
+        public ActionResult Customers(string campaignId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
+            var campaign = _campaignService.GetCampaignById(campaignId);
+            var customers = _campaignService.CustomerSubscriptions(campaign, command.Page - 1, command.PageSize);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = customers,
+                Total = customers.Count
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult History(string campaignId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
+            var campaign = _campaignService.GetCampaignById(campaignId);
+            var history = _campaignService.GetCampaignHistory(campaign, command.Page - 1, command.PageSize);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = history.Select(x => new {
+                    Email = x.Email,
+                    SentDate = x.CreatedDateUtc,
+                }),
+                Total = history.Count
+            };
+            return Json(gridModel);
+        }
+
+        public ActionResult ExportCsv(string campaignId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
+                return AccessDeniedView();
+
+            try
+            {
+                var campaign = _campaignService.GetCampaignById(campaignId);
+                var customers = _campaignService.CustomerSubscriptions(campaign);
+                string result = _exportManager.ExportNewsletterSubscribersToTxt(customers.Select(x=>x.Email).ToList());
+
+                string fileName = String.Format("newsletter_emails_campaign_{0}_{1}.txt", campaign.Name, CommonHelper.GenerateRandomDigitCode(4));
+                return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+
+
         public ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCampaigns))
@@ -132,6 +211,8 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //Tags
+            PrepareCustomerTagsModel(model);
             return View(model);
         }
 
@@ -155,6 +236,9 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //Tags
+            PrepareCustomerTagsModel(model);
+
             return View(model);
         }
 
@@ -172,6 +256,8 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //Tags
+            PrepareCustomerTagsModel(model);
             return View(model);
 		}
 
@@ -194,6 +280,9 @@ namespace Nop.Admin.Controllers
                 _campaignService.UpdateCampaign(campaign);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
+                //selected tab
+                SaveSelectedTabIndex();
+
                 return continueEditing ? RedirectToAction("Edit", new { id = campaign.Id }) : RedirectToAction("List");
             }
 
@@ -201,6 +290,8 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //Tags
+            PrepareCustomerTagsModel(model);
             return View(model);
 		}
 
@@ -220,6 +311,8 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
+            //Tags
+            PrepareCustomerTagsModel(model);
 
             try
             {
@@ -270,7 +363,9 @@ namespace Nop.Admin.Controllers
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
-
+            //Tags
+            PrepareCustomerTagsModel(model);
+            model.CustomerTags = campaign.CustomerTags.ToList();
             try
             {
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
@@ -280,8 +375,7 @@ namespace Nop.Admin.Controllers
                 //subscribers of certain store?
                 var store = _storeService.GetStoreById(campaign.StoreId);
                 var storeId = store != null ? store.Id : "";
-                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId,
-                    isActive: true);
+                var subscriptions = _campaignService.CustomerSubscriptions(campaign);
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
                 SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent), false);
                 return View(model);

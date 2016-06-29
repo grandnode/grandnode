@@ -1018,6 +1018,24 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
+        /// Export newsletter subscribers to TXT
+        /// </summary>
+        /// <param name="subscriptions">Subscriptions</param>
+        /// <returns>Result in TXT (string) format</returns>
+        public virtual string ExportNewsletterSubscribersToTxt(IList<string> subscriptions)
+        {
+            if (subscriptions == null)
+                throw new ArgumentNullException("subscriptions");
+
+            var sb = new StringBuilder();
+            foreach (var subscription in subscriptions)
+            {
+                sb.Append(subscription);
+                sb.Append(Environment.NewLine);  //new line
+            }
+            return sb.ToString();
+        }
+        /// <summary>
         /// Export states to TXT
         /// </summary>
         /// <param name="states">States</param>

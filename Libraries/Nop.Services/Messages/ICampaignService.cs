@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Domain.Messages;
+using Nop.Core;
 
 namespace Nop.Services.Messages
 {
@@ -11,6 +12,11 @@ namespace Nop.Services.Messages
         /// <param name="campaign">Campaign</param>        
         void InsertCampaign(Campaign campaign);
 
+        /// <summary>
+        /// Inserts a campaign history
+        /// </summary>
+        /// <param name="campaign">Campaign</param>        
+        void InsertCampaignHistory(CampaignHistory campaignhistory);
         /// <summary>
         /// Updates a campaign
         /// </summary>
@@ -35,7 +41,20 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <returns>Campaigns</returns>
         IList<Campaign> GetAllCampaigns();
-        
+
+        /// <summary>
+        /// Gets campaign history 
+        /// </summary>
+        /// <returns>Campaigns</returns>
+        IPagedList<CampaignHistory> GetCampaignHistory(Campaign campaign, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Gets customer subscriptions
+        /// </summary>
+        /// <param name="Campaign">Campaign</param>
+        /// <returns>CampaignCustomerSubscription</returns>
+        IPagedList<NewsLetterSubscription> CustomerSubscriptions(Campaign campaign, int pageIndex = 0, int pageSize = int.MaxValue);
+
         /// <summary>
         /// Sends a campaign to specified emails
         /// </summary>

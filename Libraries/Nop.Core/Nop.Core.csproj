@@ -115,6 +115,9 @@
     <Compile Include="Domain\Customers\CustomerByTimeReportLine.cs" />
     <Compile Include="Domain\Customers\CustomerReminderHistory.cs" />
     <Compile Include="Domain\Messages\BannerArchive.cs" />
+    <Compile Include="Domain\Messages\CampaignHistory.cs" />
+    <Compile Include="Domain\Messages\CampaignCondition.cs" />
+    <Compile Include="Domain\Messages\CampaignCustomerSubscription.cs" />
     <Compile Include="Domain\Orders\OrderByTimeReportLine.cs" />
     <Compile Include="Domain\Seo\SeoSettings.cs" />
     <Compile Include="ParentEntity.cs" />

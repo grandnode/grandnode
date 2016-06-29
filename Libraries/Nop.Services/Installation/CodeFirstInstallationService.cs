@@ -56,6 +56,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<BlogComment> _blogcommentRepository;
         private readonly IRepository<BlogPost> _blogpostRepository;
         private readonly IRepository<Campaign> _campaignRepository;
+        private readonly IRepository<CampaignHistory> _campaignHistoryRepository;
         private readonly IRepository<Download> _downloadRepository;
         private readonly IRepository<GiftCard> _giftcardRepository;
         private readonly IRepository<Order> _orderRepository;
@@ -145,6 +146,7 @@ namespace Nop.Services.Installation
             IRepository<BlogComment> blogcommentRepository,
             IRepository<BlogPost> blogpostRepository,
             IRepository<Campaign> campaignRepository,
+            IRepository<CampaignHistory> campaignHistoryRepository,
             IRepository<Download> downloadRepository,
             IRepository<GiftCard> giftcardRepository,
             IRepository<Order> orderRepository,
@@ -227,6 +229,7 @@ namespace Nop.Services.Installation
             this._blogcommentRepository = blogcommentRepository;
             this._blogpostRepository = blogpostRepository;
             this._campaignRepository = campaignRepository;
+            this._campaignHistoryRepository = campaignHistoryRepository;
             this._downloadRepository = downloadRepository;
             this._orderRepository = orderRepository;
             this._orderNoteRepository = orderNoteRepository;
@@ -10165,6 +10168,24 @@ namespace Nop.Services.Installation
                                                   Enabled = true,
                                                   Name = "Send email Customer reminder - Birthday"
                                               },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CustomerReminder.SendCampaign",
+                                                  Enabled = true,
+                                                  Name = "Send Campaign"
+                                              },
+                                           new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CustomerAdmin.SendEmail",
+                                                  Enabled = true,
+                                                  Name = "Send email"
+                                              },
+                                            new ActivityLogType
+                                              {
+                                                  SystemKeyword = "CustomerAdmin.SendPM",
+                                                  Enabled = true,
+                                                  Name = "Send PM"
+                                              },
                                       };
             _activityLogTypeRepository.Insert(activityLogTypes);
         }
@@ -10661,6 +10682,8 @@ namespace Nop.Services.Installation
 
             //Campaign
             _campaignRepository.Collection.Indexes.CreateOneAsync(Builders<Campaign>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.CampaignId).Descending(x=>x.CreatedDateUtc), new CreateIndexOptions() { Name = "CampaignId", Unique = false });
 
             //download
             _downloadRepository.Collection.Indexes.CreateOneAsync(Builders<Download>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

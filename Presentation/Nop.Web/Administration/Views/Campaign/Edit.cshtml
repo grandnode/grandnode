@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.Campaigns.EditCampaignDetails").Text;
 }
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "campaign-form" }))
 {
     @Html.AntiForgeryToken()
     
@@ -20,6 +20,10 @@
                         <div class="btn-group btn-group-devided">
                             <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                             <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+
+                            <button class="btn default" type="submit" name="send-mass-email">
+                            <i class="fa fa-send"></i> @T("Admin.Promotions.Campaigns.SendMassEmail") </button>
+
                             <span id="campaign-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
                         </div>
                     </div>

@@ -786,6 +786,15 @@
   <LocaleResource Name="Activitylog.Registeredcustomer">
     <Value>Public store. Registered Customer </Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.SendCampaign">
+    <Value>Email campaign {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.SendEmailfromAdminPanel">
+    <Value>Email (from admin panel) {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.SendPM">
+    <Value>PM (from admin panel) {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Address">
     <Value>Address</Value>
   </LocaleResource>
@@ -10944,6 +10953,21 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Deleted">
     <Value>The campaign has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Info">
+    <Value>Campaign info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Conditions">
+    <Value>Conditions for campaign</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Emails">
+    <Value>Email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.History">
+    <Value>History of sent emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Test">
+    <Value>Test campaign</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.EditCampaignDetails">
     <Value>Edit campaign</Value>
   </LocaleResource>
@@ -10964,6 +10988,60 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CreatedOn">
     <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerCreatedDateFrom">
+    <Value>Customers created from date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerCreatedDateFrom.hint">
+    <Value>Select customers created from the date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerCreatedDateTo">
+    <Value>To</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerCreatedDateTo.hint">
+    <Value>Select customers created to the date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerLastActivityDateFrom">
+    <Value>Last activity from date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerLastActivityDateFrom.hint">
+    <Value>Last activity from date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerLastActivityDateTo">
+    <Value>To</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerLastActivityDateTo.hint">
+    <Value>Last activity to date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerLastPurchaseDateFrom">
+    <Value>Last purchase from date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerLastPurchaseDateFrom.hint">
+    <Value>Last purchase from date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerLastPurchaseDateTo">
+    <Value>To</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerLastPurchaseDateTo.hint">
+    <Value>Last purchase to date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerHasOrders">
+    <Value>Customer has an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerHasOrders.hint">
+    <Value>Customer has an order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerHasShoppingCart">
+    <Value>Customer has a shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerHasShoppingCart.hint">
+    <Value>Customer has a shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Email">
+    <Value>Address email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.SentDate">
+    <Value>Sent date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Name">
     <Value>Name</Value>
@@ -10989,6 +11067,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Subject.Required">
     <Value>Subject is required</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.promotions.campaigns.fields.customertags">
+    <Value>Customer tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.promotions.campaigns.fields.customertags.hint">
+    <Value>Customer tags</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.TestEmail">
     <Value>Send test email to</Value>
   </LocaleResource>
@@ -11003,6 +11087,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.SendTestEmail">
     <Value>Send test email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.SaveBeforeEdit">
+    <Value>You need to save the campaign.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.TestEmailSentToCustomers">
     <Value>Email has been successfully sent.</Value>

@@ -1554,6 +1554,7 @@ namespace Nop.Admin.Controllers
                         null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SendEmail.DontSendBeforeDate.Value)
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
+                _customerActivityService.InsertActivity("CustomerAdmin.SendEmail", "", _localizationService.GetResource("ActivityLog.SendEmailfromAdminPanel"), customer, model.SendEmail.Subject);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));
             }
             catch (Exception exc)
@@ -1600,6 +1601,7 @@ namespace Nop.Admin.Controllers
                 };
 
                 _forumService.InsertPrivateMessage(privateMessage);
+                _customerActivityService.InsertActivity("CustomerAdmin.SendPM", "", _localizationService.GetResource("ActivityLog.SendPMfromAdminPanel"), customer, model.SendPm.Subject);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendPM.Sent"));
             }
             catch (Exception exc)

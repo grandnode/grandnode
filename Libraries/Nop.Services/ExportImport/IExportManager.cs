@@ -83,6 +83,12 @@ namespace Nop.Services.ExportImport
         string ExportNewsletterSubscribersToTxt(IList<NewsLetterSubscription> subscriptions);
 
         /// <summary>
+        /// Export newsletter subscribers to TXT
+        /// </summary>
+        /// <param name="subscriptions">Subscriptions</param>
+        /// <returns>Result in TXT (string) format</returns>
+        string ExportNewsletterSubscribersToTxt(IList<string> subscriptions);
+        /// <summary>
         /// Export states to TXT
         /// </summary>
         /// <param name="states">States</param>

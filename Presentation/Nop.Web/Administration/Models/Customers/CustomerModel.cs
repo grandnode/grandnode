@@ -116,10 +116,6 @@ namespace Nop.Admin.Models.Customers
 
         public List<CustomerAttributeModel> CustomerAttributes { get; set; }
 
-
-
-
-
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
@@ -138,9 +134,6 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
         public string AffiliateName { get; set; }
 
-
-
-
         //time zone
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.TimeZoneId")]
         [AllowHtml]
@@ -150,10 +143,6 @@ namespace Nop.Admin.Models.Customers
 
         public IList<SelectListItem> AvailableTimeZones { get; set; }
 
-
-
-
-
         //EU VAT
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.VatNumber")]
         [AllowHtml]
@@ -162,10 +151,6 @@ namespace Nop.Admin.Models.Customers
         public string VatNumberStatusNote { get; set; }
 
         public bool DisplayVatNumber { get; set; }
-
-
-
-
 
         //registration date
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CreatedOn")]
@@ -195,11 +180,6 @@ namespace Nop.Admin.Models.Customers
         public List<StoreModel> AvailableNewsletterSubscriptionStores { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
         public string[] SelectedNewsletterSubscriptionStoreIds { get; set; }
-
-
-
-
-
 
         //reward points history
         public bool DisplayRewardPointsHistory { get; set; }
