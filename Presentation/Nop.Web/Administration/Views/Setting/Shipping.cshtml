@@ -64,6 +64,16 @@
                         <div class="form-body">
                             <div class="form-group">
                                 <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShipToSameAddress_OverrideForStore, model => model.ShipToSameAddress, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShipToSameAddress, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ShipToSameAddress)
+                                    @Html.ValidationMessageFor(model => model.ShipToSameAddress)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowPickUpInStore_OverrideForStore, model => model.AllowPickUpInStore, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.AllowPickUpInStore, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>

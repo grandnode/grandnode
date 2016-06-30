@@ -8,6 +8,10 @@ namespace Nop.Admin.Models.Settings
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShipToSameAddress")]
+        public bool ShipToSameAddress { get; set; }
+        public bool ShipToSameAddress_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.AllowPickUpInStore")]
         public bool AllowPickUpInStore { get; set; }
         public bool AllowPickUpInStore_OverrideForStore { get; set; }

@@ -189,6 +189,14 @@ label, label + * {
     text-align: center;
 }
 
+.checkout-page .ship-to-same-address {
+ 	padding: 5px 10px 10px 10px;
+ 	text-align: left;
+ 	font-weight: bold;
+ 	color: #444;
+ }
+
+
 /*.page-title {
 	min-height: 50px;
 	margin: 0 0 25px;
@@ -3504,6 +3512,16 @@ input.qq-edit-filename {
 	text-transform: uppercase;
 }
 
+.opc .section.ship-to-same-address
+{
+    margin: 0 0 30px;
+ 	padding: 0;
+}
+
+.opc .section.ship-to-same-address .selector
+{
+    text-align: center;
+}
 
 .opc .step-title {
 	margin: 0 0 1px;

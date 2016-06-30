@@ -154,10 +154,14 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CheckoutBillingAddressModel PrepareBillingAddressModel(string selectedCountryId = null, 
+        protected virtual CheckoutBillingAddressModel PrepareBillingAddressModel(
+            IList<ShoppingCartItem> cart, string selectedCountryId = null, 
             bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutBillingAddressModel();
+            model.ShipToSameAddressAllowed = _shippingSettings.ShipToSameAddress && cart.RequiresShipping();
+            model.ShipToSameAddress = true;
+
             //existing addresses
 
             var addresses = _workContext.CurrentCustomer.Addresses
@@ -556,7 +560,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //model
-            var model = PrepareBillingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+            var model = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
 
             //check whether "billing address" step is enabled
             if (_orderSettings.DisableBillingAddressCheckoutStep)
@@ -574,7 +578,7 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
-        public ActionResult SelectBillingAddress(string addressId)
+        public ActionResult SelectBillingAddress(string addressId, bool shipToSameAddress = false)
         {
             var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
@@ -583,6 +587,23 @@ namespace Nop.Web.Controllers
             _workContext.CurrentCustomer.BillingAddress = address;
             address.CustomerId = _workContext.CurrentCustomer.Id;
             _customerService.UpdateBillingAddress(address);
+
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .ToList();
+
+            //ship to the same address?
+            if (_shippingSettings.ShipToSameAddress && shipToSameAddress && cart.RequiresShipping())
+            {
+                _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
+                _customerService.UpdateShippingAddress(address);                
+                //reset selected shipping method (in case if "pick up in store" was selected)
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
+                //limitation - "Ship to the same address" doesn't properly work in "pick up in store only" case (when no shipping plugins are available) 
+                return RedirectToRoute("CheckoutShippingMethod");
+            }
 
             return RedirectToRoute("CheckoutShippingAddress");
         }
@@ -634,12 +655,24 @@ namespace Nop.Web.Controllers
                 address.CustomerId = _workContext.CurrentCustomer.Id;
                 _customerService.UpdateBillingAddress(address);
 
+                //ship to the same address?
+                if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress && cart.RequiresShipping())
+                {
+                    _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
+                    _customerService.UpdateShippingAddress(address);
+                    //reset selected shipping method (in case if "pick up in store" was selected)
+                    _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
+                    //limitation - "Ship to the same address" doesn't properly work in "pick up in store only" case (when no shipping plugins are available) 
+                    return RedirectToRoute("CheckoutShippingMethod");
+                }
+
                 return RedirectToRoute("CheckoutShippingAddress");
             }
 
 
             //If we got this far, something failed, redisplay form
-            model = PrepareBillingAddressModel(
+            model = PrepareBillingAddressModel(cart, 
                 selectedCountryId: model.NewAddress.CountryId,
                 overrideAttributesXml: customAttributes);
             return View(model);
@@ -1227,6 +1260,36 @@ namespace Nop.Web.Controllers
         #region Methods (one page checkout)
 
         [NonAction]
+        protected JsonResult OpcLoadStepAfterShippingAddress(List<ShoppingCartItem> cart)
+        {
+            var shippingMethodModel = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+
+            if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
+                shippingMethodModel.ShippingMethods.Count == 1)
+            {
+                //if we have only one shipping method, then a customer doesn't have to choose a shipping method
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.SelectedShippingOption,
+                    shippingMethodModel.ShippingMethods.First().ShippingOption,
+                    _storeContext.CurrentStore.Id);
+
+                //load next step
+                return OpcLoadStepAfterShippingMethod(cart);
+            }
+
+
+            return Json(new
+            {
+                update_section = new UpdateSectionJsonModel
+                {
+                    name = "shipping-method",
+                    html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+                },
+                goto_section = "shipping_method"
+            });
+        }
+
+        [NonAction]
         protected JsonResult OpcLoadStepAfterShippingMethod(List<ShoppingCartItem> cart)
         {
             //Check whether payment workflow is required
@@ -1357,7 +1420,12 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult OpcBillingForm()
         {
-            var billingAddressModel = PrepareBillingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList();
+
+            var billingAddressModel = PrepareBillingAddressModel(cart, prePopulateNewAddressWithCustomerFields: true);
             return PartialView("OpcBillingAddress", billingAddressModel);
         }
 
@@ -1412,7 +1480,7 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var billingAddressModel = PrepareBillingAddressModel(
+                        var billingAddressModel = PrepareBillingAddressModel(cart,
                                                     selectedCountryId: model.NewAddress.CountryId,
                                                     overrideAttributesXml: customAttributes);
                         billingAddressModel.NewAddressPreselected = true;
@@ -1452,16 +1520,37 @@ namespace Nop.Web.Controllers
                 if (cart.RequiresShipping())
                 {
                     //shipping is required
-                    var shippingAddressModel = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
-                    return Json(new
+                    
+                    var model = new CheckoutBillingAddressModel();
+                    TryUpdateModel(model);
+                    if (_shippingSettings.ShipToSameAddress && model.ShipToSameAddress)
                     {
-                        update_section = new UpdateSectionJsonModel
+                        _workContext.CurrentCustomer.ShippingAddress = _workContext.CurrentCustomer.BillingAddress;
+                        _customerService.UpdateShippingAddress(_workContext.CurrentCustomer.BillingAddress);
+                        _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
+                        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
+                        return OpcLoadStepAfterShippingAddress(cart);
+                    }
+                    else
+                    {
+                        var shippingAddressModel = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+                        if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
                         {
-                            name = "shipping",
-                            html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
-                        },
-                        goto_section = "shipping"
-                    });
+                            //shippingAddressModel.PickUpInStoreOnly = true;
+                            shippingAddressModel.PickUpInStore = true;
+                        }
+
+                        return Json(new
+                        {
+                           update_section = new UpdateSectionJsonModel
+                            {
+                                name = "shipping",
+                                html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
+                            },
+                            goto_section = "shipping"
+                         });
+                    }
+
                 }
                 //shipping is not required
                 _workContext.CurrentCustomer.ShippingAddress = null;
@@ -1613,31 +1702,7 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateShippingAddress(address);
                 }
 
-                var shippingMethodModel = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
-
-                if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
-                    shippingMethodModel.ShippingMethods.Count == 1)
-                {
-                    //if we have only one shipping method, then a customer doesn't have to choose a shipping method
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.SelectedShippingOption,
-                        shippingMethodModel.ShippingMethods.First().ShippingOption,
-                        _storeContext.CurrentStore.Id);
-
-                    //load next step
-                    return OpcLoadStepAfterShippingMethod(cart);
-                }
-
-                
-                return Json(new
-                {
-                    update_section = new UpdateSectionJsonModel
-                    {
-                        name = "shipping-method",
-                        html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
-                    },
-                    goto_section = "shipping_method"
-                });
+                return OpcLoadStepAfterShippingAddress(cart);
             }
             catch (Exception exc)
             {
