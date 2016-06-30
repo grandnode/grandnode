@@ -12,12 +12,14 @@
                             pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
                         }
                     }
-                    @Html.CheckBoxFor(x => x.PickUpInStore, new { @onclick = "Shipping.togglePickUpInStore(this)" })
+                    @Html.CheckBoxFor(x => x.PickUpInStore, Model.PickUpInStoreOnly ? new { @onclick = "return false" } : new { @onclick = "Shipping.togglePickUpInStore(this)" })
                     <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
                 </p>
                 <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
             </div>
         }
+    @if (!Model.PickUpInStoreOnly)
+    {
     <div class="shipping-addresses" id="shipping-addresses-form">
         @Html.Widget("op_checkout_shipping_address_top")
         @if (Model.ExistingAddresses.Count > 0)
@@ -81,4 +83,5 @@
         </div>
         @Html.Widget("op_checkout_shipping_address_bottom")
     </div>
+    }
 </div>

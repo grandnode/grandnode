@@ -703,6 +703,12 @@ namespace Nop.Web.Controllers
 
             //model
             var model = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
+            if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
+            {
+                model.PickUpInStoreOnly = true;
+                model.PickUpInStore = true;
+            }
+
             return View(model);
         }
         public ActionResult SelectShippingAddress(string addressId)
@@ -1536,7 +1542,7 @@ namespace Nop.Web.Controllers
                         var shippingAddressModel = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
                         if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
                         {
-                            //shippingAddressModel.PickUpInStoreOnly = true;
+                            shippingAddressModel.PickUpInStoreOnly = true;
                             shippingAddressModel.PickUpInStore = true;
                         }
 

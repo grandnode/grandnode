@@ -18,14 +18,14 @@
             {
                 <div class="section pickup-in-store">
                     <div class="selector">
-                        @{
-                var pickupInStoreName = T("Checkout.PickUpInStore").Text;
-                if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
-                {
-                    pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
-                }
+                    @{
+                        var pickupInStoreName = T("Checkout.PickUpInStore").Text;
+                        if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
+                        {
+                            pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
                         }
-                        @Html.CheckBoxFor(x => x.PickUpInStore)
+                    }
+                        @Html.CheckBoxFor(x => x.PickUpInStore, Model.PickUpInStoreOnly ? new { @onclick = "return false" } : null)
                         <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
                     </div>
                     <div class="description">
@@ -45,7 +45,9 @@
                         }
                     </script>
                 </div>
-            }
+                        }
+                        if (!Model.PickUpInStoreOnly)
+                        {
             <div class="shipping-addresses" id="shipping-addresses-form">
                 @Html.Widget("checkout_shipping_address_top")
                 @if (Model.ExistingAddresses.Count > 0)
@@ -171,6 +173,7 @@
                 </div>
                 @Html.Widget("checkout_shipping_address_bottom")
             </div>
+            }
             <div class="buttons">
                 <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
             </div>

@@ -25,8 +25,14 @@
                                 pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
                             }
                         }
-                        @*@Html.CheckBoxFor(x => x.PickUpInStore)*@                        
-						<input type="checkbox" id="@Html.FieldIdFor(model => model.PickUpInStore)" name="@Html.FieldIdFor(model => model.PickUpInStore)" value="true">						
+                        @if (Model.PickUpInStoreOnly)
+                        {
+						    <input type="checkbox" id="@Html.FieldIdFor(model => model.PickUpInStore)" onclick = "return false" name="@Html.FieldIdFor(model => model.PickUpInStore)" checked value="true">
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="@Html.FieldIdFor(model => model.PickUpInStore)" name="@Html.FieldIdFor(model => model.PickUpInStore)" value="true">
+                        }
                         <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
 						<input name="@Html.FieldIdFor(model => model.PickUpInStore)" type="hidden" value="false">
                     </div>
@@ -47,7 +53,9 @@
                         }
                     </script>
                 </div>
-            }
+                            }
+                            if (!Model.PickUpInStoreOnly)
+                            {
             <div class="shipping-addresses" id="shipping-addresses-form">
                 @Html.Widget("checkout_shipping_address_top")
                 @if (Model.ExistingAddresses.Count > 0)
@@ -175,6 +183,7 @@
                 </div>
                 @Html.Widget("checkout_shipping_address_bottom")
             </div>
+            }
             <div class="buttons">
                 <button type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn waves-effect waves-light">@T("Checkout.NextButton")</button>
             </div>

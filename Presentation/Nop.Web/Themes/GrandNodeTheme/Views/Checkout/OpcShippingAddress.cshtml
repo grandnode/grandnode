@@ -13,14 +13,22 @@
                             pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
                         }
                     }
-                    @*@Html.CheckBoxFor(x => x.PickUpInStore, new { @onclick = "Shipping.togglePickUpInStore(this)" })*@
-                    <input type="checkbox" name="@Html.FieldIdFor(model => model.PickUpInStore)" id="@Html.FieldIdFor(model => model.PickUpInStore)" onclick="Shipping.togglePickUpInStore(this)" value="true">
+                    @if (Model.PickUpInStoreOnly)
+                    {
+                        <input type="checkbox" name="@Html.FieldIdFor(model => model.PickUpInStore)" id="@Html.FieldIdFor(model => model.PickUpInStore)" onclick="return false" value="true" checked>
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="@Html.FieldIdFor(model => model.PickUpInStore)" id="@Html.FieldIdFor(model => model.PickUpInStore)" onclick="Shipping.togglePickUpInStore(this)" value="true">
+                    }
                     <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
 					<input name="@Html.FieldIdFor(model => model.PickUpInStore)" type="hidden" value="false">
                 </p>
                 <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
             </div>
         }
+    @if (!Model.PickUpInStoreOnly)
+    {
     <div class="shipping-addresses input-field col s12 section" id="shipping-addresses-form">
         
         @Html.Widget("op_checkout_shipping_address_top")
@@ -84,6 +92,7 @@
         </div>
         @Html.Widget("op_checkout_shipping_address_bottom")
     </div>
+    }
 </div>
 
 
