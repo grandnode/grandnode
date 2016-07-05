@@ -2698,6 +2698,8 @@
     <Content Include="Views\Product\AskQuestion.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Product\_ProductAskQuestionButton.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Product\AskQuestion.cshtml" />
+    <Content Include="Views\ShoppingCart\_EstimateShippingResult.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\ShoppingCart\_EstimateShippingResult.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
