@@ -102,7 +102,7 @@ namespace Nop.Services.Common
                     //update
                     prop.Value = valueStr;
                     var builder = Builders<BaseEntity>.Filter;
-                    var filter = builder.Eq(x => x.Id, prop.EntityId);
+                    var filter = builder.Eq(x => x.Id, entity.Id);
                     filter = filter & builder.Where(x => x.GenericAttributes.Any(y => y.Key == prop.Key));
                     var update = Builders<BaseEntity>.Update
                         .Set(x => x.GenericAttributes.ElementAt(-1).Value, prop.Value);
@@ -116,9 +116,7 @@ namespace Nop.Services.Common
                 {
                     prop = new GenericAttribute
                     {
-                        EntityId = entity.Id,
                         Key = key,
-                        KeyGroup = keyGroup,
                         Value = valueStr,
                         StoreId = storeId,
                     };
