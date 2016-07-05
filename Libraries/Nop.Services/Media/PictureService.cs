@@ -80,33 +80,34 @@ namespace Nop.Services.Media
         /// <param name="resizeType">Resize type</param>
         /// <param name="ensureSizePositive">A value indicatingh whether we should ensure that size values are positive</param>
         /// <returns></returns>
-        protected virtual Size CalculateDimensions(Size originalSize, int targetSize, 
+        protected virtual Size CalculateDimensions(Size originalSize, int targetSize,
             ResizeType resizeType = ResizeType.LongestSide, bool ensureSizePositive = true)
         {
-            var newSize = new Size();
+            float width, height;
+
             switch (resizeType)
             {
                 case ResizeType.LongestSide:
                     if (originalSize.Height > originalSize.Width)
                     {
-                        // portrait 
-                        newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
-                        newSize.Height = targetSize;
+                        // portrait
+                        width = originalSize.Width * (targetSize / (float)originalSize.Height);
+                        height = targetSize;
                     }
-                    else 
+                    else
                     {
                         // landscape or square
-                        newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
-                        newSize.Width = targetSize;
+                        width = targetSize;
+                        height = originalSize.Height * (targetSize / (float)originalSize.Width);
                     }
                     break;
                 case ResizeType.Width:
-                    newSize.Height = (int)(originalSize.Height * (float)(targetSize / (float)originalSize.Width));
-                    newSize.Width = targetSize;
+                    width = targetSize;
+                    height = originalSize.Height * (targetSize / (float)originalSize.Width);
                     break;
                 case ResizeType.Height:
-                    newSize.Width = (int)(originalSize.Width * (float)(targetSize / (float)originalSize.Height));
-                    newSize.Height = targetSize;
+                    width = originalSize.Width * (targetSize / (float)originalSize.Height);
+                    height = targetSize;
                     break;
                 default:
                     throw new Exception("Not supported ResizeType");
@@ -114,15 +115,16 @@ namespace Nop.Services.Media
 
             if (ensureSizePositive)
             {
-                if (newSize.Width < 1)
-                    newSize.Width = 1;
-                if (newSize.Height < 1)
-                    newSize.Height = 1;
+                if (width < 1)
+                    width = 1;
+                if (height < 1)
+                    height = 1;
             }
 
-            return newSize;
+            //we invoke Math.Round to ensure that no white background is rendered - http://www.nopcommerce.com/boards/t/40616/image-resizing-bug.aspx
+            return new Size((int)Math.Round(width), (int)Math.Round(height));
         }
-        
+
         /// <summary>
         /// Returns the file extension from mime type.
         /// </summary>
