@@ -163,6 +163,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var customertag = model.ToEntity();
+                customertag.Name = customertag.Name.ToLower();
                 _customerTagService.InsertCustomerTag(customertag);
 
                 //activity log
@@ -207,6 +208,8 @@ namespace Nop.Admin.Controllers
                 {
 
                     customertag = model.ToEntity(customertag);
+                    customertag.Name = customertag.Name.ToLower();
+
                     _customerTagService.UpdateCustomerTag(customertag);
 
                     //activity log
