@@ -8292,7 +8292,7 @@
     <Value>Back to action</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customerreminder.backtolist">
-    <Value>Back to list</Value>
+    <Value>Back to customer reminder list</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customerreminder.condition.added">
     <Value>Condition added</Value>
@@ -8498,7 +8498,7 @@
   <Value>Back to Action</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.backtolist">
-  <Value>Back to list</Value>
+  <Value>Back to customer action list</Value>
  </LocaleResource>
  <LocaleResource Name="admin.customers.customeraction.conditions">
   <Value>Conditions</Value>
@@ -11977,7 +11977,7 @@
     <Value>Message Contact form</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ContactForm.BackToList">
-    <Value>Back to list</Value>
+    <Value>Back to contact form list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ContactForm.Delete">
     <Value>Delete</Value>
@@ -12267,20 +12267,92 @@
   <LocaleResource Name="Admin.System.ScheduleTasks">
     <Value>Schedule tasks</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Edit">
+    <Value>Edit Schedule task</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.BackToList">
+    <Value>Back to schedule tasks list</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Enabled.hint">
     <Value>Enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LastEnd">
     <Value>Last end date</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LastEndUtc">
+    <Value>Last end date</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LastStart">
+    <Value>Last start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.laststartutc">
     <Value>Last start date</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.LastSuccess">
     <Value>Last success date</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.lastsuccessutc">
+    <Value>Last success date</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Name">
     <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.ScheduleTaskName">
+    <Value>Task Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.ScheduleTaskName.hint">
+    <Value>Task Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Type">
+    <Value>SheduledTask Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Type.hint">
+    <Value>SheduledTask Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.TimeIntervalChoice">
+    <Value>Select time interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.TimeIntervalChoice.hint">
+    <Value>Select time interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.TimeInterval">
+    <Value>Time interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.TimeInterval.hint">
+    <Value>Time interval</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.MinuteOfHour">
+    <Value>Minute of hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.MinuteOfHour.hint">
+    <Value>Minute of hour</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.HourOfDay">
+    <Value>Hour of day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.HourOfDay.hint">
+    <Value>Hour of day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfWeek">
+    <Value>Day of week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfWeek.hint">
+    <Value>Day of week</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.MonthOptionChoice">
+    <Value>Month option</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.MonthOptionChoice.hint">
+    <Value>Month option</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfMonth">
+    <Value>Day of month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.DayOfMonth.hint">
+    <Value>Day of month</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.Name.Required">
     <Value>Name is required</Value>
@@ -12304,6 +12376,9 @@
     <Value>Seconds should be positive</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.StopOnError">
+    <Value>Stop on error</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.StopOnError.hint">
     <Value>Stop on error</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SeNames">

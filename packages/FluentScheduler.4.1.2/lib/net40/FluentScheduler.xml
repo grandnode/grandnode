@@ -1,0 +1,731 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FluentScheduler</name>
+    </assembly>
+    <members>
+        <member name="T:FluentScheduler.DelayForExtensions">
+            <summary>
+            DelayFor extension methods.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DelayForExtensions.DelayFor(FluentScheduler.SpecificTimeUnit,System.Int32)">
+            <summary>
+            Delays the job for the given interval.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.DelayForExtensions.DelayFor(FluentScheduler.SecondUnit,System.Int32)">
+            <summary>
+            Delays the job for the given interval.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.DelayForExtensions.DelayFor(FluentScheduler.MinuteUnit,System.Int32)">
+            <summary>
+            Delays the job for the given interval.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.DelayForExtensions.DelayFor(FluentScheduler.HourUnit,System.Int32)">
+            <summary>
+            Delays the job for the given interval.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.DelayForExtensions.DelayFor(FluentScheduler.DayUnit,System.Int32)">
+            <summary>
+            Delays the job for the given interval.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.DelayForExtensions.DelayFor(FluentScheduler.WeekUnit,System.Int32)">
+            <summary>
+            Delays the job for the given interval.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.DelayForExtensions.DelayFor(FluentScheduler.MonthUnit,System.Int32)">
+            <summary>
+            Delays the job for the given interval.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.DelayForExtensions.DelayFor(FluentScheduler.YearUnit,System.Int32)">
+            <summary>
+            Delays the job for the given interval.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="T:FluentScheduler.GenericEventHandler`2">
+            <summary>
+            Event handler with typed sender.
+            </summary>
+            <typeparam name="TSender">Sender type.</typeparam>
+            <typeparam name="TEventArgs">EventArgs type.</typeparam>
+            <param name="sender">The object that initiated the event.</param>
+            <param name="e">Data related to the event.</param>
+        </member>
+        <member name="T:FluentScheduler.IDayRestrictableUnit">
+            <summary>
+            Common interface of units that can be restricted by day.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.IDayRestrictableUnit.Schedule">
+            <summary>
+            The schedule being affected.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.IDayRestrictableUnit.DayIncrement(System.DateTime)">
+            <summary>
+            Increment the given days.
+            </summary>
+            <param name="increment">Days to increment</param>
+            <returns>The resulting date</returns>
+        </member>
+        <member name="T:FluentScheduler.ITimeRestrictableUnit">
+            <summary>
+            Common interface of units that can be restricted by time.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.ITimeRestrictableUnit.Schedule">
+            <summary>
+            The schedule being affected.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.MinuteUnit">
+            <summary>
+            Unit of time in minutes.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.RestrictableUnitExtensions">
+            <summary>
+            Extension class for restrictable units.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.RestrictableUnitExtensions.Between(FluentScheduler.ITimeRestrictableUnit,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Runs the job between the given start and end hour of day.
+            </summary>
+            <param name="unit">The schedule being affected.</param>
+            <param name="startHour">The start hours (0 through 23).</param>
+            <param name="startMinute">The start minutes (0 through 59).</param>
+            <param name="endHour">The end hours (0 through 23).</param>
+            <param name="endMinute">The end minutes (0 through 59).</param>
+        </member>
+        <member name="M:FluentScheduler.RestrictableUnitExtensions.WeekdaysOnly(FluentScheduler.IDayRestrictableUnit)">
+            <summary>
+            Runs the job only on weekdays.
+            <param name="unit">The schedule being affected</param>
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.SecondUnit">
+            <summary>
+            Unit of time in seconds.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.JobExceptionInfo">
+            <summary>
+            Information of an exception occurred in a job.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobExceptionInfo.Name">
+            <summary>
+            Name of the job.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobExceptionInfo.Task">
+            <summary>
+            Job's task.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.DelayTimeUnit">
+            <summary>
+            Unit used to represent delay.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DelayTimeUnit.Seconds">
+            <summary>
+            Sets the interval to seconds.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DelayTimeUnit.Minutes">
+            <summary>
+            Sets the interval to minutes.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DelayTimeUnit.Hours">
+            <summary>
+            Sets the interval to hours.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DelayTimeUnit.Days">
+            <summary>
+            Sets the interval to days.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DelayTimeUnit.Weeks">
+            <summary>
+            Sets the interval to weeks.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DelayTimeUnit.Months">
+            <summary>
+            Sets the interval to months.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DelayTimeUnit.Years">
+            <summary>
+            Sets the interval to years.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.WeekdayUnit">
+            <summary>
+            Unit of time in weekdays.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.WeekdayUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.IJobFactory">
+            <summary>
+            A job factory.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.IJobFactory.GetJobInstance``1">
+            <summary>
+            Instantiate a job of the given type.
+            </summary>
+            <typeparam name="T">Type of the job to instantiate</typeparam>
+            <returns>The instantiated job</returns>
+        </member>
+        <member name="T:FluentScheduler.JobEndInfo">
+            <summary>
+            Information of a job end.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobEndInfo.Duration">
+            <summary>
+            The elapsed time of the job.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobEndInfo.NextRun">
+            <summary>
+            Date and time of next run.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.JobStartInfo">
+            <summary>
+            Information of a job start.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobStartInfo.Name">
+            <summary>
+            Name of the job.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobStartInfo.StartTime">
+            <summary>
+            Date and time of the start.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.Registry">
+            <summary>
+            A registry of job schedules.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Registry.#ctor">
+            <summary>
+            Default ctor.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Registry.NonReentrantAsDefault">
+            <summary>
+            Sets all jobs in this schedule as non reentrant.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Registry.UseUtcTime">
+            <summary>
+            Use UTC time rather than local time.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Registry.Schedule(System.Action)">
+            <summary>
+            Schedules a new job in the registry.
+            </summary>
+            <param name="job">Job to run.</param>
+        </member>
+        <member name="M:FluentScheduler.Registry.Schedule(FluentScheduler.IJob)">
+            <summary>
+            Schedules a new job in the registry.
+            </summary>
+            <param name="job">Job to run.</param>
+        </member>
+        <member name="M:FluentScheduler.Registry.Schedule``1">
+            <summary>
+            Schedules a new job in the registry.
+            </summary>
+            <typeparam name="T">Job to schedule.</typeparam>
+        </member>
+        <member name="T:FluentScheduler.IJob">
+            <summary>
+            Some work to be done.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.IJob.Execute">
+            <summary>
+            Executes the job.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.YearOnDayOfYearUnit">
+            <summary>
+            Unit of time that represents a specific day of the year.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.YearOnDayOfYearUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.YearOnLastDayOfYearUnit">
+            <summary>
+            Unit of time that represents last day of the year.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.YearOnLastDayOfYearUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.YearUnit">
+            <summary>
+            Unit of time in years.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.YearUnit.On(System.Int32)">
+            <summary>
+            Runs the job on the given day of the year.
+            If the day has passed it schedules to the next year.
+            </summary>
+            <param name="day">Day of the year to run the job.</param>
+        </member>
+        <member name="M:FluentScheduler.YearUnit.OnTheLastDay">
+            <summary>
+            Runs the job on the last day of the year.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.MonthOnDayOfWeekUnit">
+            <summary>
+            Unit of time that represents week and day of week of the month (wow that's confusing).
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.MonthOnDayOfWeekUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.MonthOnLastDayOfMonthUnit">
+            <summary>
+            Unit of time that represents last day of the month.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.MonthOnLastDayOfMonthUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.MonthOnDayOfMonthUnit">
+            <summary>
+            Unit of time that represents a specific day of the month.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.MonthOnDayOfMonthUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.MonthUnit">
+            <summary>
+            Unit of time in months.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.MonthUnit.On(System.Int32)">
+            <summary>
+            Runs the job on the given day of the month.
+            </summary>
+            <param name="day">The day (1 through the number of days in month).</param>
+        </member>
+        <member name="M:FluentScheduler.MonthUnit.OnTheLastDay">
+            <summary>
+            Runs the job on the last day of the month.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.MonthUnit.OnTheFirst(System.DayOfWeek)">
+            <summary>
+            Runs the job on the given day of week on the first week of the month.
+            </summary>
+            <param name="day">The day of the week.</param>
+        </member>
+        <member name="M:FluentScheduler.MonthUnit.OnTheSecond(System.DayOfWeek)">
+            <summary>
+            Runs the job on the given day of week on the second week of the month.
+            </summary>
+            <param name="day">The day of the week.</param>
+        </member>
+        <member name="M:FluentScheduler.MonthUnit.OnTheThird(System.DayOfWeek)">
+            <summary>
+            Runs the job on the given day of week on the third week of the month.
+            </summary>
+            <param name="day">The day of the week.</param>
+        </member>
+        <member name="M:FluentScheduler.MonthUnit.OnTheFourth(System.DayOfWeek)">
+            <summary>
+            Runs the job on the given day of week on the fourth week of the month.
+            </summary>
+            <param name="day">The day of the week.</param>
+        </member>
+        <member name="M:FluentScheduler.MonthUnit.OnTheLast(System.DayOfWeek)">
+            <summary>
+            Runs the job on the given day of week on the last week of the month.
+            </summary>
+            <param name="day">The day of the week.</param>
+        </member>
+        <member name="T:FluentScheduler.WeeklyDayOfWeekUnit">
+            <summary>
+            Unit of time that represents day of the week.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.WeeklyDayOfWeekUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.WeekUnit">
+            <summary>
+            Unit of time in weeks.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.WeekUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="M:FluentScheduler.WeekUnit.On(System.DayOfWeek)">
+            <summary>
+            Runs the job on the given day of the week.
+            </summary>
+            <param name="day">The day of the week.</param>
+        </member>
+        <member name="T:FluentScheduler.DayUnit">
+            <summary>
+            Unit of time in days.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.DayUnit.At(System.Int32,System.Int32)">
+            <summary>
+            Runs the job at the given time of day.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.HourUnit">
+            <summary>
+            Unit of time in hours.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.HourUnit.At(System.Int32)">
+            <summary>
+            Runs the job at the given minute of the hour.
+            </summary>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="T:FluentScheduler.TimeUnit">
+            <summary>
+            Unit of time.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.TimeUnit.Seconds">
+            <summary>
+            Sets the interval to seconds.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.TimeUnit.Minutes">
+            <summary>
+            Sets the interval to minutes.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.TimeUnit.Hours">
+            <summary>
+            Sets the interval to hours.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.TimeUnit.Days">
+            <summary>
+            Sets the interval to days.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.TimeUnit.Weekdays">
+            <summary>
+            Sets the interval to weekdays.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.TimeUnit.Weeks">
+            <summary>
+            Sets the interval to weeks.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.TimeUnit.Months">
+            <summary>
+            Sets the interval to months.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.TimeUnit.Years">
+            <summary>
+            Sets the interval to years.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.SpecificTimeUnit">
+            <summary>
+            Unit of specific time of the day.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.SpecificTimeUnit.AndEvery(System.Int32)">
+            <summary>
+            Also runs the job according to the given interval.
+            </summary>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="T:FluentScheduler.JobManager">
+            <summary>
+            Job manager that handles jobs execution.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobManager.JobFactory">
+            <summary>
+            Job factory used by the job manager.
+            </summary>
+        </member>
+        <member name="E:FluentScheduler.JobManager.JobException">
+            <summary>
+            Event raised when an exception occurs in a job.
+            </summary>
+        </member>
+        <member name="E:FluentScheduler.JobManager.JobStart">
+            <summary>
+            Event raised when a job starts.
+            </summary>
+        </member>
+        <member name="E:FluentScheduler.JobManager.JobEnd">
+            <summary>
+            Evemt raised when a job ends.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.JobManager.Initialize(FluentScheduler.Registry)">
+            <summary>
+            Initializes the job manager with the jobs to run and starts it.
+            </summary>
+            <param name="registry">Registry of jobs to run</param>
+        </member>
+        <member name="M:FluentScheduler.JobManager.Start">
+            <summary>
+            Starts the job manager.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.JobManager.Stop">
+            <summary>
+            Stops the job manager.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.JobManager.GetSchedule(System.String)">
+            <summary>
+            Returns the schedule of the given name.
+            </summary>
+            <param name="name">Name of the schedule.</param>
+            <returns>The schedule of the given name, if any.</returns>
+        </member>
+        <member name="P:FluentScheduler.JobManager.RunningSchedules">
+            <summary>
+            Collection of the currently running schedules.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobManager.AllSchedules">
+            <summary>
+            Collection of all schedules.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.JobManager.AddJob(System.Action,System.Action{FluentScheduler.Schedule})">
+            <summary>
+            Adds a job schedule to the job manager.
+            </summary>
+            <param name="job">Job to run.</param>
+            <param name="schedule">Job schedule to add.</param>
+        </member>
+        <member name="M:FluentScheduler.JobManager.AddJob(FluentScheduler.IJob,System.Action{FluentScheduler.Schedule})">
+            <summary>
+            Adds a job schedule to the job manager.
+            </summary>
+            <param name="job">Job to run.</param>
+            <param name="schedule">Job schedule to add.</param>
+        </member>
+        <member name="M:FluentScheduler.JobManager.AddJob``1(System.Action{FluentScheduler.Schedule})">
+            <summary>
+            Adds a job schedule to the job manager.
+            </summary>
+            <typeparam name="T">Job to run.</typeparam>
+            <param name="schedule">Job schedule to add.</param>
+        </member>
+        <member name="M:FluentScheduler.JobManager.RemoveJob(System.String)">
+            <summary>
+            Removes the schedule of the given name.
+            </summary>
+            <param name="name">Name of the schedule.</param>
+        </member>
+        <member name="T:FluentScheduler.Schedule">
+            <summary>
+            A job schedule.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.Schedule.NextRun">
+            <summary>
+            Date and time of the next run of this job schedule.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.Schedule.Name">
+            <summary>
+            Name of this job schedule.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.Schedule.Disabled">
+            <summary>
+            Flag indicating if this job schedule is disabled.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Schedule.#ctor(System.Action)">
+            <summary>
+            Schedules a new job in the registry.
+            </summary>
+            <param name="action">Job to schedule.</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.#ctor(System.Collections.Generic.IEnumerable{System.Action})">
+            <summary>
+            Schedules a new job in the registry.
+            </summary>
+            <param name="actions">Jobs to schedule</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.Execute">
+            <summary>
+            Executes the job regardless its schedule.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Schedule.AndThen(System.Action)">
+            <summary>
+            Schedules another job to be run with this schedule.
+            </summary>
+            <param name="job">Job to run.</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.AndThen(FluentScheduler.IJob)">
+            <summary>
+            Schedules another job to be run with this schedule.
+            </summary>
+            <param name="job">Job to run.</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.AndThen``1">
+            <summary>
+            Schedules another job to be run with this schedule.
+            </summary>
+            <typeparam name="T">Job to run.</typeparam>
+        </member>
+        <member name="M:FluentScheduler.Schedule.ToRunNow">
+            <summary>
+            Runs the job now.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Schedule.ToRunEvery(System.Int32)">
+            <summary>
+            Runs the job according to the given interval.
+            </summary>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.ToRunOnceIn(System.Int32)">
+            <summary>
+            Runs the job once after the given interval.
+            </summary>
+            <param name="interval">Interval to wait.</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.ToRunOnceAt(System.Int32,System.Int32)">
+            <summary>
+            Runs the job once at the given time.
+            </summary>
+            <param name="hours">The hours (0 through 23).</param>
+            <param name="minutes">The minutes (0 through 59).</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.ToRunOnceAt(System.DateTime)">
+            <summary>
+            Runs the job once at the given time.
+            </summary>
+            <param name="time">The time to run.</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.WithName(System.String)">
+            <summary>
+            Assigns a name to this job schedule.
+            </summary>
+            <param name="name">Name to assign</param>
+        </member>
+        <member name="M:FluentScheduler.Schedule.NonReentrant">
+            <summary>
+            Sets this job schedule as non reentrant.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Schedule.Disable">
+            <summary>
+            Disables this job schedule.
+            </summary>
+        </member>
+        <member name="M:FluentScheduler.Schedule.Enable">
+            <summary>
+            Enables this job schedule.
+            </summary>
+        </member>
+        <member name="T:FluentScheduler.UnhandledExceptionEventArgs">
+            <summary>
+            Same as System.UnhandledExceptionEventArgs except that ExceptionObject is an actual System.Exception reference.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.UnhandledExceptionEventArgs.ExceptionObject">
+            <summary>
+            Gets the unhandled exception object.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.UnhandledExceptionEventArgs.IsTerminating">
+            <summary>
+            Indicates whether the common language runtime is terminating.
+            </summary>
+        </member>
+    </members>
+</doc>

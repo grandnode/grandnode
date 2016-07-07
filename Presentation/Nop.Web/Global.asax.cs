@@ -19,6 +19,7 @@ using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Mvc;
+using FluentScheduler;
 
 namespace Nop.Web
 {
@@ -72,8 +73,8 @@ namespace Nop.Web
             //start scheduled tasks
             if (databaseInstalled)
             {
-                TaskManager.Instance.Initialize();
-                TaskManager.Instance.Start();
+                var scheduleTasks = ScheduleTaskManager.Instance.LoadScheduleTasks();       //load records from db to collection
+                JobManager.Initialize(new RegistryGrandNode(scheduleTasks));                //init registry and start scheduled tasks
             }
 
             //miniprofiler

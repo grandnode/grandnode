@@ -43,6 +43,7 @@ using MongoDB.Driver;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Configuration;
 using Nop.Data;
+using Nop.Services.Tasks;
 
 namespace Nop.Services.Installation
 {
@@ -10255,105 +10256,210 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallScheduleTasks()
         {
+            //these tasks are default - they are created in order to insert them into database
+            //and nothing above it
+            //there is no need to send arguments into ctor - all are null
             var tasks = new List<ScheduleTask>
             {
-                new ScheduleTask
-                {
-                    Name = "Send emails",
-                    Seconds = 60,
-                    Type = "Nop.Services.Messages.QueuedMessagesSendTask, Nop.Services",
+            new ScheduleTask
+            {
+                    ScheduleTaskName = "Send emails",
+                    Type = "Nop.Services.Tasks.QueuedMessagesSendScheduleTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Keep alive",
-                    Seconds = 300,
-                    Type = "Nop.Services.Common.KeepAliveTask, Nop.Services",
+                    ScheduleTaskName = "Keep alive",
+                    Type = "Nop.Services.Tasks.KeepAliveScheduleTask",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeInterval = 5,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Delete guests",
-                    Seconds = 600,
-                    Type = "Nop.Services.Customers.DeleteGuestsTask, Nop.Services",
+                    ScheduleTaskName = "Delete guests",
+                    Type = "Nop.Services.Tasks.DeleteGuestsScheduleTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeInterval = 10,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Clear cache",
-                    Seconds = 600,
-                    Type = "Nop.Services.Caching.ClearCacheTask, Nop.Services",
+                    ScheduleTaskName = "Clear cache",
+                    Type = "Nop.Services.Tasks.ClearCacheScheduleTask, Nop.Services",
                     Enabled = false,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_MINUTES,
+                    TimeInterval = 10,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Clear log",
-                    //60 minutes
-                    Seconds = 3600,
-                    Type = "Nop.Services.Logging.ClearLogTask, Nop.Services",
+                    ScheduleTaskName = "Clear log",
+                    Type = "Nop.Services.Tasks.ClearLogScheduleTask",
                     Enabled = false,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Update currency exchange rates",
-                    //60 minutes
-                    Seconds = 3600,
-                    Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
+                    ScheduleTaskName = "Update currency exchange rates",
+                    Type = "Nop.Services.Tasks.UpdateExchangeRateScheduleTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Customer reminder - AbandonedCart",
-                    //60 minutes
-                    Seconds = 3600,
-                    Type = "Nop.Services.Customers.CustomerReminderAbandonedCartTask, Nop.Services",
+                    ScheduleTaskName = "Customer reminder - AbandonedCart",
+                    Type = "Nop.Services.Tasks.CustomerReminderAbandonedCartScheduleTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_HOURS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Customer reminder - RegisteredCustomer",
-                    //24 hours
-                    Seconds = 86400,
-                    Type = "Nop.Services.Customers.CustomerReminderRegisteredCustomerTask, Nop.Services",
+                    ScheduleTaskName = "Customer reminder - RegisteredCustomer",
+                    Type = "Nop.Services.Tasks.CustomerReminderRegisteredCustomerScheduleTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Customer reminder - LastActivity",
-                    //24 hours
-                    Seconds = 86400,
-                    Type = "Nop.Services.Customers.CustomerReminderLastActivityTask, Nop.Services",
+                    ScheduleTaskName = "Customer reminder - LastActivity",
+                    Type = "Nop.Services.Tasks.CustomerReminderLastActivityScheduleTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Customer reminder - LastPurchase",
-                    //24 hours
-                    Seconds = 86400,
-                    Type = "Nop.Services.Customers.CustomerReminderLastPurchaseTask, Nop.Services",
+                    ScheduleTaskName = "Customer reminder - LastPurchase",
+                    Type = "Nop.Services.Tasks.CustomerReminderLastPurchaseScheduleTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
                 new ScheduleTask
                 {
-                    Name = "Customer reminder - Bithday",
-                    //24 hours
-                    Seconds = 86400,
-                    Type = "Nop.Services.Customers.CustomerReminderBithdayTask, Nop.Services",
+                    ScheduleTaskName = "Customer reminder - Birthday",
+                    Type = "Nop.Services.Tasks.CustomerReminderBirthdayScheduleTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
                 },
             };
-
             _scheduleTaskRepository.Insert(tasks);
         }
 

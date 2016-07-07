@@ -263,7 +263,7 @@ namespace Nop.Admin.Controllers
                 _customerReminderService.Task_AbandonedCart(model.Id);
 
             if (model.ReminderRule == CustomerReminderRuleEnum.Birthday)
-                _customerReminderService.Task_Bithday(model.Id);
+                _customerReminderService.Task_Birthday(model.Id);
 
             if (model.ReminderRule == CustomerReminderRuleEnum.LastActivity)
                 _customerReminderService.Task_LastActivity(model.Id);

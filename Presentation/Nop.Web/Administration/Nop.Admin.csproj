@@ -68,6 +68,10 @@
       <HintPath>..\..\..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentScheduler, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b76503528a14ebd1, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\FluentScheduler.4.1.2\lib\net40\FluentScheduler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
@@ -1881,6 +1885,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\GoogleAnalytics\DashboardDataByExit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ScheduleTask\EditScheduler.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

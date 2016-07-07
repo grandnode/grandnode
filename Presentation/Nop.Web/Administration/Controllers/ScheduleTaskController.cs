@@ -2,64 +2,65 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Tasks;
-using Nop.Core.Domain.Tasks;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Kendoui;
-using Nop.Web.Framework.Mvc;
+using Nop.Core.Domain.Tasks;
 
 namespace Nop.Admin.Controllers
 {
     public partial class ScheduleTaskController : BaseAdminController
     {
         #region Fields
-
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly IPermissionService _permissionService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
-
         #endregion
 
         #region Constructors
-
-        public ScheduleTaskController(IScheduleTaskService scheduleTaskService,
+        public ScheduleTaskController(
+            IScheduleTaskService scheduleTaskService,
             IPermissionService permissionService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService)
+            IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService)
         {
             this._scheduleTaskService = scheduleTaskService;
             this._permissionService = permissionService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
         }
-
         #endregion
 
         #region Utility
-
         [NonAction]
         protected virtual ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
         {
             var model = new ScheduleTaskModel
             {
                 Id = task.Id,
-                Name = task.Name,
-                Seconds = task.Seconds,
+                ScheduleTaskName = task.ScheduleTaskName,
+                Type = task.Type,
                 Enabled = task.Enabled,
                 StopOnError = task.StopOnError,
-                LastStartUtc = task.LastStartUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastStartUtc.Value, DateTimeKind.Utc).ToString("G") : "",
-                LastEndUtc = task.LastEndUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastEndUtc.Value, DateTimeKind.Utc).ToString("G") : "",
-                LastSuccessUtc = task.LastSuccessUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(task.LastSuccessUtc.Value, DateTimeKind.Utc).ToString("G") : "",
+                LastStartUtc = task.LastStartUtc.ToString(),
+                LastEndUtc = task.LastNonSuccessEndUtc.ToString(),
+                LastSuccessUtc = task.LastSuccessUtc.ToString(),
+                TimeIntervalChoice = (int)task.TimeIntervalChoice,
+                TimeInterval = task.TimeInterval,
+                MinuteOfHour = task.MinuteOfHour,
+                HourOfDay = task.HourOfDay,
+                DayOfWeek = (int)task.DayOfWeek,
+                MonthOptionChoice = (int)task.MonthOptionChoice,
+                DayOfMonth = task.DayOfMonth
             };
             return model;
         }
-
         #endregion
 
         #region Methods
-
         public ActionResult Index()
         {
             return RedirectToAction("List");
@@ -69,7 +70,6 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
-
             return View();
         }
 
@@ -79,7 +79,8 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
 
-            var models = _scheduleTaskService.GetAllTasks(true)
+            //get all tasks and then change their type inside PrepareSCheduleTaskModel and return as List<ScheduleTaskModel>
+            var models = _scheduleTaskService.GetAllTasks()
                 .Select(PrepareScheduleTaskModel)
                 .ToList();
             var gridModel = new DataSourceResult
@@ -87,57 +88,70 @@ namespace Nop.Admin.Controllers
                 Data = models,
                 Total = models.Count
             };
-
             return Json(gridModel);
         }
 
-        [HttpPost]
-        public ActionResult TaskUpdate(ScheduleTaskModel model)
+        [HttpGet]
+        public ActionResult EditScheduler(string id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
-                return AccessDeniedView();
-
-            if (!ModelState.IsValid)
+            var task = _scheduleTaskService.GetTaskById(id);
+            var model = new ScheduleTaskModel();
             {
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+                model.Id = task.Id;
+                model.ScheduleTaskName = task.ScheduleTaskName;
+                model.Type = task.Type;
+                model.Enabled = task.Enabled;
+                model.StopOnError = task.StopOnError;
+                model.LastStartUtc = task.LastStartUtc.ToString();
+                model.LastEndUtc = task.LastNonSuccessEndUtc.ToString();
+                model.LastSuccessUtc = task.LastSuccessUtc.ToString();
+                model.TimeIntervalChoice = (int)task.TimeIntervalChoice;
+                model.TimeInterval = task.TimeInterval;
+                model.MinuteOfHour = task.MinuteOfHour;
+                model.HourOfDay = task.HourOfDay;
+                model.DayOfWeek = (int)task.DayOfWeek;
+                model.MonthOptionChoice = (int)task.MonthOptionChoice;
+                model.DayOfMonth = task.DayOfMonth;
             }
+            return View(model);
+        }
 
-            var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
-            if (scheduleTask == null)
-                return Content("Schedule task cannot be loaded");
-
-            scheduleTask.Name = model.Name;
-            scheduleTask.Seconds = model.Seconds;
-            scheduleTask.Enabled = model.Enabled;
-            scheduleTask.StopOnError = model.StopOnError;
-            _scheduleTaskService.UpdateTask(scheduleTask);
-
-            return new NullJsonResult();
+        [HttpPost]
+        public ActionResult EditScheduler(ScheduleTaskModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);
+                scheduleTask.Enabled = model.Enabled;
+                scheduleTask.StopOnError = model.StopOnError;
+                scheduleTask.TimeIntervalChoice = (TimeIntervalChoice)model.TimeIntervalChoice;
+                scheduleTask.TimeInterval = model.TimeInterval;
+                scheduleTask.MinuteOfHour = model.MinuteOfHour;
+                scheduleTask.HourOfDay = model.HourOfDay;
+                scheduleTask.DayOfWeek = (DayOfWeek)model.DayOfWeek;
+                scheduleTask.MonthOptionChoice = (MonthOptionChoice)model.MonthOptionChoice;
+                scheduleTask.DayOfMonth = model.DayOfMonth;
+                _scheduleTaskService.UpdateTask(scheduleTask);
+                return EditScheduler(model.Id);
+            }
+            return View(model);
         }
 
         public ActionResult RunNow(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageScheduleTasks))
                 return AccessDeniedView();
-
             try
             {
                 var scheduleTask = _scheduleTaskService.GetTaskById(id);
-                if (scheduleTask == null)
-                    throw new Exception("Schedule task cannot be loaded");
-
-                var task = new Task(scheduleTask);
-                //ensure that the task is enabled
-                task.Enabled = true;
-                //do not dispose. otherwise, we can get exception that DbContext is disposed
-                task.Execute(true, false, false);
+                if (scheduleTask == null) throw new Exception("Schedule task cannot be loaded");
+                RegistryGrandNode.RunTaskNow(scheduleTask);
                 SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
             }
             catch (Exception exc)
             {
                 ErrorNotification(exc);
             }
-
             return RedirectToAction("List");
         }
         #endregion

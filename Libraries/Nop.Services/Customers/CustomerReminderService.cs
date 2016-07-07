@@ -909,7 +909,7 @@ namespace Nop.Services.Customers
 
         }
 
-        public virtual void Task_Bithday(string id = "")
+        public virtual void Task_Birthday(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow;
             var customerReminder = new List<CustomerReminder>();

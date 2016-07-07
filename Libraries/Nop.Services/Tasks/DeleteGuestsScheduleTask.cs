@@ -1,16 +1,17 @@
 ﻿using System;
-using Nop.Services.Tasks;
+using Nop.Services.Customers;
+using Nop.Core.Domain.Tasks;
 
-namespace Nop.Services.Customers
+namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Represents a task for deleting guest customers
     /// </summary>
-    public partial class DeleteGuestsTask : ITask
+    public partial class DeleteGuestsScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly ICustomerService _customerService;
 
-        public DeleteGuestsTask(ICustomerService customerService)
+        public DeleteGuestsScheduleTask(ICustomerService customerService)
         {
             this._customerService = customerService;
         }
@@ -22,7 +23,7 @@ namespace Nop.Services.Customers
         {
             //60*24 = 1 day
             var olderThanMinutes = 1440; //TODO move to settings
-            //Do not delete more than 1000 records per time. This way the system is not slowed down
+                                            //Do not delete more than 1000 records per time. This way the system is not slowed down
             _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
         }
     }

@@ -1,17 +1,19 @@
+using Nop.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Data;
-using Nop.Core.Domain.Tasks;
-using MongoDB.Driver.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
+using MongoDB.Driver.Linq;
+using Nop.Core.Domain.Tasks;
 
 namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Task service
     /// </summary>
-    public partial class ScheduleTaskService : IScheduleTaskService
+    public class ScheduleTaskService : IScheduleTaskService
     {
         #region Fields
 
@@ -27,20 +29,6 @@ namespace Nop.Services.Tasks
         }
 
         #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Deletes a task
-        /// </summary>
-        /// <param name="task">Task</param>
-        public virtual void DeleteTask(ScheduleTask task)
-        {
-            if (task == null)
-                throw new ArgumentNullException("task");
-
-            _taskRepository.Delete(task);
-        }
 
         /// <summary>
         /// Gets a task
@@ -76,30 +64,9 @@ namespace Nop.Services.Tasks
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Tasks</returns>
-        public virtual IList<ScheduleTask> GetAllTasks(bool showHidden = false)
+        public virtual IList<ScheduleTask> GetAllTasks()
         {
-            var query = _taskRepository.Table;
-
-            if (!showHidden)
-            {
-                query = query.Where(t => t.Enabled);
-            }
-            query = query.OrderByDescending(t => t.Seconds);
-
-            var tasks = query.ToList();
-            return tasks;
-        }
-
-        /// <summary>
-        /// Inserts a task
-        /// </summary>
-        /// <param name="task">Task</param>
-        public virtual void InsertTask(ScheduleTask task)
-        {
-            if (task == null)
-                throw new ArgumentNullException("task");
-
-            _taskRepository.Insert(task);
+            return _taskRepository.Table.ToList();
         }
 
         /// <summary>
@@ -113,7 +80,6 @@ namespace Nop.Services.Tasks
 
             _taskRepository.Update(task);
         }
-
-        #endregion
     }
 }
+

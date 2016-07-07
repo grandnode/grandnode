@@ -52,6 +52,10 @@
       <HintPath>..\..\packages\EPPlus.4.0.5\lib\net20\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentScheduler, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b76503528a14ebd1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentScheduler.4.1.2\lib\net40\FluentScheduler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Apis, Version=1.13.1.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.Apis.1.13.1\lib\net45\Google.Apis.dll</HintPath>
       <Private>True</Private>
@@ -245,7 +249,7 @@
     <Compile Include="Blogs\BlogService.cs" />
     <Compile Include="Blogs\BlogExtensions.cs" />
     <Compile Include="Blogs\IBlogService.cs" />
-    <Compile Include="Caching\ClearCacheTask.cs" />
+    <Compile Include="Tasks\ClearCacheScheduleTask.cs" />
     <Compile Include="Catalog\BackInStockSubscriptionService.cs" />
     <Compile Include="Catalog\Cache\PriceCacheEventConsumer.cs" />
     <Compile Include="Catalog\CategoryService.cs" />
@@ -291,7 +295,7 @@
     <Compile Include="Common\AddressExtensions.cs" />
     <Compile Include="Common\IGenericAttributeService.cs" />
     <Compile Include="Common\GenericAttributeService.cs" />
-    <Compile Include="Common\KeepAliveTask.cs" />
+    <Compile Include="Tasks\KeepAliveTask.cs" />
     <Compile Include="Common\GenericAttributeExtensions.cs" />
     <Compile Include="Common\IMiscPlugin.cs" />
     <Compile Include="Common\IPdfService.cs" />
@@ -305,12 +309,12 @@
     <Compile Include="Configuration\SettingExtensions.cs" />
     <Compile Include="Customers\CustomerActionEventService.cs" />
     <Compile Include="Customers\CustomerActionService.cs" />
-    <Compile Include="Customers\CustomerReminderBithdayTask.cs" />
-    <Compile Include="Customers\CustomerReminderLastPurchaseTask.cs" />
-    <Compile Include="Customers\CustomerReminderLastActivityTask.cs" />
-    <Compile Include="Customers\CustomerReminderRegisteredCustomerTask.cs" />
+    <Compile Include="Tasks\CustomerReminderBirthdayScheduleTask.cs" />
+    <Compile Include="Tasks\CustomerReminderLastPurchaseScheduleTask.cs" />
+    <Compile Include="Tasks\CustomerReminderLastActivityScheduleTask.cs" />
+    <Compile Include="Tasks\CustomerReminderRegisteredCustomerScheduleTask.cs" />
     <Compile Include="Customers\CustomerReminderService.cs" />
-    <Compile Include="Customers\CustomerReminderAbandonedCartTask.cs" />
+    <Compile Include="Tasks\CustomerReminderAbandonedCartScheduleTask.cs" />
     <Compile Include="Customers\ICustomerActionEventService.cs" />
     <Compile Include="Customers\ICustomerActionService.cs" />
     <Compile Include="Customers\ICustomerAttributeParser.cs" />
@@ -347,9 +351,12 @@
     <Compile Include="Infrastructure\AzureWebsitesMachineNameProvider.cs" />
     <Compile Include="Infrastructure\DefaultMachineNameProvider.cs" />
     <Compile Include="Infrastructure\IMachineNameProvider.cs" />
-    <Compile Include="Logging\ClearLogTask.cs" />
+    <Compile Include="Tasks\ClearLogScheduleTask.cs" />
     <Compile Include="Media\ResizeType.cs" />
     <Compile Include="Shipping\EventPublisherExtensions.cs" />
+    <Compile Include="Tasks\IScheduleTask.cs" />
+    <Compile Include="Tasks\RegistryGrandNode.cs" />
+    <Compile Include="Tasks\ScheduleTaskManager.cs" />
     <Compile Include="Tax\TaxProductPrice.cs" />
     <Compile Include="Topics\ITopicTemplateService.cs" />
     <Compile Include="Topics\TopicTemplateService.cs" />
@@ -360,7 +367,7 @@
     <Compile Include="Customers\CustomerRegistrationService.cs" />
     <Compile Include="Customers\ICustomerReportService.cs" />
     <Compile Include="Customers\CustomerReportService.cs" />
-    <Compile Include="Customers\DeleteGuestsTask.cs" />
+    <Compile Include="Tasks\DeleteGuestsScheduleTask.cs" />
     <Compile Include="Stores\IStoreMappingService.cs" />
     <Compile Include="Stores\StoreMappingService.cs" />
     <Compile Include="Stores\IStoreService.cs" />
@@ -379,7 +386,7 @@
     <Compile Include="News\NewsService.cs" />
     <Compile Include="News\INewsService.cs" />
     <Compile Include="Customers\CustomerExtensions.cs" />
-    <Compile Include="Directory\UpdateExchangeRateTask.cs" />
+    <Compile Include="Tasks\UpdateExchangeRateScheduleTask.cs" />
     <Compile Include="Directory\IExchangeRateProvider.cs" />
     <Compile Include="Discounts\DiscountExtensions.cs" />
     <Compile Include="Discounts\DiscountService.cs" />
@@ -431,7 +438,7 @@
     <Compile Include="Messages\IWorkflowMessageService.cs" />
     <Compile Include="Messages\MessageTemplateService.cs" />
     <Compile Include="Messages\QueuedEmailService.cs" />
-    <Compile Include="Messages\QueuedMessagesSendTask.cs" />
+    <Compile Include="Tasks\QueuedMessagesSendScheduleTask.cs" />
     <Compile Include="Messages\Tokenizer.cs" />
     <Compile Include="Messages\Token.cs" />
     <Compile Include="Messages\WorkflowMessageService.cs" />
@@ -515,10 +522,6 @@
     <Compile Include="Shipping\Tracking\IShipmentTracker.cs" />
     <Compile Include="Tasks\ScheduleTaskService.cs" />
     <Compile Include="Tasks\IScheduleTaskService.cs" />
-    <Compile Include="Tasks\ITask.cs" />
-    <Compile Include="Tasks\Task.cs" />
-    <Compile Include="Tasks\TaskManager.cs" />
-    <Compile Include="Tasks\TaskThread.cs" />
     <Compile Include="Tax\CalculateTaxRequest.cs" />
     <Compile Include="Tax\CalculateTaxResult.cs" />
     <Compile Include="Tax\ITaxCategoryService.cs" />

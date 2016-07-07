@@ -54,7 +54,7 @@ namespace Nop.Services.Customers
         void Task_RegisteredCustomer(string id = "");
         void Task_LastActivity(string id = "");
         void Task_LastPurchase(string id = "");
-        void Task_Bithday(string id = "");
+        void Task_Birthday(string id = "");
 
     }
 }

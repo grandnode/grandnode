@@ -1,19 +1,14 @@
-using System.Collections.Generic;
 using Nop.Core.Domain.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Nop.Services.Tasks
 {
-    /// <summary>
-    /// Task service interface
-    /// </summary>
     public partial interface IScheduleTaskService
     {
-        /// <summary>
-        /// Deletes a task
-        /// </summary>
-        /// <param name="task">Task</param>
-        void DeleteTask(ScheduleTask task);
-
         /// <summary>
         /// Gets a task
         /// </summary>
@@ -31,15 +26,8 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Gets all tasks
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Tasks</returns>
-        IList<ScheduleTask> GetAllTasks(bool showHidden = false);
-
-        /// <summary>
-        /// Inserts a task
-        /// </summary>
-        /// <param name="task">Task</param>
-        void InsertTask(ScheduleTask task);
+        IList<ScheduleTask> GetAllTasks();
 
         /// <summary>
         /// Updates the task

@@ -14,10 +14,14 @@ namespace Nop.Services.Helpers
     public class BrowscapXmlHelper
     {
         private readonly List<string> _crawlerUserAgentsRegexp;
+        private readonly List<string> _crawlerUserAgents;
+        private readonly List<string> _notCrawlerUserAgents;
 
         public BrowscapXmlHelper(string filePath)
         {
+            _crawlerUserAgents = new List<string>();
             _crawlerUserAgentsRegexp = new List<string>();
+            _notCrawlerUserAgents = new List<string>();
 
             Initialize(filePath);
         }
@@ -58,10 +62,22 @@ namespace Nop.Services.Helpers
         /// Determines whether a user agent is a crawler
         /// </summary>
         /// <param name="userAgent">User agent string</param>
-        /// <returns>True if user agent is a crawler, otherwise - false</returns>
+        /// <returns>True if user agent is a crawler, otherwise false</returns>
         public bool IsCrawler(string userAgent)
         {
-            return _crawlerUserAgentsRegexp.Any(p => Regex.IsMatch(userAgent, p));
+            if (_crawlerUserAgents.Any(p => p == userAgent))
+                return true;
+
+            if (_notCrawlerUserAgents.Any(p => p == userAgent))
+                return false;
+
+            var flag = _crawlerUserAgentsRegexp.Any(p => Regex.IsMatch(userAgent, p));
+            if (flag)
+                _crawlerUserAgents.Add(userAgent);
+            else
+                _notCrawlerUserAgents.Add(userAgent);
+
+            return flag;
         }
     }
 }

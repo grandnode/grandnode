@@ -1,18 +1,20 @@
 ﻿using System;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Tasks;
+using Nop.Core.Domain.Tasks;
+using Nop.Services.Directory;
 
-namespace Nop.Services.Directory
+namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Represents a task for updating exchange rates
     /// </summary>
-    public partial class UpdateExchangeRateTask : ITask
+    public partial class UpdateExchangeRateScheduleTask : ScheduleTask, IScheduleTask
     {
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
 
-        public UpdateExchangeRateTask(ICurrencyService currencyService, CurrencySettings currencySettings)
+        public UpdateExchangeRateScheduleTask(ICurrencyService currencyService, CurrencySettings currencySettings)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
