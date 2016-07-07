@@ -64,6 +64,11 @@ namespace Nop.Core.Domain.Discounts
         public string CouponCode { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether discount can be used simultaneously with other discounts (with the same discount type)
+        /// </summary>
+        public bool IsCumulative { get; set; }
+
+        /// <summary>
         /// Gets or sets the discount limitation identifier
         /// </summary>
         public int DiscountLimitationId { get; set; }

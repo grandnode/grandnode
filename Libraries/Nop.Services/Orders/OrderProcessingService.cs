@@ -454,30 +454,25 @@ namespace Nop.Services.Orders
             if (!processPaymentRequest.IsRecurringPayment)
             {
                 //sub total (incl tax)
-                decimal orderSubTotalDiscountAmount1;
-                Discount orderSubTotalAppliedDiscount1;
-                decimal subTotalWithoutDiscountBase1;
-                decimal subTotalWithDiscountBase1;
+                decimal orderSubTotalDiscountAmount;
+                List<Discount> orderSubTotalAppliedDiscounts;
+                decimal subTotalWithoutDiscountBase;
+                decimal subTotalWithDiscountBase;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart,
-                    true, out orderSubTotalDiscountAmount1, out orderSubTotalAppliedDiscount1,
-                    out subTotalWithoutDiscountBase1, out subTotalWithDiscountBase1);
-                details.OrderSubTotalInclTax = subTotalWithoutDiscountBase1;
-                details.OrderSubTotalDiscountInclTax = orderSubTotalDiscountAmount1;
+                    true, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
+                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                details.OrderSubTotalInclTax = subTotalWithoutDiscountBase;
+                details.OrderSubTotalDiscountInclTax = orderSubTotalDiscountAmount;
 
-                //discount history
-                if (orderSubTotalAppliedDiscount1 != null && !details.AppliedDiscounts.ContainsDiscount(orderSubTotalAppliedDiscount1))
-                    details.AppliedDiscounts.Add(orderSubTotalAppliedDiscount1);
+                foreach (var disc in orderSubTotalAppliedDiscounts)
+                    if (!details.AppliedDiscounts.ContainsDiscount(disc))
+                        details.AppliedDiscounts.Add(disc);
 
                 //sub total (excl tax)
-                decimal orderSubTotalDiscountAmount2;
-                Discount orderSubTotalAppliedDiscount2;
-                decimal subTotalWithoutDiscountBase2;
-                decimal subTotalWithDiscountBase2;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart,
-                    false, out orderSubTotalDiscountAmount2, out orderSubTotalAppliedDiscount2,
-                    out subTotalWithoutDiscountBase2, out subTotalWithDiscountBase2);
-                details.OrderSubTotalExclTax = subTotalWithoutDiscountBase2;
-                details.OrderSubTotalDiscountExclTax = orderSubTotalDiscountAmount2;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(details.Cart, false, out orderSubTotalDiscountAmount,
+                out orderSubTotalAppliedDiscounts, out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                details.OrderSubTotalExclTax = subTotalWithoutDiscountBase;
+                details.OrderSubTotalDiscountExclTax = orderSubTotalDiscountAmount;
             }
             else
             {
@@ -555,26 +550,19 @@ namespace Nop.Services.Orders
                 : ShippingStatus.ShippingNotRequired;
 
             //shipping total
-            if (!processPaymentRequest.IsRecurringPayment)
-            {
-                decimal taxRate;
-                Discount shippingTotalDiscount;
-                decimal? orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out taxRate, out shippingTotalDiscount);
-                decimal? orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
-                if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
-                    throw new NopException("Shipping total couldn't be calculated");
-                details.OrderShippingTotalInclTax = orderShippingTotalInclTax.Value;
-                details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
+            decimal tax;
+            List<Discount> shippingTotalDiscounts;
+            var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out tax, out shippingTotalDiscounts);
+            var orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
+            if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
+                throw new NopException("Shipping total couldn't be calculated");
 
-                if (shippingTotalDiscount != null && !details.AppliedDiscounts.ContainsDiscount(shippingTotalDiscount))
-                    details.AppliedDiscounts.Add(shippingTotalDiscount);
-            }
-            else
-            {
-                details.OrderShippingTotalInclTax = details.InitialOrder.OrderShippingInclTax;
-                details.OrderShippingTotalExclTax = details.InitialOrder.OrderShippingExclTax;
-            }
+            details.OrderShippingTotalInclTax = orderShippingTotalInclTax.Value;
+            details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
 
+            foreach (var disc in shippingTotalDiscounts)
+                if (!details.AppliedDiscounts.ContainsDiscount(disc))
+                    details.AppliedDiscounts.Add(disc);
 
             //payment total
             if (!processPaymentRequest.IsRecurringPayment)
@@ -619,36 +607,29 @@ namespace Nop.Services.Orders
 
 
             //order total (and applied discounts, gift cards, reward points)
-            if (!processPaymentRequest.IsRecurringPayment)
-            {
-                List<AppliedGiftCard> appliedGiftCards;
-                Discount orderAppliedDiscount;
-                decimal orderDiscountAmount;
-                int redeemedRewardPoints ;
-                decimal redeemedRewardPointsAmount;
+            List<AppliedGiftCard> appliedGiftCards;
+            List<Discount> orderAppliedDiscounts;
+            decimal orderDiscountAmount;
+            int redeemedRewardPoints;
+            decimal redeemedRewardPointsAmount;
+            var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out orderDiscountAmount,
+                out orderAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount);
+            if (!orderTotal.HasValue)
+                throw new NopException("Order total couldn't be calculated");
 
-                var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart,
-                    out orderDiscountAmount, out orderAppliedDiscount, out appliedGiftCards,
-                    out redeemedRewardPoints, out redeemedRewardPointsAmount);
-                if (!orderTotal.HasValue)
-                    throw new NopException("Order total couldn't be calculated");
+            details.OrderDiscountAmount = orderDiscountAmount;
+            details.RedeemedRewardPoints = redeemedRewardPoints;
+            details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
+            details.AppliedGiftCards = appliedGiftCards;
+            details.OrderTotal = orderTotal.Value;
 
-                details.OrderDiscountAmount = orderDiscountAmount;
-                details.RedeemedRewardPoints = redeemedRewardPoints;
-                details.RedeemedRewardPointsAmount = redeemedRewardPointsAmount;
-                details.AppliedGiftCards = appliedGiftCards;
-                details.OrderTotal = orderTotal.Value;
+            //discount history
+            foreach (var disc in orderAppliedDiscounts)
+                if (!details.AppliedDiscounts.ContainsDiscount(disc))
+                    details.AppliedDiscounts.Add(disc);
 
-                //discount history
-                if (orderAppliedDiscount != null && !details.AppliedDiscounts.ContainsDiscount(orderAppliedDiscount))
-                    details.AppliedDiscounts.Add(orderAppliedDiscount);
-            }
-            else
-            {
-                details.OrderDiscountAmount = details.InitialOrder.OrderDiscount;
-                details.OrderTotal = details.InitialOrder.OrderTotal;
-            } 
             processPaymentRequest.OrderTotal = details.OrderTotal;
+
 
             //recurring or standard shopping cart?
             if (!processPaymentRequest.IsRecurringPayment)
@@ -1241,11 +1222,11 @@ namespace Nop.Services.Orders
                         {
                             //prices
                             decimal taxRate;
-                            Discount scDiscount;
+                            List<Discount> scDiscounts;
                             decimal discountAmount;
                             decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
                             var product = _productService.GetProductById(sc.ProductId);
-                            decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscount);
+                            decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscounts);
 
                             var prices = _taxService.GetTaxProductPrice(product, details.Customer, out taxRate, scUnitPrice, scSubTotal, discountAmount, _taxSettings.PricesIncludeTax);
                             decimal scUnitPriceInclTax = prices.UnitPriceInclTax;
@@ -1264,8 +1245,9 @@ namespace Nop.Services.Orders
                             decimal discountAmountExclTax = _taxService.GetProductPrice(product, discountAmount, false, details.Customer, out taxRate);
                             */
 
-                            if (scDiscount != null && !details.AppliedDiscounts.ContainsDiscount(scDiscount))
-                                details.AppliedDiscounts.Add(scDiscount);
+                            foreach (var disc in scDiscounts)
+                                if (!details.AppliedDiscounts.ContainsDiscount(disc))
+                                    details.AppliedDiscounts.Add(disc);
 
                             //attributes
                             string attributeDescription = _productAttributeFormatter.FormatAttributes(product, sc.AttributesXml, details.Customer);
@@ -2997,11 +2979,11 @@ namespace Nop.Services.Orders
             {
                 //subtotal
                 decimal orderSubTotalDiscountAmountBase;
-                Discount orderSubTotalAppliedDiscount;
+                List<Discount> orderSubTotalAppliedDiscounts;
                 decimal subTotalWithoutDiscountBase;
                 decimal subTotalWithDiscountBase;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false,
-                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
+                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscounts,
                     out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
                 if (subTotalWithoutDiscountBase < _orderSettings.MinOrderSubtotalAmount)

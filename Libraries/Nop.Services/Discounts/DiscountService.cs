@@ -18,6 +18,7 @@ using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using Nop.Services.Localization;
 using Nop.Core.Infrastructure;
+using Nop.Services.Catalog.Cache;
 
 namespace Nop.Services.Discounts
 {
@@ -48,6 +49,19 @@ namespace Nop.Services.Discounts
         /// Key pattern to clear cache
         /// </summary>
         private const string DISCOUNTS_PATTERN_KEY = "Nop.discount.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string MANUFACTURERS_PATTERN_KEY = "Nop.manufacturer.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string CATEGORIES_PATTERN_KEY = "Nop.category.";
+
 
         #endregion
 
@@ -174,6 +188,7 @@ namespace Nop.Services.Discounts
                 var builderproduct = Builders<Product>.Update;
                 var updatefilter = builderproduct.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
                 var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+                _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToCategories)
@@ -181,6 +196,7 @@ namespace Nop.Services.Discounts
                 var buildercategory = Builders<Category>.Update;
                 var updatefilter = buildercategory.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
                 var result = _categoryRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+                _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToManufacturers)
@@ -188,6 +204,7 @@ namespace Nop.Services.Discounts
                 var buildermanufacturer = Builders<Manufacturer>.Update;
                 var updatefilter = buildermanufacturer.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
                 var result = _manufacturerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+                _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
 
 
@@ -299,6 +316,7 @@ namespace Nop.Services.Discounts
                 var update = Builders<Product>.Update
                     .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
                 var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
+                _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToCategories)
@@ -308,6 +326,7 @@ namespace Nop.Services.Discounts
                 var update = Builders<Category>.Update
                     .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
                 var result = _categoryRepository.Collection.UpdateManyAsync(filter, update).Result;
+                _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToManufacturers)
@@ -317,6 +336,7 @@ namespace Nop.Services.Discounts
                 var update = Builders<Manufacturer>.Update
                     .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
                 var result = _manufacturerRepository.Collection.UpdateManyAsync(filter, update).Result;
+                _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
 
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);

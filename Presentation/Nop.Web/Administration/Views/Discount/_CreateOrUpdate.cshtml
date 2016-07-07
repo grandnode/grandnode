@@ -231,7 +231,14 @@
                </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.DiscountLimitationId)
+                @Html.GrandLabelFor(model => model.IsCumulative)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IsCumulative)
+                    @Html.ValidationMessageFor(model => model.IsCumulative)
+                </div>
+            </div>            
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.DiscountLimitationId)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandDropDownListFor(model => model.DiscountLimitationId, ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())
                     @Html.ValidationMessageFor(model => model.DiscountLimitationId)
