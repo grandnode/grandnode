@@ -11,5 +11,10 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <returns>Result</returns>
         bool IsSearchEngine();
+        /// <summary>
+        /// Get a value indicating whether the request is made by web api
+        /// </summary>
+        /// <returns>Result</returns>
+        bool IsWebApi();
     }
 }

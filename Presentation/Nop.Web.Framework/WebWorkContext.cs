@@ -190,13 +190,18 @@ namespace Nop.Web.Framework
                     customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.BackgroundTask);
                 }
 
-                //check whether request is made by a search engine
+                //check whether request is made by a search engine or webapi
                 //in this case return built-in customer record for search engines 
                 //or comment the following two lines of code in order to disable this functionality
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
                     if (_userAgentHelper.IsSearchEngine())
                         customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+                    else
+                        if (_userAgentHelper.IsWebApi())
+                        {
+                            customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.WebApi);
+                        }
                 }
 
                 //registered user

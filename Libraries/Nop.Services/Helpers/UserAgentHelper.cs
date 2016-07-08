@@ -5,6 +5,7 @@ using System.Web;
 using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Helpers
 {
@@ -66,6 +67,23 @@ namespace Nop.Services.Helpers
 
                 var userAgent = _httpContext.Request.UserAgent;
                 return bowscapXmlHelper.IsCrawler(userAgent);
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(exc);
+            }
+
+            return false;
+        }
+
+        public virtual bool IsWebApi()
+        {
+            if (_httpContext == null)
+                return false;
+            try
+            {
+                var userAgent = _httpContext.Request.UserAgent;
+                return userAgent == SystemCustomerNames.WebApi;
             }
             catch (Exception exc)
             {
