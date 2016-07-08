@@ -75,7 +75,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //some country is selected
-                    if (result.Count == 0)
+                    if (!result.Any())
                     {
                         //country does not have states
                         result.Insert(0, new { id = "", name = _localizationService.GetResource("Address.OtherNonUS") });

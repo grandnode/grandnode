@@ -349,7 +349,7 @@ namespace Nop.Services.Messages
                         foreach (var tr in order.TaxRatesDictionary)
                             taxRates.Add(tr.Key, _currencyService.ConvertCurrency(tr.Value, order.CurrencyRate));
 
-                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                         displayTax = !displayTaxRates;
 
                         var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -554,7 +554,7 @@ namespace Nop.Services.Messages
                 if(withPicture)
                 {
                     string pictureUrl = "";
-                    if (product.ProductPictures.Count > 0)
+                    if (product.ProductPictures.Any())
                     {
                         var picture = pictureService.GetPictureById(product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault().PictureId);
                         if(picture!=null)

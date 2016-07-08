@@ -381,14 +381,14 @@ namespace Nop.Services.Orders
                     .LimitPerStore(processPaymentRequest.StoreId)
                     .ToList();
 
-                if (details.Cart.Count == 0)
+                if (!details.Cart.Any())
                     throw new NopException("Cart is empty");
 
                 //validate the entire shopping cart
                 var warnings = _shoppingCartService.GetShoppingCartWarnings(details.Cart,
                     details.CheckoutAttributesXml,
                     true);
-                if (warnings.Count > 0)
+                if (warnings.Any())
                 {
                     var warningsSb = new StringBuilder();
                     foreach (string warning in warnings)
@@ -407,7 +407,7 @@ namespace Nop.Services.Orders
                         product, processPaymentRequest.StoreId, sci.AttributesXml,
                         sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                         sci.Quantity, false);
-                    if (sciWarnings.Count > 0)
+                    if (sciWarnings.Any())
                     {
                         var warningsSb = new StringBuilder();
                         foreach (string warning in sciWarnings)
@@ -931,7 +931,7 @@ namespace Nop.Services.Orders
                 .Where(cr => purchasedProductIds.Contains(cr.PurchasedWithProductId))
                 .ToList();
 
-            if (customerRoles.Count > 0)
+            if (customerRoles.Any())
             {
                 var customer = _customerService.GetCustomerById(order.CustomerId);
                 foreach (var customerRole in customerRoles)
@@ -2975,7 +2975,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("cart");
 
             //min order amount sub-total validation
-            if (cart.Count > 0 && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
+            if (cart.Any() && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
             {
                 //subtotal
                 decimal orderSubTotalDiscountAmountBase;
@@ -3003,7 +3003,7 @@ namespace Nop.Services.Orders
             if (cart == null)
                 throw new ArgumentNullException("cart");
 
-            if (cart.Count > 0 && _orderSettings.MinOrderTotalAmount > decimal.Zero)
+            if (cart.Any() && _orderSettings.MinOrderTotalAmount > decimal.Zero)
             {
                 decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart);
                 if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value < _orderSettings.MinOrderTotalAmount)

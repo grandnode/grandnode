@@ -51,7 +51,7 @@ namespace Nop.Services.Discounts
 
             var result = new List<Discount>();
             discountAmount = decimal.Zero;
-            if (discounts.Count == 0)
+            if (!discounts.Any())
                 return result;
 
             //first we check simple discounts

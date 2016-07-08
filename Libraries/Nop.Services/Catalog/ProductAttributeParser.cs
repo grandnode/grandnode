@@ -452,7 +452,7 @@ namespace Nop.Services.Catalog
                         continue;
 
                     var attributeValues = product.ProductAttributeMappings.Where(x => x.Id == pam.Id).FirstOrDefault().ProductAttributeValues;  //_productAttributeService.GetProductAttributeValues(pam.Id);
-                    if (attributeValues.Count == 0)
+                    if (!attributeValues.Any())
                         continue;
 
                     //checkboxes could have several values ticked
@@ -475,7 +475,7 @@ namespace Nop.Services.Catalog
                         }
                     }
 
-                    if (attributesXml.Count == 0)
+                    if (!attributesXml.Any())
                     {
                         //first set of values
                         if (pam.AttributeControlType == AttributeControlType.Checkboxes ||

@@ -5,7 +5,6 @@ using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Plugins;
-using Nop.Plugin.Tax.CountryStateZip.Data;
 using Nop.Plugin.Tax.CountryStateZip.Infrastructure.Cache;
 using Nop.Plugin.Tax.CountryStateZip.Services;
 using Nop.Services.Localization;

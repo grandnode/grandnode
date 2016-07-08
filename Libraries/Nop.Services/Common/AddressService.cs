@@ -208,7 +208,7 @@ namespace Nop.Services.Common
                 if (_addressSettings.StateProvinceEnabled)
                 {
                     var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id);
-                    if (states.Count > 0)
+                    if (states.Any())
                     {
                         if (String.IsNullOrEmpty(address.StateProvinceId))
                             return false;

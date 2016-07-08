@@ -124,9 +124,6 @@
   <ItemGroup>
     <Compile Include="Controllers\TaxCountryStateZipController.cs" />
     <Compile Include="CountryStateZipTaxProvider.cs" />
-    <Compile Include="Data\EfStartUpTask.cs" />
-    <Compile Include="Data\TaxRateMap.cs" />
-    <Compile Include="Data\TaxRateObjectContext.cs" />
     <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Domain\TaxRate.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />

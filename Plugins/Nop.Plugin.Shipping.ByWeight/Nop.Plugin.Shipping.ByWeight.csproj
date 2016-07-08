@@ -122,7 +122,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\EfStartUpTask.cs" />
     <Compile Include="ShippingByWeightSettings.cs" />
     <Compile Include="Controllers\ShippingByWeightController.cs" />
     <Compile Include="DependencyRegistrar.cs" />

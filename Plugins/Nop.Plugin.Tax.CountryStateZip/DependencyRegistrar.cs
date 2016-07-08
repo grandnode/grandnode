@@ -5,7 +5,6 @@ using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Data;
-using Nop.Plugin.Tax.CountryStateZip.Data;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
 using Nop.Plugin.Tax.CountryStateZip.Services;
 using Nop.Web.Framework.Mvc;

@@ -459,7 +459,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -471,7 +471,7 @@ namespace Nop.Web.Controllers
             //validation (cart)
             var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
             var scWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, checkoutAttributesXml, true);
-            if (scWarnings.Count > 0)
+            if (scWarnings.Any())
                 return RedirectToRoute("ShoppingCart");
 
             var productService = EngineContext.Current.Resolve<IProductService>();
@@ -489,7 +489,7 @@ namespace Nop.Web.Controllers
                     sci.RentalEndDateUtc,
                     sci.Quantity,
                     false);
-                if (sciWarnings.Count > 0)
+                if (sciWarnings.Any())
                     return RedirectToRoute("ShoppingCart");
             }
 
@@ -549,7 +549,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -616,7 +616,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -684,7 +684,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -702,7 +702,7 @@ namespace Nop.Web.Controllers
 
             //model
             var model = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
-            if (_shippingSettings.AllowPickUpInStore && _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Count == 0)
+            if (_shippingSettings.AllowPickUpInStore && !_shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id).Any())
             {
                 model.PickUpInStoreOnly = true;
                 model.PickUpInStore = true;
@@ -738,7 +738,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -839,7 +839,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -892,7 +892,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -954,7 +954,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -1010,7 +1010,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -1060,7 +1060,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -1109,7 +1109,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -1164,7 +1164,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -1186,7 +1186,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (_orderSettings.OnePageCheckoutEnabled)
@@ -1405,7 +1405,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return RedirectToRoute("ShoppingCart");
 
             if (!_orderSettings.OnePageCheckoutEnabled)
@@ -1444,7 +1444,7 @@ namespace Nop.Web.Controllers
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
-                if (cart.Count == 0)
+                if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
                 if (!_orderSettings.OnePageCheckoutEnabled)
@@ -1582,7 +1582,7 @@ namespace Nop.Web.Controllers
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
-                if (cart.Count == 0)
+                if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
                 if (!_orderSettings.OnePageCheckoutEnabled)
@@ -1726,7 +1726,7 @@ namespace Nop.Web.Controllers
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
-                if (cart.Count == 0)
+                if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
                 if (!_orderSettings.OnePageCheckoutEnabled)
@@ -1794,7 +1794,7 @@ namespace Nop.Web.Controllers
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
-                if (cart.Count == 0)
+                if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
                 if (!_orderSettings.OnePageCheckoutEnabled)
@@ -1869,7 +1869,7 @@ namespace Nop.Web.Controllers
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
-                if (cart.Count == 0)
+                if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
                 if (!_orderSettings.OnePageCheckoutEnabled)
@@ -1940,7 +1940,7 @@ namespace Nop.Web.Controllers
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
-                if (cart.Count == 0)
+                if (!cart.Any())
                     throw new Exception("Your cart is empty");
 
                 if (!_orderSettings.OnePageCheckoutEnabled)

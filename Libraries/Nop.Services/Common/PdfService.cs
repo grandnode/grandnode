@@ -720,7 +720,7 @@ namespace Nop.Services.Common
                     {
                         taxRates = order.TaxRatesDictionary;
 
-                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Any();
                         displayTax = !displayTaxRates;
 
                         var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
@@ -808,7 +808,7 @@ namespace Nop.Services.Common
                         .Where(on => on.DisplayToCustomer)
                         .OrderByDescending(on => on.CreatedOnUtc)
                         .ToList();
-                    if (orderNotes.Count > 0)
+                    if (orderNotes.Any())
                     { 
                         var notesHeader = new PdfPTable(1);
                         notesHeader.RunDirection = GetDirection(lang);
@@ -876,7 +876,7 @@ namespace Nop.Services.Common
                         pdfSettingsByStore.InvoiceFooterTextColumn2
                         .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
-                    if (column1Lines.Count > 0 || column2Lines.Count > 0)
+                    if (column1Lines.Any() || column2Lines.Any())
                     {
                         var totalLines = Math.Max(column1Lines.Count, column2Lines.Count);
                         const float margin = 43;
@@ -895,7 +895,7 @@ namespace Nop.Services.Common
                         footerTable.RunDirection = GetDirection(lang);
 
                         //column 1
-                        if (column1Lines.Count > 0)
+                        if (column1Lines.Any())
                         {
                             var column1 = new PdfPCell(new Phrase());
                             column1.Border = Rectangle.NO_BORDER;

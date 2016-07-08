@@ -537,7 +537,7 @@ namespace Nop.Web.Controllers
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
-                    hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
+                    hasFeaturedProductsCache = featuredProducts.Any();
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
@@ -621,7 +621,7 @@ namespace Nop.Web.Controllers
             {
                 //product details page
                 var productCategories = _productService.GetProductById(currentProductId).ProductCategories; //_categoryService.GetProductCategoriesByProductId(currentProductId);
-                if (productCategories.Count > 0)
+                if (productCategories.Any())
                     activeCategoryId = productCategories.FirstOrDefault().CategoryId;
             }
 
@@ -713,7 +713,7 @@ namespace Nop.Web.Controllers
                 .ToList()
             );
 
-            if (model.Count == 0)
+            if (!model.Any())
                 return Content("");
 
             return PartialView(model);
@@ -801,7 +801,7 @@ namespace Nop.Web.Controllers
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
-                    hasFeaturedProductsCache = featuredProducts.TotalCount > 0;
+                    hasFeaturedProductsCache = featuredProducts.Any();
                     _cacheManager.Set(cacheKey, hasFeaturedProductsCache, 60);
                 }
                 if (hasFeaturedProductsCache.Value && featuredProducts == null)
@@ -923,7 +923,7 @@ namespace Nop.Web.Controllers
                     return model;
                 });
 
-            if (cacheModel.Manufacturers.Count == 0)
+            if (!cacheModel.Manufacturers.Any())
                 return Content("");
             
             return PartialView(cacheModel);
@@ -1060,7 +1060,7 @@ namespace Nop.Web.Controllers
                 return model;
             });
 
-            if (cacheModel.Vendors.Count == 0)
+            if (!cacheModel.Vendors.Any())
                 return Content("");
             
             return PartialView(cacheModel);
@@ -1103,7 +1103,7 @@ namespace Nop.Web.Controllers
                 return model;
             });
 
-            if (cacheModel.Tags.Count == 0)
+            if (!cacheModel.Tags.Any())
                 return Content("");
             
             return PartialView(cacheModel);
@@ -1234,7 +1234,7 @@ namespace Nop.Web.Controllers
                 }
                 return categoriesModel;
             });
-            if (categories.Count > 0)
+            if (categories.Any())
             {
                 //first empty entry
                 model.AvailableCategories.Add(new SelectListItem
@@ -1255,7 +1255,7 @@ namespace Nop.Web.Controllers
             }
 
             var manufacturers = _manufacturerService.GetAllManufacturers();
-            if (manufacturers.Count > 0)
+            if (manufacturers.Any())
             {
                 model.AvailableManufacturers.Add(new SelectListItem
                 {
@@ -1275,7 +1275,7 @@ namespace Nop.Web.Controllers
             if (model.asv)
             {
                 var vendors = _vendorService.GetAllVendors();
-                if (vendors.Count > 0)
+                if (vendors.Any())
                 {
                     model.AvailableVendors.Add(new SelectListItem
                     {

@@ -545,7 +545,7 @@ namespace Nop.Services.Catalog
             var builder = Builders<Product>.Filter;
             var filter = builder.Where(p => p.Published && p.VisibleIndividually);
             ////category filtering
-            if (categoryIds != null && categoryIds.Count > 0)
+            if (categoryIds != null && categoryIds.Any())
             {
                 filter = filter & builder.Where(p => p.ProductCategories.Any(x=> categoryIds.Contains(x.CategoryId)));
             }
@@ -725,7 +725,7 @@ namespace Nop.Services.Catalog
             var filter = FilterDefinition<Product>.Empty;
 
             //category filtering
-            if (categoryIds != null && categoryIds.Count > 0)
+            if (categoryIds != null && categoryIds.Any())
             {
 
                 if (featuredProducts.Value)
@@ -889,7 +889,7 @@ namespace Nop.Services.Catalog
             }
 
             //search by specs
-            if (filteredSpecs != null && filteredSpecs.Count > 0)
+            if (filteredSpecs != null && filteredSpecs.Any())
             {
                     foreach(var spec in filteredSpecs)
                     {
@@ -923,7 +923,7 @@ namespace Nop.Services.Catalog
 
             var builderSort = Builders<Product>.Sort.Descending(x=>x.CreatedOnUtc);
 
-            if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Count > 0)
+            if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Any())
             {
                 //category position
                 builderSort = Builders<Product>.Sort.Ascending(x => x.DisplayOrderCategory);
@@ -997,8 +997,8 @@ namespace Nop.Services.Catalog
                 Task t = Task.Run(() =>
                 {
                     var filterSpec = filter &
-                        builder.Where(x => x.ProductSpecificationAttributes.Count > 0);
-                    //builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.AllowFiltering));
+                        builder.Where(x => x.ProductSpecificationAttributes.Any());
+
                     var taskCount = _productRepository.Collection.CountAsync(filterSpec);
                     taskCount.Wait();
                     if ((int)taskCount.Result > 0)
@@ -1284,7 +1284,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            product.HasTierPrices = product.TierPrices.Count > 0;
+            product.HasTierPrices = product.TierPrices.Any();
 
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
@@ -1309,7 +1309,7 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            product.HasDiscountsApplied = product.AppliedDiscounts.Count > 0;
+            product.HasDiscountsApplied = product.AppliedDiscounts.Any();
 
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
@@ -1837,7 +1837,7 @@ namespace Nop.Services.Catalog
             if (numberOfProducts == 0)
                 return result;
 
-            if (cart == null || cart.Count == 0)
+            if (cart == null || !cart.Any())
                 return result;
 
             var cartProductIds = new List<string>();

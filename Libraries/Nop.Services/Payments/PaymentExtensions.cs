@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Services.Orders;
+using System.Linq;
 
 namespace Nop.Services.Payments
 {
@@ -82,7 +83,7 @@ namespace Nop.Services.Payments
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            if (request.CustomValues.Count == 0)
+            if (!request.CustomValues.Any())
                 return null;
 
             //XmlSerializer won't serialize objects that implement IDictionary by default.
@@ -161,7 +162,7 @@ namespace Nop.Services.Payments
 
             public void WriteXml(XmlWriter writer)
             {
-                if (Dictionary.Count == 0)
+                if (!Dictionary.Any())
                     return;
 
                 foreach (var key in this.Dictionary.Keys)

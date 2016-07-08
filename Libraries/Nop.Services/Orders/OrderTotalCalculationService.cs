@@ -251,7 +251,7 @@ namespace Nop.Services.Orders
             subTotalWithDiscount = decimal.Zero;
             taxRates = new SortedDictionary<decimal, decimal>();
 
-            if (cart.Count == 0)
+            if (!cart.Any())
                 return;
 
             //get the customer 
@@ -585,7 +585,7 @@ namespace Nop.Services.Orders
 
                 var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id);
                 
-                if (shippingRateComputationMethods.Count == 0)
+                if (!shippingRateComputationMethods.Any())
                     if (_shippingSettings.AllowPickUpInStore)
                         shippingTotal = _shippingSettings.PickUpInStoreFee;
                     else
@@ -760,7 +760,7 @@ namespace Nop.Services.Orders
             }
 
             //add at least one tax rate (0%)
-            if (taxRates.Count == 0)
+            if (!taxRates.Any())
                 taxRates.Add(decimal.Zero, decimal.Zero);
 
             //summarize taxes

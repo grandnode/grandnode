@@ -9,7 +9,9 @@ namespace Nop.Admin.Infrastructure.Mapper
     {
         public void Execute()
         {
-            AutoMapperConfiguration.Init();
+            System.Threading.Tasks.Task.Run(() => {
+                AutoMapperConfiguration.Init();
+            });
         }
 
         public int Order

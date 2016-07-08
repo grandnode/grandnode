@@ -153,7 +153,7 @@ namespace Nop.Web.Models.Catalog
             public virtual void LoadPriceRangeFilters(string priceRangeStr, IWebHelper webHelper, IPriceFormatter priceFormatter)
             {
                 var priceRangeList = GetPriceRangeList(priceRangeStr);
-                if (priceRangeList.Count > 0)
+                if (priceRangeList.Any())
                 {
                     this.Enabled = true;
 

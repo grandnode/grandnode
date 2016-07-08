@@ -7,6 +7,7 @@ using Nop.Services.Cms;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Cms;
+using System.Linq;
 
 namespace Nop.Web.Controllers
 {
@@ -66,7 +67,7 @@ namespace Nop.Web.Controllers
             });
 
             //no data?
-            if (cacheModel.Count == 0)
+            if (!cacheModel.Any())
                 return Content("");
 
             //"RouteValues" property of widget models depends on "additionalData".

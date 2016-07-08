@@ -542,7 +542,7 @@ namespace Nop.Services.Customers
                                     select cr).ToList();
             }
 
-            if (customerReminder.Count > 0)
+            if (customerReminder.Any())
             {
                 foreach (var reminder in customerReminder)
                 {
@@ -556,7 +556,7 @@ namespace Nop.Services.Customers
                         var history = (from hc in _customerReminderHistoryRepository.Table
                                              where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
                                              select hc).ToList();
-                        if(history.Count > 0)
+                        if(history.Any())
                         {
                             var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
                             if (activereminderhistory != null)
@@ -637,7 +637,7 @@ namespace Nop.Services.Customers
                                     where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.RegisteredCustomer
                                     select cr).ToList();
             }
-            if (customerReminder.Count > 0)
+            if (customerReminder.Any())
             {
                 foreach (var reminder in customerReminder)
                 {
@@ -652,7 +652,7 @@ namespace Nop.Services.Customers
                         var history = (from hc in _customerReminderHistoryRepository.Table
                                        where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
                                        select hc).ToList();
-                        if (history.Count > 0)
+                        if (history.Any())
                         {
                             var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
                             if (activereminderhistory != null)
@@ -734,7 +734,7 @@ namespace Nop.Services.Customers
                                     where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastActivity
                                     select cr).ToList();
             }
-            if (customerReminder.Count > 0)
+            if (customerReminder.Any())
             {
                 foreach (var reminder in customerReminder)
                 {
@@ -748,7 +748,7 @@ namespace Nop.Services.Customers
                         var history = (from hc in _customerReminderHistoryRepository.Table
                                        where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
                                        select hc).ToList();
-                        if (history.Count > 0)
+                        if (history.Any())
                         {
                             var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
                             if (activereminderhistory != null)
@@ -829,7 +829,7 @@ namespace Nop.Services.Customers
                                     where cr.Id == id && cr.ReminderRuleId == (int)CustomerReminderRuleEnum.LastPurchase
                                     select cr).ToList();
             }
-            if (customerReminder.Count > 0)
+            if (customerReminder.Any())
             {
                 foreach (var reminder in customerReminder)
                 {
@@ -844,7 +844,7 @@ namespace Nop.Services.Customers
                         var history = (from hc in _customerReminderHistoryRepository.Table
                                        where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
                                        select hc).ToList();
-                        if (history.Count > 0)
+                        if (history.Any())
                         {
                             var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
                             if (activereminderhistory != null)
@@ -927,7 +927,7 @@ namespace Nop.Services.Customers
                                     select cr).ToList();
             }
 
-            if (customerReminder.Count > 0)
+            if (customerReminder.Any())
             {
                 foreach (var reminder in customerReminder)
                 {
@@ -947,7 +947,7 @@ namespace Nop.Services.Customers
                         var history = (from hc in _customerReminderHistoryRepository.Table
                                        where hc.CustomerId == customer.Id && hc.CustomerReminderId == reminder.Id
                                        select hc).ToList();
-                        if (history.Count > 0)
+                        if (history.Any())
                         {
                             var activereminderhistory = history.FirstOrDefault(x => x.HistoryStatus == CustomerReminderHistoryStatusEnum.Started);
                             if (activereminderhistory != null)

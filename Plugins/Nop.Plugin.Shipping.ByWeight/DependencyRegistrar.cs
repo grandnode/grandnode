@@ -5,7 +5,6 @@ using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Data;
-using Nop.Plugin.Shipping.ByWeight.Data;
 using Nop.Plugin.Shipping.ByWeight.Domain;
 using Nop.Plugin.Shipping.ByWeight.Services;
 using Nop.Web.Framework.Mvc;

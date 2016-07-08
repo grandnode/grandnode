@@ -90,7 +90,7 @@ namespace Nop.Services.Media
             {
                 var parentProduct = EngineContext.Current.Resolve<IProductService>().GetProductById(product.ParentGroupedProductId);
                 if(parentProduct!=null)
-                    if(parentProduct.ProductPictures.Count > 0)
+                    if(parentProduct.ProductPictures.Any())
                     {
                         picture = pictureService.GetPictureById(parentProduct.ProductPictures.FirstOrDefault().PictureId);
 

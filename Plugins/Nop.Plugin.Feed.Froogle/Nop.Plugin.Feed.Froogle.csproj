@@ -123,7 +123,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\FeedFroogleController.cs" />
-    <Compile Include="Data\EfStartUpTask.cs" />
     <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Domain\GoogleProductRecord.cs" />
     <Compile Include="FroogleService.cs" />

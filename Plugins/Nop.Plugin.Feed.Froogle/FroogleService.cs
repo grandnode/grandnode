@@ -12,7 +12,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Plugins;
-using Nop.Plugin.Feed.Froogle.Data;
 using Nop.Plugin.Feed.Froogle.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Common;

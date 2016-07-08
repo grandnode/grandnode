@@ -676,7 +676,7 @@ namespace Nop.Services.Shipping
                         matchedByCountry.Add(warehouse);
             }
             //no country matches. return any
-            if (matchedByCountry.Count == 0)
+            if (!matchedByCountry.Any())
                 return warehouses.FirstOrDefault();
 
 
@@ -848,7 +848,7 @@ namespace Nop.Services.Shipping
                     .Where(srcm => allowedShippingRateComputationMethodSystemName.Equals(srcm.PluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
                     .ToList();
             }
-            if (shippingRateComputationMethods.Count == 0)
+            if (!shippingRateComputationMethods.Any())
                 throw new NopException("Shipping rate computation method could not be loaded");
 
 
@@ -919,7 +919,7 @@ namespace Nop.Services.Shipping
             if (_shippingSettings.ReturnValidOptionsIfThereAreAny)
             {
                 //return valid options if there are any (no matter of the errors returned by other shipping rate compuation methods).
-                if (result.ShippingOptions.Count > 0 && result.Errors.Count > 0)
+                if (!result.ShippingOptions.Any() && !result.Errors.Any())
                     result.Errors.Clear();
             }
             

@@ -71,11 +71,14 @@ namespace Nop.Web
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
 
             //start scheduled tasks
-            if (databaseInstalled)
+            System.Threading.Tasks.Task.Run(() =>
             {
-                var scheduleTasks = ScheduleTaskManager.Instance.LoadScheduleTasks();       //load records from db to collection
-                JobManager.Initialize(new RegistryGrandNode(scheduleTasks));                //init registry and start scheduled tasks
-            }
+                if (databaseInstalled)
+                {
+                    var scheduleTasks = ScheduleTaskManager.Instance.LoadScheduleTasks();       //load records from db to collection
+                    JobManager.Initialize(new RegistryGrandNode(scheduleTasks));                //init registry and start scheduled tasks
+                }
+            });
 
             //miniprofiler
             if (databaseInstalled)
