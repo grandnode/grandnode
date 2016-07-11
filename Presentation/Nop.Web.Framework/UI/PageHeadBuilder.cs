@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
         private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts;
-        private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
+        private readonly Dictionary<ResourceLocation, List<CssReferenceMeta>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
         #endregion
@@ -36,7 +36,7 @@ namespace Nop.Web.Framework.UI
             this._metaDescriptionParts = new List<string>();
             this._metaKeywordParts = new List<string>();
             this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
-            this._cssParts = new Dictionary<ResourceLocation, List<string>>();
+            this._cssParts = new Dictionary<ResourceLocation, List<CssReferenceMeta>>();
             this._canonicalUrlParts = new List<string>();
             this._headCustomParts = new List<string>();
         }
@@ -218,7 +218,7 @@ namespace Nop.Web.Framework.UI
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
 
-            if (_scriptParts.Count == 0)
+            if (!_scriptParts.Any())
                 return "";
 
             if (!bundleFiles.HasValue)
@@ -248,7 +248,7 @@ namespace Nop.Web.Framework.UI
                     //create bundle
                     lock (s_lock)
                     {
-                        var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);                        
+                        var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);
                         if (bundleFor == null)
                         {
                             var bundle = new ScriptBundle(bundleVirtualPath);
@@ -257,8 +257,8 @@ namespace Nop.Web.Framework.UI
                             //"As is" ordering
                             bundle.Orderer = new AsIsBundleOrderer();
                             //disable file extension replacements. renders scripts which were specified by a developer
-                            bundle.EnableFileExtensionReplacements = false;                            
-                            bundle.Include(partsToBundle);                            
+                            bundle.EnableFileExtensionReplacements = false;
+                            bundle.Include(partsToBundle);
                             BundleTable.Bundles.Add(bundle);
                         }
                     }
@@ -289,35 +289,40 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public virtual void AddCssFileParts(ResourceLocation location, string part)
+        public virtual void AddCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
-                _cssParts.Add(location, new List<string>());
+                _cssParts.Add(location, new List<CssReferenceMeta>());
 
             if (string.IsNullOrEmpty(part))
                 return;
 
-            _cssParts[location].Add(part);
+            _cssParts[location].Add(new CssReferenceMeta {
+                ExcludeFromBundle = excludeFromBundle,
+                Part = part
+            });
         }
-        public virtual void AppendCssFileParts(ResourceLocation location, string part)
+        public virtual void AppendCssFileParts(ResourceLocation location, string part, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
-                _cssParts.Add(location, new List<string>());
+                _cssParts.Add(location, new List<CssReferenceMeta>());
 
             if (string.IsNullOrEmpty(part))
                 return;
 
-            _cssParts[location].Insert(0, part);
+            _cssParts[location].Insert(0, new CssReferenceMeta {
+                ExcludeFromBundle = excludeFromBundle,
+                Part = part
+            });
         }
         public virtual string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
                 return "";
 
-            //use only distinct rows
-            var distinctParts = _cssParts[location].Distinct().ToList();
-            if (!distinctParts.Any())
+            if (!_cssParts.Any())
                 return "";
+
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
@@ -325,24 +330,34 @@ namespace Nop.Web.Framework.UI
             }
             if (bundleFiles.Value)
             {
-                //bundling is enabled
+                var partsToBundle = _cssParts[location]
+                    .Where(x => !x.ExcludeFromBundle)
+                    .Select(x => x.Part)
+                    .Distinct()
+                    .ToArray();
+                var partsToDontBundle = _cssParts[location]
+                    .Where(x => x.ExcludeFromBundle)
+                    .Select(x => x.Part)
+                    .Distinct()
+                    .ToArray();
+
+
                 var result = new StringBuilder();
 
-                var partsToBundle = distinctParts.ToArray();
                 if (partsToBundle.Length > 0)
                 {
                     //IMPORTANT: Do not use CSS bundling in virtual categories
-                    
                     string bundleVirtualPath = GetBundleVirtualPath("~/bundles/styles/", ".css", partsToBundle);
-                  
+
                     //create bundle
                     lock (s_lock)
                     {
                         var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);
                         if (bundleFor == null)
                         {
-                            
                             var bundle = new StyleBundle(bundleVirtualPath);
+                            //bundle.Transforms.Clear();
+
                             //"As is" ordering
                             bundle.Orderer = new AsIsBundleOrderer();
                             //disable file extension replacements. renders scripts which were specified by a developer
@@ -351,12 +366,19 @@ namespace Nop.Web.Framework.UI
                             {
                                 bundle.Include(ptb, GetCssTranform());
                             }
-                            BundleTable.Bundles.Add(bundle);                 
+                            BundleTable.Bundles.Add(bundle);
                         }
                     }
-                    
+
                     //parts to bundle
                     result.AppendLine(Styles.Render(bundleVirtualPath).ToString());
+                }
+
+                //parts to do not bundle
+                foreach (var item in partsToDontBundle)
+                {
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(item), "text/css");
+                    result.Append(Environment.NewLine);
                 }
 
                 return result.ToString();
@@ -365,15 +387,14 @@ namespace Nop.Web.Framework.UI
             {
                 //bundling is disabled
                 var result = new StringBuilder();
-                foreach (var path in distinctParts)
+                foreach (var path in _cssParts[location].Select(x => x.Part).Distinct())
                 {
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", urlHelper.Content(path));
-                    result.Append(Environment.NewLine);
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(path), "text/css");
+                    result.AppendLine();
                 }
                 return result.ToString();
             }
         }
-
 
         public virtual void AddCanonicalUrlParts(string part)
         {
@@ -442,6 +463,12 @@ namespace Nop.Web.Framework.UI
             public string Part { get; set; }
         }
 
-        #endregion
-    }
+        private class CssReferenceMeta
+        {
+            public bool ExcludeFromBundle { get; set; }
+            public string Part { get; set; }
+        }
+
+    #endregion
+}
 }

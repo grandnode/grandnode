@@ -175,9 +175,9 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="part">CSS part</param>
-        public static void AddCssFileParts(this HtmlHelper html, string part)
+        public static void AddCssFileParts(this HtmlHelper html, string part, bool excludeFromBundle = false)
         {
-            AddCssFileParts(html, ResourceLocation.Head, part);
+            AddCssFileParts(html, ResourceLocation.Head, part, excludeFromBundle);
         }
         /// <summary>
         /// Add CSS element
@@ -185,19 +185,19 @@ namespace Nop.Web.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="part">CSS part</param>
-        public static void AddCssFileParts(this HtmlHelper html, ResourceLocation location, string part)
+        public static void AddCssFileParts(this HtmlHelper html, ResourceLocation location, string part, bool excludeFromBundle = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddCssFileParts(location, part);
+            pageHeadBuilder.AddCssFileParts(location, part, excludeFromBundle);
         }
         /// <summary>
         /// Append CSS element
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="part">CSS part</param>
-        public static void AppendCssFileParts(this HtmlHelper html, string part)
+        public static void AppendCssFileParts(this HtmlHelper html, string part, bool excludeFromBundle = false)
         {
-            AppendCssFileParts(html, ResourceLocation.Head, part);
+            AppendCssFileParts(html, ResourceLocation.Head, part, excludeFromBundle);
         }
         /// <summary>
         /// Append CSS element
@@ -205,10 +205,10 @@ namespace Nop.Web.Framework.UI
         /// <param name="html">HTML helper</param>
         /// <param name="location">A location of the script element</param>
         /// <param name="part">CSS part</param>
-        public static void AppendCssFileParts(this HtmlHelper html, ResourceLocation location, string part)
+        public static void AppendCssFileParts(this HtmlHelper html, ResourceLocation location, string part, bool excludeFromBundle = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendCssFileParts(location, part);
+            pageHeadBuilder.AppendCssFileParts(location, part, excludeFromBundle);
         }
         /// <summary>
         /// Generate all CSS parts
