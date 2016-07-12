@@ -6018,6 +6018,9 @@ select[name="DateOfBirthYear"] {
 	margin: 0 0 0 15px;
 }
 
+.theme-selector {
+    margin-top: 25px;
+}
 
 /*** COLUMN ***/
 
