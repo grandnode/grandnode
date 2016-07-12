@@ -29,6 +29,10 @@ namespace Nop.Core.Domain
         public bool DisplayMiniProfilerInPublicStore { get; set; }
 
         /// <summary>
+        /// Gets or sets a picture identifier of the logo. If 0, then the default one will be used
+        /// </summary>
+        public string LogoPictureId { get; set; }
+        /// <summary>
         /// Gets or sets a value indicating whether we should display warnings about the new EU cookie law
         /// </summary>
         public bool DisplayEuCookieLawWarning { get; set; }

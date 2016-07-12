@@ -350,6 +350,7 @@
     <Compile Include="Models\Common\ContactVendorModel.cs" />
     <Compile Include="Models\Common\FooterModel.cs" />
     <Compile Include="Models\Common\FaviconModel.cs" />
+    <Compile Include="Models\Common\Logo.cs" />
     <Compile Include="Models\Common\PagerModel.cs" />
     <Compile Include="Models\Common\StoreThemeModel.cs" />
     <Compile Include="Models\Common\LanguageSelectorModel.cs" />
@@ -2696,6 +2697,8 @@
     <Content Include="Themes\GrandNodeTheme\Views\Product\AskQuestion.cshtml" />
     <Content Include="Views\ShoppingCart\_EstimateShippingResult.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\ShoppingCart\_EstimateShippingResult.cshtml" />
+    <Content Include="Views\Common\Logo.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Common\Logo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

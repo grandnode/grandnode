@@ -25,6 +25,7 @@ using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -72,6 +73,7 @@ namespace Nop.Web.Controllers
         private readonly IVendorService _vendorService;
         private readonly IContactUsService _contactUsService;
         private readonly IBannerService _bannerService;
+        private readonly IPictureService _pictureService;
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -113,6 +115,7 @@ namespace Nop.Web.Controllers
             IVendorService vendorService,
             IContactUsService contactUsService,
             IBannerService bannerService,
+            IPictureService pictureService,
             CustomerSettings customerSettings, 
             TaxSettings taxSettings, 
             CatalogSettings catalogSettings,
@@ -150,7 +153,7 @@ namespace Nop.Web.Controllers
             this._vendorService = vendorService;
             this._contactUsService = contactUsService;
             this._bannerService = bannerService;
-
+            this._pictureService = pictureService;
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
@@ -199,6 +202,35 @@ namespace Nop.Web.Controllers
             this.Response.TrySkipIisCustomErrors = true;
 
             return View();
+        }
+
+        //logo
+        [ChildActionOnly]
+        public ActionResult Logo()
+        {
+            var model = new LogoModel
+            {
+                StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name)
+            };
+
+            var cacheKey = string.Format(ModelCacheEventConsumer.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName, _webHelper.IsCurrentConnectionSecured());
+            model.LogoPath = _cacheManager.Get(cacheKey, () =>
+            {
+                var logo = "";
+                var logoPictureId = _storeInformationSettings.LogoPictureId;
+                if (!String.IsNullOrEmpty(logoPictureId))
+                {
+                    logo = _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
+                }
+                if (String.IsNullOrEmpty(logo))
+                {
+                    //use default logo
+                    logo = string.Format("{0}Themes/{1}/Content/images/logo.png", _webHelper.GetStoreLocation(), _themeContext.WorkingThemeName);
+                }
+                return logo;
+            });
+
+            return PartialView(model);
         }
 
         //language

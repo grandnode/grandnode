@@ -2407,6 +2407,8 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
             model.StoreInformationSettings.AllowCustomerToSelectTheme = storeInformationSettings.AllowCustomerToSelectTheme;
+
+            model.StoreInformationSettings.LogoPictureId = storeInformationSettings.LogoPictureId;
             //EU Cookie law
             model.StoreInformationSettings.DisplayEuCookieLawWarning = storeInformationSettings.DisplayEuCookieLawWarning;
             //social pages
@@ -2424,6 +2426,7 @@ namespace Nop.Admin.Controllers
                 model.StoreInformationSettings.StoreClosed_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosed, storeScope);
                 model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreTheme, storeScope);
                 model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
+                model.StoreInformationSettings.LogoPictureId_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.LogoPictureId, storeScope);
                 model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
                 model.StoreInformationSettings.FacebookLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.FacebookLink, storeScope);
                 model.StoreInformationSettings.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeScope);
@@ -2557,6 +2560,7 @@ namespace Nop.Admin.Controllers
             storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
             storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
             storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
+            storeInformationSettings.LogoPictureId = model.StoreInformationSettings.LogoPictureId;
             //EU Cookie law
             storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
             //social pages
@@ -2587,7 +2591,12 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
-            
+
+            if (model.StoreInformationSettings.LogoPictureId_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(storeInformationSettings, x => x.LogoPictureId, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(storeInformationSettings, x => x.LogoPictureId, storeScope);
+
             if (model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
