@@ -1126,6 +1126,9 @@ namespace Nop.Services.Customers
             if (address == null)
                 throw new ArgumentNullException("address");
 
+            if (address.StateProvinceId == "0")
+                address.StateProvinceId = "";
+
             var updatebuilder = Builders<Customer>.Update;
             var update = updatebuilder.AddToSet(p => p.Addresses, address);
             _customerRepository.Collection.UpdateOneAsync(new BsonDocument("_id", address.CustomerId), update);

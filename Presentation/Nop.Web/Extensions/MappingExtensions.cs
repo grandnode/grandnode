@@ -100,14 +100,19 @@ namespace Nop.Web.Extensions
                 model.LastName = address.LastName;
                 model.Email = address.Email;
                 model.Company = address.Company;
+
                 model.CountryId = address.CountryId;
-                model.CountryName = !String.IsNullOrEmpty(address.CountryId)
-                    ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(address.CountryId).GetLocalized(x => x.Name) 
-                    : null;
+                Country country = null;
+                if (!String.IsNullOrEmpty(address.CountryId))
+                    country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(address.CountryId);
+                model.CountryName = country!=null ? country.GetLocalized(x => x.Name) : null;
+
                 model.StateProvinceId = address.StateProvinceId;
-                model.StateProvinceName = !String.IsNullOrEmpty(address.StateProvinceId)
-                    ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(address.StateProvinceId).GetLocalized(x => x.Name)
-                    : null;
+                StateProvince state = null;
+                if(!String.IsNullOrEmpty(address.StateProvinceId))
+                    state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(address.StateProvinceId);
+                model.StateProvinceName = state!=null ? state.GetLocalized(x => x.Name) : null;
+
                 model.City = address.City;
                 model.Address1 = address.Address1;
                 model.Address2 = address.Address2;
