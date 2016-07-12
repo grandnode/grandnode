@@ -94,7 +94,7 @@ namespace Nop.Core.Plugins
             if (String.IsNullOrEmpty(storeId))
                 return true;
 
-            if (pluginDescriptor.LimitedToStores.Any())
+            if (!pluginDescriptor.LimitedToStores.Any())
                 return true;
 
             return pluginDescriptor.LimitedToStores.Contains(storeId);

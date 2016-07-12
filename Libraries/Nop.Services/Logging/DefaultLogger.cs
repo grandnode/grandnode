@@ -57,7 +57,7 @@ namespace Nop.Services.Logging
         /// <returns>Result</returns>
         protected virtual bool IgnoreLog(string message)
         {
-            if (_commonSettings.IgnoreLogWordlist.Any())
+            if (!_commonSettings.IgnoreLogWordlist.Any())
                 return false;
 
             if (String.IsNullOrWhiteSpace(message))

@@ -53,7 +53,7 @@ namespace Nop.Core.Domain.Orders
             }
 
             //add at least one tax rate (0%)
-            if (taxRatesDictionary.Any())
+            if (!taxRatesDictionary.Any())
                 taxRatesDictionary.Add(decimal.Zero, decimal.Zero);
 
             return taxRatesDictionary;

@@ -316,7 +316,7 @@ namespace Nop.Services.Catalog
             var allowedDiscounts = GetAllowedDiscounts(product, customer);
 
             //no discounts
-            if (allowedDiscounts.Any())
+            if (!allowedDiscounts.Any())
                 return appliedDiscountAmount;
 
             appliedDiscounts = allowedDiscounts.GetPreferredDiscount(productPriceWithoutDiscount, out appliedDiscountAmount);

@@ -131,7 +131,7 @@ namespace Nop.Core.Plugins
 
             //nopCommerce 2.00 didn't have 'SupportedVersions' parameter
             //so let's set it to "2.00"
-            if (descriptor.SupportedVersions.Any())
+            if (!descriptor.SupportedVersions.Any())
                 descriptor.SupportedVersions.Add("2.00");
 
             return descriptor;
