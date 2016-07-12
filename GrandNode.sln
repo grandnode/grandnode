@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E4ACA93B-D3DE-4557-B069-F1DB42925A4B}"
 EndProject
@@ -24,8 +24,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.FixedRateShipping", "Plugins\Nop.Plugin.Shipping.FixedRateShipping\Nop.Plugin.Shipping.FixedRateShipping.csproj", "{2DCB7949-24C2-49C7-872C-C948E43717E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.CustomerRoles", "Plugins\Nop.Plugin.DiscountRules.CustomerRoles\Nop.Plugin.DiscountRules.CustomerRoles.csproj", "{D28CAD64-4C88-48CB-8AA4-10B7D050BE56}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.SMS.Verizon", "Plugins\Nop.Plugin.SMS.Verizon\Nop.Plugin.SMS.Verizon.csproj", "{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Payments.Manual", "Plugins\Nop.Plugin.Payments.Manual\Nop.Plugin.Payments.Manual.csproj", "{9A7B9344-6AD0-4828-876D-0BF14C177148}"
 EndProject
@@ -169,16 +167,6 @@ Global
 		{D28CAD64-4C88-48CB-8AA4-10B7D050BE56}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D28CAD64-4C88-48CB-8AA4-10B7D050BE56}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D28CAD64-4C88-48CB-8AA4-10B7D050BE56}.Release|x86.ActiveCfg = Release|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7}.Release|x86.ActiveCfg = Release|Any CPU
 		{9A7B9344-6AD0-4828-876D-0BF14C177148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A7B9344-6AD0-4828-876D-0BF14C177148}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A7B9344-6AD0-4828-876D-0BF14C177148}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -448,7 +436,6 @@ Global
 		{767CED15-6A9B-433C-9F69-DABA80920C74} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{2DCB7949-24C2-49C7-872C-C948E43717E7} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{D28CAD64-4C88-48CB-8AA4-10B7D050BE56} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
-		{84F19CC3-88BF-4854-A7EF-47CFD39F8DC7} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{9A7B9344-6AD0-4828-876D-0BF14C177148} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{C4FFB99C-8A99-47E2-B863-3586AE2CF9C9} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{75FD4163-333C-4DD5-854D-2EF294E45D94} = {B09156FB-8291-46A2-AF37-67CE97CFB5A6}
