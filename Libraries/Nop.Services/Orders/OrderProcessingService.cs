@@ -2611,7 +2611,8 @@ namespace Nop.Services.Orders
                         {
                             Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
                             DisplayToCustomer = false,
-                            CreatedOnUtc = DateTime.UtcNow
+                            CreatedOnUtc = DateTime.UtcNow,
+                            OrderId = order.Id,
                         });
                     }
 

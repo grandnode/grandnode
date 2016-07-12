@@ -430,6 +430,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                                 _orderService.InsertOrderNote(new OrderNote
                                                 {
                                                     Note = errorStr,
+                                                    OrderId = order.Id,
                                                     DisplayToCustomer = false,
                                                     CreatedOnUtc = DateTime.UtcNow
                                                 });
@@ -460,6 +461,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                                 _orderService.InsertOrderNote(new OrderNote
                                                 {
                                                     Note = errorStr,
+                                                    OrderId = order.Id,
                                                     DisplayToCustomer = false,
                                                     CreatedOnUtc = DateTime.UtcNow
                                                 });
