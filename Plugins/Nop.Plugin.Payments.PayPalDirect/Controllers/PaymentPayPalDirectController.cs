@@ -17,6 +17,7 @@ using Nop.Services.Payments;
 using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Services.Common;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 {
@@ -467,21 +468,22 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                         break;
                                     case PaymentStatus.Refunded:
                                         {
-                                            var totalToRefund = Math.Abs(mc_gross);
-                                            if (totalToRefund > 0 && Math.Round(totalToRefund, 2).Equals(Math.Round(order.OrderTotal, 2)))
+                                            //compare last refund transaction id with IPN transaction id
+                                            if (order.GetAttribute<string>("RefundTransactionId") != txn_id)
                                             {
-                                                //refund
-                                                if (_orderProcessingService.CanRefundOffline(order))
+                                                //refund was initiated not in the nopCommerce
+                                                var totalToRefund = Math.Abs(mc_gross);
+                                                if (totalToRefund > 0 && Math.Round(totalToRefund, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                                 {
-                                                    _orderProcessingService.RefundOffline(order);
+                                                    //refund
+                                                    if (_orderProcessingService.CanRefundOffline(order))
+                                                        _orderProcessingService.RefundOffline(order);
                                                 }
-                                            }
-                                            else
-                                            {
-                                                //partial refund
-                                                if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
+                                                else
                                                 {
-                                                    _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
+                                                    //partial refund
+                                                    if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
+                                                        _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
                                                 }
                                             }
                                         }
