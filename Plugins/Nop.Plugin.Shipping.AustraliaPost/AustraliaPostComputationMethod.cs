@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Web.Routing;
+using Newtonsoft.Json.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
@@ -13,7 +15,6 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Plugin.Shipping.AustraliaPost
 {
@@ -25,30 +26,40 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         #region Constants
 
         private const int MIN_LENGTH = 50; // 5 cm
-        private const int MIN_WEIGHT = 1; // 1 g
+        private const int MIN_WEIGHT = 500; // 500 g
         private const int MAX_LENGTH = 1050; // 105 cm
-        private const int MAX_WEIGHT = 20000; // 20 Kg
+        private const int MAX_DOMESTIC_WEIGHT = 22000; // 22 Kg
+        private const int MAX_INTERNATIONAL_WEIGHT = 20000; // 20 Kg
         private const int MIN_GIRTH = 160; // 16 cm
-        private const int MAX_GIRTH = 1050; // 105 cm
+        private const int MAX_GIRTH = 1400; // 140 cm
+        private const int ONE_KILO = 1000; // 1 kg
+        private const int ONE_CENTIMETER = 10; // 1 cm
+
+        private const string GATEWAY_URL_INTERNACIONAL_ALLOWED_SERVICES = "https://digitalapi.auspost.com.au/postage/parcel/international/service.json";
+        private const string GATEWAY_URL_DOMESTIC_ALLOWED_SERVICES = "https://digitalapi.auspost.com.au/postage/parcel/domestic/service.json";
 
         #endregion
 
         #region Fields
 
+        private readonly ICurrencyService _currencyService;
         private readonly IMeasureService _measureService;
         private readonly IShippingService _shippingService;
+        private readonly ICountryService _countryService;
         private readonly ISettingService _settingService;
         private readonly AustraliaPostSettings _australiaPostSettings;
 
         #endregion
 
         #region Ctor
-        public AustraliaPostComputationMethod(IMeasureService measureService,
-            IShippingService shippingService, ISettingService settingService,
-            AustraliaPostSettings australiaPostSettings)
+        public AustraliaPostComputationMethod(ICurrencyService currencyService,
+            IMeasureService measureService, IShippingService shippingService,
+            ICountryService countryService, ISettingService settingService, AustraliaPostSettings australiaPostSettings)
         {
+            this._currencyService = currencyService;
             this._measureService = measureService;
             this._shippingService = shippingService;
+            this._countryService = countryService;
             this._settingService = settingService;
             this._australiaPostSettings = australiaPostSettings;
         }
@@ -72,126 +83,99 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             }
         }
 
-        private string GetGatewayUrl()
-        {
-            return _australiaPostSettings.GatewayUrl;
-        }
-
         private int GetWeight(GetShippingOptionRequest getShippingOptionRequest)
         {
             var totalWeigth = _shippingService.GetTotalWeight(getShippingOptionRequest);
-
             int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureWeight(totalWeigth, this.GatewayMeasureWeight)));
             return (value < MIN_WEIGHT ? MIN_WEIGHT : value);
         }
-        
-        private ShippingOption RequestShippingOption(string zipPostalCodeFrom,
-            string zipPostalCodeTo, string countryCode, string serviceType,
-            int weight, int length, int width, int height, int quantity)
+
+        private IList<ShippingOption> RequestShippingOptions(string countryTwoLetterIsoCode, string fromPostcode, string toPostcode, decimal weight, int length, int width, int heigth, int totalPackages)
         {
-            var shippingOption = new ShippingOption();
+            var shippingOptions = new List<ShippingOption>();
+            var cultureInfo = new CultureInfo("en-AU");
             var sb = new StringBuilder();
 
-            sb.AppendFormat(GetGatewayUrl());
-            sb.AppendFormat("?Pickup_Postcode={0}&", zipPostalCodeFrom);
-            sb.AppendFormat("Destination_Postcode={0}&", zipPostalCodeTo);
-            sb.AppendFormat("Country={0}&", countryCode);
-            sb.AppendFormat("Service_Type={0}&", serviceType);
-            sb.AppendFormat("Weight={0}&", weight);
-            sb.AppendFormat("Length={0}&", length);
-            sb.AppendFormat("Width={0}&", width);
-            sb.AppendFormat("Height={0}&", height);
-            sb.AppendFormat("Quantity={0}", quantity);
-
-            var request = WebRequest.Create(sb.ToString()) as HttpWebRequest;
-            request.Method = "GET";
-            //request.ContentType = "application/x-www-form-urlencoded";
-            //byte[] reqContent = Encoding.ASCII.GetBytes(sb.ToString());
-            //request.ContentLength = reqContent.Length;
-            //using (Stream newStream = request.GetRequestStream())
-            //{
-            //    newStream.Write(reqContent, 0, reqContent.Length);
-            //}
-
-            WebResponse response = request.GetResponse();
-            string rspContent;
-            using (var reader = new StreamReader(response.GetResponseStream()))
+            switch (countryTwoLetterIsoCode)
             {
-                rspContent = reader.ReadToEnd();
-            }
-
-            string[] tmp = rspContent.Split(new [] { '\n' }, 3);
-            if (tmp.Length != 3)
-            {
-                throw new NopException("Response is not valid.");
-            }
-
-            var rspParams = new NameValueCollection();
-            foreach (string s in tmp)
-            {
-                string[] tmp2 = s.Split(new [] { '=' });
-                if (tmp2.Length != 2)
-                {
-                    throw new NopException("Response is not valid.");
-                }
-                rspParams.Add(tmp2[0].Trim(), tmp2[1].Trim());
-            }
-
-
-            string errMsg = rspParams["err_msg"];
-            if (!errMsg.ToUpperInvariant().StartsWith("OK"))
-            {
-                throw new NopException(errMsg);
-            }
-
-            var serviceName = GetServiceNameByType(serviceType);
-            if (serviceName != null && !serviceName.StartsWith("Australia Post.", StringComparison.InvariantCultureIgnoreCase))
-                serviceName = string.Format("Australia Post. {0}", serviceName);
-            shippingOption.Name = serviceName;
-            shippingOption.Description = String.Format("{0} Days", rspParams["days"]);
-            shippingOption.Rate = Decimal.Parse(rspParams["charge"]);
-
-            return shippingOption;
-        }
-        
-        private string GetServiceNameByType(string type)
-        {
-            if (String.IsNullOrEmpty(type))
-                return type;
-
-            string serviceName;
-            switch (type)
-            {
-                case "Standard":
-                    serviceName = "Regular Parcels";
-                    break;
-                case "Express":
-                    serviceName = "Express Parcels";
-                    break;
-                case "EXP_PLT":
-                    serviceName = "Express Parcels Platinum";
-                    break;
-                case "Air":
-                    serviceName = "Air Mail";
-                    break;
-                case "Sea":
-                    serviceName = "Sea Mail";
-                    break;
-                case "ECI_D":
-                    serviceName = "Express Courier International Document";
-                    break;
-                case "ECI_M":
-                    serviceName = "Express Courier International Merchandise";
-                    break;
-                case "EPI":
-                    serviceName = "Express Post International";
+                case "AU":
+                    sb.AppendFormat(GATEWAY_URL_DOMESTIC_ALLOWED_SERVICES);
+                    sb.AppendFormat("?from_postcode={0}&", fromPostcode);
+                    sb.AppendFormat("to_postcode={0}&", toPostcode);
+                    sb.AppendFormat("length={0}&", length);
+                    sb.AppendFormat("width={0}&", width);
+                    sb.AppendFormat("height={0}&", heigth);
                     break;
                 default:
-                    //not found. return service type
-                    serviceName = type;
+                    sb.AppendFormat(GATEWAY_URL_INTERNACIONAL_ALLOWED_SERVICES);
+                    sb.AppendFormat("?country_code={0}&", countryTwoLetterIsoCode);
                     break;
             }
-            return serviceName;
+
+            sb.AppendFormat("weight={0}", weight.ToString(cultureInfo.NumberFormat));
+
+            var request = WebRequest.Create(sb.ToString()) as HttpWebRequest;
+            request.Headers.Add("AUTH-KEY", _australiaPostSettings.ApiKey);
+            request.Method = "GET";
+            Stream stream;
+
+            try
+            {
+                var response = request.GetResponse();
+                stream = response.GetResponseStream();
+            }
+            catch (WebException ex)
+            {
+                stream = ex.Response.GetResponseStream();
+            }
+
+            //parse json from response
+            using (var reader = new StreamReader(stream))
+            {
+                var json = reader.ReadToEnd();
+                if (!string.IsNullOrEmpty(json))
+                {
+                    var parsed = JObject.Parse(json);
+                    JToken jToken;
+                    try
+                    {
+                        jToken = parsed["services"]["service"];
+                        if (jToken != null)
+                        {
+                            var options = (JArray)jToken;
+                            foreach (var option in options)
+                            {
+                                var service = (JObject)option;
+                                var shippingOption = service.ParseShippingOption(_currencyService);
+                                if (shippingOption != null)
+                                {
+                                    shippingOption.Rate = shippingOption.Rate * totalPackages;
+                                    shippingOptions.Add(shippingOption);
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //if the size or weight of the parcel exceeds the allowable, 
+                        //and if for example the set(or not set) the wrong postal code, 
+                        //the Australia Post errorMessage returns the error text.
+                        //As a result, the client can not use the services of the service
+                        jToken = parsed["error"]["errorMessage"];
+                        if (jToken != null)
+                        {
+                            var error = (JValue)jToken;
+                            throw new NopException(error.Value.ToString());
+                        }
+                        throw new Exception("Response is not valid.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Response is not valid.");
+                }
+            }
+            return shippingOptions;
         }
 
         #endregion
@@ -216,23 +200,46 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 return response;
             }
 
+            if (string.IsNullOrEmpty(getShippingOptionRequest.ZipPostalCodeFrom))
+            {
+                response.AddError("Shipping origin zip is not set");
+                return response;
+            }
+
+            if(getShippingOptionRequest.ShippingAddress == null)
+            {
+                response.AddError("Shipping address is not specified");
+                return response;
+            }
+
+            var country = _countryService.GetCountryById(getShippingOptionRequest.ShippingAddress.CountryId);
+            if (country == null)
+            {
+                response.AddError("Shipping country is not specified");
+                return response;
+            }
+
             if (getShippingOptionRequest.ShippingAddress == null)
             {
                 response.AddError("Shipping address is not set");
                 return response;
             }
 
+            if (string.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.ZipPostalCode))
+            {
+                response.AddError("Shipping zip (postal code) is not set");
+                return response;
+            }
+
             string zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             int weight = GetWeight(getShippingOptionRequest);
-
-
             decimal lengthTmp, widthTmp, heightTmp;
             _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
-            int length = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
-            int width = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(widthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
-            int height = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(heightTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
-            
+            int length = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+            int width = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(widthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+            int height = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(heightTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+
             //estimate packaging
             int totalPackagesDims = 1;
             int totalPackagesWeights = 1;
@@ -240,9 +247,11 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             {
                 totalPackagesDims = Convert.ToInt32(Math.Ceiling((decimal)Math.Max(Math.Max(length, width), height) / MAX_LENGTH));
             }
-            if (weight > MAX_WEIGHT)
+
+            int maxWeight = country.TwoLetterIsoCode.Equals("AU") ? MAX_DOMESTIC_WEIGHT : MAX_INTERNATIONAL_WEIGHT;
+            if (weight > maxWeight)
             {
-                totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)weight / (decimal)MAX_WEIGHT));
+                totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)weight / (decimal)maxWeight));
             }
             var totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
             if (totalPackages == 0)
@@ -275,42 +284,38 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 height = MAX_LENGTH / 4;
                 width = MAX_LENGTH / 4;
             }
+            // Australia post takes the dimensions in centimeters and weight in kilograms, 
+            // so dimensions should be converted and rounded up from millimeters to centimeters,
+            // grams should be converted to kilograms and rounded to two decimal.
+            length = length / ONE_CENTIMETER + (length % ONE_CENTIMETER > 0 ? 1 : 0);
+            width = width / ONE_CENTIMETER + (width % ONE_CENTIMETER > 0 ? 1 : 0);
+            height = height / ONE_CENTIMETER + (height % ONE_CENTIMETER > 0 ? 1 : 0);
+            var kgWeight = Math.Round(weight / (decimal)ONE_KILO, 2);
+
             try
             {
+                var shippingOptions = RequestShippingOptions(country.TwoLetterIsoCode,
+                    zipPostalCodeFrom, zipPostalCodeTo, kgWeight, length, width, height, totalPackages);
 
-                var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(getShippingOptionRequest.ShippingAddress.CountryId);
-                if (country == null)
+                foreach (var shippingOption in shippingOptions)
                 {
-                    response.AddError("Shipping country is not specified");
-                    return response;
-                }
-                switch (country.ThreeLetterIsoCode)
-                {
-                    case "AUS":
-                        //domestic services
-                        response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Standard", weight, length, width, height, totalPackages));
-                        response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Express", weight, length, width, height, totalPackages));
-                        //discontinued
-                        //response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "EXP_PLT", weight, length, width, height, totalPackages));
-                        break;
-                    default:
-                        //international services
-                        response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Air", weight, length, width, height, totalPackages));
-                        response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Sea", weight, length, width, height, totalPackages));
-                        response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "ECI_D", weight, length, width, height, totalPackages));
-                        response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "ECI_M", weight, length, width, height, totalPackages));
-                        response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "EPI", weight, length, width, height, totalPackages));
-                        break;
-                }
-
-                foreach (var shippingOption in response.ShippingOptions)
-                {
-                    shippingOption.Rate += _australiaPostSettings.AdditionalHandlingCharge;
+                    response.ShippingOptions.Add(shippingOption);
                 }
             }
-            catch (Exception ex)
+            catch (NopException ex)
             {
                 response.AddError(ex.Message);
+                return response;
+            }
+            catch (Exception)
+            {
+                response.AddError("Australia Post Service is currently unavailable, try again later");
+                return response;
+            }
+
+            foreach (var shippingOption in response.ShippingOptions)
+            {
+                shippingOption.Rate += _australiaPostSettings.AdditionalHandlingCharge;
             }
             return response;
         }
@@ -337,7 +342,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             controllerName = "ShippingAustraliaPost";
             routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.AustraliaPost.Controllers" }, { "area", null } };
         }
-        
+
         /// <summary>
         /// Install plugin
         /// </summary>
@@ -346,30 +351,33 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             //settings
             var settings = new AustraliaPostSettings
             {
-                GatewayUrl = "http://drc.edeliver.com.au/ratecalc.asp",
+                AdditionalHandlingCharge = 0
             };
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl", "Gateway URL");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint", "Specify gateway URL");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge", "Additional handling charge.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey", "Australia Post API Key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint", "Specify Australia Post API Key.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge", "Additional handling charge");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
-            
+
             base.Install();
         }
 
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
         public override void Uninstall()
         {
             //settings
             _settingService.DeleteSetting<AustraliaPostSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl");
-            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge");
             this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint");
-            
+
             base.Uninstall();
         }
         #endregion
@@ -390,8 +398,8 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// <summary>
         /// Gets a shipment tracker
         /// </summary>
-        public IShipmentTracker ShipmentTracker 
-        { 
+        public IShipmentTracker ShipmentTracker
+        {
             get { return null; }
         }
 

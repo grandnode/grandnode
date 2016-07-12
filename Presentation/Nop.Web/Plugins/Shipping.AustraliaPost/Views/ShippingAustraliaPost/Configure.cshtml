@@ -10,11 +10,11 @@
         <div class="form-body">
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
-                    @Html.GrandLabelFor(model => model.GatewayUrl, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                    @Html.GrandLabelFor(model => model.ApiKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.GatewayUrl)
-                    @Html.ValidationMessageFor(model => model.GatewayUrl)
+                    @Html.GrandEditorFor(model => model.ApiKey)
+                    @Html.ValidationMessageFor(model => model.ApiKey)
                 </div>
             </div>
             <div class="form-group">
