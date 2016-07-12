@@ -1249,23 +1249,10 @@
             </remarks>
             <returns>The <see cref="T:System.Type"/> of the ADO.NET provider</returns>
         </member>
-        <member name="M:log4net.Appender.AdoNetAppender.InitializeDatabaseCommand">
-            <summary>
-            Prepares the database command and initialize the parameters.
-            </summary>
-        </member>
         <member name="M:log4net.Appender.AdoNetAppender.InitializeDatabaseConnection">
             <summary>
             Connects to the database.
             </summary>		
-        </member>
-        <member name="M:log4net.Appender.AdoNetAppender.DisposeCommand(System.Boolean)">
-            <summary>
-            Cleanup the existing command.
-            </summary>
-            <param name="ignoreException">
-            If true, a message will be written using LogLog.Warn if an exception is encountered when calling Dispose.
-            </param>
         </member>
         <member name="M:log4net.Appender.AdoNetAppender.DiposeConnection">
             <summary>
@@ -1273,17 +1260,6 @@
             </summary>
             <remarks>
             Calls the IDbConnection's <see cref="M:System.Data.IDbConnection.Close"/> method.
-            </remarks>
-        </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_usePreparedCommand">
-            <summary>
-            Flag to indicate if we are using a command object
-            </summary>
-            <remarks>
-            <para>
-            Set to <c>true</c> when the appender is to use a prepared
-            statement or stored procedure to insert into the database.
-            </para>
             </remarks>
         </member>
         <member name="F:log4net.Appender.AdoNetAppender.m_parameters">
@@ -1307,11 +1283,6 @@
             to insert logging events into a database.
             </summary>
         </member>
-        <member name="F:log4net.Appender.AdoNetAppender.m_dbCommand">
-            <summary>
-            The database command.
-            </summary>
-        </member>
         <member name="F:log4net.Appender.AdoNetAppender.m_connectionString">
             <summary>
             Database connection string.
@@ -1320,6 +1291,11 @@
         <member name="F:log4net.Appender.AdoNetAppender.m_appSettingsKey">
             <summary>
             The appSettings key from App.Config that contains the connection string.
+            </summary>
+        </member>
+        <member name="F:log4net.Appender.AdoNetAppender.m_connectionStringName">
+            <summary>
+            The connectionStrings key from App.Config that contains the connection string.
             </summary>
         </member>
         <member name="F:log4net.Appender.AdoNetAppender.m_connectionType">
@@ -1344,7 +1320,7 @@
         </member>
         <member name="F:log4net.Appender.AdoNetAppender.m_reconnectOnError">
             <summary>
-            Indicates whether to use transactions when writing to the database.
+            Indicates whether to reconnect when a connection is lost.
             </summary>
         </member>
         <member name="F:log4net.Appender.AdoNetAppender.declaringType">
@@ -1384,6 +1360,14 @@
             <summary>
             The appSettings key from App.Config that contains the connection string.
             </summary>
+        </member>
+        <member name="P:log4net.Appender.AdoNetAppender.ConnectionStringName">
+            <summary>
+            The connectionStrings key from App.Config that contains the connection string.
+            </summary>
+            <remarks>
+            This property requires at least .NET 2.0.
+            </remarks>
         </member>
         <member name="P:log4net.Appender.AdoNetAppender.ConnectionType">
             <summary>
@@ -1437,6 +1421,10 @@
             <para>
             The <see cref="P:log4net.Appender.AdoNetAppender.CommandType"/> property determines if
             this text is a prepared statement or a stored procedure.
+            </para>
+            <para>
+            If this property is not set, the command text is retrieved by invoking
+            <see cref="M:log4net.Appender.AdoNetAppender.GetLogStatement(log4net.Core.LoggingEvent)"/>.
             </para>
             </remarks>
         </member>
@@ -4061,6 +4049,11 @@
             </para>
             </remarks>
         </member>
+        <member name="M:log4net.Appender.FileAppender.OnClose">
+            <summary>
+            Close this appender instance. The underlying stream or writer is also closed.
+            </summary>
+        </member>
         <member name="M:log4net.Appender.FileAppender.PrepareWriter">
             <summary>
             Called to initialize the file writer
@@ -4448,6 +4441,16 @@
             </para>
             </remarks>
         </member>
+        <member name="M:log4net.Appender.FileAppender.LockingModelBase.ActivateOptions">
+            <summary>
+            Initializes all resources used by this locking model.
+            </summary>
+        </member>
+        <member name="M:log4net.Appender.FileAppender.LockingModelBase.OnClose">
+            <summary>
+            Disposes all resources that were initialized by this locking model.
+            </summary>
+        </member>
         <member name="M:log4net.Appender.FileAppender.LockingModelBase.AcquireLock">
             <summary>
             Acquire the lock on the file
@@ -4578,6 +4581,16 @@
             </para>
             </remarks>
         </member>
+        <member name="M:log4net.Appender.FileAppender.ExclusiveLock.ActivateOptions">
+            <summary>
+            Initializes all resources used by this locking model.
+            </summary>
+        </member>
+        <member name="M:log4net.Appender.FileAppender.ExclusiveLock.OnClose">
+            <summary>
+            Disposes all resources that were initialized by this locking model.
+            </summary>
+        </member>
         <member name="T:log4net.Appender.FileAppender.MinimalLock">
             <summary>
             Acquires the file lock for each write
@@ -4641,6 +4654,16 @@
             </para>
             </remarks>
         </member>
+        <member name="M:log4net.Appender.FileAppender.MinimalLock.ActivateOptions">
+            <summary>
+            Initializes all resources used by this locking model.
+            </summary>
+        </member>
+        <member name="M:log4net.Appender.FileAppender.MinimalLock.OnClose">
+            <summary>
+            Disposes all resources that were initialized by this locking model.
+            </summary>
+        </member>
         <member name="T:log4net.Appender.FileAppender.InterProcessLock">
             <summary>
             Provides cross-process file locking.
@@ -4687,7 +4710,17 @@
         </member>
         <member name="M:log4net.Appender.FileAppender.InterProcessLock.ReleaseLock">
             <summary>
-            
+            Releases the lock and allows others to acquire a lock.
+            </summary>
+        </member>
+        <member name="M:log4net.Appender.FileAppender.InterProcessLock.ActivateOptions">
+            <summary>
+            Initializes all resources used by this locking model.
+            </summary>
+        </member>
+        <member name="M:log4net.Appender.FileAppender.InterProcessLock.OnClose">
+            <summary>
+            Disposes all resources that were initialized by this locking model.
             </summary>
         </member>
         <member name="T:log4net.Appender.ForwardingAppender">
@@ -5231,6 +5264,198 @@
             </para>
             </remarks>
         </member>
+        <member name="T:log4net.Appender.ManagedColoredConsoleAppender">
+            <summary>
+            Appends colorful logging events to the console, using the .NET 2
+            built-in capabilities.
+            </summary>
+            <remarks>
+            <para>
+            ManagedColoredConsoleAppender appends log events to the standard output stream
+            or the error output stream using a layout specified by the 
+            user. It also allows the color of a specific type of message to be set.
+            </para>
+            <para>
+            By default, all output is written to the console's standard output stream.
+            The <see cref="P:log4net.Appender.ManagedColoredConsoleAppender.Target"/> property can be set to direct the output to the
+            error stream.
+            </para>
+            <para>
+            When configuring the colored console appender, mappings should be
+            specified to map logging levels to colors. For example:
+            </para>
+            <code lang="XML" escaped="true">
+            <mapping>
+            	<level value="ERROR"/>
+            	<foreColor value="DarkRed"/>
+            	<backColor value="White"/>
+            </mapping>
+            <mapping>
+            	<level value="WARN"/>
+            	<foreColor value="Yellow"/>
+            </mapping>
+            <mapping>
+            	<level value="INFO"/>
+            	<foreColor value="White"/>
+            </mapping>
+            <mapping>
+            	<level value="DEBUG"/>
+            	<foreColor value="Blue"/>
+            </mapping>
+            </code>
+            <para>
+            The Level is the standard log4net logging level while
+            ForeColor and BackColor are the values of <see cref="T:System.ConsoleColor"/>
+            enumeration.
+            </para>
+            <para>
+            Based on the ColoredConsoleAppender
+            </para>
+            </remarks>
+            <author>Rick Hobbs</author>
+            <author>Nicko Cadell</author>
+            <author>Pavlos Touboulidis</author>
+        </member>
+        <member name="F:log4net.Appender.ManagedColoredConsoleAppender.ConsoleOut">
+            <summary>
+            The <see cref="P:log4net.Appender.ManagedColoredConsoleAppender.Target"/> to use when writing to the Console 
+            standard output stream.
+            </summary>
+            <remarks>
+            <para>
+            The <see cref="P:log4net.Appender.ManagedColoredConsoleAppender.Target"/> to use when writing to the Console 
+            standard output stream.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:log4net.Appender.ManagedColoredConsoleAppender.ConsoleError">
+            <summary>
+            The <see cref="P:log4net.Appender.ManagedColoredConsoleAppender.Target"/> to use when writing to the Console 
+            standard error output stream.
+            </summary>
+            <remarks>
+            <para>
+            The <see cref="P:log4net.Appender.ManagedColoredConsoleAppender.Target"/> to use when writing to the Console 
+            standard error output stream.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Appender.ManagedColoredConsoleAppender.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:log4net.Appender.ManagedColoredConsoleAppender"/> class.
+            </summary>
+            <remarks>
+            The instance of the <see cref="T:log4net.Appender.ManagedColoredConsoleAppender"/> class is set up to write 
+            to the standard output stream.
+            </remarks>
+        </member>
+        <member name="M:log4net.Appender.ManagedColoredConsoleAppender.AddMapping(log4net.Appender.ManagedColoredConsoleAppender.LevelColors)">
+            <summary>
+            Add a mapping of level to color - done by the config file
+            </summary>
+            <param name="mapping">The mapping to add</param>
+            <remarks>
+            <para>
+            Add a <see cref="T:log4net.Appender.ManagedColoredConsoleAppender.LevelColors"/> mapping to this appender.
+            Each mapping defines the foreground and background colors
+            for a level.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Appender.ManagedColoredConsoleAppender.Append(log4net.Core.LoggingEvent)">
+            <summary>
+            This method is called by the <see cref="M:AppenderSkeleton.DoAppend(log4net.Core.LoggingEvent)"/> method.
+            </summary>
+            <param name="loggingEvent">The event to log.</param>
+            <remarks>
+            <para>
+            Writes the event to the console.
+            </para>
+            <para>
+            The format of the output will depend on the appender's layout.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Appender.ManagedColoredConsoleAppender.ActivateOptions">
+            <summary>
+            Initialize the options for this appender
+            </summary>
+            <remarks>
+            <para>
+            Initialize the level to color mappings set on this appender.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:log4net.Appender.ManagedColoredConsoleAppender.m_writeToErrorStream">
+            <summary>
+            Flag to write output to the error stream rather than the standard output stream
+            </summary>
+        </member>
+        <member name="F:log4net.Appender.ManagedColoredConsoleAppender.m_levelMapping">
+            <summary>
+            Mapping from level object to color value
+            </summary>
+        </member>
+        <member name="P:log4net.Appender.ManagedColoredConsoleAppender.Target">
+            <summary>
+            Target is the value of the console output stream.
+            This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
+            </summary>
+            <value>
+            Target is the value of the console output stream.
+            This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
+            </value>
+            <remarks>
+            <para>
+            Target is the value of the console output stream.
+            This is either <c>"Console.Out"</c> or <c>"Console.Error"</c>.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Appender.ManagedColoredConsoleAppender.RequiresLayout">
+            <summary>
+            This appender requires a <see cref="N:log4net.Layout"/> to be set.
+            </summary>
+            <value><c>true</c></value>
+            <remarks>
+            <para>
+            This appender requires a <see cref="N:log4net.Layout"/> to be set.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:log4net.Appender.ManagedColoredConsoleAppender.LevelColors">
+            <summary>
+            A class to act as a mapping between the level that a logging call is made at and
+            the color it should be displayed as.
+            </summary>
+            <remarks>
+            <para>
+            Defines the mapping between a level and the color it should be displayed in.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Appender.ManagedColoredConsoleAppender.LevelColors.ForeColor">
+            <summary>
+            The mapped foreground color for the specified level
+            </summary>
+            <remarks>
+            <para>
+            Required property.
+            The mapped foreground color for the specified level.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Appender.ManagedColoredConsoleAppender.LevelColors.BackColor">
+            <summary>
+            The mapped background color for the specified level
+            </summary>
+            <remarks>
+            <para>
+            Required property.
+            The mapped background color for the specified level.
+            </para>
+            </remarks>
+        </member>
         <member name="T:log4net.Appender.MemoryAppender">
             <summary>
             Stores logging events in an array.
@@ -5241,12 +5466,22 @@
             that are appended in an in-memory array.
             </para>
             <para>
-            Use the <see cref="M:log4net.Appender.MemoryAppender.GetEvents"/> method to get
-            the current list of events that have been appended.
+            Use the <see cref="M:PopAllEvents()"/> method to get
+            and clear the current list of events that have been appended.
+            </para>
+            <para>
+            Use the <see cref="M:GetEvents()"/> method to get the current
+            list of events that have been appended.  Note there is a
+            race-condition when calling <see cref="M:GetEvents()"/> and
+            <see cref="M:Clear()"/> in pairs, you better use <see
+            mref="M:PopAllEvents()"/> in that case.
             </para>
             <para>
             Use the <see cref="M:Clear()"/> method to clear the
-            current list of events.
+            current list of events.  Note there is a
+            race-condition when calling <see cref="M:GetEvents()"/> and
+            <see cref="M:Clear()"/> in pairs, you better use <see
+            mref="M:PopAllEvents()"/> in that case.
             </para>
             </remarks>
             <author>Julian Biddle</author>
@@ -5289,6 +5524,17 @@
             </summary>
             <remarks>
             Clear the list of events
+            </remarks>
+        </member>
+        <member name="M:log4net.Appender.MemoryAppender.PopAllEvents">
+            <summary>
+            Gets the events that have been logged and clears the list of events.
+            </summary>
+            <returns>The events that have been logged</returns>
+            <remarks>
+            <para>
+            Gets the events that have been logged and clears the list of events.
+            </para>
             </remarks>
         </member>
         <member name="F:log4net.Appender.MemoryAppender.m_eventsList">
@@ -5723,82 +5969,83 @@
             <author>Nicko Cadell</author>
         </member>
         <member name="T:log4net.Appender.UdpAppender">
-            <summary>
-            Sends logging events as connectionless UDP datagrams to a remote host or a 
-            multicast group using an <see cref="T:System.Net.Sockets.UdpClient"/>.
-            </summary>
-            <remarks>
-            <para>
-            UDP guarantees neither that messages arrive, nor that they arrive in the correct order.
-            </para>
-            <para>
-            To view the logging results, a custom application can be developed that listens for logging 
-            events.
-            </para>
-            <para>
-            When decoding events send via this appender remember to use the same encoding
-            to decode the events as was used to send the events. See the <see cref="P:log4net.Appender.UdpAppender.Encoding"/>
-            property to specify the encoding to use.
-            </para>
-            </remarks>
-            <example>
-            This example shows how to log receive logging events that are sent 
-            on IP address 244.0.0.1 and port 8080 to the console. The event is 
-            encoded in the packet as a unicode string and it is decoded as such. 
-            <code lang="C#">
-            IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-            UdpClient udpClient;
-            byte[] buffer;
-            string loggingEvent;
+             <summary>
+             Sends logging events as connectionless UDP datagrams to a remote host or a 
+             multicast group using an <see cref="T:System.Net.Sockets.UdpClient"/>.
+             </summary>
+             <remarks>
+             <para>
+             UDP guarantees neither that messages arrive, nor that they arrive in the correct order.
+             </para>
+             <para>
+             To view the logging results, a custom application can be developed that listens for logging 
+             events.
+             </para>
+             <para>
+             When decoding events send via this appender remember to use the same encoding
+             to decode the events as was used to send the events. See the <see cref="P:log4net.Appender.UdpAppender.Encoding"/>
+             property to specify the encoding to use.
+             </para>
+             </remarks>
+             <example>
+             This example shows how to log receive logging events that are sent 
+             on IP address 244.0.0.1 and port 8080 to the console. The event is 
+             encoded in the packet as a unicode string and it is decoded as such. 
+             <code lang="C#">
+             IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+             UdpClient udpClient;
+             byte[] buffer;
+             string loggingEvent;
+             
+             try 
+             {
+                 udpClient = new UdpClient(8080);
+                 
+                 while(true) 
+                 {
+                     buffer = udpClient.Receive(ref remoteEndPoint);
+                     loggingEvent = System.Text.Encoding.Unicode.GetString(buffer);
+                     Console.WriteLine(loggingEvent);
+                 }
+             } 
+             catch(Exception e) 
+             {
+                 Console.WriteLine(e.ToString());
+             }
+             </code>
+             <code lang="Visual Basic">
+             Dim remoteEndPoint as IPEndPoint
+             Dim udpClient as UdpClient
+             Dim buffer as Byte()
+             Dim loggingEvent as String
+             
+             Try 
+                 remoteEndPoint = new IPEndPoint(IPAddress.Any, 0)
+                 udpClient = new UdpClient(8080)
             
-            try 
-            {
-                udpClient = new UdpClient(8080);
-                
-                while(true) 
-                {
-                    buffer = udpClient.Receive(ref remoteEndPoint);
-                    loggingEvent = System.Text.Encoding.Unicode.GetString(buffer);
-                    Console.WriteLine(loggingEvent);
-                }
-            } 
-            catch(Exception e) 
-            {
-                Console.WriteLine(e.ToString());
-            }
-            </code>
-            <code lang="Visual Basic">
-            Dim remoteEndPoint as IPEndPoint
-            Dim udpClient as UdpClient
-            Dim buffer as Byte()
-            Dim loggingEvent as String
-            
-            Try 
-                remoteEndPoint = new IPEndPoint(IPAddress.Any, 0)
-                udpClient = new UdpClient(8080)
-                            While True
-                    buffer = udpClient.Receive(ByRef remoteEndPoint)
-                    loggingEvent = System.Text.Encoding.Unicode.GetString(buffer)
-                    Console.WriteLine(loggingEvent)
-                Wend
-            Catch e As Exception
-                Console.WriteLine(e.ToString())
-            End Try
-            </code>
-            <para>
-            An example configuration section to log information using this appender to the 
-            IP 224.0.0.1 on port 8080:
-            </para>
-            <code lang="XML" escaped="true">
-            <appender name="UdpAppender" type="log4net.Appender.UdpAppender">
-                <remoteAddress value="224.0.0.1"/>
-                <remotePort value="8080"/>
-                <layout type="log4net.Layout.PatternLayout" value="%-5level %logger [%ndc] - %message%newline"/>
-            </appender>
-            </code>
-            </example>
-            <author>Gert Driesen</author>
-            <author>Nicko Cadell</author>
+                 While True
+                     buffer = udpClient.Receive(ByRef remoteEndPoint)
+                     loggingEvent = System.Text.Encoding.Unicode.GetString(buffer)
+                     Console.WriteLine(loggingEvent)
+                 Wend
+             Catch e As Exception
+                 Console.WriteLine(e.ToString())
+             End Try
+             </code>
+             <para>
+             An example configuration section to log information using this appender to the 
+             IP 224.0.0.1 on port 8080:
+             </para>
+             <code lang="XML" escaped="true">
+             <appender name="UdpAppender" type="log4net.Appender.UdpAppender">
+                 <remoteAddress value="224.0.0.1"/>
+                 <remotePort value="8080"/>
+                 <layout type="log4net.Layout.PatternLayout" value="%-5level %logger [%ndc] - %message%newline"/>
+             </appender>
+             </code>
+             </example>
+             <author>Gert Driesen</author>
+             <author>Nicko Cadell</author>
         </member>
         <member name="M:log4net.Appender.UdpAppender.#ctor">
             <summary>
@@ -6679,6 +6926,11 @@
             </para>
             </remarks>
         </member>
+        <member name="M:log4net.Appender.RollingFileAppender.Finalize">
+            <summary>
+            Cleans up all resources used by this appender.
+            </summary>
+        </member>
         <member name="F:log4net.Appender.RollingFileAppender.declaringType">
             <summary>
             The fully qualified type of the RollingFileAppender class.
@@ -7091,6 +7343,11 @@
             FileName provided in configuration.  Used for rolling properly
             </summary>
         </member>
+        <member name="F:log4net.Appender.RollingFileAppender.m_mutexForRolling">
+            <summary>
+            A mutex that is used to lock rolling of files.
+            </summary>
+        </member>
         <member name="F:log4net.Appender.RollingFileAppender.s_date1970">
             <summary>
             The 1st of January 1970 in UTC
@@ -7489,6 +7746,11 @@
             </summary>
             <param name="messageBody">the body text to include in the mail</param>
         </member>
+        <member name="M:log4net.Appender.SmtpAppender.MaybeTrimSeparators(System.String)">
+            <summary>
+              trims leading and trailing commas or semicolons
+            </summary>
+        </member>
         <member name="P:log4net.Appender.SmtpAppender.To">
             <summary>
             Gets or sets a comma- or semicolon-delimited list of recipient e-mail addresses (use semicolon on .NET 1.1 and comma for later versions).
@@ -7662,17 +7924,33 @@
             Gets or sets the priority of the e-mail message
             </summary>
             <value>
-            One of the <see cref="T:System.Web.Mail.MailPriority"/> values.
+            One of the <see cref="T:System.Net.Mail.MailPriority"/> values.
             </value>
             <remarks>
             <para>
             Sets the priority of the e-mails generated by this
-            appender. The default priority is <see cref="F:System.Web.Mail.MailPriority.Normal"/>.
+            appender. The default priority is <see cref="F:System.Net.Mail.MailPriority.Normal"/>.
             </para>
             <para>
             If you are using this appender to report errors then
-            you may want to set the priority to <see cref="F:System.Web.Mail.MailPriority.High"/>.
+            you may want to set the priority to <see cref="F:System.Net.Mail.MailPriority.High"/>.
             </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Appender.SmtpAppender.EnableSsl">
+            <summary>
+            Enable or disable use of SSL when sending e-mail message
+            </summary>
+            <remarks>
+            This is available on MS .NET 2.0 runtime and higher
+            </remarks>
+        </member>
+        <member name="P:log4net.Appender.SmtpAppender.ReplyTo">
+            <summary>
+            Gets or sets the reply-to e-mail address.
+            </summary>
+            <remarks>
+            This is available on MS .NET 2.0 runtime and higher
             </remarks>
         </member>
         <member name="P:log4net.Appender.SmtpAppender.SubjectEncoding">
@@ -7864,6 +8142,19 @@
             <para>
             Gets or sets the path to write the messages to. This should be the same
             as that used by the agent sending the messages.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Appender.SmtpPickupDirAppender.FileExtension">
+            <summary>
+            Gets or sets the file extension for the generated files
+            </summary>
+            <value>
+            The file extension for the generated files
+            </value>
+            <remarks>
+            <para>
+            The file extension for the generated files
             </para>
             </remarks>
         </member>
@@ -19596,48 +19887,49 @@
             </remarks>
         </member>
         <member name="T:log4net.Layout.XmlLayout">
-            <summary>
-            Layout that formats the log events as XML elements.
-            </summary>
-            <remarks>
-            <para>
-            The output of the <see cref="T:log4net.Layout.XmlLayout"/> consists of a series of 
-            log4net:event elements. It does not output a complete well-formed XML 
-            file. The output is designed to be included as an <em>external entity</em>
-            in a separate file to form a correct XML file.
-            </para>
-            <para>
-            For example, if <c>abc</c> is the name of the file where
-            the <see cref="T:log4net.Layout.XmlLayout"/> output goes, then a well-formed XML file would 
-            be:
-            </para>
-            <code lang="XML">
-            &lt;?xml version="1.0" ?&gt;
+             <summary>
+             Layout that formats the log events as XML elements.
+             </summary>
+             <remarks>
+             <para>
+             The output of the <see cref="T:log4net.Layout.XmlLayout"/> consists of a series of 
+             log4net:event elements. It does not output a complete well-formed XML 
+             file. The output is designed to be included as an <em>external entity</em>
+             in a separate file to form a correct XML file.
+             </para>
+             <para>
+             For example, if <c>abc</c> is the name of the file where
+             the <see cref="T:log4net.Layout.XmlLayout"/> output goes, then a well-formed XML file would 
+             be:
+             </para>
+             <code lang="XML">
+             &lt;?xml version="1.0" ?&gt;
+             
+             &lt;!DOCTYPE log4net:events SYSTEM "log4net-events.dtd" [&lt;!ENTITY data SYSTEM "abc"&gt;]&gt;
             
-            &lt;!DOCTYPE log4net:events SYSTEM "log4net-events.dtd" [&lt;!ENTITY data SYSTEM "abc"&gt;]&gt;
-                        &lt;log4net:events version="1.2" xmlns:log4net="http://logging.apache.org/log4net/schemas/log4net-events-1.2&gt;
-                &amp;data;
-            &lt;/log4net:events&gt;
-            </code>
-            <para>
-            This approach enforces the independence of the <see cref="T:log4net.Layout.XmlLayout"/> 
-            and the appender where it is embedded.
-            </para>
-            <para>
-            The <c>version</c> attribute helps components to correctly
-            interpret output generated by <see cref="T:log4net.Layout.XmlLayout"/>. The value of 
-            this attribute should be "1.2" for release 1.2 and later.
-            </para>
-            <para>
-            Alternatively the <c>Header</c> and <c>Footer</c> properties can be
-            configured to output the correct XML header, open tag and close tag.
-            When setting the <c>Header</c> and <c>Footer</c> properties it is essential
-            that the underlying data store not be appendable otherwise the data
-            will become invalid XML.
-            </para>
-            </remarks>
-            <author>Nicko Cadell</author>
-            <author>Gert Driesen</author>
+             &lt;log4net:events version="1.2" xmlns:log4net="http://logging.apache.org/log4net/schemas/log4net-events-1.2&gt;
+                 &amp;data;
+             &lt;/log4net:events&gt;
+             </code>
+             <para>
+             This approach enforces the independence of the <see cref="T:log4net.Layout.XmlLayout"/> 
+             and the appender where it is embedded.
+             </para>
+             <para>
+             The <c>version</c> attribute helps components to correctly
+             interpret output generated by <see cref="T:log4net.Layout.XmlLayout"/>. The value of 
+             this attribute should be "1.2" for release 1.2 and later.
+             </para>
+             <para>
+             Alternatively the <c>Header</c> and <c>Footer</c> properties can be
+             configured to output the correct XML header, open tag and close tag.
+             When setting the <c>Header</c> and <c>Footer</c> properties it is essential
+             that the underlying data store not be appendable otherwise the data
+             will become invalid XML.
+             </para>
+             </remarks>
+             <author>Nicko Cadell</author>
+             <author>Gert Driesen</author>
         </member>
         <member name="T:log4net.Layout.XmlLayoutBase">
             <summary>
@@ -25695,6 +25987,1049 @@
             </para>
             </remarks>
         </member>
+        <member name="T:log4net.Util.ILogExtensions">
+            <summary>
+            The static class ILogExtensions contains a set of widely used
+            methods that ease the interaction with the ILog interface implementations.
+            </summary>
+            <remarks>
+            <para>
+            This class contains methods for logging at different levels and checks the
+            properties for determining if those logging levels are enabled in the current
+            configuration.
+            </para>
+            </remarks>
+            <example>Simple example of logging messages
+            <code lang="C#">
+            using log4net.Util;
+            
+            ILog log = LogManager.GetLogger("application-log");
+            
+            log.InfoExt("Application Start");
+            log.DebugExt("This is a debug message");
+            </code>
+            </example>
+        </member>
+        <member name="F:log4net.Util.ILogExtensions.declaringType">
+            <summary>
+            The fully qualified type of the Logger class.
+            </summary>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Func{System.Object})">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Debug"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>INFO</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsDebugEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation.  If this logger is <c>INFO</c> enabled, then it converts 
+            the message object (retrieved by invocation of the provided callback) to a 
+            string by invoking the appropriate <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>.
+            It then proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Func{System.Object},System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Func{System.Object},System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Debug"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object)">
+            <overloads>Log a message object with the <see cref="F:log4net.Core.Level.Debug"/> level.</overloads> //TODO
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Debug"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>INFO</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsDebugEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation. If this logger is <c>INFO</c> enabled, then it converts 
+            the message object (passed as parameter) to a string by invoking the appropriate
+            <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+            proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object,System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object,System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Debug"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugFormatExt(log4net.ILog,System.String,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Debug"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugFormatExt(log4net.ILog,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Debug"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugFormatExt(log4net.ILog,System.IFormatProvider,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Debug"/> level.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> that supplies culture-specific formatting information</param>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugFormatExt(log4net.ILog,System.String,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Debug"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.DebugFormatExt(log4net.ILog,System.String,System.Object,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Debug"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <param name="arg2">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.DebugExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Debug(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsDebugEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Func{System.Object})">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Info"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>INFO</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsInfoEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation.  If this logger is <c>INFO</c> enabled, then it converts 
+            the message object (retrieved by invocation of the provided callback) to a 
+            string by invoking the appropriate <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>.
+            It then proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Func{System.Object},System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Func{System.Object},System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Info"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object)">
+            <overloads>Log a message object with the <see cref="F:log4net.Core.Level.Info"/> level.</overloads> //TODO
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Info"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>INFO</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsInfoEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation. If this logger is <c>INFO</c> enabled, then it converts 
+            the message object (passed as parameter) to a string by invoking the appropriate
+            <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+            proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object,System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object,System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Info"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoFormatExt(log4net.ILog,System.String,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Info"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoFormatExt(log4net.ILog,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Info"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoFormatExt(log4net.ILog,System.IFormatProvider,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Info"/> level.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> that supplies culture-specific formatting information</param>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoFormatExt(log4net.ILog,System.String,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Info"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.InfoFormatExt(log4net.ILog,System.String,System.Object,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Info"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <param name="arg2">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.InfoExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Info(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsInfoEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Func{System.Object})">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Warn"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>WARN</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsWarnEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation.  If this logger is <c>WARN</c> enabled, then it converts 
+            the message object (retrieved by invocation of the provided callback) to a 
+            string by invoking the appropriate <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>.
+            It then proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Func{System.Object},System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Func{System.Object},System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Warn"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object)">
+            <overloads>Log a message object with the <see cref="F:log4net.Core.Level.Warn"/> level.</overloads> //TODO
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Warn"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>WARN</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsWarnEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation. If this logger is <c>WARN</c> enabled, then it converts 
+            the message object (passed as parameter) to a string by invoking the appropriate
+            <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+            proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object,System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object,System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Warn"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnFormatExt(log4net.ILog,System.String,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Warn"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnFormatExt(log4net.ILog,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Warn"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnFormatExt(log4net.ILog,System.IFormatProvider,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Warn"/> level.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> that supplies culture-specific formatting information</param>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnFormatExt(log4net.ILog,System.String,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Warn"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.WarnFormatExt(log4net.ILog,System.String,System.Object,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Warn"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <param name="arg2">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.WarnExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Warn(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsWarnEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Func{System.Object})">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Error"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>ERROR</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsErrorEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation.  If this logger is <c>ERROR</c> enabled, then it converts 
+            the message object (retrieved by invocation of the provided callback) to a 
+            string by invoking the appropriate <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>.
+            It then proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Func{System.Object},System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Func{System.Object},System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Error"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object)">
+            <overloads>Log a message object with the <see cref="F:log4net.Core.Level.Error"/> level.</overloads> //TODO
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Error"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>ERROR</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsErrorEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation. If this logger is <c>ERROR</c> enabled, then it converts 
+            the message object (passed as parameter) to a string by invoking the appropriate
+            <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+            proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object,System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object,System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Error"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorFormatExt(log4net.ILog,System.String,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Error"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorFormatExt(log4net.ILog,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Error"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorFormatExt(log4net.ILog,System.IFormatProvider,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Error"/> level.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> that supplies culture-specific formatting information</param>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorFormatExt(log4net.ILog,System.String,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Error"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.ErrorFormatExt(log4net.ILog,System.String,System.Object,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Error"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <param name="arg2">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.ErrorExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Error(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsErrorEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Func{System.Object})">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Fatal"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>FATAL</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsFatalEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation.  If this logger is <c>FATAL</c> enabled, then it converts 
+            the message object (retrieved by invocation of the provided callback) to a 
+            string by invoking the appropriate <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>.
+            It then proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Func{System.Object},System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Func{System.Object},System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Fatal"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="callback">The lambda expression that gets the object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object)">
+            <overloads>Log a message object with the <see cref="F:log4net.Core.Level.Fatal"/> level.</overloads> //TODO
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Fatal"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <remarks>
+            <para>
+            This method first checks if this logger is <c>FATAL</c>
+            enabled by reading the value <seealso cref="P:log4net.ILog.IsFatalEnabled"/> property.
+            This check happens always and does not depend on the <seealso cref="T:log4net.ILog"/>
+            implementation. If this logger is <c>FATAL</c> enabled, then it converts 
+            the message object (passed as parameter) to a string by invoking the appropriate
+            <see cref="T:log4net.ObjectRenderer.IObjectRenderer"/>. It then 
+            proceeds to call all the registered appenders in this logger 
+            and also higher in the hierarchy depending on the value of 
+            the additivity flag.
+            </para>
+            <para><b>WARNING</b> Note that passing an <see cref="T:System.Exception"/> 
+            to this method will print the name of the <see cref="T:System.Exception"/> 
+            but no stack trace. To print a stack trace use the 
+            <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object,System.Exception)"/> form instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object,System.Exception)">
+            <summary>
+            Log a message object with the <see cref="F:log4net.Core.Level.Fatal"/> level including
+            the stack trace of the <see cref="T:System.Exception"/> passed
+            as a parameter.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="message">The message object to log.</param>
+            <param name="exception">The exception to log, including its stack trace.</param>
+            <remarks>
+            <para>
+            See the <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object)"/> form for more detailed information.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalFormatExt(log4net.ILog,System.String,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Fatal"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalFormatExt(log4net.ILog,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Fatal"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalFormatExt(log4net.ILog,System.IFormatProvider,System.String,System.Object[])">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Fatal"/> level.
+            </summary>
+            <param name="provider">An <see cref="T:System.IFormatProvider"/> that supplies culture-specific formatting information</param>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="args">An Object array containing zero or more objects to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalFormatExt(log4net.ILog,System.String,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Fatal"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
+        <member name="M:log4net.Util.ILogExtensions.FatalFormatExt(log4net.ILog,System.String,System.Object,System.Object,System.Object)">
+            <summary>
+            Logs a formatted message string with the <see cref="F:log4net.Core.Level.Fatal"/> level.
+            </summary>
+            <param name="logger">The logger on which the message is logged.</param>
+            <param name="format">A String containing zero or more format items</param>
+            <param name="arg0">An Object to format</param>
+            <param name="arg1">An Object to format</param>
+            <param name="arg2">An Object to format</param>
+            <remarks>
+            <para>
+            The message is formatted using the <c>String.Format</c> method. See
+            <see cref="M:System.String.Format(System.String,System.Object[])"/> for details of the syntax of the format string and the behavior
+            of the formatting.
+            </para>
+            <para>
+            This method does not take an <see cref="T:System.Exception"/> object to include in the
+            log event. To pass an <see cref="T:System.Exception"/> use one of the <see cref="M:log4net.Util.ILogExtensions.FatalExt(log4net.ILog,System.Object,System.Exception)"/>
+            methods instead.
+            </para>
+            </remarks>
+            <seealso cref="M:log4net.ILog.Fatal(System.Object)"/>
+            <seealso cref="P:log4net.ILog.IsFatalEnabled"/>
+        </member>
         <member name="T:log4net.Util.LevelMapping">
             <summary>
             Manages a mapping from levels to <see cref="T:log4net.Util.LevelMappingEntry"/>
@@ -25871,6 +27206,294 @@
             <remarks>
             <para>
             Get or set the property value for the <paramref name="key"/> specified.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:log4net.Util.TwoArgAction`2">
+            <summary>
+            Delegate type used for LogicalThreadContextStack's callbacks.
+            </summary>
+        </member>
+        <member name="T:log4net.Util.LogicalThreadContextStack">
+            <summary>
+            Implementation of Stack for the <see cref="T:log4net.LogicalThreadContext"/>
+            </summary>
+            <remarks>
+            <para>
+            Implementation of Stack for the <see cref="T:log4net.LogicalThreadContext"/>
+            </para>
+            </remarks>
+            <author>Nicko Cadell</author>
+        </member>
+        <member name="F:log4net.Util.LogicalThreadContextStack.m_stack">
+            <summary>
+            The stack store.
+            </summary>
+        </member>
+        <member name="F:log4net.Util.LogicalThreadContextStack.m_propertyKey">
+            <summary>
+            The name of this <see cref="T:log4net.Util.LogicalThreadContextStack"/> within the
+            <see cref="T:log4net.Util.LogicalThreadContextProperties"/>.
+            </summary>
+        </member>
+        <member name="F:log4net.Util.LogicalThreadContextStack.m_registerNew">
+            <summary>
+            The callback used to let the <see cref="T:log4net.Util.LogicalThreadContextStacks"/> register a
+            new instance of a <see cref="T:log4net.Util.LogicalThreadContextStack"/>.
+            </summary>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.#ctor(System.String,log4net.Util.TwoArgAction{System.String,log4net.Util.LogicalThreadContextStack})">
+            <summary>
+            Internal constructor
+            </summary>
+            <remarks>
+            <para>
+            Initializes a new instance of the <see cref="T:log4net.Util.LogicalThreadContextStack"/> class. 
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.Clear">
+            <summary>
+            Clears all the contextual information held in this stack.
+            </summary>
+            <remarks>
+            <para>
+            Clears all the contextual information held in this stack.
+            Only call this if you think that this thread is being reused after
+            a previous call execution which may not have completed correctly.
+            You do not need to use this method if you always guarantee to call
+            the <see cref="M:System.IDisposable.Dispose"/> method of the <see cref="T:System.IDisposable"/>
+            returned from <see cref="M:log4net.Util.LogicalThreadContextStack.Push(System.String)"/> even in exceptional circumstances,
+            for example by using the <c>using(log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))</c> 
+            syntax.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.Pop">
+            <summary>
+            Removes the top context from this stack.
+            </summary>
+            <returns>The message in the context that was removed from the top of this stack.</returns>
+            <remarks>
+            <para>
+            Remove the top context from this stack, and return
+            it to the caller. If this stack is empty then an
+            empty string (not <see langword="null"/>) is returned.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.Push(System.String)">
+            <summary>
+            Pushes a new context message into this stack.
+            </summary>
+            <param name="message">The new context message.</param>
+            <returns>
+            An <see cref="T:System.IDisposable"/> that can be used to clean up the context stack.
+            </returns>
+            <remarks>
+            <para>
+            Pushes a new context onto this stack. An <see cref="T:System.IDisposable"/>
+            is returned that can be used to clean up this stack. This
+            can be easily combined with the <c>using</c> keyword to scope the
+            context.
+            </para>
+            </remarks>
+            <example>Simple example of using the <c>Push</c> method with the <c>using</c> keyword.
+            <code lang="C#">
+            using(log4net.LogicalThreadContext.Stacks["NDC"].Push("Stack_Message"))
+            {
+            	log.Warn("This should have an ThreadContext Stack message");
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.GetFullMessage">
+            <summary>
+            Gets the current context information for this stack.
+            </summary>
+            <returns>The current context information.</returns>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.ToString">
+            <summary>
+            Gets the current context information for this stack.
+            </summary>
+            <returns>Gets the current context information</returns>
+            <remarks>
+            <para>
+            Gets the current context information for this stack.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.log4net#Core#IFixingRequired#GetFixedObject">
+            <summary>
+            Get a portable version of this object
+            </summary>
+            <returns>the portable instance of this object</returns>
+            <remarks>
+            <para>
+            Get a cross thread portable version of this object
+            </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Util.LogicalThreadContextStack.Count">
+            <summary>
+            The number of messages in the stack
+            </summary>
+            <value>
+            The current number of messages in the stack
+            </value>
+            <remarks>
+            <para>
+            The current number of messages in the stack. That is
+            the number of times <see cref="M:log4net.Util.LogicalThreadContextStack.Push(System.String)"/> has been called
+            minus the number of times <see cref="M:log4net.Util.LogicalThreadContextStack.Pop"/> has been called.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Util.LogicalThreadContextStack.InternalStack">
+            <summary>
+            Gets and sets the internal stack used by this <see cref="T:log4net.Util.LogicalThreadContextStack"/>
+            </summary>
+            <value>The internal storage stack</value>
+            <remarks>
+            <para>
+            This property is provided only to support backward compatability 
+            of the <see cref="T:log4net.NDC"/>. Tytpically the internal stack should not
+            be modified.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:log4net.Util.LogicalThreadContextStack.StackFrame">
+            <summary>
+            Inner class used to represent a single context frame in the stack.
+            </summary>
+            <remarks>
+            <para>
+            Inner class used to represent a single context frame in the stack.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.StackFrame.#ctor(System.String,log4net.Util.LogicalThreadContextStack.StackFrame)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message">The message for this context.</param>
+            <param name="parent">The parent context in the chain.</param>
+            <remarks>
+            <para>
+            Initializes a new instance of the <see cref="T:log4net.Util.LogicalThreadContextStack.StackFrame"/> class
+            with the specified message and parent context.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Util.LogicalThreadContextStack.StackFrame.Message">
+            <summary>
+            Get the message.
+            </summary>
+            <value>The message.</value>
+            <remarks>
+            <para>
+            Get the message.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:log4net.Util.LogicalThreadContextStack.StackFrame.FullMessage">
+            <summary>
+            Gets the full text of the context down to the root level.
+            </summary>
+            <value>
+            The full text of the context down to the root level.
+            </value>
+            <remarks>
+            <para>
+            Gets the full text of the context down to the root level.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:log4net.Util.LogicalThreadContextStack.AutoPopStackFrame">
+            <summary>
+            Struct returned from the <see cref="M:log4net.Util.LogicalThreadContextStack.Push(System.String)"/> method.
+            </summary>
+            <remarks>
+            <para>
+            This struct implements the <see cref="T:System.IDisposable"/> and is designed to be used
+            with the <see langword="using"/> pattern to remove the stack frame at the end of the scope.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:log4net.Util.LogicalThreadContextStack.AutoPopStackFrame.m_frameDepth">
+            <summary>
+            The depth to trim the stack to when this instance is disposed
+            </summary>
+        </member>
+        <member name="F:log4net.Util.LogicalThreadContextStack.AutoPopStackFrame.m_logicalThreadContextStack">
+            <summary>
+            The outer LogicalThreadContextStack.
+            </summary>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.AutoPopStackFrame.#ctor(log4net.Util.LogicalThreadContextStack,System.Int32)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="logicalThreadContextStack">The internal stack used by the ThreadContextStack.</param>
+            <param name="frameDepth">The depth to return the stack to when this object is disposed.</param>
+            <remarks>
+            <para>
+            Initializes a new instance of the <see cref="T:log4net.Util.LogicalThreadContextStack.AutoPopStackFrame"/> class with
+            the specified stack and return depth.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStack.AutoPopStackFrame.Dispose">
+            <summary>
+            Returns the stack to the correct depth.
+            </summary>
+            <remarks>
+            <para>
+            Returns the stack to the correct depth.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:log4net.Util.LogicalThreadContextStacks">
+            <summary>
+            Implementation of Stacks collection for the <see cref="T:log4net.LogicalThreadContext"/>
+            </summary>
+            <remarks>
+            <para>
+            Implementation of Stacks collection for the <see cref="T:log4net.LogicalThreadContext"/>
+            </para>
+            </remarks>
+            <author>Nicko Cadell</author>
+        </member>
+        <member name="M:log4net.Util.LogicalThreadContextStacks.#ctor(log4net.Util.LogicalThreadContextProperties)">
+            <summary>
+            Internal constructor
+            </summary>
+            <remarks>
+            <para>
+            Initializes a new instance of the <see cref="T:log4net.Util.ThreadContextStacks"/> class.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:log4net.Util.LogicalThreadContextStacks.declaringType">
+            <summary>
+            The fully qualified type of the ThreadContextStacks class.
+            </summary>
+            <remarks>
+            Used by the internal logger to record the Type of the
+            log message.
+            </remarks>
+        </member>
+        <member name="P:log4net.Util.LogicalThreadContextStacks.Item(System.String)">
+            <summary>
+            Gets the named thread context stack
+            </summary>
+            <value>
+            The named stack
+            </value>
+            <remarks>
+            <para>
+            Gets the named thread context stack
             </para>
             </remarks>
         </member>
