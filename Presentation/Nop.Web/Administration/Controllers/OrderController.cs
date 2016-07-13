@@ -2747,9 +2747,8 @@ namespace Nop.Admin.Controllers
             {
                 address = model.Address.ToEntity(address);
                 address.CustomAttributes = customAttributes;
-                //_orderService.UpdateOrder(order);
-                //_addressService.UpdateAddress(address);
-
+                _orderService.UpdateOrder(order);
+                
                 //add a note
                 _orderService.InsertOrderNote(new OrderNote
                 {
