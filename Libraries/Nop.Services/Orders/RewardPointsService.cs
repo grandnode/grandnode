@@ -106,7 +106,7 @@ namespace Nop.Services.Orders
         public IList<RewardPointsHistory> GetRewardPointsHistory(string customerId = "", bool showHidden = false)
         {
             var query = _rphRepository.Table;
-            if (String.IsNullOrEmpty(customerId))
+            if (!String.IsNullOrEmpty(customerId))
                 query = query.Where(rph => rph.CustomerId == customerId);
             if (!showHidden && !_rewardPointsSettings.PointsAccumulatedForAllStores)
             {
