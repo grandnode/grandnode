@@ -109,8 +109,7 @@
         </div>
     </div>
 
-    <div class="footer-copyright">
-        <div class="container">
+    <div class="container">
             @if (Model.DisplayTaxShippingInfoFooter)
             {
                 var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
@@ -118,19 +117,20 @@
                     @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
                 </span>
             }
-            
-            <span class="grey-text text-darken-2 left">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
-            
-	    <span class="grey-text text-darken-2 right">
-            <a href="http://www.grandNode.com/">GrandNode. </a>
-            @if (!Model.HidePoweredByGrandNode)
-            {               
-                    <text>&nbsp;Powered by</text>
-                    <a href="http://www.nopcommerce.com/"> nopCommerce </a>  
-            }
-	    </span>
-
+        <div class="footer-info">
+            <span class="footer-disclaimer grey-text text-darken-2">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
         </div>
+        <div class="footer-powered-by">
+            <span class="grey-text text-darken-2">
+                <a href="http://www.grandNode.com/">GrandNode. </a>
+                @if (!Model.HidePoweredByGrandNode)
+                {
+                    <text>&nbsp;Powered by</text>
+                    <a href="http://www.nopcommerce.com/"> nopCommerce </a>
+                }
+            </span>
+        </div>
+
         @Html.Action("StoreThemeSelector", "Common")
     </div>
     @Html.Widget("footer")

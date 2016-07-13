@@ -2699,6 +2699,7 @@
     <Content Include="Themes\GrandNodeTheme\Views\ShoppingCart\_EstimateShippingResult.cshtml" />
     <Content Include="Views\Common\Logo.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Common\Logo.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Common\StoreThemeSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

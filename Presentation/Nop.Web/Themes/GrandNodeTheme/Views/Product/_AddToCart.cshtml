@@ -68,7 +68,8 @@
                         }
                     }
                     <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn waves-effect waves-light" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
-                        @addToCartText
+                        <i class="material-icons left">shopping_cart</i>
+                        <span class="hide-on-small-only">@addToCartText</span>
                     </button>
                     }
 </div>

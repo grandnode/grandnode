@@ -4909,6 +4909,16 @@ footer.page-footer .follow-us > .social {
     margin-top: 12px;
 }
 
+.footer-info{
+    text-align:center;
+}
+
+.footer-powered-by{
+    text-align:center;
+}
+.theme-selector {
+    padding: 25px 0px 10px 0px;
+}
 
 }
 
@@ -6019,7 +6029,7 @@ select[name="DateOfBirthYear"] {
 }
 
 .theme-selector {
-    margin-top: 25px;
+    padding: 25px 0px 10px 0px;
 }
 
 /*** COLUMN ***/
@@ -6575,3 +6585,24 @@ select[name="DateOfBirthYear"] {
 
 }
 
+@media all and (max-width: 601px) {
+    .overview-buttons .add-to-cart-panel i.left {
+        margin-right: 0;
+    }
+
+    .overview-buttons {
+        display: inline-flex;
+    }
+
+    .overview .add-to-cart-panel {
+        display: flex;
+    }
+
+    .overview .add-to-cart-panel, .overview .add-to-wishlist, .overview .compare-products {
+        margin-right: 10px;
+    }
+
+    .overview .add-to-cart-panel .qty-input {
+        margin-right: 10px;
+    }
+}
