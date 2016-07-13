@@ -772,7 +772,7 @@ namespace Nop.Services.Messages
         {
             var productService = EngineContext.Current.Resolve<IProductService>();
             var orderService = EngineContext.Current.Resolve<IOrderService>();
-            tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
+            tokens.Add(new Token("ReturnRequest.ID", returnRequest.ReturnNumber.ToString()));
             tokens.Add(new Token("ReturnRequest.OrderId", orderService.GetOrderByOrderItemId(orderItem.Id).OrderNumber.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Name", productService.GetProductByIdIncludeArch(orderItem.ProductId).Name));
