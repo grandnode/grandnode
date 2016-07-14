@@ -2717,6 +2717,7 @@
     <Content Include="Views\Common\Logo.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Common\Logo.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Common\StoreThemeSelector.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Customer\UserAgreement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />
