@@ -245,6 +245,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
+    <Reference Include="WebMarkupMin.AspNet.Common, Version=2.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.AspNet.Common.2.0.0\lib\net40-client\WebMarkupMin.AspNet.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebMarkupMin.AspNet4.Common, Version=2.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.AspNet4.Common.2.0.0\lib\net40\WebMarkupMin.AspNet4.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebMarkupMin.AspNet4.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.AspNet4.Mvc.2.0.0\lib\net40\WebMarkupMin.AspNet4.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebMarkupMin.Core, Version=2.0.2.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.Core.2.0.2\lib\net40-client\WebMarkupMin.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\BasePublicController.cs" />
@@ -277,6 +293,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\AttributeParserHelper.cs" />
+    <Compile Include="Extensions\FilterConfig.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
@@ -2908,11 +2925,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>15536</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:2451/</IISUrl>
+          <IISUrl>http://localhost:15540/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

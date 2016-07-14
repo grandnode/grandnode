@@ -89,6 +89,9 @@ namespace Nop.Web
                 }
             }
 
+            //register WebMarkupMin
+            Extensions.FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+
             //log application start
             if (databaseInstalled)
             {
