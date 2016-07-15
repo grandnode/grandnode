@@ -390,17 +390,7 @@
 
 </script>
 <div class="form-horizontal">
-    <div class="form-body">
-        @if (!String.IsNullOrEmpty(Model.Id))
-        {
-            @*<div class="form-group">
-                @Html.GrandLabelFor(model => model.Id)
-                <div class="col-md-9 col-sm-9">
-                    <span class="form-control"> @Model.Id.ToString() </span>
-                    @Html.ValidationMessageFor(model => model.Id)
-                </div>
-            </div>*@
-        }
+    <div class="form-body">      
         <div class="form-group">
             @Html.GrandLabelFor(model => model.ProductTypeId)
             <div class="col-md-9 col-sm-9">

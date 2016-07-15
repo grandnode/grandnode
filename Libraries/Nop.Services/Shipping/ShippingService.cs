@@ -45,6 +45,11 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
+        private const string PICKUPPOINTS_PATTERN_KEY = "Nop.pickuppoint.";
+
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
 
         #endregion
@@ -54,6 +59,7 @@ namespace Nop.Services.Shipping
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
+        private readonly IRepository<PickupPoint> _pickupPointsRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -80,6 +86,7 @@ namespace Nop.Services.Shipping
         /// <param name="shippingMethodRepository">Shipping method repository</param>
         /// <param name="deliveryDateRepository">Delivery date repository</param>
         /// <param name="warehouseRepository">Warehouse repository</param>
+        /// <param name="pickupPointsRepository">Pickup points repository</param>
         /// <param name="logger">Logger</param>
         /// <param name="productService">Product service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
@@ -96,6 +103,7 @@ namespace Nop.Services.Shipping
         public ShippingService(IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<DeliveryDate> deliveryDateRepository,
             IRepository<Warehouse> warehouseRepository,
+            IRepository<PickupPoint> pickupPointsRepository,
             ILogger logger,
             IProductService productService,
             IProductAttributeParser productAttributeParser,
@@ -114,6 +122,7 @@ namespace Nop.Services.Shipping
             this._shippingMethodRepository = shippingMethodRepository;
             this._deliveryDateRepository = deliveryDateRepository;
             this._warehouseRepository = warehouseRepository;
+            this._pickupPointsRepository = pickupPointsRepository;
             this._logger = logger;
             this._productService = productService;
             this._productAttributeParser = productAttributeParser;
@@ -434,6 +443,89 @@ namespace Nop.Services.Shipping
             //event notification
             _eventPublisher.EntityUpdated(warehouse);
         }
+
+        #endregion
+
+
+        #region Pickup points
+
+
+        /// <summary>
+        /// Gets a pickup point
+        /// </summary>
+        /// <param name="pickupPointId">The pickup point identifier</param>
+        /// <returns>Delivery date</returns>
+        public virtual PickupPoint GetPickupPointById(string pickupPointId)
+        {
+            return _pickupPointsRepository.GetById(pickupPointId);
+        }
+
+        /// <summary>
+        /// Gets all pickup points
+        /// </summary>
+        /// <returns>Warehouses</returns>
+        public virtual IList<PickupPoint> GetAllPickupPoints()
+        {
+            var query = from pp in _pickupPointsRepository.Table
+                        orderby pp.DisplayOrder
+                        select pp;
+            var pickuppoints = query.ToList();
+            return pickuppoints;
+        }
+
+
+        /// <summary>
+        /// Inserts a warehouse
+        /// </summary>
+        /// <param name="warehouse">Warehouse</param>
+        public virtual void InsertPickupPoint(PickupPoint pickupPoint)
+        {
+            if (pickupPoint == null)
+                throw new ArgumentNullException("pickupPoint");
+
+            _pickupPointsRepository.Insert(pickupPoint);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(pickupPoint);
+        }
+
+        /// <summary>
+        /// Updates the warehouse
+        /// </summary>
+        /// <param name="warehouse">Warehouse</param>
+        public virtual void UpdatePickupPoint(PickupPoint pickupPoint)
+        {
+            if (pickupPoint == null)
+                throw new ArgumentNullException("pickupPoint");
+
+            _pickupPointsRepository.Update(pickupPoint);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(WAREHOUSES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(pickupPoint);
+        }
+
+        /// <summary>
+        /// Deletes a delivery date
+        /// </summary>
+        /// <param name="deliveryDate">The delivery date</param>
+        public virtual void DeletePickupPoint(PickupPoint pickupPoint)
+        {
+            if (pickupPoint == null)
+                throw new ArgumentNullException("pickupPoint");
+
+            _pickupPointsRepository.Delete(pickupPoint);
+            _cacheManager.RemoveByPattern(PICKUPPOINTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(pickupPoint);
+        }
+
 
         #endregion
 

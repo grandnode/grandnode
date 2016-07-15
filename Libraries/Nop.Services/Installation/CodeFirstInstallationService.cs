@@ -118,6 +118,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Setting> _settingRepository;
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
+        private readonly IRepository<PickupPoint> _pickupPointsRepository;
         private readonly IRepository<PermissionRecord> _permissionRepository;
         private readonly IRepository<ExternalAuthenticationRecord> _externalAuthenticationRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
@@ -206,6 +207,7 @@ namespace Nop.Services.Installation
             IRepository<Setting> settingRepository,
             IRepository<Shipment> shipmentRepository,
             IRepository<Warehouse> warehouseRepository,
+            IRepository<PickupPoint> pickupPointsRepository,
             IRepository<PermissionRecord> permissionRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<ExternalAuthenticationRecord> externalAuthenticationRepository,
@@ -290,6 +292,7 @@ namespace Nop.Services.Installation
             this._settingRepository = settingRepository;
             this._shipmentRepository = shipmentRepository;
             this._warehouseRepository = warehouseRepository;
+            this._pickupPointsRepository = pickupPointsRepository;
             this._webHelper = webHelper;
             this._permissionRepository = permissionRepository;
             this._vendorRepository = vendorRepository;
@@ -10565,6 +10568,27 @@ namespace Nop.Services.Installation
             _warehouseRepository.Insert(warehouses);
         }
 
+        protected virtual void InstallPickupPoints()
+        {
+            var addresspoint = new Address
+            {
+                Address1 = "21 West 52nd Street",
+                City = "New York",
+                StateProvinceId = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York").Id,
+                CountryId = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA").Id,
+                ZipPostalCode = "10021",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            _addressRepository.Insert(addresspoint);
+           
+            var point = new PickupPoint()
+            {
+                AddressId = addresspoint.Id,
+                Name = "My Store - New York",
+            };
+            _pickupPointsRepository.Insert(point);
+        }
+
         protected virtual void InstallVendors()
         {
             var vendors = new List<Vendor>
@@ -10846,6 +10870,9 @@ namespace Nop.Services.Installation
             //warehouse
             _warehouseRepository.Collection.Indexes.CreateOneAsync(Builders<Warehouse>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
+            //pickup points
+            _pickupPointsRepository.Collection.Indexes.CreateOneAsync(Builders<PickupPoint>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
             //order
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
@@ -10945,6 +10972,7 @@ namespace Nop.Services.Installation
                 InstallNews();
                 InstallPolls();
                 InstallWarehouses();
+                InstallPickupPoints();
                 InstallVendors();
                 InstallAffiliates();
             }

@@ -20,6 +20,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Stores;
 
 namespace Nop.Admin.Controllers
 {
@@ -38,10 +39,11 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IWebHelper _webHelper;
+        private readonly IStoreService _storeService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public ShippingController(IShippingService shippingService, 
             ShippingSettings shippingSettings,
@@ -53,7 +55,8 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService,
             ILanguageService languageService,
             IPluginFinder pluginFinder,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            IStoreService storeService)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
@@ -66,7 +69,9 @@ namespace Nop.Admin.Controllers
             this._languageService = languageService;
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
-		}
+            this._storeService = storeService;
+
+        }
 
 		#endregion 
         
@@ -707,7 +712,276 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
+        #region PickupPoints
+
+        public ActionResult PickupPoints()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult PickupPoints(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var pickupPointsModel = _shippingService.GetAllPickupPoints()
+                .Select(x =>
+                {
+                    var pickupPointModel = new PickupPointModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        DisplayOrder = x.DisplayOrder
+                    };
+                    return pickupPointModel;
+                })
+                .ToList();
+
+            var gridModel = new DataSourceResult
+            {
+                Data = pickupPointsModel,
+                Total = pickupPointsModel.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        public ActionResult CreatePickupPoint()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var model = new PickupPointModel();
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
+            model.Address.CountryEnabled = true;
+            model.Address.StateProvinceEnabled = true;
+            model.Address.CityEnabled = true;
+            model.Address.StreetAddressEnabled = true;
+            model.Address.ZipPostalCodeEnabled = true;
+            model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneEnabled = true;
+
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectStore"), Value = "" });
+            foreach (var c in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectWarehouse"), Value = "" });
+            foreach (var c in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+
+            return View(model);
+        }
+
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public ActionResult CreatePickupPoint(PickupPointModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
+            {
+                var address = model.Address.ToEntity();
+                address.CreatedOnUtc = DateTime.UtcNow;
+                _addressService.InsertAddressSettings(address);
+                var pickuppoint = new PickupPoint
+                {
+                    Name = model.Name,
+                    AdminComment = model.AdminComment,
+                    AddressId = address.Id,
+                    Description = model.Description,
+                    DisplayOrder = model.DisplayOrder,
+                    PickupFee = model.PickupFee,
+                    StoreId = model.StoreId,
+                    WarehouseId = model.WarehouseId
+                };
+
+                _shippingService.InsertPickupPoint(pickuppoint);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.PickupPoints.Added"));
+                return continueEditing ? RedirectToAction("EditPickupPoint", new { id = pickuppoint.Id }) : RedirectToAction("PickupPoints");
+            }
+
+            //If we got this far, something failed, redisplay form
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
+            //states
+            var states = !String.IsNullOrEmpty(model.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
+            {
+                foreach (var s in states)
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
+
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectStore"), Value = "" });
+            foreach (var c in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectWarehouse"), Value = "" });
+            foreach (var c in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+
+
+            return View(model);
+        }
+
+        public ActionResult EditPickupPoint(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var pickuppoint = _shippingService.GetPickupPointById(id);
+            if (pickuppoint == null)
+                //No pickup pint found with the specified id
+                return RedirectToAction("PickupPoints");
+
+            var address = _addressService.GetAddressByIdSettings(pickuppoint.AddressId);
+            var model = new PickupPointModel
+            {
+                Id = pickuppoint.Id,
+                Name = pickuppoint.Name,
+                AdminComment = pickuppoint.AdminComment,
+                Description = pickuppoint.Description,
+                DisplayOrder = pickuppoint.DisplayOrder,
+                PickupFee = pickuppoint.PickupFee,
+                StoreId = pickuppoint.StoreId,
+                WarehouseId = pickuppoint.WarehouseId
+            };
+
+            if (address != null)
+            {
+                model.Address = address.ToModel();
+            }
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (address != null && c.Id == address.CountryId) });
+            //states
+            var states = address != null && !String.IsNullOrEmpty(address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
+            {
+                foreach (var s in states)
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
+            model.Address.CountryEnabled = true;
+            model.Address.StateProvinceEnabled = true;
+            model.Address.CityEnabled = true;
+            model.Address.StreetAddressEnabled = true;
+            model.Address.ZipPostalCodeEnabled = true;
+            model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneEnabled = true;
+
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectStore"), Value = "" });
+            foreach (var c in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectWarehouse"), Value = "" });
+            foreach (var c in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+
+            return View(model);
+        }
+
+        [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        public ActionResult EditPickupPoint(PickupPointModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var pickupPoint = _shippingService.GetPickupPointById(model.Id);
+            if (pickupPoint == null)
+                //No pickup point found with the specified id
+                return RedirectToAction("PickupPoints");
+
+            if (ModelState.IsValid)
+            {
+                var address = _addressService.GetAddressByIdSettings(pickupPoint.AddressId) ??
+                    new Core.Domain.Common.Address
+                    {
+                        CreatedOnUtc = DateTime.UtcNow,
+                    };
+                address = model.Address.ToEntity(address);
+                if (!String.IsNullOrEmpty(address.Id))
+                    _addressService.UpdateAddressSettings(address);
+                else
+                    _addressService.InsertAddressSettings(address);
+
+
+                pickupPoint.Name = model.Name;
+                pickupPoint.AdminComment = model.AdminComment;
+                pickupPoint.AddressId = address.Id;
+                pickupPoint.Description = model.Description;
+                pickupPoint.DisplayOrder = model.DisplayOrder;
+                pickupPoint.PickupFee = model.PickupFee;
+                pickupPoint.StoreId = model.StoreId;
+                pickupPoint.WarehouseId = model.WarehouseId;
+
+                _shippingService.UpdatePickupPoint(pickupPoint);
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.PickupPoints.Updated"));
+                return continueEditing ? RedirectToAction("EditPickupPoint", new { id = pickupPoint.Id }) : RedirectToAction("PickupPoints");
+            }
+
+
+            //If we got this far, something failed, redisplay form
+            //countries
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
+            //states
+            var states = !String.IsNullOrEmpty(model.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            if (states.Count > 0)
+            {
+                foreach (var s in states)
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
+            }
+            else
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
+
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectStore"), Value = "" });
+            foreach (var c in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Shipping.PickupPoint.SelectWarehouse"), Value = "" });
+            foreach (var c in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult DeletePickupPoint(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var pickupPoint = _shippingService.GetPickupPointById(id);
+            if (pickupPoint == null)
+                //No pickup point found with the specified id
+                return RedirectToAction("PickupPoints");
+
+            _shippingService.DeletePickupPoint(pickupPoint);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.PickupPoints.Deleted"));
+            return RedirectToAction("PickupPoints");
+        }
+
+
+        #endregion
+
         #region Restrictions
 
         public ActionResult Restrictions()

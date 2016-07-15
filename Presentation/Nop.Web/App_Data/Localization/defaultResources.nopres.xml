@@ -6932,6 +6932,86 @@
   <LocaleResource Name="Admin.Configuration.Shipping.DeliveryDates.Updated">
     <Value>The delivery date has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoints">
+    <Value>Pickup points</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoint.selectwarehouse">
+    <Value>Select warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoint.selectstore">
+    <Value>Select store</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoints.addnew">
+    <Value>Add a new pickup point</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoints.added">
+    <Value>The new pickup point has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoints.updated">
+    <Value>The pickup point has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoints.deleted">
+    <Value>The pickup point has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoints.backtolist">
+    <Value>Back to pickup points</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoints.editdetails">
+    <Value>Edit a pickup point</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.configuration.shipping.pickuppoints.fields.name.required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Name.hint">
+    <Value>Specify a name of the pickup point.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Description.hint">
+    <Value>Specify a description of the pickup point.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.AdminComment.hint">
+    <Value>Specify a admin Comment of the pickup point.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Address">
+    <Value>Addresses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Address.hint">
+    <Value>Specify a address of the pickup point.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.DisplayOrder.hint">
+    <Value>Display order of the pickup point.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Warehouses">
+    <Value>Select warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Warehouses.hint">
+    <Value>Assign the warehouse for the pickup point.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Stores">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.Stores.hint">
+    <Value>A store name for which this pickup point will be available.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.PickupFee">
+    <Value>Pickup fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.PickupPoint.Fields.PickupFee.hint">
+    <Value>Specify a fee for the shipping to the pickup point.</Value>
+  </LocaleResource>
+
+
   <LocaleResource Name="Admin.Configuration.Shipping.Methods">
     <Value>Shipping methods</Value>
   </LocaleResource>

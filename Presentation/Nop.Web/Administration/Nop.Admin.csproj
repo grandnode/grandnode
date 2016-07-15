@@ -331,6 +331,7 @@
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
     <Compile Include="Models\Settings\SortOptionModel.cs" />
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
+    <Compile Include="Models\Shipping\PickupPointModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
     <Compile Include="Models\Templates\TopicTemplateModel.cs" />
@@ -452,6 +453,7 @@
     <Compile Include="Validators\Messages\TestMessageTemplateValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestActionValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestReasonValidator.cs" />
+    <Compile Include="Validators\Shipping\PickupPointValidator.cs" />
     <Compile Include="Validators\Templates\TopicTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ProductTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ManufacturerTemplateValidator.cs" />
@@ -1888,6 +1890,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ScheduleTask\EditScheduler.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\PickupPoints.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\CreatePickupPoint.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\EditPickupPoint.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shipping\_CreateOrUpdatePickupPoint.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
