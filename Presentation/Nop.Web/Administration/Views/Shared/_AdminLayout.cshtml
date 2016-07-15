@@ -12,7 +12,7 @@
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
         !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
 
-    Html.AppendCssFileParts("~/Administration/Content/styles.css");
+    Html.AppendCssFileParts("~/Administration/Content/styles.css", true);
 
 
     //CSS 
