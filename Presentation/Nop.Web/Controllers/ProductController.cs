@@ -735,10 +735,10 @@ namespace Nop.Web.Controllers
                                     //select new values
                                     var selectedValues = _productAttributeParser.ParseProductAttributeValues(product, updatecartitem.AttributesXml);
                                     foreach (var attributeValue in selectedValues)
-                                        if (attributeModel.Id == attributeValue.ProductAttributeMappingId)
-                                            foreach (var item in attributeModel.Values)
-                                                if (attributeValue.Id == item.Id)
-                                                    item.IsPreSelected = true;
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+
                                 }
                             }
                             break;
