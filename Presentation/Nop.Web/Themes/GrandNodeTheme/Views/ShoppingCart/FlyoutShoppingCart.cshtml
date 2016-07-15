@@ -31,12 +31,12 @@
                             <div class="name">
                                 <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
                             </div>
-                            @*@if (!String.IsNullOrEmpty(item.AttributeInfo))
+                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
                             {
                                 <div class="attributes">
                                     @Html.Raw(item.AttributeInfo)
                                 </div>
-                            }*@
+                            }
                             <div class="price">@T("ShoppingCart.Mini.UnitPrice"): <span>@item.UnitPrice</span></div>
                             <div class="quantity">@T("ShoppingCart.Mini.Quantity"): <span>@item.Quantity</span></div>
                         </div>

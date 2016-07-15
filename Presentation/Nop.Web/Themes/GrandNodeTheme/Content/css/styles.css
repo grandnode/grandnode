@@ -5853,7 +5853,6 @@ select[name="DateOfBirthYear"] {
 .mini-shopping-cart .attributes {
 	margin: 5px 0;
 	color: #444;
-    display: none;
 }
 .mini-shopping-cart .totals {
 	margin: 0 0 12px;
