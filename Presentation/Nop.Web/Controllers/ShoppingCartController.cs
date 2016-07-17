@@ -40,6 +40,7 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
 {
@@ -609,10 +610,10 @@ namespace Nop.Web.Controllers
                 {
                     model.OrderReviewData.IsShippable = true;
 
-                    if (_shippingSettings.AllowPickUpInStore)
-                    {
-                        model.OrderReviewData.SelectedPickUpInStore = _workContext.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, _storeContext.CurrentStore.Id);
-                    }
+                    var pickupPoint = _workContext.CurrentCustomer
+                       .GetAttribute<string>(SystemCustomerAttributeNames.SelectedPickupPoint, _storeContext.CurrentStore.Id);
+
+                    model.OrderReviewData.SelectedPickUpInStore = _shippingSettings.AllowPickUpInStore && !String.IsNullOrEmpty(pickupPoint);
 
                     if (!model.OrderReviewData.SelectedPickUpInStore)
                     {
@@ -626,8 +627,21 @@ namespace Nop.Web.Controllers
                                 addressAttributeFormatter: _addressAttributeFormatter);
                         }
                     }
-                    
-                    
+                    else
+                    {
+                        var pickup = _shippingService.GetPickupPointById(pickupPoint);
+                        if (pickup != null)
+                        {
+                            var country = _countryService.GetCountryById(pickup.Address.CountryId);
+                            model.OrderReviewData.PickupAddress = new AddressModel
+                            {
+                                Address1 = pickup.Address.Address1,
+                                City = pickup.Address.City,
+                                CountryName = country != null ? country.Name : string.Empty,
+                                ZipPostalCode = pickup.Address.ZipPostalCode
+                            };
+                        }
+                    }
                     //selected shipping method
                     var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                     if (shippingOption != null)
@@ -2384,7 +2398,7 @@ namespace Nop.Web.Controllers
                                 Name = _localizationService.GetResource("Checkout.PickUpInStore"),
                                 Description = _localizationService.GetResource("Checkout.PickUpInStore.Description"),
                             };
-                            decimal shippingTotal = _shippingSettings.PickUpInStoreFee;
+                            decimal shippingTotal = _shippingService.GetAllPickupPoints().Max(x => x.PickupFee); 
                             decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                             decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                             soModel.Price = _priceFormatter.FormatShippingPrice(rate, true);

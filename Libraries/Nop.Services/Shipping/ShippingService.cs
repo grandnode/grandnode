@@ -473,6 +473,20 @@ namespace Nop.Services.Shipping
             return pickuppoints;
         }
 
+        /// <summary>
+        /// Gets all pickup points
+        /// </summary>
+        /// <returns>Warehouses</returns>
+        public virtual IList<PickupPoint> LoadActivePickupPoints(string storeId = "")
+        {
+            var query = from pp in _pickupPointsRepository.Table
+                        where pp.StoreId == storeId || String.IsNullOrEmpty(pp.StoreId)
+                        orderby pp.DisplayOrder
+                        select pp;
+            var pickuppoints = query.ToList();
+            return pickuppoints;
+        }
+
 
         /// <summary>
         /// Inserts a warehouse

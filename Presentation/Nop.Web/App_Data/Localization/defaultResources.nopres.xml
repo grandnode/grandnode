@@ -10367,6 +10367,12 @@
   <LocaleResource Name="Admin.Orders.Fields.Profit">
     <Value>Profit</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PickupAddress">
+    <Value>Pickup point address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PickupAddress.hint">
+    <Value>Pickup point address info.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Profit.Hint">
     <Value>Profit of this order.</Value>
   </LocaleResource>
@@ -13046,11 +13052,23 @@
   <LocaleResource Name="Checkout.PaymentMethod">
     <Value>Payment method</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints">
+    <Value>Pickup</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.PickUpInStore">
     <Value>In-Store Pickup</Value>
   </LocaleResource>
-  <LocaleResource Name="Checkout.PickUpInStoreAndFee">
-    <Value>In-Store Pickup ({0})</Value>
+  <LocaleResource Name="Checkout.PickupPoints.Description">
+    <Value>Pick up your items at the store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.Name">
+    <Value>Pickup at {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.SelectPickupPoint">
+    <Value>Select pickup point</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickupPoints.NotAvailable">
+    <Value>Pickup points could not be loaded</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.PickUpInStore.Description">
     <Value>Pick up your items at the store (put your store address here)</Value>
@@ -14270,6 +14288,9 @@
   <LocaleResource Name="Messages.Order.OrderTotal">
     <Value>Order Total:</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.PickupAddress">
+    <Value>Pickup point address</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.Order.PaymentMethodAdditionalFee">
     <Value>Payment method additional fee:</Value>
   </LocaleResource>
@@ -14524,6 +14545,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.Shipments.Phone">
     <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.PickupAddress">
+    <Value>Pickup point address</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Shipments.Product(s)">
     <Value>Shipped product(s)</Value>
@@ -14839,6 +14863,9 @@
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.PaymentMethodAdditionalFee">
     <Value>Payment Method Additional Fee:</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.Pickup">
+    <Value>Pickup point:</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.Phone">
     <Value>Phone: {0}</Value>

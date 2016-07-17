@@ -204,9 +204,11 @@ var Shipping = {
     togglePickUpInStore: function (pickupInStoreInput) {
         if (pickupInStoreInput.checked) {
             $('#shipping-addresses-form').hide();
+            $('#pickup-points-form').show();
         }
         else {
             $('#shipping-addresses-form').show();
+            $('#pickup-points-form').hide();
         }
     },
 

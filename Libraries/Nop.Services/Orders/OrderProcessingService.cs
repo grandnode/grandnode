@@ -233,7 +233,7 @@ namespace Nop.Services.Orders
             public string ShippingMethodName { get; set; }
             public string ShippingRateComputationMethodSystemName { get; set; }
             public bool PickUpInStore { get; set; }
-
+            public PickupPoint PickupPoint { get; set; }
             public bool IsRecurringShoppingCart { get; set; }
             //initial order (used with recurring payments)
             public Order InitialOrder { get; set; }
@@ -495,10 +495,13 @@ namespace Nop.Services.Orders
             {
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
-                    details.PickUpInStore = _shippingSettings.AllowPickUpInStore &&
-                        details.Customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, processPaymentRequest.StoreId);
-
-                    if (!details.PickUpInStore)
+                    var pickupPoint = details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.SelectedPickupPoint, processPaymentRequest.StoreId);
+                    if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
+                    {
+                        details.PickUpInStore = true;
+                        details.PickupPoint = _shippingService.GetPickupPointById(pickupPoint);
+                    }
+                    else
                     {
                         if (details.Customer.ShippingAddress == null)
                             throw new NopException("Shipping address is not provided");
@@ -525,8 +528,13 @@ namespace Nop.Services.Orders
                 }
                 else
                 {
-                    details.PickUpInStore = details.InitialOrder.PickUpInStore;
-                    if (!details.PickUpInStore)
+                    var pickupPoint = details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.SelectedPickupPoint, processPaymentRequest.StoreId);
+                    if (_shippingSettings.AllowPickUpInStore && pickupPoint != null)
+                    {
+                        details.PickUpInStore = true;
+                        details.PickupPoint = _shippingService.GetPickupPointById(pickupPoint);
+                    }
+                    else
                     {
                         if (details.InitialOrder.ShippingAddress == null)
                             throw new NopException("Shipping address is not available");
@@ -676,9 +684,9 @@ namespace Nop.Services.Orders
 
             //add reward points
             _rewardPointsService.AddRewardPointsHistory(customer.Id, points, order.StoreId, string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.OrderNumber));
-            order.RewardPointsWereAdded = true;
-            //_customerService.UpdateCustomer(customer);
-            _orderService.UpdateOrder(order);
+            //order.RewardPointsWereAdded = true;
+            //order.RedeemedRewardPointsEntry = rph;
+            //_orderService.UpdateOrder(order);
         }
 
         /// <summary>
@@ -959,7 +967,6 @@ namespace Nop.Services.Orders
                         }
                     }
                 }
-                //_customerService.UpdateCustomer(customer);
             }
         }
 
@@ -1207,6 +1214,7 @@ namespace Nop.Services.Orders
                         ShippingStatus = details.ShippingStatus,
                         ShippingMethod = details.ShippingMethodName,
                         PickUpInStore = details.PickUpInStore,
+                        PickupPoint = details.PickupPoint,
                         ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
                         CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
                         VatNumber = details.VatNumber,
@@ -1433,10 +1441,13 @@ namespace Nop.Services.Orders
                     if (details.RedeemedRewardPointsAmount > decimal.Zero)
                     {
 
-                        _rewardPointsService.AddRewardPointsHistory(details.Customer.Id,
+                        var rph = _rewardPointsService.AddRewardPointsHistory(details.Customer.Id,
                             -details.RedeemedRewardPoints, order.StoreId,
                             string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.OrderNumber),
                             order.Id, details.RedeemedRewardPointsAmount);
+                        order.RewardPointsWereAdded = true;
+                        order.RedeemedRewardPointsEntry = rph;
+                        _orderService.UpdateOrder(order);
                     }
 
                     //recurring orders
@@ -1525,7 +1536,7 @@ namespace Nop.Services.Orders
                         {
                             _orderService.InsertOrderNote(new OrderNote
                             {
-                                Note = string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId),
+                                Note = "\"Order placed\" email (to store owner) has been queued",
                                 DisplayToCustomer = false,
                                 CreatedOnUtc = DateTime.UtcNow,
                                 OrderId = order.Id,
@@ -1543,7 +1554,7 @@ namespace Nop.Services.Orders
                         {
                             _orderService.InsertOrderNote(new OrderNote
                             {
-                                Note = string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId),
+                                Note = "\"Order placed\" email (to customer) has been queued",
                                 DisplayToCustomer = false,
                                 CreatedOnUtc = DateTime.UtcNow,
                                 OrderId = order.Id,
@@ -1559,7 +1570,7 @@ namespace Nop.Services.Orders
                             {
                                 _orderService.InsertOrderNote(new OrderNote
                                 {
-                                    Note = string.Format("\"Order placed\" email (to vendor) has been queued. Queued email identifier: {0}.", orderPlacedVendorNotificationQueuedEmailId),
+                                    Note = "\"Order placed\" email (to vendor) has been queued",
                                     DisplayToCustomer = false,
                                     CreatedOnUtc = DateTime.UtcNow,
                                     OrderId = order.Id,
@@ -2775,10 +2786,6 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            //uncomment the lines below in order to allow this operation for cancelled orders
-            //if (order.OrderStatus == OrderStatus.Cancelled)
-            //    return false;
-
             if (order.PaymentStatus == PaymentStatus.Authorized &&
                 _paymentService.SupportVoid(order.PaymentMethodSystemName))
                 return true;
@@ -2870,10 +2877,6 @@ namespace Nop.Services.Orders
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
-
-            //uncomment the lines below in order to allow this operation for cancelled orders
-            //if (order.OrderStatus == OrderStatus.Cancelled)
-            //    return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized)
                 return true;

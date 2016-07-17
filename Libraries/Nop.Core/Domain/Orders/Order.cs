@@ -349,7 +349,12 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the shipping address
         /// </summary>
         public virtual Address ShippingAddress { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the pickup point
+        /// </summary>
+        public virtual PickupPoint PickupPoint { get; set; }
+
         /// <summary>
         /// Gets or sets the reward points history record
         /// </summary>

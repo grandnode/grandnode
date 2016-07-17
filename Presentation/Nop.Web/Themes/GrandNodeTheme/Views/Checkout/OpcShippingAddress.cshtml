@@ -1,32 +1,97 @@
 ﻿@model CheckoutShippingAddressModel
+@using System.Text;
 @using Nop.Web.Models.Checkout;
 
 <div class="checkout-data">
-    @if (Model.AllowPickUpInStore)
-        {
+    @if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
+    {
             <div class="section pickup-in-store">
+
                 <p class="selector">
-                    @{
-                        var pickupInStoreName = T("Checkout.PickUpInStore").Text;
-                        if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
-                        {
-                            pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
-                        }
-                    }
-                    @if (Model.PickUpInStoreOnly)
+                    <input type="checkbox" name="@Html.FieldIdFor(model => model.PickUpInStore)" id="@Html.FieldIdFor(model => model.PickUpInStore)" onclick="Shipping.togglePickUpInStore(this)" value="true">
+                    <label for="@Html.FieldIdFor(model => model.PickUpInStore)">
+                        @T("Checkout.PickupPoints").Text
+                    </label>
+                    <input name="@Html.FieldIdFor(model => model.PickUpInStore)" type="hidden" value="false">
+                </p>
+                <p class="description">
+                    <i>@T("Checkout.PickupPoints.Description")</i>
+                </p>
+                <script type="text/javascript">
+                $(document).ready(function () {
+                    Shipping.togglePickUpInStore($('#@Html.FieldIdFor(model => model.PickUpInStore)'));
+                });
+                </script>
+            </div>
+        }
+
+    @if (Model.AllowPickUpInStore)
+    {
+        <div class="pickup-points" id="pickup-points-form">
+            @if (Model.PickupPoints.Any())
+            {
+                if (Model.PickUpInStoreOnly)
+                {
+                    @Html.HiddenFor(x => x.PickUpInStore)
+                }
+                <div class="section select-pickup-points">
+                    @if (Model.PickupPoints.Count == 1)
                     {
-                        <input type="checkbox" name="@Html.FieldIdFor(model => model.PickUpInStore)" id="@Html.FieldIdFor(model => model.PickUpInStore)" onclick="return false" value="true" checked>
+                        var point = Model.PickupPoints.First();
+                        @Html.Hidden("pickup-point-id", point.Id)
+                        <div class="section single-pickup-point">
+                            <ul>
+                                <li class="single-pickup-point name">@point.Name</li>
+                                <li class="single-pickup-point address">@(string.Format("{0} {1} {2}", point.Address.City, point.Address.ZipPostalCode, point.Address.Address1))</li>
+                                @if (!string.IsNullOrEmpty(point.PickupFee))
+                                {
+                                    <li class="single-pickup-point fee">@point.PickupFee</li>
+                                }
+                            </ul>
+                        </div>
                     }
                     else
                     {
-                        <input type="checkbox" name="@Html.FieldIdFor(model => model.PickUpInStore)" id="@Html.FieldIdFor(model => model.PickUpInStore)" onclick="Shipping.togglePickUpInStore(this)" value="true">
+                        <label for="pickup-points-select">@T("Checkout.PickupPoints.SelectPickupPoint")</label>
+                        <select name="pickup-point-id" id="pickup-points-select" class="address-select" title="">
+                            @foreach (var point in Model.PickupPoints)
+                            {
+                                var addressLine = new StringBuilder();
+                                addressLine.Append(point.Name);
+                                if (!string.IsNullOrEmpty(point.Address.City))
+                                {
+                                    addressLine.AppendFormat(", {0}", point.Address.City);
+                                }
+                                if (!string.IsNullOrEmpty(point.Address.ZipPostalCode))
+                                {
+                                    addressLine.AppendFormat(", {0}", point.Address.ZipPostalCode);
+                                }
+                                if (!string.IsNullOrEmpty(point.Address.Address1))
+                                {
+                                    addressLine.AppendFormat(", {0}", point.Address.Address1);
+                                }
+                                if (!string.IsNullOrEmpty(point.PickupFee))
+                                {
+                                    addressLine.AppendFormat(", {0}", point.PickupFee);
+                                }
+                                <option value="@point.Id">@(addressLine)</option>
+                            }
+                        </select>
                     }
-                    <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
-					<input name="@Html.FieldIdFor(model => model.PickUpInStore)" type="hidden" value="false">
-                </p>
-                <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
+                </div>
+            }
+            <div class="section message-error">
+                <ul>
+                    @foreach (var warning in Model.Warnings)
+                {
+                        <li>@warning</li>
+                    }
+                </ul>
             </div>
-        }
+        </div>
+    }
+
+
     @if (!Model.PickUpInStoreOnly)
     {
     <div class="shipping-addresses input-field col s12 section" id="shipping-addresses-form">

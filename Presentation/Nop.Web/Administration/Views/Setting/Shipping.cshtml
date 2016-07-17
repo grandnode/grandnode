@@ -8,20 +8,9 @@
     @Html.AntiForgeryToken()
     <script type="text/javascript">
     $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
         $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
-
-            toggleAllowPickUpInStore();
             toggleFreeShippingOverX();
         });
-
-        function toggleAllowPickUpInStore() {
-            if ($('#@Html.FieldIdFor(model => model.AllowPickUpInStore)').is(':checked')) {
-                $('#pnlPickUpInStoreFee').show();
-            } else {
-                $('#pnlPickUpInStoreFee').hide();
-            }
-        }
 
         function toggleFreeShippingOverX() {
             if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
@@ -80,16 +69,6 @@
                                 <div class="col-md-9 col-sm-9">
                                     @Html.GrandEditorFor(model => model.AllowPickUpInStore)
                                     @Html.ValidationMessageFor(model => model.AllowPickUpInStore)
-                                </div>
-                            </div>
-                            <div class="form-group" id="pnlPickUpInStoreFee">
-                                <div class="col-md-3 col-sm-3 text-right">
-                                    @Html.OverrideStoreCheckboxFor(model => model.PickUpInStoreFee_OverrideForStore, model => model.PickUpInStoreFee, Model.ActiveStoreScopeConfiguration)
-                                    @Html.GrandLabelFor(model => model.PickUpInStoreFee, new Dictionary<string, object> { { "class", "control-label" } }, false)
-                                </div>
-                                <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.PickUpInStoreFee)
-                                    @Html.ValidationMessageFor(model => model.PickUpInStoreFee)
                                 </div>
                             </div>
                             <div class="form-group">

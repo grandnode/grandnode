@@ -42,6 +42,13 @@
             </div>
         </div>
         <div class="form-group">
+            @Html.GrandLabelFor(model => model.PickupFee)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.PickupFee)
+                @Html.ValidationMessageFor(model => model.PickupFee)
+            </div>
+        </div>
+        <div class="form-group">
             @Html.GrandLabelFor(model => model.DisplayOrder)
             <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.DisplayOrder)

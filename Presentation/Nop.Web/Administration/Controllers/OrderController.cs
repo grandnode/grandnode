@@ -544,6 +544,19 @@ namespace Nop.Admin.Controllers
                         model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (!String.IsNullOrEmpty(order.ShippingAddress.CountryId) ? _countryService.GetCountryById(order.ShippingAddress.CountryId).Name : "")));
                     }
                 }
+                else
+                {
+                    if(order.PickupPoint!=null)
+                    {
+                        if(order.PickupPoint.Address!=null)
+                        {
+                            model.PickupAddress = order.PickupPoint.Address.ToModel();
+                            var country = _countryService.GetCountryById(order.PickupPoint.Address.CountryId);
+                            if (country != null)
+                                model.PickupAddress.CountryName = country.Name;
+                        }
+                    }
+                }
                 model.ShippingMethod = order.ShippingMethod;
 
                 model.CanAddNewShipments = false;

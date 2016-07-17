@@ -1,3 +1,5 @@
+using Nop.Core.Domain.Common;
+
 namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
@@ -23,7 +25,7 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets the address identifier
         /// </summary>
-        public string AddressId { get; set; }
+        public Address Address { get; set; }
 
         /// <summary>
         /// Gets or sets the warehouse identifier

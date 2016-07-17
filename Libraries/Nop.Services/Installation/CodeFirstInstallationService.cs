@@ -5179,7 +5179,6 @@ namespace Nop.Services.Installation
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
                 ShipToSameAddress = false, 
                 AllowPickUpInStore = true,
-                PickUpInStoreFee = decimal.Zero,
                 UseWarehouseLocation = false,
                 NotifyCustomerAboutShippingFromMultipleLocations = false,
                 FreeShippingOverXEnabled = false,
@@ -10583,7 +10582,7 @@ namespace Nop.Services.Installation
            
             var point = new PickupPoint()
             {
-                AddressId = addresspoint.Id,
+                Address = addresspoint,
                 Name = "My Store - New York",
             };
             _pickupPointsRepository.Insert(point);

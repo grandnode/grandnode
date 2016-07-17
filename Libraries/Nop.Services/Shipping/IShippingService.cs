@@ -149,6 +149,12 @@ namespace Nop.Services.Shipping
         IList<PickupPoint> GetAllPickupPoints();
 
         /// <summary>
+        /// Gets active pickup points
+        /// </summary>
+        /// <returns>PickupPoints</returns>
+        IList<PickupPoint> LoadActivePickupPoints(string storeId = "");
+
+        /// <summary>
         /// Inserts a pickupPoint
         /// </summary>
         /// <param name="PickupPoint">PickupPoint</param>

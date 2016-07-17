@@ -195,12 +195,11 @@
            @if (Model.IsShippable)
            {
                <ul class="shipping-info">
+                   <li class="title">
+                       <strong>@(Model.PickUpInStore ? T("Order.PickupAddress") : T("Order.ShippingAddress"))</strong>
+                   </li>
                    @if (!Model.PickUpInStore)
                    {
-
-                       <li class="title">
-                           @T("Order.ShippingAddress")
-                       </li>
                        <li class="name">
                            @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
                        </li>
@@ -272,6 +271,36 @@
                                @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
                            </li>
                        }
+                   }
+                   else
+                   {
+                                                   if (!string.IsNullOrEmpty(Model.PickupAddress.Address1))
+                            {
+                                <li class="address1">
+                                    @Model.PickupAddress.Address1
+                                </li>
+                            }
+                            if (!string.IsNullOrEmpty(Model.PickupAddress.City) || !string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                            {
+                                <li class="city-state-zip">
+                                    @if (!string.IsNullOrEmpty(Model.PickupAddress.City))
+                                    {
+                                        @Model.PickupAddress.City
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
+                                    {
+                                        <text>,</text>
+                                        @Model.PickupAddress.ZipPostalCode
+                                    }
+                                </li>
+                            }
+                            if (!string.IsNullOrEmpty(Model.PickupAddress.CountryName))
+                            {
+                                <li class="country">
+                                    @Model.PickupAddress.CountryName
+                                </li>
+                            }
+
                    }
                    <li class="title">
                        @T("Order.Shipping")

@@ -398,6 +398,29 @@ namespace Nop.Services.Common
                         }
                         shippingAddress.AddCell(new Paragraph(" "));
                     }
+                    else
+                        if (order.PickupPoint != null)
+                        {
+                            if (order.PickupPoint.Address != null)
+                            {
+                                shippingAddress.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
+                                if (!string.IsNullOrEmpty(order.PickupPoint.Address.Address1))
+                                    shippingAddress.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupPoint.Address.Address1)), font));
+                                if (!string.IsNullOrEmpty(order.PickupPoint.Address.City))
+                                    shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.City), font));
+                                if (!string.IsNullOrEmpty(order.PickupPoint.Address.CountryId))
+                                {
+                                    var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
+                                    if (country != null)
+                                        shippingAddress.AddCell(new Paragraph(string.Format("   {0}", country.Name), font));
+                                }
+                                if (!string.IsNullOrEmpty(order.PickupPoint.Address.ZipPostalCode))
+                                    shippingAddress.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.ZipPostalCode), font));
+
+                                shippingAddress.AddCell(new Paragraph(" "));
+                            }
+                        }
+
                     shippingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.ShippingMethod", lang.Id), order.ShippingMethod), font));
                     shippingAddress.AddCell(new Paragraph());
 
@@ -1049,6 +1072,27 @@ namespace Nop.Services.Common
                         addressTable.AddCell(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
                     }
                 }
+                else
+                    if (order.PickupPoint != null)
+                    {
+                        if (order.PickupPoint.Address != null)
+                        {
+                            addressTable.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.Pickup", lang.Id), titleFont));
+                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.Address1))
+                                addressTable.AddCell(new Paragraph(string.Format("   {0}", string.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.PickupPoint.Address.Address1)), font));
+                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.City))
+                                addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.City), font));
+                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.CountryId))
+                            {
+                                var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.PickupPoint.Address.CountryId);
+                                if (country != null)
+                                    addressTable.AddCell(new Paragraph(string.Format("   {0}", country.Name), font));
+                            }
+                            if (!string.IsNullOrEmpty(order.PickupPoint.Address.ZipPostalCode))
+                                addressTable.AddCell(new Paragraph(string.Format("   {0}", order.PickupPoint.Address.ZipPostalCode), font));
+                            addressTable.AddCell(new Paragraph(" "));
+                        }
+                    }
 
                 addressTable.AddCell(new Paragraph(" "));
 

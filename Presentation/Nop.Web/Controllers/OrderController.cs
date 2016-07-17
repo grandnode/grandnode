@@ -26,6 +26,7 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Models.Order;
 using Nop.Core.Infrastructure;
 using Nop.Services.Customers;
+using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
 {
@@ -205,9 +206,25 @@ namespace Nop.Web.Controllers
                         addressSettings: _addressSettings,
                         addressAttributeFormatter: _addressAttributeFormatter);
                 }
+                else
+                {
+                    if(order.PickupPoint!=null)
+                    {
+                        if(order.PickupPoint.Address!=null)
+                        {
+                            var country = _countryService.GetCountryById(order.PickupPoint.Address.CountryId);
+                            model.PickupAddress = new AddressModel
+                            {
+                                Address1 = order.PickupPoint.Address.Address1,
+                                City = order.PickupPoint.Address.City,
+                                CountryName = country != null ? country.Name : string.Empty,
+                                ZipPostalCode = order.PickupPoint.Address.ZipPostalCode
+                            };
+                        }
+                    }
+                }
                 model.ShippingMethod = order.ShippingMethod;
    
-
                 //shipments (only already shipped)
                 var shipments = _shipmentService.GetShipmentsByOrder(order.Id).Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)

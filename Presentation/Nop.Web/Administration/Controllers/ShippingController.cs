@@ -796,7 +796,7 @@ namespace Nop.Admin.Controllers
                 {
                     Name = model.Name,
                     AdminComment = model.AdminComment,
-                    AddressId = address.Id,
+                    Address = address,
                     Description = model.Description,
                     DisplayOrder = model.DisplayOrder,
                     PickupFee = model.PickupFee,
@@ -847,7 +847,7 @@ namespace Nop.Admin.Controllers
                 //No pickup pint found with the specified id
                 return RedirectToAction("PickupPoints");
 
-            var address = _addressService.GetAddressByIdSettings(pickuppoint.AddressId);
+            //var address = _addressService.GetAddressByIdSettings(pickuppoint.AddressId);
             var model = new PickupPointModel
             {
                 Id = pickuppoint.Id,
@@ -857,23 +857,20 @@ namespace Nop.Admin.Controllers
                 DisplayOrder = pickuppoint.DisplayOrder,
                 PickupFee = pickuppoint.PickupFee,
                 StoreId = pickuppoint.StoreId,
-                WarehouseId = pickuppoint.WarehouseId
+                WarehouseId = pickuppoint.WarehouseId,
+                Address = pickuppoint.Address.ToModel(),
             };
 
-            if (address != null)
-            {
-                model.Address = address.ToModel();
-            }
             //countries
             model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "" });
             foreach (var c in _countryService.GetAllCountries(showHidden: true))
-                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (address != null && c.Id == address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (pickuppoint.Address != null && c.Id == pickuppoint.Address.CountryId) });
             //states
-            var states = address != null && !String.IsNullOrEmpty(address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
+            var states = pickuppoint.Address != null && !String.IsNullOrEmpty(pickuppoint.Address.CountryId) ? _stateProvinceService.GetStateProvincesByCountryId(pickuppoint.Address.CountryId, showHidden: true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == pickuppoint.Address.StateProvinceId) });
             }
             else
                 model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "" });
@@ -909,21 +906,16 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var address = _addressService.GetAddressByIdSettings(pickupPoint.AddressId) ??
+                var address = 
                     new Core.Domain.Common.Address
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
                 address = model.Address.ToEntity(address);
-                if (!String.IsNullOrEmpty(address.Id))
-                    _addressService.UpdateAddressSettings(address);
-                else
-                    _addressService.InsertAddressSettings(address);
-
 
                 pickupPoint.Name = model.Name;
                 pickupPoint.AdminComment = model.AdminComment;
-                pickupPoint.AddressId = address.Id;
+                pickupPoint.Address = address;
                 pickupPoint.Description = model.Description;
                 pickupPoint.DisplayOrder = model.DisplayOrder;
                 pickupPoint.PickupFee = model.PickupFee;

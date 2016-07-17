@@ -565,16 +565,7 @@ namespace Nop.Services.Orders
 
             if (shippingOption != null)
             {
-                //use last shipping option (get from cache)
-
-                var pickUpInStore = _shippingSettings.AllowPickUpInStore &&
-                    customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, _storeContext.CurrentStore.Id);
-                shippingTotal = pickUpInStore ?
-                    //"pick up in store" fee
-                    //we do not adjust shipping rate ("AdjustShippingRate" method) for pickup in store
-                    _shippingSettings.PickUpInStoreFee :
-                    //adjust shipping rate
-                    AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscounts);
+                shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscounts);
             }
             else
             {
@@ -585,11 +576,8 @@ namespace Nop.Services.Orders
 
                 var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id);
                 
-                if (!shippingRateComputationMethods.Any())
-                    if (_shippingSettings.AllowPickUpInStore)
-                        shippingTotal = _shippingSettings.PickUpInStoreFee;
-                    else
-                        throw new NopException("Shipping rate computation method could not be loaded");
+                if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickUpInStore)
+                    throw new NopException("Shipping rate computation method could not be loaded");
 
                 if (shippingRateComputationMethods.Count == 1)
                 {
@@ -774,10 +762,6 @@ namespace Nop.Services.Orders
             return taxTotal;
         }
 
-
-
-
-
         /// <summary>
         /// Gets shopping cart total
         /// </summary>
@@ -863,14 +847,8 @@ namespace Nop.Services.Orders
                         false, customer);
             }
 
-
-
-
             //tax
             decimal shoppingCartTax = GetTaxTotal(cart, usePaymentMethodAdditionalFee);
-
-
-
 
             //order total
             decimal resultTemp = decimal.Zero;
@@ -977,10 +955,6 @@ namespace Nop.Services.Orders
                 orderTotal = RoundingHelper.RoundPrice(orderTotal);
             return orderTotal;
         }
-
-
-
-
 
         /// <summary>
         /// Converts existing reward points to amount
