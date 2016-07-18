@@ -183,6 +183,24 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Gets a newsletter subscription by customer ID
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>NewsLetter subscription</returns>
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByCustomerId(string customerId)
+        {
+            if (String.IsNullOrEmpty(customerId))
+                return null;
+
+            var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
+                                          where nls.CustomerId == customerId
+                                          orderby nls.Id
+                                          select nls;
+
+            return newsLetterSubscriptions.FirstOrDefault();
+        }
+
+        /// <summary>
         /// Gets the newsletter subscription list
         /// </summary>
         /// <param name="email">Email to search or string. Empty to load all records.</param>

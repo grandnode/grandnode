@@ -341,6 +341,9 @@ namespace Nop.Web.Controllers
 
                 //newsletter
                 var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
+                if (newsletter == null)
+                    newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
+
                 model.Newsletter = newsletter != null && newsletter.Active;
 
                 model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
@@ -1364,6 +1367,9 @@ namespace Nop.Web.Controllers
                     {
                         //save newsletter value
                         var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
+                        if (newsletter == null)
+                            newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
+
                         if (newsletter != null)
                         {
                             if (model.Newsletter)
@@ -1372,7 +1378,10 @@ namespace Nop.Web.Controllers
                                 _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
                             }
                             else
-                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+                            {
+                                newsletter.Active = false;
+                                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
+                            }
                         }
                         else
                         {

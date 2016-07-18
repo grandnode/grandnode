@@ -52,6 +52,14 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         NewsLetterSubscription GetNewsLetterSubscriptionByEmailAndStoreId(string email, string storeId);
 
+
+        /// <summary>
+        /// Gets a newsletter subscription by customerId
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>NewsLetter subscription</returns>
+        NewsLetterSubscription GetNewsLetterSubscriptionByCustomerId(string customerId);
+
         /// <summary>
         /// Gets the newsletter subscription list
         /// </summary>
