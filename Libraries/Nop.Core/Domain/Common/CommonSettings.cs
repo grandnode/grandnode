@@ -62,6 +62,11 @@ namespace Nop.Core.Domain.Common
         /// </summary>
         public List<string> IgnoreLogWordlist { get; set; }
 
+        /// <summary>
+        /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
+        /// </summary>
+        public int DeleteGuestTaskOlderThanMinutes { get; set; }
+
         public bool TurnOffLog { get; set; }
     }
 }
