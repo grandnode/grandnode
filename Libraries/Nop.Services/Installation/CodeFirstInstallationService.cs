@@ -10878,6 +10878,7 @@ namespace Nop.Services.Installation
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending("OrderItem.ProductId"), new CreateIndexOptions() { Name = "OrderItemProductId" });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.StoreId).Ascending(x=>x.CustomerId).Ascending(x=>x.Deleted).Descending(x=>x.CreatedOnUtc) , new CreateIndexOptions() { Name = "F1Index", Unique = true });
 
             _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.OrderId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true });
