@@ -1135,7 +1135,7 @@ namespace Nop.Services.Catalog
             //Track inventory for product
             string vendors = "";
             if (!String.IsNullOrEmpty(vendorId))
-                vendors = " && this.VendorId==" + vendorId.ToString();
+                vendors = " && this.VendorId=='" + vendorId.ToString()+"' ";
             if (String.IsNullOrEmpty(vendorId))
                 vendorId = "";
 
