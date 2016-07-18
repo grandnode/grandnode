@@ -21,6 +21,7 @@ namespace Nop.Services.Shipping.Tests {
         private IRepository<ShippingMethod> _shippingMethodRepository;
         private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
+        private IRepository<PickupPoint> _pickupPointRepository;
         private ILogger _logger;
         private IProductAttributeParser _productAttributeParser;
         private ICheckoutAttributeParser _checkoutAttributeParser;
@@ -50,6 +51,7 @@ namespace Nop.Services.Shipping.Tests {
             _logger = new NullLogger();
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _checkoutAttributeParser = new Mock<ICheckoutAttributeParser>().Object;
+            _pickupPointRepository = new Mock<IRepository<PickupPoint>>().Object;
 
             var cacheManager = new NopNullCache();
 
@@ -77,6 +79,7 @@ namespace Nop.Services.Shipping.Tests {
             _shippingService = new ShippingService(_shippingMethodRepository,
                 _deliveryDateRepository,
                 _warehouseRepository,
+                _pickupPointRepository,
                 _logger,
                 _productService,
                 _productAttributeParser,
