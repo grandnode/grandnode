@@ -3169,6 +3169,10 @@ namespace Nop.Admin.Controllers
                         AdminComment = adminComment,
                         CreatedOnUtc = DateTime.UtcNow,
                     };
+                    if (_workContext.CurrentVendor != null)
+                    {
+                        shipment.VendorId = _workContext.CurrentVendor.Id;
+                    }
                 }
                 //create a shipment item
                 var shipmentItem = new ShipmentItem

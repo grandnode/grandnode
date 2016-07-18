@@ -86,7 +86,11 @@ namespace Nop.Services.Shipping
             var builder = Builders<Shipment>.Filter;
             var filter = builder.Where(s => s.OrderId != "");
 
-            //var query = _shipmentRepository.Table;
+            if(!String.IsNullOrEmpty(vendorId))
+            {
+                filter = filter & builder.Where(x => x.VendorId == vendorId);
+            }
+            
             if (!String.IsNullOrEmpty(trackingNumber))
                 filter = filter & builder.Where(s => s.TrackingNumber.Contains(trackingNumber));
 

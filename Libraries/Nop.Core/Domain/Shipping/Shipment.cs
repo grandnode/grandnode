@@ -15,7 +15,12 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets the order identifier
         /// </summary>
         public string OrderId { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the vendor identifier
+        /// </summary>
+        public string VendorId { get; set; }
+
         /// <summary>
         /// Gets or sets the tracking number of this shipment
         /// </summary>

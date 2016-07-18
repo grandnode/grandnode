@@ -212,7 +212,7 @@
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.ShippingMethod)
                 <div class="col-md-9 col-sm-9">
-                    <span class="control-label" id="lblShippingMethod">@Model.ShippingMethod</span>
+                    <label class="control-label" id="lblShippingMethod">@Model.ShippingMethod</label>
                     @if (!Model.IsLoggedInAsVendor)
                     {
                         <script type="text/javascript">
