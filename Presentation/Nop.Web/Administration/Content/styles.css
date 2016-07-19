@@ -197,3 +197,12 @@ a span.username {
 .page-header.navbar .page-logo .logo-default {
     margin: 2px 0 0;
 }
+
+.page-footer .page-footer-inner a {
+    color: white;
+    text-decoration: initial;
+}
+
+.page-footer .page-footer-inner{
+    float:left;
+}
