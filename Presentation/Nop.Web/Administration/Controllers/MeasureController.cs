@@ -248,6 +248,90 @@ namespace Nop.Admin.Controllers
         }
         #endregion
 
+
+        #region Units
+
+
+        public ActionResult Units()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+                return AccessDeniedView();
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Units(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+                return AccessDeniedView();
+
+            var unitsModel = _measureService.GetAllMeasureUnits()
+                .Select(x => x.ToModel())
+                .ToList();
+            
+            var gridModel = new DataSourceResult
+            {
+                Data = unitsModel,
+                Total = unitsModel.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult UnitUpdate(MeasureUnitModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+                return AccessDeniedView();
+
+            if (!ModelState.IsValid)
+            {
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+            }
+
+            var unit = _measureService.GetMeasureUnitById(model.Id);
+            unit = model.ToEntity(unit);
+            _measureService.UpdateMeasureUnit(unit);
+
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public ActionResult UnitAdd([Bind(Exclude = "Id")] MeasureUnitModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+                return AccessDeniedView();
+
+            if (!ModelState.IsValid)
+            {
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
+            }
+
+            var unit = new MeasureUnit();
+            unit = model.ToEntity(unit);
+            _measureService.InsertMeasureUnit(unit);
+
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public ActionResult UnitDelete(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
+                return AccessDeniedView();
+
+            var unit = _measureService.GetMeasureUnitById(id);
+            if (unit == null)
+                throw new ArgumentException("No unit found with the specified id");
+
+            _measureService.DeleteMeasureUnit(unit);
+
+            return new NullJsonResult();
+        }
+
+        #endregion
+
         #endregion
     }
 }

@@ -66,6 +66,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Store> _storeRepository;
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
+        private readonly IRepository<MeasureUnit> _measureUnitRepository;
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
         private readonly IRepository<Language> _languageRepository;
         private readonly IRepository<LocaleStringResource> _lsrRepository;
@@ -156,6 +157,7 @@ namespace Nop.Services.Installation
             IRepository<Store> storeRepository,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
+            IRepository<MeasureUnit> measureUnitRepository,
             IRepository<TaxCategory> taxCategoryRepository,
             IRepository<Language> languageRepository,
             IRepository<LocaleStringResource> lsrRepository,
@@ -240,6 +242,7 @@ namespace Nop.Services.Installation
             this._storeRepository = storeRepository;
             this._measureDimensionRepository = measureDimensionRepository;
             this._measureWeightRepository = measureWeightRepository;
+            this._measureUnitRepository = measureUnitRepository;
             this._taxCategoryRepository = taxCategoryRepository;
             this._languageRepository = languageRepository;
             this._lsrRepository = lsrRepository;
@@ -417,6 +420,28 @@ namespace Nop.Services.Installation
             };
 
             _measureWeightRepository.Insert(measureWeights);
+
+            var measureUnits = new List<MeasureUnit>
+            {
+                new MeasureUnit
+                {
+                    Name = "pcs.",
+                    DisplayOrder = 1,
+                },
+                new MeasureUnit
+                {
+                    Name = "pair",
+                    DisplayOrder = 2,
+                },
+                new MeasureUnit
+                {
+                    Name = "set",
+                    DisplayOrder = 3,
+                }
+            };
+
+            _measureUnitRepository.Insert(measureUnits);
+
         }
 
         protected virtual void InstallTaxCategories()
@@ -10696,6 +10721,7 @@ namespace Nop.Services.Installation
             //measure
             _measureDimensionRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureDimension>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _measureWeightRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureWeight>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _measureUnitRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureUnit>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //TaxCategory
             _taxCategoryRepository.Collection.Indexes.CreateOneAsync(Builders<TaxCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

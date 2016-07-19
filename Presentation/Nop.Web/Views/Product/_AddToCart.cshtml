@@ -37,7 +37,12 @@
                 else
                 {
                     @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
-
+                    if (!String.IsNullOrEmpty(Model.MeasureUnit))
+                    {
+                        <label class="qty-unit">
+                            @Model.MeasureUnit
+                        </label>
+                    }
                     //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
                     <script type="text/javascript">
                         $(document).ready(function () {

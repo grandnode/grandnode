@@ -567,6 +567,7 @@ namespace Nop.Services.ExportImport
 
             var properties = new[]
             {
+                new PropertyByName<Product>("Id", p => p.Id),
                 new PropertyByName<Product>("ProductTypeId", p => p.ProductTypeId),
                 new PropertyByName<Product>("ParentGroupedProductId", p => p.ParentGroupedProductId),
                 new PropertyByName<Product>("VisibleIndividually", p => p.VisibleIndividually),
@@ -652,6 +653,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew),
                 new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc),
                 new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc),
+                new PropertyByName<Product>("UnitId", p => p.UnitId),
                 new PropertyByName<Product>("Weight", p => p.Weight),
                 new PropertyByName<Product>("Length", p => p.Length),
                 new PropertyByName<Product>("Width", p => p.Width),

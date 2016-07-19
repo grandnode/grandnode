@@ -486,6 +486,24 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Units
+
+        public static MeasureUnitModel ToModel(this MeasureUnit entity)
+        {
+            return entity.MapTo<MeasureUnit, MeasureUnitModel>();
+        }
+
+        public static MeasureUnit ToEntity(this MeasureUnitModel model)
+        {
+            return model.MapTo<MeasureUnitModel, MeasureUnit>();
+        }
+
+        public static MeasureUnit ToEntity(this MeasureUnitModel model, MeasureUnit destination)
+        {
+            return model.MapTo(destination);
+        }
+        #endregion
+
         #region Tax providers
 
         public static TaxProviderModel ToModel(this ITaxProvider entity)

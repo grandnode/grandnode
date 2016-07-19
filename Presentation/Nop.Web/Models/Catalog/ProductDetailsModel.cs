@@ -51,7 +51,6 @@ namespace Nop.Web.Models.Catalog
 
         public bool ShowGtin { get; set; }
         public string Gtin { get; set; }
-
         public bool ShowVendor { get; set; }
         public VendorBriefInfoModel VendorModel { get; set; }
 
@@ -146,7 +145,7 @@ namespace Nop.Web.Models.Catalog
 
             //rental
             public bool IsRental { get; set; }
-
+            public string MeasureUnit { get; set; }
             //pre-order
             public bool AvailableForPreOrder { get; set; }
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }

@@ -141,5 +141,38 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         decimal ConvertFromPrimaryMeasureWeight(decimal value,
             MeasureWeight targetMeasureWeight);
+
+        /// <summary>
+        /// Deletes measure unit
+        /// </summary>
+        /// <param name="measureUnit">Measure unit</param>
+        void DeleteMeasureUnit(MeasureUnit measureUnit);
+
+        /// <summary>
+        /// Gets a measure unit by identifier
+        /// </summary>
+        /// <param name="measureUnitId">Measure unit identifier</param>
+        /// <returns>Measure dimension</returns>
+        MeasureUnit GetMeasureUnitById(string measureUnitId);
+
+        /// <summary>
+        /// Gets all measure units
+        /// </summary>
+        /// <returns>Measure units</returns>
+        IList<MeasureUnit> GetAllMeasureUnits();
+
+        /// <summary>
+        /// Inserts a measure unit
+        /// </summary>
+        /// <param name="measure">Measure unit</param>
+        void InsertMeasureUnit(MeasureUnit measure);
+
+        /// <summary>
+        /// Updates the measure unit
+        /// </summary>
+        /// <param name="measure">Measure unit</param>
+        void UpdateMeasureUnit(MeasureUnit measure);
+
+
     }
 }

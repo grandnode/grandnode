@@ -315,6 +315,7 @@
     <Compile Include="Models\Customers\CustomerAttributeValueModel.cs" />
     <Compile Include="Models\Customers\CustomerTagModel.cs" />
     <Compile Include="Models\Customers\CustomerRoleProductModel.cs" />
+    <Compile Include="Models\Directory\MeasureUnitModel.cs" />
     <Compile Include="Models\Discounts\DiscountListModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
     <Compile Include="Models\Messages\BannerModel.cs" />
@@ -449,6 +450,7 @@
     <Compile Include="Validators\Customers\CustomerAttributeValueValidator.cs" />
     <Compile Include="Validators\Customers\CustomerActionValidator.cs" />
     <Compile Include="Validators\Customers\CustomerTagValidator.cs" />
+    <Compile Include="Validators\Directory\MeasureUnitValidator.cs" />
     <Compile Include="Validators\Messages\BannerValidator.cs" />
     <Compile Include="Validators\Messages\TestMessageTemplateValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestActionValidator.cs" />
@@ -1902,6 +1904,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shipping\_CreateOrUpdatePickupPoint.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Measure\Units.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

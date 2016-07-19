@@ -31,6 +31,7 @@ namespace Nop.Admin.Models.Catalog
             AvailableCategories = new List<SelectListItem>();
             AvailableManufacturers = new List<SelectListItem>();
             AvailableProductAttributes = new List<SelectListItem>();
+            AvailableUnits = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
@@ -336,6 +337,10 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? MarkAsNewEndDateTimeUtc { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Unit")]
+        public string UnitId { get; set; }
+        public IList<SelectListItem> AvailableUnits { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Weight")]
         public decimal Weight { get; set; }

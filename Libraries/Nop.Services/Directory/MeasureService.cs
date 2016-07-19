@@ -6,6 +6,8 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Events;
+using MongoDB.Driver;
+using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Directory
 {
@@ -47,12 +49,30 @@ namespace Nop.Services.Directory
         /// </summary>
         private const string MEASUREWEIGHTS_PATTERN_KEY = "Nop.measureweight.";
 
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        private const string MEASUREUNITS_ALL_KEY = "Nop.measureunit.all";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : dimension ID
+        /// </remarks>
+        private const string MEASUREUNITS_BY_ID_KEY = "Nop.measureunit.id-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string MEASUREUNITS_PATTERN_KEY = "Nop.measureunit.";
+
         #endregion
 
         #region Fields
 
         private readonly IRepository<MeasureDimension> _measureDimensionRepository;
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
+        private readonly IRepository<MeasureUnit> _measureUnitRepository;
         private readonly ICacheManager _cacheManager;
         private readonly MeasureSettings _measureSettings;
         private readonly IEventPublisher _eventPublisher;
@@ -67,17 +87,20 @@ namespace Nop.Services.Directory
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="measureDimensionRepository">Dimension repository</param>
         /// <param name="measureWeightRepository">Weight repository</param>
+        /// <param name="measureUnitRepository">Unit repository</param>
         /// <param name="measureSettings">Measure settings</param>
         /// <param name="eventPublisher">Event published</param>
         public MeasureService(ICacheManager cacheManager,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
+            IRepository<MeasureUnit> measureUnitRepository,
             MeasureSettings measureSettings,
             IEventPublisher eventPublisher)
         {
             _cacheManager = cacheManager;
             _measureDimensionRepository = measureDimensionRepository;
             _measureWeightRepository = measureWeightRepository;
+            _measureUnitRepository = measureUnitRepository;
             _measureSettings = measureSettings;
            _eventPublisher = eventPublisher;
         }
@@ -436,6 +459,97 @@ namespace Nop.Services.Directory
             return result;
         }
 
+        #endregion
+
+        #region MeasureUnit
+
+        /// <summary>
+        /// Deletes measure unit
+        /// </summary>
+        /// <param name="measureUnit">Measure unit</param>
+        public virtual void DeleteMeasureUnit(MeasureUnit measureUnit)
+        {
+            if (measureUnit == null)
+                throw new ArgumentNullException("measureUnit");
+
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.UnitId, measureUnit.Id);
+            var update = Builders<Product>.Update
+                .Set(x => x.UnitId, "");
+            var result = Nop.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<Product>>()
+                .Collection.UpdateManyAsync(filter, update).Result;
+
+            _measureUnitRepository.Delete(measureUnit);
+
+            _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(measureUnit);
+        }
+
+        /// <summary>
+        /// Gets a measure unit by identifier
+        /// </summary>
+        /// <param name="measureUnitId">Measure unit identifier</param>
+        /// <returns>Measure dimension</returns>
+        public virtual MeasureUnit GetMeasureUnitById(string measureUnitId)
+        {
+            string key = string.Format(MEASUREUNITS_BY_ID_KEY, measureUnitId);
+            return _cacheManager.Get(key, () => _measureUnitRepository.GetById(measureUnitId));
+        }
+
+        
+        /// <summary>
+        /// Gets all measure units
+        /// </summary>
+        /// <returns>Measure unit</returns>
+        public virtual IList<MeasureUnit> GetAllMeasureUnits()
+        {
+            string key = MEASUREUNITS_ALL_KEY;
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from md in _measureUnitRepository.Table
+                            orderby md.DisplayOrder
+                            select md;
+                var measureUnits = query.ToList();
+                return measureUnits;
+
+            });
+        }
+
+        /// <summary>
+        /// Inserts a measure unit
+        /// </summary>
+        /// <param name="measure">Measure unit</param>
+        public virtual void InsertMeasureUnit(MeasureUnit measure)
+        {
+            if (measure == null)
+                throw new ArgumentNullException("measure");
+
+            _measureUnitRepository.Insert(measure);
+
+            _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(measure);
+        }
+
+        /// <summary>
+        /// Updates the measure unit
+        /// </summary>
+        /// <param name="measure">Measure unit</param>
+        public virtual void UpdateMeasureUnit(MeasureUnit measure)
+        {
+            if (measure == null)
+                throw new ArgumentNullException("measure");
+
+            _measureUnitRepository.Update(measure);
+
+            _cacheManager.RemoveByPattern(MEASUREUNITS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(measure);
+        }
         #endregion
 
         #endregion

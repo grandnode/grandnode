@@ -1093,11 +1093,14 @@
                     }
             </div>
         </div>
-        <div class="form-group" id="pnlStockQuantity">
+        <div class="form-inline" id="pnlStockQuantity">
             @Html.GrandLabelFor(model => model.StockQuantity)
             <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.StockQuantity)
                 @Html.ValidationMessageFor(model => model.StockQuantity)
+                <span>
+                    @Html.GrandDropDownListFor(model => model.UnitId, Model.AvailableUnits, new { @class = "form-control input-xsmall", style= "height: 30px;padding: 0px;"})
+                </span>
             </div>
         </div>
         <div class="form-group" id="pnlDisplayStockAvailability">

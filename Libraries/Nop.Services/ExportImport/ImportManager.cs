@@ -192,11 +192,15 @@ namespace Nop.Services.ExportImport
 
                     manager.ReadFromXlsx(worksheet, iRow);
                     var sku = manager.GetProperty("sku") != null ? manager.GetProperty("sku").StringValue : string.Empty;
+                    var productid = manager.GetProperty("id") != null ? manager.GetProperty("id").StringValue : string.Empty;
 
                     Product product = null;
 
                     if(!String.IsNullOrEmpty(sku))
                         product = _productService.GetProductBySku(sku);
+
+                    if(!String.IsNullOrEmpty(productid))
+                        product = _productService.GetProductById(productid);
 
                     var isNew = product == null;
 
@@ -461,6 +465,9 @@ namespace Nop.Services.ExportImport
                                 break;
                             case "markasnewenddatetimeutc":
                                 product.MarkAsNewEndDateTimeUtc = property.DateTimeNullable;
+                                break;
+                            case "unitid":
+                                product.UnitId = property.StringValue;
                                 break;
                             case "weight":
                                 product.Weight = property.DecimalValue;

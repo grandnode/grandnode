@@ -2943,6 +2943,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.UnlimitedDownloads.Hint">
     <Value>When a customer purchases a download product, they can download the item unlimited number of times.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Unit">
+    <Value>Unit</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.UpdatedOn">
     <Value>Updated on</Value>
   </LocaleResource>
@@ -4415,6 +4418,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Measures.Weights.Fields.SystemKeyword.Required">
     <Value>Please provide a system keyword.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Units">
+    <Value>Units</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Units.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Units.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Units.Fields.DisplayOrder">
+    <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment">
     <Value>Payment</Value>

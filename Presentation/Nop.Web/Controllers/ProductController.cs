@@ -531,6 +531,8 @@ namespace Nop.Web.Controllers
 
             //quantity
             model.AddToCart.EnteredQuantity = updatecartitem != null ? updatecartitem.Quantity : product.OrderMinimumQuantity;
+            model.AddToCart.MeasureUnit = !String.IsNullOrEmpty(product.UnitId) ? _measureService.GetMeasureUnitById(product.UnitId).Name : string.Empty;
+
             //allowed quantities
             var allowedQuantities = product.ParseAllowedQuantities();
             foreach (var qty in allowedQuantities)

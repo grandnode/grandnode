@@ -443,6 +443,7 @@ namespace Nop.Services.Catalog
                 .Set(x => x.Stores, product.Stores)
                 .Set(x => x.SubjectToAcl, product.SubjectToAcl)
                 .Set(x => x.TaxCategoryId, product.TaxCategoryId)
+                .Set(x => x.UnitId, product.UnitId)
                 .Set(x => x.UnlimitedDownloads, product.UnlimitedDownloads)
                 .Set(x => x.UpdatedOnUtc, product.UpdatedOnUtc)
                 .Set(x => x.UseMultipleWarehouses, product.UseMultipleWarehouses)

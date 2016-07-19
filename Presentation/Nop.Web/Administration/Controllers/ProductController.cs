@@ -655,6 +655,12 @@ namespace Nop.Admin.Controllers
             foreach (var mw in measureWeights)
                 model.AvailableBasepriceBaseUnits.Add(new SelectListItem { Text = mw.Name, Value = mw.Id.ToString(), Selected = product != null && !setPredefinedValues && mw.Id == product.BasepriceBaseUnitId });
 
+            //units
+            var units = _measureService.GetAllMeasureUnits();
+            model.AvailableUnits.Add(new SelectListItem { Text = "---", Value = "" });
+            foreach (var un in units)
+                model.AvailableUnits.Add(new SelectListItem { Text = un.Name, Value = un.Id.ToString(), Selected = product != null  && un.Id == product.UnitId });
+
             //default specs values
             model.AddSpecificationAttributeModel.ShowOnProductPage = true;
 

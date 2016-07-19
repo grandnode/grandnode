@@ -421,6 +421,11 @@ namespace Nop.Core.Domain.Catalog
         public string BasepriceBaseUnitId { get; set; }
 
         /// <summary>
+        /// Gets or sets a unit of product 
+        /// </summary>
+        public string UnitId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this product is marked as new
         /// </summary>
         public bool MarkAsNew { get; set; }

@@ -2077,6 +2077,7 @@ label, label + * {
 .variant-overview .qty-label {
     display: none !important;
 }
+
 .overview .qty-input,
 .variant-overview .qty-input {
 	width: 45px;
@@ -2086,6 +2087,13 @@ label, label + * {
     font-size: 15px;
 	color: #444;
 }
+.overview .qty-unit,
+.variant-overview .qty-unit {
+    background-color: #ddd;
+    height: 43px;
+    padding: 13px 10px 0px 10px;
+}
+
 .overview .add-to-cart-button,
 .variant-overview .add-to-cart-button {
 	height: 43px;

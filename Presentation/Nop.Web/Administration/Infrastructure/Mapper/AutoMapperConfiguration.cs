@@ -295,6 +295,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableTaxCategories, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableUnits, mo => mo.Ignore())
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.BaseDimensionIn, mo => mo.Ignore())
                 .ForMember(dest => dest.BaseWeightIn, mo => mo.Ignore())
@@ -382,7 +383,13 @@ namespace Nop.Admin.Infrastructure.Mapper
             cfg.CreateMap<MeasureWeightModel, MeasureWeight>()
                 .ForMember(dest => dest.Id, mo => mo.Ignore());
 
-            //measure dimensions
+            //measure units
+            cfg.CreateMap<MeasureUnit, MeasureUnitModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            cfg.CreateMap<MeasureUnitModel, MeasureUnit>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
+                //measure dimensions
                 cfg.CreateMap<MeasureDimension, MeasureDimensionModel>()
                 .ForMember(dest => dest.IsPrimaryDimension, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
