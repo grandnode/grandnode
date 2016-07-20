@@ -1,0 +1,79 @@
+﻿@model IList<CustomerModel.CustomerAttributeModel>
+@using Grand.Core.Domain.Catalog;
+@foreach (var attribute in Model)
+{
+    string controlId = string.Format("customer_attribute_{0}", attribute.Id);
+    string textPrompt = attribute.Name;
+    <div class="form-horizontal">
+        <div class="form-body">
+            <label class="control-label col-md-3">
+                @textPrompt
+            </label>
+            <div class="col-md-9 col-sm-9">
+
+                @switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                        {
+                            <select class="control-label" name="@(controlId)" id="@(controlId)">
+                                @if (!attribute.IsRequired)
+                                {
+                                    <option value="0">---</option>
+                                }
+                                @foreach (var attributeValue in attribute.Values)
+                                {
+                                    <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
+                                }
+                            </select>
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                        {
+                            <div class="radio-list">
+                                @foreach (var attributeValue in attribute.Values)
+                                {
+                                    <div>
+                                        <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            <div class="checkbox-list">
+                                @foreach (var attributeValue in attribute.Values)
+                                {
+                                    <div>
+                                        <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                        {
+                            <input name="@(controlId)" type="text" class="text-box single-line control-label" id="@(controlId)" value="@attribute.DefaultValue" />
+                        }
+                        break;
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            <textarea id="@(controlId)" style="Height: 150px;" class="control-label" name="@(controlId)">@attribute.DefaultValue</textarea>
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.FileUpload:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
+                        {
+                            //not support attribute type
+                        }
+                        break;
+                }
+            </div>
+        </div>
+    </div>
+}

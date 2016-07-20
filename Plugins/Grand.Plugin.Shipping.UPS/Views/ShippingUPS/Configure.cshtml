@@ -1,0 +1,177 @@
+﻿@{
+    Layout = "";
+}
+@model Grand.Plugin.Shipping.UPS.Models.UPSShippingModel
+@using Grand.Web.Framework;
+@using Grand.Plugin.Shipping.UPS;
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#PackingType").change(togglePackingType);
+
+            togglePackingType();
+        });
+
+        function togglePackingType() {
+            var selectedPackingTypeId = $("#PackingType").val();
+            if (selectedPackingTypeId == @(((int)PackingType.PackByDimensions).ToString())) {
+                $('#pnlPassDimensions').show();
+                $('#pnlPackingPackageVolume').hide();
+            }
+            else if (selectedPackingTypeId == @(((int)PackingType.PackByOneItemPerPackage).ToString())) {
+                $('#pnlPassDimensions').hide();
+                $('#pnlPackingPackageVolume').hide();
+            }
+            else if (selectedPackingTypeId == @(((int)PackingType.PackByVolume).ToString())) {
+                $('#pnlPassDimensions').hide();
+                $('#pnlPackingPackageVolume').show();
+            }
+        }
+    </script>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.Url, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Url)
+                    @Html.ValidationMessageFor(model => model.Url)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.AccessKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AccessKey)
+                    @Html.ValidationMessageFor(model => model.AccessKey)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.Username, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Username)
+                    @Html.ValidationMessageFor(model => model.Username)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.Password, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Password)
+                    @Html.ValidationMessageFor(model => model.Password)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.CustomerClassification, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.DropDownListFor(model => model.CustomerClassification, Model.AvailableCustomerClassifications)
+                    @Html.ValidationMessageFor(model => model.CustomerClassification)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.PickupType, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.DropDownListFor(model => model.PickupType, Model.AvailablePickupTypes)
+                    @Html.ValidationMessageFor(model => model.PickupType)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.PackagingType, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.DropDownListFor(model => model.PackagingType, Model.AvailablePackagingTypes)
+                    @Html.ValidationMessageFor(model => model.PackagingType)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.InsurePackage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.InsurePackage)
+                    @Html.ValidationMessageFor(model => model.InsurePackage)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.AdditionalHandlingCharge, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AdditionalHandlingCharge)
+                    @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.AvailableCarrierServices, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
+                        @foreach (var csd in Model.AvailableCarrierServices)
+                        {
+                            <input type="checkbox" name="CheckedCarrierServices" value="@(csd)" checked="@Model.CarrierServicesOffered.Contains(csd)" />
+                            <label>@csd</label>
+                            <br />
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.PackingTypeValues, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.DropDownList("PackingType", Model.PackingTypeValues)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPassDimensions">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.PassDimensions, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.PassDimensions)
+                    @Html.ValidationMessageFor(model => model.PassDimensions)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPackingPackageVolume">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.PackingPackageVolume, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.PackingPackageVolume)
+                    @Html.ValidationMessageFor(model => model.PackingPackageVolume)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.Tracing, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Tracing)
+                    @Html.ValidationMessageFor(model => model.Tracing)
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

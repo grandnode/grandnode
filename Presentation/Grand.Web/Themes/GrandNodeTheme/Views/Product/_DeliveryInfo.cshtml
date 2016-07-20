@@ -1,0 +1,23 @@
+﻿@model ProductDetailsModel
+@using Grand.Web.Models.Catalog;
+@if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
+{
+    <div class="delivery">
+        @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
+        {
+            <div class="free-shipping">
+                <i class="material-icons left">local_shipping</i>
+                @T("Products.FreeShipping")
+            </div>
+        }
+        @if (!String.IsNullOrWhiteSpace(Model.DeliveryDate))
+        {
+            <div class="delivery-date">
+                <span class="label">@T("Products.DeliveryDate"):</span>
+                <span class="color" style="background-color: @(Model.DeliveryColorSquaresRgb);
+                      @(!String.IsNullOrEmpty(Model.DeliveryColorSquaresRgb) ? "" : "display:none;")" title="@Model.DeliveryDate"></span>
+                <span class="value">@Model.DeliveryDate</span>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,185 @@
+﻿@{
+    Layout = "";
+
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+}
+@model ShippingByWeightListModel
+@using Grand.Plugin.Shipping.ByWeight.Models;
+@using Grand.Web.Framework;
+@using Grand.Core.Infrastructure;
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="note note-info">
+        <strong>@T("Plugins.Shipping.ByWeight.Formula"):</strong>
+        @T("Plugins.Shipping.ByWeight.Formula.Value")
+    </div>
+
+    var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="shipping-byweight-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 550, true); return false;" class="btn default" />
+            <input type="submit" id="btnRefresh" style="display: none" />
+        </div>
+    </div>
+
+
+
+    <script>
+                    $(document).ready(function () {
+                        $("#shipping-byweight-grid").kendoGrid({
+                            dataSource: {
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("RatesList", "ShippingByWeight", new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("RateDelete", "ShippingByWeight", new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "StoreName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.Store")",
+                                width: 300
+                            }, {
+                                field: "WarehouseName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.Warehouse")",
+                                width: 300
+                            }, {
+                                field: "CountryName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.Country")",
+                                width: 200
+                            }, {
+                                field: "StateProvinceName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.StateProvince")",
+                                width: 200
+                            }, {
+                                field: "Zip",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.Zip")",
+                                width: 200
+                            }, {
+                                field: "ShippingMethodName",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.ShippingMethod")",
+                                width: 200
+                            }, {
+                                field: "DataHtml",
+                                title: "@T("Plugins.Shipping.ByWeight.Fields.DataHtml")",
+                                width: 200,
+                                encoded: false
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='k-button' />"
+                            },  {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }]
+                        });
+                    });
+    </script>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var grid = $("#shipping-byweight-grid").data('kendoGrid');
+                            //grid.dataSource.page(1); //new search. Set page size to 1
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+
+                <table>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.GrandLabelFor(model => model.LimitMethodsToCreated, null, false):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.LimitMethodsToCreated)
+                            @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <br />
+                            <input type="button" id="savegeneralsettings" class="btn default" value="@T("Admin.Common.Save")" />
+                            <script type="text/javascript">
+                    $(function () {
+                        $('#savegeneralsettings').click(function () {
+
+                            var postData = $(this.form).serialize();
+                            addAntiForgeryToken(postData);
+
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
+                                data: postData,
+                                dataType: 'json',
+                                success: function (data) {
+                                    alert('Saved');
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to add record.');
+                                }
+                            });
+                            return false;
+                        });
+                    });
+                            </script>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <hr />
+                <br />
+}

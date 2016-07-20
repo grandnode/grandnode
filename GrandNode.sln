@@ -9,63 +9,67 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{7881B112-7843-4542-B1F7-F99553FB9BB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Web", "Presentation\Nop.Web\Nop.Web.csproj", "{4F1F649C-1020-45BE-A487-F416D9297FF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Web", "Presentation\Grand.Web\Grand.Web.csproj", "{4F1F649C-1020-45BE-A487-F416D9297FF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Core", "Libraries\Nop.Core\Nop.Core.csproj", "{6BDA8332-939F-45B7-A25E-7A797260AE59}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Core", "Libraries\Grand.Core\Grand.Core.csproj", "{6BDA8332-939F-45B7-A25E-7A797260AE59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Data", "Libraries\Nop.Data\Nop.Data.csproj", "{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Data", "Libraries\Grand.Data\Grand.Data.csproj", "{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Services", "Libraries\Nop.Services\Nop.Services.csproj", "{210541AD-F659-47DA-8763-16F36C5CD2F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Services", "Libraries\Grand.Services\Grand.Services.csproj", "{210541AD-F659-47DA-8763-16F36C5CD2F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Tax.FixedRate", "Plugins\Nop.Plugin.Tax.FixedRate\Nop.Plugin.Tax.FixedRate.csproj", "{60E882EA-9ACB-4EFE-82A0-8FB1F5884B04}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Tax.FixedRate", "Plugins\Grand.Plugin.Tax.FixedRate\Grand.Plugin.Tax.FixedRate.csproj", "{60E882EA-9ACB-4EFE-82A0-8FB1F5884B04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.FixedRateShipping", "Plugins\Nop.Plugin.Shipping.FixedRateShipping\Nop.Plugin.Shipping.FixedRateShipping.csproj", "{2DCB7949-24C2-49C7-872C-C948E43717E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Shipping.FixedRateShipping", "Plugins\Grand.Plugin.Shipping.FixedRateShipping\Grand.Plugin.Shipping.FixedRateShipping.csproj", "{2DCB7949-24C2-49C7-872C-C948E43717E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.CustomerRoles", "Plugins\Nop.Plugin.DiscountRules.CustomerRoles\Nop.Plugin.DiscountRules.CustomerRoles.csproj", "{D28CAD64-4C88-48CB-8AA4-10B7D050BE56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.DiscountRules.CustomerRoles", "Plugins\Grand.Plugin.DiscountRules.CustomerRoles\Grand.Plugin.DiscountRules.CustomerRoles.csproj", "{D28CAD64-4C88-48CB-8AA4-10B7D050BE56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HadSpentAmount", "Plugins\Nop.Plugin.DiscountRules.HadSpentAmount\Nop.Plugin.DiscountRules.HadSpentAmount.csproj", "{C4FFB99C-8A99-47E2-B863-3586AE2CF9C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.DiscountRules.HadSpentAmount", "Plugins\Grand.Plugin.DiscountRules.HadSpentAmount\Grand.Plugin.DiscountRules.HadSpentAmount.csproj", "{C4FFB99C-8A99-47E2-B863-3586AE2CF9C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Web.Framework", "Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj", "{75FD4163-333C-4DD5-854D-2EF294E45D94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Web.Framework", "Presentation\Grand.Web.Framework\Grand.Web.Framework.csproj", "{75FD4163-333C-4DD5-854D-2EF294E45D94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Admin", "Presentation\Nop.Web\Administration\Nop.Admin.csproj", "{152C761A-DD2E-4C1F-AF89-DFB2547A3BCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Admin", "Presentation\Grand.Web\Administration\Grand.Admin.csproj", "{152C761A-DD2E-4C1F-AF89-DFB2547A3BCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Feed.Froogle", "Plugins\Nop.Plugin.Feed.Froogle\Nop.Plugin.Feed.Froogle.csproj", "{965A02F0-FC84-4AC4-91E4-79EADFC1CA9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Feed.Froogle", "Plugins\Grand.Plugin.Feed.Froogle\Grand.Plugin.Feed.Froogle.csproj", "{965A02F0-FC84-4AC4-91E4-79EADFC1CA9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Tax.CountryStateZip", "Plugins\Nop.Plugin.Tax.CountryStateZip\Nop.Plugin.Tax.CountryStateZip.csproj", "{493761CB-5190-4283-8C6C-A8CEB5450CAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Tax.CountryStateZip", "Plugins\Grand.Plugin.Tax.CountryStateZip\Grand.Plugin.Tax.CountryStateZip.csproj", "{493761CB-5190-4283-8C6C-A8CEB5450CAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasAllProducts", "Plugins\Nop.Plugin.DiscountRules.HasAllProducts\Nop.Plugin.DiscountRules.HasAllProducts.csproj", "{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.DiscountRules.HasAllProducts", "Plugins\Grand.Plugin.DiscountRules.HasAllProducts\Grand.Plugin.DiscountRules.HasAllProducts.csproj", "{36261AB6-2FD4-4BDA-A941-AF4CC18C21E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.DiscountRules.HasOneProduct", "Plugins\Nop.Plugin.DiscountRules.HasOneProduct\Nop.Plugin.DiscountRules.HasOneProduct.csproj", "{5B956174-04FA-4E95-AA00-3736630FEEFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.DiscountRules.HasOneProduct", "Plugins\Grand.Plugin.DiscountRules.HasOneProduct\Grand.Plugin.DiscountRules.HasOneProduct.csproj", "{5B956174-04FA-4E95-AA00-3736630FEEFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.USPS", "Plugins\Nop.Plugin.Shipping.USPS\Nop.Plugin.Shipping.USPS.csproj", "{E8EB218B-C4FE-4F90-85F2-2D95A48B9F28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Shipping.USPS", "Plugins\Grand.Plugin.Shipping.USPS\Grand.Plugin.Shipping.USPS.csproj", "{E8EB218B-C4FE-4F90-85F2-2D95A48B9F28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.UPS", "Plugins\Nop.Plugin.Shipping.UPS\Nop.Plugin.Shipping.UPS.csproj", "{98CA7487-6ADE-4773-BD0A-29255F443236}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Shipping.UPS", "Plugins\Grand.Plugin.Shipping.UPS\Grand.Plugin.Shipping.UPS.csproj", "{98CA7487-6ADE-4773-BD0A-29255F443236}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.Fedex", "Plugins\Nop.Plugin.Shipping.Fedex\Nop.Plugin.Shipping.Fedex.csproj", "{8D73A283-0611-4673-B78A-62F8673F45D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Shipping.Fedex", "Plugins\Grand.Plugin.Shipping.Fedex\Grand.Plugin.Shipping.Fedex.csproj", "{8D73A283-0611-4673-B78A-62F8673F45D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Shipping.ByWeight", "Plugins\Nop.Plugin.Shipping.ByWeight\Nop.Plugin.Shipping.ByWeight.csproj", "{0793FB50-67BB-461E-B961-2F45887464CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Shipping.ByWeight", "Plugins\Grand.Plugin.Shipping.ByWeight\Grand.Plugin.Shipping.ByWeight.csproj", "{0793FB50-67BB-461E-B961-2F45887464CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Payments.CheckMoneyOrder", "Plugins\Nop.Plugin.Payments.CheckMoneyOrder\Nop.Plugin.Payments.CheckMoneyOrder.csproj", "{5422ED35-2808-4790-B5E6-C86A383B2874}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Payments.CheckMoneyOrder", "Plugins\Grand.Plugin.Payments.CheckMoneyOrder\Grand.Plugin.Payments.CheckMoneyOrder.csproj", "{5422ED35-2808-4790-B5E6-C86A383B2874}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Payments.PayPalStandard", "Plugins\Nop.Plugin.Payments.PayPalStandard\Nop.Plugin.Payments.PayPalStandard.csproj", "{5979DBFD-8471-4DF5-A0FD-96F6768205AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Payments.PayPalStandard", "Plugins\Grand.Plugin.Payments.PayPalStandard\Grand.Plugin.Payments.PayPalStandard.csproj", "{5979DBFD-8471-4DF5-A0FD-96F6768205AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Payments.PayPalDirect", "Plugins\Nop.Plugin.Payments.PayPalDirect\Nop.Plugin.Payments.PayPalDirect.csproj", "{83235353-0D04-4028-82B2-81116E7361DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Payments.PayPalDirect", "Plugins\Grand.Plugin.Payments.PayPalDirect\Grand.Plugin.Payments.PayPalDirect.csproj", "{83235353-0D04-4028-82B2-81116E7361DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.ExchangeRate.McExchange", "Plugins\Nop.Plugin.ExchangeRate.McExchange\Nop.Plugin.ExchangeRate.McExchange.csproj", "{D449B6D7-8670-4081-B729-A40DF88B8699}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.ExchangeRate.McExchange", "Plugins\Grand.Plugin.ExchangeRate.McExchange\Grand.Plugin.ExchangeRate.McExchange.csproj", "{D449B6D7-8670-4081-B729-A40DF88B8699}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.GoogleAnalytics", "Plugins\Nop.Plugin.Widgets.GoogleAnalytics\Nop.Plugin.Widgets.GoogleAnalytics.csproj", "{C2B83AF5-80F6-4B8C-8628-FA7DE10C3BB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Widgets.GoogleAnalytics", "Plugins\Grand.Plugin.Widgets.GoogleAnalytics\Grand.Plugin.Widgets.GoogleAnalytics.csproj", "{C2B83AF5-80F6-4B8C-8628-FA7DE10C3BB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.ExternalAuth.Facebook", "Plugins\Nop.Plugin.ExternalAuth.Facebook\Nop.Plugin.ExternalAuth.Facebook.csproj", "{446FED73-BCA1-4D8F-BC13-EA1507C7EF29}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.ExternalAuth.Facebook", "Plugins\Grand.Plugin.ExternalAuth.Facebook\Grand.Plugin.ExternalAuth.Facebook.csproj", "{446FED73-BCA1-4D8F-BC13-EA1507C7EF29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Widgets.NivoSlider", "Plugins\Nop.Plugin.Widgets.NivoSlider\Nop.Plugin.Widgets.NivoSlider.csproj", "{9978B382-0BCD-4621-B6B5-52E0E3B5F464}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Widgets.NivoSlider", "Plugins\Grand.Plugin.Widgets.NivoSlider\Grand.Plugin.Widgets.NivoSlider.csproj", "{9978B382-0BCD-4621-B6B5-52E0E3B5F464}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Plugin.Misc.FacebookShop", "Plugins\Nop.Plugin.Misc.FacebookShop\Nop.Plugin.Misc.FacebookShop.csproj", "{6216A5CA-8599-4B53-8E70-F21CC6D4273C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Misc.FacebookShop", "Plugins\Grand.Plugin.Misc.FacebookShop\Grand.Plugin.Misc.FacebookShop.csproj", "{6216A5CA-8599-4B53-8E70-F21CC6D4273C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{63F6DD7F-17E6-4A62-8F4A-E3DCAFEB1582}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Core.Tests", "Tests\Nop.Core.Tests\Nop.Core.Tests.csproj", "{A5F564FD-2300-45D8-BACF-FE9D1055D757}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Core.Tests", "Tests\Grand.Core.Tests\Grand.Core.Tests.csproj", "{A5F564FD-2300-45D8-BACF-FE9D1055D757}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nop.Services.Tests", "Tests\Nop.Services.Tests\Nop.Services.Tests.csproj", "{E32D01C5-1F2E-46F8-B33D-1D9C74D2D5C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Services.Tests", "Tests\Grand.Services.Tests\Grand.Services.Tests.csproj", "{E32D01C5-1F2E-46F8-B33D-1D9C74D2D5C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Payments.CashOnDelivery", "Plugins\Grand.Plugin.Payments.CashOnDelivery\Grand.Plugin.Payments.CashOnDelivery.csproj", "{3D61DE73-5B82-40BD-A980-EA54533179C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Payments.PayInStore", "Plugins\Grand.Plugin.Payments.PayInStore\Grand.Plugin.Payments.PayInStore.csproj", "{A284F47B-9DAF-4475-BB79-7A418EECC01D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -361,6 +365,30 @@ Global
 		{E32D01C5-1F2E-46F8-B33D-1D9C74D2D5C2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E32D01C5-1F2E-46F8-B33D-1D9C74D2D5C2}.Release|x86.ActiveCfg = Release|Any CPU
 		{E32D01C5-1F2E-46F8-B33D-1D9C74D2D5C2}.Release|x86.Build.0 = Release|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Debug|x86.Build.0 = Debug|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Release|x86.ActiveCfg = Release|Any CPU
+		{3D61DE73-5B82-40BD-A980-EA54533179C4}.Release|x86.Build.0 = Release|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Debug|x86.Build.0 = Debug|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Release|x86.ActiveCfg = Release|Any CPU
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -394,6 +422,8 @@ Global
 		{6216A5CA-8599-4B53-8E70-F21CC6D4273C} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 		{A5F564FD-2300-45D8-BACF-FE9D1055D757} = {63F6DD7F-17E6-4A62-8F4A-E3DCAFEB1582}
 		{E32D01C5-1F2E-46F8-B33D-1D9C74D2D5C2} = {63F6DD7F-17E6-4A62-8F4A-E3DCAFEB1582}
+		{3D61DE73-5B82-40BD-A980-EA54533179C4} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
+		{A284F47B-9DAF-4475-BB79-7A418EECC01D} = {7881B112-7843-4542-B1F7-F99553FB9BB7}
 	EndGlobalSection
 	GlobalSection(NDepend) = preSolution
 		Project = ".\GrandNode.ndproj"

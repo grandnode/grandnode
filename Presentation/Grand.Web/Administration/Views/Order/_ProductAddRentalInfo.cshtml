@@ -1,0 +1,39 @@
+﻿@model OrderModel.AddOrderProductModel.ProductDetailsModel
+@if (Model.IsRental)
+{
+    //Actually just a copy (almost) of \Presentation\Grand.Web\Views\Product\_RentalInfo.cshtml
+            
+                const string startDateControlId = "rental_start_date";
+                const string endDateControlId = "rental_end_date";
+                //currenly we support only this format
+                const string datePickerFormat = "mm/dd/yy";
+                <div class="form-group">
+                    <label class="control-label col-md-3">
+                        @T("Products.RentalStartDate")
+                        <span class="required">*</span>
+                    </label>
+                    <div class="col-md-3">
+                        <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="form-control datepicker" />
+                        <script>
+                            $(document).ready(function () {
+                                $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
+                            });
+                        </script>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">
+                        @T("Products.RentalEndDate"):
+                        <span class="required">*</span>
+                    </label>
+                    <div class="col-md-3">
+                        <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="form-control datepicker" />
+                        <script>
+                            $(document).ready(function() {
+                                $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
+                            });
+                        </script>
+                    </div>
+                </div>
+ 
+}

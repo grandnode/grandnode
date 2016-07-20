@@ -1,0 +1,173 @@
+﻿@model FooterModel
+@using Grand.Core
+@using Grand.Core.Domain.Tax
+@using Grand.Core.Infrastructure
+@using Grand.Web.Models.Common;
+
+<footer class="page-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col 14 offset-12 l3 m4 s12 footer-block">
+                <h5 class="title waves-effect">@T("Footer.Information")</h5>
+                <ul class="list">
+                    @if (Model.SitemapEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
+                    }
+                    @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                    }
+                    <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+                </ul>
+            </div>
+            <div class="col 14 offset-12 l3 m4 s12 footer-block">
+                <h5 class ="title waves-effect">@T("Footer.CustomerService")</h5>
+                <ul class="list">
+                    <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+                    @if (Model.NewsEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("NewsArchive")">@T("News")</a></li>
+                    }
+                    @if (Model.BlogEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+                    }
+                    @if (Model.ForumEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+                    }
+                    @if (Model.RecentlyViewedProductsEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("RecentlyViewedProducts")">@T("Products.RecentlyViewedProducts")</a></li>
+                    }
+                    @if (Model.CompareProductsEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("CompareProducts")">@T("Products.Compare.List")</a></li>
+                    }
+                    @if (Model.NewProductsEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a></li>
+                    }
+                    @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn2).ToList())
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="col 14 offset-12 l3 m4 s12 footer-block">
+                <h5 class="title waves-effect">@T("Footer.MyAccount")</h5>
+                <ul class="list">
+                    <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+                    <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("CustomerOrders")">@T("Account.CustomerOrders")</a></li>
+                    <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("CustomerAddresses")">@T("Account.CustomerAddresses")</a></li>
+                    @if (Model.ShoppingCartEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("ShoppingCart")">@T("ShoppingCart")</a></li>
+                    }
+                    @if (Model.WishlistEnabled)
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("Wishlist")">@T("Wishlist")</a></li>
+                    }
+                    @if (Model.AllowCustomersToApplyForVendorAccount)
+                    {
+                        <li><a href="@Url.RouteUrl("ApplyVendorAccount")">@T("Vendors.ApplyAccount")</a></li>
+                    }
+
+                    @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn3).ToList())
+                    {
+                        <li><a class="grey-text text-darken-1" href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="col 14 offset-12 l3 m12 s12 follow-us">
+                <h5 class="">@T("Footer.FollowUs")</h5>
+                <ul class="list social">
+                    @if (!string.IsNullOrEmpty(Model.FacebookLink))
+                    {
+                        <li class="facebook"><a class="grey-text text-darken-1" href="@Model.FacebookLink" target="_blank"><i class="fa fa-2x fa-facebook-square"></i></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.TwitterLink))
+                    {
+                        <li class="twitter"><a class="grey-text text-darken-1" href="@Model.TwitterLink" target="_blank"><i class="fa fa-2x fa-twitter-square"></i></a></li>
+                    }
+                    @if (Model.NewsEnabled)
+                    {
+                        <li class="rss"><a class="grey-text text-darken-1" href="@Url.RouteUrl("NewsRSS", new {languageId = Model.WorkingLanguageId})"><i class="fa fa-2x fa-rss-square"></i></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.YoutubeLink))
+                    {
+                        <li class="youtube"><a class="grey-text text-darken-1" href="@Model.YoutubeLink" target="_blank"><i class="fa fa-2x fa-youtube-square"></i></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.GooglePlusLink))
+                    {
+                        <li class="google-plus"><a class="grey-text text-darken-1" href="@Model.GooglePlusLink" target="_blank"><i class="fa fa-2x fa-google-plus-square"></i></a></li>
+                    }
+                </ul>                
+                @Html.Action("NewsletterBox", "Newsletter")
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+            @if (Model.DisplayTaxShippingInfoFooter)
+            {
+                var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                <span class="footer-tax-shipping grey-text text-darken-2 left">
+                    @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                </span>
+            }
+        <div class="footer-info">
+            <span class="footer-disclaimer grey-text text-darken-2">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
+        </div>
+        <div class="footer-powered-by">
+            <span class="grey-text text-darken-2">
+                <a href="http://www.grandNode.com/">GrandNode. </a>
+                @if (!Model.HidePoweredByGrandNode)
+                {
+                    <text>&nbsp;Powered by</text>
+                    <a href="http://www.nopcommerce.com/"> nopCommerce </a>
+                }
+            </span>
+        </div>
+
+        @Html.Action("StoreThemeSelector", "Common")
+    </div>
+    @Html.Widget("footer")
+</footer>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.footer-block .title').click(function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+
+            if (result.width < 769) {
+                $(this).siblings('.list').slideToggle('slow');
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.block .title').click(function () {
+            var e = window, a = 'inner';
+            if (!('innerWidth' in window)) {
+                a = 'client';
+                e = document.documentElement || document.body;
+            }
+
+            var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
+
+            if (result.width < 1001) {
+                $(this).siblings('.listbox').slideToggle('slow');
+            }
+        });
+    });
+</script>

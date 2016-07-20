@@ -1,0 +1,99 @@
+﻿@model DashboardActivityModel
+<ul class="feeds">
+    <li>
+        <a href="@Url.Action("List", "Order", new{ orderStatusId = ((int)Grand.Core.Domain.Orders.OrderStatus.Pending).ToString() })">
+            <div class="col1">
+                <div class="cont">
+                    <div class="cont-col1">
+                        <div class="label label-sm label-info">
+                            <i class="fa fa-briefcase"></i>
+                        </div>
+                    </div>
+                    <div class="cont-col2">
+                        <div class="desc"> @T("Admin.Dashboard.ActivityOverview.OrderPending")</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col2">
+                <div class="date"> @Model.OrdersPending </div>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a href="@Url.Action("CurrentCarts", "ShoppingCart")">
+            <div class="col1">
+                <div class="cont">
+                    <div class="cont-col1">
+                        <div class="label label-sm label-success">
+                            <i class="fa fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                    <div class="cont-col2">
+                        <div class="desc"> @T("Admin.Dashboard.ActivityOverview.AbandonedCarts")  </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col2">
+                <div class="date"> @Model.AbandonedCarts </div>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a href="@Url.Action("LowStockReport", "Product")">
+            <div class="col1">
+                <div class="cont">
+                    <div class="cont-col1">
+                        <div class="label label-sm label-danger">
+                            <i class="fa fa-bell-o"></i>
+                        </div>
+                    </div>
+                    <div class="cont-col2">
+                        <div class="desc">@T("Admin.Dashboard.ActivityOverview.LowStockProducts") </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col2">
+                <div class="date"> @Model.LowStockProducts </div>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a href="@Url.Action("List", "Customer")">
+            <div class="col1">
+                <div class="cont">
+                    <div class="cont-col1">
+                        <div class="label label-sm label-warning">
+                            <i class="fa fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="cont-col2">
+                        <div class="desc">@T("Admin.Dashboard.ActivityOverview.TodayRegisteredCustomers")</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col2">
+                <div class="date"> @Model.TodayRegisteredCustomers </div>
+            </div>
+        </a>
+    </li>
+    <li>
+        <a href="@Url.Action("List", "ReturnRequest")">
+            <div class="col1">
+                <div class="cont">
+                    <div class="cont-col1">
+                        <div class="label label-sm label-default">
+                            <i class="fa fa-truck"></i>
+                        </div>
+                    </div>
+                    <div class="cont-col2">
+                        <div class="desc">@T("Admin.Dashboard.ActivityOverview.ReturnRequests")</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col2">
+                <div class="date"> @Model.ReturnRequests </div>
+            </div>
+        </a>
+    </li>
+</ul>
+

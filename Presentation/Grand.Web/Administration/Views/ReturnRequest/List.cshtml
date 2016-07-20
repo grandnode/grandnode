@@ -1,0 +1,113 @@
+﻿@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.ReturnRequests").Text;
+}
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-truck"></i>
+                    @T("Admin.ReturnRequests")
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="returnrequests-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+            
+
+    <script>
+        $(document).ready(function() {
+            $("#returnrequests-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("List", "ReturnRequest"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "ReturnNumber",
+                        title: "@T("Admin.ReturnRequests.Fields.ID")",
+                        width: 50
+                    }, {
+                        field: "ProductName",
+                        title: "@T("Admin.ReturnRequests.Fields.Product")",
+                        width: 200,
+                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+                    }, {
+                        field: "Quantity",
+                        title: "@T("Admin.ReturnRequests.Fields.Quantity")",
+                        width: 100
+                    }, {
+                        field: "CustomerId",
+                        title: "@T("Admin.ReturnRequests.Fields.Customer")",
+                        width: 200,
+                        template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                    }, {
+                        field: "OrderId",
+                        title: "@T("Admin.ReturnRequests.Fields.Order")",
+                        width: 200,
+                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                    }, {
+                        field: "ReturnRequestStatusStr",
+                        title: "@T("Admin.ReturnRequests.Fields.Status")",
+                        width: 100
+                    }, {
+                        field: "CreatedOn",
+                        title: "@T("Admin.ReturnRequests.Fields.CreatedOn")",
+                        width: 100,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+                    }
+                ]
+            });
+        });
+    </script>

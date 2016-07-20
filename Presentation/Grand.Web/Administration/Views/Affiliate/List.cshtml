@@ -1,0 +1,203 @@
+﻿@model AffiliateListModel
+    @{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Affiliates").Text;
+}
+@Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cube"></i>
+                    @T("Admin.Affiliates")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchFirstName)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.SearchFirstName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchLastName)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.SearchLastName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchFriendlyUrlName)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.SearchFriendlyUrlName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                                @Html.GrandLabelFor(model => model.LoadOnlyWithOrders)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.LoadOnlyWithOrders)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlOrdersCreatedFromUtc">
+                                @Html.GrandLabelFor(model => model.OrdersCreatedFromUtc)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.OrdersCreatedFromUtc)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlOrdersCreatedToUtc">
+                                @Html.GrandLabelFor(model => model.OrdersCreatedToUtc)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.OrdersCreatedToUtc)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <button class="btn btn-success filter-submit" id="search-affiliates">
+                                    <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="affiliates-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
+
+        toggleLoadOnlyWithOrders();
+    });
+
+    function toggleLoadOnlyWithOrders() {
+        if ($('#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
+            $('#pnlOrdersCreatedFromUtc').show();
+            $('#pnlOrdersCreatedToUtc').show();
+        } else {
+            $('#pnlOrdersCreatedFromUtc').hide();
+            $('#pnlOrdersCreatedToUtc').hide();
+        }
+    }
+</script>
+
+
+<script>
+        $(document).ready(function () {
+            $("#affiliates-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("List", "Affiliate"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Address.FirstName",
+                    title: "@T("Admin.Address.Fields.FirstName")",
+                    width: 200
+                }, {
+                    field: "Address.LastName",
+                    title: "@T("Admin.Address.Fields.LastName")",
+                    width: 200
+                }, {
+                    field: "Active",
+                    title: "@T("Admin.Affiliates.Fields.Active")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Active) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    field: "Id",
+                    title: "@T("Admin.Common.Edit")",
+                    width: 100,
+                    template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+                }]
+            });
+        });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#search-affiliates').click(function () {
+            var grid = $('#affiliates-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            //grid.dataSource.read(); we already loaded the grid above using "page" function
+            return false;
+        });
+    });
+
+    $("#@Html.FieldIdFor(model => model.SearchFirstName)").keydown(function (event) {
+        if (event.keyCode == 13) {
+            $("#search-affiliates").click();
+            return false;
+        }
+    });
+    $("#@Html.FieldIdFor(model => model.SearchLastName)").keydown(function (event) {
+        if (event.keyCode == 13) {
+            $("#search-affiliates").click();
+            return false;
+        }
+    });
+    $("#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)").keydown(function (event) {
+        if (event.keyCode == 13) {
+            $("#search-affiliates").click();
+            return false;
+        }
+    });
+
+    function additionalData() {
+        var data = {
+            SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
+            SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
+            SearchFriendlyUrlName: $('#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)').val(),
+            LoadOnlyWithOrders: $('#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)').is(':checked'),
+            OrdersCreatedFromUtc: $('#@Html.FieldIdFor(model => model.OrdersCreatedFromUtc)').val(),
+            OrdersCreatedToUtc: $('#@Html.FieldIdFor(model => model.OrdersCreatedToUtc)').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+
+</script>
+        

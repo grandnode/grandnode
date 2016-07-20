@@ -1,0 +1,36 @@
+﻿@model UpgradeModel
+
+@using Grand.Core.Infrastructure;
+@using Grand.Web.Models.Upgrade;
+@using Grand.Web.Infrastructure.Installation;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+<div class="page upgrade-page">
+        @if (Model.ApplicationVersion != Model.DatabaseVersion)
+        {
+            <div class="page-title">
+                <h1> @T("UpgradeSystem.NonActual")</h1>
+            </div>
+            <div class="entity">
+                <div class="entity-title">
+                    <h2>@T("UpgradeSystem.DatabaseVersion"): @Model.DatabaseVersion</h2>
+                    <h2>@T("UpgradeSystem.ApplicationVersion"): @Model.ApplicationVersion</h2>
+                    <h3>@T("UpgradeSystem.Message1")</h3>
+                </div>
+            </div>
+            using (Html.BeginForm())
+            {
+                <div class="buttons">
+                    <input type="submit" name="run-upgrade" class="button-1 upgrade-page" value="@T("UpgradeSystem.RunUpgrade")" />
+                </div>
+            }
+        }
+        else
+        {
+            <div class="page-title">
+                <h1>@T("UpgradeSystem.Actual")</h1>
+                <h2>@T("UpgradeSystem.Message2")</h2>
+            </div>
+        }
+</div>

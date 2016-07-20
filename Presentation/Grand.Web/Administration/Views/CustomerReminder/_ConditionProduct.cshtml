@@ -1,0 +1,97 @@
+﻿@model CustomerReminderModel.ConditionModel
+
+
+    @if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerReminder.Condition.SaveBeforeEdit")
+        </div>
+    }
+    @if (!String.IsNullOrEmpty(Model.Id))
+    {
+        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="products-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Customers.CustomerReminder.Condition.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id, btnId = "btnRefreshProducts" }))    ', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="btnRefreshProducts" style="display: none" />
+            </div>
+        </div>
+
+    <script>
+            $(document).ready(function () {
+                $("#products-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ConditionProduct", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ConditionDeletePosition", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+                    {
+                            field: "ProductName",
+                            title: "@T("Admin.Customers.CustomerReminder.Condition.Fields.ProductName")",
+                            width: 300,
+                            filterable: false,
+                            sortable: false
+                    },
+                    {
+                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }]
+                });
+            });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshProducts').click(function () {
+                var grid = $("#products-grid").data('kendoGrid');
+                grid.dataSource.read();
+                return false;
+            });
+        });
+    </script>
+}

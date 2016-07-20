@@ -1,0 +1,74 @@
+﻿@model ProductModel
+@using Grand.Core.Domain.Catalog
+
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="activitylog-grid"></div>
+        </div>
+    </div>
+                
+    <script>
+        $(document).ready(function () {
+            $("#activitylog-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListActivityLog", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ActivityLogTypeName",
+                    title: "@T("Admin.Catalog.Products.ActivityLog.ActivityLogType")",
+                    width: 200,
+                }, {
+                    field: "CustomerId",
+                    title: "@T("Admin.Catalog.Products.ActivityLog.Customer")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                }, {
+                    field: "Comment",
+                    title: "@T("Admin.Catalog.Products.ActivityLog.Comment")"
+                }, {
+                    field: "CreatedOn",
+                    title: "@T("Admin.Catalog.Products.ActivityLog.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                }]
+            });
+        });
+    </script>
+ 
+}
