@@ -4437,11 +4437,23 @@
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
     <Value>Payment method restrictions</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Role">
+    <Value>Customer role</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Shipping">
+    <Value>Shipping method</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Country">
     <Value>Country</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Description">
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.DescriptionCountry">
     <Value>Please mark the checkbox(es) for the country or countries in which you want the payment method(s) not available</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.DescriptionRole">
+    <Value>Please mark the checkbox(es) for the customer roles in which you want the payment method(s) not available</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.DescriptionShipping">
+    <Value>Please mark the checkbox(es) for the shipping method in which you want the payment method(s) not available</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Updated">
     <Value>Settings have been updated successfully</Value>

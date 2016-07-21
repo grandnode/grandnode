@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Grand.Core.Domain.Orders;
+using Grand.Core.Domain.Customers;
 
 namespace Grand.Services.Payments
 {
@@ -15,7 +16,7 @@ namespace Grand.Services.Payments
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        IList<IPaymentMethod> LoadActivePaymentMethods(string filterByCustomerId = "", string storeId = "", string filterByCountryId = "");
+        IList<IPaymentMethod> LoadActivePaymentMethods(Customer filterByCustomer = null, string storeId = "", string filterByCountryId = "");
 
         /// <summary>
         /// Load payment provider by system name
@@ -40,12 +41,39 @@ namespace Grand.Services.Payments
         IList<string> GetRestictedCountryIds(IPaymentMethod paymentMethod);
 
         /// <summary>
-        /// Saves a list of coutnry identifiers in which a certain payment method is now allowed
+        /// Gets a list of role identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <returns>A list of role identifiers</returns>
+        IList<string> GetRestictedRoleIds(IPaymentMethod paymentMethod);
+
+        /// <summary>
+        /// Gets a list of shipping identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <returns>A list of role identifiers</returns>
+        IList<string> GetRestictedShippingIds(IPaymentMethod paymentMethod);
+
+        /// <summary>
+        /// Saves a list of country identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">A list of country identifiers</param>
         void SaveRestictedCountryIds(IPaymentMethod paymentMethod, List<string> countryIds);
 
+        /// <summary>
+        /// Saves a list of role identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <param name="roleIds">A list of role identifiers</param>
+        void SaveRestictedRoleIds(IPaymentMethod paymentMethod, List<string> roleIds);
+
+        /// <summary>
+        /// Saves a list of shipping identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <param name="shippingIds">A list of shipping identifiers</param>
+        void SaveRestictedShippingIds(IPaymentMethod paymentMethod, List<string> shippingIds);
 
         /// <summary>
         /// Process a payment

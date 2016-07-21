@@ -163,7 +163,7 @@ namespace Grand.Core.Plugins
                 var storeList = string.Join(",", plugin.LimitedToStores);
                 keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", storeList));
             }
-
+            
             var sb = new StringBuilder();
             for (int i = 0; i < keyValues.Count; i++)
             {

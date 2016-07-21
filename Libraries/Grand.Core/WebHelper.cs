@@ -234,7 +234,12 @@ namespace Grand.Core
                 }
                 else
                 {
-                    useSsl = _httpContext.Request.IsSecureConnection;
+                    try
+                    {
+                        useSsl = _httpContext.Request.IsSecureConnection;
+                    }
+                    catch
+                    { }
                 }
             }
 

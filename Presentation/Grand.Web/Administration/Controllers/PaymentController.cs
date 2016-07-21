@@ -15,6 +15,8 @@ using Grand.Services.Payments;
 using Grand.Services.Security;
 using Grand.Web.Framework.Kendoui;
 using Grand.Web.Framework.Mvc;
+using Grand.Services.Customers;
+using Grand.Services.Shipping;
 
 namespace Grand.Admin.Controllers
 {
@@ -27,6 +29,8 @@ namespace Grand.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
 	    private readonly ICountryService _countryService;
+        private readonly ICustomerService _customerService;
+        private readonly IShippingService _shippingService;
         private readonly IPluginFinder _pluginFinder;
 	    private readonly IWebHelper _webHelper;
 	    private readonly ILocalizationService _localizationService;
@@ -40,6 +44,8 @@ namespace Grand.Admin.Controllers
             ISettingService settingService, 
             IPermissionService permissionService,
             ICountryService countryService,
+            ICustomerService customerService,
+            IShippingService shippingService,
             IPluginFinder pluginFinder,
             IWebHelper webHelper,
             ILocalizationService localizationService)
@@ -49,6 +55,8 @@ namespace Grand.Admin.Controllers
             this._settingService = settingService;
             this._permissionService = permissionService;
             this._countryService = countryService;
+            this._customerService = customerService;
+            this._shippingService = shippingService;
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
             this._localizationService = localizationService;
@@ -155,6 +163,9 @@ namespace Grand.Admin.Controllers
 
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             var countries = _countryService.GetAllCountries(showHidden: true);
+            var customerroles = _customerService.GetAllCustomerRoles(showHidden: true);
+            var shippings = _shippingService.GetAllShippingMethods();
+
             foreach (var pm in paymentMethods)
             {
                 model.AvailablePaymentMethods.Add(pm.ToModel());
@@ -163,6 +174,18 @@ namespace Grand.Admin.Controllers
             {
                 model.AvailableCountries.Add(c.ToModel());
             }
+            foreach (var r in customerroles)
+            {
+                model.AvailableCustomerRoles.Add(r.ToModel());
+            }
+            foreach (var s in shippings)
+            {
+                model.AvailableShippingMethods.Add(new Models.Shipping.ShippingMethodModel() {
+                     Id = s.Id,
+                     Name = s.Name
+                });
+            }
+
             foreach (var pm in paymentMethods)
             {
                 var restictedCountries = _paymentService.GetRestictedCountryIds(pm);
@@ -173,6 +196,25 @@ namespace Grand.Admin.Controllers
                         model.Resticted[pm.PluginDescriptor.SystemName] = new Dictionary<string, bool>();
                     model.Resticted[pm.PluginDescriptor.SystemName][c.Id] = resticted;
                 }
+
+                var restictedRoles = _paymentService.GetRestictedRoleIds(pm);
+                foreach (var r in customerroles)
+                {
+                    bool resticted = restictedRoles.Contains(r.Id);
+                    if (!model.RestictedRole.ContainsKey(pm.PluginDescriptor.SystemName))
+                        model.RestictedRole[pm.PluginDescriptor.SystemName] = new Dictionary<string, bool>();
+                    model.RestictedRole[pm.PluginDescriptor.SystemName][r.Id] = resticted;
+                }
+
+                var restictedShipping = _paymentService.GetRestictedShippingIds(pm);
+                foreach (var s in shippings)
+                {
+                    bool resticted = restictedShipping.Contains(s.Name);
+                    if (!model.RestictedShipping.ContainsKey(pm.PluginDescriptor.SystemName))
+                        model.RestictedShipping[pm.PluginDescriptor.SystemName] = new Dictionary<string, bool>();
+                    model.RestictedShipping[pm.PluginDescriptor.SystemName][s.Name] = resticted;
+                }
+
             }
 
             return View(model);
@@ -186,6 +228,8 @@ namespace Grand.Admin.Controllers
 
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
             var countries = _countryService.GetAllCountries(showHidden: true);
+            var customerroles = _customerService.GetAllCustomerRoles(showHidden: true);
+            var shippings = _shippingService.GetAllShippingMethods();
 
             foreach (var pm in paymentMethods)
             {
@@ -202,6 +246,35 @@ namespace Grand.Admin.Controllers
                     }
                 }
                 _paymentService.SaveRestictedCountryIds(pm, newCountryIds);
+
+
+                formKey = "restrictrole_" + pm.PluginDescriptor.SystemName;
+                var roleIdsToRestrict = (form[formKey] != null ? form[formKey].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
+                    .Select(x => x).ToList();
+
+                var newRoleIds = new List<string>();
+                foreach (var r in customerroles)
+                {
+                    if (roleIdsToRestrict.Contains(r.Id))
+                    {
+                        newRoleIds.Add(r.Id);
+                    }
+                }
+                _paymentService.SaveRestictedRoleIds(pm, newRoleIds);
+
+                formKey = "restrictship_" + pm.PluginDescriptor.SystemName;
+                var shipIdsToRestrict = (form[formKey] != null ? form[formKey].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>())
+                    .Select(x => x).ToList();
+
+                var newShipIds = new List<string>();
+                foreach (var s in shippings)
+                {
+                    if (shipIdsToRestrict.Contains(s.Name))
+                    {
+                        newShipIds.Add(s.Name);
+                    }
+                }
+                _paymentService.SaveRestictedShippingIds(pm, newShipIds);
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));

@@ -296,16 +296,6 @@ namespace Grand.Core.Plugins
         /// <returns>Result</returns>
         private static bool IsAlreadyLoaded(FileInfo fileInfo)
         {
-            //compare full assembly name
-            //var fileAssemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
-            //foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-            //{
-            //    if (a.FullName.Equals(fileAssemblyName.FullName, StringComparison.InvariantCultureIgnoreCase))
-            //        return true;
-            //}
-            //return false;
-
-            //do not compare the full assembly name, just filename
             try
             {
                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);

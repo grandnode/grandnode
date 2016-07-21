@@ -569,7 +569,7 @@ namespace Grand.Web.Controllers
             #region Button payment methods
 
             var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id)
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();

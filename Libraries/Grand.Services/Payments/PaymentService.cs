@@ -7,6 +7,9 @@ using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
+using Grand.Core.Domain.Customers;
+using Grand.Services.Common;
+using Grand.Core.Domain.Shipping;
 
 namespace Grand.Services.Payments
 {
@@ -54,11 +57,42 @@ namespace Grand.Services.Payments
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="filterByCountryId">Load records allowed only in a specified country; pass 0 to load all records</param>
         /// <returns>Payment methods</returns>
-        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(string filterByCustomerId = "", string storeId = "", string filterByCountryId = "")
+        public virtual IList<IPaymentMethod> LoadActivePaymentMethods(Customer filterByCustomer = null, string storeId = "", string filterByCountryId = "")
         {
-            return LoadAllPaymentMethods(storeId, filterByCountryId)
+            var pm = LoadAllPaymentMethods(storeId, filterByCountryId)
                    .Where(provider => _paymentSettings.ActivePaymentMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
                    .ToList();
+
+            if(filterByCustomer!=null)
+            {
+
+                var selectedShippingOption = filterByCustomer.GetAttribute<ShippingOption>(
+                       SystemCustomerAttributeNames.SelectedShippingOption, storeId);
+
+                for (int i = pm.Count - 1; i >= 0; i--)
+                {
+                    var restictedRoleIds = GetRestictedRoleIds(pm[i]);
+                    if (filterByCustomer.CustomerRoles.Where(x => restictedRoleIds.Contains(x.Id)).Count() > 0)
+                    {
+                        pm.Remove(pm[i]);
+                    }
+                }
+
+                if (selectedShippingOption != null)
+                {
+                    for (int i = pm.Count - 1; i >= 0; i--)
+                    {
+                        var restictedRoleIds = GetRestictedShippingIds(pm[i]);
+                        if (restictedRoleIds.Contains(selectedShippingOption.Name))
+                        {
+                            pm.Remove(pm[i]);
+                        }
+                    }
+                }
+
+            }
+
+            return pm;
         }
 
         /// <summary>
@@ -118,7 +152,40 @@ namespace Grand.Services.Payments
         }
 
         /// <summary>
-        /// Saves a list of coutnry identifiers in which a certain payment method is now allowed
+        /// Gets a list of role identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <returns>A list of role identifiers</returns>
+        public virtual IList<string> GetRestictedRoleIds(IPaymentMethod paymentMethod)
+        {
+            if (paymentMethod == null)
+                throw new ArgumentNullException("paymentMethod");
+
+            var settingKey = string.Format("PaymentMethodRestictionsRole.{0}", paymentMethod.PluginDescriptor.SystemName);
+            var restictedRoleIds = _settingService.GetSettingByKey<List<string>>(settingKey);
+            if (restictedRoleIds == null)
+                restictedRoleIds = new List<string>();
+            return restictedRoleIds;
+        }
+
+        /// <summary>
+        /// Gets a list of role identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <returns>A list of role identifiers</returns>
+        public virtual IList<string> GetRestictedShippingIds(IPaymentMethod paymentMethod)
+        {
+            if (paymentMethod == null)
+                throw new ArgumentNullException("paymentMethod");
+
+            var settingKey = string.Format("PaymentMethodRestictionsShipping.{0}", paymentMethod.PluginDescriptor.SystemName);
+            var restictedShippingIds = _settingService.GetSettingByKey<List<string>>(settingKey);
+            if (restictedShippingIds == null)
+                restictedShippingIds = new List<string>();
+            return restictedShippingIds;
+        }
+        /// <summary>
+        /// Saves a list of country identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <param name="countryIds">A list of country identifiers</param>
@@ -131,6 +198,33 @@ namespace Grand.Services.Payments
             _settingService.SetSetting(settingKey, countryIds);
         }
 
+        /// <summary>
+        /// Saves a list of role identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <param name="countryIds">A list of country identifiers</param>
+        public virtual void SaveRestictedRoleIds(IPaymentMethod paymentMethod, List<string> roleIds)
+        {
+            if (paymentMethod == null)
+                throw new ArgumentNullException("paymentMethod");
+
+            var settingKey = string.Format("PaymentMethodRestictionsRole.{0}", paymentMethod.PluginDescriptor.SystemName);
+            _settingService.SetSetting(settingKey, roleIds);
+        }
+
+        /// <summary>
+        /// Saves a list of shipping identifiers in which a certain payment method is now allowed
+        /// </summary>
+        /// <param name="paymentMethod">Payment method</param>
+        /// <param name="shippingIds">A list of country identifiers</param>
+        public virtual void SaveRestictedShippingIds(IPaymentMethod paymentMethod, List<string> shippingIds)
+        {
+            if (paymentMethod == null)
+                throw new ArgumentNullException("paymentMethod");
+
+            var settingKey = string.Format("PaymentMethodRestictionsShipping.{0}", paymentMethod.PluginDescriptor.SystemName);
+            _settingService.SetSetting(settingKey, shippingIds);
+        }
 
         /// <summary>
         /// Process a payment

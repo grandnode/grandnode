@@ -120,6 +120,7 @@
     <Compile Include="Domain\Messages\CampaignCondition.cs" />
     <Compile Include="Domain\Messages\CampaignCustomerSubscription.cs" />
     <Compile Include="Domain\Orders\OrderByTimeReportLine.cs" />
+    <Compile Include="Domain\Payments\PaymentRestrictionAmount.cs" />
     <Compile Include="Domain\Seo\SeoSettings.cs" />
     <Compile Include="Domain\Shipping\PickupPoints.cs" />
     <Compile Include="Domain\Tasks\MonthOptionChoice.cs" />

@@ -259,7 +259,7 @@
                 grid.dataSource.page(1); //new search. Set page size to 1
                 //grid.dataSource.read(); we already loaded the grid above using "page" function
                 //clear selected checkboxes
-                $('.checkboxGroups').attr('checked', false).change();
+                $('.checkboxGroups').prop('checked', false).change();
                 selectedIds = [];
                 return false;
             });
@@ -306,7 +306,7 @@
             });
 
             $('#mastercheckbox').click(function () {
-                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
             });
 
             //wire up checkboxes.
