@@ -66,6 +66,7 @@ namespace Grand.Admin.Models.Orders
 
             [NopResourceDisplayName("Admin.GiftCards.History.Order")]
             public string OrderId { get; set; }
+            public int OrderNumber { get; set; }
 
             [NopResourceDisplayName("Admin.GiftCards.History.CreatedOn")]
             public DateTime CreatedOn { get; set; }

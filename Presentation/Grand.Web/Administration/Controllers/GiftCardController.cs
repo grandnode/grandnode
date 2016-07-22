@@ -196,7 +196,10 @@ namespace Grand.Admin.Controllers
                 return AccessDeniedView();
 
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
-            var order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+            Order order = null;
+            if (giftCard.PurchasedWithOrderItem != null)
+                order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
@@ -321,7 +324,8 @@ namespace Grand.Admin.Controllers
                 .Select(x => new GiftCardModel.GiftCardUsageHistoryModel
                 {
                     Id = x.Id,
-                    OrderId = x.UsedWithOrderId,
+                    OrderId = x.UsedWithOrderId,        
+                    OrderNumber = _orderService.GetOrderById(x.UsedWithOrderId) !=null ? _orderService.GetOrderById(x.UsedWithOrderId).OrderNumber : 0,
                     UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 })
