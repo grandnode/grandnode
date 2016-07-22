@@ -931,11 +931,12 @@ namespace Grand.Admin.Controllers
                     new Address
                     {
                         CreatedOnUtc = DateTime.UtcNow,
+                        Id = "",
                     };
                 //update ID manually (in case we're in multi-store configuration mode it'll be set to the shared one)
                 model.DefaultTaxAddress.Id = addressId;
                 originAddress = model.DefaultTaxAddress.ToEntity(originAddress);
-                if (!String.IsNullOrEmpty(originAddress.Id))
+                if (!String.IsNullOrEmpty(model.DefaultTaxAddress.Id))
                     _addressService.UpdateAddressSettings(originAddress);
                 else
                     _addressService.InsertAddressSettings(originAddress);

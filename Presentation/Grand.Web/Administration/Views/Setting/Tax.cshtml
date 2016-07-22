@@ -186,15 +186,17 @@
                                     @Html.ValidationMessageFor(model => model.TaxBasedOn)
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
-                                    @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
-                                    <strong>@Html.GrandLabelFor(model => model.DefaultTaxAddress, new Dictionary<string, object> { { "class", "control-label" } }, false)</strong>
+                            <div class="form-horizontal portlet light bg-inverse form-fit">
+                                <div class="form-group" style="padding-top:15px;margin-bottom: 0px;">
+                                    <div class="col-md-3 col-sm-3 text-right">
+                                        @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
+                                        <strong>@T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")</strong>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div id="pnlDefaultTaxAddress">
-                                    @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
+                                <div class="form-group">
+                                    <div id="pnlDefaultTaxAddress">
+                                        @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
