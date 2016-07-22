@@ -62,7 +62,7 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
             }
 
             string restrictByCountryId = (getShippingOptionRequest.ShippingAddress != null && !String.IsNullOrEmpty(getShippingOptionRequest.ShippingAddress.CountryId)) ? getShippingOptionRequest.ShippingAddress.CountryId : "";
-            var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId);
+            var shippingMethods = this._shippingService.GetAllShippingMethods(restrictByCountryId, getShippingOptionRequest.Customer);
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();

@@ -278,6 +278,8 @@ namespace Grand.Admin.Controllers
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Payment.MethodRestrictions.Updated"));
+            //selected tab
+            SaveSelectedTabIndex();
             return RedirectToAction("MethodRestrictions");
         }
 

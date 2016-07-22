@@ -45,6 +45,11 @@ namespace Grand.Services.Shipping
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
+        private const string SHIPPINGMETHOD_PATTERN_KEY = "Nop.shippingmethod.";
+
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
         private const string PICKUPPOINTS_PATTERN_KEY = "Nop.pickuppoint.";
 
         /// <summary>
@@ -197,6 +202,9 @@ namespace Grand.Services.Shipping
 
             _shippingMethodRepository.Delete(shippingMethod);
 
+            //clear cache
+            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
+
             //event notification
             _eventPublisher.EntityDeleted(shippingMethod);
         }
@@ -216,30 +224,28 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <param name="filterByCountryId">The country indentifier to filter by</param>
         /// <returns>Shipping methods</returns>
-        public virtual IList<ShippingMethod> GetAllShippingMethods(string filterByCountryId = "")
+        public virtual IList<ShippingMethod> GetAllShippingMethods(string filterByCountryId = "", Customer customer = null)
         {
-            if (!String.IsNullOrEmpty(filterByCountryId))
-            {
-                var query1 = from sm in _shippingMethodRepository.Table
-                             where sm.RestrictedCountries.Any(c=>c.Id == filterByCountryId)
-                             select sm.Id;
-                var cc = query1.ToList();
-                var query2 = from sm in _shippingMethodRepository.Table
-                             where !cc.Contains(sm.Id)
-                             orderby sm.DisplayOrder
-                             select sm;
+            List<ShippingMethod> shippingMethods = new List<ShippingMethod>();
 
-                var shippingMethods = query2.ToList();
-                return shippingMethods;
-            }
-            else
+            shippingMethods = _cacheManager.Get(SHIPPINGMETHOD_PATTERN_KEY, () =>
             {
                 var query = from sm in _shippingMethodRepository.Table
                             orderby sm.DisplayOrder
                             select sm;
-                var shippingMethods = query.ToList();
-                return shippingMethods;
+                return query.ToList();
+            });
+
+            if (!String.IsNullOrEmpty(filterByCountryId))
+            {
+                shippingMethods = shippingMethods.Where(x => !x.CountryRestrictionExists(filterByCountryId)).ToList();
             }
+            if(customer !=null)
+            {
+                shippingMethods = shippingMethods.Where(x => !x.CustomerRoleRestrictionExists(customer.CustomerRoles.Select(y=>y.Id).ToList())).ToList();
+            }
+
+            return shippingMethods;
         }
 
         /// <summary>
@@ -252,6 +258,9 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("shippingMethod");
 
             _shippingMethodRepository.Insert(shippingMethod);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityInserted(shippingMethod);
@@ -267,6 +276,9 @@ namespace Grand.Services.Shipping
                 throw new ArgumentNullException("shippingMethod");
 
             _shippingMethodRepository.Update(shippingMethod);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(shippingMethod);

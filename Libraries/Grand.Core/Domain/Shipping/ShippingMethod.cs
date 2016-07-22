@@ -10,6 +10,7 @@ namespace Grand.Core.Domain.Shipping
     public partial class ShippingMethod : BaseEntity, ILocalizedEntity
     {
         private ICollection<Country> _restrictedCountries;
+        private ICollection<string> _restrictedRoles;
 
         public ShippingMethod()
         {
@@ -42,6 +43,15 @@ namespace Grand.Core.Domain.Shipping
         {
             get { return _restrictedCountries ?? (_restrictedCountries = new List<Country>()); }
             protected set { _restrictedCountries = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the restricted roles
+        /// </summary>
+        public virtual ICollection<string> RestrictedRoles
+        {
+            get { return _restrictedRoles ?? (_restrictedRoles = new List<string>()); }
+            protected set { _restrictedRoles = value; }
         }
     }
 }

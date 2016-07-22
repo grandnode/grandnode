@@ -21,6 +21,7 @@ using Grand.Web.Framework.Kendoui;
 using Grand.Web.Framework.Mvc;
 using Grand.Core.Domain.Localization;
 using Grand.Services.Stores;
+using Grand.Services.Customers;
 
 namespace Grand.Admin.Controllers
 {
@@ -40,6 +41,8 @@ namespace Grand.Admin.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly IWebHelper _webHelper;
         private readonly IStoreService _storeService;
+        private readonly ICustomerService _customerService;
+
 
         #endregion
 
@@ -56,7 +59,8 @@ namespace Grand.Admin.Controllers
             ILanguageService languageService,
             IPluginFinder pluginFinder,
             IWebHelper webHelper,
-            IStoreService storeService)
+            IStoreService storeService,
+            ICustomerService customerService)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
@@ -70,6 +74,7 @@ namespace Grand.Admin.Controllers
             this._pluginFinder = pluginFinder;
             this._webHelper = webHelper;
             this._storeService = storeService;
+            this._customerService = customerService;
 
         }
 
@@ -985,6 +990,8 @@ namespace Grand.Admin.Controllers
 
             var countries = _countryService.GetAllCountries(showHidden:true);
             var shippingMethods = _shippingService.GetAllShippingMethods();
+            var customerRoles = _customerService.GetAllCustomerRoles();
+
             foreach (var country in countries)
             {
                 model.AvailableCountries.Add(new CountryModel
@@ -1001,7 +1008,13 @@ namespace Grand.Admin.Controllers
                     Name = sm.Name
                 });
             }
+            foreach (var r in customerRoles)
+            {
+                model.AvailableCustomerRoles.Add(r.ToModel());
+            }
+
             foreach (var country in countries)
+            {
                 foreach (var shippingMethod in shippingMethods)
                 {
                     bool restricted = shippingMethod.CountryRestrictionExists(country.Id);
@@ -1009,6 +1022,19 @@ namespace Grand.Admin.Controllers
                         model.Restricted[country.Id] = new Dictionary<string, bool>();
                     model.Restricted[country.Id][shippingMethod.Id] = restricted;
                 }
+            }
+
+            foreach (var role in customerRoles)
+            {
+                foreach (var shippingMethod in shippingMethods)
+                {
+                    bool restricted = shippingMethod.CustomerRoleRestrictionExists(role.Id);
+                    if (!model.RestictedRole.ContainsKey(role.Id))
+                        model.RestictedRole[role.Id] = new Dictionary<string, bool>();
+                    model.RestictedRole[role.Id][shippingMethod.Id] = restricted;
+                }
+            }
+
 
             return View(model);
         }
@@ -1021,7 +1047,7 @@ namespace Grand.Admin.Controllers
 
             var countries = _countryService.GetAllCountries(showHidden:true);
             var shippingMethods = _shippingService.GetAllShippingMethods();
-
+            var customerRoles = _customerService.GetAllCustomerRoles();
 
             foreach (var shippingMethod in shippingMethods)
             {
@@ -1053,9 +1079,42 @@ namespace Grand.Admin.Controllers
                         }
                     }
                 }
+
+                formKey = "restrictrole_" + shippingMethod.Id;
+                var roleIdsToRestrict = form[formKey] != null
+                    ? form[formKey].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x)
+                    .ToList()
+                    : new List<string>();
+
+
+                foreach (var role in customerRoles)
+                {
+
+                    bool restrict = roleIdsToRestrict.Contains(role.Id);
+                    if (restrict)
+                    {
+                        if (shippingMethod.RestrictedRoles.FirstOrDefault(c => c == role.Id) == null)
+                        {
+                            shippingMethod.RestrictedRoles.Add(role.Id);
+                            _shippingService.UpdateShippingMethod(shippingMethod);
+                        }
+                    }
+                    else
+                    {
+                        if (shippingMethod.RestrictedRoles.FirstOrDefault(c => c == role.Id) != null)
+                        {
+                            shippingMethod.RestrictedRoles.Remove(role.Id);
+                            _shippingService.UpdateShippingMethod(shippingMethod);
+                        }
+                    }
+                }
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Restrictions.Updated"));
+            //selected tab
+            SaveSelectedTabIndex();
+
             return RedirectToAction("Restrictions");
         }
 

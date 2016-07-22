@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Shipping;
+using Grand.Core.Domain.Customers;
 
 namespace Grand.Services.Shipping
 {
@@ -55,7 +56,7 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <param name="filterByCountryId">The country indentifier to filter by</param>
         /// <returns>Shipping methods</returns>
-        IList<ShippingMethod> GetAllShippingMethods(string filterByCountryId = "");
+        IList<ShippingMethod> GetAllShippingMethods(string filterByCountryId = "", Customer customer = null);
 
         /// <summary>
         /// Inserts a shipping method

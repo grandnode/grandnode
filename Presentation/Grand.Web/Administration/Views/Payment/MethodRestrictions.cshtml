@@ -33,8 +33,7 @@
                             });
                         });
                     </script>                    
-
-
+                    
                     <div id="paymentrestriction-edit" style="display:none">
                         <ul>
                             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -43,7 +42,7 @@
                             <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
                                 @T("Admin.Configuration.Payment.MethodRestrictions.Role")
                             </li>
-                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
                                 @T("Admin.Configuration.Payment.MethodRestrictions.Shipping")
                             </li>
                         </ul>
@@ -58,7 +57,19 @@
                         </div>
                     </div>
 
+                    @{
+                        //custom tabs
+                        var eventMessage = new AdminTabStripCreated(this.Html, "paymentrestriction-edit");
+                        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+                        foreach (var eventBlock in eventMessage.BlocksToRender)
+                        {
+                            @eventBlock
+                        }
+                    }
 
+
+                    @*save selected tab index*@
+                    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
                 </div>
             </div>
