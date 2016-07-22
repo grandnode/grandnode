@@ -83,6 +83,7 @@ namespace Grand.Web.Extensions
             ITaxService taxService,
             ICurrencyService currencyService,
             IPictureService pictureService,
+            IMeasureService measureService,
             IWebHelper webHelper,
             ICacheManager cacheManager,
             CatalogSettings catalogSettings,
@@ -186,6 +187,10 @@ namespace Grand.Web.Extensions
                                                         priceModel.OldPrice = null;
                                                         priceModel.Price = String.Format(localizationService.GetResource("Products.PriceRangeFrom"), priceFormatter.FormatPrice(finalPrice));
                                                         priceModel.PriceValue = finalPrice;
+
+                                                        //PAngV baseprice (used in Germany)
+                                                        priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice,
+                                                            localizationService, measureService, currencyService, workContext, priceFormatter);
                                                     }
                                                     else
                                                     {
@@ -312,6 +317,11 @@ namespace Grand.Web.Extensions
                                             priceModel.DisplayTaxShippingInfo = catalogSettings.DisplayTaxShippingInfoProductBoxes
                                                 && product.IsShipEnabled &&
                                                 !product.IsFreeShipping;
+
+                                            //PAngV baseprice (used in Germany)
+                                            priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice,
+                                                localizationService, measureService, currencyService, workContext, priceFormatter);
+
                                         }
                                     }
                                 }

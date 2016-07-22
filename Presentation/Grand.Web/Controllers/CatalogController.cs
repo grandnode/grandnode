@@ -64,6 +64,7 @@ namespace Grand.Web.Controllers
         private readonly ITopicService _topicService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISearchTermService _searchTermService;
+        private readonly IMeasureService _measureService;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
@@ -101,6 +102,7 @@ namespace Grand.Web.Controllers
             ITopicService topicService,
             IEventPublisher eventPublisher,
             ISearchTermService searchTermService,
+            IMeasureService measureService,
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
@@ -134,6 +136,7 @@ namespace Grand.Web.Controllers
             this._topicService = topicService;
             this._eventPublisher = eventPublisher;
             this._searchTermService = searchTermService;
+            this._measureService = measureService;
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
@@ -393,7 +396,7 @@ namespace Grand.Web.Controllers
                 _storeContext, _categoryService, _productService, _specificationAttributeService,
                 _priceCalculationService, _priceFormatter, _permissionService,
                 _localizationService, _taxService, _currencyService,
-                _pictureService, _webHelper, _cacheManager,
+                _pictureService, _measureService, _webHelper, _cacheManager,
                 _catalogSettings, _mediaSettings, products,
                 preparePriceModel, preparePictureModel,
                 productThumbPictureSize, prepareSpecificationAttributes,

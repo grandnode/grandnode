@@ -39,6 +39,7 @@ namespace Grand.Web.Models.Catalog
             public string OldPrice { get; set; }
             public string Price {get;set;}
             public decimal PriceValue { get; set; }
+            public string BasePricePAngV { get; set; }
             public bool DisableBuyButton { get; set; }
             public bool DisableWishlistButton { get; set; }
             public bool DisableAddToCompareListButton { get; set; }
