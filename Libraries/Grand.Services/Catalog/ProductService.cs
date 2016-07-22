@@ -1142,7 +1142,7 @@ namespace Grand.Services.Catalog
 
             var doc = MongoDB.Bson.Serialization.BsonSerializer
                         .Deserialize<BsonDocument>
-                        ("{$where: \" this.MinStockQuantity > this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0 " + vendors + " \" }");
+                        ("{$where: \" this.MinStockQuantity >= this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0 " + vendors + " \" }");
 
             products = _productRepository.Collection.Find(new CommandDocument(doc)).ToListAsync().Result;
 
