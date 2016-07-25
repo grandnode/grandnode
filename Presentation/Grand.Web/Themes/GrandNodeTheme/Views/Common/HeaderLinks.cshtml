@@ -1,5 +1,27 @@
 ﻿@model HeaderLinksModel
 @using Grand.Web.Models.Common;
+
+@if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+{
+    <div id="pmnotificationmodal" class="modal">
+        <div class="modal-content">
+            <h4>Notification</h4>
+            <p>@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">LATER</a>
+            <a href="/privatemessages" class="modal-action modal-close waves-effect waves-green btn-flat">READ</a>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#pmnotificationmodal').insertAfter('.master-column-wrapper');
+            $('#pmnotificationmodal').openModal();
+        });
+    </script>
+}
+
 <div class="header-links">
     <ul>
         @Html.Widget("header_links_before")
@@ -52,35 +74,18 @@
                 </a>
             </li>
         }
-        @*@if (Model.ShoppingCartEnabled)
-        {
-            <li id="topcartlink">
-                <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
-                    <span class="cart-label">@T("ShoppingCart")</span>
-                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
-                </a>
-            </li>
-        }*@
         @Html.Widget("header_links_after")
 
         
     </ul>
+
     <script type="text/javascript">
         $(function () {
             $(AjaxCart.topcartselector).html('@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)');
         });
    
     </script>
-
-    @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
-    {
-        //new private message notification
-        <script type="text/javascript">
-            $(document).ready(function () {
-                displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))', 'success', false);
-            });
-        </script>
-    }
+    
     @if (Model.ShoppingCartEnabled)
     {
         <script type="text/javascript">

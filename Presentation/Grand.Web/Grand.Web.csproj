@@ -2715,6 +2715,12 @@
     <Content Include="Themes\GrandNodeTheme\Views\Common\Logo.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Common\StoreThemeSelector.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Customer\UserAgreement.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Vendor\Vendor.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Common\ContactVendor.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\PrivateMessages\Inbox.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\PrivateMessages\Index.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\PrivateMessages\SentItems.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Profile\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

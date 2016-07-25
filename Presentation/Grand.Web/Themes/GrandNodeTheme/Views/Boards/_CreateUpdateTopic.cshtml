@@ -27,7 +27,7 @@
             @Html.HiddenFor(model => model.ForumId)
             <div class="fieldset">
                 <div class="form-fields">
-                    <div class="inputs">
+                    <div class="inputs inputtitleforum">
                         <label>@T("Forum.ForumName"):</label>
                         <strong>@Model.ForumName</strong>
                     </div>
@@ -46,7 +46,7 @@
                     </div>
                     @if (Model.IsCustomerAllowedToSetTopicPriority)
                     {
-                        <div class="inputs">
+                        <div class="inputs inputpriorityforum">
                             <label>@T("Forum.Priority"):</label>
                             @Html.DropDownList("TopicTypeId", new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))
                         </div>

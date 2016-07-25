@@ -197,12 +197,7 @@ label, label + * {
  }
 
 
-/*.page-title {
-	min-height: 50px;
-	margin: 0 0 25px;
-	border-bottom: 1px solid #ddd;
-	padding: 6px 10px;
-}*/
+
 .page-title h1 {
 	font-size: 30px;
 	font-weight: normal;
@@ -220,9 +215,7 @@ label, label + * {
 	clear: both;
 }
 .center-1 .page-title,
-.center-1 .title {
-	/*text-align: center;*/
-}
+
 .buttons {
 	margin: 0 0 30px;
 }
@@ -413,6 +406,9 @@ label, label + * {
     white-space: nowrap;
 	font-weight: normal;
     background-color: #fff;
+}
+.data-table th {
+    padding: 5px;
 }
 .cart td,
 .data-table td,
@@ -931,11 +927,6 @@ label, label + * {
 .search-box form {
     display: flex;
 }
-/*.search-box form:after {
-	content: "";
-	display: block;
-	clear: both;
-}*/
 
 .search-box .ui-autocomplete-loading {
 	background: #fff url('../images/ajax-loader-small.gif') right center no-repeat;
@@ -1122,9 +1113,7 @@ label, label + * {
 .newsletter-email>input.newsletter-subscribe-text:-ms-input-placeholder {
     color: #777;
 }
-/*.newsletter-validation .please-wait {
-	display: none !important; 
-}*/
+
 footer.page-footer {
     background-color: #eee;
 }
@@ -1213,15 +1202,6 @@ footer.page-footer .footer-copyright a{
 	margin: 24px 0 0;
     text-align: center;
 }
-/*.block .view-all a {
-	display: inline-block;
-	padding: 10px 15px;
-	font-size: 16px;
-	color: #8bc34a;
-}
-.block .view-all a:hover {
-	text-decoration: underline;
-}*/
 
 .block .tags ul {
 	font-size: 0;
@@ -1593,15 +1573,7 @@ footer.page-footer .footer-copyright a{
 	font-size: 16px;
 	color: #8bc34a;
 }
-/*.vendor-list li a:before {
-	content: "";
-	position: absolute;
-	top: 13px;
-	left: -15px;
-	width: 5px;
-	height: 5px;
-	background-color: #ddd;   
-}*/
+
 .vendor-list li a:hover {
 	text-decoration: underline;
 }
@@ -2215,36 +2187,14 @@ footer.page-footer .footer-copyright a{
 	margin: -32px 0 0;
 }
 
-/*.giftcard {
-	margin: 0 0 20px;
-	overflow: hidden;
+.ask-a-question-page .fieldset .form-fields .inputs label {
+    width: 87px;
 }
-.giftcard div {
-	margin: 0 0 10px;
-}
-.giftcard label {
-	display: block;
-	margin: 0 auto 5px;
-	font-weight: bold;
-	color: #444;
-}
-.giftcard input,
-.giftcard textarea {
-	width: 350px;
-	max-width: 100%;
-}
-.giftcard textarea {
-	height: 150px;
-}*/
+
 
 
 /********** PRODUCT REVIEWS **********/
 
-
-
-/*.product-reviews-page h1 a {
-	color: #8bc34a;
-}*/
 .product-reviews-page h1 a:before,
 .product-reviews-page h1 a:after {
 	content: "''";
@@ -4391,6 +4341,9 @@ input.qq-edit-filename {
 .private-message-send-page .page-title {
 	margin: 0 0 -1px;
 }
+.forum-edit-page .page-body form .fieldset .form-fields .inputs label {
+    width: auto;
+}
 .move-topic-page label {
 	white-space: normal;
 }
@@ -4462,6 +4415,48 @@ input.qq-edit-filename {
 	font-size: 18px;
 	color: #8bc34a;
 }
+.center-1 .forums-header .forum-search-box {
+    width: 75%;
+    display: inline-block;
+}
+
+.center-1 .forums-header .forum-search-box .basic {
+    width: 80%;
+}
+
+.center-1 .forums-header .forum-search-box .basic a:hover {
+    color: #8bc34a;
+}
+
+.center-1 .forums-header .forum-search-box .basic a {
+    margin-left: 15px;
+}
+
+.inputpriorityforum label {
+    display: inline-block;
+}
+
+.inputpriorityforum .select-wrapper {
+    display: inline-block;
+    width: 80%;
+}
+
+.inputpriorityforum {
+    max-width: 590px;
+    margin: 20px auto;
+}
+
+.inputtitleforum {
+    max-width: 590px;
+    margin: 20px auto;
+}
+
+.inputtitleforum input[type="text"] {
+    width: 87%;
+    max-width: 87%;
+}
+
+
 
 /* jQuery tabs */
 
@@ -4526,7 +4521,7 @@ input.qq-edit-filename {
 	margin: 0 0 30px;
 }
 .private-messages-page th.select {
-	text-align: center;
+	text-align: left;
 }
 .private-messages-page td.from, 
 .private-messages-page td.to,
@@ -5634,6 +5629,19 @@ footer.page-footer .footer-copyright {
 	text-align: left;
 }
 
+.tabs .tab a {
+    color: #8bc34a;
+}
+.tabs .tab a:hover {
+    color:rgba(139, 195, 74, 0.38);
+}
+.tabs .indicator {
+    background-color: #8bc34a;
+}
+.tabcontroll .tabnumber {
+    padding-top: 15px;
+}
+
 select[name="DateOfBirthDay"],
 select[name="DateOfBirthMonth"],
 select[name="DateOfBirthYear"] {
@@ -6603,5 +6611,19 @@ select[name="DateOfBirthYear"] {
 
     .overview .add-to-cart-panel .qty-input {
         margin-right: 10px;
+    }
+}
+
+@media (min-width: 1367px) {
+    .message label {
+        width: 415px;
+    }
+    .inputs input[type="text"] {
+        max-width: 75%;
+    }
+}
+@media (min-width: 1001px) and (max-width: 1366px) {
+    .inputs input[type="text"] {
+        max-width: 75%;
     }
 }
