@@ -85,7 +85,7 @@
                     }
                     @if (Model.IsCurrentCustomerAllowedToDeletePost)
                     {                        
-                        <a href="#" class="delete-post-button" onclick="deletepost(@(Model.Id))">@T("Forum.DeletePost").Text</a>
+                        <a href="#" class="delete-post-button" onclick="deletepost('@(Model.Id)')">@T("Forum.DeletePost").Text</a>
                     }
                 </div>
                 <div class="quote-post">

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web.Mvc;
 using Grand.Core.Infrastructure;
 using Grand.Services.Security;
+using Grand.Core;
+using Grand.Core.Domain.Customers;
 
 namespace Grand.Web.Framework.Controllers
 {
@@ -53,6 +55,11 @@ namespace Grand.Web.Framework.Controllers
 
             if (OutputCacheAttribute.IsChildActionCacheActive(filterContext))
                 throw new InvalidOperationException("You cannot use [AdminAuthorize] attribute when a child action cache is active");
+
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            if (workContext.CurrentCustomer.IsVendor())
+                if (workContext.CurrentVendor == null)
+                    filterContext.Result = new HttpUnauthorizedResult();
 
             if (IsAdminPageRequested(filterContext))
             {
