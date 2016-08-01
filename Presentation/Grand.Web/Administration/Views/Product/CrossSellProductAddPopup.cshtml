@@ -158,7 +158,7 @@
                 grid.dataSource.page(1); //new search. Set page size to 1
                 //grid.dataSource.read(); we already loaded the grid above using "page" function
                 //clear selected checkboxes
-                $('.checkboxGroups').attr('checked', false).change();
+                $('.checkboxGroups').prop('checked', false).change();
                 return false;
             });
         
@@ -171,7 +171,7 @@
 
             //wire up checkboxes
             $('#mastercheckbox').click(function() {
-                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
             });
 
             $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
@@ -194,7 +194,7 @@
         function updateMasterCheckbox() {
             var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
             var numChkBoxesChecked = $('#products-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
-            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
     </script>
 }

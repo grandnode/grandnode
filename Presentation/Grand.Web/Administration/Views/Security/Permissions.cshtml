@@ -45,7 +45,7 @@
                                                 {
                                 <text>
                                                 $('#selectall-@(cr.Id)').click(function () {
-                                                    $('.allow_@(cr.Id)').attr('checked', $(this).is(':checked')).change();
+                                                    $('.allow_@(cr.Id)').prop('checked', $(this).is(':checked')).change();
                                                 });
 
                                                 </text>
