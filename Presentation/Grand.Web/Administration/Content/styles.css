@@ -206,3 +206,11 @@ a span.username {
 .page-footer .page-footer-inner{
     float:left;
 }
+
+.page-sidebar .page-sidebar-menu .sub-menu li>.sub-menu>li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>.sub-menu>li>a {
+    padding-left: 40px;
+}
+
+.page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
+    padding: 6px 15px 6px 23px; 
+}
