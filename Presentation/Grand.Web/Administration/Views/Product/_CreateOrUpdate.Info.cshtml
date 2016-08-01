@@ -1231,7 +1231,7 @@
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.CreatedOn)
                 <div class="col-md-9 col-sm-9">
-                    <span class="form-control">@Model.CreatedOn.Value.ToString("F")</span>
+                    <label class="control-label">@Model.CreatedOn.Value.ToString("F")</label>
                 </div>
             </div>
         }
@@ -1240,7 +1240,7 @@
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.UpdatedOn)
                 <div class="col-md-9 col-sm-9">
-                    <span class="form-control">@Model.UpdatedOn.Value.ToString("F")</span>
+                    <label class="control-label">@Model.UpdatedOn.Value.ToString("F")</label>
                 </div>
             </div>
         }
