@@ -214,3 +214,15 @@ a span.username {
 .page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
     padding: 6px 15px 6px 23px; 
 }
+
+.portlet.light>.portlet-title>.caption > small {
+    font-weight: normal;
+    margin-left: 10px;
+    margin-right: 5px;
+}
+.portlet.light>.portlet-title>.caption > small >i {
+    margin-right: 5px;
+}
+.portlet.light>.portlet-title>.caption > small >a:hover {
+    text-decoration:none;
+}

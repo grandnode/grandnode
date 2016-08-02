@@ -15,7 +15,7 @@
                     <div class="caption">
                         <i class="fa fa-tag"></i>
                         @T("Admin.System.Log.ViewLogDetails") 
-                        <small>@Html.ActionLink("(" + T("Admin.System.Log.BackToList") + ")", "List")                    </small>
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.Log.BackToList").Text, "List")                    </small>
                     </div>
                     <div class="actions">
                         <span id="log-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>

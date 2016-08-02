@@ -16,7 +16,7 @@
                     <div class="caption">
                         <i class="fa fa-list-alt"></i>
                         @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails") - @Model.Name 
-                        <small>@Html.ActionLink("(" + T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList") + ")", "ReturnRequestReasonList")</small>
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList").Text, "ReturnRequestReasonList")</small>
                     </div>
                     <div class="actions">
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>

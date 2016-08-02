@@ -14,7 +14,7 @@
                     <div class="caption">
                         <i class="fa fa-globe"></i>
                         @T("Admin.Configuration.Countries.EditCountryDetails") - @Model.Name                        
-                        <small>@Html.ActionLink("(" + T("Admin.Configuration.Countries.BackToList") + ")", "List")</small>
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Countries.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">

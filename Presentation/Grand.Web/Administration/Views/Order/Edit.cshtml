@@ -13,7 +13,7 @@
                     <div class="caption">
                         <i class="icon-basket"></i>
                         @T("Admin.Orders.EditOrderDetails") - @Model.OrderNumber
-                        <small>@Html.ActionLink("(" + T("Admin.Orders.BackToList") + ")", "List")</small>
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided util-btn-margin-bottom-5">

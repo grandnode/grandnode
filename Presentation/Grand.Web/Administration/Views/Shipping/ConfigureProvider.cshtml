@@ -10,7 +10,7 @@
                 <div class="caption">
                     <i class="fa fa-tasks"></i>
                     @T("Admin.Configuration.Shipping.Providers.Configure") - @Model.FriendlyName
-                    <small>@Html.ActionLink("(" + T("Admin.Configuration.Shipping.Providers.BackToList") + ")", "Providers")</small>
+                    <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Shipping.Providers.BackToList").Text, "Providers")</small>
                 </div>
             </div>
             <div class="portlet-body form">

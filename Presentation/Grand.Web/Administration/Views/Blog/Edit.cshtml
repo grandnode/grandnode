@@ -15,7 +15,7 @@
                     <div class="caption">
                         <i class="fa fa-comment"></i>
                         @T("Admin.ContentManagement.Blog.BlogPosts.EditBlogPostDetails")  - @Model.Title
-                        <small>@Html.ActionLink("(" + T("Admin.ContentManagement.Blog.BlogPosts.BackToList") + ")", "List")</small>
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.Blog.BlogPosts.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">

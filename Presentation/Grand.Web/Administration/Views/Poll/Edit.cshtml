@@ -14,7 +14,7 @@
                     <div class="caption">
                         <i class="fa fa-tasks"></i>
                         @T("Admin.ContentManagement.Polls.EditPollDetails") - @Model.Name
-                        <small>@Html.ActionLink("(" + T("Admin.ContentManagement.Polls.BackToList") + ")", "List")</small>
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.Polls.BackToList").Text, "List")</small>
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">
