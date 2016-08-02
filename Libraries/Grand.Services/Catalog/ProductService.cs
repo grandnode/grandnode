@@ -411,6 +411,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.NotApprovedRatingSum, product.NotApprovedRatingSum)
                 .Set(x => x.NotApprovedTotalReviews, product.NotApprovedTotalReviews)
                 .Set(x => x.NotifyAdminForQuantityBelow, product.NotifyAdminForQuantityBelow)
+                .Set(x => x.NotReturnable, product.NotReturnable)
                 .Set(x => x.OnSale, product.OnSale)
                 .Set(x => x.OldPrice, product.OldPrice)
                 .Set(x => x.OrderMaximumQuantity, product.OrderMaximumQuantity)

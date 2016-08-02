@@ -2953,17 +2953,20 @@ namespace Grand.Services.Orders
             if (order.OrderStatus != OrderStatus.Complete)
                 return false;
 
-            bool numberOfDaysReturnRequestAvailableValid = false;
-            if (_orderSettings.NumberOfDaysReturnRequestAvailable == 0)
-            {
-                numberOfDaysReturnRequestAvailableValid = true;
-            }
-            else
+            //validate allowed number of days
+            if (_orderSettings.NumberOfDaysReturnRequestAvailable > 0)
             {
                 var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
-                numberOfDaysReturnRequestAvailableValid = (daysPassed - _orderSettings.NumberOfDaysReturnRequestAvailable) < 0;
+                if (daysPassed >= _orderSettings.NumberOfDaysReturnRequestAvailable)
+                    return false;
             }
-            return numberOfDaysReturnRequestAvailableValid;
+            foreach (var item in order.OrderItems)
+            {
+                var product = _productService.GetProductById(item.ProductId);
+                if (!product.NotReturnable)
+                    return true;
+            }
+            return false;
         }
         
 

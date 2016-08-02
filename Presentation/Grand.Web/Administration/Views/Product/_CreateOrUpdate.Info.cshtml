@@ -1173,6 +1173,13 @@
                 @Html.ValidationMessageFor(model => model.AllowedQuantities)
             </div>
         </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.NotReturnable)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.NotReturnable)
+                @Html.ValidationMessageFor(model => model.NotReturnable)
+            </div>
+        </div>
         <div class="form-group" id="pnlAllowAddingOnlyExistingAttributeCombinations">
             @Html.GrandLabelFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
             <div class="col-md-9 col-sm-9">

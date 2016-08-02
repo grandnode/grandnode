@@ -341,6 +341,11 @@ namespace Grand.Core.Domain.Catalog
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this product is returnable (a customer is allowed to submit return request with this product)
+        /// </summary>
+        public bool NotReturnable { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to disable buy (Add to cart) button
         /// </summary>
         public bool DisableBuyButton { get; set; }

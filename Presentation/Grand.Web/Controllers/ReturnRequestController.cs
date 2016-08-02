@@ -124,29 +124,31 @@ namespace Grand.Web.Controllers
             foreach (var orderItem in orderItems)
             {
                 var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
+                if (!product.NotReturnable)
                 {
-                    Id = orderItem.Id,
-                    ProductId = orderItem.ProductId,
-                    ProductName = product.GetLocalized(x => x.Name),
-                    ProductSeName = product.GetSeName(),
-                    AttributeInfo = orderItem.AttributeDescription,
-                    Quantity = orderItem.Quantity
-                };
-                model.Items.Add(orderItemModel);
-
-                //unit price
-                if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-                {
-                    //including tax
-                    var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
-                    orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
-                }
-                else
-                {
-                    //excluding tax
-                    var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
-                    orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+                    var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
+                    {
+                        Id = orderItem.Id,
+                        ProductId = orderItem.ProductId,
+                        ProductName = product.GetLocalized(x => x.Name),
+                        ProductSeName = product.GetSeName(),
+                        AttributeInfo = orderItem.AttributeDescription,
+                        Quantity = orderItem.Quantity
+                    };
+                    model.Items.Add(orderItemModel);
+                    //unit price
+                    if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
+                    {
+                        //including tax
+                        var unitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceInclTax, order.CurrencyRate);
+                        orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, true);
+                    }
+                    else
+                    {
+                        //excluding tax
+                        var unitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderItem.UnitPriceExclTax, order.CurrencyRate);
+                        orderItemModel.UnitPrice = _priceFormatter.FormatPrice(unitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, _workContext.WorkingLanguage, false);
+                    }
                 }
             }
 
@@ -226,39 +228,43 @@ namespace Grand.Web.Controllers
             int count = 0;
             foreach (var orderItem in order.OrderItems)
             {
-                int quantity = 0; //parse quantity
-                foreach (string formKey in form.AllKeys)
-                    if (formKey.Equals(string.Format("quantity{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        int.TryParse(form[formKey], out quantity);
-                        break;
-                    }
-                if (quantity > 0)
+                var product = _productService.GetProductById(orderItem.ProductId);
+                if (!product.NotReturnable)
                 {
-                    var rrr = _returnRequestService.GetReturnRequestReasonById(model.ReturnRequestReasonId);
-                    var rra = _returnRequestService.GetReturnRequestActionById(model.ReturnRequestActionId);
-
-                    var rr = new ReturnRequest
+                    int quantity = 0; //parse quantity
+                    foreach (string formKey in form.AllKeys)
+                        if (formKey.Equals(string.Format("quantity{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            int.TryParse(form[formKey], out quantity);
+                            break;
+                        }
+                    if (quantity > 0)
                     {
-                        StoreId = _storeContext.CurrentStore.Id,
-                        OrderId = order.Id,
-                        OrderItemId = orderItem.Id,
-                        Quantity = quantity,
-                        CustomerId = _workContext.CurrentCustomer.Id,
-                        ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name) : "not available",
-                        RequestedAction = rra != null ? rra.GetLocalized(x => x.Name) : "not available",
-                        CustomerComments = model.Comments,
-                        StaffNotes = string.Empty,
-                        ReturnRequestStatus = ReturnRequestStatus.Pending,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow
-                    };
+                        var rrr = _returnRequestService.GetReturnRequestReasonById(model.ReturnRequestReasonId);
+                        var rra = _returnRequestService.GetReturnRequestActionById(model.ReturnRequestActionId);
 
-                    _returnRequestService.InsertReturnRequest(rr);
-                    //notify store owner here (email)
-                    _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+                        var rr = new ReturnRequest
+                        {
+                            StoreId = _storeContext.CurrentStore.Id,
+                            OrderId = order.Id,
+                            OrderItemId = orderItem.Id,
+                            Quantity = quantity,
+                            CustomerId = _workContext.CurrentCustomer.Id,
+                            ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name) : "not available",
+                            RequestedAction = rra != null ? rra.GetLocalized(x => x.Name) : "not available",
+                            CustomerComments = model.Comments,
+                            StaffNotes = string.Empty,
+                            ReturnRequestStatus = ReturnRequestStatus.Pending,
+                            CreatedOnUtc = DateTime.UtcNow,
+                            UpdatedOnUtc = DateTime.UtcNow
+                        };
 
-                    count++;
+                        _returnRequestService.InsertReturnRequest(rr);
+                        //notify store owner here (email)
+                        _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+
+                        count++;
+                    }
                 }
             }
 
