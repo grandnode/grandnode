@@ -119,10 +119,15 @@ namespace Grand.Web.Controllers
                     return actions;
                 });
 
+            var shipments = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Services.Shipping.IShipmentService>().GetShipmentsByOrder(order.Id);
+
             //products
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
             foreach (var orderItem in orderItems)
             {
+                var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == orderItem.Id).Sum(x => x.Quantity);
+                var qtyReturn = _returnRequestService.SearchReturnRequests(customerId: order.CustomerId, orderItemId: orderItem.Id).Sum(x => x.Quantity);
+
                 var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
                 if (!product.NotReturnable)
                 {
@@ -133,7 +138,7 @@ namespace Grand.Web.Controllers
                         ProductName = product.GetLocalized(x => x.Name),
                         ProductSeName = product.GetSeName(),
                         AttributeInfo = orderItem.AttributeDescription,
-                        Quantity = orderItem.Quantity
+                        Quantity = qtyDelivery - qtyReturn, 
                     };
                     model.Items.Add(orderItemModel);
                     //unit price

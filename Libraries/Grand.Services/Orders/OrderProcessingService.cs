@@ -75,7 +75,7 @@ namespace Grand.Services.Orders
         private readonly IEventPublisher _eventPublisher;
         private readonly IPdfService _pdfService;
         private readonly IRewardPointsService _rewardPointsService;
-
+        private readonly IReturnRequestService _returnRequestService;
         private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -159,6 +159,7 @@ namespace Grand.Services.Orders
             IEventPublisher eventPublisher,
             IPdfService pdfService,
             IRewardPointsService rewardPointsService,
+            IReturnRequestService returnRequestService,
             ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -198,6 +199,7 @@ namespace Grand.Services.Orders
             this._eventPublisher = eventPublisher;
             this._pdfService = pdfService;
             this._rewardPointsService = rewardPointsService;
+            this._returnRequestService = returnRequestService;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -2950,8 +2952,7 @@ namespace Grand.Services.Orders
             if (order == null || order.Deleted)
                 return false;
 
-            if (order.OrderStatus != OrderStatus.Complete)
-                return false;
+            var shipments = _shipmentService.GetShipmentsByOrder(order.Id);
 
             //validate allowed number of days
             if (_orderSettings.NumberOfDaysReturnRequestAvailable > 0)
@@ -2963,7 +2964,10 @@ namespace Grand.Services.Orders
             foreach (var item in order.OrderItems)
             {
                 var product = _productService.GetProductById(item.ProductId);
-                if (!product.NotReturnable)
+                var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == item.Id).Sum(x => x.Quantity);
+                var qtyReturn = _returnRequestService.SearchReturnRequests(customerId:order.CustomerId, orderItemId: item.Id).Sum(x=>x.Quantity);
+
+                if (!product.NotReturnable && qtyDelivery - qtyReturn > 0)
                     return true;
             }
             return false;
