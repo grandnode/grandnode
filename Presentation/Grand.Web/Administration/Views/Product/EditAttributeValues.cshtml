@@ -14,7 +14,9 @@
                     <div class="caption">
                         <i class="fa fa-cube"></i>
                         @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
-                        <small>@Html.ActionLink("(" + T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)</small>
+                        <small>
+                            <i class="fa fa-arrow-circle-left"></i>
+                        @Html.ActionLink(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct").Text, "Edit", "Product", new { Id = Model.ProductId }, null)</small>
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">

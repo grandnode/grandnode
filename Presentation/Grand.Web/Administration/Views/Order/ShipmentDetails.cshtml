@@ -55,7 +55,11 @@
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-truck"></i>
-                        @T("Admin.Orders.Shipments.ViewDetails") - @Model.ShipmentNumber @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
+                        @T("Admin.Orders.Shipments.ViewDetails") - @Model.ShipmentNumber 
+                        <small>
+                            <i class="fa fa-arrow-circle-left"></i>
+                            @Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })
+                        </small>
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided">

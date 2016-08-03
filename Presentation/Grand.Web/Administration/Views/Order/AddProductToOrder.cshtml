@@ -14,7 +14,12 @@
             <div class="portlet-title">
                 <div class="caption">
                     <i class="fa fa-cube"></i>
-                    @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId) @Html.ActionLink("(" + T("Admin.Orders.Products.AddNew.BackToOrder") + ")", "Edit", new { id = Model.OrderId })                </div>
+                    @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
+                    <small>
+                        <i class="fa fa-arrow-circle-left"></i>
+                        @Html.ActionLink(T("Admin.Orders.Products.AddNew.BackToOrder").Text, "Edit", new { id = Model.OrderId })
+                    </small>
+                </div>
             </div>
             <div class="portlet-body form">
                 <div class="form-horizontal">

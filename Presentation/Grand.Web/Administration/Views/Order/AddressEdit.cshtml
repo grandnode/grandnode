@@ -13,7 +13,10 @@
                     <div class="caption">
                         <i class="fa fa-cube"></i>
                         @T("Admin.Orders.Address.EditAddress") 
-                        @Html.ActionLink("(" + T("Admin.Orders.Address.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
+                        <small>
+                            <i class="fa fa-arrow-circle-left"></i>
+                            @Html.ActionLink(T("Admin.Orders.Address.BackToOrder").Text, "Edit", new { id = Model.OrderId })
+                        </small>
                     </div>
                     <div class="actions">
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>                    </div>
