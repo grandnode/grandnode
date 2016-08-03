@@ -37,6 +37,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            @Html.GrandLabelFor(model => model.IpAddress)
+                            <div class="col-md-4 col-sm-6">
+                                @Html.GrandEditorFor(model => model.IpAddress)
+                            </div>
+                        </div>
+                        <div class="form-group">
                             @Html.GrandLabelFor(model => model.ActivityLogTypeId)
                             <div class="col-md-4 col-sm-6">
                                 @Html.GrandDropDownListFor(model => model.ActivityLogTypeId, Model.ActivityLogType)
@@ -116,12 +122,15 @@
                         columns: [{
                             field: "ActivityLogTypeName",
                             title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")",
-                            width: 200
+                            width: 150
                         }, {
                             field: "CustomerId",
                             title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")",
                             width: 100,
                             template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                        }, {
+                            field: "IpAddress",
+                            title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.IpAddress")"
                         }, {
                             field: "Comment",
                             title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")"
@@ -132,7 +141,7 @@
                             type: "date",
                             format: "{0:G}"
                         }, {
-                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" }, 
+                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                             title: "@T("Admin.Common.Delete")",
                             width: 100
                         }]
@@ -155,6 +164,7 @@
                     var data = {
                         CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
                         CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+                        IpAddress: $('#@Html.FieldIdFor(model => model.IpAddress)').val(),
                         ActivityLogTypeId: $('#ActivityLogTypeId').val()
                     };
                     addAntiForgeryToken(data);

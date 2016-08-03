@@ -2101,7 +2101,7 @@ namespace Grand.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return Content("");
 
-            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, "", command.Page - 1, command.PageSize);
+            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, "",null, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = activityLog.Select(x =>

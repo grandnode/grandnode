@@ -14,6 +14,8 @@ namespace Grand.Admin.Models.Logging
         public string CustomerEmail { get; set; }
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")]
         public string Comment { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.IpAddress")]
+        public string IpAddress { get; set; }
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
     }

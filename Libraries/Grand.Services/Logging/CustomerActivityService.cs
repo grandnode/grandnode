@@ -264,6 +264,7 @@ namespace Grand.Services.Logging
         /// <returns>Activity log items</returns>
         public virtual IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string customerId = "", string activityLogTypeId = "",
+            string ipAddress = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
@@ -275,6 +276,8 @@ namespace Grand.Services.Logging
                 query = query.Where(al => activityLogTypeId == al.ActivityLogTypeId);
             if (!String.IsNullOrEmpty(customerId))
                 query = query.Where(al => customerId == al.CustomerId);
+            if (!String.IsNullOrEmpty(ipAddress))
+                query = query.Where(al => ipAddress == al.IpAddress);
 
             query = query.OrderByDescending(al => al.CreatedOnUtc);
 

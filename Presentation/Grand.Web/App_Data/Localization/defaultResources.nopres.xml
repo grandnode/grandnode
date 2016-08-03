@@ -3725,6 +3725,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogTypeColumn">
     <Value>Activity Log Type</Value>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.IpAddress">
+    <Value>Ip address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.IpAddress.Hint">
+    <Value>The IP address for the search.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment">
     <Value>Message</Value>

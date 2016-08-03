@@ -80,7 +80,7 @@ namespace Grand.Services.Logging
         /// <returns>Activity log items</returns>
         IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, string customerId = "", string activityLogTypeId = "",
-            int pageIndex = 0, int pageSize = int.MaxValue);
+            string ipAddress = null, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets stats activity log items
