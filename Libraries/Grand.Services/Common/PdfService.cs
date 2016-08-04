@@ -308,12 +308,12 @@ namespace Grand.Services.Common
                 if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
                 {
                     var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId);
-                    billingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.BillingAddress.City, order.BillingAddress.StateProvinceId != "" ? state.GetLocalized(x => x.Name, lang.Id) : "", order.BillingAddress.ZipPostalCode), font));
+                    billingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.BillingAddress.City, !String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? state.GetLocalized(x => x.Name, lang.Id) : "", order.BillingAddress.ZipPostalCode), font));
                 }
-                if (_addressSettings.CountryEnabled && order.BillingAddress.CountryId != "")
+                if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(order.BillingAddress.CountryId))
                 {
                     var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId);
-                    billingAddress.AddCell(new Paragraph("   " + String.Format("{0}", order.BillingAddress.CountryId != "" ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
+                    billingAddress.AddCell(new Paragraph("   " + String.Format("{0}", !String.IsNullOrEmpty(order.BillingAddress.CountryId) ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
                 }
                 //VAT number
                 if (!String.IsNullOrEmpty(order.VatNumber))
@@ -382,12 +382,12 @@ namespace Grand.Services.Common
                         if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
                         {
                             var state = EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId);
-                            shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvinceId != "" ? state.GetLocalized(x => x.Name, lang.Id) : "", order.ShippingAddress.ZipPostalCode), font));
+                            shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.ShippingAddress.City, !String.IsNullOrEmpty(order.ShippingAddress.StateProvinceId) ? state.GetLocalized(x => x.Name, lang.Id) : "", order.ShippingAddress.ZipPostalCode), font));
                         }
-                        if (_addressSettings.CountryEnabled && order.ShippingAddress.CountryId != "")
+                        if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(order.ShippingAddress.CountryId))
                         {
                             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId);
-                            shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}", order.ShippingAddress.CountryId != "" ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
+                            shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}", !String.IsNullOrEmpty(order.ShippingAddress.CountryId) ? country.GetLocalized(x => x.Name, lang.Id) : ""), font));
                         }
                         //custom attributes
                         var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
@@ -1056,12 +1056,12 @@ namespace Grand.Services.Common
                                     order.ShippingAddress.Address2), font));
 
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled || _addressSettings.ZipPostalCodeEnabled)
-                        addressTable.AddCell(new Paragraph(String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvinceId != ""
+                        addressTable.AddCell(new Paragraph(String.Format("{0}, {1} {2}", order.ShippingAddress.City, !String.IsNullOrEmpty(order.ShippingAddress.StateProvinceId)
                                         ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId).GetLocalized(x => x.Name, lang.Id)
                                         : "", order.ShippingAddress.ZipPostalCode), font));
 
-                    if (_addressSettings.CountryEnabled && order.ShippingAddress.CountryId != "")
-                        addressTable.AddCell(new Paragraph(String.Format("{0}", order.ShippingAddress.CountryId != ""
+                    if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(order.ShippingAddress.CountryId))
+                        addressTable.AddCell(new Paragraph(String.Format("{0}", !String.IsNullOrEmpty(order.ShippingAddress.CountryId)
                                         ? EngineContext.Current.Resolve <ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name, lang.Id)
                                         : ""), font));
 

@@ -643,9 +643,9 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("Order.BillingAddress1", order.BillingAddress.Address1));
             tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
             tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));
-            tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvinceId != "" ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.BillingStateProvince", !String.IsNullOrEmpty(order.BillingAddress.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.BillingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.BillingZipPostalCode", order.BillingAddress.ZipPostalCode));
-            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.CountryId != "" ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.BillingCountry", !String.IsNullOrEmpty(order.BillingAddress.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.BillingAddress.CountryId).GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
@@ -658,9 +658,9 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("Order.ShippingAddress1", order.ShippingAddress != null ? order.ShippingAddress.Address1 : ""));
             tokens.Add(new Token("Order.ShippingAddress2", order.ShippingAddress != null ? order.ShippingAddress.Address2 : ""));
             tokens.Add(new Token("Order.ShippingCity", order.ShippingAddress != null ? order.ShippingAddress.City : ""));
-            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvinceId != "" ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && !String.IsNullOrEmpty(order.ShippingAddress.StateProvinceId) ? EngineContext.Current.Resolve<IStateProvinceService>().GetStateProvinceById(order.ShippingAddress.StateProvinceId).GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : ""));
-            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.CountryId != "" ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && !String.IsNullOrEmpty(order.ShippingAddress.CountryId) ? EngineContext.Current.Resolve<ICountryService>().GetCountryById(order.ShippingAddress.CountryId).GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.ShippingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.ShippingAddress != null ? order.ShippingAddress.CustomAttributes : ""), true));
 
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);

@@ -86,7 +86,7 @@ namespace Grand.Services.Media
             }
 
             //let's check whether this product has some parent "grouped" product
-            if (picture == null && !product.VisibleIndividually && product.ParentGroupedProductId != "")
+            if (picture == null && !product.VisibleIndividually && !String.IsNullOrEmpty(product.ParentGroupedProductId))
             {
                 var parentProduct = EngineContext.Current.Resolve<IProductService>().GetProductById(product.ParentGroupedProductId);
                 if(parentProduct!=null)

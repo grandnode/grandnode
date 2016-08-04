@@ -410,7 +410,7 @@ namespace Grand.Services.ExportImport
                     xmlWriter.WriteStartElement("TierPrice");
                     xmlWriter.WriteElementString("TierPriceId", null, tierPrice.Id);
                     xmlWriter.WriteElementString("StoreId", null, tierPrice.StoreId);
-                    xmlWriter.WriteElementString("CustomerRoleId", null, tierPrice.CustomerRoleId != "" ? tierPrice.CustomerRoleId : "");
+                    xmlWriter.WriteElementString("CustomerRoleId", null, !String.IsNullOrEmpty(tierPrice.CustomerRoleId) ? tierPrice.CustomerRoleId : "");
                     xmlWriter.WriteElementString("Quantity", null, tierPrice.Quantity.ToString());
                     xmlWriter.WriteElementString("Price", null, tierPrice.Price.ToString());
                     xmlWriter.WriteEndElement();

@@ -340,11 +340,12 @@ namespace Grand.Services.Orders
 
                 //clone billing address
                 details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
-                if (details.BillingAddress.CountryId != "")
+                if (!String.IsNullOrEmpty(details.BillingAddress.CountryId))
                 {
                     var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.BillingAddress.CountryId);
-                    if (!country.AllowsBilling)
-                        throw new NopException(string.Format("Country '{0}' is not allowed for billing", country.Name));
+                    if (country != null)
+                        if (!country.AllowsBilling)
+                            throw new NopException(string.Format("Country '{0}' is not allowed for billing", country.Name));
                 }
             }
             else
@@ -354,11 +355,12 @@ namespace Grand.Services.Orders
 
                 //clone billing address
                 details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
-                if (details.BillingAddress.CountryId != "")
+                if (!String.IsNullOrEmpty(details.BillingAddress.CountryId))
                 {
                     var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.BillingAddress.CountryId);
-                    if(!country.AllowsBilling)
-                        throw new NopException(string.Format("Country '{0}' is not allowed for billing", country.Name));
+                    if (country != null)
+                        if (!country.AllowsBilling)
+                            throw new NopException(string.Format("Country '{0}' is not allowed for billing", country.Name));
                 }
             }
 
@@ -513,11 +515,12 @@ namespace Grand.Services.Orders
 
                         //clone shipping address
                         details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
-                        if (details.ShippingAddress.CountryId != "") 
+                        if (!String.IsNullOrEmpty(details.ShippingAddress.CountryId)) 
                         {
                             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.ShippingAddress.CountryId);
-                            if(!country.AllowsShipping)
-                                throw new NopException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
+                            if (country != null)
+                                if (!country.AllowsShipping)
+                                    throw new NopException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
                         }
                     }
 
@@ -543,11 +546,12 @@ namespace Grand.Services.Orders
 
                         //clone shipping address
                         details.ShippingAddress = (Address)details.InitialOrder.ShippingAddress.Clone();
-                        if (details.ShippingAddress.CountryId != "")
+                        if (!String.IsNullOrEmpty(details.ShippingAddress.CountryId))
                         {
                             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.ShippingAddress.CountryId);
-                            if(!country.AllowsShipping)
-                                throw new NopException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
+                            if (country != null)
+                                if (!country.AllowsShipping)
+                                    throw new NopException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
                         }
                     }
 
