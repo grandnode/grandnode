@@ -3169,6 +3169,7 @@ namespace Grand.Admin.Controllers
                         product.OldPrice = pModel.OldPrice;
                         product.StockQuantity = pModel.StockQuantity;
                         product.Published = pModel.Published;
+                        product.Name = pModel.Name;
                         _productService.UpdateProduct(product);
 
                         //back in stock notifications
