@@ -75,6 +75,8 @@ namespace Grand.Services.Configuration
                 IList<string> dimensionHeaders = header.Dimensions;
                 IList<MetricHeaderEntry> metricHeaders = header.MetricHeader.MetricHeaderEntries;
                 IList<ReportRow> rows = report.Data.Rows;
+                if (rows == null)
+                    rows = new List<ReportRow>();
 
                 const int MAX_RECORDS = 10;
                 int recordCount;
