@@ -64,12 +64,7 @@ namespace Grand.Services.Installation
                 fromversion = version_370;
             }
 
-            if (fromversion == version_370)
-            {
-                From370To380();
-                fromversion = version_380;
-            }
-
+           
             if (fromversion == toversion)
             {
                 var databaseversion = _versionRepository.Table.FirstOrDefault();
@@ -251,15 +246,7 @@ namespace Grand.Services.Installation
             #endregion
 
         }
-
-        private void From370To380()
-        {
-            #region Install String resources
-                InstallStringResources("370_380.nopres.xml");
-            #endregion
-
-        }
-
+       
 
         private void InstallStringResources(string filenames)
         {

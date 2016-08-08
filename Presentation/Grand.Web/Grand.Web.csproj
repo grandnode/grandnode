@@ -492,7 +492,6 @@
     <Content Include="App_Data\Localization\defaultResources.nopres.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\Localization\Upgrade\EN_370_380.nopres.xml" />
     <Content Include="App_Data\Localization\Upgrade\EN_360_370.nopres.xml" />
     <Content Include="Content\BBEditor\ed.js" />
     <Content Include="Content\BBEditor\images\bold.gif" />
