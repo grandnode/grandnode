@@ -18,6 +18,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Orders;
 using System.Threading.Tasks;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Seo;
 
 namespace Grand.Admin.Controllers
 {
@@ -26,6 +27,7 @@ namespace Grand.Admin.Controllers
         #region Fields
         private readonly IStoreContext _storeContext;
         private readonly CommonSettings _commonSettings;
+        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
         private readonly ISettingService _settingService;
         private readonly IWorkContext _workContext;
         private readonly ICacheManager _cacheManager;
@@ -39,7 +41,8 @@ namespace Grand.Admin.Controllers
         #region Ctor
 
         public HomeController(IStoreContext storeContext, 
-            CommonSettings commonSettings, 
+            CommonSettings commonSettings,
+            GoogleAnalyticsSettings googleAnalyticsSettings,
             ISettingService settingService,
             IWorkContext workContext,
             ICacheManager cacheManager,
@@ -50,6 +53,7 @@ namespace Grand.Admin.Controllers
         {
             this._storeContext = storeContext;
             this._commonSettings = commonSettings;
+            this._googleAnalyticsSettings = googleAnalyticsSettings;
             this._settingService = settingService;
             this._workContext = workContext;
             this._cacheManager= cacheManager;
@@ -87,6 +91,10 @@ namespace Grand.Admin.Controllers
         {
             var model = new DashboardModel();
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            if (String.IsNullOrEmpty(_googleAnalyticsSettings.gaprivateKey) || String.IsNullOrEmpty(_googleAnalyticsSettings.gaserviceAccountEmail) ||
+                (String.IsNullOrEmpty(_googleAnalyticsSettings.gaviewID)))
+                model.HideReportGA = true;
+
             return View(model);
         }
 

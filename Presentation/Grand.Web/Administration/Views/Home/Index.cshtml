@@ -121,94 +121,100 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-sm-12 col-lg-4 col-md-12">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-line-chart font-blue"></i>
-                                    <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics")</span>
+                    @if (Model.HideReportGA)
+                    {
+                        <div class="col-sm-12 col-lg-4 col-md-12">
+                            <div class="portlet light bordered">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-line-chart font-blue"></i>
+                                        <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics")</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="portlet-body">         
-                                <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardGeneralData", "GoogleAnalytics")">
-                                    <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                                <div class="portlet-body">         
+                                    <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardGeneralData", "GoogleAnalytics")">
+                                        <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                     <div class="col-sm-12 col-lg-8 col-md-12">
                         @Html.Action("ReportCustomerTimeChar", "Customer")
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-sm-12 col-lg-6 col-md-12">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-sign-in font-blue"></i>
-                                    <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Source")</span>
+            if (Model.HideReportGA)
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-sm-12 col-lg-6 col-md-12">
+                            <div class="portlet light bordered">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-sign-in font-blue"></i>
+                                        <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Source")</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataBySource", "GoogleAnalytics")">
+                                        <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                                    </div>
                                 </div>
                             </div>
-                            <div class="portlet-body">
-                                <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataBySource", "GoogleAnalytics")">
-                                    <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                        </div>  
+                        <div class="col-sm-12 col-lg-6 col-md-12">
+                            <div class="portlet light bordered">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-sign-out font-blue"></i>
+                                        <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Exit")</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByExit", "GoogleAnalytics")">
+                                        <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>  
-                    <div class="col-sm-12 col-lg-6 col-md-12">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-sign-out font-blue"></i>
-                                    <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Exit")</span>
-                                </div>
-                            </div>
-                            <div class="portlet-body">
-                                <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByExit", "GoogleAnalytics")">
-                                    <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
+                        </div>                    
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="col-sm-12 col-lg-6 col-md-12">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-laptop font-blue"></i>
-                                    <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Device")</span>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-sm-12 col-lg-6 col-md-12">
+                            <div class="portlet light bordered">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-laptop font-blue"></i>
+                                        <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Device")</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByDevice", "GoogleAnalytics")">
+                                        <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                                    </div>
                                 </div>
                             </div>
-                            <div class="portlet-body">
-                                <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByDevice", "GoogleAnalytics")">
-                                    <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                        </div>
+                        <div class="col-sm-12 col-lg-6 col-md-12">
+                            <div class="portlet light bordered">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-map-marker font-blue"></i>
+                                        <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Localization")</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByLocalization", "GoogleAnalytics")">
+                                        <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-lg-6 col-md-12">
-                        <div class="portlet light bordered">
-                            <div class="portlet-title">
-                                <div class="caption">
-                                    <i class="fa fa-map-marker font-blue"></i>
-                                    <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Localization")</span>
-                                </div>
-                            </div>
-                            <div class="portlet-body">
-                                <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByLocalization", "GoogleAnalytics")">
-                                    <img src="~/Administration/Content/Images/loading.gif" /> Loading ...
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
+               }
             }
             @if (canManageOrders)
             {

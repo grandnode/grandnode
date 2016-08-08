@@ -5,6 +5,7 @@ namespace Grand.Admin.Models.Home
     public partial class DashboardModel : BaseNopModel
     {
         public bool IsLoggedInAsVendor { get; set; }
+        public bool HideReportGA { get; set; }
 
     }
     public partial class DashboardActivityModel : BaseNopModel
