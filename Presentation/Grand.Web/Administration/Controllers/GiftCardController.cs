@@ -246,7 +246,10 @@ namespace Grand.Admin.Controllers
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
             model = giftCard.ToModel();
-            var order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+            Order order = null;
+            if (giftCard.PurchasedWithOrderItem != null)
+                order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
+
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order.Id : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
