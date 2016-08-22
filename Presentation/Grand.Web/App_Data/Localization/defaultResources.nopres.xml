@@ -639,6 +639,9 @@
   <LocaleResource Name="ActivityLog.DeleteCheckoutAttribute">
     <Value>Deleted a checkout attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteCustomerAction">
+    <Value>Deleted a customer action</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteCustomer">
     <Value>Deleted a customer (ID = {0})</Value>
   </LocaleResource>
@@ -7126,6 +7129,9 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Country">
     <Value>Country</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Descriptioncountry">
+    <Value>Country</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Role">
     <Value>Customer role</Value>
   </LocaleResource>
@@ -11189,6 +11195,9 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount">
     <Value>Email account</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.EmailAccount.hint">
+    <Value>Email account</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.SentDate">
     <Value>Sent date</Value>
   </LocaleResource>
@@ -12122,7 +12131,10 @@
   <LocaleResource Name="Admin.System.ContactForm.Delete">
     <Value>Delete</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.ContactForm.deleteall">
+  <LocaleResource Name="Admin.System.ContactForm.Deleted">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.deletedall">
     <Value>Delete all</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ContactForm.Details">
