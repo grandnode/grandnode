@@ -198,7 +198,7 @@ namespace Grand.Admin.Controllers
             
             //Stores
             PrepareStoresMappingModel(model, null, false);
-
+            model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
                 model.AvailableEmailAccounts.Add(ea.ToModel());
