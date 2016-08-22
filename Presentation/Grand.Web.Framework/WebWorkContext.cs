@@ -329,6 +329,7 @@ namespace Grand.Web.Framework
                         {
                             _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageAutomaticallyDetected,
                                  true, _storeContext.CurrentStore.Id);
+                            this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
                         }
                     }
                 }
@@ -339,6 +340,7 @@ namespace Grand.Web.Framework
                     {
                         _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageId,
                             detectedLanguage.Id, _storeContext.CurrentStore.Id);
+                        this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
                     }
                 }
 
@@ -368,6 +370,7 @@ namespace Grand.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.LanguageId,
                     languageId, _storeContext.CurrentStore.Id);
+                this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
 
                 //reset cache
                 _cachedLanguage = null;
@@ -427,6 +430,7 @@ namespace Grand.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.CurrencyId,
                     currencyId, _storeContext.CurrentStore.Id);
+                this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
 
                 //reset cache
                 _cachedCurrency = null;
@@ -468,7 +472,7 @@ namespace Grand.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
                     SystemCustomerAttributeNames.TaxDisplayTypeId,
                     (int)value, _storeContext.CurrentStore.Id);
-
+                this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
                 //reset cache
                 _cachedTaxDisplayType = null;
 
