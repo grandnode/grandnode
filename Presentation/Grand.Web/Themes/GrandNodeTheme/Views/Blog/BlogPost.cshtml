@@ -77,9 +77,9 @@
                             @Html.Raw(Html.GenerateCaptcha())
                         </div>
                     }
-
-                    <input class="btn waves-effect waves-light" type="submit" name="add-comment" value="@T("Blog.Comments.SubmitButton")" />
-                    
+                    <button type="submit" name="add-comment" class="btn waves-effect waves-light">
+                        @T("Blog.Comments.SubmitButton")
+                    </button>
                 }
             </div>
             if (Model.Comments.Count > 0)
