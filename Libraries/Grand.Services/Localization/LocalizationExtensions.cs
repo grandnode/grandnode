@@ -90,7 +90,7 @@ namespace Grand.Services.Localization
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 
-            if (languageId.Length > 0)
+            if (!String.IsNullOrEmpty(languageId))
             {
                 //ensure that we have at least two published languages
                 bool loadLocalizedValue = true;
