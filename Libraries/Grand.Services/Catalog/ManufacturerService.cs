@@ -169,7 +169,7 @@ namespace Grand.Services.Catalog
             
             query = query.OrderBy(m => m.DisplayOrder);
 
-            if ((!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations) || (!showHidden && !_catalogSettings.IgnoreAcl))
+            if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)))
             { 
                 if (!_catalogSettings.IgnoreAcl)
                 {
