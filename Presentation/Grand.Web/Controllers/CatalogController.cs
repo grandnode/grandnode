@@ -1254,7 +1254,7 @@ namespace Grand.Web.Controllers
                 //first empty entry
                 model.AvailableCategories.Add(new SelectListItem
                     {
-                         Value = "0",
+                         Value = "",
                          Text = _localizationService.GetResource("Common.All")
                     });
                 //all other categories
@@ -1274,7 +1274,7 @@ namespace Grand.Web.Controllers
             {
                 model.AvailableManufacturers.Add(new SelectListItem
                 {
-                    Value = "0",
+                    Value = "",
                     Text = _localizationService.GetResource("Common.All")
                 });
                 foreach (var m in manufacturers)
@@ -1294,7 +1294,7 @@ namespace Grand.Web.Controllers
                 {
                     model.AvailableVendors.Add(new SelectListItem
                     {
-                        Value = "0",
+                        Value = "",
                         Text = _localizationService.GetResource("Common.All")
                     });
                     foreach (var vendor in vendors)
