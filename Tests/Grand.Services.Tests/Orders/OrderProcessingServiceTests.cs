@@ -238,7 +238,7 @@ namespace Grand.Services.Orders.Tests {
                 _workflowMessageService, _vendorService,
                 _customerActivityService, tempICustomerActionEventService, 
                 _currencyService, _affiliateService,
-                _eventPublisher, _pdfService, null,
+                _eventPublisher, _pdfService, null, null,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);

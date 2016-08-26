@@ -5339,6 +5339,13 @@ namespace Grand.Services.Installation
             {
                 ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" },
             });
+
+            settingService.SaveSetting(new GoogleAnalyticsSettings()
+            {
+                gaprivateKey = "",
+                gaserviceAccountEmail = "",
+                gaviewID = ""
+            });
         }
 
         protected virtual void InstallCheckoutAttributes()

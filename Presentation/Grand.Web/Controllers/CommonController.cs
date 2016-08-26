@@ -42,6 +42,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Topics;
+using Grand.Web.Framework.UI;
 
 namespace Grand.Web.Controllers
 {
@@ -74,6 +75,7 @@ namespace Grand.Web.Controllers
         private readonly IContactUsService _contactUsService;
         private readonly IBannerService _bannerService;
         private readonly IPictureService _pictureService;
+        private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -116,6 +118,7 @@ namespace Grand.Web.Controllers
             IContactUsService contactUsService,
             IBannerService bannerService,
             IPictureService pictureService,
+            IPageHeadBuilder pageHeadBuilder,
             CustomerSettings customerSettings, 
             TaxSettings taxSettings, 
             CatalogSettings catalogSettings,
@@ -154,6 +157,7 @@ namespace Grand.Web.Controllers
             this._contactUsService = contactUsService;
             this._bannerService = bannerService;
             this._pictureService = pictureService;
+            this._pageHeadBuilder = pageHeadBuilder;
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
@@ -458,6 +462,7 @@ namespace Grand.Web.Controllers
                 ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
+                EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
             };
 
             return PartialView(model);

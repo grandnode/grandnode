@@ -91,8 +91,9 @@ namespace Grand.Admin.Controllers
         {
             var model = new DashboardModel();
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            if (String.IsNullOrEmpty(_googleAnalyticsSettings.gaprivateKey) || String.IsNullOrEmpty(_googleAnalyticsSettings.gaserviceAccountEmail) ||
-                (String.IsNullOrEmpty(_googleAnalyticsSettings.gaviewID)))
+            if (string.IsNullOrEmpty(_googleAnalyticsSettings.gaprivateKey) || 
+                string.IsNullOrEmpty(_googleAnalyticsSettings.gaserviceAccountEmail) ||
+                string.IsNullOrEmpty(_googleAnalyticsSettings.gaviewID))
                 model.HideReportGA = true;
 
             return View(model);

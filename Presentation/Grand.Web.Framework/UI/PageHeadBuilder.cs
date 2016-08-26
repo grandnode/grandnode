@@ -25,6 +25,8 @@ namespace Grand.Web.Framework.UI
         private readonly Dictionary<ResourceLocation, List<CssReferenceMeta>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
+        private string _editPageUrl;
+
         #endregion
 
         #region Ctor
@@ -450,7 +452,14 @@ namespace Grand.Web.Framework.UI
             }
             return result.ToString();
         }
-
+        public virtual string GetEditPageUrl()
+        {
+            return _editPageUrl;
+        }
+        public virtual void AddEditPageUrl(string url)
+        {
+            _editPageUrl = url;
+        }
 
         #endregion
 

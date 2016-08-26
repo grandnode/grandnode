@@ -127,8 +127,7 @@ namespace Grand.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.FlagFileNames, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             cfg.CreateMap<LanguageModel, Language>()
-                .ForMember(dest => dest.Id, mo => mo.Ignore())
-                .ForMember(dest => dest.LocaleStringResources, mo => mo.Ignore());
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
             //email account
             cfg.CreateMap<EmailAccount, EmailAccountModel>()
                 .ForMember(dest => dest.Password, mo => mo.Ignore())

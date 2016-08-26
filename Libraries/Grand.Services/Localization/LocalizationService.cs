@@ -315,12 +315,13 @@ namespace Grand.Services.Localization
             if (language == null)
                 throw new ArgumentNullException("language");
             var sb = new StringBuilder();
+
             var stringWriter = new StringWriter(sb);
             var xmlWriter = new XmlTextWriter(stringWriter);
+
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Language");
             xmlWriter.WriteAttributeString("Name", language.Name);
-
 
             var resources = GetAllResources(language.Id);
             foreach (var resource in resources)
@@ -367,26 +368,29 @@ namespace Grand.Services.Localization
 
                     //do not use "Insert"/"Update" methods because they clear cache
                     //let's bulk insert
-                    var resource = language.LocaleStringResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-                if (resource != null)
-                {
-                    resource.ResourceValue = value;
-                    _lsrRepository.Update(resource);
-                }
-                else
-                {
+                    //var resource = language.LocaleStringResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    var resource = (from l in _lsrRepository.Table
+                                    where l.ResourceName.ToLowerInvariant() == name.ToLowerInvariant() && l.LanguageId == language.Id
+                                    select l).FirstOrDefault();
 
-                    var lsr = (
-                        new LocaleStringResource
-                        {
-                            LanguageId = language.Id,
-                            ResourceName = name,
-                            ResourceValue = value
-                        });
-                    _lsrRepository.Insert(lsr);
+                    if (resource != null)
+                    {
+                        resource.ResourceValue = value;
+                        _lsrRepository.Update(resource);
+                    }
+                    else
+                    {
+
+                        var lsr = (
+                            new LocaleStringResource
+                            {
+                                LanguageId = language.Id,
+                                ResourceName = name,
+                                ResourceValue = value
+                            });
+                        _lsrRepository.Insert(lsr);
+                    }
                 }
-                }
-                //_languageService.UpdateLanguage(language);
 
             //clear cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
@@ -429,8 +433,7 @@ namespace Grand.Services.Localization
                      });
                 _lsrRepository.Insert(lsr);
             }
-            //_languageService.UpdateLanguage(language);
-
+           
             //clear cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
         }

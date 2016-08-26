@@ -157,6 +157,14 @@ namespace Grand.Web.Framework.Controllers
             }
         }
 
+        protected virtual void DisplayEditLink(string editPageUrl)
+        {
+            //We cannot use ViewData because it works only for the current controller (and we pass and then render "Edit" link data in distinct controllers)
+            //that's why we use IPageHeadBuilder
+            //ViewData["nop.editpage.link"] = editPageUrl;
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            pageHeadBuilder.AddEditPageUrl(editPageUrl);
+        }
 
 
         /// <summary>

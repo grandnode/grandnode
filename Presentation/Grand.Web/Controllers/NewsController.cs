@@ -27,6 +27,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.News;
 using Grand.Core.Infrastructure;
 using MongoDB.Bson;
+using Grand.Services.Security;
 
 namespace Grand.Web.Controllers
 {
@@ -46,6 +47,7 @@ namespace Grand.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IPermissionService _permissionService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
@@ -64,6 +66,7 @@ namespace Grand.Web.Controllers
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
             ICacheManager cacheManager, ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
+            IPermissionService permissionService,
             MediaSettings mediaSettings, NewsSettings newsSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
@@ -79,7 +82,7 @@ namespace Grand.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._storeMappingService = storeMappingService;
-
+            this._permissionService = permissionService;
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
             this._localizationSettings = localizationSettings;
@@ -243,6 +246,10 @@ namespace Grand.Web.Controllers
 
             var model = new NewsItemModel();
             PrepareNewsItemModel(model, newsItem, true);
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                DisplayEditLink(Url.Action("Edit", "News", new { id = newsItem.Id, area = "Admin" }));
 
             return View(model);
         }

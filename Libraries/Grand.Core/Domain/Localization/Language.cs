@@ -10,7 +10,6 @@ namespace Grand.Core.Domain.Localization
     [BsonIgnoreExtraElements]
     public partial class Language : BaseEntity, IStoreMappingSupported
     {
-        private ICollection<LocaleStringResource> _localeStringResources;
         public Language()
         {
             Stores = new List<string>();
@@ -62,13 +61,5 @@ namespace Grand.Core.Domain.Localization
         /// </summary>
         public int DisplayOrder { get; set; }
         
-        /// <summary>
-        /// Gets or sets locale string resources
-        /// </summary>
-        public virtual ICollection<LocaleStringResource> LocaleStringResources
-        {
-            get { return _localeStringResources ?? (_localeStringResources = new List<LocaleStringResource>()); }
-            protected set { _localeStringResources = value; }
-        }
     }
 }

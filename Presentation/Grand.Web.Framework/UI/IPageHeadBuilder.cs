@@ -32,5 +32,8 @@ namespace Grand.Web.Framework.UI
         void AddHeadCustomParts(string part);
         void AppendHeadCustomParts(string part);
         string GenerateHeadCustom();
+        void AddEditPageUrl(string url);
+        string GetEditPageUrl();
     }
+
 }

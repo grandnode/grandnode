@@ -1,4 +1,4 @@
-Group: Widgets
+﻿Group: Widgets
 FriendlyName: Nivo Slider
 SystemName: Widgets.NivoSlider
 Version: 1.09

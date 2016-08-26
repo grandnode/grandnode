@@ -11091,7 +11091,7 @@
     <Value>The banner has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns">
-    <Value>Campaigns</Value>
+    <Value>Mailing Campaigns</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Added">
     <Value>The new campaign has been added successfully.</Value>
@@ -13306,6 +13306,9 @@
   </LocaleResource>
   <LocaleResource Name="Common.LoadingNextStep">
     <Value>Loading next step...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.ManagePage">
+    <Value>Manage this page</Value>
   </LocaleResource>
   <LocaleResource Name="Common.Month">
     <Value>Month</Value>

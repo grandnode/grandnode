@@ -28,6 +28,7 @@ namespace Grand.Web.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IAclService _aclService;
         private readonly ITopicTemplateService _topicTemplateService;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -40,7 +41,8 @@ namespace Grand.Web.Controllers
             ICacheManager cacheManager,
             IStoreMappingService storeMappingService,
             ITopicTemplateService topicTemplateService,
-            IAclService aclService)
+            IAclService aclService,
+            IPermissionService permissionService)
         {
             this._topicService = topicService;
             this._workContext = workContext;
@@ -50,6 +52,7 @@ namespace Grand.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._topicTemplateService = topicTemplateService;
             this._aclService = aclService;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -121,6 +124,10 @@ namespace Grand.Web.Controllers
                     throw new Exception("No default template could be loaded");
                 return template.ViewPath;
             });
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageTopics))
+                DisplayEditLink(Url.Action("Edit", "Topic", new { id = cacheModel.Id, area = "Admin" }));
 
             return View(templateViewPath, cacheModel);
         }

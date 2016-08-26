@@ -121,7 +121,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    @if (Model.HideReportGA)
+                    @if (!Model.HideReportGA)
                     {
                         <div class="col-sm-12 col-lg-4 col-md-12">
                             <div class="portlet light bordered">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            if (Model.HideReportGA)
+            if (!Model.HideReportGA)
             {
                 <div class="row">
                     <div class="col-md-12">
