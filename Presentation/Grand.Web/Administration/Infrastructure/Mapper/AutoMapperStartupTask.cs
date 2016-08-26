@@ -9,9 +9,7 @@ namespace Grand.Admin.Infrastructure.Mapper
     {
         public void Execute()
         {
-            System.Threading.Tasks.Task.Run(() => {
-                AutoMapperConfiguration.Init();
-            });
+            AutoMapperConfiguration.Init();
         }
 
         public int Order
