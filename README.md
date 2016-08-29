@@ -34,7 +34,7 @@ Browse our shopping cart demo store to get a feel for grandnode shopping cart. B
 [![ScreenShot](http://grandnode.com/Content/Images/uploaded/grand.png)](http://demo.grandnode.com/)
 
 ##### Frontend:
-[![ScreenShot](http://grandnode.com/Content/Images/uploaded/backend2.jpg)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
+[![ScreenShot](http://grandnode.com/Content/Images/uploaded/687474703a2f2f6772616e646e6f64652e636f6d2f436f6e74656e742f496d616765732f75706c6f616465642f6261636b656e64322e6a7067.jpg)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
 
 Demo is restoring every hour to the original state.
 
