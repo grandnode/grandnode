@@ -1,0 +1,165 @@
+﻿@model CustomerModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.Customers.EditCustomerDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-user"></i>
+                        @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Customers.Customers.BackToList").Text, "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <input type="button" id="sendemail" class="btn yellow" value="@T("Admin.Customers.Customers.SendEmail")" />
+                            <input type="button" id="sendprivatemessage" class="btn blue" value="@T("Admin.Customers.Customers.SendPM")" />
+                            @if (Model.AllowSendingOfWelcomeMessage)
+                            {
+                                <input type="submit" name="send-welcome-message" class="btn default" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                            }
+                            @if (Model.AllowReSendingOfActivationMessage)
+                            {
+                                <input type="submit" name="resend-activation-message" class="btn default" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                            }
+                            <span id="customer-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdate", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@Html.DeleteConfirmation("customer-delete")
+
+@*send email form*@
+<div id="sendemail-window" style="display:none;">
+    @using (Html.BeginForm("SendEmail", "Customer", new {id = Model.Id}))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SendEmail.Subject)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.SendEmail.Subject)
+                        @Html.ValidationMessageFor(model => model.SendEmail.Subject)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SendEmail.Body)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandTextAreaFor(model => model.SendEmail.Body, new { style = "Height: 100px;" })
+                        @Html.ValidationMessageFor(model => model.SendEmail.Body)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SendEmail.SendImmediately)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.SendEmail.SendImmediately)
+                        @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
+                    </div>
+                </div>
+                <div class="form-group" id="pnl-send-date">
+                    @Html.GrandLabelFor(model => model.SendEmail.DontSendBeforeDate)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.SendEmail.DontSendBeforeDate)
+                        @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                    <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                        <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendEmail")" />
+                    </div>
+            </div>
+
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#sendemail").click(function (e) {
+            e.preventDefault();
+            var window = $("#sendemail-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "650px",
+                    title: "@T("Admin.Customers.Customers.SendEmail")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+    });
+</script>
+
+
+@*send PM form*@
+<div id="sendprivatemessage-window" style="display:none;">
+    @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
+    {
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SendPm.Subject, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4" } }, false)
+                <div class="col-md-8 col-sm-8">
+                    @Html.GrandEditorFor(model => model.SendPm.Subject)
+                    @Html.ValidationMessageFor(model => model.SendPm.Subject)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SendPm.Message, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4" } }, false)
+                <div class="col-md-8 col-sm-8">
+                    @Html.GrandTextAreaFor(model => model.SendPm.Message, new { style = "Height: 100px;" })
+                    @Html.ValidationMessageFor(model => model.SendPm.Message)
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                <input type="submit" class="btn default" value="@T("Admin.Customers.Customers.SendPM")" />
+            </div>
+        </div>
+    </div>
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#sendprivatemessage").click(function (e) {
+            e.preventDefault();
+            var window = $("#sendprivatemessage-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "500px",
+                    title: "@T("Admin.Customers.Customers.SendPM")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+        $("#@Html.FieldIdFor(model => model.SendEmail.SendImmediately)").click(sendImmediately);
+        sendImmediately();
+    });
+
+    function sendImmediately() {
+        if ($('#@Html.FieldIdFor(model => model.SendEmail.SendImmediately)').is(':checked'))
+            $('#pnl-send-date').hide();
+        else
+            $('#pnl-send-date').show();
+    }
+</script>

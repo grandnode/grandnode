@@ -1,0 +1,10 @@
+﻿@model ProductDetailsModel
+@using Grand.Web.Models.Catalog;
+@if (Model.AskQuestionEnabled)
+{
+    <div class="ask-a-question">
+        <button type="button" class="btn waves-effect waves-light" onclick="setLocation('@Url.RouteUrl("AskQuestion", new { productId = Model.Id })')">
+            <i class="material-icons prefix">help</i>
+        </button>
+    </div>
+}

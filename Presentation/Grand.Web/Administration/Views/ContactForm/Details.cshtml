@@ -1,0 +1,77 @@
+﻿@model ContactFormModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.ContactForm.Details").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-envelope-o"></i>
+                        @T("Admin.System.ContactForm.Details") 
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.ContactForm.BackToList").Text, "List")</small>
+                    </div>
+                    <div class="actions">
+                        <span id="contactform-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.CreatedOn)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Email)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.FullName) - @Html.DisplayFor(model => model.Email)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Subject)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.Subject)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Enquiry)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.Raw(Model.Enquiry)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.IpAddress)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.IpAddress)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Store)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.Store)</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.EmailAccountName)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.EmailAccountName)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@Html.DeleteConfirmation("contactform-delete")

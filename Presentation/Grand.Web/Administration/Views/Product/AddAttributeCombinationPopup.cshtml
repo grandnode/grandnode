@@ -1,0 +1,126 @@
+﻿@model AddProductAttributeCombinationModel
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle").Text;
+}
+@*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
+@using (Html.BeginForm("AddAttributeCombinationPopup", "Product",
+                new RouteValueDictionary(new { productId = Model.ProductId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+                FormMethod.Post,
+                new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+    
+   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cube"></i>
+                        @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @Html.Partial("_ProductAttributes", Model.ProductAttributes)
+                            <br />
+                            @if (Model.Warnings.Count > 0)
+                            {
+                                <div class="message-box message-box-error">
+                                    @foreach (var warning in Model.Warnings)
+                                    {
+                                        @warning
+                                        <br />
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.StockQuantity, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.StockQuantity)
+                                    @Html.ValidationMessageFor(model => model.StockQuantity)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.AllowOutOfStockOrders, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.AllowOutOfStockOrders)
+                                    @Html.ValidationMessageFor(model => model.AllowOutOfStockOrders)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Sku, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.Sku)
+                                    @Html.ValidationMessageFor(model => model.Sku)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.ManufacturerPartNumber, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ManufacturerPartNumber)
+                                    @Html.ValidationMessageFor(model => model.ManufacturerPartNumber)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Gtin, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.Gtin)
+                                    @Html.ValidationMessageFor(model => model.Gtin)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.OverriddenPrice, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.OverriddenPrice)
+                                    @Html.ValidationMessageFor(model => model.OverriddenPrice)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.NotifyAdminForQuantityBelow, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.NotifyAdminForQuantityBelow)
+                                    @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-sm-offset-3 col-md-offset-3 col-md-9 col-sm-9">
+                                        <input type="submit" class="btn green" id="add-attribute-combination" name="add-attribute-combination" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+        </script>
+    }
+
+    
+    
+}

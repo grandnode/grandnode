@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model ShippingByWeightModel
+@using Grand.Plugin.Shipping.ByWeight.Models;
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list-alt"></i>
+                        @T("Admin.Common.Edit")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <input type="submit" name="save" class="btn default" value="@T("Admin.Common.Save")" />
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/_CreateOrUpdate.cshtml", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+}

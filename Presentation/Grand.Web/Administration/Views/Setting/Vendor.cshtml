@@ -1,0 +1,93 @@
+﻿@model VendorSettingsModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Vendor").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.Vendor")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @Html.Action("StoreScopeConfiguration", "Setting")
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.VendorsBlockItemsToDisplay_OverrideForStore, model => model.VendorsBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.VendorsBlockItemsToDisplay, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.VendorsBlockItemsToDisplay)
+                                    @Html.ValidationMessageFor(model => model.VendorsBlockItemsToDisplay)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowVendorOnProductDetailsPage_OverrideForStore, model => model.ShowVendorOnProductDetailsPage, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShowVendorOnProductDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.ShowVendorOnProductDetailsPage)
+                                    @Html.ValidationMessageFor(model => model.ShowVendorOnProductDetailsPage)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToContactVendors_OverrideForStore, model => model.AllowCustomersToContactVendors, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowCustomersToContactVendors, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.AllowCustomersToContactVendors)
+                                    @Html.ValidationMessageFor(model => model.AllowCustomersToContactVendors)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToApplyForVendorAccount_OverrideForStore, model => model.AllowCustomersToApplyForVendorAccount, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowCustomersToApplyForVendorAccount, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.AllowCustomersToApplyForVendorAccount)
+                                    @Html.ValidationMessageFor(model => model.AllowCustomersToApplyForVendorAccount)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowSearchByVendor_OverrideForStore, model => model.AllowSearchByVendor, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowSearchByVendor, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.EditorFor(model => model.AllowSearchByVendor)
+                                    @Html.ValidationMessageFor(model => model.AllowSearchByVendor)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

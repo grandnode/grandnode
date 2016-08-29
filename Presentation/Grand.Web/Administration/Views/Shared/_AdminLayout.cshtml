@@ -1,0 +1,262 @@
+﻿@using Grand.Core.Domain.Customers
+@using Grand.Core.Domain.Localization
+@using Grand.Web.Framework.UI;
+@using Grand.Core;
+@using Grand.Core.Domain.Common;
+@using Grand.Services.Security;
+@{
+    var currentCustomer = this.WorkContext.CurrentCustomer;
+    var usernamesEnabled = EngineContext.Current.Resolve<CustomerSettings>().UsernamesEnabled;
+    var currentVersion = GrandVersion.CurrentVersion;
+    var kendoVersion = "2016.2.504";
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
+        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
+
+    Html.AppendCssFileParts("~/Administration/Content/styles.css", true);
+
+
+    //CSS 
+    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.rtl.min.css", kendoVersion), true);
+    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.custom.css", kendoVersion), true);
+    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion), true);
+    Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css", true);
+
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Administration/Content/global/css/plugins-rtl.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/layout/themes/darkblue-rtl.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/layout/custom-rtl.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/layout/layout-rtl.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/global/css/components-rtl.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/bootstrap-rtl.min.css", true);
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Administration/Content/global/css/plugins.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/layout/themes/darkblue.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/layout/custom.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/layout/layout.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/global/css/components.min.css", true);
+        Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/bootstrap.min.css", true);
+    }
+
+    Html.AppendCssFileParts("~/Administration/Content/bootstrap/css/daterangepicker.min.css", true);
+    Html.AppendCssFileParts("~/Administration/Content/simple-line-icons/simple-line-icons.min.css", true);
+    Html.AppendCssFileParts("~/Administration/Content/font-awesome/css/font-awesome.min.css", true);
+
+    //js
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.all.min.js", kendoVersion));
+    Html.AppendScriptParts("~/Scripts/admin.common.js");
+    Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
+
+    Html.AppendScriptParts("~/Administration/Content/layout/js/layout.js");
+    Html.AppendScriptParts("~/Administration/Content/global/js/jquery.cookieBar.min.js");
+    Html.AppendScriptParts("~/Administration/Content/global/js/app.js");
+    Html.AppendScriptParts("~/Administration/Content/bootstrap/js/daterangepicker.min.js");
+    Html.AppendScriptParts("~/Administration/Content/global/js/moment.min.js");
+    Html.AppendScriptParts("~/Administration/Content/bootstrap/js/bootstrap.min.js");
+    Html.AppendScriptParts("~/Administration/Content/global/js/jquery.min.js");
+
+
+    //page title
+    string adminPageTitle = "";
+    if (!String.IsNullOrWhiteSpace(ViewBag.Title))
+    {
+        adminPageTitle = ViewBag.Title + " / ";
+    }
+    adminPageTitle += T("Admin.PageTitle").Text;
+
+    //has "Manage Maintenance" permission?
+    var canManageMaintenance = EngineContext.Current.Resolve<IPermissionService>()
+        .Authorize(StandardPermissionProvider.ManageMaintenance);
+
+    //X-UA-Compatible tag
+    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+    if (commonSettings.RenderXuaCompatible)
+    {
+        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
+    }
+
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+}
+<!DOCTYPE html>
+<html @if (supportRtl) {<text>dir="rtl"</text>}>
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @Html.NopHeadCustom()
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+    @Html.NopScripts(this.Url, ResourceLocation.Head)
+</head>
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+    @Html.Widget("admin_header_before")
+
+    @if (IsSectionDefined("header"))
+    {
+        @RenderSection("header")
+    }
+    else
+    {
+        <div class="page-header navbar navbar-fixed-top">
+            <div class="page-header-inner ">
+                <div class="page-logo">
+                    <a href="~/Admin">
+                        <img src="~/Administration/Content/images/logo.png" alt="logo" class="logo-default" />
+                    </a>
+                    <div class="menu-toggler sidebar-toggler">
+                        <span></span>
+                    </div>
+                </div>
+                <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span></span>
+                </a>
+                <div class="top-menu">
+                    <ul class="nav navbar-nav pull-right">
+                        @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
+                        <li class="dropdown" id="header_inbox_bar">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <i class="icon-settings"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-default">
+                                @if (canManageMaintenance)
+                                {
+                                    <li>
+                                        <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary { { "area", "Admin" } }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                            <i class="icon-refresh"></i>
+                                            @T("Admin.Header.ClearCache")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary { { "area", "Admin" } }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)" id="restart-application">
+                                            <i class="icon-reload"></i>
+                                            @T("Admin.Header.RestartApplication")
+                                        </a>
+                                    </li>
+                                }                                
+                            </ul>
+                        </li>
+                        <li class="dropdown dropdown-user">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <img alt="" class="img-circle" src="~/Administration/Content/layout/img/avatar.png" />
+                                <span class="username username-hide-on-mobile">
+                                    @if (currentCustomer != null && currentCustomer.IsRegistered())
+                                    {
+                                        @(usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                                    }
+                                </span>
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-default">
+                                <li>
+                                    <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id, area = "Admin" })">
+                                        <i class="icon-user"></i> My Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">
+                                        <i class="icon-logout"></i> @T("Admin.Header.Logout")
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown" id="header_inbox_bar">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                <i class="icon-info"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-default">
+                                <li>
+                                    <a href="http://docs.grandnode.com/" target="_blank">
+                                        <i class="icon-book-open"></i>
+                                        @T("Admin.Header.Documentation")
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://grandnode.com/boards" target="_blank">
+                                        <i class="icon-bubbles"></i>
+                                        @T("Admin.Header.Community")
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <i class="fa fa-dot-circle-o"></i> grandnode @currentVersion
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown" >
+                            <a href="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-toggle" style="padding-right:10px">
+                                <i class="icon-home"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    }
+    @Html.Widget("admin_header_after")
+    <div class="clearfix"> </div>
+    <div class="page-container">
+        <div class="page-content-wrapper">
+            @if (IsSectionDefined("headermenu"))
+            {
+                @RenderSection("headermenu")
+            }
+            else
+            {
+                @Html.Partial("Menu")
+            }
+
+
+            @if (IsSectionDefined("statusbar"))
+            {
+                @RenderSection("statusbar")
+            }
+            <div class="page-content">
+                @Html.Partial("Notifications")
+                @RenderBody()
+            </div>
+            <div class="throbber">
+                <div class="curtain">
+                </div>
+
+                <div class="curtain-content">
+                    <div>
+                        <h1 class="throbber-header">Wait...</h1>
+                        <div class="spinner active">
+                            <svg style="width:100px; height:100px" viewBox="0 0 64 64">
+                                <circle cx="32" cy="32" r="29" fill="none" stroke-width="3" stroke-miterlimit="10"></circle>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+    @Html.NopScripts(this.Url, ResourceLocation.Foot)
+
+    <div class="page-footer">
+        <div class="page-footer-inner">
+            <a href="http://grandnode.com/" target="_blank">2016 © Powered by GrandNode.</a>
+        </div>
+        <div class="scroll-to-top">
+            <i class="icon-arrow-up"></i>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#restart-application").click(function (e) {
+                                showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Header.RestartApplication.Progress").Text))');
+                            });
+                        });
+    </script>
+
+</body>
+</html>
+

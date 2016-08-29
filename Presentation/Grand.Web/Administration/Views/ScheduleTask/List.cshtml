@@ -1,0 +1,150 @@
+﻿@{
+    //page title
+    ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
+}
+@Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-tasks"></i>
+                    @T("Admin.System.ScheduleTasks")
+                </div>
+            </div>
+            <div class="note note-info">
+                <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
+            </div>
+
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="schedule-tasks-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#schedule-tasks-grid").on("click", ".run-now", function (e) {
+            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.System.ScheduleTasks.RunNow.Progress").Text))');
+        });
+    });
+</script>
+
+<div id="schedule-tasks-grid"></div>
+
+<script>
+    $(document).ready(function () {
+        $("#schedule-tasks-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "ScheduleTask"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    update: {
+                        url: "@Html.Raw(Url.Action("TaskUpdate", "ScheduleTask"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "string" },
+                            ScheduleTaskName: { editable: true, type: "string" },
+                            Enabled: { editable: true, type: "boolean" },
+                            StopOnError: { editable: true, type: "boolean" },
+                            LastStartUtc: { editable: false, type: "date" },
+                            LastEndUtc: { editable: false, type: "date" },
+                            LastSuccessUtc: { editable: false, type: "date" }
+                        }
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [
+                    {
+                        field: "ScheduleTaskName",
+                        title: "@T("Admin.System.ScheduleTasks.Name")",
+                        width: 300
+                    },
+                    {
+                        field: "Enabled",
+                        title: "@T("Admin.System.ScheduleTasks.Enabled")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(Enabled) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    }, {
+                        field: "StopOnError",
+                        title: "@T("Admin.System.ScheduleTasks.StopOnError")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(StopOnError) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    }, {
+                        field: "LastStartUtc",
+                        title: "@T("Admin.System.ScheduleTasks.LastStart")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "LastSuccessUtc",
+                        title: "@T("Admin.System.ScheduleTasks.LastSuccess")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    }, {
+                        field: "LastEndUtc",
+                        title: "@T("Admin.System.ScheduleTasks.LastEnd")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    },
+            {
+                field: "Id",
+                title: "@T("admin.common.edit")",
+                width: 100,
+                template: '<a href="EditScheduler/#=Id#">@T("admin.common.edit")</a>'
+            },
+            {
+                field: "Id",
+                title: "@T("Admin.System.ScheduleTasks.RunNow")",
+                width: 100,
+                template: '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")#=Id#" class="k-button run-now">@T("Admin.System.ScheduleTasks.RunNow")</a>'
+            }]
+        });
+    });
+</script>

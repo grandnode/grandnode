@@ -1,0 +1,59 @@
+﻿@model AddressAttributeValueModel
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.AddressAttributeId)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+    </script>
+}
+
+@(Html.LocalizedEditor<AddressAttributeValueModel, AddressAttributeValueLocalizedModel>("addressattributevalue-localized",
+@<div class="form-horizontal">
+     <div class="form-body">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Locales[item].Name)
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Locales[item].Name)
+                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+             </div>
+         </div>
+         @Html.HiddenFor(model => model.Locales[item].LanguageId)
+     </div>
+</div>
+,
+@<div class="form-horizontal">
+     <div class="form-body">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Name)
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Name)
+                 @Html.ValidationMessageFor(model => model.Name)
+             </div>
+         </div>
+     </div>
+</div>
+))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsPreSelected)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.IsPreSelected)
+                @Html.ValidationMessageFor(model => model.IsPreSelected)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,38 @@
+﻿@model GoogleAnalyticsResult
+@using Grand.Services.Configuration
+
+
+@if(!String.IsNullOrEmpty(Model.Message))
+{
+    <div class="note note-info">
+        @Model.Message
+    </div>
+}
+@if (Model.Records.Count > 0)
+{
+
+    <div class="table-scrollable">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    @foreach (var item in Model.Records.FirstOrDefault())
+                    {
+                        <th> @item.Key </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Records)
+                {
+                    <tr>
+                        @foreach (var pos in item)
+                        {
+                            <td> @pos.Value </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}

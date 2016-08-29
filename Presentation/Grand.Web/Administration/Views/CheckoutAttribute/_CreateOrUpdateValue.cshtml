@@ -1,0 +1,94 @@
+﻿@model CheckoutAttributeValueModel
+@{
+    Html.AddScriptParts("~/Scripts/farbtastic.js");
+    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
+}
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.CheckoutAttributeId)
+@Html.HiddenFor(model => model.DisplayColorSquaresRgb)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+    </script>
+}
+
+@(Html.LocalizedEditor<CheckoutAttributeValueModel, CheckoutAttributeValueLocalizedModel>("checkoutattributevalue-localized",
+@<div class="form-horizontal">
+     <div class="form-body">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Locales[item].Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Locales[item].Name)
+                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+             </div>
+         </div>
+         @Html.HiddenFor(model => model.Locales[item].LanguageId)
+     </div>
+</div>
+,
+@<div class="form-horizontal">
+     <div class="form-body">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Name)
+                 @Html.ValidationMessageFor(model => model.Name)
+             </div>
+         </div>
+     </div>
+</div>
+))
+<div class="form-horizontal">
+    <div class="form-body">
+    @if (Model.DisplayColorSquaresRgb)
+    {
+    <div class="form-group">
+        @Html.GrandLabelFor(model => model.ColorSquaresRgb, new Dictionary<string, object> { { "class", "col-sm-3" } })
+        <div class="col-md-9 col-sm-9">
+            @Html.GrandEditorFor(model => model.ColorSquaresRgb)
+            <div id="color-picker"></div>
+            <script  type="text/javascript">
+                $(document).ready(function(){
+                    $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                });
+            </script>
+            @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+        </div>
+    </div>
+    }
+    <div class="form-group">
+        @Html.GrandLabelFor(model => model.PriceAdjustment, new Dictionary<string, object> { { "class", "col-sm-3" } })
+        <div class="col-md-9 col-sm-9">
+            @Html.GrandEditorFor(model => model.PriceAdjustment) [@Model.PrimaryStoreCurrencyCode]
+            @Html.ValidationMessageFor(model => model.PriceAdjustment)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.GrandLabelFor(model => model.WeightAdjustment, new Dictionary<string, object> { { "class", "col-sm-3" } })
+        <div class="col-md-9 col-sm-9">
+            @Html.GrandEditorFor(model => model.WeightAdjustment) [@Model.BaseWeightIn]
+            @Html.ValidationMessageFor(model => model.WeightAdjustment)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.GrandLabelFor(model => model.IsPreSelected, new Dictionary<string, object> { { "class", "col-sm-3" } })
+        <div class="col-md-9 col-sm-9">
+            @Html.EditorFor(model => model.IsPreSelected)
+            @Html.ValidationMessageFor(model => model.IsPreSelected)
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.GrandLabelFor(model => model.DisplayOrder, new Dictionary<string, object> { { "class", "col-sm-3" } })
+        <div class="col-md-9 col-sm-9">
+            @Html.GrandEditorFor(model => model.DisplayOrder)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
+        </div>
+    </div>
+    </div>
+</div>
+

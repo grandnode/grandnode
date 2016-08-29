@@ -1,0 +1,966 @@
+﻿@model CatalogSettingsModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Catalog").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.Catalog")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @Html.Action("StoreScopeConfiguration", "Setting")
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div id="catalogsettings-edit" style="display:none">
+                        <ul>
+                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.Catalog.General")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.Catalog.Performance")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.Catalog.ProductReviews")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.Catalog.Search")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.Catalog.CompareProducts")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.Catalog.Sharing")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.Catalog.SortOptions")
+                            </li>
+                        </ul>
+                        <div>
+                            @TabGeneralSettings()
+                        </div>
+                        <div>
+                            @TabPerformance()
+                        </div>
+                        <div>
+                            @TabProductReviews()
+                        </div>
+                        <div>
+                            @TabSearchSettings()
+                        </div>
+                        <div>
+                            @TabCompareProducts()
+                        </div>
+                        <div>
+                            @TabSharing()
+                        </div>
+                        <div>
+                            @TabSortOptions()
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.ValidationSummary(false)
+
+    <script>
+        $(document).ready(function () {
+            $("#catalogsettings-edit").show();
+            $("#catalogsettings-edit").kendoTabStrip({
+                animation: {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
+
+    {
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "catalogsettings-edit");
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+
+    @*save selected tab index*@
+    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+}
+@helper TabGeneralSettings()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
+            $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
+            $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
+            $("#@Html.FieldIdFor(model => model.NewProductsEnabled)").click(toggleNewProducts);
+            $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
+            $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
+            $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
+
+            toggleShowCategoryProductNumberIncludingSubcategories();
+            toggleEmailAFriend();
+            toggleRecentlyViewedProducts();
+            toggleNewProducts();
+            toggleBestsellersOnHomepage();
+            toggleProductsAlsoPurchasedNumber();
+            toggleProductsByTagPageSize();
+        });
+
+        function toggleShowCategoryProductNumberIncludingSubcategories() {
+            if ($('#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)').is(':checked')) {
+                $('#pnlShowCategoryProductNumberIncludingSubcategories').show();
+            }
+            else {
+                $('#pnlShowCategoryProductNumberIncludingSubcategories').hide();
+            }
+        }
+
+        function toggleEmailAFriend() {
+            if ($('#@Html.FieldIdFor(model => model.EmailAFriendEnabled)').is(':checked')) {
+                $('#pnlAllowAnonymousUsersToEmailAFriend').show();
+            }
+            else {
+                $('#pnlAllowAnonymousUsersToEmailAFriend').hide();
+            }
+        }
+
+        function toggleRecentlyViewedProducts() {
+            if ($('#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)').is(':checked')) {
+                $('#pnlRecentlyViewedProductsNumber').show();
+            }
+            else {
+                $('#pnlRecentlyViewedProductsNumber').hide();
+            }
+        }
+
+        function toggleNewProducts() {
+            if ($('#@Html.FieldIdFor(model => model.NewProductsEnabled)').is(':checked')) {
+                $('#pnlNewProductsNumber').show();
+            }
+            else {
+                $('#pnlNewProductsNumber').hide();
+            }
+        }
+
+        function toggleBestsellersOnHomepage() {
+            if ($('#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)').is(':checked')) {
+                $('#pnlNumberOfBestsellersOnHomepage').show();
+            }
+            else {
+                $('#pnlNumberOfBestsellersOnHomepage').hide();
+            }
+        }
+
+        function toggleProductsAlsoPurchasedNumber() {
+            if ($('#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)').is(':checked')) {
+                $('#pnlProductsAlsoPurchasedNumber').show();
+            }
+            else {
+                $('#pnlProductsAlsoPurchasedNumber').hide();
+            }
+        }
+
+        function toggleProductsByTagPageSize() {
+            if ($('#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlProductsByTagPageSize').hide();
+                $('#pnlProductsByTagPageSizeOptions').show();
+            } else {
+                $('#pnlProductsByTagPageSize').show();
+                $('#pnlProductsByTagPageSizeOptions').hide();
+            }
+        }
+
+    </script>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AllowViewUnpublishedProductPage_OverrideForStore, model => model.AllowViewUnpublishedProductPage, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.AllowViewUnpublishedProductPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AllowViewUnpublishedProductPage)
+                    @Html.ValidationMessageFor(model => model.AllowViewUnpublishedProductPage)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore, model => model.DisplayDiscontinuedMessageForUnpublishedProducts, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+                    @Html.ValidationMessageFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowProductSku, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowProductSku)
+                    @Html.ValidationMessageFor(model => model.ShowProductSku)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowManufacturerPartNumber_OverrideForStore, model => model.ShowManufacturerPartNumber, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowManufacturerPartNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowManufacturerPartNumber)
+                    @Html.ValidationMessageFor(model => model.ShowManufacturerPartNumber)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowGtin_OverrideForStore, model => model.ShowGtin, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowGtin, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowGtin)
+                    @Html.ValidationMessageFor(model => model.ShowGtin)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowFreeShippingNotification_OverrideForStore, model => model.ShowFreeShippingNotification, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowFreeShippingNotification, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowFreeShippingNotification)
+                    @Html.ValidationMessageFor(model => model.ShowFreeShippingNotification)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AllowProductSorting_OverrideForStore, model => model.AllowProductSorting, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.AllowProductSorting, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AllowProductSorting)
+                    @Html.ValidationMessageFor(model => model.AllowProductSorting)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AllowProductViewModeChanging_OverrideForStore, model => model.AllowProductViewModeChanging, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.AllowProductViewModeChanging, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AllowProductViewModeChanging)
+                    @Html.ValidationMessageFor(model => model.AllowProductViewModeChanging)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowProductsFromSubcategories_OverrideForStore, model => model.ShowProductsFromSubcategories, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowProductsFromSubcategories, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowProductsFromSubcategories)
+                    @Html.ValidationMessageFor(model => model.ShowProductsFromSubcategories)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowCategoryProductNumber_OverrideForStore, model => model.ShowCategoryProductNumber, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowCategoryProductNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowCategoryProductNumber)
+                    @Html.ValidationMessageFor(model => model.ShowCategoryProductNumber)
+                </div>
+            </div>
+            <div class="form-group" id="pnlShowCategoryProductNumberIncludingSubcategories">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, model => model.ShowCategoryProductNumberIncludingSubcategories, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowCategoryProductNumberIncludingSubcategories, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+                    @Html.ValidationMessageFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.CategoryBreadcrumbEnabled_OverrideForStore, model => model.CategoryBreadcrumbEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.CategoryBreadcrumbEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CategoryBreadcrumbEnabled)
+                    @Html.ValidationMessageFor(model => model.CategoryBreadcrumbEnabled)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AskQuestionEnabled_OverrideForStore, model => model.AskQuestionEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.AskQuestionEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AskQuestionEnabled)
+                    @Html.ValidationMessageFor(model => model.AskQuestionEnabled)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.EmailAFriendEnabled_OverrideForStore, model => model.EmailAFriendEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.EmailAFriendEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.EmailAFriendEnabled)
+                    @Html.ValidationMessageFor(model => model.EmailAFriendEnabled)
+                </div>
+            </div>
+            <div class="form-group" id="pnlAllowAnonymousUsersToEmailAFriend">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, model => model.AllowAnonymousUsersToEmailAFriend, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.AllowAnonymousUsersToEmailAFriend, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AllowAnonymousUsersToEmailAFriend)
+                    @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailAFriend)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsEnabled_OverrideForStore, model => model.RecentlyViewedProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.RecentlyViewedProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.RecentlyViewedProductsEnabled)
+                    @Html.ValidationMessageFor(model => model.RecentlyViewedProductsEnabled)
+                </div>
+            </div>
+            <div class="form-group" id="pnlRecentlyViewedProductsNumber">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsNumber_OverrideForStore, model => model.RecentlyViewedProductsNumber, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.RecentlyViewedProductsNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.RecentlyViewedProductsNumber)
+                    @Html.ValidationMessageFor(model => model.RecentlyViewedProductsNumber)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.RecommendedProductsEnabled_OverrideForStore, model => model.RecommendedProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.RecommendedProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.RecommendedProductsEnabled)
+                    @Html.ValidationMessageFor(model => model.RecommendedProductsEnabled)
+                </div>
+            </div>        <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.NewProductsEnabled_OverrideForStore, model => model.NewProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.NewProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.NewProductsEnabled)
+                    @Html.ValidationMessageFor(model => model.NewProductsEnabled)
+                </div>
+            </div>
+            <div class="form-group" id="pnlNewProductsNumber">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.NewProductsNumber_OverrideForStore, model => model.NewProductsNumber, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.NewProductsNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.NewProductsNumber)
+                    @Html.ValidationMessageFor(model => model.NewProductsNumber)
+                </div>
+            </div>        <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowBestsellersOnHomepage_OverrideForStore, model => model.ShowBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowBestsellersOnHomepage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowBestsellersOnHomepage)
+                    @Html.ValidationMessageFor(model => model.ShowBestsellersOnHomepage)
+                </div>
+            </div>
+            <div class="form-group" id="pnlNumberOfBestsellersOnHomepage">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, model => model.NumberOfBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.NumberOfBestsellersOnHomepage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.NumberOfBestsellersOnHomepage)
+                    @Html.ValidationMessageFor(model => model.NumberOfBestsellersOnHomepage)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductsAlsoPurchasedEnabled_OverrideForStore, model => model.ProductsAlsoPurchasedEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductsAlsoPurchasedEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductsAlsoPurchasedEnabled)
+                    @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedEnabled)
+                </div>
+            </div>
+            <div class="form-group" id="pnlProductsAlsoPurchasedNumber">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductsAlsoPurchasedNumber_OverrideForStore, model => model.ProductsAlsoPurchasedNumber, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductsAlsoPurchasedNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductsAlsoPurchasedNumber)
+                    @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedNumber)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.NumberOfProductTags_OverrideForStore, model => model.NumberOfProductTags, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.NumberOfProductTags, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.NumberOfProductTags)
+                    @Html.ValidationMessageFor(model => model.NumberOfProductTags)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore, model => model.ProductsByTagAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductsByTagAllowCustomersToSelectPageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+                    @Html.ValidationMessageFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+                </div>
+            </div>
+            <div class="form-group" id="pnlProductsByTagPageSize">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSize_OverrideForStore, model => model.ProductsByTagPageSize, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductsByTagPageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductsByTagPageSize)
+                    @Html.ValidationMessageFor(model => model.ProductsByTagPageSize)
+                </div>
+            </div>
+            <div class="form-group" id="pnlProductsByTagPageSizeOptions">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.ProductsByTagPageSizeOptions, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductsByTagPageSizeOptions, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductsByTagPageSizeOptions)
+                    @Html.ValidationMessageFor(model => model.ProductsByTagPageSizeOptions)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, model => model.ManufacturersBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ManufacturersBlockItemsToDisplay, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ManufacturersBlockItemsToDisplay)
+                    @Html.ValidationMessageFor(model => model.ManufacturersBlockItemsToDisplay)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoFooter_OverrideForStore, model => model.DisplayTaxShippingInfoFooter, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoFooter, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoFooter)
+                    @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoFooter)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore, model => model.DisplayTaxShippingInfoProductDetailsPage, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoProductDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+                    @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoProductBoxes_OverrideForStore, model => model.DisplayTaxShippingInfoProductBoxes, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoProductBoxes, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoProductBoxes)
+                    @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductBoxes)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoShoppingCart_OverrideForStore, model => model.DisplayTaxShippingInfoShoppingCart, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoShoppingCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoShoppingCart)
+                    @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoShoppingCart)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoWishlist_OverrideForStore, model => model.DisplayTaxShippingInfoWishlist, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoWishlist, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoWishlist)
+                    @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoWishlist)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore, model => model.DisplayTaxShippingInfoOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoOrderDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+                    @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper TabPerformance()
+{
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.IgnoreAcl, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IgnoreAcl)
+                    @Html.ValidationMessageFor(model => model.IgnoreAcl)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.IgnoreStoreLimitations, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IgnoreStoreLimitations)
+                    @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.IgnoreDiscounts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IgnoreDiscounts)
+                    @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.IgnoreFeaturedProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IgnoreFeaturedProducts)
+                    @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IgnoreFilterableSpecAttributeOption_OverrideForStore, model => model.IgnoreFilterableSpecAttributeOption, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.IgnoreFilterableSpecAttributeOption, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IgnoreFilterableSpecAttributeOption)
+                    @Html.ValidationMessageFor(model => model.IgnoreFilterableSpecAttributeOption)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IgnoreFilterableAvailableStartEndDateTime_OverrideForStore, model => model.IgnoreFilterableAvailableStartEndDateTime, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.IgnoreFilterableAvailableStartEndDateTime, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
+                    @Html.ValidationMessageFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.CacheProductPrices, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CacheProductPrices)
+                    @Html.ValidationMessageFor(model => model.CacheProductPrices)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper TabProductReviews()
+{
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductReviewsMustBeApproved_OverrideForStore, model => model.ProductReviewsMustBeApproved, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductReviewsMustBeApproved, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductReviewsMustBeApproved)
+                    @Html.ValidationMessageFor(model => model.ProductReviewsMustBeApproved)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, model => model.AllowAnonymousUsersToReviewProduct, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.AllowAnonymousUsersToReviewProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.AllowAnonymousUsersToReviewProduct)
+                    @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToReviewProduct)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, model => model.NotifyStoreOwnerAboutNewProductReviews, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.NotifyStoreOwnerAboutNewProductReviews, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                    @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowProductReviewsPerStore_OverrideForStore, model => model.ShowProductReviewsPerStore, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowProductReviewsPerStore, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowProductReviewsPerStore)
+                    @Html.ValidationMessageFor(model => model.ShowProductReviewsPerStore)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper TabSearchSettings()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
+            $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
+
+            toggleSearchPagePageSize();
+            toggleProductSearchAutoComplete();
+        });
+
+        function toggleSearchPagePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlSearchPageProductsPerPage').hide();
+                $('#pnlSearchPagePageSizeOptions').show();
+            } else {
+                $('#pnlSearchPageProductsPerPage').show();
+                $('#pnlSearchPagePageSizeOptions').hide();
+            }
+        }
+        
+        function toggleProductSearchAutoComplete() {
+            if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
+                $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
+                $('#pnlShowProductImagesInSearchAutoComplete').show();                
+            }
+            else {
+                $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
+                $('#pnlShowProductImagesInSearchAutoComplete').hide();
+            }
+        }
+        
+    </script>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, model => model.SearchPageAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.SearchPageAllowCustomersToSelectPageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                    @Html.ValidationMessageFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                </div>
+            </div>
+            <div class="form-group" id="pnlSearchPageProductsPerPage">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.SearchPageProductsPerPage_OverrideForStore, model => model.SearchPageProductsPerPage, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.SearchPageProductsPerPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SearchPageProductsPerPage)
+                    @Html.ValidationMessageFor(model => model.SearchPageProductsPerPage)
+                </div>
+            </div>
+            <div class="form-group" id="pnlSearchPagePageSizeOptions">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.SearchPagePageSizeOptions, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.SearchPagePageSizeOptions, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SearchPagePageSizeOptions)
+                    @Html.ValidationMessageFor(model => model.SearchPagePageSizeOptions)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteEnabled_OverrideForStore, model => model.ProductSearchAutoCompleteEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductSearchAutoCompleteEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductSearchAutoCompleteEnabled)
+                    @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteEnabled)
+                </div>
+            </div>
+            <div class="form-group" id="pnlProductSearchAutoCompleteNumberOfProducts">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, model => model.ProductSearchAutoCompleteNumberOfProducts, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductSearchAutoCompleteNumberOfProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
+                    @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
+                </div>
+            </div>
+            <div class="form-group" id="pnlShowProductImagesInSearchAutoComplete">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInSearchAutoComplete_OverrideForStore, model => model.ShowProductImagesInSearchAutoComplete, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowProductImagesInSearchAutoComplete, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowProductImagesInSearchAutoComplete)
+                    @Html.ValidationMessageFor(model => model.ShowProductImagesInSearchAutoComplete)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductSearchTermMinimumLength_OverrideForStore, model => model.ProductSearchTermMinimumLength, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductSearchTermMinimumLength, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductSearchTermMinimumLength)
+                    @Html.ValidationMessageFor(model => model.ProductSearchTermMinimumLength)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper TabCompareProducts()
+{
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.CompareProductsEnabled_OverrideForStore, model => model.CompareProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.CompareProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CompareProductsEnabled)
+                    @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, model => model.IncludeShortDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.IncludeShortDescriptionInCompareProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IncludeShortDescriptionInCompareProducts)
+                    @Html.ValidationMessageFor(model => model.IncludeShortDescriptionInCompareProducts)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.IncludeFullDescriptionInCompareProducts_OverrideForStore, model => model.IncludeFullDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.IncludeFullDescriptionInCompareProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IncludeFullDescriptionInCompareProducts)
+                    @Html.ValidationMessageFor(model => model.IncludeFullDescriptionInCompareProducts)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper TabSharing()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.ShowShareButton)").click(togglePageShareCode);
+
+            togglePageShareCode();
+        });
+
+        function togglePageShareCode() {
+            if ($('#@Html.FieldIdFor(model => model.ShowShareButton)').is(':checked')) {
+                $('#pnlPageShareCode').show();
+            }
+            else {
+                $('#pnlPageShareCode').hide();
+            }
+        }
+    </script>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShowShareButton_OverrideForStore, model => model.ShowShareButton, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShowShareButton, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ShowShareButton)
+                    @Html.ValidationMessageFor(model => model.ShowShareButton)
+                </div>
+            </div>
+            <div class="form-group" id="pnlPageShareCode">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.PageShareCode_OverrideForStore, model => model.PageShareCode, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.PageShareCode, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(model => model.PageShareCode, new { style = "Height: 100px;" })
+                    @Html.ValidationMessageFor(model => model.PageShareCode)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper TabSortOptions()
+{
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="sortoptions-grid"></div>
+        </div>
+    </div>
+                
+
+    <script>
+    $(document).ready(function () {
+        $("#sortoptions-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("SortOptionsList", "Setting"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    update: {
+                        url: "@Html.Raw(Url.Action("SortOptionUpdate", "Setting"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Name: { editable: false, type: "string" },
+                            DisplayOrder: { editable: true, type: "number" },
+                            IsActive: { editable: true, type: "boolean" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Name",
+                title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.Name")",
+                width: 250
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder")",
+                //integer format
+                format: "{0:0}",
+                width: 100
+            }, {
+                field: "IsActive",
+                title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.IsActive")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(IsActive) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            },  {
+                command: {
+                    name: "edit",
+                    text: {
+                        edit: "@T("Admin.Common.Edit")",
+                        update: "@T("Admin.Common.Update")",
+                        cancel: "@T("Admin.Common.Cancel")"
+                    }
+                },
+                title: "@T("Admin.Common.Edit")",
+                width: 150
+            }]
+        });
+    });
+    </script>
+           
+}

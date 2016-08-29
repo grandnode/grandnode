@@ -1,0 +1,32 @@
+﻿@model ReturnRequestActionModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list-alt"></i>
+                        @T("Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew")
+                        <small>
+                        <i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Settings.Order.ReturnRequestActions.BackToList").Text, "ReturnRequestActionList")</small>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                   @Html.Partial("_CreateOrUpdate.ReturnRequestAction", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}

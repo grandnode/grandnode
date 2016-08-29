@@ -1,0 +1,127 @@
+﻿@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
+    
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.News.Comments").Text;
+}
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-newspaper-o"></i>
+                    @T("Admin.ContentManagement.News.Comments")
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            <div id="comments-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    @{
+        string readUrl = "";
+        if (filterByNewsItemId.HasValue)
+        {
+            readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
+        }
+        else
+        {
+            readUrl = Url.Action("Comments", "News");
+        }
+    }
+    <script>
+        $(document).ready(function () {
+            $("#comments-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@readUrl",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("CommentDelete", "News"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                //do not implicitly specify all fields
+                                //we do it only for fields which implicitly require it
+                                //otherwise, they'll be formatted wrong way
+                                CreatedOn: {type: "date" }
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "NewsItemTitle",
+                    title: "@T("Admin.ContentManagement.News.Comments.Fields.NewsItem")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
+                }, {
+                    field: "CustomerId",
+                    title: "@T("Admin.ContentManagement.News.Comments.Fields.Customer")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                }, {
+                    field: "CommentTitle",
+                    title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentTitle")"
+                }, {
+                    field: "CommentText",
+                    title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentText")",
+                    encoded: false
+                }, {
+                    field: "CreatedOn",
+                    title: "@T("Admin.ContentManagement.News.Comments.Fields.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")",
+                    width: 100
+                }]
+            });
+        });
+    </script>

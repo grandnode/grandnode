@@ -1,0 +1,80 @@
+﻿@model ReturnRequestModel
+@using Grand.Core.Domain.Orders;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ReturnNumber)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Model.ReturnNumber</label>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OrderId)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.OrderId }, new { })</label>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerId)
+            <div class="col-md-9 col-sm-9">
+               <label class="control-label"> @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { }) </label>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ProductName)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { }) </label>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Quantity)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Quantity)
+                @Html.ValidationMessageFor(model => model.Quantity)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ReturnRequestStatusId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ReturnRequestStatusId, ((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ReturnRequestStatusId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ReasonForReturn)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ReasonForReturn)
+                @Html.ValidationMessageFor(model => model.ReasonForReturn)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.RequestedAction)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.RequestedAction)
+                @Html.ValidationMessageFor(model => model.RequestedAction)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerComments)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandTextAreaFor(model => model.CustomerComments, new { style = "Height: 100px;" })
+                @Html.ValidationMessageFor(model => model.CustomerComments)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.StaffNotes)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandTextAreaFor(model => model.StaffNotes, new { style = "Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.StaffNotes)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CreatedOn)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
+            </div>
+        </div>
+    </div>
+</div>

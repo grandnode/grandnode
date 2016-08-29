@@ -1,0 +1,102 @@
+﻿@model HeaderLinksModel
+@using Grand.Web.Models.Common;
+
+@if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+{
+    <div id="pmnotificationmodal" class="modal">
+        <div class="modal-content">
+            <h4>Notification</h4>
+            <p>@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">LATER</a>
+            <a href="/privatemessages" class="modal-action modal-close waves-effect waves-green btn-flat">READ</a>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#pmnotificationmodal').insertAfter('.master-column-wrapper');
+            $('#pmnotificationmodal').openModal();
+        });
+    </script>
+}
+
+<div class="header-links">
+    <ul>
+        @Html.Widget("header_links_before")
+        @if (Model.IsAuthenticated)
+        {
+            <li><a href="@Url.RouteUrl("CustomerInfo")">
+                    <span class="email-username-label">@Model.CustomerEmailUsername</span>
+                    <span class="material-icons left tiny">account_circle</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.RouteUrl("Logout")">
+                    <span class="account-logout-label">@T("Account.Logout")</span>
+                    <span class="material-icons left tiny">keyboard_tab</span>
+                </a>
+            </li>
+        }
+        else
+        {
+            <li>
+                <a href="@Url.RouteUrl("Register")">
+                    <span class="account-register-label">@T("Account.Register")</span>
+                    <span class="material-icons left tiny">person</span>
+                </a>
+            </li>
+            <li>
+                <a href="@Url.RouteUrl("Login")">
+                    <span class="account-login-label">@T("Account.Login")</span>
+                    <span class="material-icons left tiny">input</span>
+                </a>
+            </li>
+        }
+        @if (Model.AllowPrivateMessages)
+        {
+            <li>
+                <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
+                    <span class="material-icons left tiny">email</span>
+                    <span class="private-message-label">@T("PrivateMessages.Inbox")</span>
+                    <span class="unread-message-qty">@Model.UnreadPrivateMessages</span>
+                </a>
+            </li>
+        }
+        @if (Model.WishlistEnabled)
+        {
+            <li>
+                <a href="@Url.RouteUrl("Wishlist")">
+                    <span class="material-icons left tiny">favorite</span>
+                    <span class="wishlist-label">@T("Wishlist")</span>
+                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+                </a>
+            </li>
+        }
+        @Html.Widget("header_links_after")
+
+        
+    </ul>
+
+    <script type="text/javascript">
+        $(function () {
+            $(AjaxCart.topcartselector).html('@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)');
+        });
+   
+    </script>
+    
+    @if (Model.ShoppingCartEnabled)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.header').on('mouseenter', '.topcart', function () {
+                    $('#flyout-cart').addClass('active');
+                });
+                $('.header').on('mouseleave', '.topcart', function () {
+                    $('#flyout-cart').removeClass('active');
+                });
+            });
+        </script>
+    }
+</div>

@@ -1,0 +1,11 @@
+@using System.Globalization
+@model DateTime
+    @{ 
+        
+    }
+<input id="@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)" name="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" value="@((Model.ToLocalTime() > DateTime.MinValue ? Model.ToLocalTime() : DateTime.Today).ToString())" />
+<script>
+    $(document).ready(function () {
+        $("#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)").kendoDateTimePicker();
+    });
+</script>

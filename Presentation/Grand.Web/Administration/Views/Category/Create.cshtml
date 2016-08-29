@@ -1,0 +1,33 @@
+﻿@model CategoryModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Categories.AddNew").Text;
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "category-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-sitemap"></i>
+                        @T("Admin.Catalog.Categories.AddNew")
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Categories.BackToList").Text, "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdate", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

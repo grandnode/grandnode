@@ -1,0 +1,134 @@
+﻿@model CustomerReminderModel.ConditionModel
+
+
+    @if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerReminder.Condition.SaveBeforeEdit")
+        </div>
+    }
+
+    @if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="customerattribute-grid"></div>
+            </div>
+        </div>
+
+        <script>
+        $(document).ready(function () {
+        $("#customerattribute-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ConditionCustomCustomerAttribute", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    create: {
+                        url: "@Html.Raw(Url.Action("ConditionCustomCustomerAttributeInsert", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    update: {
+                        url: "@Html.Raw(Url.Action("ConditionCustomCustomerAttributeUpdate", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("ConditionDeletePosition", "CustomerReminder", new { customerReminderId = Model.CustomerReminderId, conditionId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            CustomerAttributeId: { editable: true, type: "string" },
+                            CustomerAttributeName: { editable: true, type: "string" },
+                            CustomerAttributeValue: { editable: true, type: "string" },
+                            Id: { editable: false, type: "string" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "create" || e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+            editable: {
+                confirmation: false,
+                mode: "inline",
+            },
+            scrollable: false,
+            columns: [{
+                    field: "CustomerAttributeName",
+                    title: "@T("Admin.Customers.CustomerReminder.Condition.Fields.CustomCustomerAttributeName")",
+                    width: 200,
+                    editor: crDropDownEditorCA,
+                    template: "#:CustomerAttributeId#"
+                }, {
+                    field: "CustomerAttributeValue",
+                    title: "@T("Admin.Customers.CustomerReminder.Condition.Fields.CustomCustomerAttributeValue")",
+                    width: 200,
+                },
+                {
+                command: [
+                    {
+                        name: "edit",
+                        text: {
+                            edit: "@T("Admin.Common.Edit")",
+                            update: "@T("Admin.Common.Update")",
+                            cancel: "@T("Admin.Common.Cancel")"
+                        }
+                },{
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 200
+            }]
+        });
+    });
+
+
+        function crDropDownEditorCA(container, options) {
+        $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerAttributeName"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                autoBind: false,
+                dataSource:
+                {
+                    transport: {
+                        read: "@Html.Raw(Url.Action("CustomCustomerAttributeFields", "CustomerReminder"))"
+                    }
+                },
+                optionLabel: " -- Select -- "
+            });
+        }
+        </script>
+    }

@@ -1,0 +1,220 @@
+﻿@model ScheduleTaskModel
+@{
+    ViewBag.Title = T("Admin.System.ScheduleTasks.Edit").Text;
+}
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+
+
+    <script>
+    $(document).ready(function() {
+        $("#@Html.FieldIdFor(model => model.TimeIntervalChoice)").change(toggleTimeIntervalChoice);
+        toggleTimeIntervalChoice();
+
+        function toggleTimeIntervalChoice() {
+            var selectedTimeIntervalChoice = $("#@Html.FieldIdFor(model => model.TimeIntervalChoice)").val();
+            if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_MINUTES).ToString()))
+            {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').hide();
+                $('#trHourOfDay').hide();
+                $('#trDayOfWeek').hide();
+                $('#trMonthOptionChoice').hide();
+                $('#trDayOfMonth').hide();
+            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_HOURS).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').hide();
+                $('#trDayOfWeek').hide();
+                $('#trMonthOptionChoice').hide();
+                $('#trDayOfMonth').hide();
+            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_DAYS).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').hide();
+                $('#trMonthOptionChoice').hide();
+                $('#trDayOfMonth').hide();
+            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_WEEKS).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').show();
+                $('#trMonthOptionChoice').hide();
+                $('#trDayOfMonth').hide();
+            } else if (selectedTimeIntervalChoice == @(((int) Grand.Core.Domain.Tasks.TimeIntervalChoice.EVERY_MONTHS).ToString())) {
+                $('#trMonthOptionChoice').show();
+                $("#@Html.FieldIdFor(model => model.MonthOptionChoice)").change(toggleMonthOptionChoice);
+                toggleMonthOptionChoice();
+            }
+        }
+
+        function toggleMonthOptionChoice() {
+            var selectedMonthIntervalChoice = $("#@Html.FieldIdFor(model => model.MonthOptionChoice)").val();
+            if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_SPECIFIC_DAY).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').hide();
+
+                $('#trDayOfMonth').show();
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_FIRST_WEEK_OF_MONTH).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').show();
+
+                $('#trDayOfMonth').hide();
+
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_SECOND_WEEK_OF_MONTH).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').show();
+
+                $('#trDayOfMonth').hide();
+
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_THIRD_WEEK_OF_MONTH).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').show();
+
+                $('#trDayOfMonth').hide();
+
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_FOURTH_WEEK_OF_MONTH).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').show();
+
+                $('#trDayOfMonth').hide();
+
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_LAST_WEEK_OF_MONTH).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').show();
+
+                $('#trDayOfMonth').hide();
+
+            } else if (selectedMonthIntervalChoice == @(((int) Grand.Core.Domain.Tasks.MonthOptionChoice.ON_THE_LAST_DAY_OF_MONTH).ToString())) {
+                $('#trTimeInterval').show();
+                $('#trMinuteOfHour').show();
+                $('#trHourOfDay').show();
+                $('#trDayOfWeek').hide();
+
+                $('#trDayOfMonth').hide();
+            }
+        }
+    });
+    </script>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-tasks"></i>
+                        @T("Admin.System.ScheduleTasks")
+                        <small><i class="fa fa-arrow-circle-left"></i>
+                            @Html.ActionLink(T("Admin.System.ScheduleTasks.BackToList").Text, "List")
+                        </small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.ScheduleTaskName)
+                                <div class="col-md-9 col-sm-9">
+                                   <label class="control-label"> @Html.DisplayFor(model => model.ScheduleTaskName) </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Type)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label"> @Html.DisplayFor(model => model.Type) </label>
+                                </div>
+                            </div>                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.Enabled)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.Enabled)
+                                    @Html.ValidationMessageFor(model => model.Enabled)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.StopOnError)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.StopOnError)
+                                    @Html.ValidationMessageFor(model => model.StopOnError)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.TimeIntervalChoice)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.TimeIntervalChoice, ((Grand.Core.Domain.Tasks.TimeIntervalChoice)Model.TimeIntervalChoice).ToSelectList())
+                                    @Html.ValidationMessageFor(model => model.TimeIntervalChoice)
+                                </div>
+                            </div>
+                            <div class="form-group" id="trTimeInterval">
+                                @Html.GrandLabelFor(model => model.TimeInterval)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.TimeInterval)
+                                    @Html.ValidationMessageFor(model => model.TimeInterval)
+                                </div>
+                            </div>
+                            <div class="form-group" id="trMinuteOfHour">
+                                @Html.GrandLabelFor(model => model.MinuteOfHour)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.MinuteOfHour)
+                                    @Html.ValidationMessageFor(model => model.MinuteOfHour)
+                                </div>
+                            </div>
+                            <div class="form-group" id="trHourOfDay">
+                                @Html.GrandLabelFor(model => model.HourOfDay)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.HourOfDay)
+                                    @Html.ValidationMessageFor(model => model.HourOfDay)
+                                </div>
+                            </div>
+                            <div class="form-group" id="trMonthOptionChoice">
+                                @Html.GrandLabelFor(model => model.MonthOptionChoice)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.MonthOptionChoice, ((Grand.Core.Domain.Tasks.MonthOptionChoice)Model.MonthOptionChoice).ToSelectList())
+                                    @Html.ValidationMessageFor(model => model.MonthOptionChoice)
+                                </div>
+                            </div>
+                            <div class="form-group" id="trDayOfWeek">
+                                @Html.GrandLabelFor(model => model.DayOfWeek)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.DayOfWeek, ((System.DayOfWeek)Model.DayOfWeek).ToSelectList())
+                                    @Html.ValidationMessageFor(model => model.DayOfWeek)
+                                </div>
+                            </div>
+                            <div class="form-group" id="trDayOfMonth">
+                                @Html.GrandLabelFor(model => model.DayOfMonth)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.DayOfMonth)
+                                    @Html.ValidationMessageFor(model => model.DayOfMonth)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

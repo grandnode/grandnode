@@ -1,0 +1,256 @@
+﻿@model BlogPostModel
+
+@using System.Text;
+@using Grand.Services.Blogs
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function () {
+        $("#blog-post-edit").show();
+        $("#blog-post-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+<div id="blog-post-edit" style="display:none">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Blog.BlogPosts.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Common.SEO")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.News.NewsItems.Stores")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabSeo()
+    </div>
+    <div>
+        @TabStores()
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "blog-post-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@{
+    //resources for product tags input
+    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css");
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js");
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js");
+}
+@helper TabInfo()
+{
+
+    <script type="text/javascript">
+        @{
+        //TODO move to Model
+        var blogTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags("", "", true);
+        var blogTagsSb = new StringBuilder();
+        blogTagsSb.Append("var initialBlogTags = [");
+        for (int i = 0; i < blogTags.Count; i++)
+        {
+            var tag = blogTags[i];
+            blogTagsSb.Append("'");
+            blogTagsSb.Append(HttpUtility.JavaScriptStringEncode(tag.Name));
+            blogTagsSb.Append("'");
+            if (i != blogTags.Count - 1)
+            {
+                blogTagsSb.Append(",");
+            }
+        }
+        blogTagsSb.Append("]");
+    }
+
+    //tags
+    $(document).ready(function () {
+        @Html.Raw(blogTagsSb.ToString())
+        $("#@Html.FieldIdFor(model => model.Tags)").tagEditor({
+            autocomplete: {
+                delay: 0,
+                position: { collision: 'flip' },
+                source: initialBlogTags
+            },
+            delimiter: ',',
+            placeholder: 'Enter tags ...'
+        });
+    });
+    </script>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.LanguageId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Title)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Title)
+                    @Html.ValidationMessageFor(model => model.Title)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Body)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.Body, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Body)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.BodyOverview)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(model => model.BodyOverview, new { style = "Height: 100px;" })
+                    @Html.ValidationMessageFor(model => model.BodyOverview)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.AllowComments)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.AllowComments)
+                    @Html.ValidationMessageFor(model => model.AllowComments)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Tags)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Tags)
+                    @Html.ValidationMessageFor(model => model.Tags)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.StartDate)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.StartDate)
+                    @Html.ValidationMessageFor(model => model.StartDate)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.EndDate)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.EndDate)
+                    @Html.ValidationMessageFor(model => model.EndDate)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@helper TabSeo()
+{
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.MetaKeywords)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(x => x.MetaKeywords)
+                    @Html.ValidationMessageFor(model => model.MetaKeywords)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.MetaDescription)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(x => x.MetaDescription)
+                    @Html.ValidationMessageFor(model => model.MetaDescription)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.MetaTitle)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(x => x.MetaTitle)
+                    @Html.ValidationMessageFor(model => model.MetaTitle)
+                </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SeName)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SeName)
+                    @Html.ValidationMessageFor(model => model.SeName)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabStores()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
+
+            toggleStoreMapping();
+        });
+
+
+        function toggleStoreMapping() {
+            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
+                $('#pnl-available-stores').show();
+            }
+            else {
+                $('#pnl-available-stores').hide();
+            }
+        }
+
+    </script>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LimitedToStores)
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.LimitedToStores)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.LimitedToStores)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-available-stores">
+                @Html.GrandLabelFor(model => model.AvailableStores)
+                <div class="col-md-9 col-sm-9">
+                    @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
+                    {
+                        @Html.Action("MultistoreDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var store in Model.AvailableStores)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    <span></span>
+                                </label>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="note note-info">
+                            No stores defined
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

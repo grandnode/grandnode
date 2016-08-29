@@ -1,0 +1,137 @@
+﻿@model TopicListModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Topics").Text;
+}
+@Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-fw fa-file-o"></i>
+                    @T("Admin.ContentManagement.Topics")
+                </div>
+                <div class="actions btn-group btn-group-devided">
+                    <a href="@Url.Action("Create")" class="btn green"><i class="fa fa-plus"></i><span class="hidden-xs"> @T("Admin.Common.AddNew") </span></a>
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchStoreId)
+                            <div class="col-md-4 col-sm-6">
+                                @Html.GrandDropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                <button class="btn btn-success filter-submit" id="search-topics">
+                                    <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="topics-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#topics-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "Topic"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: additionalData
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "SystemName",
+                title: "@T("Admin.ContentManagement.Topics.Fields.SystemName")"
+            }, {
+                field: "IsPasswordProtected",
+                title: "@T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(IsPasswordProtected) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "IncludeInTopMenu",
+                title: "@T("Admin.ContentManagement.Topics.Fields.IncludeInTopMenu")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(IncludeInTopMenu) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.ContentManagement.Topics.Fields.DisplayOrder")",
+                width: 100
+            }, {
+                field: "Id",
+                title: "@T("Admin.Common.Edit")",
+                width: 100,
+                template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-pencil"></i> @T("Admin.Common.Edit")</a>'
+            }]
+        });
+    });
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //search button
+        $('#search-topics').click(function () {
+            //search
+            var grid = $('#topics-grid').data('kendoGrid');
+            grid.dataSource.read();
+            return false;
+        });
+    });
+
+    function additionalData() {
+        var data = {
+            SearchStoreId: $('#SearchStoreId').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+</script>

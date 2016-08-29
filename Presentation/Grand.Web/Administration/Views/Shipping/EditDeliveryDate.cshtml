@@ -1,0 +1,34 @@
+﻿@model DeliveryDateModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-list-alt"></i>
+                        @T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails") - @Model.Name
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Shipping.DeliveryDates.BackToList").Text, "DeliveryDates")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                            <button class="btn btn-success" type="submit" name="save-continue"><i class="fa fa-check-circle"></i> @T("Admin.Common.SaveContinue") </button>
+                            <span id="delivery-date-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdateDeliveryDate", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@Html.DeleteConfirmation("DeleteDeliveryDate", "delivery-date-delete")

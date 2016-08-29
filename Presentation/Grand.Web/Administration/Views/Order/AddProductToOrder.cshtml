@@ -1,0 +1,164 @@
+﻿@model OrderModel.AddOrderProductModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
+}
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cube"></i>
+                    @string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId)
+                    <small>
+                        <i class="fa fa-arrow-circle-left"></i>
+                        @Html.ActionLink(T("Admin.Orders.Products.AddNew.BackToOrder").Text, "Edit", new { id = Model.OrderId })
+                    </small>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchProductName)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.SearchProductName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchCategoryId)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandDropDownListFor(model => model.SearchCategoryId, Model.AvailableCategories)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchManufacturerId)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandDropDownListFor(model => model.SearchManufacturerId, Model.AvailableManufacturers)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SearchProductTypeId)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandDropDownListFor(model => model.SearchProductTypeId, Model.AvailableProductTypes)
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-md-11 col-sm-11 btn-group btn-group-devided">
+                                    <button class="btn btn-success filter-submit" id="search-products">
+                                        <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <strong>@T("Admin.Orders.Products.AddNew.Note1")</strong>
+                <div id="products-grid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+            <script>
+                $(document).ready(function () {
+                    $("#products-grid").kendoGrid({
+                        dataSource: {
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("AddProductToOrder", "Order"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: additionalData
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)]
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        //selectable
+                        selectable: true,
+                        change: onChange,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Orders.Products.AddNew.Name")",
+                            width: 400
+                        },{
+                            field: "Sku",
+                            title: "@T("Admin.Orders.Products.AddNew.SKU")",
+                            width: 100
+                        }]
+                    });
+                });
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#search-products').click(function () {
+                        var grid = $('#products-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        //grid.dataSource.read(); we already loaded the grid above using "page" function
+                        return false;
+                    });
+                });
+
+                $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-products").click();
+                        return false;
+                    }
+                });
+
+                function additionalData() {
+                    var data = {
+                        SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                        SearchCategoryId: $('#SearchCategoryId').val(),
+                        SearchManufacturerId: $('#SearchManufacturerId').val(),
+                        SearchProductTypeId: $('#SearchProductTypeId').val()
+                    };
+                    addAntiForgeryToken(data);
+                    return data;
+                }
+
+                function onChange(e) {
+                    var grid = $('#products-grid').data('kendoGrid');
+                    var selectedItem = grid.dataItem(grid.select());
+                    var productId = selectedItem.Id;
+                    //load "product details page" block
+                    var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new { orderId = Model.OrderId, productId = "productidplaceholder" }))';
+                    productDetailsActionUrl = productDetailsActionUrl.replace("productidplaceholder", productId);
+                    setLocation(productDetailsActionUrl);
+                }
+            </script>
+
+<div id="productdetails">
+</div>
+@Html.HiddenFor(model => model.OrderId)

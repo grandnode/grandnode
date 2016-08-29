@@ -1,0 +1,87 @@
+﻿@model EmailAccountModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Email)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.DisplayName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayName)
+                @Html.ValidationMessageFor(model => model.DisplayName)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Host)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Host)
+                @Html.ValidationMessageFor(model => model.Host)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Port)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Port)
+                @Html.ValidationMessageFor(model => model.Port)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Username)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Username)
+                @Html.ValidationMessageFor(model => model.Username)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Password)
+            <div class="col-md-9 col-sm-9">
+                @Html.PasswordFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+                @if (!String.IsNullOrEmpty(Model.Id))
+                {
+                    <input type="submit" name="changepassword" class="btn default" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
+                }
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.EnableSsl)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.EnableSsl)
+                @Html.ValidationMessageFor(model => model.EnableSsl)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.UseDefaultCredentials)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.UseDefaultCredentials)
+                @Html.ValidationMessageFor(model => model.UseDefaultCredentials)
+            </div>
+        </div>
+        @if (!String.IsNullOrEmpty(Model.Id))
+        {
+            <div class="form-group">
+                    <div class="note note-info">
+                        @T("Admin.Configuration.EmailAccounts.SendTestEmail")
+                    </div>
+            </div>
+            <div class="form-group">
+                    @Html.GrandLabelFor(model => model.SendTestEmailTo)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SendTestEmailTo)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-9 col-sm-9 col-md-offset-3">
+                    <input type="submit" name="sendtestemail" class="btn default" value="@T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")" />
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿@model ProductAskQuestionModel
+@using Grand.Web.Models.Catalog;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(Model.ProductName);
+    Html.AddTitleParts(T("PageTitle.ProductAskQuestion").Text);
+}
+<div class="page ask-a-question-page">
+    <div class="page-title">
+        <h1>@T("Products.AskQuestion.Title")</h1>
+    </div>
+    <div class="page-body">
+        <div class="title">
+            <h2><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></h2>
+        </div>
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                var validationSummary = Html.ValidationSummary(true);
+                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                {
+                    <div class="message-error">@validationSummary</div>
+                }
+                <div class="fieldset card-panel grey lighten-4">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            @Html.LabelFor(model => model.Email)
+                            @Html.TextBoxFor(model => model.Email, new { @class = "ask-question-email", placeholder = T("Products.AskQuestion.Email.Hint") })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                        <div class="input-field col s12">
+                            @Html.LabelFor(model => model.FullName)
+                            @Html.TextBoxFor(model => model.FullName, new { @class = "ask-question-fullname", placeholder = T("Products.AskQuestion.FullName.Hint") })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.FullName)
+                        </div>
+                        <div class="input-field col s12">
+                            @Html.LabelFor(model => model.Phone)
+                            @Html.TextBoxFor(model => model.Phone, new { @class = "ask-question-phone", placeholder = T("Products.AskQuestion.Phone.Hint") })
+                            @Html.ValidationMessageFor(model => model.Phone)
+                        </div>
+                        <div class="input-field col s12">
+                            @Html.LabelFor(model => model.Message)
+                            @Html.TextAreaFor(model => model.Message, new { @class = "materialize-textarea" })
+                            @Html.ValidationMessageFor(model => model.Message)
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <input type="submit" name="send-email" class="btn waves-effect waves-light" value="@T("Products.AskQuestion.Button")" />
+                </div>
+            }
+        }
+    </div>
+</div>

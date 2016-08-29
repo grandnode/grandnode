@@ -1,0 +1,74 @@
+﻿@model ContactVendorModel
+@using Grand.Web.Models.Common;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ContactVendor", Model.VendorName).Text);
+}
+<div class="page contact-page">
+    <div class="page-title">
+        <h1>@T("PageTitle.ContactVendor", Model.VendorName)</h1>
+    </div>
+    <div class="page-body contact-vendor-page">
+        @Html.Widget("contactvendor_top")
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                var validationSummary = Html.ValidationSummary(true);
+                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                {
+                    <div class="message-error">@validationSummary</div>
+                }
+                <div class="fieldset card-panel grey lighten-4">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            @Html.LabelFor(model => model.FullName)
+                            @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactVendor.FullName.Hint") })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.FullName)
+                        </div>
+                        <div class="input-field col s12">
+                            @Html.LabelFor(model => model.Email)
+                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactVendor.Email.Hint") })
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                        @if (Model.SubjectEnabled)
+                        {
+                            <div class="input-field col s12">
+                                @Html.LabelFor(model => model.Subject)
+                                @Html.TextBoxFor(model => model.Subject, new { @class = "subject", placeholder = T("ContactVendor.Subject.Hint") })
+                                @Html.RequiredHint()
+                                @Html.ValidationMessageFor(model => model.Subject)
+                            </div>
+                        }
+                        <div class="input-field col s12">
+                            @Html.LabelFor(model => model.Enquiry)
+                            @Html.TextAreaFor(model => model.Enquiry, new { @class = "materialize-textarea" })
+                            @Html.ValidationMessageFor(model => model.Enquiry)
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="buttons">
+                    <input type="submit" name="send-email" class="btn waves-effect waves-light" value="@T("ContactVendor.Button")" />
+                </div>
+            }
+        }
+        @Html.Widget("contactvendor_bottom")
+    </div>
+</div>

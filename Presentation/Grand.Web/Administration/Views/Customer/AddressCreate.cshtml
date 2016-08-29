@@ -1,0 +1,28 @@
+﻿@model CustomerAddressModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Customers.Customers.Addresses.AddNew").Text;
+}
+@using (Html.BeginForm())
+{   @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-user-plus"></i>
+                        @T("Admin.Customers.Customers.Addresses.AddNew") 
+                        <small>@Html.ActionLink("(" + T("Admin.Customers.Customers.Addresses.BackToCustomer") + ")", "Edit", new { id = Model.CustomerId })</small>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdateAddress", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

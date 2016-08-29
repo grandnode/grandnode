@@ -1,0 +1,58 @@
+﻿@model TestMessageTemplateModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.MessageTemplates.TestDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-envelope-o"></i>
+                        @T("Admin.ContentManagement.MessageTemplates.TestDetails") 
+                        <small>@Html.ActionLink("(" + T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate") + ")", "Edit", new { id = Model.Id })</small>
+                    </div>
+                    <div class="actions btn-group btn-group-devided">
+                        <input type="submit" name="send-test" class="btn green" value="@T("Admin.ContentManagement.MessageTemplates.Test.Send")" />
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="portlet-body">
+                                <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.SendTo)
+                                    <div class="col-md-9 col-sm-9">
+                                        @Html.GrandEditorFor(model => model.SendTo)
+                                        @Html.ValidationMessageFor(model => model.SendTo)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="note note-info">
+                                        @T("Admin.ContentManagement.MessageTemplates.Test.Tokens.Description")
+                                    </div>
+                                </div>
+                                @foreach (var token in Model.Tokens)
+                                {
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3">@token</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="text" name="token_@(token)" class="form-control single-line" />
+                                        </div>
+                                    </div>
+                                }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Html.HiddenFor(model => model.Id)
+}

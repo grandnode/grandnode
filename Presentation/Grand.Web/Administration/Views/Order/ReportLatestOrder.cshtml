@@ -1,0 +1,113 @@
+﻿@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+}
+<div id="latest-orders-grid"></div>
+<script>
+    $(document).ready(function () {
+        $("#latest-orders-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("OrderList", "Order"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "read") {
+                            var response = e.response;
+                            if (response) {
+                                //store extra data
+                                reportAggregates = e.response["ExtraData"];
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: 5,
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [5,10,15]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "Id",
+                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                        width: 50
+                    },
+                    {
+                        field: "OrderNumber",
+                        title: "@T("Admin.Orders.Fields.Id")",
+                        width: 50
+                    },
+                    {
+                        field: "CustomerEmail",
+                        title: "@T("Admin.Orders.Fields.Customer")",
+                        width: 300,
+                        template: '#=CustomerFullName# (#=CustomerEmail#)'
+                    },
+                    {
+                        field: "StoreName",
+                        title: "@T("Admin.Orders.Fields.Store")",
+                        width: 200
+                    },
+                    {
+                        field: "OrderTotal",
+                        title: "@T("Admin.Orders.Fields.OrderTotal")",
+                        width: 200,
+                    },
+                    {
+                        field: "CreatedOn",
+                        title: "@T("Admin.Orders.Fields.CreatedOn")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    },
+                    {
+                        field: "Id",
+                        title: "@T("Admin.Common.View")",
+                        width: 100,
+                        template: '<a class="btn btn-sm btn-default" href="Admin/Order/Edit/#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                    }
+                ]
+            } );
+
+
+        function additionalData() {
+            var data = {
+                startdate: $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD'),
+                endDate: $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD'),
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+
+    });
+
+
+
+</script>

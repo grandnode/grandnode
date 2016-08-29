@@ -1,0 +1,112 @@
+﻿@model CustomerActionConditionModel
+
+
+@if (String.IsNullOrEmpty(Model.Id))
+{
+    <div class="note note-info">
+        @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
+    </div>
+}
+
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="urlreferrer-grid"></div>
+        </div>
+    </div>
+                
+
+    <script>
+    $(document).ready(function () {
+    $("#urlreferrer-grid").kendoGrid({
+        dataSource: {
+            transport: {
+                read: {
+                    url: "@Html.Raw(Url.Action("ConditionUrlReferrer", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
+                create: {
+                    url: "@Html.Raw(Url.Action("ConditionUrlReferrerInsert", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
+                update: {
+                    url: "@Html.Raw(Url.Action("ConditionUrlReferrerUpdate", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                },
+                destroy: {
+                    url: "@Html.Raw(Url.Action("ConditionDeletePosition", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                    type: "POST",
+                    dataType: "json",
+                    data: addAntiForgeryToken
+                }
+            },
+            schema: {
+                data: "Data",
+                total: "Total",
+                errors: "Errors",
+                model: {
+                    id: "Id",
+                    fields: {
+                        Name: { editable: true, type: "string" },
+                    }
+                }
+            },
+            requestEnd: function (e) {
+                if (e.type == "create" || e.type == "update") {
+                    this.read();
+                }
+            },
+            error: function (e) {
+                display_kendoui_grid_error(e);
+                // Cancel the changes
+                this.cancelChanges();
+            },
+            serverPaging: true,
+            serverFiltering: true,
+            serverSorting: true
+        },
+        pageable: {
+            refresh: true,
+            numeric: false,
+            previousNext: false,
+            info: false
+        },
+        toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+        editable: {
+            confirmation: false,
+            mode: "inline",
+        },
+        scrollable: false,
+        columns: [{
+                field: "Name",
+                title: "@T("Admin.Customers.CustomerActionCondition.Fields.UrlReferrerName")",
+                width: 200,
+            },
+            {
+            command: [
+                {
+                    name: "edit",
+                    text: {
+                        edit: "@T("Admin.Common.Edit")",
+                        update: "@T("Admin.Common.Update")",
+                        cancel: "@T("Admin.Common.Cancel")"
+                    }
+            },{
+                name: "destroy",
+                text: "@T("Admin.Common.Delete")"
+            }],
+            width: 200
+        }]
+    });
+});
+
+</script>
+
+}

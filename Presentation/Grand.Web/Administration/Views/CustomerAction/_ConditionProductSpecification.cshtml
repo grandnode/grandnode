@@ -1,0 +1,162 @@
+﻿@model CustomerActionConditionModel
+
+
+@if (String.IsNullOrEmpty(Model.Id))
+{
+    <div class="note note-info">
+        @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
+    </div>
+}
+
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="specification-grid"></div>
+        </div>
+    </div>
+
+        <script>
+        $(document).ready(function () {
+        $("#specification-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ConditionProductSpecification", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    create: {
+                        url: "@Html.Raw(Url.Action("ConditionProductSpecificationInsert", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("ConditionDeletePosition", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            SpecificationName: { editable: true, type: "string" },
+                            SpecificationValueName: { editable: true, type: "string" },
+                            SpecificationId: { editable: true, type: "string" },
+                            SpecificationValueId: { editable: true, type: "string" },
+                            Id: { editable: false, type: "string" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "create" || e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }, { name: "save", text: "@T("Admin.Common.Save")" }, { name: "cancel", text: "@T("Admin.Common.Cancel")" }],
+            editable: {
+                confirmation: false,
+                mode: "inline",
+            },
+            scrollable: false,
+            columns: [{
+                field: "SpecificationName",
+                    title: "@T("Admin.Customers.CustomerActionCondition.Fields.SpecificationName")",
+                    width: 200,
+                    editor: specDropDownEditor,
+                    template: "#:SpecificationName#"
+
+                },
+                {
+                    field: "SpecificationValueName",
+                    title: "@T("Admin.Customers.CustomerActionCondition.Fields.SpecificationValueName")",
+                    width: 200,
+                    editor: specValueDropDownEditor,
+                    template: "#:SpecificationValueName#"
+                },
+                {
+                command: [
+                {
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 200
+            }]
+        });
+    });
+
+    var dataSourceValue = new kendo.data.DataSource({
+            transport: {
+                read: "@Html.Raw(Url.Action("ProductSpecificationValue", "CustomerAction", new { specificationId = 0 }))"
+            }
+            });
+
+    function specDropDownEditor(container, options) {
+        $('<input id="dropdownspecification" required data-text-field="Name" data-value-field="Id" data-bind="value:SpecificationId"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                autoBind: false,
+                change: onChange,
+                dataSource:
+                {
+                    transport: {
+                        read: "@Html.Raw(Url.Action("ProductSpecification", "CustomerAction"))"
+                    }
+                },
+                optionLabel: " -- Select -- "
+            });
+    }
+
+    function specValueDropDownEditor(container, options) {
+                $('<input id="dropdownspecificationvalue" required data-text-field="Name" data-value-field="Id" data-bind="value:SpecificationValueId"/>')
+                            .appendTo(container)
+                            .kendoDropDownList({
+                                autoBind: false,
+                                optionLabel: " -- Select -- "
+                            });
+    }
+
+    function onChange() {
+        var specValId = $("#dropdownspecification").val();
+        if (specValId == '') {
+            $("#dropdownspecificationvalue").data("kendoDropDownList").setDataSource(null);
+            $("#dropdownspecificationvalue").data("kendoDropDownList").refresh();
+        }
+        else {
+            var url = "@Html.Raw(Url.Action("ProductSpecificationValue", "CustomerAction"))?specificationId=" + specValId;
+            var dataSourceValue = new kendo.data.DataSource({
+                transport: {
+                    read: url,
+                }
+            });
+            dataSourceValue.read();
+            $("#dropdownspecificationvalue").data("kendoDropDownList").setDataSource(dataSourceValue);
+        }
+    }
+
+            
+
+    </script>
+    }

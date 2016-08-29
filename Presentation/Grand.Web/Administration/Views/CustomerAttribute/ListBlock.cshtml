@@ -1,0 +1,85 @@
+﻿
+<div class="panel panel-default">
+    <div class="note note-info">
+        <p>
+            <h4>@T("Admin.Customers.CustomerAttributes")</h4>
+        </p>
+        <p>
+            <em>@T("Admin.Customers.CustomerAttributes.Description")</em>
+        </p>
+    </div>
+    <div class="panel-body">
+        <div id="customerattributes-grid"></div>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("Create", "CustomerAttribute")" class="btn default">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+
+
+            
+<script>
+    $(document).ready(function () {
+        $("#customerattributes-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "CustomerAttribute"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Name",
+                title: "@T("Admin.Customers.CustomerAttributes.Fields.Name")",
+                width: 300
+            }, {
+                field: "AttributeControlTypeName",
+                title: "@T("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")",
+                width: 200
+            },{
+                field: "IsRequired",
+                title: "@T("Admin.Customers.CustomerAttributes.Fields.IsRequired")",
+                width: 100,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(IsRequired) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+            }, {
+                field: "DisplayOrder",
+                title: "@T("Admin.Customers.CustomerAttributes.Fields.DisplayOrder")",
+                width: 100
+            }, {
+                field: "Id",
+                title: "@T("Admin.Common.Edit")",
+                width: 100,
+                template: '<a href="@Url.Content("~/Admin/CustomerAttribute/Edit/")#=Id#">@T("Admin.Common.Edit")</a>'
+            }]
+        });
+    });
+</script>

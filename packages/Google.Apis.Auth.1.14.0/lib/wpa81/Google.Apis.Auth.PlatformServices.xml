@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Google.Apis.Auth.PlatformServices</name>
+    </assembly>
+    <members>
+        <member name="T:Google.Apis.Auth.OAuth2.AuthorizationCodeBroker">
+            <summary>
+            OAuth 2.0 verification code receiver for Windows Phone 8.1 application that opens a Google account form so the
+            users can enter their credentials and accept the application access to their token.
+            
+            This broker's most important method is
+            <see cref="M:Google.Apis.Auth.OAuth2.AuthorizationCodeBroker.ReceiveCodeAsync(Google.Apis.Auth.OAuth2.Requests.AuthorizationCodeRequestUrl,System.Threading.CancellationToken)"/>.
+            The first time it is being called, it calls <code>WebAuthenticationBroker.AuthenticateAndContinue</code>
+            so the users can authorize the app to access their private resources. While calling this method the app is
+            suspended.
+            
+            When the app is being activated again, the developer MUST store the auth result (which may contain the access
+            code or an error) in the storage with the <code>SerializableWebAuthResult.Name</code> key.
+            Then when the auth framework calls again the
+            <see cref="M:Google.Apis.Auth.OAuth2.AuthorizationCodeBroker.ReceiveCodeAsync(Google.Apis.Auth.OAuth2.Requests.AuthorizationCodeRequestUrl,System.Threading.CancellationToken)"/> it looks in the storage to find
+            the auth result, and if a code was received the framework will convert it in turn to access and refresh tokens.
+            </summary>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.AuthorizationCodeBroker.ReceiveCodeAsync(Google.Apis.Auth.OAuth2.Requests.AuthorizationCodeRequestUrl,System.Threading.Tasks.TaskCompletionSource{Google.Apis.Auth.OAuth2.Responses.AuthorizationCodeResponseUrl})">
+            <summary>Asynchronously receives the authorization code.</summary>
+            <param name="url">The authorization code request URL.</param>
+            <param name="tcs">Task completion source whose result will be set to the authorization code.</param>
+        </member>
+        <member name="T:Google.Apis.Auth.OAuth2.AuthorizationCodeWPInstalledApp">
+            <summary>
+            OAuth 2.0 authorization code flow for a Windows Phone 8.1 installed application that persists end-user
+            credentials.
+            <remarks>
+            This installed app class uses an internal <see cref="T:Google.Apis.Auth.OAuth2.AuthorizationCodeInstalledApp"/> with a
+            <see cref="T:Google.Apis.Auth.OAuth2.AuthorizationCodeBroker"/> for retrieving the authorization code. 
+            </remarks>
+            </summary>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.AuthorizationCodeWPInstalledApp.#ctor(Google.Apis.Auth.OAuth2.Flows.AuthorizationCodeFlow.Initializer)">
+            <summary>
+            Constructs a new authorization code for Windows Store application targeting an installed application flow.
+            </summary>
+            <param name="authorizationCodeFlowInitializer">An authorization code flow initializer.</param>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.AuthorizationCodeWPInstalledApp.#ctor(Google.Apis.Auth.OAuth2.Flows.IAuthorizationCodeFlow)">
+            <summary>
+            Constructs a new authorization code for Windows Store application targeting an installed application flow.
+            </summary>
+            <param name="flow">An authorization code flow.</param>
+        </member>
+        <member name="T:Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker">
+            <summary>A helper utility to manage the authorization code flow.</summary>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.AuthorizeAsync(System.Uri,System.Collections.Generic.IEnumerable{System.String},System.String,System.Threading.CancellationToken)">
+            <summary>Asynchronously authorizes the specified user.</summary>
+            <remarks>
+            It uses <see cref="T:Google.Apis.Util.Store.PasswordVaultDataStore"/> as the flow's data store by default.
+            </remarks>
+            <param name="clientSecretsUri">The client secrets URI.</param>
+            <param name="scopes">
+            The scopes which indicate the Google API access your application is requesting.
+            </param>
+            <param name="user">The user to authorize.</param>
+            <param name="taskCancellationToken">Cancellation token to cancel an operation.</param>
+            <returns>User credential.</returns>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.ReauthorizeAsync(Google.Apis.Auth.OAuth2.UserCredential,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously reauthorizes the user. This method should be called if the users want to authorize after 
+            they revoked the token.
+            </summary>
+            <param name="userCredential">The current user credential. Its <see cref="P:Google.Apis.Auth.OAuth2.UserCredential.Token"/> will be
+            updated. </param>
+            <param name="taskCancellationToken">Cancellation token to cancel an operation.</param>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.AuthorizeAsync(Google.Apis.Auth.OAuth2.ClientSecrets,System.Collections.Generic.IEnumerable{System.String},System.String,System.Threading.CancellationToken)">
+            <summary>Asynchronously authorizes the specified user.</summary>
+            <remarks>
+            It uses <see cref="T:Google.Apis.Util.Store.PasswordVaultDataStore"/> as the flow's data store by default.
+            </remarks>
+            <param name="clientSecrets">The client secrets URI.</param>
+            <param name="scopes">
+            The scopes which indicate the Google API access your application is requesting.
+            </param>
+            <param name="user">The user to authorize.</param>
+            <param name="taskCancellationToken">Cancellation token to cancel an operation.</param>
+            <returns>User credential.</returns>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.GoogleWebAuthorizationBroker.LoadClientSecrets(System.Uri)">
+            <summary>Loads the client secrets from the given URI.</summary>
+            <param name="clientSecretsUri">The client secrets URI.</param>
+            <returns>Client secrets.</returns>
+        </member>
+        <member name="T:Google.Apis.Auth.OAuth2.SerializableWebAuthResult">
+            <summary>
+            Contains the WebAuthenticationResult data. WebAuthenticationResult doesn't have an empty constructor, and as a
+            result it can't be deserialized.
+            </summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.SerializableWebAuthResult.ResponseData">
+            <summary>Gets or sets the the protocol data when the operation successfully completes.</summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.SerializableWebAuthResult.ResponseErrorDetail">
+            <summary>Gets or sets the HTTP error code when ResponseStatus is equal to ErrorHttp.</summary>
+        </member>
+        <member name="P:Google.Apis.Auth.OAuth2.SerializableWebAuthResult.ResponseStatus">
+            <summary>Gets or sets the status of the asynchronous operation when it completes.</summary>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.SerializableWebAuthResult.#ctor">
+            <summary>Empty default constructor.</summary>
+        </member>
+        <member name="M:Google.Apis.Auth.OAuth2.SerializableWebAuthResult.#ctor(Windows.Security.Authentication.Web.WebAuthenticationResult)">
+            <summary>Constructs a new instance of the class and set its properties by the specified result.</summary>
+        </member>
+    </members>
+</doc>

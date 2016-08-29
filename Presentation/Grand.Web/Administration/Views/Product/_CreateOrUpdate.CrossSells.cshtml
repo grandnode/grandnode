@@ -1,0 +1,103 @@
+﻿@model ProductModel
+
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="crosssellproducts-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshCrossSellProducts" style="display: none" />
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#crosssellproducts-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("CrossSellProductList", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("CrossSellProductDelete", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Product2Name: { editable: false, type: "string" },
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "Product2Name",
+                        title: "@T("Admin.Catalog.Products.CrossSells.Fields.Product")"
+                    }, {
+                        field: "ProductId2",
+                        title: "@T("Admin.Common.View")",
+                        width: 100,
+                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                    }, {
+                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                        title: "@T("Admin.Common.Delete")",
+                        width: 200
+                    }
+                ]
+            });
+        });
+    </script>
+            
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshCrossSellProducts').click(function () {
+                //refresh grid
+                var grid = $("#crosssellproducts-grid").data('kendoGrid');
+                grid.dataSource.read();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
+    </div>
+}

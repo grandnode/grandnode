@@ -1,0 +1,228 @@
+﻿@import url(//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all);
+
+/* kendo */
+/* reset everything to the default box model */
+
+*, :before, :after
+{
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.daterangepicker *
+{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+/* set a border-box model only to elements that need it */
+
+.form-control, /* if this class is applied to a Kendo UI widget, its layout may change */
+.container,
+.container-fluid,
+.row,
+.col-xs-1, .col-sm-1, .col-md-1, .col-lg-1,
+.col-xs-2, .col-sm-2, .col-md-2, .col-lg-2,
+.col-xs-3, .col-sm-3, .col-md-3, .col-lg-3,
+.col-xs-4, .col-sm-4, .col-md-4, .col-lg-4,
+.col-xs-5, .col-sm-5, .col-md-5, .col-lg-5,
+.col-xs-6, .col-sm-6, .col-md-6, .col-lg-6,
+.col-xs-7, .col-sm-7, .col-md-7, .col-lg-7,
+.col-xs-8, .col-sm-8, .col-md-8, .col-lg-8,
+.col-xs-9, .col-sm-9, .col-md-9, .col-lg-9,
+.col-xs-10, .col-sm-10, .col-md-10, .col-lg-10,
+.col-xs-11, .col-sm-11, .col-md-11, .col-lg-11,
+.col-xs-12, .col-sm-12, .col-md-12, .col-lg-12
+{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.k-grid.k-widget {
+    overflow-x: auto;
+}
+
+/* end Kedno*/
+
+/* spinner */
+.throbber-header{
+    font-size: 42px;
+    font-weight: 100;
+    color: #fff;
+}
+.throbber{
+    display: none;
+}
+.throbber .curtain{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #3e4d45;
+    opacity: 0.9;
+    filter: alpha(opacity=90);
+}
+.throbber .curtain-content{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.throbber .curtain-content div{
+    text-align: center;
+    padding: 10px;
+    color: #FFF;
+}
+
+.spinner svg {
+    -webkit-transform-origin: 50% 50% 0;
+    transform-origin: 50% 50% 0;
+    -webkit-animation: spinner-rotate 1.333s linear infinite;
+    animation: spinner-rotate 1.333s linear infinite;
+}
+
+.spinner-container.active>.spinner, .spinner.active {
+    background-color: transparent;
+    border: none;
+    display: inline-block;
+}
+.spinner {
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    display: none;
+}
+
+.spinner circle {
+    fill: transparent;
+    stroke: #ff9800;
+    stroke-linecap: round;
+    stroke-dasharray: 200.96;
+    stroke-dashoffset: 58px;
+    -webkit-animation: spinner-dash 1.333s linear infinite,spinner-colors 10.644s linear infinite;
+    animation: spinner-dash 1.333s linear infinite,spinner-colors 10.644s linear infinite;
+}
+
+
+.spinner-container {
+    position:relative;
+    display:none;
+    -webkit-align-items:center;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+    align-items:center;
+    -webkit-box-pack:center;
+    -webkit-justify-content:center;
+    -ms-flex-pack:center;
+    justify-content:center
+}
+
+
+html.ie .spinner circle{stroke-dashoffset:80px}
+@keyframes spinner-dash{0%{stroke-dashoffset:58px}50%{stroke-dashoffset:200.96px}100%{stroke-dashoffset:58px}}
+@-webkit-keyframes spinner-dash{0%{stroke-dashoffset:58px}50%{stroke-dashoffset:200.96px}100%{stroke-dashoffset:58px}}
+@keyframes spinner-rotate{50%{transform:rotate(600deg)}100%{transform:rotate(720deg)}}
+@-webkit-keyframes spinner-rotate{50%{transform:rotate(600deg)}100%{transform:rotate(720deg)}}
+@keyframes spinner-rotate-ie{50%{transform:rotate(360deg)}100%{transform:rotate(720deg)}}
+@keyframes spinner-colors{0%{stroke:#3f51b5}20%{stroke:#09b7bf}40%{stroke:#90d36b}60%{stroke:#f44336}80%{stroke:#f90}100%{stroke:#3f51b5}}
+@-webkit-keyframes spinner-colors{0%{stroke:#3f51b5}20%{stroke:#09b7bf}40%{stroke:#90d36b}60%{stroke:#f44336}80%{stroke:#f90}100%{stroke:#3f51b5}}
+
+
+/* validator */
+
+.field-validation-error, .validation-summary-errors {
+    color: red;
+}
+
+
+
+.form-horizontal .form-group {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+select.form-control {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-group input[type=checkbox] {
+    margin-top: 10px;
+}
+
+label.mt-checkbox.mt-checkbox-outline{
+        margin-top: 6px;
+}
+
+a span.username {
+    color: #a4aebb;
+}
+
+.page-header-inner {
+    padding: 0px 10px 0px 0px;
+}
+
+.k-grid  .k-grid-header  .k-header  .k-link {
+    height: auto;
+}
+  
+.k-grid  .k-grid-header  .k-header {
+    white-space: normal;
+}
+
+
+.feeds li .col1 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+.feeds li .col2>.date {
+    padding-top: 15px;
+    color: #337ab7;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.mce-container label {
+    max-width: inherit;
+}
+
+.page-header.navbar .page-logo .logo-default {
+    margin: 2px 0 0;
+}
+
+.page-footer .page-footer-inner a {
+    color: white;
+    text-decoration: initial;
+}
+
+.page-footer .page-footer-inner{
+    float:left;
+}
+
+.page-sidebar .page-sidebar-menu .sub-menu li>.sub-menu>li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>.sub-menu>li>a {
+    padding-left: 40px;
+}
+
+.page-sidebar .page-sidebar-menu .sub-menu li>a, .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu .sub-menu li>a {
+    padding: 6px 15px 6px 23px; 
+}
+
+.portlet.light>.portlet-title>.caption > small {
+    font-weight: normal;
+    margin-left: 10px;
+    margin-right: 5px;
+}
+.portlet.light>.portlet-title>.caption > small >i {
+    margin-right: 5px;
+}
+.portlet.light>.portlet-title>.caption > small >a:hover {
+    text-decoration:none;
+}

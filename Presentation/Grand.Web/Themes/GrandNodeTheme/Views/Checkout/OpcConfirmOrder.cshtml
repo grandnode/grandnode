@@ -1,0 +1,79 @@
+﻿@model CheckoutConfirmModel
+@using Grand.Web.Models.Checkout;
+<div class="checkout-data">
+    @Html.Widget("op_checkout_confirm_top")
+    <div class="section order-summary">
+        @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
+    </div>
+    @if (String.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
+    {
+        <div id="show-terms-of-service-warning" class="container modal">
+            <div class="modal-content">
+                <h5>@T("Checkout.TermsOfService")</h5>
+                <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-close waves-effect waves-green btn-flat">Ok</a>
+            </div>
+        </div>
+        <div class="terms-of-service input-field">
+            <input id="termsofservice" type="checkbox" name="termsofservice" />
+            <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")<a class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</a></label>
+        </div>
+        <script type="text/javascript">
+    $(document).ready(function () {
+        $('.modal-close').on('click',function(){
+			$('.lean-overlay').remove();
+		});
+
+        $('#confirm-order').click(function () {
+			$("body").append($('#show-terms-of-service-warning'));
+			var count = 0;
+				$("div[id=show-terms-of-service-warning]").each(function(index){
+				count = count+1;
+				if(count > 1)
+				{
+					$(this).remove();
+				}
+			});
+
+            var termOfServiceOk = true;
+            if ($('#termsofservice').length > 0) {
+                //terms of service element exists
+                if (!$('#termsofservice').is(':checked')) {
+                    $('#show-terms-of-service-warning').openModal();
+                    termOfServiceOk = false;
+                } else {
+                    termOfServiceOk = true;
+                }
+            }
+            return termOfServiceOk;
+        });
+
+    });
+        </script>
+
+    }
+
+    @Html.Widget("op_checkout_confirm_bottom")
+    <div class="section confirm-order">
+        <div>
+            @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+            {
+                <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+            }
+        </div>
+        @if (Model.Warnings.Count > 0)
+        {
+            <div class="message-error">
+                <ul>
+                    @foreach (var warning in Model.Warnings)
+                    {
+                        <li>@warning</li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+
+</div>

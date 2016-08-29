@@ -1,0 +1,117 @@
+﻿@model MaintenanceModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.Maintenance").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-database"></i>
+                        @T("Admin.System.Maintenance")
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="note note-info">
+                                    <strong>@T("Admin.System.Maintenance.DeleteGuests")</strong>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.DeleteGuests.StartDate)
+                                <div class="col-md-4 col-sm-4">
+                                    @Html.GrandEditorFor(model => model.DeleteGuests.StartDate)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.DeleteGuests.EndDate)
+                                <div class="col-md-4 col-sm-4">
+                                    @Html.GrandEditorFor(model => model.DeleteGuests.EndDate)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
+                                <div class="col-md-4 col-sm-4">
+                                    @Html.GrandEditorFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                    <input type="submit" name="delete-guests" class="btn red" value="@T("Admin.Common.Delete")" />                                
+                            </div>
+                            @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
+                            {
+                                <div class="note note-info">
+                                    <strong>@string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)</strong>                                    
+                                </div>
+                            }
+                        </div>
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="note note-info">
+                                    <strong>@T("Admin.System.Maintenance.ClearMostViewed")</strong>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <input type="submit" name="clear-most-view" class="btn red" value="@T("Admin.Common.Delete")" />
+                            </div>
+                        </div>
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="note note-info">
+                                    <strong>@T("Admin.System.Maintenance.DeleteExportedFiles")</strong>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.DeleteExportedFiles.StartDate):
+                                <div class="col-md-4 col-sm-4">
+                                    @Html.GrandEditorFor(model => model.DeleteExportedFiles.StartDate)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.DeleteExportedFiles.EndDate):
+                                <div class="col-md-4 col-sm-4">
+                                    @Html.GrandEditorFor(model => model.DeleteExportedFiles.EndDate)
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <input type="submit" name="delete-exported-files" class="btn red" value="@T("Admin.Common.Delete")" />
+                            </div>
+                            @if (Model.DeleteExportedFiles.NumberOfDeletedFiles.HasValue)
+                            {
+                                <div class="form-group">
+                                    <div class="note note-info">
+                                        <strong>@string.Format(T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)</strong>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="form-body">
+                            <div class="note note-info">
+                                    <strong>@T("Admin.System.Maintenance.DeleteActivityLog")</strong>
+                            </div>
+                            <div class="form-actions">                                
+                                    <input type="submit" name="delete-activitylog" class="btn blue" value="@T("Admin.Common.Delete")" />
+                            </div>
+                            @if (Model.DeleteActivityLog)
+                            {
+                                <div class="form-group">
+                                    <div class="note note-info">
+                                        <strong>@T("Admin.System.Maintenance.DeleteActivityLog.Deleted")</strong>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}

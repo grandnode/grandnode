@@ -1,0 +1,117 @@
+﻿@model List<CustomerActionTypeModel>
+@{  
+    //page title
+    ViewBag.Title = T("Admin.Customers.ActionType").Text;
+}
+@using (Html.BeginForm("SaveTypes", "CustomerActionType"))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-repeat"></i>
+                        @T("Admin.Customers.ActionType")
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div id="actionType-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        //local datasource
+        var actionTypes = [
+            @for(int i=0;i<Model.Count;i++)
+        {
+            var alt = Model[i];
+            <text>
+            {
+                Id: "@(alt.Id)",
+                Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(alt.Name)))",
+                Enabled: @(alt.Enabled.ToString().ToLowerInvariant())
+            }
+        </text>
+            if (i != Model.Count - 1)
+            {
+                <text>,</text>
+            }
+        }
+        ];
+
+        $(document).ready(function () {
+            $("#actionType-grid").kendoGrid({
+                dataSource: {
+                    data: actionTypes,
+                    schema: {
+                        model: {
+                            fields: {
+                                Id: { type: "string" },
+                                Name: { type: "string" },
+                                Enabled: { type: "boolean" }
+                            }
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    }
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                scrollable: false,
+                columns: [
+                    {
+                        field: "Name",
+                        title: "@T("Admin.Customers.ActionType.Fields.Name")",
+                        width: 100
+                    }, {
+                        field: "Enabled",
+                        headerTemplate: "@T("Admin.Customers.ActionType.Fields.Enabled")&nbsp<input id='mastercheckbox' type='checkbox' />",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: "<input name='checkbox_action_types' value='#=Id#' type='checkbox' class='checkboxGroups' # if(Enabled) {# checked='checked' #}  # />",
+                        width: 100
+                    }
+                ]
+            });
+        });
+
+    </script>
+                
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            updateMasterCheckbox();
+
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            });
+
+            //wire up checkboxes.
+            $('#actionType-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                updateMasterCheckbox();
+            });
+        });
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#actionType-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#actionType-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+        }
+    </script>   
+           
+}

@@ -1,0 +1,58 @@
+﻿@model GoogleAnalyticsResult
+@using Grand.Services.Configuration
+
+
+@if(!String.IsNullOrEmpty(Model.Message))
+{
+    <div class="note note-info">
+        @Model.Message
+    </div>
+}
+@if (Model.Records.Count > 0)
+{
+<div class="mt-element-list">
+    <div class="mt-list-container list-simple ext-1 group" >
+
+        @foreach (var item in Model.Records)
+        {
+            var usertype = item.Where(x => x.Key == "ga:userType").FirstOrDefault().Value;
+            usertype = usertype.Replace(" ", "");
+            
+            <a class="list-toggle-container" data-toggle="collapse" href="#@(usertype)" aria-expanded="true">
+                <div class="list-toggle uppercase" >
+                    @item.Where(x => x.Key == "ga:userType").FirstOrDefault().Value
+                </div>
+            </a>
+            <div class="panel-collapse collapse in" id="@(usertype)" aria-expanded="true">
+                <ul>
+                    @foreach (var pos in item.Where(x => x.Key != "ga:userType"))
+                    {
+                        if (pos.Value != "0")
+                        {
+                        <li class="mt-list-item">
+                            <div class="list-icon-container done">
+                                <a href="javascript:;">
+                                    <i class="icon-check"></i>
+                                </a>
+                            </div>
+                            <div class="list-datetime">
+                                @pos.Value
+                            </div>
+                            <div class="list-item-content" style="padding: 0 15px 0 30px;">
+                                <h3 class="uppercase">
+                                    @pos.Key
+                                </h3>
+                            </div>
+                        </li>
+                        }
+
+                    }
+                </ul>
+            </div>
+
+
+
+        }
+    </div>
+</div>
+}

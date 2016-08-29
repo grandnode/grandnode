@@ -1,0 +1,34 @@
+﻿@model TaxProviderModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Tax.Providers.Configure").Text + " - " + Model.FriendlyName;
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-tasks"></i>
+                   @T("Admin.Configuration.Tax.Providers.Configure") - @Model.FriendlyName
+                    <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Tax.Providers.BackToList").Text, "Providers")</small>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="portlet-body">
+                            @if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
+                            {
+                                @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
+                            }
+                            else
+                            {
+                                @T("Admin.Common.ConfigurationNotRequired")
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

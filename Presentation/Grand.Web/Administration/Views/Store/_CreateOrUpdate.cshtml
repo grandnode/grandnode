@@ -1,0 +1,127 @@
+﻿@model StoreModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#@Html.FieldIdFor(model => model.SslEnabled)").click(toggleSslEnabled);
+
+        toggleSslEnabled();
+    });
+
+    function toggleSslEnabled() {
+        if ($('#@Html.FieldIdFor(model => model.SslEnabled)').is(':checked')) {
+            $('#pnlSecureUrl').show();
+        }
+        else {
+            $('#pnlSecureUrl').hide();
+        }
+    }
+</script>
+@(Html.LocalizedEditor<StoreModel, StoreLocalizedModel>("store-localized",
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Locales[item].Name)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Locales[item].Name)
+                     @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                 </div>
+             </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+         </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                     @Html.GrandLabelFor(model => model.Name)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Name)
+                     @Html.ValidationMessageFor(model => model.Name)
+                 </div>
+             </div>
+         </div>
+    </div>
+))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Url)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Url)
+                @Html.ValidationMessageFor(model => model.Url)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.SslEnabled)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.SslEnabled)
+                @Html.ValidationMessageFor(model => model.SslEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="note note-info">
+                <em>@T("Admin.Configuration.Stores.Fields.SslEnabled.Hint2")</em>
+            </div>
+        </div>
+        <div class="form-group" id="pnlSecureUrl">            
+                @Html.GrandLabelFor(model => model.SecureUrl)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.SecureUrl)
+                @Html.ValidationMessageFor(model => model.SecureUrl)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.Hosts)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Hosts)
+                @Html.ValidationMessageFor(model => model.Hosts)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.DefaultLanguageId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.DefaultLanguageId, Model.AvailableLanguages)
+                @Html.ValidationMessageFor(model => model.DefaultLanguageId)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.CompanyName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.CompanyName)
+                @Html.ValidationMessageFor(model => model.CompanyName)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.CompanyAddress)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.CompanyAddress)
+                @Html.ValidationMessageFor(model => model.CompanyAddress)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.CompanyPhoneNumber)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.CompanyPhoneNumber)
+                @Html.ValidationMessageFor(model => model.CompanyPhoneNumber)
+            </div>
+        </div>
+        <div class="form-group">
+                @Html.GrandLabelFor(model => model.CompanyVat)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.CompanyVat)
+                @Html.ValidationMessageFor(model => model.CompanyVat)
+            </div>
+        </div>
+    </div>
+</div>

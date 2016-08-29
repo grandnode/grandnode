@@ -1,7 +1,0 @@
-<configuration>
-	<configSections>
-		<sectionGroup name="webMarkupMin">
-			<section name="webExtensions" type="WebMarkupMin.Web.Configuration.WebExtensionsConfiguration, WebMarkupMin.Web" />
-		</sectionGroup>
-	</configSections>
-</configuration>

@@ -1,0 +1,89 @@
+﻿@model LogModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.System.Log.ViewLogDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()    
+    @Html.ValidationSummary(true)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-tag"></i>
+                        @T("Admin.System.Log.ViewLogDetails") 
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.System.Log.BackToList").Text, "List")                    </small>
+                    </div>
+                    <div class="actions">
+                        <span id="log-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.LogLevel)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.LogLevel)</label> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.ShortMessage)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.ShortMessage)</label> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.FullMessage)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label" style="text-align:left">@Html.DisplayFor(model => model.FullMessage)</label> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.IpAddress)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.IpAddress)</label> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.CustomerId)
+                                <div class="col-md-9 col-sm-9">
+                                    @if (!String.IsNullOrEmpty(Model.CustomerId))
+                                    {
+                                        <label class="control-label">
+                                            @Html.ActionLink(!String.IsNullOrEmpty(Model.CustomerEmail) ? Model.CustomerEmail : T("Admin.Customers.Guest").Text, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.PageUrl)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.PageUrl)</label> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.ReferrerUrl)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.ReferrerUrl)</label> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                    @Html.GrandLabelFor(model => model.CreatedOn)
+                                <div class="col-md-9 col-sm-9">
+                                    <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+@Html.DeleteConfirmation("log-delete")

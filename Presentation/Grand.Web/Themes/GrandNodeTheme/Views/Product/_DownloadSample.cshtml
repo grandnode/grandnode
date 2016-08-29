@@ -1,0 +1,11 @@
+﻿@model ProductDetailsModel
+@using Grand.Web.Models.Catalog;
+@if (Model.HasSampleDownload)
+{
+    <div class="download-sample">
+        <a class="btn waves-effect waves-light" href="@Url.RouteUrl("GetSampleDownload", new { productid = Model.Id })">
+            <i class="material-icons left">file_download</i>
+            @T("Products.DownloadSample")
+        </a>
+    </div>
+}

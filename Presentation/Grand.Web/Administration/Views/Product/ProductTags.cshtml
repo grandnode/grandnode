@@ -1,0 +1,126 @@
+﻿@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-tags-form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("Admin.Catalog.ProductTags")
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="portlet-body">
+                            <div id="product-tags-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $("#product-tags-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ProductTags", "Product"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ProductTagDelete", "Product"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Name: { editable: true, type: "string" },
+                                Value: { editable: true, type: "string" },
+                                Store: { editable: true, type: "string" },
+                                StoreId: { editable: true, type: "string" },
+                                Id: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Name",
+                    title: "@T("Admin.Catalog.ProductTags.Fields.Name")",
+                    width: 300
+                }, {
+                    field: "ProductCount",
+                    title: "@T("Admin.Catalog.ProductTags.Fields.ProductCount")",
+                    width: 150
+                }, {
+                    field: "Id",
+                    title: "@T("Admin.Common.Edit")",
+                    width: 150,
+                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/EditProductTag/")#=Id#?btnId=btnRefresh&formId=product-tags-form', 800, 350, true); return false;\" class='k-button' />"
+                }, {
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")",
+                    width: 100
+                }]
+            });
+        });
+    </script>       
+            
+    <input type="submit" id="btnRefresh" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefresh').click(function () {
+                //refresh grid
+                var grid = $("#product-tags-grid").data('kendoGrid');
+                grid.dataSource.read();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+           
+}
