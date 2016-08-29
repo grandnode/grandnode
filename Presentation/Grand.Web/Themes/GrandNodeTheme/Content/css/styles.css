@@ -1318,6 +1318,7 @@ footer.page-footer .footer-copyright a{
 .product-selectors .select-wrapper {
 	margin: 0 8px;
 	display: inline-block;
+    vertical-align: -moz-middle-with-baseline;
 }
 .product-selectors .product-viewmode {
 	display: none;

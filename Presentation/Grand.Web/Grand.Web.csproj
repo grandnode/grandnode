@@ -489,7 +489,7 @@
     <Content Include="App_Data\Localization\Installation\installation.ur.xml" />
     <Content Include="App_Data\Localization\Installation\installation.vi.xml" />
     <Content Include="App_Data\Localization\Installation\installation.zhs.xml" />
-    <Content Include="App_Data\Localization\defaultResources.nopres.xml">
+    <Content Include="App_Data\Localization\defaultResources.grandres.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Localization\Upgrade\EN_360_370.nopres.xml" />
