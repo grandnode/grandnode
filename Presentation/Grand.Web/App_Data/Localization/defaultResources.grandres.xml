@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="English">
   <LocaleResource Name="Account.AccountActivation">
     <Value>Account activation</Value>
@@ -5668,7 +5668,7 @@
     <Value>Set the page size for topics in forums e.g. '10' topics per page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
-    <Value>General and miscellaneous settings</Value>
+    <Value>General settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses">
     <Value>Admin area allowed IP</Value>
