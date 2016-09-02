@@ -8592,7 +8592,7 @@
   </LocaleResource>
 
   <LocaleResource Name="admin.customers.customerreminder.text1">
-    <Value>Abandoned cart – You can set custom reminger to customers who left their carts without confirming order. Activity date is counting "from this date".</Value>
+    <Value>Abandoned cart – You can set custom reminder to customers who left their carts without confirming order. Activity date is counting "from this date".</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customerreminder.text2">
     <Value>Registered customer – You can set custom reminder to customers who just register in your store. Activity date is counting from this date.</Value>
