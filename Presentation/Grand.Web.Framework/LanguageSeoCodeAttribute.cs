@@ -6,6 +6,8 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Infrastructure;
 using Grand.Web.Framework.Localization;
+using Grand.Services.Localization;
+using System.Linq;
 
 namespace Grand.Web.Framework
 {
@@ -47,8 +49,26 @@ namespace Grand.Web.Framework
             var pageUrl = filterContext.HttpContext.Request.RawUrl;
             string applicationPath = filterContext.HttpContext.Request.ApplicationPath;
             if (pageUrl.IsLocalizedUrl(applicationPath, true))
+            {
                 //already localized URL
-                return;
+                //let's ensure that this language exists
+                var seoCode = pageUrl.GetLanguageSeoCodeFromUrl(applicationPath, true);
+
+                var languageService = EngineContext.Current.Resolve<ILanguageService>();
+                var language = languageService.GetAllLanguages()
+                    .FirstOrDefault(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase));
+                if (language != null && language.Published)
+                {
+                    //exists
+                    return;
+                }
+                else
+                {
+                    //doesn't exist. redirect to the original page (not permanent)
+                    pageUrl = pageUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
+                    filterContext.Result = new RedirectResult(pageUrl);
+                }
+            }
             //add language code to URL
             var workContext = EngineContext.Current.Resolve<IWorkContext>();
             pageUrl = pageUrl.AddLanguageSeoCodeToRawUrl(applicationPath, workContext.WorkingLanguage);
