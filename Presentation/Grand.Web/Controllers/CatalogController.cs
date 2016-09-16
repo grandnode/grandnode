@@ -1309,7 +1309,16 @@ namespace Grand.Web.Controllers
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
             // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
-            if (Request.Params["q"] != null)
+            var isSearchTermSpecified = false;
+            try
+            {
+                isSearchTermSpecified = Request.Params["q"] != null;
+            }
+            catch
+            {
+                isSearchTermSpecified = !String.IsNullOrEmpty(searchTerms);
+            }
+            if (isSearchTermSpecified)
             {
                 if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 {
@@ -1434,6 +1443,7 @@ namespace Grand.Web.Controllers
             return PartialView(model);
         }
 
+        [ValidateInput(false)]
         public ActionResult SearchTermAutoComplete(string term)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
