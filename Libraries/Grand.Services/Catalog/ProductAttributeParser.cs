@@ -70,10 +70,13 @@ namespace Grand.Services.Catalog
         public virtual IList<ProductAttributeMapping> ParseProductAttributeMappings(Product product, string attributesXml)
         {
             var result = new List<ProductAttributeMapping>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return result;
+
             var ids = ParseProductAttributeMappingIds(attributesXml);
             foreach (string id in ids)
             {
-                var attribute = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();  //_productAttributeService.GetProductAttributeMappingById(id);
+                var attribute = product.ProductAttributeMappings.Where(x => x.Id == id).FirstOrDefault();  
                 if (attribute != null)
                 {
                     attribute.ProductId = product.Id;
@@ -91,6 +94,9 @@ namespace Grand.Services.Catalog
         public virtual IList<ProductAttributeValue> ParseProductAttributeValues(Product product, string attributesXml)
         {
             var values = new List<ProductAttributeValue>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return values;
+
             var attributes = ParseProductAttributeMappings(product, attributesXml);
             foreach (var attribute in attributes)
             {
@@ -126,6 +132,9 @@ namespace Grand.Services.Catalog
         public virtual IList<string> ParseValues(string attributesXml, string productAttributeMappingId)
         {
             var selectedValues = new List<string>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return selectedValues;
+
             try
             {
                 var xmlDoc = new XmlDocument();

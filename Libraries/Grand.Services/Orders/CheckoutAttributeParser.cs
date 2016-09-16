@@ -59,6 +59,9 @@ namespace Grand.Services.Orders
         public virtual IList<CheckoutAttribute> ParseCheckoutAttributes(string attributesXml)
         {
             var result = new List<CheckoutAttribute>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return result;
+
             var ids = ParseCheckoutAttributeIds(attributesXml);
             foreach (string id in ids)
             {
@@ -79,6 +82,9 @@ namespace Grand.Services.Orders
         public virtual IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributesXml)
         {
             var values = new List<CheckoutAttributeValue>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return values;
+
             var attributes = ParseCheckoutAttributes(attributesXml);
             foreach (var attribute in attributes)
             {
@@ -108,6 +114,9 @@ namespace Grand.Services.Orders
         public virtual IList<string> ParseValues(string attributesXml, string checkoutAttributeId)
         {
             var selectedCheckoutAttributeValues = new List<string>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return selectedCheckoutAttributeValues;
+
             try
             {
                 var xmlDoc = new XmlDocument();

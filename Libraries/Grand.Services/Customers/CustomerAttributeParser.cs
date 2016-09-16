@@ -63,6 +63,9 @@ namespace Grand.Services.Customers
         public virtual IList<CustomerAttribute> ParseCustomerAttributes(string attributesXml)
         {
             var result = new List<CustomerAttribute>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return result;
+
             var ids = ParseCustomerAttributeIds(attributesXml);
             foreach (string id in ids)
             {
@@ -83,6 +86,9 @@ namespace Grand.Services.Customers
         public virtual IList<CustomerAttributeValue> ParseCustomerAttributeValues(string attributesXml)
         {
             var values = new List<CustomerAttributeValue>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return values;
+
             var attributes = ParseCustomerAttributes(attributesXml);
             foreach (var attribute in attributes)
             {
@@ -112,6 +118,9 @@ namespace Grand.Services.Customers
         public virtual IList<string> ParseValues(string attributesXml, string customerAttributeId)
         {
             var selectedCustomerAttributeValues = new List<string>();
+            if (String.IsNullOrEmpty(attributesXml))
+                return selectedCustomerAttributeValues;
+
             try
             {
                 var xmlDoc = new XmlDocument();
