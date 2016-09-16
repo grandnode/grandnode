@@ -2333,6 +2333,10 @@ namespace Grand.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
+            //refund cannot be made if previously a partial refund has been already done. only other partial refund can be made in this case
+            if (order.RefundedAmount > decimal.Zero)
+                return false;
+
             //uncomment the lines below in order to allow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
             //    return false;
@@ -2463,6 +2467,11 @@ namespace Grand.Services.Orders
 
             if (order.OrderTotal == decimal.Zero)
                 return false;
+
+            //refund cannot be made if previously a partial refund has been already done. only other partial refund can be made in this case
+            if (order.RefundedAmount > decimal.Zero)
+                return false;
+
 
             //uncomment the lines below in order to allow this operation for cancelled orders
             //if (order.OrderStatus == OrderStatus.Cancelled)
