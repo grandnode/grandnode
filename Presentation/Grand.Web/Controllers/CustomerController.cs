@@ -1659,6 +1659,9 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
+            if (_customerSettings.HideDownloadableProductsTab)
+                return RedirectToRoute("CustomerInfo");
+
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerDownloadableProductsModel();
