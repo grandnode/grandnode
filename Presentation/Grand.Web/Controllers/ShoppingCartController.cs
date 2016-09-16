@@ -475,7 +475,12 @@ namespace Grand.Web.Controllers
                     (!String.IsNullOrEmpty(cartItemModel.AttributeInfo) || product.IsGiftCard) &&
                     product.VisibleIndividually;
 
-                //allowed quantities
+                //disable removal?
+                //1. do other items require this one?
+                if (product.RequireOtherProducts)
+                    cartItemModel.DisableRemoval = product.RequireOtherProducts && product.ParseRequiredProductIds().Intersect(cart.Select(x => x.ProductId)).Any();
+
+                    //allowed quantities
                 var allowedQuantities = product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)
                 {
