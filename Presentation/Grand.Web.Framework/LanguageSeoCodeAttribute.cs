@@ -36,6 +36,7 @@ namespace Grand.Web.Framework
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
+
             var localizationSettings = EngineContext.Current.Resolve<LocalizationSettings>();
             if (!localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
                 return;
