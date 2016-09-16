@@ -363,6 +363,7 @@ namespace Grand.Plugin.Feed.Froogle
                             finalPriceBase = product.Price;
                         }
                         decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
+                        price = RoundingHelper.RoundPrice(price);
                         writer.WriteElementString("g", "price", googleBaseNamespace,
                                                   price.ToString(new CultureInfo("en-US", false).NumberFormat) + " " +
                                                   currency.CurrencyCode);
