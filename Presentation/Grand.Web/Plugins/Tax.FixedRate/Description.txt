@@ -2,7 +2,7 @@
 FriendlyName: Fixed tax rate provider
 SystemName: Tax.FixedRate
 Version: 1.14
-SupportedVersions: 3.80
-Author: nopCommerce team
+SupportedVersions: 3.90
+Author: grandnode team, nopcommerce team
 DisplayOrder: 1
 FileName: Grand.Plugin.Tax.FixedRate.dll
