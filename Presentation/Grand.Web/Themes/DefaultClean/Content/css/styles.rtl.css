@@ -4449,6 +4449,29 @@ label, label + * {
 	background-color: #999;
 }
 
+.topic-post .post-vote span.vote {
+	cursor: pointer;
+    display: block;
+    width: 40px;
+    height: 24px;
+}
+.topic-post .post-vote span.up{
+    background: url('../images/vote-up.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.up.selected{
+    background: url('../images/vote-up-selected.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.down{
+    background: url('../images/vote-down.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.down.selected{
+    background: url('../images/vote-down-selected.png') no-repeat 50% 50%;
+}
+.topic-post .vote-count-post {
+    display: block;
+    font-size: 160%;
+}
+
 .topic-post .post-time {
 	margin: 0 0 15px;
 	background-color: #f6f6f6;
@@ -4471,6 +4494,11 @@ label, label + * {
 	display: inline-block;
 	margin: 1px 5px;
 	font-size: 14px;
+}
+.topic-post .post-vote{
+    text-align: center;
+    display: table;
+    margin: 0 auto 20px;
 }
 .topic-post .post-actions .edit-post-button,
 .topic-post .post-actions .delete-post-button {
@@ -5184,6 +5212,11 @@ pre {
 	background-color: #f9f9f9;
 	padding: 30px 20px 20px;
 }
+.topic-post .post-body {
+    float: right;
+    max-width: 90.5%;
+    text-align: right;
+}
 
 .ui-tabs-nav li {
 	display: inline-block;
@@ -5681,6 +5714,10 @@ pre {
 	display: table;
 	width: 100%;
 	margin: 0;
+}
+
+.topic-post .post-vote {
+    padding: 20px 0;
 }
 .topic-post .post-info {
 	display: table-cell;

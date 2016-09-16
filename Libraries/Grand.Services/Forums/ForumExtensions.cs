@@ -130,20 +130,6 @@ namespace Grand.Services.Forums
         }
 
         /// <summary>
-        /// Get forum last post customer
-        /// </summary>
-        /// <param name="forum">Forum</param>
-        /// <param name="customerService">Customer service</param>
-        /// <returns>Customer</returns>
-        public static Customer GetLastPostCustomer(this Forum forum, ICustomerService customerService)
-        {
-            if (forum == null)
-                throw new ArgumentNullException("forum");
-
-            return customerService.GetCustomerById(forum.LastPostCustomerId);
-        }
-
-        /// <summary>
         /// Get first post
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
@@ -175,18 +161,5 @@ namespace Grand.Services.Forums
             return forumService.GetPostById(forumTopic.LastPostId);
         }
 
-        /// <summary>
-        /// Get forum last post customer
-        /// </summary>
-        /// <param name="forumTopic">Forum topic</param>
-        /// <param name="customerService">Customer service</param>
-        /// <returns>Customer</returns>
-        public static Customer GetLastPostCustomer(this ForumTopic forumTopic, ICustomerService customerService)
-        {
-            if (forumTopic == null)
-                throw new ArgumentNullException("forumTopic");
-
-            return customerService.GetCustomerById(forumTopic.LastPostCustomerId);
-        }
     }
 }

@@ -91,6 +91,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Forum> _forumRepository;
         private readonly IRepository<ForumPost> _forumpostRepository;
         private readonly IRepository<ForumTopic> _forumtopicRepository;
+        private readonly IRepository<ForumPostVote> _forumPostVote;
         private readonly IRepository<ForumSubscription> _forumsubscriptionRepository;
         private readonly IRepository<Country> _countryRepository;
         private readonly IRepository<StateProvince> _stateProvinceRepository;
@@ -181,6 +182,7 @@ namespace Grand.Services.Installation
             IRepository<Forum> forumRepository,
             IRepository<ForumPost> forumpostRepository,
             IRepository<ForumTopic> forumtopicRepository,
+            IRepository<ForumPostVote> forumPostVote,
             IRepository<ForumSubscription> forumsubscriptionRepository,
             IRepository<Country> countryRepository,
             IRepository<StateProvince> stateProvinceRepository,
@@ -267,6 +269,7 @@ namespace Grand.Services.Installation
             this._forumpostRepository = forumpostRepository;
             this._forumtopicRepository = forumtopicRepository;
             this._forumsubscriptionRepository = forumsubscriptionRepository;
+            this._forumPostVote = forumPostVote;
             this._countryRepository = countryRepository;
             this._stateProvinceRepository = stateProvinceRepository;
             this._discountRepository = discountRepository;
@@ -5292,6 +5295,8 @@ namespace Grand.Services.Installation
                 AllowCustomersToManageSubscriptions = false,
                 AllowGuestsToCreatePosts = false,
                 AllowGuestsToCreateTopics = false,
+                AllowPostVoting = true,
+                MaxVotesPerDay = 30,
                 TopicSubjectMaxLength = 450,
                 PostMaxLength = 4000,
                 StrippedTopicMaxLength = 45,
@@ -10818,6 +10823,8 @@ namespace Grand.Services.Installation
             _forumpostRepository.Collection.Indexes.CreateOneAsync(Builders<ForumPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _forumtopicRepository.Collection.Indexes.CreateOneAsync(Builders<ForumTopic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _forumsubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<ForumSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x=>x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
 
             // Country and Stateprovince
             _countryRepository.Collection.Indexes.CreateOneAsync(Builders<Country>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Grand.Core.Domain.Forums;
 
 namespace Grand.Services.Installation
 {
@@ -258,6 +259,13 @@ namespace Grand.Services.Installation
             #region Install String resources
             InstallStringResources("380_390.nopres.xml");
             #endregion
+
+            #region Install forum Vote
+            var _forumPostVote = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<ForumPostVote>>();
+            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
+
+            #endregion  
         }
 
         private void InstallStringResources(string filenames)

@@ -2,6 +2,7 @@
 using Grand.Core;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
+using System;
 
 namespace Grand.Services.Forums
 {
@@ -350,5 +351,39 @@ namespace Grand.Services.Forums
         /// <param name="postId">Post identifier</param>
         /// <returns>Page index</returns>
         int CalculateTopicPageIndex(string forumTopicId, int pageSize, string postId);
+
+        /// <summary>
+        /// Get a post vote 
+        /// </summary>
+        /// <param name="postId">Post identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Post vote</returns>
+        ForumPostVote GetPostVote(string postId, string customerId);
+
+        /// <summary>
+        /// Get post vote made since the parameter date
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <param name="сreatedFromUtc">Date</param>
+        /// <returns>Post votes count</returns>
+        int GetNumberOfPostVotes(string customerId, DateTime сreatedFromUtc);
+
+        /// <summary>
+        /// Insert a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        void InsertPostVote(ForumPostVote postVote);
+
+        // <summary>
+        /// Update a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        void UpdatePostVote(ForumPostVote postVote);
+
+        /// <summary>
+        /// Delete a post vote
+        /// </summary>
+        /// <param name="postVote">Post vote</param>
+        void DeletePostVote(ForumPostVote postVote);
     }
 }

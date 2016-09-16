@@ -21,5 +21,6 @@ namespace Grand.Web.Models.Boards
 
         //posts
         public int TotalPostPages { get; set; }
+        public int Votes { get; set; }
     }
 }

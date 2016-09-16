@@ -26,5 +26,6 @@ namespace Grand.Web.Models.Boards
         public bool ForumFeedsEnabled { get; set; }
 
         public int PostsPageSize { get; set; }
+        public bool AllowPostVoting { get; set; }
     }
 }

@@ -492,6 +492,7 @@
     <Content Include="App_Data\Localization\defaultResources.grandres.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Localization\Upgrade\EN_380_390.nopres.xml" />
     <Content Include="App_Data\Localization\Upgrade\EN_360_370.nopres.xml" />
     <Content Include="Content\BBEditor\ed.js" />
     <Content Include="Content\BBEditor\images\bold.gif" />
@@ -2454,6 +2455,10 @@
     <Content Include="Themes\DefaultClean\Content\images\topic-type3.png" />
     <Content Include="Themes\DefaultClean\Content\images\view-grid.png" />
     <Content Include="Themes\DefaultClean\Content\images\view-list.png" />
+    <Content Include="Themes\DefaultClean\Content\images\vote-down-selected.png" />
+    <Content Include="Themes\DefaultClean\Content\images\vote-down.png" />
+    <Content Include="Themes\DefaultClean\Content\images\vote-up-selected.png" />
+    <Content Include="Themes\DefaultClean\Content\images\vote-up.png" />
     <Content Include="Themes\DefaultClean\Content\images\watch.png" />
     <Content Include="Themes\DefaultClean\Content\images\wishlist-button.png" />
     <Content Include="Themes\DefaultClean\preview.jpg" />
@@ -2504,6 +2509,10 @@
     <Content Include="Themes\GrandNodeTheme\Content\images\topic-type3.png" />
     <Content Include="Themes\GrandNodeTheme\Content\images\view-grid.png" />
     <Content Include="Themes\GrandNodeTheme\Content\images\view-list.png" />
+    <Content Include="Themes\GrandNodeTheme\Content\images\vote-down-selected.png" />
+    <Content Include="Themes\GrandNodeTheme\Content\images\vote-down.png" />
+    <Content Include="Themes\GrandNodeTheme\Content\images\vote-up-selected.png" />
+    <Content Include="Themes\GrandNodeTheme\Content\images\vote-up.png" />
     <Content Include="Themes\GrandNodeTheme\Content\images\watch.png" />
     <Content Include="Themes\GrandNodeTheme\Content\images\wishlist-button.png" />
     <Content Include="Themes\GrandNodeTheme\Content\js\materialize.js" />

@@ -94,5 +94,13 @@ namespace Grand.Admin.Models.Settings
         public int ActiveDiscussionsPageSize { get; set; }
         public bool ActiveDiscussionsPageSize_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Forums.AllowPostVoting")]
+        public bool AllowPostVoting { get; set; }
+        public bool AllowPostVoting_OverrideForStore { get; set; }
+ 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Forums.MaxVotesPerDay")]
+        public int MaxVotesPerDay { get; set; }
+        public bool MaxVotesPerDay_OverrideForStore { get; set; }
+
     }
 }

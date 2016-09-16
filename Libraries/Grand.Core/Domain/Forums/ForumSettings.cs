@@ -50,6 +50,16 @@ namespace Grand.Core.Domain.Forums
         public int StrippedTopicMaxLength { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum number of votes for user per day
+        /// </summary>
+        public int MaxVotesPerDay { get; set; }
+
+        /// <summary>
+        /// Gets or sets the whether users can vote for posts
+        /// </summary>
+        public bool AllowPostVoting { get; set; }
+
+        /// <summary>
         /// Gets or sets maximum length of post
         /// </summary>
         public int PostMaxLength { get; set; }

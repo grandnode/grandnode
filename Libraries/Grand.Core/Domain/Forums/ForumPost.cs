@@ -41,6 +41,11 @@ namespace Grand.Core.Domain.Forums
         public string IPAddress { get; set; }
 
         /// <summary>
+        /// Gets or sets the count of votes
+        /// </summary>
+        public int VoteCount { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

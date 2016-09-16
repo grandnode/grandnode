@@ -37,6 +37,9 @@ namespace Grand.Web.Models.Boards
         public string FormattedSignature { get; set; }
 
         public int CurrentTopicPage { get; set; }
+        public bool AllowPostVoting { get; set; }
+        public int VoteCount { get; set; }
+        public bool? VoteIsUp { get; set; }
 
     }
 }

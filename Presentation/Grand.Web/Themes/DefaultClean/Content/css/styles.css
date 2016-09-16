@@ -4693,11 +4693,18 @@ label, label + * {
 	color: #fff;
 }
 
-.topic-post .post-body {
-	/*topic post-body also gets style from blog post-body*/
+.topic-post .post-text {
+	/*topic post-text also gets style from blog post-body*/
 	padding: 0 10px 20px;
 	line-height: 22px;
 	color: #444;
+    margin-bottom: 0;
+}
+
+.topic-post .post-vote{
+    text-align: center;
+    display: table;
+    margin: 0 auto 20px;
 }
 
 .topic-post .user-posted-image,
@@ -4719,6 +4726,29 @@ label, label + * {
 	font-size: 13px;
     font-style: italic;
 }
+.topic-post .post-vote span.vote {
+	cursor: pointer;
+    display: block;
+    width: 40px;
+    height: 24px;
+}
+.topic-post .post-vote span.up{
+    background: url('../images/vote-up.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.up.selected{
+    background: url('../images/vote-up-selected.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.down{
+    background: url('../images/vote-down.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.down.selected{
+    background: url('../images/vote-down-selected.png') no-repeat 50% 50%;
+}
+.topic-post .vote-count-post {
+    display: block;
+    font-size: 160%;
+}
+
 
 /* forum edit & send message */
 
@@ -5371,6 +5401,11 @@ pre {
 	width: auto;
 	margin: 1px;
 }
+.topic-post .post-text {
+    float: left;
+    width: 90.5%;
+    text-align: left;
+}
 
 }
 
@@ -5908,10 +5943,13 @@ pre {
 	border-left: 1px solid #ddd;
 	text-align: center;
 }
-.topic-post .post-body {
-	padding: 20px;
-}
 
+.topic-post .post-text {
+	padding: 20px 5px;
+}
+.topic-post .post-vote{
+    padding: 20px 0 20px 15px;
+}
 .ui-tabs-nav {
 	text-align: left;
 }
@@ -6811,6 +6849,10 @@ pre {
 .forum-actions .pager,
 .topic-actions .pager {
 	max-width: 600px !important;
+}
+.topic-post .post-text {
+    width: 930px;
+    max-width: 100%;
 }
 
 }

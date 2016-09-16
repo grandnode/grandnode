@@ -4335,6 +4335,30 @@ input.qq-edit-filename {
     font-style: italic;
 }
 
+.topic-post .post-vote span.vote {
+	cursor: pointer;
+    display: block;
+    width: 40px;
+    height: 24px;
+}
+.topic-post .post-vote span.up{
+    background: url('../images/vote-up.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.up.selected{
+    background: url('../images/vote-up-selected.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.down{
+    background: url('../images/vote-down.png') no-repeat 50% 50%;
+}
+.topic-post .post-vote span.vote.down.selected{
+    background: url('../images/vote-down-selected.png') no-repeat 50% 50%;
+}
+.topic-post .vote-count-post {
+    display: block;
+    font-size: 160%;
+}
+
+
 /* forum edit & send message */
 
 .forum-edit-page .page-title,
@@ -5045,6 +5069,16 @@ footer.page-footer .follow-us > .social {
 	padding: 30px 20px 20px;
 }
 
+.topic-post .post-text {
+    float: left;
+    width: 90.5%;
+    text-align: left;
+}
+.topic-post .post-vote {
+    text-align: center;
+    display: table;
+    margin: 0 auto 20px;
+}
 .ui-tabs-nav li {
 	display: inline-block;
 	min-width: 150px;
@@ -5596,6 +5630,9 @@ footer.page-footer .footer-copyright {
 .topic-post .post-actions .quote-post a {
 	min-width: 70px;
 }
+.topic-post .post-text {
+    padding: 20px 5px;
+}
 .topic-post .post-actions a.post-link-button {
 	margin: 0 0 0 10px;
 	border-left: 1px solid #ddd;
@@ -5604,7 +5641,9 @@ footer.page-footer .footer-copyright {
 .topic-post .post-body {
 	padding: 20px;
 }
-
+.topic-post .post-vote {
+    padding: 20px 0 20px 15px;
+}
 .ui-tabs-nav {
 	text-align: left;
 }

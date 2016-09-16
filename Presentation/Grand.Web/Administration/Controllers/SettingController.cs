@@ -390,6 +390,8 @@ namespace Grand.Admin.Controllers
                 model.ForumFeedCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumFeedCount, storeScope);
                 model.SearchResultsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.SearchResultsPageSize, storeScope);
                 model.ActiveDiscussionsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope);
+                model.AllowPostVoting_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.AllowPostVoting, storeScope);
+                model.MaxVotesPerDay_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.MaxVotesPerDay, storeScope);
             }
             model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList();
 
@@ -514,7 +516,18 @@ namespace Grand.Admin.Controllers
                 _settingService.SaveSetting(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope);
+
+
+            if (model.AllowPostVoting_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(forumSettings, x => x.AllowPostVoting, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(forumSettings, x => x.AllowPostVoting, storeScope);
             
+            if (model.MaxVotesPerDay_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(forumSettings, x => x.MaxVotesPerDay, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(forumSettings, x => x.MaxVotesPerDay, storeScope);
+
             //now clear settings cache
             _settingService.ClearCache();
 

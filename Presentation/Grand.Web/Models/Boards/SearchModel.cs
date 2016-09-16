@@ -48,5 +48,6 @@ namespace Grand.Web.Models.Boards
         public string Error { get; set; }
 
         public int PostsPageSize { get; set; }
+        public bool AllowPostVoting { get; set; }
     }
 }
