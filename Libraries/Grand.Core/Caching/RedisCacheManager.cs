@@ -116,7 +116,7 @@ namespace Grand.Core.Caching
             foreach (var ep in _connectionWrapper.GetEndpoints())
             {
                 var server = _connectionWrapper.Server(ep);
-                var keys = server.Keys(pattern: "*" + pattern + "*");
+                var keys = server.Keys(database: _db.Database, pattern: "*" + pattern + "*");
                 foreach (var key in keys)
                     _db.KeyDelete(key);
             }
@@ -130,14 +130,9 @@ namespace Grand.Core.Caching
             foreach (var ep in _connectionWrapper.GetEndpoints())
             {
                 var server = _connectionWrapper.Server(ep);
-                //we can use the code belwo (commented)
-                //but it requires administration permission - ",allowAdmin=true"
-                //server.FlushDatabase();
-
-                //that's why we simply interate through all elements now
-                var keys = server.Keys();
+                var keys = server.Keys(database: _db.Database);
                 foreach (var key in keys)
-                    _db.KeyDelete(key);
+                    Remove(key);
             }
         }
 
