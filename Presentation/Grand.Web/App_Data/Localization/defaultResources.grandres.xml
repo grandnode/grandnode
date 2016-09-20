@@ -4453,7 +4453,7 @@
     <Value>Payment</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
-    <Value>Payment method restrictions</Value>
+    <Value>Payment restrictions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Role">
     <Value>Customer role</Value>
@@ -7136,7 +7136,7 @@
     <Value>System name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions">
-    <Value>Shipping method restrictions</Value>
+    <Value>Shipping restrictions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Country">
     <Value>Country</Value>
