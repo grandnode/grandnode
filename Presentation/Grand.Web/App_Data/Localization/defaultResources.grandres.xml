@@ -4453,7 +4453,7 @@
     <Value>Payment</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions">
-    <Value>Payment method restrictions</Value>
+    <Value>Payment restrictions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Payment.MethodRestrictions.Role">
     <Value>Customer role</Value>
@@ -7136,7 +7136,7 @@
     <Value>System name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions">
-    <Value>Shipping method restrictions</Value>
+    <Value>Shipping restrictions</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Restrictions.Country">
     <Value>Country</Value>
@@ -12522,7 +12522,7 @@
     <Value>Name is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.RestartApplication">
-    <Value>Do not forgot to restart the application once a task has been modified.</Value>
+    <Value>Do not forget to restart the application once a task has been modified.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.ScheduleTasks.RunNow">
     <Value>Run now</Value>
