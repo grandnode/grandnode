@@ -18,7 +18,10 @@ using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using Grand.Services.Localization;
 using Grand.Core.Infrastructure;
-using Grand.Services.Catalog.Cache;
+using Grand.Services.Vendors;
+using Grand.Services.Stores;
+using Grand.Core.Domain.Vendors;
+using Grand.Core.Domain.Stores;
 
 namespace Grand.Services.Discounts
 {
@@ -61,7 +64,14 @@ namespace Grand.Services.Discounts
         /// Key pattern to clear cache
         /// </summary>
         private const string CATEGORIES_PATTERN_KEY = "Nop.category.";
-
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string VENDORS_PATTERN_KEY = "Nop.vendor.";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string STORES_PATTERN_KEY = "Nop.store.";
 
         #endregion
 
@@ -72,6 +82,8 @@ namespace Grand.Services.Discounts
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
+        private readonly IRepository<Vendor> _vendorRepository;
+        private readonly IRepository<Store> _storeRepository;
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
@@ -96,7 +108,9 @@ namespace Grand.Services.Discounts
             IEventPublisher eventPublisher,
             IRepository<Product> productRepository,
             IRepository<Category> categoryRepository,
-            IRepository<Manufacturer> manufacturerRepository
+            IRepository<Manufacturer> manufacturerRepository,
+            IRepository<Vendor> vendorRepository,
+            IRepository<Store> storeRepository
             )
         {
             this._cacheManager = cacheManager;
@@ -110,6 +124,8 @@ namespace Grand.Services.Discounts
             this._productRepository = productRepository;
             this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
+            this._vendorRepository = vendorRepository;
+            this._storeRepository = storeRepository;
         }
 
         #endregion
@@ -206,7 +222,21 @@ namespace Grand.Services.Discounts
                 var result = _manufacturerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
+            if (discount.DiscountType == DiscountType.AssignedToVendors)
+            {
+                var buildervendor = Builders<Vendor>.Update;
+                var updatefilter = buildervendor.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var result = _vendorRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+                _cacheManager.RemoveByPattern(VENDORS_PATTERN_KEY);
+            }
 
+            if (discount.DiscountType == DiscountType.AssignedToStores)
+            {
+                var builderstore = Builders<Store>.Update;
+                var updatefilter = builderstore.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var result = _storeRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
+                _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
+            }
 
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
@@ -337,6 +367,25 @@ namespace Grand.Services.Discounts
                     .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
                 var result = _manufacturerRepository.Collection.UpdateManyAsync(filter, update).Result;
                 _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
+            }
+            if (discount.DiscountType == DiscountType.AssignedToVendors)
+            {
+                var builder = Builders<Vendor>.Filter;
+                var filter = builder.ElemMatch(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var update = Builders<Vendor>.Update
+                    .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
+                var result = _vendorRepository.Collection.UpdateManyAsync(filter, update).Result;
+                _cacheManager.RemoveByPattern(VENDORS_PATTERN_KEY);
+            }
+
+            if (discount.DiscountType == DiscountType.AssignedToStores)
+            {
+                var builder = Builders<Store>.Filter;
+                var filter = builder.ElemMatch(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var update = Builders<Store>.Update
+                    .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
+                var result = _storeRepository.Collection.UpdateManyAsync(filter, update).Result;
+                _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
             }
 
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);

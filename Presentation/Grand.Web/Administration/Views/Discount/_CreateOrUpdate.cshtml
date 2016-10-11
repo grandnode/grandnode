@@ -1,5 +1,4 @@
 ﻿@model DiscountModel
-
 @using Grand.Core.Domain.Discounts;
 @using Grand.Web.Framework.UI;
 @{
@@ -7,7 +6,6 @@
 }
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-
 <script>
     $(document).ready(function() {
         $("#discount-edit").show();
@@ -21,7 +19,6 @@
         });
     });
 </script>
-
 <div id="discount-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -38,6 +35,12 @@
         </li>
         <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex()) id="tab-applied-to-manufacturers">
             @T("Admin.Promotions.Discounts.AppliedToManufacturers")
+        </li>
+        <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex()) id="tab-applied-to-vendors">
+            @T("Admin.Promotions.Discounts.AppliedToVendors")
+        </li>
+        <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex()) id="tab-applied-to-stores">
+            @T("Admin.Promotions.Discounts.AppliedToStores")
         </li>
         @if (!String.IsNullOrEmpty(Model.Id))
         {
@@ -61,6 +64,12 @@
     <div>
         @TabAppliedToManufacturers()
     </div>
+    <div>
+        @TabAppliedToVendors()
+    </div>
+    <div>
+        @TabAppliedToStores()
+    </div>
     @if (!String.IsNullOrEmpty(Model.Id))
     {
         <div>
@@ -80,78 +89,101 @@
 
 
 
-
-
-
 @*save selected tab index*@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-
 @helper TabInfo()
 {
     <script type="text/javascript">
-            $(document).ready(function () {
-                $("#@Html.FieldIdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
-                $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);
-                $("#@Html.FieldIdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
-                $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
+            $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);
+            $("#@Html.FieldIdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
+            $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
 
-                toggleDiscountType();
-                toggleLimitation();
-                toggleUsePercentage();
-                toggleRequiresCouponCode();
-            });
-            
-            function toggleDiscountType() {
-                var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
-                if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToCategories).ToString())) {
-                    $('#tab-applied-to-categories').show();
-                $('#tab-applied-to-manufacturers').hide();
-                    $('#tab-applied-to-products').hide();
-                    $('#pnlMaximumDiscountedQuantity').show();
-                }
-                else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToManufacturers).ToString())) {
+            toggleDiscountType();
+            toggleLimitation();
+            toggleUsePercentage();
+            toggleRequiresCouponCode();
+        });
+
+        function toggleDiscountType() {
+            var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
+            if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToCategories).ToString())) {
+            $('#tab-applied-to-categories').show();
+            $('#tab-applied-to-manufacturers').hide();
+            $('#tab-applied-to-products').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#tab-applied-to-vendors').hide();
+            $('#tab-applied-to-stores').hide();
+        }
+        else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToManufacturers).ToString())) {
+            $('#tab-applied-to-categories').hide();
+            $('#tab-applied-to-manufacturers').show();
+            $('#tab-applied-to-products').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#tab-applied-to-vendors').hide();
+            $('#tab-applied-to-stores').hide();
+        }
+        else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
+            $('#tab-applied-to-categories').hide();
+            $('#tab-applied-to-manufacturers').hide();
+            $('#tab-applied-to-products').show();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#tab-applied-to-vendors').hide();
+            $('#tab-applied-to-stores').hide();
+        }
+        else if(selectedDiscountTypeId == @(((int)DiscountType.AssignedToVendors).ToString())){
+            $('#tab-applied-to-categories').hide();
+            $('#tab-applied-to-manufacturers').hide();
+            $('#tab-applied-to-products').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#tab-applied-to-vendors').show();
+            $('#tab-applied-to-stores').hide();
+        }
+        else if(selectedDiscountTypeId == @(((int)DiscountType.AssignedToStores).ToString())){
+            $('#tab-applied-to-categories').hide();
+            $('#tab-applied-to-manufacturers').hide();
+            $('#tab-applied-to-products').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#tab-applied-to-vendors').hide();
+            $('#tab-applied-to-stores').show();
+        }
+        else {
                     $('#tab-applied-to-categories').hide();
-                    $('#tab-applied-to-manufacturers').show();
-                    $('#tab-applied-to-products').hide();
-                    $('#pnlMaximumDiscountedQuantity').show();
-                } else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
-                    $('#tab-applied-to-categories').hide();
-                    $('#tab-applied-to-manufacturers').hide();
-                    $('#tab-applied-to-products').show();
-                    $('#pnlMaximumDiscountedQuantity').show();
-                }
-                else {
-                    $('#tab-applied-to-categories').hide();
-                    $('#tab-applied-to-manufacturers').hide();
-                    $('#tab-applied-to-products').hide();
-                    $('#pnlMaximumDiscountedQuantity').hide();
-                }
-            }
+        $('#tab-applied-to-manufacturers').hide();
+        $('#tab-applied-to-products').hide();
+        $('#pnlMaximumDiscountedQuantity').hide();
+        $('#tab-applied-to-vendors').hide();
+        $('#tab-applied-to-stores').hide();
 
-            function toggleLimitation() {
-                var selectedDiscountLimitationId = $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").val();
-                if (selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesPerCustomer).ToString())) {
-                    //'N Times Only' or 'N Times Per Customer'
-                    $('#pnlLimitationTimes').show();
-                } else {
-                    $('#pnlLimitationTimes').hide();
-                }
-            }
+        }
+        }
 
-            function toggleUsePercentage() {
-                if ($('#@Html.FieldIdFor(model => model.UsePercentage)').is(':checked')) {
-                    $('#pnlDiscountPercentage').show();
-                    $('#pnlDiscountAmount').hide();
-                    $('#pnlMaximumDiscountAmount').show();
-                } else {
-                    $('#pnlDiscountPercentage').hide();
-                    $('#pnlDiscountAmount').show();
-                    $('#pnlMaximumDiscountAmount').hide();
-                }
-            }
+        function toggleLimitation() {
+            var selectedDiscountLimitationId = $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").val();
+            if (selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesPerCustomer).ToString())) {
+                //'N Times Only' or 'N Times Per Customer'
+                $('#pnlLimitationTimes').show();
+        }
+        else {
+                $('#pnlLimitationTimes').hide();
+        }
+        }
 
-            function toggleRequiresCouponCode() {
-                if ($('#@Html.FieldIdFor(model => model.RequiresCouponCode)').is(':checked')) {
+        function toggleUsePercentage() {
+            if ($('#@Html.FieldIdFor(model => model.UsePercentage)').is(':checked')) {
+                $('#pnlDiscountPercentage').show();
+                $('#pnlDiscountAmount').hide();
+                $('#pnlMaximumDiscountAmount').show();
+            } else {
+                $('#pnlDiscountPercentage').hide();
+                $('#pnlDiscountAmount').show();
+                $('#pnlMaximumDiscountAmount').hide();
+            }
+        }
+
+        function toggleRequiresCouponCode() {
+            if ($('#@Html.FieldIdFor(model => model.RequiresCouponCode)').is(':checked')) {
                 $('#pnlCouponCode').show();
             } else {
                 $('#pnlCouponCode').hide();
@@ -161,74 +193,74 @@
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Name)
+                @Html.GrandLabelFor(model => model.Name)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.Name)
                     @Html.ValidationMessageFor(model => model.Name)
-               </div>
+                </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.DiscountTypeId)
+                @Html.GrandLabelFor(model => model.DiscountTypeId)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandDropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
                     @Html.ValidationMessageFor(model => model.DiscountTypeId)
-               </div>
+                </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.UsePercentage)
+                @Html.GrandLabelFor(model => model.UsePercentage)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.UsePercentage)
                     @Html.ValidationMessageFor(model => model.UsePercentage)
-               </div>
+                </div>
             </div>
-            <div class="form-group" id="pnlDiscountAmount">                
-                    @Html.GrandLabelFor(model => model.DiscountAmount)
+            <div class="form-group" id="pnlDiscountAmount">
+                @Html.GrandLabelFor(model => model.DiscountAmount)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.DiscountAmount) [@Model.PrimaryStoreCurrencyCode]
                     @Html.ValidationMessageFor(model => model.DiscountAmount)
-               </div>
+                </div>
             </div>
             <div class="form-group" id="pnlDiscountPercentage">
-                    @Html.GrandLabelFor(model => model.DiscountPercentage)
+                @Html.GrandLabelFor(model => model.DiscountPercentage)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.DiscountPercentage)
                     @Html.ValidationMessageFor(model => model.DiscountPercentage)
-               </div>
+                </div>
             </div>
             <div class="form-group" id="pnlMaximumDiscountAmount">
-                    @Html.GrandLabelFor(model => model.MaximumDiscountAmount)
+                @Html.GrandLabelFor(model => model.MaximumDiscountAmount)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.MaximumDiscountAmount) [@Model.PrimaryStoreCurrencyCode]
                     @Html.ValidationMessageFor(model => model.MaximumDiscountAmount)
-               </div>
+                </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.StartDateUtc)
+                @Html.GrandLabelFor(model => model.StartDateUtc)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.StartDateUtc)
                     @Html.ValidationMessageFor(model => model.StartDateUtc)
-               </div>
+                </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.EndDateUtc)
+                @Html.GrandLabelFor(model => model.EndDateUtc)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.EndDateUtc)
                     @Html.ValidationMessageFor(model => model.EndDateUtc)
-               </div>
+                </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.RequiresCouponCode)
+                @Html.GrandLabelFor(model => model.RequiresCouponCode)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.RequiresCouponCode)
                     @Html.ValidationMessageFor(model => model.RequiresCouponCode)
-               </div>
+                </div>
             </div>
             <div class="form-group" id="pnlCouponCode">
-                    @Html.GrandLabelFor(model => model.CouponCode)
+                @Html.GrandLabelFor(model => model.CouponCode)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.CouponCode)
                     @Html.ValidationMessageFor(model => model.CouponCode)
-               </div>
+                </div>
             </div>
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.IsCumulative)
@@ -236,40 +268,40 @@
                     @Html.GrandEditorFor(model => model.IsCumulative)
                     @Html.ValidationMessageFor(model => model.IsCumulative)
                 </div>
-            </div>            
+            </div>
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.DiscountLimitationId)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandDropDownListFor(model => model.DiscountLimitationId, ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())
                     @Html.ValidationMessageFor(model => model.DiscountLimitationId)
-               </div>
+                </div>
             </div>
             <div class="form-group" id="pnlLimitationTimes">
-                    @Html.GrandLabelFor(model => model.LimitationTimes)
+                @Html.GrandLabelFor(model => model.LimitationTimes)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.LimitationTimes)
                     @Html.ValidationMessageFor(model => model.LimitationTimes) @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
-               </div>
+                </div>
             </div>
             <div class="form-group" id="pnlMaximumDiscountedQuantity">
-                    @Html.GrandLabelFor(model => model.MaximumDiscountedQuantity)
+                @Html.GrandLabelFor(model => model.MaximumDiscountedQuantity)
                 <div class="col-md-9 col-sm-9">
                     @Html.EditorFor(model => model.MaximumDiscountedQuantity)
                     @Html.ValidationMessageFor(model => model.MaximumDiscountedQuantity)
-               </div>
+                </div>
             </div>
         </div>
     </div>
 }
 @helper TabRequirements()
 {
-        if (!String.IsNullOrEmpty(Model.Id))
-        {
-        
-    <script type="text/javascript">
-            
+if (!String.IsNullOrEmpty(Model.Id))
+{
+
+        <script type="text/javascript">
+
             $(document).ready(function () {
-            
+
                 $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
 
                 //load add requirement box
@@ -277,25 +309,31 @@
 
                 //load existing requirements
                 loadExistingRequirements();
-                           
-               //adding requirement event
-               $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
-  
-                   var discountId = '@Model.Id';
-                   
-                   var postData = {
-                       discountRequirementId: newRequirementId,
-                       discountId: discountId
-                   };
-                   addAntiForgeryToken(postData);
+
+                //adding requirement event
+                $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
+
+                    var discountId = '@Model.Id';
+
+                    var postData = {
+                        discountRequirementId: newRequirementId,
+                        discountId: discountId
+                    };
+                    addAntiForgeryToken(postData);
 
                     $.ajax({
                         cache:false,
                         type: "POST",
                         url: "@(Url.Action("GetDiscountRequirementMetaInfo", "Discount"))",
                         data: postData,
-                        success: function (result) {                            
-                            discountRequirements.push({ discountRequirementId: newRequirementId, ruleName : result.ruleName, url : result.url });
+                        success: function (result) {
+                            discountRequirements.push(
+                                {
+                                    discountRequirementId: newRequirementId,
+                                    ruleName : result.ruleName,
+                                    url : result.url
+                                }
+                                );
                             loadExistingRequirements();
                         },
                         error:function (xhr, ajaxOptions, thrownError) {
@@ -303,10 +341,10 @@
                         }
                     });
 
-               });
+                });
             });
 
-                
+
             //load requirement HTML
             function loadRequirement(configureRuleUrl, placeholderName) {
                 $.ajax({
@@ -336,13 +374,13 @@
                         url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
                         data: { "systemName": ruleSystemName, "discountId": discountId },
                         success: function (result) {
-                                var configureRuleUrl = result.url;
-                                //now load the content
-                                loadRequirement(configureRuleUrl, '#addrequirementplaceholder');
+                            var configureRuleUrl = result.url;
+                            //now load the content
+                            loadRequirement(configureRuleUrl, '#addrequirementplaceholder');
                         },
                         error:function (xhr, ajaxOptions, thrownError){
                             $('#addrequirementplaceholder').html('Failed to load requirement URL');
-                        }  
+                        }
                     });
                 }
                 else {
@@ -351,42 +389,42 @@
                 }
             }
 
-           //array of exisiting discount requirements
-           var discountRequirements = [
-                    @for (int i = 0; i < Model.DiscountRequirementMetaInfos.Count; i++)
+            //array of exisiting discount requirements
+            var discountRequirements = [
+                     @for (int i = 0; i < Model.DiscountRequirementMetaInfos.Count; i++)
                     {
                         var drmi = Model.DiscountRequirementMetaInfos[i];
                         <text>{ discountRequirementId: "@(drmi.DiscountRequirementId)", ruleName: "@(drmi.RuleName)", url:  "@(Html.Raw(drmi.ConfigurationUrl))" } </text> if (i != Model.DiscountRequirementMetaInfos.Count - 1)
                                                                                                                                                                          {<text>, </text>}
                     }
-               ];
-           
-           //load HTML for exisiting requirements
-        function loadExistingRequirements() {
-               App.startPageLoading();
-               $("#discountRequirementContainer").html('');
-               $("#discountRequirementTemplate").tmpl(discountRequirements).appendTo("#discountRequirementContainer");
+            ];
 
-               var discountRequirementsLen = discountRequirements.length;
-               for (var i=0; i<discountRequirementsLen; i++) {
-                   var url = discountRequirements[i].url;
-                   var discountRequirementId = discountRequirements[i].discountRequirementId;
-                   var placeholderName = '#editrequirementplaceholder' + discountRequirementId;
-                   $(placeholderName).html('loading...');
-                   loadRequirement(url, placeholderName);
-               }
-               App.stopPageLoading();
-           }
+            //load HTML for exisiting requirements
+            function loadExistingRequirements() {
+                App.startPageLoading();
+                $("#discountRequirementContainer").html('');
+                $("#discountRequirementTemplate").tmpl(discountRequirements).appendTo("#discountRequirementContainer");
 
-           //delete requirement rule
-           function deleteRequirement(discountRequirementId) {           
-               var discountId = '@Model.Id';
-               
-               var postData = {
-                   discountRequirementId: discountRequirementId,
-                   discountId: discountId
-               };
-               addAntiForgeryToken(postData);
+                var discountRequirementsLen = discountRequirements.length;
+                for (var i=0; i<discountRequirementsLen; i++) {
+                    var url = discountRequirements[i].url;
+                    var discountRequirementId = discountRequirements[i].discountRequirementId;
+                    var placeholderName = '#editrequirementplaceholder' + discountRequirementId;
+                    $(placeholderName).html('loading...');
+                    loadRequirement(url, placeholderName);
+                }
+                App.stopPageLoading();
+            }
+
+            //delete requirement rule
+            function deleteRequirement(discountRequirementId) {
+                var discountId = '@Model.Id';
+
+                var postData = {
+                    discountRequirementId: discountRequirementId,
+                    discountId: discountId
+                };
+                addAntiForgeryToken(postData);
 
                 $.ajax({
                     cache: false,
@@ -402,55 +440,54 @@
                     }
                 });
 
-                
-            function removeRequirementByElement(arrayName,discountRequirementId) {
-                for(var i=0; i<arrayName.length; i++) {
-                    if(arrayName[i].discountRequirementId==discountRequirementId) {
-                        arrayName.splice(i,1);
+
+                function removeRequirementByElement(arrayName,discountRequirementId) {
+                    for(var i=0; i<arrayName.length; i++) {
+                        if(arrayName[i].discountRequirementId==discountRequirementId) {
+                            arrayName.splice(i,1);
+                        }
                     }
                 }
-             }
 
-        }
+            }
 
-    </script>
+        </script>
 
     <!-- Template container -->
-    <div class="form-horizontal" id="discountRequirementContainer">
-    </div>
+        <div class="form-horizontal" id="discountRequirementContainer">
+        </div>
     <!-- Discount requirement template -->
-    <script id="discountRequirementTemplate" type="text/html">
+        <script id="discountRequirementTemplate" type="text/html">
             <div class="form-body" id="editrequirement{{= discountRequirementId }}">
-                    <div class="note note-info">@T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType") <strong>{{= ruleName }}</strong></div>
-                    <div class="form-group" id="editrequirementplaceholder{{= discountRequirementId }}"></div>
-                    <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
-                        <input type="button" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement('{{= discountRequirementId }}')" class="btn default" value="@T("Admin.Promotions.Discounts.Requirements.Remove")" />
+                <div class="note note-info">@T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType") <strong>{{= ruleName }}</strong></div>
+                <div class="form-group" id="editrequirementplaceholder{{= discountRequirementId }}"></div>
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-6 col-sm-6">
+                    <input type="button" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement('{{= discountRequirementId }}')" class="btn default" value="@T("Admin.Promotions.Discounts.Requirements.Remove")" />
                 </div>
             </div>
-    </script>
-            
-    <div class="form-horizontal">
-        <div class="form-body">
+        </script>
+
+        <div class="form-horizontal">
+            <div class="form-body">
                 <div class="note note-info">
                     <strong>@T("Admin.Promotions.Discounts.Requirements.AddNew")</strong>
                 </div>
-            
-            <div class="form-group">
-                    @Html.GrandLabelFor(model => model.AddDiscountRequirement)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
-                    @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
-               </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-horizontal">
-        <div class="form-body">
-            <div id="addrequirementplaceholder">
-            </div>
 
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.AddDiscountRequirement)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
+                        @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="form-horizontal">
+            <div class="form-body">
+                <div id="addrequirementplaceholder">
+                </div>
+            </div>
+        </div>
 }
 else
 {
@@ -542,7 +579,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                 });
             });
         </script>
-               
+
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#btnRefreshProducts').click(function () {
@@ -578,7 +615,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                 <input type="submit" id="btnRefreshCategories" style="display: none" />
             </div>
         </div>
-                    
+
 
         <script>
             $(document).ready(function () {
@@ -648,7 +685,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                 });
             });
         </script>
-              
+
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#btnRefreshCategories').click(function () {
@@ -685,88 +722,88 @@ if (!String.IsNullOrEmpty(Model.Id))
             </div>
         </div>
 
-                    
 
-            <script>
-                $(document).ready(function () {
-                    $("#manufacturers-grid").kendoGrid({
-                        dataSource: {
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ManufacturerList", "Discount", new { discountId = Model.Id }))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("ManufacturerDelete", "Discount", new { discountId = Model.Id }))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "ManufacturerId",
-                                    fields: {
-                                        ManufacturerName: {editable: false, type: "string" },
-                                        ManufacturerId: {editable: false, type: "string" }
-                                    }
-                                }
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "ManufacturerName",
-                            title: "@T("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")"
-                        },  {
-                            field: "ManufacturerId",
-                            title: "@T("Admin.Common.View")",
-                            width: 150,
-                            template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">@T("Admin.Common.View")</a>'
-                        }, {
-                            command: [{
-                                name: "destroy",
-                                text: "@T("Admin.Common.Delete")"
-                            }],
-                            width: 150
-                        }]
-                    });
-                });
-            </script>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#btnRefreshManufacturers').click(function () {
-                        //refresh grid
-                        var grid = $("#manufacturers-grid").data('kendoGrid');
-                        grid.dataSource.read();
 
-                        //return false to don't reload a page
-                        return false;
-                    });
+        <script>
+            $(document).ready(function () {
+                $("#manufacturers-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ManufacturerList", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ManufacturerDelete", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "ManufacturerId",
+                                fields: {
+                                    ManufacturerName: {editable: false, type: "string" },
+                                    ManufacturerId: {editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "ManufacturerName",
+                        title: "@T("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")"
+                    },  {
+                        field: "ManufacturerId",
+                        title: "@T("Admin.Common.View")",
+                        width: 150,
+                        template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">@T("Admin.Common.View")</a>'
+                    }, {
+                        command: [{
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 150
+                    }]
                 });
-            </script>
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshManufacturers').click(function () {
+                    //refresh grid
+                    var grid = $("#manufacturers-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
 }
 else
 {
@@ -775,10 +812,220 @@ else
         </div>
 }
 }
+
+@helper TabAppliedToVendors()
+{
+if (!String.IsNullOrEmpty(Model.Id))
+{
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="vendors-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewVendor" value="@T("Admin.Promotions.Discounts.AppliedToVendors.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("VendorAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshVendors", formId = "discount-form" }))', 800, 800, true); return false;" class="btn default" />
+                <input type="button" id="btnRefreshVendors" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#vendors-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("VendorList", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("VendorDelete", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "VendorId",
+                                fields: {
+                                    VendorName: {editable: false, type: "string" },
+                                    VendorId: {editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "VendorName",
+                        title: "@T("Admin.Promotions.Discounts.AppliedToVendors.Vendor")"
+                    },  {
+                        field: "VendorId",
+                        title: "@T("Admin.Common.View")",
+                        width: 150,
+                        template: '<a href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#">@T("Admin.Common.View")</a>'
+                    }, {
+                        command: [{
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 150
+                    }]
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshVendors').click(function () {
+                    //refresh grid
+                    var grid = $("#vendors-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+}
+else
+{
+        <div class="note note-info">
+            @T("Admin.Promotions.Discounts.AppliedToVendors.SaveBeforeEdit")
+        </div>
+}
+}
+
+
+@helper TabAppliedToStores()
+{
+if (!String.IsNullOrEmpty(Model.Id))
+{
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="stores-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewStore" value="@T("Admin.Promotions.Discounts.AppliedToStores.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StoreAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshStores", formId = "discount-form" }))', 800, 800, true); return false;" class="btn default" />
+                <input type="button" id="btnRefreshStores" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#stores-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("StoreList", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("StoreDelete", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "StoreId",
+                                fields: {
+                                    StoreName: {editable: false, type: "string" },
+                                    StoreId: {editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "StoreName",
+                        title: "@T("Admin.Promotions.Discounts.AppliedToStores.Store")"
+                    },  {
+                        field: "StoreId",
+                        title: "@T("Admin.Common.View")",
+                        width: 150,
+                        template: '<a href="@Url.Content("~/Admin/Store/Edit/")#=StoreId#">@T("Admin.Common.View")</a>'
+                    }, {
+                        command: [{
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 150
+                    }]
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshStores').click(function () {
+                    //refresh grid
+                    var grid = $("#stores-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+}
+else
+{
+        <div class="note note-info">
+            @T("Admin.Promotions.Discounts.AppliedToStores.SaveBeforeEdit")
+        </div>
+}
+}
+
+
+
 @helper TabHistory()
 {
-        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     <div id="usagehistory-grid"></div>
 

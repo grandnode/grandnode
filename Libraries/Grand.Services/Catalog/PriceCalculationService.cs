@@ -11,6 +11,8 @@ using Grand.Core.Domain.Orders;
 using Grand.Services.Catalog.Cache;
 using Grand.Services.Customers;
 using Grand.Services.Discounts;
+using Grand.Services.Vendors;
+using Grand.Services.Stores;
 
 namespace Grand.Services.Catalog
 {
@@ -29,6 +31,8 @@ namespace Grand.Services.Catalog
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly ICacheManager _cacheManager;
+        private readonly IVendorService _vendorService;
+        private readonly IStoreService _storeService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
 
@@ -44,6 +48,8 @@ namespace Grand.Services.Catalog
             IProductAttributeParser productAttributeParser, 
             IProductService productService,
             ICacheManager cacheManager,
+            IVendorService vendorService,
+            IStoreService storeService,
             ShoppingCartSettings shoppingCartSettings, 
             CatalogSettings catalogSettings)
         {
@@ -55,6 +61,8 @@ namespace Grand.Services.Catalog
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
             this._cacheManager = cacheManager;
+            this._vendorService = vendorService;
+            this._storeService = storeService;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
         }
@@ -124,7 +132,7 @@ namespace Grand.Services.Catalog
             {
 
                 var category = _categoryService.GetCategoryById(productCategory.CategoryId);
-                if (category.AppliedDiscounts.Count() > 0)
+                if (category.AppliedDiscounts.Any())
                 {
                     var categoryDiscounts = category.AppliedDiscounts;
                     foreach (var discount in categoryDiscounts)
@@ -155,7 +163,7 @@ namespace Grand.Services.Catalog
             foreach (var productManufacturer in product.ProductManufacturers)
             {
                 var manufacturer = _manufacturerService.GetManufacturerById(productManufacturer.ManufacturerId);
-                if (manufacturer.AppliedDiscounts.Count() > 0)
+                if (manufacturer.AppliedDiscounts.Any())
                 {
                     //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
                     var manufacturerDiscounts = manufacturer.AppliedDiscounts;
@@ -165,6 +173,80 @@ namespace Grand.Services.Catalog
                                  discount.DiscountType == DiscountType.AssignedToManufacturers &&
                                  !allowedDiscounts.ContainsDiscount(discount))
                             allowedDiscounts.Add(discount);
+                    }
+                }
+            }
+            return allowedDiscounts;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToVendors(Product product, Customer customer)
+        {
+            var allowedDiscounts = new List<Discount>();
+            if (_catalogSettings.IgnoreDiscounts)
+                return allowedDiscounts;
+
+            var vendor = _vendorService.GetVendorById(product.VendorId);
+
+            if (vendor != null)
+            {
+                if (vendor.AppliedDiscounts.Any())
+                {
+                    //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
+                    var vendorDiscounts = vendor.AppliedDiscounts;
+                    foreach (var discount in vendorDiscounts)
+                    {
+                        if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                 discount.DiscountType == DiscountType.AssignedToVendors &&
+                                 !allowedDiscounts.ContainsDiscount(discount))
+                            allowedDiscounts.Add(discount);
+                    }
+                }
+            }
+            return allowedDiscounts;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="product"></param>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToStores(Product product, Customer customer)
+        {
+            var allowedDiscounts = new List<Discount>();
+            if (_catalogSettings.IgnoreDiscounts)
+                return allowedDiscounts;
+
+            if (product.LimitedToStores == false)
+            {
+                //Products that don't have any Store (inside Stores collection) shouldn't have any Discount by Store
+            }
+            else
+            {
+                //if it is limited to store, it means it should have at least one Store assigned
+                foreach (var storeID in product.Stores)
+                {
+                    if (!(string.IsNullOrEmpty(storeID)))
+                    {
+                        var store = _storeService.GetStoreById(storeID);
+                        var storeDiscounts = store.AppliedDiscounts;
+
+                        if (storeDiscounts.Any())
+                        {
+                            foreach (var discount in storeDiscounts)
+                            {
+                                if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                         discount.DiscountType == DiscountType.AssignedToStores &&
+                                         !allowedDiscounts.ContainsDiscount(discount))
+                                    allowedDiscounts.Add(discount);
+                            }
+                        }
                     }
                 }
             }
@@ -198,56 +280,18 @@ namespace Grand.Services.Catalog
                 if (!allowedDiscounts.ContainsDiscount(discount))
                     allowedDiscounts.Add(discount);
 
+            //discounts applied to vendors
+            foreach (var discount in GetAllowedDiscountsAppliedToVendors(product, customer))
+                if (!allowedDiscounts.ContainsDiscount(discount))
+                    allowedDiscounts.Add(discount);
+
+            //discounts applied to stores
+            foreach (var discount in GetAllowedDiscountsAppliedToStores(product, customer))
+                if (!allowedDiscounts.ContainsDiscount(discount))
+                    allowedDiscounts.Add(discount);
+
             return allowedDiscounts;
         }
-
-        //performance optimization
-        //load all category discounts just to ensure that we have at least one
-        //if (_discountService.GetAllDiscounts(DiscountType.AssignedToCategories).Any())
-        //    {
-        //        var productCategories = product.ProductCategories; //_categoryService.GetProductCategoriesByProductId(product.Id);
-        //        foreach (var productCategory in productCategories)
-        //        {
-        //            var category = _categoryService.GetCategoryById(productCategory.CategoryId);
-        //            if (category.HasDiscountsApplied)
-        //            {
-        //                //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-        //                var categoryDiscounts = category.AppliedDiscounts;
-        //                foreach (var discount in categoryDiscounts)
-        //                {
-        //                    if (_discountService.IsDiscountValid(discount, customer) &&
-        //                        discount.DiscountType == DiscountType.AssignedToCategories &&
-        //                        !allowedDiscounts.ContainsDiscount(discount))
-        //                        allowedDiscounts.Add(discount);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    //performance optimization
-        //    //load all manufacturer discounts just to ensure that we have at least one
-        //    //if (_discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers).Any())
-        //    {
-        //        var productManufacturers = product.ProductManufacturers; // _manufacturerService.GetProductManufacturersByProductId(product.Id);
-        //        foreach (var productManufacturer in productManufacturers)
-        //        {
-        //            var manufacturer = _manufacturerService.GetManufacturerById(productManufacturer.ManufacturerId);
-        //            if (manufacturer.HasDiscountsApplied)
-        //            {
-        //                //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-        //                var manufacturerDiscounts = manufacturer.AppliedDiscounts;
-        //                foreach (var discount in manufacturerDiscounts)
-        //                {
-        //                    if (_discountService.IsDiscountValid(discount, customer) &&
-        //                        discount.DiscountType == DiscountType.AssignedToManufacturers &&
-        //                        !allowedDiscounts.ContainsDiscount(discount))
-        //                        allowedDiscounts.Add(discount);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return allowedDiscounts;
-        //}
 
         /// <summary>
         /// Gets a tier price

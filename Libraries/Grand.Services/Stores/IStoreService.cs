@@ -38,5 +38,12 @@ namespace Grand.Services.Stores
         /// </summary>
         /// <param name="store">Store</param>
         void UpdateStore(Store store);
+
+        /// <summary>
+        /// Gets a store mapping 
+        /// </summary>
+        /// <param name="discountId">Discount id mapping identifier</param>
+        /// <returns>store mapping</returns>
+        IList<Store> GetAllStoresByDiscount(string discountId);
     }
 }

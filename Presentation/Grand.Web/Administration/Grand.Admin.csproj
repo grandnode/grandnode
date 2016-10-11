@@ -1907,6 +1907,12 @@
   <ItemGroup>
     <Content Include="Views\Measure\Units.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Discount\VendorAddPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Discount\StoreAddPopup.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

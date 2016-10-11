@@ -1,6 +1,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Seo;
+using Grand.Core.Domain.Discounts;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Vendors
@@ -12,6 +13,7 @@ namespace Grand.Core.Domain.Vendors
     public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported
     {
         private ICollection<VendorNote> _vendorNotes;
+        private ICollection<Discount> _appliedDiscounts;
 
         public Vendor()
         {
@@ -103,6 +105,14 @@ namespace Grand.Core.Domain.Vendors
         {
             get { return _vendorNotes ?? (_vendorNotes = new List<VendorNote>()); }
             protected set { _vendorNotes = value; }
+        }
+        /// <summary>
+        /// Gets or sets the collection of applied discounts
+        /// </summary>
+        public virtual ICollection<Discount> AppliedDiscounts
+        {
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            protected set { _appliedDiscounts = value; }
         }
 
     }

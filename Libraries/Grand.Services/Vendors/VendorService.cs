@@ -7,6 +7,7 @@ using Grand.Services.Events;
 using MongoDB.Driver.Linq;
 using MongoDB.Driver;
 using MongoDB.Bson;
+using System.Collections.Generic;
 
 namespace Grand.Services.Vendors
 {
@@ -164,6 +165,19 @@ namespace Grand.Services.Vendors
             _eventPublisher.EntityDeleted(vendorNote);
         }
 
+        /// <summary>
+        /// Gets a vendor mapping 
+        /// </summary>
+        /// <param name="discountId">Discount id mapping identifier</param>
+        /// <returns>vendor mapping</returns>
+        public virtual IList<Vendor> GetAllVendorsByDiscount(string discountId)
+        {
+            var query = from c in _vendorRepository.Table
+                        where c.AppliedDiscounts.Any(x => x.Id == discountId)
+                        select c;
+            var vendors = query.ToList();
+            return vendors;
+        }
         #endregion
     }
 }

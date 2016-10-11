@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Domain.Vendors;
+using System.Collections.Generic;
 
 namespace Grand.Services.Vendors
 {
@@ -64,5 +65,12 @@ namespace Grand.Services.Vendors
         /// <param name="vendorId">The vendor identifier</param>
         /// <param name="vendorNote">The vendor note</param>
         void DeleteVendorNote(VendorNote vendorNote);
+
+        /// <summary>
+        /// Gets a vendor mapping 
+        /// </summary>
+        /// <param name="discountId">Discount id mapping identifier</param>
+        /// <returns>vendor mapping</returns>
+        IList<Vendor> GetAllVendorsByDiscount(string discountId);
     }
 }

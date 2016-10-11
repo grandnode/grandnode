@@ -29,4 +29,76 @@
   <LocaleResource Name="Forum.Votes.OwnPost">
     <Value>You cannot vote for your own post</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors">
+    <Value>Applied to vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add vendors for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.AddNew">
+    <Value>Add a new vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores">
+    <Value>Applied to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add stores for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores.AddNew">
+    <Value>Add a new store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.List.SearchVendorName">
+    <Value>Vendor name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.List.SearchVendorName.Hint">
+    <Value>A vendor name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.Fields.Name.Hint">
+    <Value>The vendor's name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.Fields.Email">
+    <Value>E-mail</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.Fields.Email.Hint">
+    <Value>The vendor's e-mail.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.List.SearchVendorEmail">
+    <Value>Vendor e-mail</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Vendors.List.SearchVendorEmail.Hint">
+    <Value>The vendor's e-mail.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToVendors">
+    <Value>Assigned to vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToStores">
+    <Value>Assigned to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.stores.list.searchstorename">
+    <Value>Search by store name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.stores.list.searchstorename.hint">
+    <Value>Search by store name</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.catalog.stores.fields.name">
+    <Value>Store name</Value>
+  </LocaleResource>
 </Language>

@@ -184,6 +184,45 @@ namespace Grand.Admin.Models.Discounts
             public string[] SelectedProductIds { get; set; }
         }
 
+        public partial class AppliedToVendorModel : BaseNopModel
+        {
+            public string VendorId { get; set; }
+
+            public string VendorName { get; set; }
+        }
+        public partial class AddVendorToDiscountModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorName")]
+            [AllowHtml]
+            public string SearchVendorName { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorEmail")]
+            [AllowHtml]
+            public string SearchVendorEmail { get; set; }
+
+            public string DiscountId { get; set; }
+
+            public string[] SelectedVendorIds { get; set; }
+        }
+
+
+        public partial class AppliedToStoreModel : BaseNopModel
+        {
+            public string StoreId { get; set; }
+
+            public string StoreName { get; set; }
+        }
+        public partial class AddStoreToDiscountModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Stores.List.SearchStoreName")]
+            [AllowHtml]
+            public string SearchStoreName { get; set; }
+
+            public string DiscountId { get; set; }
+
+            public string[] SelectedStoreIds { get; set; }
+        }
+
         #endregion
     }
 }

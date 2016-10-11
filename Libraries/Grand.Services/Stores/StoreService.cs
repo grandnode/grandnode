@@ -145,6 +145,19 @@ namespace Grand.Services.Stores
             _eventPublisher.EntityUpdated(store);
         }
 
+        /// <summary>
+        /// Gets a store mapping 
+        /// </summary>
+        /// <param name="discountId">Discount id mapping identifier</param>
+        /// <returns>store mapping</returns>
+        public virtual IList<Store> GetAllStoresByDiscount(string discountId)
+        {
+            var query = from c in _storeRepository.Table
+                        where c.AppliedDiscounts.Any(x => x.Id == discountId)
+                        select c;
+            var stores = query.ToList();
+            return stores;
+        }
         #endregion
     }
 }

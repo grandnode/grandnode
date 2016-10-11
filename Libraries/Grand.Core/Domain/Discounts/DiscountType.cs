@@ -22,6 +22,14 @@ namespace Grand.Core.Domain.Discounts
         /// </summary>
         AssignedToManufacturers = 6,
         /// <summary>
+        /// Assigned to vendors (all products of a vendor)
+        /// </summary>
+        AssignedToVendors = 7,
+        /// <summary>
+        /// Assigned to stores (all products of a store)
+        /// </summary>
+        AssignedToStores = 8,
+        /// <summary>
         /// Assigned to shipping
         /// </summary>
         AssignedToShipping = 10,

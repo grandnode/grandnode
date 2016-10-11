@@ -1,5 +1,6 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Discounts;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Stores
@@ -10,6 +11,8 @@ namespace Grand.Core.Domain.Stores
     [BsonIgnoreExtraElements]
     public partial class Store : BaseEntity, ILocalizedEntity
     {
+        private ICollection<Discount> _appliedDiscounts;
+
         public Store()
         {
             Locales = new List<LocalizedProperty>();
@@ -73,5 +76,13 @@ namespace Grand.Core.Domain.Stores
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }
+        /// <summary>
+        /// Gets or sets the collection of applied discounts
+        /// </summary>
+        public virtual ICollection<Discount> AppliedDiscounts
+        {
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            protected set { _appliedDiscounts = value; }
+        }
     }
 }
