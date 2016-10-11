@@ -101,4 +101,19 @@
   <LocaleResource Name="admin.catalog.stores.fields.name">
     <Value>Store name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors">
+    <Value>Applied to vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add vendors for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.AddNew">
+    <Value>Add a new vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
 </Language>

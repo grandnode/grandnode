@@ -7,6 +7,7 @@ using Grand.Web.Framework.Localization;
 using Grand.Web.Framework.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System;
+using Grand.Admin.Models.Discounts;
 
 namespace Grand.Admin.Models.Vendors
 {
@@ -87,7 +88,8 @@ namespace Grand.Admin.Models.Vendors
         [AllowHtml]
         public string AddVendorNoteMessage { get; set; }
 
-
+        public List<DiscountModel> AvailableDiscounts { get; set; }
+        public string[] SelectedDiscountIds { get; set; }
 
 
         #region Nested classes

@@ -258,6 +258,8 @@ namespace Grand.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.AssociatedCustomers, mo => mo.Ignore())
                 .ForMember(dest => dest.AddVendorNoteMessage, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             cfg.CreateMap<VendorModel, Vendor>()

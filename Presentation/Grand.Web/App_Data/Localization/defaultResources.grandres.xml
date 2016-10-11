@@ -11357,6 +11357,18 @@
   <LocaleResource Name="Admin.Promotions.Discounts.AppliedToProducts.AddNew">
     <Value>Add a new product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors">
+    <Value>Applied to vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add vendors for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToVendors.AddNew">
+    <Value>Add a new vendor</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.AppliedToStores">
     <Value>Applied to stores</Value>
   </LocaleResource>
@@ -12880,6 +12892,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Deleted">
     <Value>The vendor has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Discounts">
+    <Value>Discounts</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.EditVendorDetails">
     <Value>Edit vendor details</Value>

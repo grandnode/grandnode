@@ -5,6 +5,7 @@ using Grand.Admin.Extensions;
 using Grand.Admin.Models.Vendors;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Domain.Localization;
+using Grand.Core.Domain.Discounts;
 using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
@@ -12,6 +13,7 @@ using Grand.Services.Media;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Vendors;
+using Grand.Services.Discounts;
 using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Kendoui;
 using Grand.Web.Framework.Mvc;
@@ -32,6 +34,7 @@ namespace Grand.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IPictureService _pictureService;
         private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDiscountService _discountService;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -46,6 +49,7 @@ namespace Grand.Admin.Controllers
             ILanguageService languageService,
             IPictureService pictureService,
             IDateTimeHelper dateTimeHelper,
+            IDiscountService discountService,
             VendorSettings vendorSettings)
         {
             this._customerService = customerService;
@@ -57,6 +61,7 @@ namespace Grand.Admin.Controllers
             this._pictureService = pictureService;
             this._dateTimeHelper = dateTimeHelper;
             this._vendorSettings = vendorSettings;
+            this._discountService = discountService;
         }
 
         #endregion
@@ -121,7 +126,22 @@ namespace Grand.Admin.Controllers
             return localized;
 
         }
+        [NonAction]
+        protected virtual void PrepareDiscountModel(VendorModel model, Vendor vendor, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
 
+            model.AvailableDiscounts = _discountService
+                .GetAllDiscounts(DiscountType.AssignedToVendors, showHidden: true)
+                .Select(d => d.ToModel())
+                .ToList();
+
+            if (!excludeProperties && vendor != null)
+            {
+                model.SelectedDiscountIds = vendor.AppliedDiscounts.Select(d => d.Id).ToArray();
+            }
+        }
         #endregion
 
         #region Methods
@@ -172,6 +192,8 @@ namespace Grand.Admin.Controllers
             var model = new VendorModel();
             //locales
             AddLocales(_languageService, model.Locales);
+            //discounts
+            PrepareDiscountModel(model, null, true);
             //default values
             model.PageSize = 6;
             model.Active = true;
@@ -194,6 +216,15 @@ namespace Grand.Admin.Controllers
             {
                 var vendor = model.ToEntity();
                 _vendorService.InsertVendor(vendor);
+
+                //discounts
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToVendors, showHidden: true);
+                foreach (var discount in allDiscounts)
+                {
+                    if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                        vendor.AppliedDiscounts.Add(discount);
+                }
+
                 //search engine name
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
                 vendor.Locales = UpdateLocales(vendor, model);
@@ -209,7 +240,8 @@ namespace Grand.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = vendor.Id }) : RedirectToAction("List");
             }
-
+            //discounts
+            PrepareDiscountModel(model, null, true);
             //If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -237,6 +269,8 @@ namespace Grand.Admin.Controllers
                 locale.MetaTitle = vendor.GetLocalized(x => x.MetaTitle, languageId, false, false);
                 locale.SeName = vendor.GetSeName(languageId, false, false);
             });
+            //discounts
+            PrepareDiscountModel(model, vendor, false);
             //associated customer emails
             model.AssociatedCustomers = _customerService
                 .GetAllCustomers(vendorId: vendor.Id)
@@ -266,6 +300,25 @@ namespace Grand.Admin.Controllers
                 vendor = model.ToEntity(vendor);
                 vendor.Locales = UpdateLocales(vendor, model);
                 model.SeName = vendor.ValidateSeName(model.SeName, vendor.Name, true);
+
+                //discounts
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToVendors, showHidden: true);
+                foreach (var discount in allDiscounts)
+                {
+                    if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                    {
+                        //new discount
+                        if (vendor.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                            vendor.AppliedDiscounts.Add(discount);
+                    }
+                    else
+                    {
+                        //remove discount
+                        if (vendor.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                            vendor.AppliedDiscounts.Remove(discount);
+                    }
+                }
+
                 vendor.SeName = model.SeName;
 
                 _vendorService.UpdateVendor(vendor);
@@ -295,6 +348,8 @@ namespace Grand.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            //discounts
+            PrepareDiscountModel(model, vendor, true);
 
             //associated customer emails
             model.AssociatedCustomers = _customerService
