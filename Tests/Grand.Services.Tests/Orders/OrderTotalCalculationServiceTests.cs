@@ -23,6 +23,8 @@ using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Moq;
+using Grand.Services.Vendors;
+using Grand.Services.Stores;
 
 namespace Grand.Services.Orders.Tests {
     [TestClass()]
@@ -60,6 +62,8 @@ namespace Grand.Services.Orders.Tests {
         private ICountryService _countryService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
+        private IVendorService _vendorService;
+        private IStoreService _storeService;
 
         [TestInitialize()]
         public void TestInitialize() {
@@ -84,6 +88,8 @@ namespace Grand.Services.Orders.Tests {
             _categoryService = new Mock<ICategoryService>().Object;
             _manufacturerService = new Mock<IManufacturerService>().Object;
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
+            _vendorService = new Mock<IVendorService>().Object;
+            _storeService = new Mock<IStoreService>().Object;
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
@@ -91,7 +97,7 @@ namespace Grand.Services.Orders.Tests {
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService,
                 _manufacturerService, _productAttributeParser,
-                _productService, cacheManager,
+                _productService, cacheManager, _vendorService, _storeService,
                 _shoppingCartSettings, _catalogSettings);
 
             var tempEventPublisher = new Mock<IEventPublisher>();

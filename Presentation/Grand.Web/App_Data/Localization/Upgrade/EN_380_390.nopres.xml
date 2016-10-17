@@ -116,4 +116,125 @@
   <LocaleResource Name="Admin.Vendors.Discounts">
     <Value>Discounts</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.PingoNotFound">
+    <Value>Pingo.exe not found inside \Content\Images\Thumbs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.UseImageCompress">
+    <Value>Use Pingo Image Compression</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.UseImageCompress.Hint">
+    <Value>Every rendered image will be compressed via Pingo, it gives 20-80% file size reduction along with lossless quality</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.UseImageCompress.Info">
+    <Value>To get best result, Overlay (logo) should be a square with transparent background in .png format.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkText">
+    <Value>Watermark Text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkText.Hint">
+    <Value>A watermark text that will appear on product images</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkStyle">
+    <Value>Watermark Style</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkStyle.Hint">
+    <Value>A style applied on watermark, e.g. Italic means tilted text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkFontColor">
+    <Value>Watermark Text Color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkFontColor.Hint">
+    <Value>Color of watermark</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkFontFamily">
+    <Value>Watermark Font Family</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkFontFamily.Hint">
+    <Value>Sherif (with endings), Sans Sherif (without endings), Monospace (all letters have the same width)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOpacityPercent">
+    <Value>Watermark % Opacity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOpacityPercent.Hint">
+    <Value>The 1-100% range of text fading</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkDropShadow">
+    <Value>Watermark Shadow</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkDropShadow.Hint">
+    <Value>Text will cast shadow</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkVertical">
+    <Value>Watermark Vertical</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkVertical.Hint">
+    <Value>Text will be vertical, not horizontal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkPositionXPercent">
+    <Value>Watermark Horizontal % Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkPositionXPercent.Hint">
+    <Value>Range 1-100% from left to right</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkPositionYPercent">
+    <Value>Watermark Vertical % Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkPositionYPercent.Hint">
+    <Value>Range 1-100% from top to bottom</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkRightToLeft">
+    <Value>Watermark Right To Left</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkRightToLeft.Hint">
+    <Value>Text will be displayed starting from right edge of picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkFontSizePercent">
+    <Value>Watermark % Font Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkFontSizePercent.Hint">
+    <Value>The 1-100% value. Best between 10-30% range.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkForPicturesAboveSize">
+    <Value>Watermark Above Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkForPicturesAboveSize.Hint">
+    <Value>Apply Watermark To Pictures Above Size (px)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkOnPicturesWithOriginalSize">
+    <Value>Watermark On Original Size Picutres</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkOnPicturesWithOriginalSize.Hint">
+    <Value>Indicates if pictures with no change in size should have a watermark onto them</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlayID">
+    <Value>Watermark Overlay Picture File</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlayID.Hint">
+    <Value>Add a picture that will be displayed as Watermark Overlay on your Thumbnails</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlayPositionXPercent">
+    <Value>Watermark Overlay Horizontal % Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlayPositionXPercent.Hint">
+    <Value>Range 1-100% from left to right</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlayPositionYPercent">
+    <Value>Watermark Overlay Vertical % Position</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlayPositionYPercent.Hint">
+    <Value>Range 1-100% from top to bottom</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlaySizePercent">
+    <Value>Watermark Overlay % Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlaySizePercent.Hint">
+    <Value>The 1-100% value. Best between 10-30% range.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlayOpacityPercent">
+    <Value>Watermark Overlay % Opacity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkOverlayOpacityPercent.Hint">
+    <Value>The 1-100% range of Watermark Overlay fading</Value>
+  </LocaleResource>
+
 </Language>

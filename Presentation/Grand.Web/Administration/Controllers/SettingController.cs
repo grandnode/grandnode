@@ -2202,6 +2202,34 @@ namespace Grand.Admin.Controllers
                 model.MaximumImageSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MaximumImageSize, storeScope);
                 model.MultipleThumbDirectories_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MultipleThumbDirectories, storeScope);
                 model.DefaultImageQuality_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.DefaultImageQuality, storeScope);
+
+                //use Pingo.exe
+                model.DefaultImageQuality_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.UseImageCompress, storeScope);
+
+                //Watermark Text
+                model.WatermarkText_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkText, storeScope);
+                model.WatermarkStyle_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkStyle, storeScope);
+                model.WatermarkFontColor_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkFontColor, storeScope);
+                model.WatermarkFontFamily_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkFontFamily, storeScope);
+                model.WatermarkPositionXPercent_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkPositionXPercent, storeScope);
+                model.WatermarkPositionYPercent_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkPositionYPercent, storeScope);
+                model.WatermarkFontSizePercent_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkFontSizePercent, storeScope);
+                model.WatermarkOpacityPercent_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkOpacityPercent, storeScope);
+                model.WatermarkDropShadow_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkDropShadow, storeScope);
+                model.WatermarkVertical_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkVertical, storeScope);
+                model.WatermarkRightToLeft_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkRightToLeft, storeScope);
+
+                //Watermark Misc Options
+                model.WatermarkForPicturesAboveSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkForPicturesAboveSize, storeScope);
+                model.ApplyWatermarkOnPicturesWithOriginalSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ApplyWatermarkOnPicturesWithOriginalSize, storeScope);
+
+                //Watermark Overlay
+                model.WatermarkOverlayID_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkOverlayID, storeScope);
+                model.WatermarkOverlayPositionXPercent_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkOverlayPositionXPercent, storeScope);
+                model.WatermarkOverlayPositionYPercent_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkOverlayPositionYPercent, storeScope);
+                model.WatermarkOverlaySizePercent_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkOverlaySizePercent, storeScope);
+                model.WatermarkOverlayOpacityPercent_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkOverlayOpacityPercent, storeScope);
+
             }
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
             return View(model);
@@ -2286,13 +2314,115 @@ namespace Grand.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
               _settingService.DeleteSetting(mediaSettings, x => x.DefaultImageQuality, storeScope);
 
-            //now clear settings cache
-            _settingService.ClearCache();
-            
+
+            //use Pingo.exe
+            if (model.UseImageCompress_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.UseImageCompress, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.UseImageCompress, storeScope);
+
+
+            //Watermark section
+            if (model.WatermarkText_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkText, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkText, storeScope);
+            if (model.WatermarkStyle_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkStyle, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkStyle, storeScope);
+            if (model.WatermarkFontColor_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkFontColor, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkFontColor, storeScope);
+            if (model.WatermarkFontFamily_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkFontFamily, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkFontFamily, storeScope);
+            if (model.WatermarkOpacityPercent_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkOpacityPercent, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkOpacityPercent, storeScope);
+            if (model.WatermarkDropShadow_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkDropShadow, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkDropShadow, storeScope);
+            if (model.WatermarkVertical_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkVertical, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkVertical, storeScope);
+            if (model.WatermarkPositionXPercent_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkPositionXPercent, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkPositionXPercent, storeScope);
+            if (model.WatermarkPositionYPercent_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkPositionYPercent, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkPositionYPercent, storeScope);
+            if (model.WatermarkRightToLeft_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkRightToLeft, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkRightToLeft, storeScope);
+            if (model.WatermarkFontSizePercent_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkFontSizePercent, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkFontSizePercent, storeScope);
+
+            //Watermark Misc Options section
+            if (model.WatermarkForPicturesAboveSize_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkForPicturesAboveSize, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkForPicturesAboveSize, storeScope);
+            if (model.ApplyWatermarkOnPicturesWithOriginalSize_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.ApplyWatermarkOnPicturesWithOriginalSize, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.ApplyWatermarkOnPicturesWithOriginalSize, storeScope);
+
+            //Watermark Overlay section
+            if (model.WatermarkOverlayID_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkOverlayID, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkOverlayID, storeScope);
+            if (model.WatermarkOverlayOpacityPercent_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkOverlayOpacityPercent, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkOverlayOpacityPercent, storeScope);
+            if (model.WatermarkOverlayPositionXPercent_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkOverlayPositionXPercent, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkOverlayPositionXPercent, storeScope);
+            if (model.WatermarkOverlayPositionYPercent_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkOverlayPositionYPercent, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkOverlayPositionYPercent, storeScope);
+            if (model.WatermarkOverlaySizePercent_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.WatermarkOverlaySizePercent, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.WatermarkOverlaySizePercent, storeScope);
+
+            //now clear cache
+            var cacheManager = Grand.Core.Infrastructure.EngineContext.Current.ContainerManager.Resolve<Grand.Core.Caching.ICacheManager>();
+            cacheManager.Clear();
+
+            //clear old Thumbs
+            _pictureService.ClearThumbs();
+
             //activity log
             _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
 
-            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            if (mediaSettings.UseImageCompress == false)
+            {
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            }
+            else if (System.IO.File.Exists(CommonHelper.MapPath("~/Content/Images/Thumbs/pingo.exe")))
+            {
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+            }
+            else
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Configuration.Settings.Media.PingoNotFound"));
+            }
+
             return RedirectToAction("Media");
         }
         [HttpPost, ActionName("Media")]

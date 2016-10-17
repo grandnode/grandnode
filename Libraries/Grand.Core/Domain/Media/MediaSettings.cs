@@ -1,5 +1,6 @@
-﻿
-using Grand.Core.Configuration;
+﻿using Grand.Core.Configuration;
+using System.Drawing;
+using System.Drawing.Text;
 
 namespace Grand.Core.Domain.Media
 {
@@ -25,10 +26,46 @@ namespace Grand.Core.Domain.Media
         /// Geta or sets a default quality used for image generation
         /// </summary>
         public int DefaultImageQuality { get; set; }
-        
+
         /// <summary>
         /// Geta or sets a vaue indicating whether single (/content/images/thumbs/) or multiple (/content/images/thumbs/001/ and /content/images/thumbs/002/) directories will used for picture thumbs
         /// </summary>
         public bool MultipleThumbDirectories { get; set; }
+
+        /// <summary>
+        /// Get/set value whether use Pingo Image Compression
+        /// </summary>
+        public bool UseImageCompress { get; set; }
+
+        #region Watermark Text
+        public string WatermarkText { get; set; }
+        public FontStyle WatermarkStyle { get; set; }
+        public Color WatermarkFontColor { get; set; }
+        public GenericFontFamilies WatermarkFontFamily { get; set; }
+        public int WatermarkPositionXPercent { get; set; }
+        public int WatermarkPositionYPercent { get; set; }
+        public int WatermarkFontSizePercent { get; set; }
+        public int WatermarkOpacityPercent { get; set; }
+        public bool WatermarkDropShadow { get; set; }
+        public bool WatermarkVertical { get; set; }
+        public bool WatermarkRightToLeft { get; set; }
+
+        #endregion
+
+
+        #region Watermark Misc Options
+        public int WatermarkForPicturesAboveSize { get; set; }
+        public bool ApplyWatermarkOnPicturesWithOriginalSize { get; set; }
+        #endregion
+
+
+        #region Watermark Overlay
+        public string WatermarkOverlayID { get; set; }
+        public int WatermarkOverlayPositionXPercent { get; set; }
+        public int WatermarkOverlayPositionYPercent { get; set; }
+        public int WatermarkOverlaySizePercent { get; set; }
+        public int WatermarkOverlayOpacityPercent { get; set; }
+        #endregion
+
     }
 }

@@ -1,18 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using ImageResizer;
 using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
-using Grand.Data;
 using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
+using ImageProcessor;
+using ImageProcessor.Imaging;
 
 namespace Grand.Services.Media
 {
@@ -54,7 +52,7 @@ namespace Grand.Services.Media
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
-            ISettingService settingService, 
+            ISettingService settingService,
             IWebHelper webHelper,
             ILogger logger,
             IEventPublisher eventPublisher,
@@ -293,9 +291,10 @@ namespace Grand.Services.Media
             if (picture == null)
                 throw new ArgumentNullException("picture");
 
-            var result = fromDb 
+            var result = fromDb
                 ? _pictureRepository.GetById(picture.Id).PictureBinary
                 : LoadPictureFromFile(picture.Id, picture.MimeType);
+
             return result;
         }
 
@@ -319,6 +318,27 @@ namespace Grand.Services.Media
         protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
             File.WriteAllBytes(thumbFilePath, binary);
+
+            if (_mediaSettings.UseImageCompress)
+            {
+                string path = CommonHelper.MapPath("~/Content/Images/Thumbs/");
+                var processStartInfo = new System.Diagnostics.ProcessStartInfo()
+                {
+                    FileName = "pingo.exe",
+                    Arguments = string.Format("-s4 {0}", thumbFileName),
+                    WorkingDirectory = path,
+                    CreateNoWindow = true,
+                };
+
+                try
+                {
+                    System.Diagnostics.Process.Start(processStartInfo);
+                }
+                catch (System.ComponentModel.Win32Exception ex)
+                {
+                    _logger.Error(ex.Message);
+                }
+            }
         }
 
 
@@ -353,7 +373,7 @@ namespace Grand.Services.Media
         /// <param name="defaultPictureType">Default picture type</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <returns>Picture URL</returns>
-        public virtual string GetDefaultPictureUrl(int targetSize = 0, 
+        public virtual string GetDefaultPictureUrl(int targetSize = 0,
             PictureType defaultPictureType = PictureType.Entity,
             string storeLocation = null)
         {
@@ -391,22 +411,32 @@ namespace Grand.Services.Media
                     targetSize,
                     fileExtension);
                 var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+
+                using (var mutex = new System.Threading.Mutex(false, thumbFileName))
                 {
-                    using (var b = new Bitmap(filePath))
+                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                     {
-                        using (var destStream = new MemoryStream())
+                        mutex.WaitOne();
+
+                        if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                         {
-                            var newSize = CalculateDimensions(b.Size, targetSize);
-                            ImageBuilder.Current.Build(b, destStream, new ResizeSettings
+                            using (var b = new Bitmap(filePath))
                             {
-                                Width = newSize.Width,
-                                Height = newSize.Height,
-                                Scale = ScaleMode.Both,
-                                Quality = _mediaSettings.DefaultImageQuality
-                            });
-                            var destBinary = destStream.ToArray();
-                            SaveThumb(thumbFilePath, thumbFileName, destBinary);
+                                var pictureBinary = File.ReadAllBytes(filePath);
+
+                                pictureBinary = ApplyResize(pictureBinary, targetSize, b.Size);
+                                b.Dispose();
+
+                                //UX these 2 pictureBinar'ies aren't the same byte array, assignation is needed
+                                if (targetSize >= _mediaSettings.WatermarkForPicturesAboveSize)
+                                {
+                                    pictureBinary = ApplyWatermark(pictureBinary);
+                                }
+
+                                SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+
+                            }
+                            mutex.ReleaseMutex();
                         }
                     }
                 }
@@ -426,14 +456,14 @@ namespace Grand.Services.Media
         /// <returns>Picture URL</returns>
         public virtual string GetPictureUrl(string pictureId,
             int targetSize = 0,
-            bool showDefaultPicture = true, 
-            string storeLocation = null, 
+            bool showDefaultPicture = true,
+            string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
             var picture = GetPictureById(pictureId);
             return GetPictureUrl(picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
         }
-        
+
         /// <summary>
         /// Get a picture URL
         /// </summary>
@@ -443,10 +473,10 @@ namespace Grand.Services.Media
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        public virtual string GetPictureUrl(Picture picture, 
+        public virtual string GetPictureUrl(Picture picture,
             int targetSize = 0,
-            bool showDefaultPicture = true, 
-            string storeLocation = null, 
+            bool showDefaultPicture = true,
+            string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
             string url = string.Empty;
@@ -455,7 +485,7 @@ namespace Grand.Services.Media
                 pictureBinary = LoadPictureBinary(picture);
             if (picture == null || pictureBinary == null || pictureBinary.Length == 0)
             {
-                if(showDefaultPicture)
+                if (showDefaultPicture)
                 {
                     url = GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation);
                 }
@@ -469,27 +499,61 @@ namespace Grand.Services.Media
                 DeletePictureThumbs(picture);
 
                 //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
-                picture = UpdatePicture(picture.Id, 
-                    pictureBinary, 
-                    picture.MimeType, 
+                picture = UpdatePicture(picture.Id,
+                    pictureBinary,
+                    picture.MimeType,
                     picture.SeoFilename,
                     picture.AltAttribute,
                     picture.TitleAttribute,
-                    false, 
+                    false,
                     false);
             }
             lock (s_lock)
             {
-                string seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
+                string seoFileName = picture.SeoFilename;
                 if (targetSize == 0)
                 {
                     thumbFileName = !String.IsNullOrEmpty(seoFileName) ?
                         string.Format("{0}_{1}.{2}", picture.Id, seoFileName, lastPart) :
                         string.Format("{0}.{1}", picture.Id, lastPart);
                     var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    using (var mutex = new System.Threading.Mutex(false, thumbFileName))
                     {
-                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                        if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                        {
+                            mutex.WaitOne();
+
+                            if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                            {
+                                {
+                                    if (_mediaSettings.ApplyWatermarkOnPicturesWithOriginalSize)
+                                    {
+                                        using (var stream = new MemoryStream(pictureBinary))
+                                        {
+                                            Bitmap b = null;
+                                            try
+                                            {
+                                                //try-catch to ensure that picture binary is really OK. Otherwise, we can get "Parameter is not valid" exception if binary is corrupted for some reasons
+                                                b = new Bitmap(stream);
+                                            }
+                                            catch (ArgumentException exc)
+                                            {
+                                                _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id), exc);
+                                            }
+                                            if (b == null)
+                                            {
+                                                //bitmap could not be loaded for some reasons
+                                                return url;
+                                            }
+
+                                            //UX input pictureBinary isn't the same output pictureBinary (different MemoryStreams)
+                                            pictureBinary = ApplyWatermark(pictureBinary);
+                                        }
+                                    }
+                                    SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                                }
+                            }
+                        }
                     }
                 }
                 else
@@ -498,39 +562,46 @@ namespace Grand.Services.Media
                         string.Format("{0}_{1}_{2}.{3}", picture.Id, seoFileName, targetSize, lastPart) :
                         string.Format("{0}_{1}.{2}", picture.Id, targetSize, lastPart);
                     var thumbFilePath = GetThumbLocalPath(thumbFileName);
-                    if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
+                    using (var mutex = new System.Threading.Mutex(false, thumbFileName))
                     {
-                        using (var stream = new MemoryStream(pictureBinary))
+                        if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                         {
-                            Bitmap b = null;
-                            try
-                            {
-                                //try-catch to ensure that picture binary is really OK. Otherwise, we can get "Parameter is not valid" exception if binary is corrupted for some reasons
-                                b = new Bitmap(stream);
-                            }
-                            catch (ArgumentException exc)
-                            {
-                                _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id), exc);
-                            }
-                            if (b == null)
-                            {
-                                //bitmap could not be loaded for some reasons
-                                return url;
-                            }
+                            mutex.WaitOne();
 
-                            using (var destStream = new MemoryStream())
+                            if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                             {
-                                var newSize = CalculateDimensions(b.Size, targetSize);
-                                ImageBuilder.Current.Build(b, destStream, new ResizeSettings
                                 {
-                                    Width = newSize.Width,
-                                    Height = newSize.Height,
-                                    Scale = ScaleMode.Both,
-                                    Quality = _mediaSettings.DefaultImageQuality
-                                });
-                                var destBinary = destStream.ToArray();
-                                SaveThumb(thumbFilePath, thumbFileName, destBinary);
-                                b.Dispose();
+                                    //requested Picture with this size doesn't exist, generate new 
+                                    using (var stream = new MemoryStream(pictureBinary))
+                                    {
+                                        Bitmap b = null;
+                                        try
+                                        {
+                                            //try-catch to ensure that picture binary is really OK. Otherwise, we can get "Parameter is not valid" exception if binary is corrupted for some reasons
+                                            b = new Bitmap(stream);
+                                        }
+                                        catch (ArgumentException exc)
+                                        {
+                                            _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id), exc);
+                                        }
+                                        if (b == null)
+                                        {
+                                            //bitmap could not be loaded for some reasons
+                                            return url;
+                                        }
+
+                                        pictureBinary = ApplyResize(pictureBinary, targetSize, b.Size);
+                                        b.Dispose();
+
+                                        //UX these 2 pictureBinar'ies aren't the same byte array, assignation is needed
+                                        if (targetSize >= _mediaSettings.WatermarkForPicturesAboveSize)
+                                        {
+                                            pictureBinary = ApplyWatermark(pictureBinary);
+                                        }
+
+                                        SaveThumb(thumbFilePath, thumbFileName, pictureBinary);
+                                    }
+                                }
                             }
                         }
                     }
@@ -550,9 +621,9 @@ namespace Grand.Services.Media
         public virtual string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
         {
             string url = GetPictureUrl(picture, targetSize, showDefaultPicture);
-            if(String.IsNullOrEmpty(url))
+            if (String.IsNullOrEmpty(url))
                 return String.Empty;
-            
+
             return GetThumbLocalPath(Path.GetFileName(url));
         }
 
@@ -581,7 +652,7 @@ namespace Grand.Services.Media
 
             //delete thumbs
             DeletePictureThumbs(picture);
-            
+
             //delete from file system
             if (!this.StoreInDb)
                 DeletePictureOnFileSystem(picture);
@@ -594,6 +665,32 @@ namespace Grand.Services.Media
         }
 
         /// <summary>
+        /// Clears only physical Picture files located at ~/Content/Images/Thumbs/, it won't affect Pictures stored in database
+        /// </summary>
+        public void ClearThumbs()
+        {
+            const string searchPattern = "*.*";
+            string path = CommonHelper.MapPath("~/Content/Images/Thumbs/");
+
+            if (!System.IO.Directory.Exists(path))
+                return;
+            foreach (string str in System.IO.Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories))
+            {
+                if (str.Contains("pingo.exe"))
+                    continue;
+
+                try
+                {
+                    File.Delete(this.GetThumbLocalPath(str));
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex.Message, ex);
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets a collection of pictures
         /// </summary>
         /// <param name="pageIndex">Current page</param>
@@ -602,12 +699,12 @@ namespace Grand.Services.Media
         public virtual IPagedList<Picture> GetPictures(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _pictureRepository.Table
-                       orderby p.Id descending
-                       select p;
+                        orderby p.Id descending
+                        select p;
             var pics = new PagedList<Picture>(query, pageIndex, pageSize);
             return pics;
         }
-        
+
 
         /// <summary>
         /// Inserts a picture
@@ -633,19 +730,19 @@ namespace Grand.Services.Media
                 pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
             var picture = new Picture
-                              {
-                                  PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
-                                  MimeType = mimeType,
-                                  SeoFilename = seoFilename,
-                                  AltAttribute = altAttribute,
-                                  TitleAttribute = titleAttribute,
-                                  IsNew = isNew,
-                              };
+            {
+                PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
+                MimeType = mimeType,
+                SeoFilename = seoFilename,
+                AltAttribute = altAttribute,
+                TitleAttribute = titleAttribute,
+                IsNew = isNew,
+            };
             _pictureRepository.Insert(picture);
 
-            if(!this.StoreInDb)
+            if (!this.StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
-            
+
             //event notification
             _eventPublisher.EntityInserted(picture);
 
@@ -693,7 +790,7 @@ namespace Grand.Services.Media
 
             _pictureRepository.Update(picture);
 
-            if(!this.StoreInDb)
+            if (!this.StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
             //event notification
@@ -718,13 +815,13 @@ namespace Grand.Services.Media
             if (seoFilename != picture.SeoFilename)
             {
                 //update picture
-                picture = UpdatePicture(picture.Id, 
-                    LoadPictureBinary(picture), 
-                    picture.MimeType, 
+                picture = UpdatePicture(picture.Id,
+                    LoadPictureBinary(picture),
+                    picture.MimeType,
                     seoFilename,
                     picture.AltAttribute,
                     picture.TitleAttribute,
-                    true, 
+                    true,
                     false);
             }
             return picture;
@@ -738,22 +835,169 @@ namespace Grand.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using (var destStream = new MemoryStream())
+            pictureBinary = ApplyResize(pictureBinary, _mediaSettings.MaximumImageSize);
+            return pictureBinary;
+        }
+
+
+        protected byte[] ApplyResize(byte[] pictureBinary, int targetSize, Size originalSize = default(Size))
+        {
+            var resizeLayer = default(ResizeLayer);
+            if (originalSize != default(Size))
             {
-                ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings
+                resizeLayer = new ResizeLayer(CalculateDimensions(originalSize, targetSize), ResizeMode.Max);
+            }
+            else
+            {
+                //ValidatePicture() only
+                resizeLayer = new ResizeLayer(new Size(targetSize, targetSize), ResizeMode.Max);
+            }
+
+            using (MemoryStream inStream = new MemoryStream(pictureBinary))
+            {
+                using (MemoryStream outStream = new MemoryStream())
                 {
-                    MaxWidth = _mediaSettings.MaximumImageSize,
-                    MaxHeight = _mediaSettings.MaximumImageSize,
-                    Quality = _mediaSettings.DefaultImageQuality
-                });
-                return destStream.ToArray();
+                    using (ImageFactory imageFactory = new ImageFactory())
+                    {
+                        imageFactory.Load(inStream)
+                            .Resize(resizeLayer)
+                            .Quality(_mediaSettings.DefaultImageQuality)
+                            .Save(outStream);
+                        inStream.Dispose();
+                        imageFactory.Dispose();
+                        return outStream.ToArray();
+                    }
+                }
             }
         }
-        
+
+        protected byte[] ApplyWatermark(byte[] pictureBinary)
+        {
+            //no Watermark Text and Watermark Overlay? Return
+            if (string.IsNullOrEmpty(_mediaSettings.WatermarkText)
+                && string.IsNullOrEmpty(_mediaSettings.WatermarkOverlayID)
+                && _mediaSettings.WatermarkOverlayID == "0")
+                return pictureBinary;
+
+            //UX this piece of code needs to be here, otherwise "Input stream is not a supported format" Exception
+            var pictureWidth = default(int);
+            var pictureHeight = default(int);
+            using (MemoryStream pictureStream = new MemoryStream(pictureBinary))
+            {
+                Bitmap bitmap = new Bitmap(Image.FromStream(pictureStream));
+                pictureWidth = bitmap.Size.Width;
+                pictureHeight = bitmap.Size.Height;
+                pictureStream.Dispose();
+            }
+
+            using (MemoryStream inStream = new MemoryStream(pictureBinary))
+            {
+                using (MemoryStream outStream = new MemoryStream())
+                {
+                    using (ImageFactory imageFactory = new ImageFactory())
+                    {
+                        imageFactory
+                            .Load(inStream);
+
+                        if (!string.IsNullOrEmpty(_mediaSettings.WatermarkText))
+                        {
+                            var calculatedHorizontalPixel = (pictureWidth * _mediaSettings.WatermarkPositionXPercent) / 100;
+                            var calculatedVerticalPixel = (pictureHeight * _mediaSettings.WatermarkPositionYPercent) / 100;
+                            var calculatedFontSize = (pictureHeight * _mediaSettings.WatermarkFontSizePercent) / 100;
+
+                            imageFactory
+                                .Watermark(new TextLayer()
+                                {
+                                    Text = _mediaSettings.WatermarkText,
+                                    Style = _mediaSettings.WatermarkStyle,
+                                    FontColor = _mediaSettings.WatermarkFontColor,
+                                    FontFamily = new FontFamily(_mediaSettings.WatermarkFontFamily),
+                                    Opacity = _mediaSettings.WatermarkOpacityPercent,
+                                    DropShadow = _mediaSettings.WatermarkDropShadow,
+                                    Vertical = _mediaSettings.WatermarkVertical,
+                                    Position = new Point(calculatedHorizontalPixel, calculatedVerticalPixel),
+                                    RightToLeft = _mediaSettings.WatermarkRightToLeft,
+                                    FontSize = calculatedFontSize <= 0 ? 1 : calculatedFontSize
+                                });
+                        }
+
+                        if (!(string.IsNullOrEmpty(_mediaSettings.WatermarkOverlayID) || _mediaSettings.WatermarkOverlayID == "0"))
+                        {
+                            var overlayWidth = default(int);
+                            var overlayHeight = default(int);
+                            //picture is a horizontal rectangle, so Overlay will be tailored in context of shorter dimension - Vertical Height
+                            if (pictureWidth > pictureHeight)
+                            {
+                                overlayWidth = (pictureHeight * _mediaSettings.WatermarkOverlaySizePercent) / 100;
+                                overlayHeight = (pictureHeight * _mediaSettings.WatermarkOverlaySizePercent) / 100;
+                            }
+                            //picture is a vertical rectangle, so Overlay will be tailored in context of shorter dimension - Horizontal Width
+                            else if (pictureWidth < pictureHeight)
+                            {
+                                overlayWidth = (pictureWidth * _mediaSettings.WatermarkOverlaySizePercent) / 100;
+                                overlayHeight = (pictureWidth * _mediaSettings.WatermarkOverlaySizePercent) / 100;
+                            }
+                            //picture is a square
+                            else if (pictureWidth == pictureHeight)
+                            {
+                                overlayWidth = (pictureWidth * _mediaSettings.WatermarkOverlaySizePercent) / 100;
+                                overlayHeight = (pictureHeight * _mediaSettings.WatermarkOverlaySizePercent) / 100;
+                            }
+
+                            //calculate X and Y center of Picture
+                            var overlayHalfWidth = overlayWidth / 2;
+                            var overlayHalfHeight = overlayHeight / 2;
+
+                            //calculate the absolute X and Y pixel of Picture bitmap
+                            //where Overlay should be located
+                            var pictureHorizontalPixel = (pictureWidth * _mediaSettings.WatermarkOverlayPositionXPercent) / 100;
+                            var pictureVerticalPixel = (pictureHeight * _mediaSettings.WatermarkOverlayPositionYPercent) / 100;
+
+                            //calculate the absolute X and Y pixel of Picture bitmap
+                            //where Center of Overlay should be located
+                            var overlayHorizontalPosition = pictureHorizontalPixel - overlayHalfWidth;
+                            var overlayVerticalPosition = pictureVerticalPixel - overlayHalfHeight;
+
+                            //prevent to get beyond top or left edge of Picture 
+                            //(happens when WatermarkOverlaySizePercent is set to low value)
+                            if (overlayHorizontalPosition < 0)
+                            {
+                                overlayHorizontalPosition = 0;
+                            }
+                            if (overlayVerticalPosition < 0)
+                            {
+                                overlayVerticalPosition = 0;
+                            }
+
+                            var overlayByteArray = LoadPictureBinary(new Picture() { Id = _mediaSettings.WatermarkOverlayID });
+                            using (var overlayStream = new MemoryStream(overlayByteArray))
+                            {
+                                imageFactory
+                                    .Overlay(new ImageLayer()
+                                    {
+                                        Image = Image.FromStream(overlayStream),
+                                        Opacity = _mediaSettings.WatermarkOverlayOpacityPercent,
+                                        Position = new Point(overlayHorizontalPosition, overlayVerticalPosition),
+                                        Size = new Size(overlayWidth, overlayHeight)
+                                    });
+                                overlayStream.Dispose();
+                            }
+                        }
+
+                        imageFactory
+                            .Save(outStream);
+
+                        inStream.Dispose();
+                        imageFactory.Dispose();
+                        return outStream.ToArray();
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Properties
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>

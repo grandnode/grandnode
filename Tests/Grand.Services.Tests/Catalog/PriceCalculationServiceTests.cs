@@ -11,6 +11,8 @@ using Grand.Core.Domain.Stores;
 using Grand.Services.Tests;
 using Grand.Services.Discounts;
 using Moq;
+using Grand.Services.Vendors;
+using Grand.Services.Stores;
 
 namespace Grand.Services.Catalog.Tests {
     [TestClass()]
@@ -30,6 +32,8 @@ namespace Grand.Services.Catalog.Tests {
         private CatalogSettings _catalogSettings;
         private ICacheManager _cacheManager;
         private IPriceCalculationService _priceCalcService;
+        private IVendorService _vendorService;
+        private IStoreService _storeService;
 
         [TestInitialize()]
         public void TestInitialize() {
@@ -67,6 +71,8 @@ namespace Grand.Services.Catalog.Tests {
                 _productAttributeParser,
                 _productService,
                 _cacheManager,
+                _vendorService,
+                _storeService,
                 _shoppingCartSettings,
                 _catalogSettings);
         }

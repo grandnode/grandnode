@@ -31,6 +31,7 @@ using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Services.Vendors;
 using Moq;
+using Grand.Services.Stores;
 
 namespace Grand.Services.Orders.Tests {
     [TestClass()]
@@ -85,7 +86,7 @@ namespace Grand.Services.Orders.Tests {
         private IAffiliateService _affiliateService;
         private IVendorService _vendorService;
         private IPdfService _pdfService;
-
+        private IStoreService _storeService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
         private CustomerSettings _customerSettings;
@@ -116,12 +117,13 @@ namespace Grand.Services.Orders.Tests {
             _discountService = new Mock<IDiscountService>().Object;
             _categoryService = new Mock<ICategoryService>().Object;
             _manufacturerService = new Mock<IManufacturerService>().Object;
+            _storeService = new Mock<IStoreService>().Object;
 
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService, _manufacturerService,
                 _productAttributeParser, _productService,
-                cacheManager, _shoppingCartSettings, _catalogSettings);
+                cacheManager, _vendorService, _storeService, _shoppingCartSettings, _catalogSettings);
 
             var tempEventPublisher = new Mock<IEventPublisher>();
             {

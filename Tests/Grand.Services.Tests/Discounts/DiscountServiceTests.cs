@@ -17,6 +17,8 @@ using System.Text;
 using MongoDB.Bson.Serialization.Conventions;
 using Grand.Services.Tests;
 using Grand.Data;
+using Grand.Core.Domain.Vendors;
+using Grand.Core.Domain.Stores;
 
 namespace Grand.Services.Discounts.Tests {
     [TestClass()] 
@@ -28,6 +30,8 @@ namespace Grand.Services.Discounts.Tests {
         private ILocalizationService _localizationService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
+        private IRepository<Vendor> _vendorRepo;
+        private IRepository<Store> _storeRepo;
 
         [TestInitialize()]
         public void TestInitialize() {
@@ -70,12 +74,15 @@ namespace Grand.Services.Discounts.Tests {
             var extraProductRepo = new Mock<IRepository<Product>>().Object;
             var extraCategoryRepo = new Mock<IRepository<Category>>().Object;
             var extraManufacturerRepo = new Mock<IRepository<Manufacturer>>().Object;
+            var extraStoreRepo = new Mock<IRepository<Store>>().Object;
+            var extraVendorRepo = new Mock<IRepository<Vendor>>().Object;
+
             _genericAttributeService = new Mock<IGenericAttributeService>().Object;
             _localizationService = new Mock<ILocalizationService>().Object;
 
             _discountService = new DiscountService(new NopNullCache(), _discountRepo,
                 _discountUsageHistoryRepo, _localizationService, _storeContext, _genericAttributeService,
-                new PluginFinder(), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo);
+                new PluginFinder(), _eventPublisher, extraProductRepo, extraCategoryRepo, extraManufacturerRepo, extraVendorRepo, extraStoreRepo);
         }
 
         [TestMethod()]

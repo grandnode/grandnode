@@ -87,6 +87,11 @@ namespace Grand.Services.Media
         void DeletePicture(Picture picture);
 
         /// <summary>
+        /// Clear Pictures stored in Content/Images/Thumbs after every Watermark change
+        /// </summary>
+        void ClearThumbs();
+
+        /// <summary>
         /// Gets a collection of pictures
         /// </summary>
         /// <param name="pageIndex">Current page</param>

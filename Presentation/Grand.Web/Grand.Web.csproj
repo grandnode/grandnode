@@ -492,7 +492,9 @@
     <Content Include="App_Data\Localization\defaultResources.grandres.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\Localization\Upgrade\EN_380_390.nopres.xml" />
+    <Content Include="App_Data\Localization\Upgrade\EN_380_390.nopres.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Localization\Upgrade\EN_360_370.nopres.xml" />
     <Content Include="Content\BBEditor\ed.js" />
     <Content Include="Content\BBEditor\images\bold.gif" />
@@ -538,6 +540,9 @@
     <Content Include="Content\Images\MessageTemplate\img03.jpg" />
     <Content Include="Content\Images\MessageTemplate\img04.jpg" />
     <Content Include="Content\Images\MessageTemplate\logo.png" />
+    <Content Include="Content\Images\Thumbs\pingo.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\Thumbs\placeholder.txt" />
     <Content Include="Content\kendo\2014.1.318\Black\editor.png" />
     <Content Include="Content\kendo\2014.1.318\Black\imagebrowser.png" />

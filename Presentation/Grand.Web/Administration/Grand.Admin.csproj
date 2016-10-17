@@ -452,6 +452,7 @@
     <Compile Include="Validators\Directory\MeasureUnitValidator.cs" />
     <Compile Include="Validators\Messages\BannerValidator.cs" />
     <Compile Include="Validators\Messages\TestMessageTemplateValidator.cs" />
+    <Compile Include="Validators\Settings\MediaSettingsValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestActionValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestReasonValidator.cs" />
     <Compile Include="Validators\Shipping\PickupPointValidator.cs" />
