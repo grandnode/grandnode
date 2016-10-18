@@ -348,7 +348,7 @@ namespace Grand.Admin.Controllers
                 throw new ArgumentNullException("product");
 
             model.ProductId = product.Id;
-            model.StockQuantity = 10000;
+            model.StockQuantity = 0;
             model.NotifyAdminForQuantityBelow = 1;
 
             var attributes = product.ProductAttributeMappings //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
@@ -686,7 +686,7 @@ namespace Grand.Admin.Controllers
                 model.RecurringCycleLength = 100;
                 model.RecurringTotalCycles = 10;
                 model.RentalPriceLength = 1;
-                model.StockQuantity = 10000;
+                model.StockQuantity = 0;
                 model.NotifyAdminForQuantityBelow = 1;
                 model.OrderMinimumQuantity = 1;
                 model.OrderMaximumQuantity = 10000;
