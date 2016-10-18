@@ -1675,9 +1675,13 @@ namespace Grand.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
+            var vendorId = String.Empty;
+
             //a vendor does not have access to this functionality
             if (_workContext.CurrentVendor != null)
-                return RedirectToAction("Edit", "Order", new { id = orderId });
+            {
+                vendorId = _workContext.CurrentVendor.Id;
+            }
 
             var order = _orderService.GetOrderById(orderId);
             var orders = new List<Order>();
@@ -1685,7 +1689,7 @@ namespace Grand.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
@@ -1738,7 +1742,7 @@ namespace Grand.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id, model.VendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", "orders.pdf");
@@ -1759,11 +1763,12 @@ namespace Grand.Admin.Controllers
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
-
+            var vendorId = String.Empty;
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
                 orders = orders.Where(HasAccessToOrder).ToList();
+                vendorId = _workContext.CurrentVendor.Id;
             }
 
             //ensure that we at least one order selected
@@ -1776,7 +1781,7 @@ namespace Grand.Admin.Controllers
             byte[] bytes;
             using (var stream = new MemoryStream())
             {
-                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id, vendorId);
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", "orders.pdf");

@@ -17,11 +17,9 @@
                     </div>
                     <div class="actions">
                         <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
-                            @if (!Model.IsLoggedInAsVendor)
-                            {
-                                <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="btn purple">
-                                    <i class="fa fa-file-pdf-o"></i> @T("Admin.Orders.PdfInvoice")</a>
-                            }
+                            <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="btn purple">
+                                <i class="fa fa-file-pdf-o"></i> @T("Admin.Orders.PdfInvoice")
+                            </a>
                             @if (!Model.IsLoggedInAsVendor)
                             {
                                 <span id="order-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
