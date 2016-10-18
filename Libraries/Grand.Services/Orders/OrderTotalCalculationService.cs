@@ -766,11 +766,11 @@ namespace Grand.Services.Orders
         /// Gets shopping cart total
         /// </summary>
         /// <param name="cart">Cart</param>
-        /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
+        /// <param name="useRewardPoints">A value indicating reward points should be used; null to detect current choice of the customer</param>
         /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            bool ignoreRewardPonts = false, bool usePaymentMethodAdditionalFee = true)
+            bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
         {
             decimal discountAmount;
             List<Discount> appliedDiscounts;
@@ -782,8 +782,8 @@ namespace Grand.Services.Orders
                 out appliedDiscounts,
                 out appliedGiftCards,
                 out redeemedRewardPoints, 
-                out redeemedRewardPointsAmount, 
-                ignoreRewardPonts,
+                out redeemedRewardPointsAmount,
+                useRewardPoints,
                 usePaymentMethodAdditionalFee);
         }
 
@@ -803,7 +803,7 @@ namespace Grand.Services.Orders
             out decimal discountAmount, out List<Discount> appliedDiscounts,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
-            bool ignoreRewardPonts = false, bool usePaymentMethodAdditionalFee = true)
+            bool? useRewardPoints = null, bool usePaymentMethodAdditionalFee = true)
         {
             redeemedRewardPoints = 0;
             redeemedRewardPointsAmount = decimal.Zero;
@@ -924,25 +924,29 @@ namespace Grand.Services.Orders
 
             #region Reward points
 
-            if (_rewardPointsSettings.Enabled &&
-                !ignoreRewardPonts &&
-                customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, _storeContext.CurrentStore.Id))
+            if (_rewardPointsSettings.Enabled)
             {
-                int rewardPointsBalance = _rewardPointsService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
-                if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
+                if (!useRewardPoints.HasValue)
+                    useRewardPoints = customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout, _storeContext.CurrentStore.Id);
+
+                if (useRewardPoints.Value)
                 {
-                    decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);
-                    if (orderTotal > decimal.Zero)
+                    int rewardPointsBalance = _rewardPointsService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
+                    if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                     {
-                        if (orderTotal > rewardPointsBalanceAmount)
+                        decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);
+                        if (orderTotal > decimal.Zero)
                         {
-                            redeemedRewardPoints = rewardPointsBalance;
-                            redeemedRewardPointsAmount = rewardPointsBalanceAmount;
-                        }
-                        else
-                        {
-                            redeemedRewardPointsAmount = orderTotal;
-                            redeemedRewardPoints = ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
+                            if (orderTotal > rewardPointsBalanceAmount)
+                            {
+                                redeemedRewardPoints = rewardPointsBalance;
+                                redeemedRewardPointsAmount = rewardPointsBalanceAmount;
+                            }
+                            else
+                            {
+                                redeemedRewardPointsAmount = orderTotal;
+                                redeemedRewardPoints = ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
+                            }
                         }
                     }
                 }

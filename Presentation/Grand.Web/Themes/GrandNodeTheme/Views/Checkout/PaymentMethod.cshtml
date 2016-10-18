@@ -23,12 +23,28 @@
 					<input class="check-box" id="UseRewardPoints" name="UseRewardPoints" type="checkbox" value="true">
 					<label for="UseRewardPoints"> @string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
 					<input name="UseRewardPoints" type="hidden" value="false">
-                    
+                    @if (Model.RewardPointsEnoughToPayForOrder)
+                    {
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $("#@Html.FieldIdFor(model => model.UseRewardPoints)").change(toggleUseRewardPoints);
+                                toggleUseRewardPoints();
+                            });
+                            function toggleUseRewardPoints() {
+                                if ($('#@Html.FieldIdFor(model => model.UseRewardPoints)').is(':checked')) {
+                                    $('#payment-method-block').hide();
+                                } else {
+                                    $('#payment-method-block').show();
+                                }
+                            }
+                        </script>
+                    }
+
                 </div>
                 }
                 if (Model.PaymentMethods.Count > 0)
                 {
-                <div class="row">
+                <div class="row" id="payment-method-block">
                     @for (int i = 0; i < Model.PaymentMethods.Count; i++)
                     {
                         var paymentMethod = Model.PaymentMethods[i];
