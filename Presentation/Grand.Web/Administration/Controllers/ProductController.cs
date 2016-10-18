@@ -42,6 +42,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Grand.Core.Data;
 using Grand.Core.Caching;
+using Grand.Core.Domain.Tax;
 
 namespace Grand.Admin.Controllers
 {
@@ -80,6 +81,7 @@ namespace Grand.Admin.Controllers
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly TaxSettings _taxSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDiscountService _discountService;
         private readonly IProductAttributeService _productAttributeService;
@@ -126,6 +128,7 @@ namespace Grand.Admin.Controllers
             IMeasureService measureService,
             MeasureSettings measureSettings,
             AdminAreaSettings adminAreaSettings,
+            TaxSettings taxSettings,
             IDateTimeHelper dateTimeHelper,
             IDiscountService discountService,
             IProductAttributeService productAttributeService,
@@ -168,6 +171,7 @@ namespace Grand.Admin.Controllers
             this._measureService = measureService;
             this._measureSettings = measureSettings;
             this._adminAreaSettings = adminAreaSettings;
+            this._taxSettings = taxSettings;
             this._dateTimeHelper = dateTimeHelper;
             this._discountService = discountService;
             this._productAttributeService = productAttributeService;
@@ -644,7 +648,7 @@ namespace Grand.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
 
@@ -686,7 +690,7 @@ namespace Grand.Admin.Controllers
                 model.NotifyAdminForQuantityBelow = 1;
                 model.OrderMinimumQuantity = 1;
                 model.OrderMaximumQuantity = 10000;
-
+                model.TaxCategoryId = _taxSettings.DefaultTaxCategoryId;
                 model.UnlimitedDownloads = true;
                 model.IsShipEnabled = true;
                 model.AllowCustomerReviews = true;

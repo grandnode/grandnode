@@ -733,7 +733,7 @@ namespace Grand.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.TaxDisplayTypeValues, mo => mo.Ignore())
                 .ForMember(dest => dest.TaxBasedOnValues, mo => mo.Ignore())
                 .ForMember(dest => dest.PaymentMethodAdditionalFeeTaxCategories, mo => mo.Ignore())
-                .ForMember(dest => dest.ShippingTaxCategories, mo => mo.Ignore())
+                .ForMember(dest => dest.TaxCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.EuVatShopCountries, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                 .ForMember(dest => dest.PricesIncludeTax_OverrideForStore, mo => mo.Ignore())

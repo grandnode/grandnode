@@ -60,6 +60,12 @@ namespace Grand.Core.Domain.Tax
         /// </summary>
         public bool ForceTaxExclusionFromOrderSubtotal { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets a default tax category identifier for products
+        /// </summary>
+        public string DefaultTaxCategoryId { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether shipping price is taxable
         /// </summary>

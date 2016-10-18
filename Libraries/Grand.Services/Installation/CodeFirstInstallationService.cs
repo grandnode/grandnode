@@ -5246,6 +5246,7 @@ namespace Grand.Services.Installation
                 ForceTaxExclusionFromOrderSubtotal = false,
                 HideZeroTax = false,
                 HideTaxInOrderSummary = false,
+                DefaultTaxCategoryId = "",
                 ShippingIsTaxable = false,
                 ShippingPriceIncludesTax = false,
                 ShippingTaxClassId = "",

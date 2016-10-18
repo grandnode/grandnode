@@ -6348,7 +6348,7 @@
     <Value>Range 1-100% from top to bottom</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkRightToLeft">
-    <Value>Watermark Right To Left</Value>
+    <Value>Watermark Align Right</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.WatermarkRightToLeft.Hint">
     <Value>Text will be displayed starting from right edge of picture</Value>
@@ -6951,6 +6951,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxAddress">
     <Value>Default tax address</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory">
+    <Value>Default tax category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxCategory.Hint">
+    <Value>Select default tax category for products.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DefaultTaxAddress.Hint">
     <Value>The default address used for tax calculation.</Value>
   </LocaleResource>
@@ -6960,8 +6966,8 @@
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DisplayTaxRates.Hint">
     <Value>A value indicating whether each tax rate should be displayed on a separate line (shopping cart page).</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Tax.DisplayTaxSuffix">
-    <Value>Display tax suffix</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxCategories.None">
+    <Value>[None]</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.DisplayTaxSuffix.Hint">
     <Value>A value indicating whether to display tax suffix (incl tax/excl tax).</Value>
@@ -7067,6 +7073,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxBasedOn.Hint">
     <Value>Tax based on.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DisplayTaxSuffix">
+    <Value>Display tax suffix</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Tax.TaxDisplayType">
     <Value>Tax display type</Value>

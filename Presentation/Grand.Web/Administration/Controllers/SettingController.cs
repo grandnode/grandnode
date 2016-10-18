@@ -815,6 +815,7 @@ namespace Grand.Admin.Controllers
                 model.TaxBasedOn_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.TaxBasedOn, storeScope);
                 model.DefaultTaxAddress_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.DefaultTaxAddressId, storeScope);
                 model.ShippingIsTaxable_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.ShippingIsTaxable, storeScope);
+                model.DefaultTaxCategoryId_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.DefaultTaxCategoryId, storeScope);
                 model.ShippingPriceIncludesTax_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.ShippingPriceIncludesTax, storeScope);
                 model.ShippingTaxClassId_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.ShippingTaxClassId, storeScope);
                 model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore = _settingService.SettingExists(taxSettings, x => x.PaymentMethodAdditionalFeeIsTaxable, storeScope);
@@ -833,9 +834,9 @@ namespace Grand.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.ShippingTaxCategories.Add(new SelectListItem { Text = "---", Value = "" });
+            model.TaxCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Settings.Tax.TaxCategories.None"), Value = "" });
             foreach (var tc in taxCategories)
-                model.ShippingTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == taxSettings.ShippingTaxClassId });
+                model.TaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == taxSettings.ShippingTaxClassId });
             model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem { Text = "---", Value = "" });
             foreach (var tc in taxCategories)
                 model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == taxSettings.PaymentMethodAdditionalFeeTaxClassId });
@@ -967,7 +968,12 @@ namespace Grand.Admin.Controllers
                 _settingService.SaveSetting(taxSettings, x => x.ShippingIsTaxable, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(taxSettings, x => x.ShippingIsTaxable, storeScope);
-            
+
+            if (model.DefaultTaxCategoryId_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(taxSettings, x => x.DefaultTaxCategoryId, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(taxSettings, x => x.DefaultTaxCategoryId, storeScope);
+
             if (model.ShippingPriceIncludesTax_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(taxSettings, x => x.ShippingPriceIncludesTax, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))

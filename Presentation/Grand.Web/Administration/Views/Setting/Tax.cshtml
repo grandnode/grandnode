@@ -219,13 +219,23 @@
                                     @Html.ValidationMessageFor(model => model.ShippingPriceIncludesTax)
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxCategoryId_OverrideForStore, model => model.DefaultTaxCategoryId, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DefaultTaxCategoryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandDropDownListFor(model => model.DefaultTaxCategoryId, Model.TaxCategories)
+                                    @Html.ValidationMessageFor(model => model.DefaultTaxCategoryId)
+                                </div>
+                            </div>
                             <div class="form-group" id="pnlShippingTaxClass">
                                 <div class="col-md-3 col-sm-3 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShippingTaxClassId_OverrideForStore, model => model.ShippingTaxClassId, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.ShippingTaxClassId, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.ShippingTaxClassId, Model.ShippingTaxCategories)
+                                    @Html.GrandDropDownListFor(model => model.ShippingTaxClassId, Model.TaxCategories)
                                     @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
                                 </div>
                             </div>

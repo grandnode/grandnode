@@ -11,7 +11,7 @@ namespace Grand.Admin.Models.Settings
         public TaxSettingsModel()
         {
             PaymentMethodAdditionalFeeTaxCategories = new List<SelectListItem>();
-            ShippingTaxCategories = new List<SelectListItem>();
+            TaxCategories = new List<SelectListItem>();
             EuVatShopCountries = new List<SelectListItem>();
             DefaultTaxAddress = new AddressModel();
         }
@@ -64,9 +64,11 @@ namespace Grand.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.DefaultTaxAddress")]
         public AddressModel DefaultTaxAddress { get; set; }
         public bool DefaultTaxAddress_OverrideForStore { get; set; }
-       
 
-
+        [NopResourceDisplayName("Admin.Configuration.Settings.Tax.DefaultTaxCategory")]
+        public string DefaultTaxCategoryId { get; set; }
+        public bool DefaultTaxCategoryId_OverrideForStore { get; set; }
+        public IList<SelectListItem> TaxCategories { get; set; }
 
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.ShippingIsTaxable")]
@@ -80,7 +82,7 @@ namespace Grand.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Tax.ShippingTaxClass")]
         public string ShippingTaxClassId { get; set; }
         public bool ShippingTaxClassId_OverrideForStore { get; set; }
-        public IList<SelectListItem> ShippingTaxCategories { get; set; }
+        
 
 
 
