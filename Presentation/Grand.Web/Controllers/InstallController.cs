@@ -28,12 +28,12 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly IInstallationLocalizationService _locService;
-        private readonly NopConfig _config;
+        private readonly GrandConfig _config;
         #endregion
 
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService, NopConfig config)
+        public InstallController(IInstallationLocalizationService locService, GrandConfig config)
         {
             this._locService = locService;
             this._config = config;

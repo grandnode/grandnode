@@ -956,6 +956,7 @@ namespace Grand.Web.Controllers
 
                 var disallowPaths = new List<string>
                 {
+                    "/admin",
                     "/bin/",
                     "/content/files/",
                     "/content/files/exportimport/",

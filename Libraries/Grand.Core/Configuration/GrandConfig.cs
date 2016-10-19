@@ -6,9 +6,9 @@ using Grand.Core.Infrastructure;
 namespace Grand.Core.Configuration
 {
     /// <summary>
-    /// Represents a NopConfig
+    /// Represents a GrandConfig
     /// </summary>
-    public partial class NopConfig : IConfigurationSectionHandler
+    public partial class GrandConfig : IConfigurationSectionHandler
     {
         /// <summary>
         /// Creates a configuration section handler.
@@ -19,7 +19,7 @@ namespace Grand.Core.Configuration
         /// <returns>The created section handler object.</returns>
         public object Create(object parent, object configContext, XmlNode section)
         {
-            var config = new NopConfig();
+            var config = new GrandConfig();
             
             var startupNode = section.SelectSingleNode("Startup");
             if (startupNode != null && startupNode.Attributes != null)
@@ -47,14 +47,6 @@ namespace Grand.Core.Configuration
                 var attribute = userAgentStringsNode.Attributes["databasePath"];
                 if (attribute != null)
                     config.UserAgentStringsPath = attribute.Value;
-            }
-
-            var supportPreviousNopcommerceVersionsNode = section.SelectSingleNode("SupportPreviousNopcommerceVersions");
-            if (supportPreviousNopcommerceVersionsNode != null && supportPreviousNopcommerceVersionsNode.Attributes != null)
-            {
-                var attribute = supportPreviousNopcommerceVersionsNode.Attributes["Enabled"];
-                if (attribute != null)
-                    config.SupportPreviousNopcommerceVersions = Convert.ToBoolean(attribute.Value);
             }
 
             var webFarmsNode = section.SelectSingleNode("WebFarms");
@@ -124,14 +116,6 @@ namespace Grand.Core.Configuration
         /// Redis connection string. Used when Redis caching is enabled
         /// </summary>
         public string RedisCachingConnectionString { get; private set; }
-
-
-
-        /// <summary>
-        /// Indicates whether we should support previous nopCommerce versions (it can slightly improve performance)
-        /// </summary>
-        public bool SupportPreviousNopcommerceVersions { get; private set; }
-
 
 
         /// <summary>

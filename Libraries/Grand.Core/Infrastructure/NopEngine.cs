@@ -42,7 +42,7 @@ namespace Grand.Core.Infrastructure
         /// Register dependencies
         /// </summary>
         /// <param name="config">Config</param>
-        protected virtual void RegisterDependencies(NopConfig config)
+        protected virtual void RegisterDependencies(GrandConfig config)
         {
             var builder = new ContainerBuilder();
             var container = builder.Build();
@@ -54,7 +54,7 @@ namespace Grand.Core.Infrastructure
             //dependencies
             var typeFinder = new WebAppTypeFinder();
             builder = new ContainerBuilder();
-            builder.RegisterInstance(config).As<NopConfig>().SingleInstance();
+            builder.RegisterInstance(config).As<GrandConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IEngine>().SingleInstance();
             builder.RegisterInstance(typeFinder).As<ITypeFinder>().SingleInstance();
             builder.Update(container);
@@ -83,7 +83,7 @@ namespace Grand.Core.Infrastructure
         /// Initialize components and plugins in the nop environment.
         /// </summary>
         /// <param name="config">Config</param>
-        public void Initialize(NopConfig config)
+        public void Initialize(GrandConfig config)
         {
             //register dependencies
             RegisterDependencies(config);

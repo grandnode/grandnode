@@ -10,13 +10,13 @@ namespace Grand.Core.Caching
     /// </summary>
     public class RedisConnectionWrapper : IRedisConnectionWrapper
     {
-        private readonly NopConfig _config;
+        private readonly GrandConfig _config;
         private readonly Lazy<string> _connectionString;
 
         private volatile ConnectionMultiplexer _connection;
         private readonly object _lock = new object();
 
-        public RedisConnectionWrapper(NopConfig config)
+        public RedisConnectionWrapper(GrandConfig config)
         {
             this._config = config;
             this._connectionString = new Lazy<string>(GetConnectionString);

@@ -137,8 +137,8 @@ namespace Grand.Services.Tasks
                 if (ensureRunOnOneWebFarmInstance) //ten kod odpowiada za odpalaanie tylko na 1 serwerze
                 {
                     //is web farm enabled (multiple instances)?
-                    var nopConfig = EngineContext.Current.ContainerManager.Resolve<NopConfig>("", scope);
-                    if (nopConfig.MultipleInstancesEnabled)
+                    var grandConfig = EngineContext.Current.ContainerManager.Resolve<GrandConfig>("", scope);
+                    if (grandConfig.MultipleInstancesEnabled)
                     {
                         var machineNameProvider = EngineContext.Current.ContainerManager.Resolve<IMachineNameProvider>("", scope);
                         var machineName = machineNameProvider.GetMachineName();

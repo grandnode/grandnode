@@ -20,7 +20,7 @@ namespace Grand.Services.Tests {
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config) {
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config) {
             //cache managers
             builder.RegisterType<NopNullCache>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
 

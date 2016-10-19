@@ -13,7 +13,7 @@ namespace Grand.Plugin.Tax.CountryStateZip
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
             builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerLifetimeScope();
 

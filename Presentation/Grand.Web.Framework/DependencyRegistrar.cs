@@ -60,7 +60,7 @@ namespace Grand.Web.Framework
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
             //HTTP context and other related stuff
             builder.Register(c => 

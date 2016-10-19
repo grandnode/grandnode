@@ -14,7 +14,7 @@ namespace Grand.Services.Helpers
     /// </summary>
     public partial class UserAgentHelper : IUserAgentHelper
     {
-        private readonly NopConfig _config;
+        private readonly GrandConfig _config;
         private readonly HttpContextBase _httpContext;
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Grand.Services.Helpers
         /// <param name="config">Config</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="httpContext">HTTP context</param>
-        public UserAgentHelper(NopConfig config, HttpContextBase httpContext)
+        public UserAgentHelper(GrandConfig config, HttpContextBase httpContext)
         {
             this._config = config;
             this._httpContext = httpContext;

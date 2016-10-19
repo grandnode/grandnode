@@ -9,7 +9,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
             //we cache presentation models between requests
             builder.RegisterType<CountryStateZipTaxProvider>();

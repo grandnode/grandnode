@@ -13,7 +13,7 @@ namespace Grand.Plugin.Feed.Froogle
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
             builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerLifetimeScope();
         }

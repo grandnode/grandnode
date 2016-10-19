@@ -112,6 +112,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\GrandConfig.cs" />
     <Compile Include="Domain\Catalog\ProductDeleted.cs" />
     <Compile Include="Domain\Customers\CustomerByTimeReportLine.cs" />
     <Compile Include="Domain\Customers\CustomerReminderHistory.cs" />
@@ -233,7 +234,6 @@
     <Compile Include="CommonHelper.cs" />
     <Compile Include="ComponentModel\GenericListTypeConverter.cs" />
     <Compile Include="Configuration\ISettings.cs" />
-    <Compile Include="Configuration\NopConfig.cs" />
     <Compile Include="Domain\Affiliates\Affiliate.cs" />
     <Compile Include="Domain\Blogs\BlogSettings.cs" />
     <Compile Include="Domain\Blogs\BlogPost.cs" />

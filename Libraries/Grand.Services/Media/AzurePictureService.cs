@@ -24,7 +24,7 @@ namespace Grand.Services.Media
         private static CloudBlobClient blobClient = null;
         private static CloudBlobContainer container_thumb = null;
 
-        private readonly NopConfig _config;
+        private readonly GrandConfig _config;
         #endregion
 
         #region Ctor
@@ -35,7 +35,7 @@ namespace Grand.Services.Media
             ILogger logger,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
-            NopConfig config)
+            GrandConfig config)
             : base(pictureRepository,
                 settingService,
                 webHelper,
