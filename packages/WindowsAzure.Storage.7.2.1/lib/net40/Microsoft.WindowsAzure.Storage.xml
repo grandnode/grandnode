@@ -38,7 +38,7 @@
             with different properties. You can also use this type to perform bulk table updates of heterogeneous entities without losing property information.</para>
             <para><see cref="T:Microsoft.WindowsAzure.Storage.Table.TableEntity"/> is an implementation of <see cref="T:Microsoft.WindowsAzure.Storage.Table.ITableEntity"/> that uses reflection-based serialization and de-serialization behavior in its <see cref="M:Microsoft.WindowsAzure.Storage.Table.TableEntity.ReadEntity(System.Collections.Generic.IDictionary{System.String,Microsoft.WindowsAzure.Storage.Table.EntityProperty},Microsoft.WindowsAzure.Storage.OperationContext)"/> and <see cref="M:Microsoft.WindowsAzure.Storage.Table.TableEntity.WriteEntity(Microsoft.WindowsAzure.Storage.OperationContext)"/> methods. 
             <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableEntity"/>-derived classes with methods that follow a convention for types and naming are serialized and deserialized automatically. <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableEntity"/>-derived classes must also provide a get-able and set-able public
-            property of a type that is supported by the Windows Azure Table service.</para></remarks>
+            property of a type that is supported by the Microsoft Azure Table service.</para></remarks>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.ITableEntity.ReadEntity(System.Collections.Generic.IDictionary{System.String,Microsoft.WindowsAzure.Storage.Table.EntityProperty},Microsoft.WindowsAzure.Storage.OperationContext)">
             <summary>
@@ -70,7 +70,7 @@
             <summary>
             Gets or sets the entity's timestamp.
             </summary>
-            <value>The entity's timestamp. The property is populated by the Windows Azure Table Service.</value>
+            <value>The entity's timestamp. The property is populated by the Microsoft Azure Table Service.</value>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Table.ITableEntity.ETag">
             <summary>
@@ -1010,7 +1010,7 @@
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Auth.Protocol.IAuthenticationHandler.SignRequest(System.Net.HttpWebRequest,Microsoft.WindowsAzure.Storage.OperationContext)">
             <summary>
-            Signs the specified HTTP request so it can be authenticated by the Windows Azure storage services.
+            Signs the specified HTTP request so it can be authenticated by the Microsoft Azure storage services.
             </summary>
             <param name="request">The HTTP request to sign.</param>
             <param name="operationContext">An <see cref="T:Microsoft.WindowsAzure.Storage.OperationContext"/> object that represents the context for the current operation.</param>
@@ -1792,16 +1792,10 @@
             <summary>
             Represents an append blob, a type of blob where blocks of data are always committed to the end of the blob.
             </summary>
-            <summary>
-            Represents an append blob, a type of blob where blocks of data are always committed to the end of the blob.
-            </summary>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Blob.CloudBlob">
             <summary>
-            Represents a blob.
-            </summary>
-            <summary>
-            Represents a blob object.
+            Represents an Azure blob. A blob stores text or binary data, such as documents or media files.
             </summary>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Blob.IListBlobItem">
@@ -3863,10 +3857,10 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob">
             <summary>
-            An interface required for Windows Azure blob types. The <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob"/> and <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudPageBlob"/> classes implement the <see cref="T:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob"/> interface.
+            An interface required for Microsoft Azure blob types. The <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob"/> and <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudPageBlob"/> classes implement the <see cref="T:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob"/> interface.
             </summary>
             <summary>
-            An interface required for Windows Azure blob types. The <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob"/> and <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudPageBlob"/> classes implement the <see cref="T:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob"/> interface.
+            An interface required for Microsoft Azure blob types. The <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudBlockBlob"/> and <see cref="T:Microsoft.WindowsAzure.Storage.Blob.CloudPageBlob"/> classes implement the <see cref="T:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob"/> interface.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob.OpenRead(Microsoft.WindowsAzure.Storage.AccessCondition,Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
@@ -3996,7 +3990,7 @@
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob.UploadFromStream(System.IO.Stream,Microsoft.WindowsAzure.Storage.AccessCondition,Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
             <summary>
-            Uploads a stream to the Windows Azure Blob Service. 
+            Uploads a stream to the Microsoft Azure Blob Service. 
             </summary>
             <param name="source">The stream providing the blob content. Use a seek-able stream for optimal performance.</param>
             <param name="accessCondition">An <see cref="T:Microsoft.WindowsAzure.Storage.AccessCondition"/> object that represents the condition that must be met in order for the request to proceed.</param>
@@ -4005,7 +3999,7 @@
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob.UploadFromStream(System.IO.Stream,System.Int64,Microsoft.WindowsAzure.Storage.AccessCondition,Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
             <summary>
-            Uploads a stream to the Windows Azure Blob Service. 
+            Uploads a stream to the Microsoft Azure Blob Service. 
             </summary>
             <param name="source">A <see cref="T:System.IO.Stream"/> object providing the blob content.</param>
             <param name="length">The number of bytes to write from the source stream at its current position.</param>
@@ -4141,7 +4135,7 @@
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Blob.ICloudBlob.UploadFromFile(System.String,Microsoft.WindowsAzure.Storage.AccessCondition,Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
             <summary>
-            Uploads a file to the Windows Azure Blob Service. 
+            Uploads a file to the Microsoft Azure Blob Service. 
             </summary>
             <param name="path">A string containing the file path providing the blob content.</param>
             <param name="accessCondition">An <see cref="T:Microsoft.WindowsAzure.Storage.AccessCondition"/> object that represents the condition that must be met in order for the request to proceed.</param>
@@ -7394,15 +7388,8 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient">
             <summary>
-            Provides a client-side logical representation of the Windows Azure Blob service. This client is used to configure and execute requests against the Blob service.
+            Provides a client-side logical representation of Microsoft Azure Blob storage.
             </summary>
-            <remarks>The service client encapsulates the endpoint or endpoints for the Blob service. If the service client will be used for authenticated access, 
-            it also encapsulates the credentials for accessing the storage account.</remarks>
-            <summary>
-            Provides a client-side logical representation of the Windows Azure Blob service. This client is used to configure and execute requests against the Blob service.
-            </summary>
-            <remarks>The service client encapsulates the endpoint or endpoints for the Blob service. If the service client will be used for authenticated access, it also encapsulates 
-            the credentials for accessing the storage account.</remarks>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Blob.CloudBlobClient.ListContainers(System.String,Microsoft.WindowsAzure.Storage.Blob.ContainerListingDetails,Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
             <summary>
@@ -8128,10 +8115,10 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Blob.CloudBlobContainer">
             <summary>
-            Represents a container in the Windows Azure Blob service.
+            Represents a container in the Microsoft Azure Blob service.
             </summary>
             <summary>
-            Represents a container in the Windows Azure Blob service.
+            Represents a container in the Microsoft Azure Blob service.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Blob.CloudBlobContainer.Create(Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
@@ -11217,10 +11204,10 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Blob.CloudPageBlob">
             <summary>
-            Represents a Windows Azure page blob.
+            Represents a Microsoft Azure page blob.
             </summary>
             <summary>
-            Represents a Windows Azure page blob.
+            Represents a Microsoft Azure page blob.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Blob.CloudPageBlob.OpenWrite(System.Nullable{System.Int64},Microsoft.WindowsAzure.Storage.AccessCondition,Microsoft.WindowsAzure.Storage.Blob.BlobRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
@@ -13667,10 +13654,10 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.File.CloudFile">
             <summary>
-            Represents a file in the Windows Azure File service.
+            Represents a file in the Microsoft Azure File service.
             </summary>
             <summary>
-            Represents a Windows Azure File.
+            Represents a Microsoft Azure File.
             </summary>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.File.IListFileItem">
@@ -16184,12 +16171,12 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.File.CloudFileClient">
             <summary>
-            Provides a client-side logical representation of the Windows Azure File service. This client is used to configure and execute requests against the File service.
+            Provides a client-side logical representation of the Microsoft Azure File service. This client is used to configure and execute requests against the File service.
             </summary>
             <remarks>The service client encapsulates the base URI for the File service. If the service client will be used for authenticated access,
             it also encapsulates the credentials for accessing the storage account.</remarks>
             <summary>
-            Provides a client-side logical representation of the Windows Azure File service. This client is used to configure and execute requests against the File service.
+            Provides a client-side logical representation of the Microsoft Azure File service. This client is used to configure and execute requests against the File service.
             </summary>
             <remarks>The service client encapsulates the base URI for the File service. If the service client will be used for authenticated access, it also encapsulates 
             the credentials for accessing the storage account.</remarks>
@@ -17317,11 +17304,11 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.File.CloudFileShare">
             <summary>
-            Represents a share in the Windows Azure File service.
+            Represents a share in the Microsoft Azure File service.
             </summary>
             <remarks>Shares hold directories, which are encapsulated as <see cref="T:Microsoft.WindowsAzure.Storage.File.CloudFileDirectory"/> objects, and directories hold files. Directories can also contain sub-directories.</remarks>
             <summary>
-            Represents a share in the Windows Azure File service.
+            Represents a share in the Microsoft Azure File service.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.File.CloudFileShare.Create(Microsoft.WindowsAzure.Storage.File.FileRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
@@ -19216,10 +19203,10 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Queue.CloudQueue">
             <summary>
-            This class represents a queue in the Windows Azure Queue service.
+            This class represents a queue in the Microsoft Azure Queue service.
             </summary>
             <summary>
-            This class represents a queue in the Windows Azure Queue service.
+            Represents a queue in the Microsoft Azure Queue service.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Queue.CloudQueue.Create(Microsoft.WindowsAzure.Storage.Queue.QueueRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
@@ -20729,13 +20716,12 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Queue.CloudQueueClient">
             <summary>
-            Provides a client-side logical representation of the Windows Azure Queue service. This client is used to configure and execute requests against the Queue service.
+            Provides a client-side logical representation of the Microsoft Azure Queue service. This client is used to configure and execute requests against the Queue service.
             </summary>
             <remarks>The service client encapsulates the endpoint or endpoints for the Queue service. If the service client will be used for authenticated access, it also encapsulates the credentials for accessing the storage account.</remarks>
             <summary>
-            Provides a client-side logical representation of the Windows Azure Queue service. This client is used to configure and execute requests against the Queue service.
+            Provides a client-side logical representation of the Microsoft Azure Queue service. This client is used to configure and execute requests against the Queue service.
             </summary>
-            <remarks>The service client encapsulates the endpoint or endpoints for the Queue service. If the service client will be used for authenticated access, it also encapsulates the credentials for accessing the storage account.</remarks>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Queue.CloudQueueClient.ListQueues(System.String,Microsoft.WindowsAzure.Storage.Queue.Protocol.QueueListingDetails,Microsoft.WindowsAzure.Storage.Queue.QueueRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
             <summary>
@@ -21187,10 +21173,10 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage">
             <summary>
-            Represents a message in the Windows Azure Queue service.
+            Represents a message in the Microsoft Azure Queue service.
             </summary>
             <summary>
-            Represents a message in the Windows Azure Queue service.
+            Represents a message in the Microsoft Azure Queue service.
             </summary>
         </member>
         <member name="F:Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage.MaximumMessageSize">
@@ -21811,10 +21797,10 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Table.CloudTable">
             <summary>
-            Represents a Windows Azure table.
+            Represents a Microsoft Azure table.
             </summary>
             <summary>
-            Represents a Windows Azure table.
+            Represents a Microsoft Azure table.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.CloudTable.Execute(Microsoft.WindowsAzure.Storage.Table.TableOperation,Microsoft.WindowsAzure.Storage.Table.TableRequestOptions,Microsoft.WindowsAzure.Storage.OperationContext)">
@@ -22945,11 +22931,11 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Table.CloudTableClient">
             <summary>
-            Provides a client-side logical representation of the Windows Azure Table Service. This client is used to configure and execute requests against the Table Service.
+            Provides a client-side logical representation of the Microsoft Azure Table Service. This client is used to configure and execute requests against the Table Service.
             </summary>
             <remarks>The service client encapsulates the endpoint or endpoints for the Table service. If the service client will be used for authenticated access, it also encapsulates the credentials for accessing the storage account.</remarks>    
             <summary>
-            Provides a client-side logical representation of the Windows Azure Table service. This client is used to configure and execute requests against the Table service.
+            Provides a client-side logical representation of the Microsoft Azure Table service. This client is used to configure and execute requests against the Table service.
             </summary>
             <remarks>The CloudTableClient object encapsulates the base URI for the Table service. If the service client will be used for authenticated access, 
             it also encapsulates the credentials for accessing the storage account.</remarks>    
@@ -23566,7 +23552,7 @@
             Return an encrypted entity. This method is used for encrypting entity properties.
             </summary>
         </member>
-        <member name="M:Microsoft.WindowsAzure.Storage.Table.TableEncryptionPolicy.DecryptEntity(System.Collections.Generic.IDictionary{System.String,Microsoft.WindowsAzure.Storage.Table.EntityProperty},System.Collections.Generic.HashSet{System.String},System.String,System.String,System.Byte[],Microsoft.WindowsAzure.Storage.EncryptionData)">
+        <member name="M:Microsoft.WindowsAzure.Storage.Table.TableEncryptionPolicy.DecryptEntity(System.Collections.Generic.IDictionary{System.String,Microsoft.WindowsAzure.Storage.Table.EntityProperty},System.Collections.Generic.HashSet{System.String},System.String,System.String,System.Byte[],Microsoft.WindowsAzure.Storage.EncryptionData,System.Boolean)">
             <summary>
             Return a decrypted entity. This method is used for decrypting entity properties.
             </summary>
@@ -23713,11 +23699,11 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Table.TableQuery`1">
             <summary>
-            Represents a query against a Windows Azure table.
+            Represents a query against a Microsoft Azure table.
             </summary>
             <typeparam name="TElement">A class which implements <see cref="T:Microsoft.WindowsAzure.Storage.Table.ITableEntity"/>.</typeparam>
             <summary>
-            Represents a query against a Windows Azure table.
+            Represents a query against a Microsoft Azure table.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.TableQuery`1.#ctor">
@@ -23872,8 +23858,6 @@
             <summary>
             Represents a query against a specified table.
             </summary>
-            <remarks>The <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableQuery"/> class aggregates and encodes the query parameters to pass with the request when the query is executed. 
-            To execute the query, call the <c>executeQuery</c> or <c>executeQuerySegmented</c> method of the <see cref="T:Microsoft.WindowsAzure.Storage.Table.CloudTableClient"/> class. </remarks>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.TableQuery.#ctor">
             <summary>
@@ -24935,7 +24919,7 @@
             <summary>
             <para>Represents a canonicalizer that converts HTTP request data into a standard form appropriate for signing.</para>
             <para>For detailed information on how to authenticate a request, 
-            see <see href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</see>.</para>
+            see <see href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</see>.</para>
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Core.Auth.ICanonicalizer.CanonicalizeHttpRequest(System.Net.HttpWebRequest,System.String)">
@@ -24945,21 +24929,21 @@
             <param name="request">The HTTP request that needs to be signed.</param>
             <param name="accountName">The name of the storage account that the HTTP request will access.</param>
             <returns>The canonicalized string containing the HTTP request data in a standard form appropriate for signing.</returns>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.ICanonicalizer.AuthorizationScheme">
             <summary>
             Gets the authorization scheme used for canonicalization.
             </summary>
             <value>The authorization scheme used for canonicalization.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyCanonicalizer">
             <summary>
             Represents a canonicalizer that converts HTTP request data into a standard form appropriate for signing via 
             the Shared Key authentication scheme for the Blob or Queue service.
             </summary>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyCanonicalizer.CanonicalizeHttpRequest(System.Net.HttpWebRequest,System.String)">
             <summary>
@@ -24968,28 +24952,28 @@
             <param name="request">The HTTP request that needs to be signed.</param>
             <param name="accountName">The name of the storage account that the HTTP request will access.</param>
             <returns>The canonicalized string containing the HTTP request data in a standard form appropriate for signing.</returns>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyCanonicalizer.Instance">
             <summary>
             Gets a static instance of the <see cref="T:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyCanonicalizer"/> object.
             </summary>
             <value>The static instance of the class.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyCanonicalizer.AuthorizationScheme">
             <summary>
             Gets the authorization scheme used for canonicalization.
             </summary>
             <value>The authorization scheme used for canonicalization.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteCanonicalizer">
             <summary>
             Represents a canonicalizer that converts HTTP request data into a standard form appropriate for signing via 
             the Shared Key Lite authentication scheme for the Blob or Queue service.
             </summary>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteCanonicalizer.CanonicalizeHttpRequest(System.Net.HttpWebRequest,System.String)">
             <summary>
@@ -24998,28 +24982,28 @@
             <param name="request">The HTTP request that needs to be signed.</param>
             <param name="accountName">The name of the storage account that the HTTP request will access.</param>
             <returns>The canonicalized string containing the HTTP request data in a standard form appropriate for signing.</returns>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteCanonicalizer.Instance">
             <summary>
             Gets a static instance of the <see cref="T:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteCanonicalizer"/> object.
             </summary>
             <value>The static instance of the class.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteCanonicalizer.AuthorizationScheme">
             <summary>
             Gets the authorization scheme used for canonicalization.
             </summary>
             <value>The authorization scheme used for canonicalization.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteTableCanonicalizer">
             <summary>
             Represents a canonicalizer that converts HTTP request data into a standard form appropriate for signing via 
             the Shared Key Lite authentication scheme for the Table service.
             </summary>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteTableCanonicalizer.CanonicalizeHttpRequest(System.Net.HttpWebRequest,System.String)">
             <summary>
@@ -25028,28 +25012,28 @@
             <param name="request">The HTTP request that needs to be signed.</param>
             <param name="accountName">The name of the storage account that the HTTP request will access.</param>
             <returns>The canonicalized string containing the HTTP request data in a standard form appropriate for signing.</returns>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteTableCanonicalizer.Instance">
             <summary>
             Gets a static instance of the <see cref="T:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteTableCanonicalizer"/> object.
             </summary>
             <value>The static instance of the class.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyLiteTableCanonicalizer.AuthorizationScheme">
             <summary>
             Gets the authorization scheme used for canonicalization.
             </summary>
             <value>The authorization scheme used for canonicalization.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyTableCanonicalizer">
             <summary>
             Represents a canonicalizer that converts HTTP request data into a standard form appropriate for signing via 
             the Shared Key authentication scheme for the Table service.
             </summary>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyTableCanonicalizer.CanonicalizeHttpRequest(System.Net.HttpWebRequest,System.String)">
             <summary>
@@ -25058,21 +25042,21 @@
             <param name="request">The HTTP request that needs to be signed.</param>
             <param name="accountName">The name of the storage account that the HTTP request will access.</param>
             <returns>The canonicalized string containing the HTTP request data in a standard form appropriate for signing.</returns>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyTableCanonicalizer.Instance">
             <summary>
             Gets a static instance of the <see cref="T:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyTableCanonicalizer"/> object.
             </summary>
             <value>The static instance of the class.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="P:Microsoft.WindowsAzure.Storage.Core.Auth.SharedKeyTableCanonicalizer.AuthorizationScheme">
             <summary>
             Gets the authorization scheme used for canonicalization.
             </summary>
             <value>The authorization scheme used for canonicalization.</value>
-            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Windows Azure Storage Services</seealso>
+            <seealso href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179428.aspx">Authentication for the Microsoft Azure Storage Services</seealso>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Core.Util.APMWithTimeout">
             <summary>
@@ -25621,7 +25605,7 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.CloudStorageAccount">
             <summary>
-            Represents a Windows Azure Storage account.
+            Represents a Microsoft Azure Storage account.
             </summary>
         </member>
         <member name="F:Microsoft.WindowsAzure.Storage.CloudStorageAccount.UseDevelopmentStorageSettingString">
@@ -26999,7 +26983,7 @@
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.StorageException.ToString">
             <summary>
-            Represents an exception thrown by the Windows Azure storage client library. 
+            Represents an exception thrown by the Microsoft Azure storage client library. 
             </summary>
             <returns>A string that represents the exception.</returns>
         </member>
@@ -27016,7 +27000,7 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.StorageExtendedErrorInformation">
             <summary>
-            Represents extended error information returned by the Windows Azure storage services.
+            Represents extended error information returned by the Microsoft Azure storage services.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.StorageExtendedErrorInformation.#ctor">
@@ -27103,7 +27087,7 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.StorageUri">
             <summary>
-            Contains the URIs for both the primary and secondary locations of a Windows Azure Storage resource.
+            Contains the URIs for both the primary and secondary locations of a Microsoft Azure Storage resource.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.StorageUri.#ctor(System.Uri)">
@@ -27216,7 +27200,7 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Auth.StorageCredentials">
             <summary>
-            Represents a set of credentials used to authenticate access to a Windows Azure storage account.
+            Represents a set of credentials used to authenticate access to a Microsoft Azure storage account.
             </summary>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Auth.StorageCredentials.#ctor">
@@ -28902,7 +28886,7 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.RetryPolicies.RetryContext">
             <summary>
-            Represents the context for one or more retries of a request made against the Windows Azure storage services,
+            Represents the context for one or more retries of a request made against the Microsoft Azure storage services,
             including the number of retries made for the request, the results of the last request, and the storage location and location mode for subsequent retries.
             </summary>
         </member>
@@ -28938,7 +28922,7 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.RetryPolicies.RetryInfo">
             <summary>
-            Specifies parameters for the next retry of a request to be made against the Windows Azure storage services,
+            Specifies parameters for the next retry of a request to be made against the Microsoft Azure storage services,
             including the target location and location mode for the next retry and the interval until the next retry.
             </summary>
         </member>
@@ -34125,7 +34109,7 @@
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Table.Protocol.TableErrorCodeStrings">
             <summary>
-            Provides error code strings that are specific to the Windows Azure Table service.
+            Provides error code strings that are specific to the Microsoft Azure Table service.
             </summary>    
         </member>
         <member name="F:Microsoft.WindowsAzure.Storage.Table.Protocol.TableErrorCodeStrings.XMethodNotUsingPost">
@@ -35012,7 +34996,7 @@
         </member>
         <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.HeaderConstants.PrefixForStorageHeader">
             <summary>
-            Master Windows Azure Storage header prefix.
+            Master Microsoft Azure Storage header prefix.
             </summary>
         </member>
         <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.HeaderConstants.TrueHeader">
@@ -35825,6 +35809,16 @@
         <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.EncryptionConstants.TableEncryptionPropertyDetails">
             <summary>
             Additional property name to store the encryption metadata.
+            </summary>
+        </member>
+        <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.EncryptionConstants.AgentMetadataKey">
+            <summary>
+            Key for the encryption agent
+            </summary>
+        </member>
+        <member name="F:Microsoft.WindowsAzure.Storage.Shared.Protocol.Constants.EncryptionConstants.AgentMetadataValue">
+            <summary>
+            Value for the encryption agent
             </summary>
         </member>
         <member name="T:Microsoft.WindowsAzure.Storage.Shared.Protocol.CorsHttpMethods">
