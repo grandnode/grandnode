@@ -43,23 +43,6 @@ namespace Grand.Services.Catalog
         }
 
         /// <summary>
-        /// Returns a ProductCategory that has the specified values
-        /// </summary>
-        /// <param name="source">Source</param>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="categoryId">Category identifier</param>
-        /// <returns>A ProductCategory that has the specified values; otherwise null</returns>
-        public static ProductCategory FindProductCategory(this IList<ProductCategory> source,
-            string productId, string categoryId)
-        {
-            foreach (var productCategory in source)
-                if (productCategory.ProductId == productId && productCategory.CategoryId == categoryId)
-                    return productCategory;
-
-            return null;
-        }
-
-        /// <summary>
         /// Get formatted category breadcrumb 
         /// Note: ACL and store mapping is ignored
         /// </summary>
