@@ -241,20 +241,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
-    <Reference Include="WebMarkupMin.AspNet.Common, Version=2.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebMarkupMin.AspNet.Common.2.0.0\lib\net40-client\WebMarkupMin.AspNet.Common.dll</HintPath>
+    <Reference Include="WebMarkupMin.AspNet.Common, Version=2.2.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.AspNet.Common.2.2.0\lib\net451\WebMarkupMin.AspNet.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebMarkupMin.AspNet4.Common, Version=2.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebMarkupMin.AspNet4.Common.2.0.0\lib\net40\WebMarkupMin.AspNet4.Common.dll</HintPath>
+    <Reference Include="WebMarkupMin.AspNet4.Common, Version=2.2.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.AspNet4.Common.2.2.0\lib\net40\WebMarkupMin.AspNet4.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebMarkupMin.AspNet4.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebMarkupMin.AspNet4.Mvc.2.0.0\lib\net40\WebMarkupMin.AspNet4.Mvc.dll</HintPath>
+    <Reference Include="WebMarkupMin.AspNet4.Mvc, Version=2.2.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.AspNet4.Mvc.2.2.0\lib\net40\WebMarkupMin.AspNet4.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebMarkupMin.Core, Version=2.0.2.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebMarkupMin.Core.2.0.2\lib\net40-client\WebMarkupMin.Core.dll</HintPath>
+    <Reference Include="WebMarkupMin.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebMarkupMin.Core.2.2.0\lib\net451\WebMarkupMin.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
