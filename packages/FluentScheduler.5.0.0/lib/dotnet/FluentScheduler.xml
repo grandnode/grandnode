@@ -4,30 +4,6 @@
         <name>FluentScheduler</name>
     </assembly>
     <members>
-        <member name="T:FluentScheduler.GenericEventHandler`2">
-            <summary>
-            Event handler with typed sender.
-            </summary>
-            <typeparam name="TSender">Sender type.</typeparam>
-            <typeparam name="TEventArgs">EventArgs type.</typeparam>
-            <param name="sender">The object that initiated the event.</param>
-            <param name="e">Data related to the event.</param>
-        </member>
-        <member name="T:FluentScheduler.UnhandledExceptionEventArgs">
-            <summary>
-            Same as System.UnhandledExceptionEventArgs except that ExceptionObject is an actual System.Exception reference.
-            </summary>
-        </member>
-        <member name="P:FluentScheduler.UnhandledExceptionEventArgs.ExceptionObject">
-            <summary>
-            Gets the unhandled exception object.
-            </summary>
-        </member>
-        <member name="P:FluentScheduler.UnhandledExceptionEventArgs.IsTerminating">
-            <summary>
-            Indicates whether the common language runtime is terminating.
-            </summary>
-        </member>
         <member name="T:FluentScheduler.DelayForExtensions">
             <summary>
             DelayFor extension methods.
@@ -115,6 +91,16 @@
             Information of a job end.
             </summary>
         </member>
+        <member name="P:FluentScheduler.JobEndInfo.Name">
+            <summary>
+            Name of the job.
+            </summary>
+        </member>
+        <member name="P:FluentScheduler.JobEndInfo.StartTime">
+            <summary>
+            Date and time of the start.
+            </summary>
+        </member>
         <member name="P:FluentScheduler.JobEndInfo.Duration">
             <summary>
             The elapsed time of the job.
@@ -135,9 +121,9 @@
             Name of the job.
             </summary>
         </member>
-        <member name="P:FluentScheduler.JobExceptionInfo.Task">
+        <member name="P:FluentScheduler.JobExceptionInfo.Exception">
             <summary>
-            Job's task.
+            Job's exception.
             </summary>
         </member>
         <member name="T:FluentScheduler.JobStartInfo">
