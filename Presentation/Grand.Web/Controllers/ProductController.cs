@@ -409,8 +409,6 @@ namespace Grand.Web.Controllers
                 {
                     ImageUrl = _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
                     FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
-                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
-                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),
                 };
                 //"title" attribute
                 defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
