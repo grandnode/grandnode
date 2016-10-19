@@ -1011,8 +1011,15 @@ namespace Grand.Web.Controllers
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
 
             //display "edit" (manage) link
-            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) &&
+                _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+            {
+                //a vendor should have access only to his products
+                if (_workContext.CurrentVendor == null || _workContext.CurrentVendor.Id == product.VendorId)
+                {
+                    DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
+                }
+            }
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewProduct", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
