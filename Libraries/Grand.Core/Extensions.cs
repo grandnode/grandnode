@@ -9,10 +9,6 @@ namespace Grand.Core
 {
     public static class Extensions
     {
-        public static bool IsNullOrDefault<T>(this T? value) where T : struct
-        {
-            return default(T).Equals(value.GetValueOrDefault());
-        }
         public static void RemoveByPattern(this ICacheManager obj, string pattern, IEnumerable<string> keys)
         {
             var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);

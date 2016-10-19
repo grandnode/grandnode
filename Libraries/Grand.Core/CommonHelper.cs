@@ -200,28 +200,6 @@ namespace Grand.Core
             return _trustLevel.Value;
         }
 
-        /// <summary>
-        /// Sets a property on an object to a valuae.
-        /// </summary>
-        /// <param name="instance">The object whose property to set.</param>
-        /// <param name="propertyName">The name of the property to set.</param>
-        /// <param name="value">The value to set the property to.</param>
-        public static void SetProperty(object instance, string propertyName, object value)
-        {
-            if (instance == null) throw new ArgumentNullException("instance");
-            if (propertyName == null) throw new ArgumentNullException("propertyName");
-
-            Type instanceType = instance.GetType();
-            PropertyInfo pi = instanceType.GetProperty(propertyName);
-            if (pi == null)
-                throw new NopException("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType);
-            if (!pi.CanWrite)
-                throw new NopException("The property '{0}' on the instance of type '{1}' does not have a setter.", propertyName, instanceType);
-            if (value != null && !value.GetType().IsAssignableFrom(pi.PropertyType))
-                value = To(value, pi.PropertyType);
-            pi.SetValue(instance, value, new object[0]);
-        }
-
         public static TypeConverter GetNopCustomTypeConverter(Type type)
         {
             //we can't use the following code in order to register our custom type descriptors

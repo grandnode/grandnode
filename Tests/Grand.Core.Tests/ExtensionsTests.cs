@@ -16,22 +16,6 @@ namespace Grand.Core.Tests {
     [TestClass()]
     public class ExtensionsTests {
         [TestMethod()]
-        public void IsNullOrDefaultTest() {
-            //tests if struct is null or default (==0
-            //null - for reference type (object)
-            //default (0) - for value type
-
-            //is true - tempStruct is null/ default
-            tempStruct struktura = default(tempStruct);
-            Assert.IsTrue(Extensions.IsNullOrDefault<tempStruct>(struktura));
-
-            //is false - tempStruct isn't null
-            struktura.integral = 123;
-            struktura.str = "asd";
-            Assert.IsFalse(Extensions.IsNullOrDefault<tempStruct>(struktura));
-        }
-
-        [TestMethod()]
         public void RemoveByPatternTest() {
             /*
             In this test I provide:

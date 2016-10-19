@@ -171,37 +171,7 @@ namespace Grand.Core.Tests {
             public string tempProperty { get; set; }
         }
 
-        [TestMethod()]
-        public void SetPropertyTest() {
-            object instance = new tempClass();
-            string propertyName = "tempProperty";
-            object value = new string('d', 123);
-
-            //instance null
-            try {
-                CommonHelper.SetProperty(null, propertyName, value);
-            }
-            catch (Exception ex) {
-                Assert.AreEqual(typeof(ArgumentNullException), ex.GetType());
-            }
-
-            //propertyName null
-            try {
-                CommonHelper.SetProperty(instance, null, value);
-            }
-            catch (Exception ex) {
-                Assert.AreEqual(typeof(ArgumentNullException), ex.GetType());
-            }
-
-            //value null
-            try {
-                CommonHelper.SetProperty(instance, propertyName, null);
-            }
-            catch (Exception ex) {
-                Assert.AreEqual("No property 'tempProperty' found on the instance of type 'Grand.Core.Tests.CommonHelperTests+tempClass'.", ex.Message);
-            }
-        }
-
+       
         [TestMethod()]
         public void GetNopCustomTypeConverterTest()
         {

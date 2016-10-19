@@ -43,6 +43,7 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Domain.Topics;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Plugins;
+using Grand.Core.Infrastructure.Mapper;
 using Grand.Services.Authentication.External;
 using Grand.Services.Cms;
 using Grand.Services.Common;

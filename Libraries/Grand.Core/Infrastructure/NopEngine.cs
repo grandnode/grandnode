@@ -4,8 +4,10 @@ using System.Linq;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
+using AutoMapper;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.Infrastructure.Mapper;
 
 namespace Grand.Core.Infrastructure
 {
@@ -75,6 +77,34 @@ namespace Grand.Core.Infrastructure
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
 
+        /// <summary>
+        /// Register mapping
+        /// </summary>
+        /// <param name="config">Config</param>
+        protected virtual void RegisterMapperConfiguration(GrandConfig config)
+        {
+            var builder = new ContainerBuilder();
+            var container = builder.Build();
+            this._containerManager = new ContainerManager(container);
+
+            //dependencies
+            var typeFinder = new WebAppTypeFinder();
+
+            //register dependencies provided by other assemblies
+            var mcTypes = typeFinder.FindClassesOfType<IMapperConfiguration>();
+            var mcInstances = new List<IMapperConfiguration>();
+            foreach (var mcType in mcTypes)
+                mcInstances.Add((IMapperConfiguration)Activator.CreateInstance(mcType));
+            //sort
+            mcInstances = mcInstances.AsQueryable().OrderBy(t => t.Order).ToList();
+            //get configurations
+            var configurationActions = new List<Action<IMapperConfigurationExpression>>();
+            foreach (var mc in mcInstances)
+                configurationActions.Add(mc.GetConfiguration());
+            //register
+            AutoMapperConfiguration.Init(configurationActions);
+        }
+
         #endregion
 
         #region Methods
@@ -88,6 +118,8 @@ namespace Grand.Core.Infrastructure
             //register dependencies
             RegisterDependencies(config);
 
+            //register mapper configurations
+            RegisterMapperConfiguration(config);
             //startup tasks
             if (!config.IgnoreStartupTasks)
             {
