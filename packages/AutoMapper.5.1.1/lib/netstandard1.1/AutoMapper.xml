@@ -4,42 +4,6 @@
         <name>AutoMapper</name>
     </assembly>
     <members>
-        <member name="P:AutoMapper.IMapperConfigurationExpression.CreateMissingTypeMaps">
-            <summary>
-            Create missing type maps during mapping, if necessary
-            </summary>
-        </member>
-        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfile(AutoMapper.Profile)">
-            <summary>
-            Add an existing profile
-            </summary>
-            <param name="profile">Profile to add</param>
-        </member>
-        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfile``1">
-            <summary>
-            Add an existing profile type. Profile will be instantiated and added to the configuration.
-            </summary>
-            <typeparam name="TProfile">Profile type</typeparam>
-        </member>
-        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfile(System.Type)">
-            <summary>
-            Add an existing profile type. Profile will be instantiated and added to the configuration.
-            </summary>
-            <param name="profileType">Profile type</param>
-        </member>
-        <member name="M:AutoMapper.IMapperConfigurationExpression.ConstructServicesUsing(System.Func{System.Type,System.Object})">
-            <summary>
-            Supply a factory method callback for creating resolvers and type converters
-            </summary>
-            <param name="constructor">Factory method</param>
-        </member>
-        <member name="M:AutoMapper.IMapperConfigurationExpression.CreateProfile(System.String,System.Action{AutoMapper.Profile})">
-            <summary>
-            Create a named profile with the supplied configuration
-            </summary>
-            <param name="profileName">Profile name, must be unique</param>
-            <param name="config">Profile configuration</param>
-        </member>
         <member name="M:AutoMapper.IConfigurationProvider.GetAllTypeMaps">
             <summary>
             Get all configured type maps created
@@ -248,6 +212,78 @@
             <summary>
             Factory method for creating runtime instances of converters, resolvers etc.
             </summary>
+        </member>
+        <member name="P:AutoMapper.IMapperConfigurationExpression.CreateMissingTypeMaps">
+            <summary>
+            Create missing type maps during mapping, if necessary
+            </summary>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfile(AutoMapper.Profile)">
+            <summary>
+            Add an existing profile
+            </summary>
+            <param name="profile">Profile to add</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfile``1">
+            <summary>
+            Add an existing profile type. Profile will be instantiated and added to the configuration.
+            </summary>
+            <typeparam name="TProfile">Profile type</typeparam>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfile(System.Type)">
+            <summary>
+            Add an existing profile type. Profile will be instantiated and added to the configuration.
+            </summary>
+            <param name="profileType">Profile type</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfiles(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+            Add profiles contained in assemblies
+            </summary>
+            <param name="assembliesToScan">Assemblies containing profiles</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfiles(System.Reflection.Assembly[])">
+            <summary>
+            Add profiles contained in assemblies
+            </summary>
+            <param name="assembliesToScan">Assemblies containing profiles</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfiles(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Add profiles contained in assemblies
+            </summary>
+            <param name="assemblyNamesToScan">Assembly names to load and scan containing profiles</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfiles(System.String[])">
+            <summary>
+            Add profiles contained in assemblies
+            </summary>
+            <param name="assemblyNamesToScan">Assembly names to load and scan containing profiles</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfiles(System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Add profiles contained in assemblies
+            </summary>
+            <param name="typesFromAssembliesContainingProfiles">Types from assemblies containing profiles</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.AddProfiles(System.Type[])">
+            <summary>
+            Add profiles contained in assemblies
+            </summary>
+            <param name="typesFromAssembliesContainingProfiles">Types from assemblies containing profiles</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.ConstructServicesUsing(System.Func{System.Type,System.Object})">
+            <summary>
+            Supply a factory method callback for creating resolvers and type converters
+            </summary>
+            <param name="constructor">Factory method</param>
+        </member>
+        <member name="M:AutoMapper.IMapperConfigurationExpression.CreateProfile(System.String,System.Action{AutoMapper.Profile})">
+            <summary>
+            Create a named profile with the supplied configuration
+            </summary>
+            <param name="profileName">Profile name, must be unique</param>
+            <param name="config">Profile configuration</param>
         </member>
         <member name="T:AutoMapper.IMappingAction`2">
             <summary>
@@ -728,7 +764,7 @@
             <typeparam name="TMember">Type for this member</typeparam>
             <typeparam name="TDestination">Destination type for this map</typeparam>
         </member>
-        <member name="M:AutoMapper.IMemberConfigurationExpression`3.NullSubstitute(`2)">
+        <member name="M:AutoMapper.IMemberConfigurationExpression`3.NullSubstitute(System.Object)">
             <summary>
             Substitute a custom value when the source member resolves as null
             </summary>
@@ -824,6 +860,11 @@
         <member name="M:AutoMapper.IMemberConfigurationExpression`3.Ignore">
             <summary>
             Ignore this member for configuration validation and skip during mapping
+            </summary>
+        </member>
+        <member name="M:AutoMapper.IMemberConfigurationExpression`3.AllowNull">
+            <summary>
+            Allow this member to be null. This prevents generating a check condition for it.
             </summary>
         </member>
         <member name="M:AutoMapper.IMemberConfigurationExpression`3.SetMappingOrder(System.Int32)">
@@ -957,6 +998,29 @@
             <param name="destExpression">Destination parameter</param>
             <param name="contextExpression">ResulotionContext parameter</param>
             <returns>Map expression</returns>
+        </member>
+        <member name="T:AutoMapper.ObjectMapper`2">
+            <summary>
+            Base class for simple object mappers that don't want to use expressions.
+            </summary>
+            <typeparam name="TSource">type of the source</typeparam>
+            <typeparam name="TDestination">type of the destination</typeparam>
+        </member>
+        <member name="M:AutoMapper.ObjectMapper`2.IsMatch(AutoMapper.TypePair)">
+            <summary>
+            When true, the mapping engine will use this mapper as the strategy
+            </summary>
+            <param name="context">Resolution context</param>
+            <returns>Is match</returns>
+        </member>
+        <member name="M:AutoMapper.ObjectMapper`2.Map(`0,`1,AutoMapper.ResolutionContext)">
+            <summary>
+            Performs conversion from source to destination type
+            </summary>
+            <param name="source">Source object</param>
+            <param name="destination">Destination object</param>
+            <param name="context">Resolution context</param>
+            <returns>Destination object</returns>
         </member>
         <member name="T:AutoMapper.IProfileConfiguration">
             <summary>
@@ -1137,6 +1201,12 @@
             </summary>
             <param name="condition">Condition</param>
             <param name="memberOptions">Callback for member options. Use the property map for conditional maps.</param>
+        </member>
+        <member name="M:AutoMapper.IProfileExpression.IncludeSourceExtensionMethods(System.Type)">
+            <summary>
+            Include extension methods against source members for matching destination members to. Default source extension methods from <see cref="T:System.Linq.Enumerable"/>
+            </summary>
+            <param name="type">Static type that contains extension methods</param>
         </member>
         <member name="T:AutoMapper.IResolutionExpression`1">
             <summary>
