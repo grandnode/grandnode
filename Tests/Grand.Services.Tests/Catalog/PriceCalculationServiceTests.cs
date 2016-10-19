@@ -54,6 +54,8 @@ namespace Grand.Services.Catalog.Tests {
 
             _categoryService = new Mock<ICategoryService>().Object;
             _manufacturerService = new Mock<IManufacturerService>().Object;
+            _vendorService = new Mock<IVendorService>().Object;
+            _storeService = new Mock<IStoreService>().Object;
             tempProductService = new Mock<IProductService>();
             {
                 _productService = tempProductService.Object;

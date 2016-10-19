@@ -41,6 +41,31 @@
             <param name="configurationAction">Action on a <see cref="T:Autofac.ContainerBuilder"/>
             that adds component registations visible only in nested lifetime scopes.</param>
         </member>
+        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolver.Current">
+            <summary>
+            Gets the Autofac implementation of the dependency resolver.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolver.ApplicationContainer">
+            <summary>
+            Gets the application container that was provided to the constructor.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolver.RequestLifetimeScope">
+            <summary>
+            The lifetime containing components for processing the current HTTP request.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.AutofacDependencyResolver.SetAutofacDependencyResolverAccessor(System.Func{Autofac.Integration.Mvc.AutofacDependencyResolver})">
+            <summary>
+            Sets the mechanism used to locate the current Autofac dependency resolver.
+            </summary>
+            <param name="accessor">
+            A <see cref="T:System.Func`1"/> that returns an <see cref="T:Autofac.Integration.Mvc.AutofacDependencyResolver"/>
+            based on the current context. Set this to <see langword="null" /> to return to the
+            default behavior.
+            </param>
+        </member>
         <member name="M:Autofac.Integration.Mvc.AutofacDependencyResolver.GetService(System.Type)">
             <summary>
             Get a single instance of a service.
@@ -55,20 +80,16 @@
             <param name="serviceType">Type of the service.</param>
             <returns>The list of instances if any were resolved; otherwise, an empty list.</returns>
         </member>
-        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolver.Current">
+        <member name="M:Autofac.Integration.Mvc.AutofacDependencyResolver.DefaultResolverAccessor">
             <summary>
-            Gets the Autofac implementation of the dependency resolver.
+            Default mechanism for locating the current Autofac service resolver.
             </summary>
-        </member>
-        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolver.RequestLifetimeScope">
-            <summary>
-            The lifetime containing components for processing the current HTTP request.
-            </summary>
-        </member>
-        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolver.ApplicationContainer">
-            <summary>
-            Gets the application container that was provided to the constructor.
-            </summary>
+            <returns>
+            The current <see cref="T:Autofac.Integration.Mvc.AutofacDependencyResolver"/> if it can be located.
+            </returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the current resolver can't be found.
+            </exception>
         </member>
         <member name="T:Autofac.Integration.Mvc.AutofacDependencyResolverResources">
             <summary>
@@ -114,7 +135,7 @@
             The collection filters from all of the filter providers with properties injected.
             </returns>
             <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="controllerContext"/> is <see langword="null"/>.
+            Thrown if <paramref name="controllerContext" /> is <see langword="null" />.
             </exception>
         </member>
         <member name="T:Autofac.Integration.Mvc.AutofacModelBinderProvider">
@@ -294,35 +315,16 @@
             The provider is notified when a HTTP request ends by the <see cref="T:Autofac.Integration.Mvc.RequestLifetimeHttpModule"/>.
             </remarks>
         </member>
-        <member name="T:Autofac.Integration.Mvc.ILifetimeScopeProvider">
-            <summary>
-            Implementors are able to control the creation of nested lifetime scopes.
-            </summary>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.ILifetimeScopeProvider.GetLifetimeScope(System.Action{Autofac.ContainerBuilder})">
-            <summary>
-            Gets a nested lifetime scope that services can be resolved from.
-            </summary>
-            <param name="configurationAction">
-            A configuration action that will execute during lifetime scope creation.
-            </param>
-            <returns>A new or existing nested lifetime scope.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.ILifetimeScopeProvider.EndLifetimeScope">
-            <summary>
-            Ends the current lifetime scope.
-            </summary>
-        </member>
-        <member name="P:Autofac.Integration.Mvc.ILifetimeScopeProvider.ApplicationContainer">
-            <summary>
-            Gets the global, application-wide container.
-            </summary>
-        </member>
         <member name="M:Autofac.Integration.Mvc.RequestLifetimeScopeProvider.#ctor(Autofac.ILifetimeScope)">
             <summary>
             Initializes a new instance of the <see cref="T:Autofac.Integration.Mvc.RequestLifetimeScopeProvider"/> class.
             </summary>
             <param name="container">The parent container, usually the application container.</param>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.RequestLifetimeScopeProvider.ApplicationContainer">
+            <summary>
+            Gets the global, application-wide container.
+            </summary>
         </member>
         <member name="M:Autofac.Integration.Mvc.RequestLifetimeScopeProvider.GetLifetimeScope(System.Action{Autofac.ContainerBuilder})">
             <summary>
@@ -348,11 +350,6 @@
             </param>
             <returns>A new lifetime scope for the current HTTP request.</returns>
         </member>
-        <member name="P:Autofac.Integration.Mvc.RequestLifetimeScopeProvider.ApplicationContainer">
-            <summary>
-            Gets the global, application-wide container.
-            </summary>
-        </member>
         <member name="T:Autofac.Integration.Mvc.ExtensibleActionInvoker">
             <summary>
             Injects services from the container into the ASP.NET MVC invocation pipeline.
@@ -365,6 +362,22 @@
             </para>
             </remarks>
         </member>
+        <member name="F:Autofac.Integration.Mvc.ExtensibleActionInvoker._propertySelector">
+            <summary>
+            If set, this is used to determine which model properties are injected.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.ExtensibleActionInvoker.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.Mvc.ExtensibleActionInvoker"/> class.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.ExtensibleActionInvoker.#ctor(Autofac.Core.IPropertySelector)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.Mvc.ExtensibleActionInvoker"/> class.
+            </summary>
+            <param name="propertySelector">The inject property selector.</param>
+        </member>
         <member name="M:Autofac.Integration.Mvc.ExtensibleActionInvoker.GetParameterValue(System.Web.Mvc.ControllerContext,System.Web.Mvc.ParameterDescriptor)">
             <summary>
             Gets the parameter value.
@@ -374,12 +387,41 @@
             The parameter value.
             </returns>
             <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="parameterDescriptor"/> is <see langword="null"/>.
+            Thrown if <paramref name="parameterDescriptor" /> is <see langword="null" />.
             </exception>
+        </member>
+        <member name="T:Autofac.Integration.Mvc.ILifetimeScopeProvider">
+            <summary>
+            Implementors are able to control the creation of nested lifetime scopes.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.ILifetimeScopeProvider.GetLifetimeScope(System.Action{Autofac.ContainerBuilder})">
+            <summary>
+            Gets a nested lifetime scope that services can be resolved from.
+            </summary>
+            <param name="configurationAction">
+            A configuration action that will execute during lifetime scope creation.
+            </param>
+            <returns>A new or existing nested lifetime scope.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.ILifetimeScopeProvider.EndLifetimeScope">
+            <summary>
+            Ends the current lifetime scope.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.ILifetimeScopeProvider.ApplicationContainer">
+            <summary>
+            Gets the global, application-wide container.
+            </summary>
         </member>
         <member name="T:Autofac.Integration.Mvc.ModelBinderTypeAttribute">
             <summary>
             Indicates what types a model binder supports.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.ModelBinderTypeAttribute.TargetTypes">
+            <summary>
+            Gets the target types.
             </summary>
         </member>
         <member name="M:Autofac.Integration.Mvc.ModelBinderTypeAttribute.#ctor(System.Type[])">
@@ -393,11 +435,6 @@
             Initializes a new instance of the <see cref="T:Autofac.Integration.Mvc.ModelBinderTypeAttribute"/> class.
             </summary>
             <param name="targetType">The target type.</param>
-        </member>
-        <member name="P:Autofac.Integration.Mvc.ModelBinderTypeAttribute.TargetTypes">
-            <summary>
-            Gets the target types.
-            </summary>
         </member>
         <member name="T:Autofac.Integration.Mvc.PreApplicationStartCode">
             <summary>
@@ -414,28 +451,262 @@
             Extends <see cref="T:Autofac.ContainerBuilder"/> with methods to support ASP.NET MVC.
             </summary>
         </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.InstancePerHttpRequest``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Object[])">
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsActionFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
             <summary>
-            Share one instance of the component within the context of a single
-            HTTP request.
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IActionFilter"/> for the specified controller.
             </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsActionFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IActionFilter"/> for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsActionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IActionFilter"/> override for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsActionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IActionFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> override for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthorizationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IAuthorizationFilter"/> for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthorizationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IAuthorizationFilter"/> for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthorizationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IAuthorizationFilter"/> override for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthorizationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IAuthorizationFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsExceptionFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IExceptionFilter"/> for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsExceptionFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IExceptionFilter"/> for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsExceptionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IExceptionFilter"/> override for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsExceptionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IExceptionFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsModelBinderForTypes``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Type[])">
+            <summary>
+            Sets a provided registration to act as an <see cref="T:System.Web.Mvc.IModelBinder"/>
+            for the specified list of types.
+            </summary>
+            <param name="registration">
+            The registration for the type or object instance that will act as
+            the model binder.
+            </param>
+            <param name="types">
+            The list of model <see cref="T:System.Type"/> for which the <paramref name="registration" />
+            should be a model binder.
+            </param>
+            <typeparam name="TLimit">
+            Registration limit type.
+            </typeparam>
+            <typeparam name="TActivatorData">
+            Activator data type.
+            </typeparam>
+            <typeparam name="TRegistrationStyle">
+            Registration style.
+            </typeparam>
+            <returns>
+            An Autofac registration that can be modified as needed.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registration" /> or <paramref name="types" /> is <see langword="null" />.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="types" /> is empty or contains all <see langword="null" />
+            values.
+            </exception>
+            <remarks>
+            <para>
+            The declarative mechanism of registering model binders with Autofac
+            is through use of <see cref="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterModelBinders(Autofac.ContainerBuilder,System.Reflection.Assembly[])"/>
+            and the <see cref="T:Autofac.Integration.Mvc.ModelBinderTypeAttribute"/>.
+            This method is an imperative alternative.
+            </para>
+            <para>
+            The two mechanisms are mutually exclusive. If you register a model
+            binder using <see cref="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterModelBinders(Autofac.ContainerBuilder,System.Reflection.Assembly[])"/>
+            and register the same model binder with this method, the results
+            are not automatically merged together - standard dependency
+            registration/resolution rules will be used to manage the conflict.
+            </para>
+            <para>
+            Any <see langword="null" /> values provided in <paramref name="types" />
+            will be removed prior to registration.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsResultFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IResultFilter"/> for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsResultFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IResultFilter"/> for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsResultFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IResultFilter"/> override for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsResultFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IResultFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <param name="order">The order in which the filter is applied.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.CacheInSession``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+            <summary>
+            Cache instances in the web session. This implies external ownership (disposal is not
+            available.) All dependencies must also have external ownership.
+            </summary>
+            <remarks>
+            It is strongly recommended that components cached per-session do not take dependencies on
+            other services.
+            </remarks>
             <typeparam name="TLimit">Registration limit type.</typeparam>
-            <typeparam name="TStyle">Registration style.</typeparam>
+            <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
             <typeparam name="TActivatorData">Activator data type.</typeparam>
             <param name="registration">The registration to configure.</param>
-            <param name="lifetimeScopeTags">Additional tags applied for matching lifetime scopes.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="registration"/> is <see langword="null"/>.
-            </exception>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterControllers(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
-            <summary>
-            Register types that implement IController in the provided assemblies.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <param name="controllerAssemblies">Assemblies to scan for controllers.</param>
-            <returns>Registration builder allowing the controller components to be customised.</returns>
         </member>
         <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.InjectActionInvoker``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
             <summary>
@@ -458,63 +729,115 @@
             <param name="actionInvokerService">Service used to resolve the action invoker.</param>
             <returns>A registration builder.</returns>
         </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.InstancePerHttpRequest``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Object[])">
+            <summary>
+            Share one instance of the component within the context of a single
+            HTTP request.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TStyle">Registration style.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <param name="registration">The registration to configure.</param>
+            <param name="lifetimeScopeTags">Additional tags applied for matching lifetime scopes.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registration" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideActionFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideActionFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideAuthenticationFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideAuthenticationFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideAuthorizationFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideAuthorizationFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideExceptionFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideExceptionFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideResultFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideResultFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterControllers(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Register types that implement IController in the provided assemblies.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="controllerAssemblies">Assemblies to scan for controllers.</param>
+            <returns>Registration builder allowing the controller components to be customised.</returns>
+        </member>
+        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterFilterProvider(Autofac.ContainerBuilder)">
+            <summary>
+            Registers the <see cref="T:Autofac.Integration.Mvc.AutofacFilterProvider"/>.
+            </summary>
+            <param name="builder">The container builder.</param>
+        </member>
         <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterModelBinderProvider(Autofac.ContainerBuilder)">
             <summary>
             Registers the <see cref="T:Autofac.Integration.Mvc.AutofacModelBinderProvider"/>.
             </summary>
             <param name="builder">The container builder.</param>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsModelBinderForTypes``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Type[])">
-            <summary>
-            Sets a provided registration to act as an <see cref="T:System.Web.Mvc.IModelBinder"/>
-            for the specified list of types.
-            </summary>
-            <param name="registration">
-            The registration for the type or object instance that will act as
-            the model binder.
-            </param>
-            <param name="types">
-            The list of model <see cref="T:System.Type"/> for which the <paramref name="registration"/>
-            should be a model binder.
-            </param>
-            <typeparam name="TLimit">
-            Registration limit type.
-            </typeparam>
-            <typeparam name="TActivatorData">
-            Activator data type.
-            </typeparam>
-            <typeparam name="TRegistrationStyle">
-            Registration style.
-            </typeparam>
-            <returns>
-            An Autofac registration that can be modified as needed.
-            </returns>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="registration"/> or <paramref name="types"/> is <see langword="null"/>.
-            </exception>
-            <exception cref="T:System.ArgumentException">
-            Thrown if <paramref name="types"/> is empty or contains all <see langword="null"/>
-            values.
-            </exception>
-            <remarks>
-            <para>
-            The declarative mechanism of registering model binders with Autofac
-            is through use of <see cref="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterModelBinders(Autofac.ContainerBuilder,System.Reflection.Assembly[])"/>
-            and the <see cref="T:Autofac.Integration.Mvc.ModelBinderTypeAttribute"/>.
-            This method is an imperative alternative.
-            </para>
-            <para>
-            The two mechanisms are mutually exclusive. If you register a model
-            binder using <see cref="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterModelBinders(Autofac.ContainerBuilder,System.Reflection.Assembly[])"/>
-            and register the same model binder with this method, the results
-            are not automatically merged together - standard dependency
-            registration/resolution rules will be used to manage the conflict.
-            </para>
-            <para>
-            Any <see langword="null"/> values provided in <paramref name="types"/>
-            will be removed prior to registration.
-            </para>
-            </remarks>
         </member>
         <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterModelBinders(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
             <summary>
@@ -525,7 +848,7 @@
             <param name="modelBinderAssemblies">Assemblies to scan for model binders.</param>
             <returns>A registration builder.</returns>
             <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="builder"/> or <paramref name="modelBinderAssemblies"/> is <see langword="null"/>.
+            Thrown if <paramref name="builder" /> or <paramref name="modelBinderAssemblies" /> is <see langword="null" />.
             </exception>
             <remarks>
             <para>
@@ -561,296 +884,15 @@
             </para>
             </remarks>
         </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.RegisterFilterProvider(Autofac.ContainerBuilder)">
-            <summary>
-            Registers the <see cref="T:Autofac.Integration.Mvc.AutofacFilterProvider"/>.
-            </summary>
-            <param name="builder">The container builder.</param>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.CacheInSession``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
-            <summary>
-            Cache instances in the web session. This implies external ownership (disposal is not
-            available.) All dependencies must also have external ownership.
-            </summary>
-            <remarks>
-            It is strongly recommended that components cached per-session do not take dependencies on
-            other services.
-            </remarks>
-            <typeparam name="TLimit">Registration limit type.</typeparam>
-            <typeparam name="TSingleRegistrationStyle">Registration style.</typeparam>
-            <typeparam name="TActivatorData">Activator data type.</typeparam>
-            <param name="registration">The registration to configure.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsActionFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IActionFilter"/> for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsActionFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IActionFilter"/> for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsActionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IActionFilter"/> override for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsActionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IActionFilter"/> override for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthorizationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IAuthorizationFilter"/> for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthorizationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IAuthorizationFilter"/> for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthorizationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IAuthorizationFilter"/> override for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthorizationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IAuthorizationFilter"/> override for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsExceptionFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IExceptionFilter"/> for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsExceptionFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IExceptionFilter"/> for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsExceptionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IExceptionFilter"/> override for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsExceptionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IExceptionFilter"/> override for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsResultFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IResultFilter"/> for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsResultFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IResultFilter"/> for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsResultFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IResultFilter"/> override for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsResultFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.IResultFilter"/> override for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> override for the specified controller action.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="actionSelector">The action selector.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.AsAuthenticationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Int32)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IAuthenticationFilter"/> override for the specified controller.
-            </summary>
-            <typeparam name="TController">The type of the controller.</typeparam>
-            <param name="registration">The registration.</param>
-            <param name="order">The order in which the filter is applied.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideActionFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <param name="actionSelector">The action selector.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideActionFilterFor``1(Autofac.ContainerBuilder)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideAuthorizationFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <param name="actionSelector">The action selector.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideAuthorizationFilterFor``1(Autofac.ContainerBuilder)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideExceptionFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <param name="actionSelector">The action selector.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideExceptionFilterFor``1(Autofac.ContainerBuilder)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideAuthenticationFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <param name="actionSelector">The action selector.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideAuthenticationFilterFor``1(Autofac.ContainerBuilder)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideResultFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller action.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <param name="actionSelector">The action selector.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
-        <member name="M:Autofac.Integration.Mvc.RegistrationExtensions.OverrideResultFilterFor``1(Autofac.ContainerBuilder)">
-            <summary>
-            Sets the provided registration to act as an <see cref="T:System.Web.Mvc.Filters.IOverrideFilter"/> for the specified controller.
-            </summary>
-            <param name="builder">The container builder.</param>
-            <returns>A registration builder allowing further configuration of the component.</returns>
-        </member>
         <member name="T:Autofac.Integration.Mvc.RequestLifetimeHttpModule">
             <summary>
             An <see cref="T:System.Web.IHttpModule"/> and <see cref="T:Autofac.Integration.Mvc.ILifetimeScopeProvider"/> implementation 
             that creates a nested lifetime scope for each HTTP request.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.RequestLifetimeHttpModule.LifetimeScopeProvider">
+            <summary>
+            Gets the lifetime scope provider that should be notified when a HTTP request ends.
             </summary>
         </member>
         <member name="M:Autofac.Integration.Mvc.RequestLifetimeHttpModule.Init(System.Web.HttpApplication)">
@@ -860,17 +902,12 @@
             <param name="context">An <see cref="T:System.Web.HttpApplication"/> that provides access to the 
             methods, properties, and events common to all application objects within an ASP.NET application</param>
             <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="context"/> is <see langword="null"/>.
+            Thrown if <paramref name="context" /> is <see langword="null" />.
             </exception>
         </member>
         <member name="M:Autofac.Integration.Mvc.RequestLifetimeHttpModule.Dispose">
             <summary>
             Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule"/>.
-            </summary>
-        </member>
-        <member name="P:Autofac.Integration.Mvc.RequestLifetimeHttpModule.LifetimeScopeProvider">
-            <summary>
-            Gets the lifetime scope provider that should be notified when a HTTP request ends.
             </summary>
         </member>
         <member name="T:Autofac.Integration.Mvc.RequestLifetimeScopeProviderResources">
@@ -904,7 +941,7 @@
             A registration source for building view registrations.
             </summary>
             <remarks>
-            Supports view registrations for <see cref="T:System.Web.Mvc.WebViewPage"/>, <see cref="T:System.Web.Mvc.ViewPage"/>, 
+            Supports view registrations for <see cref="T:System.Web.Mvc.WebViewPage"/>, <see cref="T:System.Web.Mvc.ViewPage"/>,
             <see cref="T:System.Web.Mvc.ViewMasterPage"/> and <see cref="T:System.Web.Mvc.ViewUserControl"/> derived types.
             </remarks>
         </member>

@@ -30,8 +30,8 @@ namespace Grand.Services.Discounts.Tests {
         private ILocalizationService _localizationService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
-        private IRepository<Vendor> _vendorRepo;
-        private IRepository<Store> _storeRepo;
+        //private IRepository<Vendor> _vendorRepo;
+        //private IRepository<Store> _storeRepo;
 
         [TestInitialize()]
         public void TestInitialize() {
