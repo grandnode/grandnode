@@ -2451,6 +2451,7 @@ namespace Grand.Admin.Controllers
             if (attributeTypeId != (int)SpecificationAttributeType.Option)
             {
                 allowFiltering = false;
+                specificationAttributeOptionId = null;
             }
             //we don't allow CustomValue for "Option" attribute type
             if (attributeTypeId == (int)SpecificationAttributeType.Option)
@@ -2500,7 +2501,9 @@ namespace Grand.Admin.Controllers
                     var psaModel = new ProductSpecificationAttributeModel
                     {
                         Id = x.Id,
+                        AttributeTypeId = (int)x.AttributeType,
                         ProductSpecificationId = specificationAttribute.Id,
+                        AttributeId = x.SpecificationAttributeId,
                         ProductId = productId,
                         AttributeTypeName = x.AttributeType.GetLocalizedEnum(_localizationService, _workContext),
                         AttributeName = specificationAttribute.Name,
@@ -2511,7 +2514,8 @@ namespace Grand.Admin.Controllers
                     switch (x.AttributeType)
                     {
                         case SpecificationAttributeType.Option:
-                            psaModel.ValueRaw = HttpUtility.HtmlEncode(specificationAttribute.SpecificationAttributeOptions.Where(y => y.Id == x.SpecificationAttributeOptionId).FirstOrDefault().Name);
+                            psaModel.ValueRaw = HttpUtility.HtmlEncode(specificationAttribute.SpecificationAttributeOptions.Where(y => y.Id == x.SpecificationAttributeOptionId).FirstOrDefault()?.Name);
+                            psaModel.SpecificationAttributeOptionId = x.SpecificationAttributeOptionId;
                             break;
                         case SpecificationAttributeType.CustomText:
                             psaModel.ValueRaw = HttpUtility.HtmlEncode(x.CustomValue);
@@ -2560,9 +2564,15 @@ namespace Grand.Admin.Controllers
                 }
             }
 
-            //we do not allow editing these fields anymore (when we have distinct attribute types)
-            //psa.CustomValue = model.CustomValue;
-            //psa.AllowFiltering = model.AllowFiltering;
+            if (model.AttributeTypeId == (int)SpecificationAttributeType.Option)
+            {
+                psa.AllowFiltering = model.AllowFiltering;
+                psa.SpecificationAttributeOptionId = model.ValueRaw;
+            }
+            else
+            {
+                psa.CustomValue = model.ValueRaw;
+            }
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;
             psa.ProductId = model.ProductId;
