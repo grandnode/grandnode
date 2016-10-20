@@ -241,6 +241,8 @@
     <Compile Include="Blogs\BlogService.cs" />
     <Compile Include="Blogs\BlogExtensions.cs" />
     <Compile Include="Blogs\IBlogService.cs" />
+    <Compile Include="Customers\CustomerAttributeFormatter.cs" />
+    <Compile Include="Customers\ICustomerAttributeFormatter.cs" />
     <Compile Include="Tasks\ClearCacheScheduleTask.cs" />
     <Compile Include="Catalog\BackInStockSubscriptionService.cs" />
     <Compile Include="Catalog\Cache\PriceCacheEventConsumer.cs" />

@@ -1,32 +1,39 @@
-using System;
-using System.Linq;
+﻿using System;
 using System.Text;
 using System.Web;
+using System.Linq;
 using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Html;
 using Grand.Services.Localization;
 
-namespace Grand.Services.Common
+namespace Grand.Services.Customers
 {
-    /// <summary>
-    /// Address attribute helper
-    /// </summary>
-    public partial class AddressAttributeFormatter : IAddressAttributeFormatter
+    public partial class CustomerAttributeFormatter : ICustomerAttributeFormatter
     {
-        private readonly IWorkContext _workContext;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeParser _addressAttributeParser;
+        #region Fields
 
-        public AddressAttributeFormatter(IWorkContext workContext,
-            IAddressAttributeService addressAttributeService,
-            IAddressAttributeParser addressAttributeParser)
+        private readonly ICustomerAttributeParser _customerAttributeParser;
+        private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly IWorkContext _workContext;
+
+        #endregion
+
+        #region Ctor
+
+        public CustomerAttributeFormatter(ICustomerAttributeParser customerAttributeParser,
+            ICustomerAttributeService customerAttributeService,
+            IWorkContext workContext)
         {
+            this._customerAttributeParser = customerAttributeParser;
+            this._customerAttributeService = customerAttributeService;
             this._workContext = workContext;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeParser = addressAttributeParser;
         }
-        
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Formats attributes
         /// </summary>
@@ -34,17 +41,15 @@ namespace Grand.Services.Common
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        public virtual string FormatAttributes(string attributesXml,
-            string serapator = "<br />", 
-            bool htmlEncode = true)
+        public virtual string FormatAttributes(string attributesXml, string serapator = "<br />", bool htmlEncode = true)
         {
             var result = new StringBuilder();
 
-            var attributes = _addressAttributeParser.ParseAddressAttributes(attributesXml);
+            var attributes = _customerAttributeParser.ParseCustomerAttributes(attributesXml);
             for (int i = 0; i < attributes.Count; i++)
             {
                 var attribute = attributes[i];
-                var valuesStr = _addressAttributeParser.ParseValues(attributesXml, attribute.Id);
+                var valuesStr = _customerAttributeParser.ParseValues(attributesXml, attribute.Id);
                 for (int j = 0; j < valuesStr.Count; j++)
                 {
                     string valueStr = valuesStr[j];
@@ -65,7 +70,7 @@ namespace Grand.Services.Common
                         else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
-                            //not supported for address attributes
+                            //not supported for customer attributes
                         }
                         else
                         {
@@ -78,8 +83,9 @@ namespace Grand.Services.Common
                     }
                     else
                     {
+
                         string attributeValueId = valueStr;
-                        var attributeValue = attribute.AddressAttributeValues.FirstOrDefault(x => x.Id == attributeValueId); 
+                        var attributeValue = attribute.CustomerAttributeValues.FirstOrDefault(x => x.Id == attributeValueId);
                         if (attributeValue != null)
                         {
                             formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
@@ -87,6 +93,7 @@ namespace Grand.Services.Common
                         //encode (if required)
                         if (htmlEncode)
                             formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
+
                     }
 
                     if (!String.IsNullOrEmpty(formattedAttribute))
@@ -100,5 +107,7 @@ namespace Grand.Services.Common
 
             return result.ToString();
         }
+
+        #endregion
     }
 }
