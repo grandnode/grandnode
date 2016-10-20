@@ -14,7 +14,7 @@ namespace Grand.Core.Infrastructure
     /// <summary>
     /// Engine
     /// </summary>
-    public class NopEngine : IEngine
+    public class GrandEngine : IEngine
     {
         #region Fields
 

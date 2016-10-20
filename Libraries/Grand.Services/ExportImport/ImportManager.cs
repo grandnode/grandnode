@@ -153,7 +153,7 @@ namespace Grand.Services.ExportImport
                 // get the first worksheet in the workbook
                 var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
                 if (worksheet == null)
-                    throw new NopException("No worksheet found");
+                    throw new GrandException("No worksheet found");
 
 
                 //the columns
@@ -654,7 +654,7 @@ namespace Grand.Services.ExportImport
                         storeId = tmp[2].Trim();
                     }
                     else
-                        throw new NopException("Wrong file format");
+                        throw new GrandException("Wrong file format");
 
                     //import
                     var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, storeId);
@@ -701,7 +701,7 @@ namespace Grand.Services.ExportImport
                     string[] tmp = line.Split(',');
 
                     if (tmp.Length != 5)
-                        throw new NopException("Wrong file format");
+                        throw new GrandException("Wrong file format");
 
                     //parse
                     var countryTwoLetterIsoCode = tmp[0].Trim();
@@ -780,7 +780,7 @@ namespace Grand.Services.ExportImport
                 // get the first worksheet in the workbook
                 var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
                 if (worksheet == null)
-                    throw new NopException("No worksheet found");
+                    throw new GrandException("No worksheet found");
 
                 var iRow = 2;
 
@@ -875,7 +875,7 @@ namespace Grand.Services.ExportImport
                 // get the first worksheet in the workbook
                 var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
                 if (worksheet == null)
-                    throw new NopException("No worksheet found");
+                    throw new GrandException("No worksheet found");
 
                 var iRow = 2;
 

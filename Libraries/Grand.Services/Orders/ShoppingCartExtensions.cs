@@ -87,7 +87,7 @@ namespace Grand.Services.Orders
                 var product = productService.GetProductById(sci.ProductId);
                 if (product == null)
                 {
-                    throw new NopException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));
+                    throw new GrandException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));
                 }
 
                 if (product.IsRecurring)

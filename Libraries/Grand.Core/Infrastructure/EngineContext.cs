@@ -20,7 +20,7 @@ namespace Grand.Core.Infrastructure
         {
             if (Singleton<IEngine>.Instance == null || forceRecreate)
             {
-                Singleton<IEngine>.Instance = new NopEngine();
+                Singleton<IEngine>.Instance = new GrandEngine();
 
                 var config = ConfigurationManager.GetSection("GrandConfig") as GrandConfig;
                 Singleton<IEngine>.Instance.Initialize(config);

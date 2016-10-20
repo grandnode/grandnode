@@ -263,7 +263,7 @@ namespace Grand.Plugin.Feed.Froogle
                         if (String.IsNullOrEmpty(googleProductCategory))
                             googleProductCategory = _froogleSettings.DefaultGoogleCategory;
                         if (String.IsNullOrEmpty(googleProductCategory))
-                            throw new NopException("Default Google category is not set");
+                            throw new GrandException("Default Google category is not set");
                         writer.WriteStartElement("g", "google_product_category", googleBaseNamespace);
                         writer.WriteCData(googleProductCategory);
                         writer.WriteFullEndElement(); // g:google_product_category

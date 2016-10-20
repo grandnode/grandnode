@@ -15,14 +15,14 @@ namespace Grand.Data
 
             var providerName = Settings.DataProvider;
             if (String.IsNullOrWhiteSpace(providerName))
-                throw new NopException("Data Settings doesn't contain a providerName");
+                throw new GrandException("Data Settings doesn't contain a providerName");
 
             switch (providerName.ToLowerInvariant())
             {
                 case "mongodb":
                     return new MongoDBDataProvider();
                 default:
-                    throw new NopException(string.Format("Not supported dataprovider name: {0}", providerName));
+                    throw new GrandException(string.Format("Not supported dataprovider name: {0}", providerName));
             }
         }
 

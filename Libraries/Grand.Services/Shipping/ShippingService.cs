@@ -967,7 +967,7 @@ namespace Grand.Services.Shipping
                     .ToList();
             }
             if (!shippingRateComputationMethods.Any())
-                throw new NopException("Shipping rate computation method could not be loaded");
+                throw new GrandException("Shipping rate computation method could not be loaded");
 
 
 

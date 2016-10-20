@@ -130,7 +130,7 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
                 !processor.IsMethodActive(_externalAuthenticationSettings) ||
                 !processor.PluginDescriptor.Installed ||
                 !_pluginFinder.AuthenticateStore(processor.PluginDescriptor, _storeContext.CurrentStore.Id))
-                throw new NopException("Facebook module cannot be loaded");
+                throw new GrandException("Facebook module cannot be loaded");
 
             var viewModel = new LoginModel();
             TryUpdateModel(viewModel);

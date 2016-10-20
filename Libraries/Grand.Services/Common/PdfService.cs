@@ -363,7 +363,7 @@ namespace Grand.Services.Common
                     if (!order.PickUpInStore)
                     {
                         if (order.ShippingAddress == null)
-                            throw new NopException(string.Format("Shipping is required, but address is not available. Order ID = {0}", order.Id));
+                            throw new GrandException(string.Format("Shipping is required, but address is not available. Order ID = {0}", order.Id));
 
                         shippingAddress.AddCell(new Paragraph(_localizationService.GetResource("PDFInvoice.ShippingInformation", lang.Id), titleFont));
                         if (!String.IsNullOrEmpty(order.ShippingAddress.Company))
@@ -1039,7 +1039,7 @@ namespace Grand.Services.Common
                 if (!order.PickUpInStore)
                 {
                     if (order.ShippingAddress == null)
-                        throw new NopException(string.Format("Shipping is required, but address is not available. Order ID = {0}", order.Id));
+                        throw new GrandException(string.Format("Shipping is required, but address is not available. Order ID = {0}", order.Id));
                     
                     if (_addressSettings.CompanyEnabled && !String.IsNullOrEmpty(order.ShippingAddress.Company))
                         addressTable.AddCell(new Paragraph(String.Format(_localizationService.GetResource("PDFPackagingSlip.Company", lang.Id),

@@ -259,9 +259,9 @@ namespace Grand.Admin.Controllers
             try
             {
                 if (!CommonHelper.IsValidEmail(giftCard.RecipientEmail))
-                    throw new NopException("Recipient email is not valid");
+                    throw new GrandException("Recipient email is not valid");
                 if (!CommonHelper.IsValidEmail(giftCard.SenderEmail))
-                    throw new NopException("Sender email is not valid");
+                    throw new GrandException("Sender email is not valid");
 
                 var languageId = "";
                 if (order != null)

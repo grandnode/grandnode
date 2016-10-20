@@ -257,7 +257,7 @@ namespace Grand.Services.Directory
             {
                 decimal exchangeRate = sourceCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
-                    throw new NopException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
+                    throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", sourceCurrencyCode.Name));
                 result = result / exchangeRate;
             }
             return result;
@@ -283,7 +283,7 @@ namespace Grand.Services.Directory
             {
                 decimal exchangeRate = targetCurrencyCode.Rate;
                 if (exchangeRate == decimal.Zero)
-                    throw new NopException(string.Format("Exchange rate not found for currency [{0}]", targetCurrencyCode.Name));
+                    throw new GrandException(string.Format("Exchange rate not found for currency [{0}]", targetCurrencyCode.Name));
                 result = result * exchangeRate;
             }
             return result;

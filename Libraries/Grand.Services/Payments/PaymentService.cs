@@ -250,7 +250,7 @@ namespace Grand.Services.Payments
             }
             var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
             if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+                throw new GrandException("Payment method couldn't be loaded");
             return paymentMethod.ProcessPayment(processPaymentRequest);
         }
 
@@ -266,7 +266,7 @@ namespace Grand.Services.Payments
 
             var paymentMethod = LoadPaymentMethodBySystemName(postProcessPaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+                throw new GrandException("Payment method couldn't be loaded");
             paymentMethod.PostProcessPayment(postProcessPaymentRequest);
         }
 
@@ -353,7 +353,7 @@ namespace Grand.Services.Payments
         {
             var paymentMethod = LoadPaymentMethodBySystemName(capturePaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+                throw new GrandException("Payment method couldn't be loaded");
             return paymentMethod.Capture(capturePaymentRequest);
         }
 
@@ -394,7 +394,7 @@ namespace Grand.Services.Payments
         {
             var paymentMethod = LoadPaymentMethodBySystemName(refundPaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+                throw new GrandException("Payment method couldn't be loaded");
             return paymentMethod.Refund(refundPaymentRequest);
         }
         
@@ -422,7 +422,7 @@ namespace Grand.Services.Payments
         {
             var paymentMethod = LoadPaymentMethodBySystemName(voidPaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+                throw new GrandException("Payment method couldn't be loaded");
             return paymentMethod.Void(voidPaymentRequest);
         }
 
@@ -459,7 +459,7 @@ namespace Grand.Services.Payments
 
             var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
             if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+                throw new GrandException("Payment method couldn't be loaded");
             return paymentMethod.ProcessRecurringPayment(processPaymentRequest);
         }
 
@@ -475,7 +475,7 @@ namespace Grand.Services.Payments
 
             var paymentMethod = LoadPaymentMethodBySystemName(cancelPaymentRequest.Order.PaymentMethodSystemName);
             if (paymentMethod == null)
-                throw new NopException("Payment method couldn't be loaded");
+                throw new GrandException("Payment method couldn't be loaded");
             return paymentMethod.CancelRecurringPayment(cancelPaymentRequest);
         }
 

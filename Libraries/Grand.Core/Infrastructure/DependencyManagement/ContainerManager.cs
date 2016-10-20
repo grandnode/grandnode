@@ -127,17 +127,17 @@ namespace Grand.Core.Infrastructure.DependencyManagement
                     foreach (var parameter in parameters)
                     {
                         var service = Resolve(parameter.ParameterType, scope);
-                        if (service == null) throw new NopException("Unkown dependency");
+                        if (service == null) throw new GrandException("Unkown dependency");
                         parameterInstances.Add(service);
                     }
                     return Activator.CreateInstance(type, parameterInstances.ToArray());
                 }
-                catch (NopException)
+                catch (GrandException)
                 {
 
                 }
             }
-            throw new NopException("No contructor was found that had all the dependencies satisfied.");
+            throw new GrandException("No contructor was found that had all the dependencies satisfied.");
         }
 
         /// <summary>

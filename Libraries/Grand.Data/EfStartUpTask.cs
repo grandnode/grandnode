@@ -13,7 +13,7 @@ namespace Grand.Data
             {
                 var provider = EngineContext.Current.Resolve<IDataProvider>();
                 if (provider == null)
-                    throw new NopException("No IDataProvider found");
+                    throw new GrandException("No IDataProvider found");
 
                 provider.SetDatabaseInitializer();
             }

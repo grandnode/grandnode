@@ -275,7 +275,7 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customer");
 
             if (customer.IsSystemAccount)
-                throw new NopException(string.Format("System customer account ({0}) could not be deleted", customer.SystemName));
+                throw new GrandException(string.Format("System customer account ({0}) could not be deleted", customer.SystemName));
 
             customer.Deleted = true;
 
@@ -413,7 +413,7 @@ namespace Grand.Services.Customers
             //add to 'Guests' role
             var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)
-                throw new NopException("'Guests' role could not be loaded");
+                throw new GrandException("'Guests' role could not be loaded");
             customer.CustomerRoles.Add(guestRole);
 
             _customerRepository.Insert(customer);
@@ -783,7 +783,7 @@ namespace Grand.Services.Customers
 
             var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
             if (guestRole == null)
-                throw new NopException("'Guests' role could not be loaded");
+                throw new GrandException("'Guests' role could not be loaded");
 
             var query = _customerRepository.Table;
 
@@ -856,7 +856,7 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customerRole");
 
             if (customerRole.IsSystemRole)
-                throw new NopException("System role could not be deleted");
+                throw new GrandException("System role could not be deleted");
 
             _customerRoleRepository.Delete(customerRole);
 

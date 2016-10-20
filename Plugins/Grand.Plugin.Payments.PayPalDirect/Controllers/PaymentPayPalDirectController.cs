@@ -266,7 +266,7 @@ namespace Grand.Plugin.Payments.PayPalDirect.Controllers
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalDirect") as PayPalDirectPaymentProcessor;
             if (processor == null ||
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
-                throw new NopException("PayPal Direct module cannot be loaded");
+                throw new GrandException("PayPal Direct module cannot be loaded");
 
             if (processor.VerifyIpn(strRequest, out values))
             {
@@ -367,11 +367,11 @@ namespace Grand.Plugin.Payments.PayPalDirect.Controllers
                                 }
 
                                 //this.OrderService.InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
-                                _logger.Information("PayPal IPN. Recurring info", new NopException(sb.ToString()));
+                                _logger.Information("PayPal IPN. Recurring info", new GrandException(sb.ToString()));
                             }
                             else
                             {
-                                _logger.Error("PayPal IPN. Order is not found", new NopException(sb.ToString()));
+                                _logger.Error("PayPal IPN. Order is not found", new GrandException(sb.ToString()));
                             }
                         }
                         #endregion
@@ -504,7 +504,7 @@ namespace Grand.Plugin.Payments.PayPalDirect.Controllers
                             }
                             else
                             {
-                                _logger.Error("PayPal IPN. Order is not found", new NopException(sb.ToString()));
+                                _logger.Error("PayPal IPN. Order is not found", new GrandException(sb.ToString()));
                             }
                         }
                         #endregion
@@ -513,7 +513,7 @@ namespace Grand.Plugin.Payments.PayPalDirect.Controllers
             }
             else
             {
-                _logger.Error("PayPal IPN failed.", new NopException(strRequest));
+                _logger.Error("PayPal IPN failed.", new GrandException(strRequest));
             }
 
             //nothing should be rendered to visitor

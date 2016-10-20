@@ -1541,7 +1541,7 @@ namespace Grand.Admin.Controllers
             {
                 decimal amountToRefund = model.AmountToRefund;
                 if (amountToRefund <= decimal.Zero)
-                    throw new NopException("Enter amount to refund");
+                    throw new GrandException("Enter amount to refund");
 
                 decimal maxAmountToRefund = order.OrderTotal - order.RefundedAmount;
                 if (amountToRefund > maxAmountToRefund)

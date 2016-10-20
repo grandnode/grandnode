@@ -1007,7 +1007,7 @@ namespace Grand.Services.Forums
             var customerTo = _customerService.GetCustomerById(privateMessage.ToCustomerId);
             if (customerTo == null)
             {
-                throw new NopException("Recipient could not be loaded");
+                throw new GrandException("Recipient could not be loaded");
             }
 
             //UI notification

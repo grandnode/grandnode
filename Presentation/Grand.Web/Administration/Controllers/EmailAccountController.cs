@@ -188,7 +188,7 @@ namespace Grand.Admin.Controllers
             try
             {
                 if (String.IsNullOrWhiteSpace(model.SendTestEmailTo))
-                    throw new NopException("Enter test email address");
+                    throw new GrandException("Enter test email address");
 
                 string subject = _storeContext.CurrentStore.Name + ". Testing email functionality.";
                 string body = "Email works fine.";

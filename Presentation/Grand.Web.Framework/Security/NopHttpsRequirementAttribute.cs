@@ -76,7 +76,7 @@ namespace Grand.Web.Framework.Security
                     }
                     break;
                 default:
-                    throw new NopException("Not supported SslProtected parameter");
+                    throw new GrandException("Not supported SslProtected parameter");
             }
         }
 

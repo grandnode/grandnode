@@ -101,7 +101,7 @@ namespace Grand.Services.Messages
                 throw new ArgumentNullException("emailAccount");
 
             if (GetAllEmailAccounts().Count == 1)
-                throw new NopException("You cannot delete this email account. At least one account is required.");
+                throw new GrandException("You cannot delete this email account. At least one account is required.");
 
             _emailAccountRepository.Delete(emailAccount);
 

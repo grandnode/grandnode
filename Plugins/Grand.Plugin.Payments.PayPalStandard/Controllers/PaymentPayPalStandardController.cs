@@ -221,7 +221,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
-                throw new NopException("PayPal Standard module cannot be loaded");
+                throw new GrandException("PayPal Standard module cannot be loaded");
 
             if (processor.GetPdtDetails(tx, out values, out response))
             {
@@ -366,7 +366,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             var processor = _paymentService.LoadPaymentMethodBySystemName("Payments.PayPalStandard") as PayPalStandardPaymentProcessor;
             if (processor == null ||
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
-                throw new NopException("PayPal Standard module cannot be loaded");
+                throw new GrandException("PayPal Standard module cannot be loaded");
 
             if (processor.VerifyIpn(strRequest, out values))
             {
@@ -467,11 +467,11 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                                 }
 
                                 //this.OrderService.InsertOrderNote(newOrder.OrderId, sb.ToString(), DateTime.UtcNow);
-                                _logger.Information("PayPal IPN. Recurring info", new NopException(sb.ToString()));
+                                _logger.Information("PayPal IPN. Recurring info", new GrandException(sb.ToString()));
                             }
                             else
                             {
-                                _logger.Error("PayPal IPN. Order is not found", new NopException(sb.ToString()));
+                                _logger.Error("PayPal IPN. Order is not found", new GrandException(sb.ToString()));
                             }
                         }
                         #endregion
@@ -603,7 +603,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
                             }
                             else
                             {
-                                _logger.Error("PayPal IPN. Order is not found", new NopException(sb.ToString()));
+                                _logger.Error("PayPal IPN. Order is not found", new GrandException(sb.ToString()));
                             }
                         }
                         #endregion
@@ -612,7 +612,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
             }
             else
             {
-                _logger.Error("PayPal IPN failed.", new NopException(strRequest));
+                _logger.Error("PayPal IPN failed.", new GrandException(strRequest));
             }
 
             //nothing should be rendered to visitor

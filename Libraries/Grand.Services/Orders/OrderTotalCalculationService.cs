@@ -577,7 +577,7 @@ namespace Grand.Services.Orders
                 var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id);
                 
                 if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickUpInStore)
-                    throw new NopException("Shipping rate computation method could not be loaded");
+                    throw new GrandException("Shipping rate computation method could not be loaded");
 
                 if (shippingRateComputationMethods.Count == 1)
                 {

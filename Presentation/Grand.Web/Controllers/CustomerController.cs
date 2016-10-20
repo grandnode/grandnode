@@ -1801,7 +1801,7 @@ namespace Grand.Web.Controllers
                     {
                         int avatarMaxSize = _customerSettings.AvatarMaximumSizeBytes;
                         if (uploadedFile.ContentLength > avatarMaxSize)
-                            throw new NopException(string.Format(_localizationService.GetResource("Account.Avatar.MaximumUploadedFileSize"), avatarMaxSize));
+                            throw new GrandException(string.Format(_localizationService.GetResource("Account.Avatar.MaximumUploadedFileSize"), avatarMaxSize));
 
                         byte[] customerPictureBinary = uploadedFile.GetPictureBits();
                         if (customerAvatar != null)

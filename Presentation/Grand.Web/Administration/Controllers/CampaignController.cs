@@ -335,7 +335,7 @@ namespace Grand.Admin.Controllers
             {
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)
-                    throw new NopException("Email account could not be loaded");
+                    throw new GrandException("Email account could not be loaded");
 
 
                 var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(model.TestEmail, _storeContext.CurrentStore.Id);
@@ -390,7 +390,7 @@ namespace Grand.Admin.Controllers
             {
                 var emailAccount = _emailAccountService.GetEmailAccountById(campaign.EmailAccountId);
                 if (emailAccount == null)
-                    throw new NopException("Email account could not be loaded");
+                    throw new GrandException("Email account could not be loaded");
 
                 //subscribers of certain store?
                 var store = _storeService.GetStoreById(campaign.StoreId);

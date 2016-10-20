@@ -210,7 +210,7 @@ namespace Grand.Services.Customers
             //add to 'Registered' role
             var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
             if (registeredRole == null)
-                throw new NopException("'Registered' role could not be loaded");
+                throw new GrandException("'Registered' role could not be loaded");
             request.Customer.CustomerRoles.Add(registeredRole);
             registeredRole.CustomerId = request.Customer.Id;
             _customerService.InsertCustomerRoleInCustomer(registeredRole);
@@ -337,20 +337,20 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customer");
 
             if (newEmail == null)
-                throw new NopException("Email cannot be null");
+                throw new GrandException("Email cannot be null");
 
             newEmail = newEmail.Trim();
             string oldEmail = customer.Email;
 
             if (!CommonHelper.IsValidEmail(newEmail))
-                throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.NewEmailIsNotValid"));
+                throw new GrandException(_localizationService.GetResource("Account.EmailUsernameErrors.NewEmailIsNotValid"));
 
             if (newEmail.Length > 100)
-                throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.EmailTooLong"));
+                throw new GrandException(_localizationService.GetResource("Account.EmailUsernameErrors.EmailTooLong"));
 
             var customer2 = _customerService.GetCustomerByEmail(newEmail);
             if (customer2 != null && customer.Id != customer2.Id)
-                throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.EmailAlreadyExists"));
+                throw new GrandException(_localizationService.GetResource("Account.EmailUsernameErrors.EmailAlreadyExists"));
 
             customer.Email = newEmail;
             _customerService.UpdateCustomer(customer);
@@ -381,19 +381,19 @@ namespace Grand.Services.Customers
                 throw new ArgumentNullException("customer");
 
             if (!_customerSettings.UsernamesEnabled)
-                throw new NopException("Usernames are disabled");
+                throw new GrandException("Usernames are disabled");
 
             if (!_customerSettings.AllowUsersToChangeUsernames)
-                throw new NopException("Changing usernames is not allowed");
+                throw new GrandException("Changing usernames is not allowed");
 
             newUsername = newUsername.Trim();
 
             if (newUsername.Length > 100)
-                throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.UsernameTooLong"));
+                throw new GrandException(_localizationService.GetResource("Account.EmailUsernameErrors.UsernameTooLong"));
 
             var user2 = _customerService.GetCustomerByUsername(newUsername);
             if (user2 != null && customer.Id != user2.Id)
-                throw new NopException(_localizationService.GetResource("Account.EmailUsernameErrors.UsernameAlreadyExists"));
+                throw new GrandException(_localizationService.GetResource("Account.EmailUsernameErrors.UsernameAlreadyExists"));
 
             customer.Username = newUsername;
             _customerService.UpdateCustomer(customer);

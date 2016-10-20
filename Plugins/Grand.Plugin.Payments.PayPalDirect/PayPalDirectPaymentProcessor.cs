@@ -541,7 +541,7 @@ namespace Grand.Plugin.Payments.PayPalDirect
                     details.ScheduleDetails.PaymentPeriod.BillingPeriod = BillingPeriodType.YEAR;
                     break;
                 default:
-                    throw new NopException("Not supported cycle period");
+                    throw new GrandException("Not supported cycle period");
             }
             details.ScheduleDetails.PaymentPeriod.TotalBillingCycles = processPaymentRequest.RecurringTotalCycles;
 

@@ -20,7 +20,7 @@ namespace Grand.Web.Framework.Mvc
             foreach (var additionalValue in additionalValues)
             {
                 if (metadata.AdditionalValues.ContainsKey(additionalValue.Name))
-                    throw new NopException("There is already an attribute with the name of \"" + additionalValue.Name +
+                    throw new GrandException("There is already an attribute with the name of \"" + additionalValue.Name +
                                            "\" on this model.");
                 metadata.AdditionalValues.Add(additionalValue.Name, additionalValue);
             }

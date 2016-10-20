@@ -115,7 +115,7 @@ namespace Grand.Admin.Controllers
                 {
                     var primaryExchangeCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
                     if (primaryExchangeCurrency == null)
-                        throw new NopException("Primary exchange rate currency is not set");
+                        throw new GrandException("Primary exchange rate currency is not set");
 
                     ViewBag.Rates = _currencyService.GetCurrencyLiveRates(primaryExchangeCurrency.CurrencyCode);
                 }
@@ -346,10 +346,10 @@ namespace Grand.Admin.Controllers
             try
             {
                 if (currency.Id == _currencySettings.PrimaryStoreCurrencyId)
-                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeletePrimary"));
+                    throw new GrandException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeletePrimary"));
 
                 if (currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId)
-                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeleteExchange"));
+                    throw new GrandException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeleteExchange"));
 
                 //ensure we have at least one published currency
                 var allCurrencies = _currencyService.GetAllCurrencies();

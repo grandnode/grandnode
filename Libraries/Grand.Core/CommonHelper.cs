@@ -33,7 +33,7 @@ namespace Grand.Core
 
             if (!IsValidEmail(output))
             {
-                throw new NopException("Email is not valid.");
+                throw new GrandException("Email is not valid.");
             }
 
             return output;

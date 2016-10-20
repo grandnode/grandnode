@@ -30,7 +30,7 @@ namespace Grand.Core.Tests {
                     CommonHelper.EnsureSubscriberEmailOrThrow(str);
                 }
             }
-            catch (NopException ex) {
+            catch (GrandException ex) {
                 Assert.AreEqual("Email is not valid.", ex.Message);
             }
         }

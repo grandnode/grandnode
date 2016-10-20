@@ -87,7 +87,7 @@ namespace Grand.Core.Domain.Orders
                             result = this.StartDateUtc.AddYears(this.CycleLength * historyCollection.Count);
                             break;
                         default:
-                            throw new NopException("Not supported cycle period");
+                            throw new GrandException("Not supported cycle period");
                     }
                 }
                 else

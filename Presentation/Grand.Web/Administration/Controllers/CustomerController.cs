@@ -1525,19 +1525,19 @@ namespace Grand.Admin.Controllers
             try
             {
                 if (String.IsNullOrWhiteSpace(customer.Email))
-                    throw new NopException("Customer email is empty");
+                    throw new GrandException("Customer email is empty");
                 if (!CommonHelper.IsValidEmail(customer.Email))
-                    throw new NopException("Customer email is not valid");
+                    throw new GrandException("Customer email is not valid");
                 if (String.IsNullOrWhiteSpace(model.SendEmail.Subject))
-                    throw new NopException("Email subject is empty");
+                    throw new GrandException("Email subject is empty");
                 if (String.IsNullOrWhiteSpace(model.SendEmail.Body))
-                    throw new NopException("Email body is empty");
+                    throw new GrandException("Email body is empty");
 
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)
                     emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
                 if (emailAccount == null)
-                    throw new NopException("Email account can't be loaded");
+                    throw new GrandException("Email account can't be loaded");
 
                 var email = new QueuedEmail
                 {
@@ -1578,13 +1578,13 @@ namespace Grand.Admin.Controllers
             try
             {
                 if (!_forumSettings.AllowPrivateMessages)
-                    throw new NopException("Private messages are disabled");
+                    throw new GrandException("Private messages are disabled");
                 if (customer.IsGuest())
-                    throw new NopException("Customer should be registered");
+                    throw new GrandException("Customer should be registered");
                 if (String.IsNullOrWhiteSpace(model.SendPm.Subject))
-                    throw new NopException("PM subject is empty");
+                    throw new GrandException("PM subject is empty");
                 if (String.IsNullOrWhiteSpace(model.SendPm.Message))
-                    throw new NopException("PM message is empty");
+                    throw new GrandException("PM message is empty");
 
 
                 var privateMessage = new PrivateMessage

@@ -12,7 +12,7 @@ namespace Grand.Core.Tests {
         [TestMethod()]
         public void pass_individual_message_to_exception() {
             try {
-                throw new NopException("lorem ipsum 123");
+                throw new GrandException("lorem ipsum 123");
             }
             catch(Exception ex) {
                 Assert.AreEqual("lorem ipsum 123", ex.Message);

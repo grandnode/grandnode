@@ -28,7 +28,7 @@ namespace Grand.Plugin.ExchangeRate.EcbExchange
         {
             if (String.IsNullOrEmpty(exchangeRateCurrencyCode) ||
                 exchangeRateCurrencyCode.ToLower() != "eur")
-                throw new NopException(_localizationService.GetResource("Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO"));
+                throw new GrandException(_localizationService.GetResource("Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO"));
 
             var exchangeRates = new List<Grand.Core.Domain.Directory.ExchangeRate>();
 

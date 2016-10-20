@@ -265,7 +265,7 @@ namespace Grand.Admin.Controllers
             try
             {
                 if (_addressService.GetAddressTotalByCountryId(country.Id) > 0)
-                    throw new NopException("The country can't be deleted. It has associated addresses");
+                    throw new GrandException("The country can't be deleted. It has associated addresses");
 
                 _countryService.DeleteCountry(country);
 

@@ -327,16 +327,16 @@ namespace Grand.Services.Orders
 
             //check whether customer is guest
             if (details.Customer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed)
-                throw new NopException("Anonymous checkout is not allowed");
+                throw new GrandException("Anonymous checkout is not allowed");
 
             //billing address
             if (!processPaymentRequest.IsRecurringPayment)
             {
                 if (details.Customer.BillingAddress == null)
-                    throw new NopException("Billing address is not provided");
+                    throw new GrandException("Billing address is not provided");
 
                 if (!CommonHelper.IsValidEmail(details.Customer.BillingAddress.Email))
-                    throw new NopException("Email is not valid");
+                    throw new GrandException("Email is not valid");
 
                 //clone billing address
                 details.BillingAddress = (Address)details.Customer.BillingAddress.Clone();
@@ -345,13 +345,13 @@ namespace Grand.Services.Orders
                     var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.BillingAddress.CountryId);
                     if (country != null)
                         if (!country.AllowsBilling)
-                            throw new NopException(string.Format("Country '{0}' is not allowed for billing", country.Name));
+                            throw new GrandException(string.Format("Country '{0}' is not allowed for billing", country.Name));
                 }
             }
             else
             {
                 if (details.InitialOrder.BillingAddress == null)
-                    throw new NopException("Billing address is not available");
+                    throw new GrandException("Billing address is not available");
 
                 //clone billing address
                 details.BillingAddress = (Address)details.InitialOrder.BillingAddress.Clone();
@@ -360,7 +360,7 @@ namespace Grand.Services.Orders
                     var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.BillingAddress.CountryId);
                     if (country != null)
                         if (!country.AllowsBilling)
-                            throw new NopException(string.Format("Country '{0}' is not allowed for billing", country.Name));
+                            throw new GrandException(string.Format("Country '{0}' is not allowed for billing", country.Name));
                 }
             }
 
@@ -386,7 +386,7 @@ namespace Grand.Services.Orders
                     .ToList();
 
                 if (!details.Cart.Any())
-                    throw new NopException("Cart is empty");
+                    throw new GrandException("Cart is empty");
 
                 //validate the entire shopping cart
                 var warnings = _shoppingCartService.GetShoppingCartWarnings(details.Cart,
@@ -400,7 +400,7 @@ namespace Grand.Services.Orders
                         warningsSb.Append(warning);
                         warningsSb.Append(";");
                     }
-                    throw new NopException(warningsSb.ToString());
+                    throw new GrandException(warningsSb.ToString());
                 }
 
                 //validate individual cart items
@@ -419,7 +419,7 @@ namespace Grand.Services.Orders
                             warningsSb.Append(warning);
                             warningsSb.Append(";");
                         }
-                        throw new NopException(warningsSb.ToString());
+                        throw new GrandException(warningsSb.ToString());
                     }
                 }
             }
@@ -431,13 +431,13 @@ namespace Grand.Services.Orders
                 if (!minOrderSubtotalAmountOk)
                 {
                     decimal minOrderSubtotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, _workContext.WorkingCurrency);
-                    throw new NopException(string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false)));
+                    throw new GrandException(string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false)));
                 }
                 bool minOrderTotalAmountOk = ValidateMinOrderTotalAmount(details.Cart);
                 if (!minOrderTotalAmountOk)
                 {
                     decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
-                    throw new NopException(string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false)));
+                    throw new GrandException(string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false)));
                 }
             }
 
@@ -508,10 +508,10 @@ namespace Grand.Services.Orders
                     else
                     {
                         if (details.Customer.ShippingAddress == null)
-                            throw new NopException("Shipping address is not provided");
+                            throw new GrandException("Shipping address is not provided");
 
                         if (!CommonHelper.IsValidEmail(details.Customer.ShippingAddress.Email))
-                            throw new NopException("Email is not valid");
+                            throw new GrandException("Email is not valid");
 
                         //clone shipping address
                         details.ShippingAddress = (Address)details.Customer.ShippingAddress.Clone();
@@ -520,7 +520,7 @@ namespace Grand.Services.Orders
                             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.ShippingAddress.CountryId);
                             if (country != null)
                                 if (!country.AllowsShipping)
-                                    throw new NopException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
+                                    throw new GrandException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
                         }
                     }
 
@@ -542,7 +542,7 @@ namespace Grand.Services.Orders
                     else
                     {
                         if (details.InitialOrder.ShippingAddress == null)
-                            throw new NopException("Shipping address is not available");
+                            throw new GrandException("Shipping address is not available");
 
                         //clone shipping address
                         details.ShippingAddress = (Address)details.InitialOrder.ShippingAddress.Clone();
@@ -551,7 +551,7 @@ namespace Grand.Services.Orders
                             var country = EngineContext.Current.Resolve<ICountryService>().GetCountryById(details.ShippingAddress.CountryId);
                             if (country != null)
                                 if (!country.AllowsShipping)
-                                    throw new NopException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
+                                    throw new GrandException(string.Format("Country '{0}' is not allowed for shipping", country.Name));
                         }
                     }
 
@@ -569,7 +569,7 @@ namespace Grand.Services.Orders
             var orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, true, out tax, out shippingTotalDiscounts);
             var orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(details.Cart, false);
             if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
-                throw new NopException("Shipping total couldn't be calculated");
+                throw new GrandException("Shipping total couldn't be calculated");
 
             details.OrderShippingTotalInclTax = orderShippingTotalInclTax.Value;
             details.OrderShippingTotalExclTax = orderShippingTotalExclTax.Value;
@@ -629,7 +629,7 @@ namespace Grand.Services.Orders
             var orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(details.Cart, out orderDiscountAmount,
                 out orderAppliedDiscounts, out appliedGiftCards, out redeemedRewardPoints, out redeemedRewardPointsAmount);
             if (!orderTotal.HasValue)
-                throw new NopException("Order total couldn't be calculated");
+                throw new GrandException("Order total couldn't be calculated");
 
             details.OrderDiscountAmount = orderDiscountAmount;
             details.RedeemedRewardPoints = redeemedRewardPoints;
@@ -657,7 +657,7 @@ namespace Grand.Services.Orders
                     string recurringCyclesError = details.Cart.GetRecurringCycleInfo(_localizationService, _productService,
                         out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
                     if (!string.IsNullOrEmpty(recurringCyclesError))
-                        throw new NopException(recurringCyclesError);
+                        throw new GrandException(recurringCyclesError);
 
                     processPaymentRequest.RecurringCycleLength = recurringCycleLength;
                     processPaymentRequest.RecurringCyclePeriod = recurringCyclePeriod;
@@ -1086,11 +1086,11 @@ namespace Grand.Services.Orders
                 {
                     var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
                     if (paymentMethod == null)
-                        throw new NopException("Payment method couldn't be loaded");
+                        throw new GrandException("Payment method couldn't be loaded");
 
                     //ensure that payment method is active
                     if (!paymentMethod.IsPaymentMethodActive(_paymentSettings))
-                        throw new NopException("Payment method is not active");
+                        throw new GrandException("Payment method is not active");
 
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
@@ -1101,13 +1101,13 @@ namespace Grand.Services.Orders
                             switch (recurringPaymentType)
                             {
                                 case RecurringPaymentType.NotSupported:
-                                    throw new NopException("Recurring payments are not supported by selected payment method");
+                                    throw new GrandException("Recurring payments are not supported by selected payment method");
                                 case RecurringPaymentType.Manual:
                                 case RecurringPaymentType.Automatic:
                                     processPaymentResult = _paymentService.ProcessRecurringPayment(processPaymentRequest);
                                     break;
                                 default:
-                                    throw new NopException("Not supported recurring payment type");
+                                    throw new GrandException("Not supported recurring payment type");
                             }
                         }
                         else
@@ -1136,7 +1136,7 @@ namespace Grand.Services.Orders
                             switch (recurringPaymentType)
                             {
                                 case RecurringPaymentType.NotSupported:
-                                    throw new NopException("Recurring payments are not supported by selected payment method");
+                                    throw new GrandException("Recurring payments are not supported by selected payment method");
                                 case RecurringPaymentType.Manual:
                                     processPaymentResult = _paymentService.ProcessRecurringPayment(processPaymentRequest);
                                     break;
@@ -1145,12 +1145,12 @@ namespace Grand.Services.Orders
                                     processPaymentResult = new ProcessPaymentResult();
                                     break;
                                 default:
-                                    throw new NopException("Not supported recurring payment type");
+                                    throw new GrandException("Not supported recurring payment type");
                             }
                         }
                         else
                         {
-                            throw new NopException("No recurring products");
+                            throw new GrandException("No recurring products");
                         }
                     }
                 }
@@ -1163,7 +1163,7 @@ namespace Grand.Services.Orders
                 }
 
                 if (processPaymentResult == null)
-                    throw new NopException("processPaymentResult is not available");
+                    throw new GrandException("processPaymentResult is not available");
 
                 #endregion
 
@@ -1728,19 +1728,19 @@ namespace Grand.Services.Orders
             try
             {
                 if (!recurringPayment.IsActive)
-                    throw new NopException("Recurring payment is not active");
+                    throw new GrandException("Recurring payment is not active");
 
                 var initialOrder = recurringPayment.InitialOrder;
                 if (initialOrder == null)
-                    throw new NopException("Initial order could not be loaded");
+                    throw new GrandException("Initial order could not be loaded");
 
                 var customer = _customerService.GetCustomerById(initialOrder.CustomerId);
                 if (customer == null)
-                    throw new NopException("Customer could not be loaded");
+                    throw new GrandException("Customer could not be loaded");
 
                 var nextPaymentDate = recurringPayment.NextPaymentDate;
                 if (!nextPaymentDate.HasValue)
-                    throw new NopException("Next payment date could not be calculated");
+                    throw new GrandException("Next payment date could not be calculated");
 
                 //payment info
                 var paymentInfo = new ProcessPaymentRequest
@@ -1760,7 +1760,7 @@ namespace Grand.Services.Orders
                 if (result.Success)
                 {
                     if (result.PlacedOrder == null)
-                        throw new NopException("Placed order could not be loaded");
+                        throw new GrandException("Placed order could not be loaded");
 
                     var rph = new RecurringPaymentHistory
                     {
@@ -1780,7 +1780,7 @@ namespace Grand.Services.Orders
                         if (i != result.Errors.Count - 1)
                             error += ". ";
                     }
-                    throw new NopException(error);
+                    throw new GrandException(error);
                 }
             }
             catch (Exception exc)
@@ -2062,7 +2062,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanCancelOrder(order))
-                throw new NopException("Cannot do cancel for order.");
+                throw new GrandException("Cannot do cancel for order.");
 
             //Cancel order
             SetOrderStatus(order, OrderStatus.Cancelled, notifyCustomer);
@@ -2189,7 +2189,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanCapture(order))
-                throw new NopException("Cannot do capture for order.");
+                throw new GrandException("Cannot do capture for order.");
 
             var request = new CapturePaymentRequest();
             CapturePaymentResult result = null;
@@ -2294,7 +2294,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanMarkOrderAsPaid(order))
-                throw new NopException("You can't mark this order as paid");
+                throw new GrandException("You can't mark this order as paid");
 
             order.PaymentStatusId = (int)PaymentStatus.Paid;
             order.PaidDateUtc = DateTime.UtcNow;
@@ -2359,7 +2359,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanRefund(order))
-                throw new NopException("Cannot do refund for order.");
+                throw new GrandException("Cannot do refund for order.");
 
             var request = new RefundPaymentRequest();
             RefundPaymentResult result = null;
@@ -2493,7 +2493,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanRefundOffline(order))
-                throw new NopException("You can't refund this order");
+                throw new GrandException("You can't refund this order");
 
             //amout to refund
             decimal amountToRefund = order.OrderTotal;
@@ -2594,7 +2594,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanPartiallyRefund(order, amountToRefund))
-                throw new NopException("Cannot do partial refund for order.");
+                throw new GrandException("Cannot do partial refund for order.");
 
             var request = new RefundPaymentRequest();
             RefundPaymentResult result = null;
@@ -2735,7 +2735,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
             
             if (!CanPartiallyRefundOffline(order, amountToRefund))
-                throw new NopException("You can't partially refund (offline) this order");
+                throw new GrandException("You can't partially refund (offline) this order");
 
             //total amount refunded
             decimal totalAmountRefunded = order.RefundedAmount + amountToRefund;
@@ -2819,7 +2819,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanVoid(order))
-                throw new NopException("Cannot do void for order.");
+                throw new GrandException("Cannot do void for order.");
 
             var request = new VoidPaymentRequest();
             VoidPaymentResult result = null;
@@ -2909,7 +2909,7 @@ namespace Grand.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanVoidOffline(order))
-                throw new NopException("You can't void this order");
+                throw new GrandException("You can't void this order");
 
             order.PaymentStatusId = (int)PaymentStatus.Voided;
             _orderService.UpdateOrder(order);
