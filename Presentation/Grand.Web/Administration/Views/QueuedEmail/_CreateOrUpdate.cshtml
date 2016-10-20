@@ -89,6 +89,26 @@
                 </div>
             </div>
         }
+        @if (!String.IsNullOrEmpty(Model.AttachedDownloadId))
+        {
+            <div class="form-group">
+                <div class="col-md-3">
+                    @Html.GrandLabelFor(model => model.AttachedDownloadId)
+                </div>
+                <div class="col-md-4">
+                    @{
+                        //Static file attachments do not support URLs yet
+                        //A store owner have to upload a file
+                        //we store a value into "ViewData" and then use it in the Download.cshtml file
+                        ViewData["nop.DownloadEditor.DisableUrl"] = true;
+                    }
+                    <div>
+                        @Html.GrandEditorFor(model => model.AttachedDownloadId)
+                        @Html.ValidationMessageFor(model => model.AttachedDownloadId)
+                    </div>
+                </div>
+            </div>
+                        }
         <div class="form-group">
                 @Html.GrandLabelFor(model => model.CreatedOn)
             <div class="col-md-9 col-sm-9">

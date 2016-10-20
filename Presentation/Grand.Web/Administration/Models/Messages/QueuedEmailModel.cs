@@ -61,6 +61,10 @@ namespace Grand.Admin.Models.Messages
         [AllowHtml]
         public string AttachmentFilePath { get; set; }
 
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.AttachedDownload")]
+        [UIHint("Download")]
+        public string AttachedDownloadId { get; set; }
+
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SendImmediately")]

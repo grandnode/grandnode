@@ -169,9 +169,7 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.SentOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EmailAccountId, mo => mo.Ignore())
                     .ForMember(dest => dest.AttachmentFilePath, mo => mo.Ignore())
-                    .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore())
-                    .ForMember(dest => dest.AttachedDownloadId, mo => mo.Ignore());
-
+                    .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore());
                 //contact form
                 cfg.CreateMap<ContactUs, ContactFormModel>()
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
