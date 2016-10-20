@@ -348,6 +348,18 @@
                     @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailAFriend)
                 </div>
             </div>
+
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore, model => model.ProductReviewPossibleOnlyAfterPurchasing, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ProductReviewPossibleOnlyAfterPurchasing, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+                    @Html.ValidationMessageFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsEnabled_OverrideForStore, model => model.RecentlyViewedProductsEnabled, Model.ActiveStoreScopeConfiguration)

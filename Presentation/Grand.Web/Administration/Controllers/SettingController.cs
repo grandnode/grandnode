@@ -1071,6 +1071,7 @@ namespace Grand.Admin.Controllers
                 model.PageShareCode_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.PageShareCode, storeScope);
                 model.ProductReviewsMustBeApproved_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductReviewsMustBeApproved, storeScope);
                 model.AllowAnonymousUsersToReviewProduct_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeScope);
+                model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, storeScope);
                 model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeScope);
                 model.EmailAFriendEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.EmailAFriendEnabled, storeScope);
                 model.AskQuestionEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AskQuestionEnabled, storeScope);
@@ -1210,7 +1211,12 @@ namespace Grand.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.AllowAnonymousUsersToReviewProduct, storeScope);
-            
+
+            if (model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.ProductReviewPossibleOnlyAfterPurchasing, storeScope);
+
             if (model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.NotifyStoreOwnerAboutNewProductReviews, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))

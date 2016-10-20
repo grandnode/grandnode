@@ -131,6 +131,10 @@ namespace Grand.Core.Domain.Catalog
         public bool AllowAnonymousUsersToEmailAFriend { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether product can be reviewed only by customer who have already ordered it
+        /// </summary>
+        public bool ProductReviewPossibleOnlyAfterPurchasing { get; set; }
+        /// <summary>
         /// Gets or sets a number of "Recently viewed products"
         /// </summary>
         public int RecentlyViewedProductsNumber { get; set; }

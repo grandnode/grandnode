@@ -89,10 +89,10 @@ namespace Grand.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly SeoSettings _seoSettings;
         private readonly ICacheManager _cacheManager;
-        
+        private readonly IOrderService _orderService;
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public ProductController(ICategoryService categoryService, 
             IManufacturerService manufacturerService,
@@ -134,7 +134,8 @@ namespace Grand.Web.Controllers
             CustomerSettings customerSettings, 
             CaptchaSettings captchaSettings,
             SeoSettings seoSettings,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IOrderService orderService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -177,6 +178,7 @@ namespace Grand.Web.Controllers
             this._seoSettings = seoSettings;
             this._cacheManager = cacheManager;
             this._downloadService = downloadService;
+            this._orderService = orderService;
         }
 
         #endregion
@@ -1321,6 +1323,10 @@ namespace Grand.Web.Controllers
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
             }
+
+            if (_catalogSettings.ProductReviewPossibleOnlyAfterPurchasing &&
+                    !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, productId: productId, os: OrderStatus.Complete).Any())
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Reviews.ProductReviewPossibleOnlyAfterPurchasing"));
 
             if (ModelState.IsValid)
             {
