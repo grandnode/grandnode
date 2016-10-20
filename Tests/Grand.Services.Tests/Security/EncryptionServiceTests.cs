@@ -21,7 +21,7 @@ namespace Grand.Services.Security.Tests {
 
         [TestMethod()]
         public void Can_hash() {
-            string password = "MyLittleSecret"; //the same as in nopCommerce
+            string password = "MyLittleSecret"; //the same as in grandnode
             string saltKey = "salt1";
             string result = _encryptionService.CreatePasswordHash(password, saltKey);
             

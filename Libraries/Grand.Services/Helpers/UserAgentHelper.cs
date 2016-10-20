@@ -56,7 +56,6 @@ namespace Grand.Services.Helpers
                 return false;
 
             //we put required logic in try-catch block
-            //more info: http://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
             try
             {
                 var bowscapXmlHelper = GetBrowscapXmlHelper();

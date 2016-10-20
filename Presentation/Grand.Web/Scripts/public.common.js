@@ -1,5 +1,5 @@
 ﻿/*
-** nopCommerce custom js functions
+** custom js functions
 */
 
 

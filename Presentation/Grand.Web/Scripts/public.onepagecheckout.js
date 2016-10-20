@@ -1,5 +1,5 @@
 /*
-** nopCommerce one page checkout
+** one page checkout
 */
 
 

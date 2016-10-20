@@ -62,12 +62,8 @@ namespace Grand.Core.Html
 
             if (replaceUrl)
             {
-                // format the url tags: [url=http://www.nopCommerce.com]my site[/url]
-                // becomes: <a href="http://www.nopCommerce.com">my site</a>
                 text = regexUrl1.Replace(text, "<a href=\"$1\" rel=\"nofollow\">$2</a>");
 
-                // format the url tags: [url]http://www.nopCommerce.com[/url]
-                // becomes: <a href="http://www.nopCommerce.com">http://www.nopCommerce.com</a>
                 text = regexUrl2.Replace(text, "<a href=\"$1\" rel=\"nofollow\">$1</a>");
             }
 
@@ -84,8 +80,6 @@ namespace Grand.Core.Html
 
             if (replaceImg)
             {
-                // format the img tags: [img]http://www.nopCommerce.com/Content/Images/Image.jpg[/img]
-                // becomes: <img src="http://www.nopCommerce.com/Content/Images/Image.jpg"></img>
                 text = regexImg.Replace(text, "<img src=\"$1\" class=\"user-posted-image\" alt=\"\"></img>");
             }
             return text;

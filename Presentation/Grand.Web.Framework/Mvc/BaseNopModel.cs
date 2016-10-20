@@ -6,7 +6,7 @@ using System.Web.Mvc;
 namespace Grand.Web.Framework.Mvc
 {
     /// <summary>
-    /// Base nopCommerce model
+    /// Base GrandNode model
     /// </summary>
     [ModelBinder(typeof(NopModelBinder))]
     public partial class BaseNopModel
@@ -37,7 +37,7 @@ namespace Grand.Web.Framework.Mvc
     }
 
     /// <summary>
-    /// Base nopCommerce entity model
+    /// Base GrandNode entity model
     /// </summary>
     public partial class BaseNopEntityModel : BaseNopModel
     {

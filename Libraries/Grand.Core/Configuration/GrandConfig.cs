@@ -152,7 +152,7 @@ namespace Grand.Core.Configuration
         /// </summary>
         public bool UseFastInstallationService { get; private set; }
         /// <summary>
-        /// A list of plugins ignored during nopCommerce installation
+        /// A list of plugins ignored during installation
         /// </summary>
         public string PluginsIgnoredDuringInstallation { get; private set; }
     }

@@ -107,7 +107,6 @@ namespace Grand.Core.Domain.Orders
 
         /// <summary>
         /// Gets or sets the total weight of one item
-        /// It's nullable for compatibility with the previous version of nopCommerce where was no such property
         /// </summary>
         [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal? ItemWeight { get; set; }

@@ -7,7 +7,7 @@ using System.Xml;
 namespace Grand.Core.Plugins
 {
     /// <summary>
-    /// Official feed manager (official plugins from www.nopCommerce.com site)
+    /// Official feed manager 
     /// </summary>
     public partial class OfficialFeedManager : IOfficialFeedManager
     {

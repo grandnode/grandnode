@@ -117,8 +117,6 @@ namespace Grand.Services.Common
 
         protected virtual Font GetFont()
         {
-            //nopCommerce supports unicode characters
-            //nopCommerce uses Free Serif font by default (~/App_Data/Pdf/FreeSerif.ttf file)
             //It was downloaded from http://savannah.gnu.org/projects/freefont
             string fontPath = Path.Combine(CommonHelper.MapPath("~/App_Data/Pdf/"), _pdfSettings.FontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);

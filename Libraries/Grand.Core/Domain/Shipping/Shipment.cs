@@ -28,7 +28,6 @@ namespace Grand.Core.Domain.Shipping
 
         /// <summary>
         /// Gets or sets the total weight of this shipment
-        /// It's nullable for compatibility with the previous version of nopCommerce where was no such property
         /// </summary>
         public decimal? TotalWeight { get; set; }
 
