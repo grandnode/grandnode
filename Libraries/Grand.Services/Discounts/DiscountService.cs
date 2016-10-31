@@ -22,6 +22,7 @@ using Grand.Services.Vendors;
 using Grand.Services.Stores;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Domain.Stores;
+using Grand.Services.Customers;
 
 namespace Grand.Services.Discounts
 {
@@ -469,11 +470,11 @@ namespace Grand.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
-            var couponCodeToValidate = "";
+            string[] couponCodesToValidate = null;
             if (customer != null)
-                couponCodeToValidate = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode);
+                couponCodesToValidate = customer.ParseAppliedDiscountCouponCodes();
 
-            return ValidateDiscount(discount, customer, couponCodeToValidate);
+            return ValidateDiscount(discount, customer, couponCodesToValidate);
         }
 
         /// <summary>
@@ -484,6 +485,22 @@ namespace Grand.Services.Discounts
         /// <param name="couponCodeToValidate">Coupon code to validate</param>
         /// <returns>Discount validation result</returns>
         public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate)
+        {
+            if (!String.IsNullOrEmpty(couponCodeToValidate))
+                return ValidateDiscount(discount, customer, new string[] { couponCodeToValidate });
+            else
+                return ValidateDiscount(discount, customer, new string[0]);
+
+        }
+
+        /// <summary>
+        /// Validate discount
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCodesToValidate">Coupon codes to validate</param>
+        /// <returns>Discount validation result</returns>
+        public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string[] couponCodesToValidate)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -499,7 +516,11 @@ namespace Grand.Services.Discounts
             {
                 if (String.IsNullOrEmpty(discount.CouponCode))
                     return result;
-                if (!discount.CouponCode.Equals(couponCodeToValidate, StringComparison.InvariantCultureIgnoreCase))
+
+                if (couponCodesToValidate == null)
+                    return result;
+
+                if (!couponCodesToValidate.Any(x => x.Equals(discount.CouponCode, StringComparison.InvariantCultureIgnoreCase)))
                     return result;
             }
 
@@ -572,8 +593,8 @@ namespace Grand.Services.Discounts
 
             //discount requirements
             //UNDONE we should inject static cache manager into constructor. we we already have "per request" cache manager injected. better way to do it?
-            //we cache meta info of rdiscount requirements. this way we should not load them for each HTTP request
-            var staticCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>();
+            //we cache meta info of discount requirements. this way we should not load them for each HTTP request
+            var staticCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
             string key = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
             //var requirements = discount.DiscountRequirements;
             var requirements = staticCacheManager.Get(key, () =>
@@ -583,7 +604,6 @@ namespace Grand.Services.Discounts
                     cachedRequirements.Add(new DiscountRequirementForCaching
                     {
                         Id = dr.Id,
-                        DiscountId = dr.DiscountId,
                         SystemName = dr.DiscountRequirementRuleSystemName
                     });
                 return cachedRequirements;
@@ -594,15 +614,18 @@ namespace Grand.Services.Discounts
                 var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(req.SystemName);
                 if (requirementRulePlugin == null)
                     continue;
+
+                //if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, _workContext.CurrentCustomer))
+                //    continue;
+
                 if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
                     continue;
-                
+
                 var ruleRequest = new DiscountRequirementValidationRequest
                 {
                     DiscountRequirementId = req.Id,
                     Customer = customer,
-                    Store = _storeContext.CurrentStore,
-                    DiscountId = req.DiscountId,
+                    Store = _storeContext.CurrentStore
                 };
                 var ruleResult = requirementRulePlugin.CheckRequirement(ruleRequest);
                 if (!ruleResult.IsValid)
@@ -615,8 +638,6 @@ namespace Grand.Services.Discounts
             result.IsValid = true;
             return result;
         }
-
-
         /// <summary>
         /// Gets a discount usage history record
         /// </summary>

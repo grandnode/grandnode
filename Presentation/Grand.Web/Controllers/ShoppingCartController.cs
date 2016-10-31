@@ -261,12 +261,22 @@ namespace Grand.Web.Controllers
 
             //gift card and gift card boxes
             model.DiscountBox.Display= _shoppingCartSettings.ShowDiscountBox;
-            var discountCouponCode = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode);
-            var discount = _discountService.GetDiscountByCouponCode(discountCouponCode);
-            if (discount != null &&
-                discount.RequiresCouponCode &&
-                _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer).IsValid)
-                model.DiscountBox.CurrentCode = discount.CouponCode;
+            var discountCouponCodes = _workContext.CurrentCustomer.ParseAppliedDiscountCouponCodes();
+            foreach (var couponCode in discountCouponCodes)
+            {
+                var discount = _discountService.GetDiscountByCouponCode(couponCode);
+                if (discount != null &&
+                    discount.RequiresCouponCode &&
+                    _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer).IsValid)
+                {
+                    model.DiscountBox.AppliedDiscountsWithCodes.Add(new ShoppingCartModel.DiscountBoxModel.DiscountInfoModel()
+                    {
+                        Id = discount.Id,
+                        CouponCode = discount.CouponCode
+                    });
+                }
+            }
+
             model.GiftCardBox.Display = _shoppingCartSettings.ShowGiftCardBox;
 
             //cart warnings
@@ -942,8 +952,6 @@ namespace Grand.Web.Controllers
                 {
                     decimal orderSubTotalDiscountAmount = _currencyService.ConvertFromPrimaryStoreCurrency(orderSubTotalDiscountAmountBase, _workContext.WorkingCurrency);
                     model.SubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountAmount, true, _workContext.WorkingCurrency, _workContext.WorkingLanguage, subTotalIncludingTax);
-                    model.AllowRemovingSubTotalDiscount = model.IsEditable &&
-                        orderSubTotalAppliedDiscounts.Any(d => d.RequiresCouponCode && !String.IsNullOrEmpty(d.CouponCode));
                 }
 
 
@@ -1033,8 +1041,6 @@ namespace Grand.Web.Controllers
                 {
                     decimal orderTotalDiscountAmount = _currencyService.ConvertFromPrimaryStoreCurrency(orderTotalDiscountAmountBase, _workContext.WorkingCurrency);
                     model.OrderTotalDiscount = _priceFormatter.FormatPrice(-orderTotalDiscountAmount, true, false);
-                    model.AllowRemovingOrderTotalDiscount = model.IsEditable &&
-                        orderTotalAppliedDiscounts.Any(d => d.RequiresCouponCode && !String.IsNullOrEmpty(d.CouponCode));
                 }
 
                 //gift cards
@@ -2250,7 +2256,7 @@ namespace Grand.Web.Controllers
                     if (validationResult.IsValid)
                     {
                         //valid
-                        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, discountcouponcode);
+                        _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
                         _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
                         model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
                         model.DiscountBox.IsApplied = true;
@@ -2438,18 +2444,26 @@ namespace Grand.Web.Controllers
 
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
-        [FormValueRequired("removesubtotaldiscount", "removeordertotaldiscount", "removediscountcouponcode")]
-        public ActionResult RemoveDiscountCoupon()
-        {
+        [FormValueRequired(FormValueRequirement.StartsWith, "removediscount-")]
+        public ActionResult RemoveDiscountCoupon(FormCollection form)
+        {          
+            var model = new ShoppingCartModel();
+            string discountId = string.Empty;
+            foreach (var formValue in form.AllKeys)
+                if (formValue.StartsWith("removediscount-", StringComparison.InvariantCultureIgnoreCase))
+                    discountId = formValue.Substring("removediscount-".Length);
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount != null)
+            {
+                _workContext.CurrentCustomer.RemoveDiscountCouponCode(discount.CouponCode);
+                _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
+            }
+
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            var model = new ShoppingCartModel();
-
-            _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                SystemCustomerAttributeNames.DiscountCouponCode, null);
-            _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
 
             PrepareShoppingCartModel(model, cart);
             return View(model);

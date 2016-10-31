@@ -143,10 +143,18 @@ namespace Grand.Web.Models.ShoppingCart
 
         public partial class DiscountBoxModel: BaseNopModel
         {
+            public DiscountBoxModel()
+            {
+                AppliedDiscountsWithCodes = new List<DiscountInfoModel>();
+            }
+            public List<DiscountInfoModel> AppliedDiscountsWithCodes { get; set; }
             public bool Display { get; set; }
             public string Message { get; set; }
-            public string CurrentCode { get; set; }
             public bool IsApplied { get; set; }
+            public class DiscountInfoModel : BaseNopEntityModel
+            {
+                public string CouponCode { get; set; }
+            }
         }
 
         public partial class GiftCardBoxModel : BaseNopModel
