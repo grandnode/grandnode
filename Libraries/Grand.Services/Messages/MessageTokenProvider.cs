@@ -35,7 +35,6 @@ using Grand.Services.Blogs;
 using Grand.Services.News;
 using Grand.Services.Shipping;
 using Grand.Core.Domain.Vendors;
-using Grand.Core.Domain.Common;
 using Grand.Core.Domain;
 
 namespace Grand.Services.Messages
@@ -587,6 +586,56 @@ namespace Grand.Services.Messages
             return result;
         }
 
+        protected virtual string RecommendedProductsListToHtmlTable(Customer customer, string languageId, bool withPicture)
+        {
+            string result;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
+
+            #region Products
+            sb.AppendLine(string.Format("<tr style=\"background-color:{0};text-align:center;\">", _templatesSettings.Color1));
+            if (withPicture)
+                sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.RecommendedProducts.Product(s).Picture", languageId)));
+            sb.AppendLine(string.Format("<th>{0}</th>", _localizationService.GetResource("Messages.RecommendedProducts.Product(s).Name", languageId)));
+            sb.AppendLine("</tr>");
+
+            var productService = EngineContext.Current.Resolve<IProductService>();
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+            var products = productService.GetRecommendedProducts(customer.GetCustomerRoleIds());
+
+            foreach(var item in products)
+            {
+                
+                sb.AppendLine(string.Format("<tr style=\"background-color: {0};text-align: center;\">", _templatesSettings.Color2));
+                //product name
+                string productName = item.GetLocalized(x => x.Name, languageId);
+                if (withPicture)
+                {
+                    string pictureUrl = "";
+                    if (item.ProductPictures.Any())
+                    {
+                        var picture = pictureService.GetPictureById(item.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
+                        if (picture != null)
+                        {
+                            pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
+                        }
+                    }
+                    sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
+                }
+                sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
+                
+                sb.AppendLine("</td>");
+
+                sb.AppendLine("</tr>");
+            }
+            #endregion
+
+            sb.AppendLine("</table>");
+            result = sb.ToString();
+            return result;
+        }
+
 
         /// <summary>
         /// Get store URL
@@ -848,6 +897,21 @@ namespace Grand.Services.Messages
             //event notification
             _eventPublisher.EntityTokensAdded(customer, tokens);
         }
+        public virtual void AddRecommendedProductsTokens(IList<Token> tokens, Customer customer)
+        {
+            string languageId = _languageService.GetAllLanguages().FirstOrDefault().Id;
+            if (customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId") != null)
+            {
+                languageId = customer.GenericAttributes.FirstOrDefault(x => x.Key == "LanguageId").Value;
+            }
+            //RecommendedProducts
+            
+            tokens.Add(new Token("RecommendedProducts.Products", RecommendedProductsListToHtmlTable(customer, languageId, false), true));
+            tokens.Add(new Token("RecommendedProducts.ProductsWithPictures", RecommendedProductsListToHtmlTable(customer, languageId, true), true));
+
+            //event notification
+            _eventPublisher.EntityTokensAdded(customer, tokens);
+        }
 
         public virtual void AddVendorTokens(IList<Token> tokens, Vendor vendor)
         {
@@ -1022,7 +1086,9 @@ namespace Grand.Services.Messages
                 "%ShoppingCart.Products%",
                 "%ShoppingCart.ProductsWithPictures%",
                 "%Wishlist.Products%",
-                "%Wishlist.ProductsWithPictures%"
+                "%Wishlist.ProductsWithPictures%",
+                "%RecommendedProducts.Products%",
+                "%RecommendedProducts.ProductsWithPictures%",
             };
             return allowedTokens.ToArray();
         }
@@ -1174,7 +1240,9 @@ namespace Grand.Services.Messages
                 "%Customer.Username%",
                 "%Customer.FullName%",
                 "%Customer.FirstName%",
-                "%Customer.LastName%"
+                "%Customer.LastName%",
+                "%RecommendedProducts.Products%",
+                "%RecommendedProducts.ProductsWithPictures%"
                 });
             return allowedTokens.ToArray();
         }

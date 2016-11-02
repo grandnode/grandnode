@@ -263,4 +263,10 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.AttachedDownload.Hint">
     <Value>The attached static file that will be sent in this email.</Value>
   </LocaleResource>
+  <LocaleResource Name="Messages.RecommendedProducts.Product(s).Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.RecommendedProducts.Product(s).Name">
+    <Value>Product name</Value>
+  </LocaleResource>
 </Language>

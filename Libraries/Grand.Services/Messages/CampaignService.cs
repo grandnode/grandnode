@@ -292,6 +292,9 @@ namespace Grand.Services.Messages
                 if (customer != null)
                     _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
+                _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
+                _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
+
                 string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
                 string body = _tokenizer.Replace(campaign.Body, tokens, true);
 
@@ -339,7 +342,10 @@ namespace Grand.Services.Messages
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer != null)
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
-            
+
+            _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
+            _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
+
             string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
             string body = _tokenizer.Replace(campaign.Body, tokens, true);
 

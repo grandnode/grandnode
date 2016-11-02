@@ -33,6 +33,7 @@ namespace Grand.Services.Messages
         void AddCustomerTokens(IList<Token> tokens, Customer customer);
 
         void AddShoppingCartTokens(IList<Token> tokens, Customer customer);
+        void AddRecommendedProductsTokens(IList<Token> tokens, Customer customer);
 
         void AddVendorTokens(IList<Token> tokens, Vendor vendor);
 
