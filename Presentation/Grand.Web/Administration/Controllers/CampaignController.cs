@@ -161,7 +161,7 @@ namespace Grand.Admin.Controllers
             var gridModel = new DataSourceResult
             {
                 Data = customers,
-                Total = customers.Count
+                Total = customers.TotalCount
             };
             return Json(gridModel);
         }
@@ -181,7 +181,7 @@ namespace Grand.Admin.Controllers
                     Email = x.Email,
                     SentDate = x.CreatedDateUtc,
                 }),
-                Total = history.Count
+                Total = history.TotalCount
             };
             return Json(gridModel);
         }

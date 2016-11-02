@@ -341,10 +341,11 @@ namespace Grand.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer != null)
+            {
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
-            _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
-            _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
+                _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
+                _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
+            }
 
             string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
             string body = _tokenizer.Replace(campaign.Body, tokens, true);
