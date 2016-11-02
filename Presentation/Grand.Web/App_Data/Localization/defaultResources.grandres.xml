@@ -11424,6 +11424,12 @@
   <LocaleResource Name="admin.promotions.campaigns.fields.customertags.hint">
     <Value>Customer tags</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.promotions.campaigns.fields.CustomerRoles.hint">
+    <Value>Customer roles</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.TestEmail">
     <Value>Send test email to</Value>
   </LocaleResource>

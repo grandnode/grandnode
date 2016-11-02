@@ -22,6 +22,7 @@ namespace Grand.Admin.Controllers
 	public partial class CampaignController : BaseAdminController
 	{
         private readonly ICampaignService _campaignService;
+        private readonly ICustomerService _customerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IEmailAccountService _emailAccountService;
         private readonly EmailAccountSettings _emailAccountSettings;
@@ -35,6 +36,7 @@ namespace Grand.Admin.Controllers
         private readonly IExportManager _exportManager;
 
         public CampaignController(ICampaignService campaignService,
+            ICustomerService customerService,
             IDateTimeHelper dateTimeHelper, 
             IEmailAccountService emailAccountService,
             EmailAccountSettings emailAccountSettings,
@@ -48,6 +50,7 @@ namespace Grand.Admin.Controllers
             IExportManager exportManager)
 		{
             this._campaignService = campaignService;
+            this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
             this._emailAccountService = emailAccountService;
             this._emailAccountSettings = emailAccountSettings;
@@ -105,6 +108,14 @@ namespace Grand.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
             model.AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerTags.Contains(ct.Id) }).ToList();
+
+        }
+        [NonAction]
+        protected virtual void PrepareCustomerRolesModel(CampaignModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+            model.AvailableCustomerRoles = _customerService.GetAllCustomerRoles().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerRoles.Contains(ct.Id) }).ToList();
 
         }
 
@@ -220,6 +231,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Roles
+            PrepareCustomerRolesModel(model);
             //email
             PrepareEmailAccounts(model);
             return View(model);
@@ -247,6 +260,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Roles
+            PrepareCustomerRolesModel(model);
             //email
             PrepareEmailAccounts(model);
 
@@ -269,6 +284,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Roles
+            PrepareCustomerRolesModel(model);
             //email
             PrepareEmailAccounts(model);
             return View(model);
@@ -290,6 +307,16 @@ namespace Grand.Admin.Controllers
             if (ModelState.IsValid)
             {
                 campaign = model.ToEntity(campaign);
+                campaign.CustomerRoles.Clear();
+                foreach (var item in model.CustomerRoles)
+                {
+                    campaign.CustomerRoles.Add(item);
+                }
+                campaign.CustomerTags.Clear();
+                foreach (var item in model.CustomerTags)
+                {
+                    campaign.CustomerTags.Add(item);
+                }
                 _campaignService.UpdateCampaign(campaign);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
@@ -305,6 +332,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Roles
+            PrepareCustomerRolesModel(model);
             //email
             PrepareEmailAccounts(model);
             return View(model);
@@ -384,8 +413,11 @@ namespace Grand.Admin.Controllers
             PrepareCustomerTagsModel(model);
             //email
             PrepareEmailAccounts(model);
+            //Roles
+            PrepareCustomerRolesModel(model);
 
             model.CustomerTags = campaign.CustomerTags.ToList();
+            model.CustomerRoles = campaign.CustomerRoles.ToList();
             try
             {
                 var emailAccount = _emailAccountService.GetEmailAccountById(campaign.EmailAccountId);

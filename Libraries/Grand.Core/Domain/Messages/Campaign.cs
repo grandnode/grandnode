@@ -11,6 +11,7 @@ namespace Grand.Core.Domain.Messages
     public partial class Campaign : BaseEntity
     {
         private ICollection<string> _customerTags;
+        private ICollection<string> _customerRoles;
 
         /// <summary>
         /// Gets or sets the name
@@ -69,6 +70,14 @@ namespace Grand.Core.Domain.Messages
         {
             get { return _customerTags ?? (_customerTags = new List<string>()); }
             protected set { _customerTags = value; }
+        }
+        /// <summary>
+        /// Gets or sets the customer tags
+        /// </summary>
+        public virtual ICollection<string> CustomerRoles
+        {
+            get { return _customerRoles ?? (_customerRoles = new List<string>()); }
+            protected set { _customerRoles = value; }
         }
 
     }

@@ -170,6 +170,12 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            @Html.GrandLabelFor(model => model.CustomerRoles)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.EditorFor(model => model.CustomerRoles, new { SelectList = Model.AvailableCustomerRoles })
+                            </div>
+                        </div>
+                        <div class="form-group">
                             @Html.GrandLabelFor(model => model.StoreId)
                             <div class="col-md-9 col-sm-9">
                                 @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)

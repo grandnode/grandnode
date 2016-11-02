@@ -160,7 +160,7 @@ namespace Grand.Services.Messages
                 campaign.CustomerHasShoppingCartCondition != CampaignCondition.All || campaign.CustomerHasShoppingCartCondition != CampaignCondition.All ||
                 campaign.CustomerLastActivityDateFrom.HasValue || campaign.CustomerLastActivityDateTo.HasValue ||
                 campaign.CustomerLastPurchaseDateFrom.HasValue || campaign.CustomerLastPurchaseDateTo.HasValue ||
-                campaign.CustomerTags.Count > 0)
+                campaign.CustomerTags.Count > 0 || campaign.CustomerRoles.Count > 0)
             {
 
                 var query = from o in _newsLetterSubscriptionRepository.Table
@@ -173,6 +173,7 @@ namespace Grand.Services.Messages
                                 CustomerId = customers.Id,
                                 CreatedOnUtc = customers.CreatedOnUtc,
                                 CustomerTags = customers.CustomerTags,
+                                CustomerRoles = customers.CustomerRoles,
                                 HasShoppingCartItems = customers.HasShoppingCartItems,
                                 IsHasOrders = customers.IsHasOrders,
                                 LastActivityDateUtc = customers.LastActivityDateUtc,
@@ -218,6 +219,14 @@ namespace Grand.Services.Messages
                         query = query.Where(x => x.CustomerTags.Contains(item));
                     }
                 }
+                //roles
+                if (campaign.CustomerRoles.Count > 0)
+                {
+                    foreach (var item in campaign.CustomerRoles)
+                    {
+                        query = query.Where(x => x.CustomerRoles.Any(z=>z.Id == item));
+                    }
+                }
                 model = new PagedList<NewsLetterSubscription>(query.Select(x => new NewsLetterSubscription() { CustomerId = x.CustomerId, Email = x.Email, NewsLetterSubscriptionGuid = x.NewsLetterSubscriptionGuid }), pageIndex, pageSize);
             }
             else
@@ -236,6 +245,7 @@ namespace Grand.Services.Messages
             public CampaignCustomerHelp()
             {
                 //CustomerTags = new List<string>();
+                CustomerRoles = new List<CustomerRole>();
             }
             public string CustomerId { get; set; }
             public string CustomerEmail { get; set; }
@@ -246,6 +256,7 @@ namespace Grand.Services.Messages
             public bool HasShoppingCartItems { get; set; }
             public bool IsHasOrders { get; set; }
             public ICollection<string> CustomerTags { get; set; }
+            public ICollection<CustomerRole> CustomerRoles { get; set; }
             public Guid NewsLetterSubscriptionGuid { get; set; }
         }
 

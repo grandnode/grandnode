@@ -17,6 +17,8 @@ namespace Grand.Admin.Models.Messages
             this.AvailableStores = new List<SelectListItem>();
             this.AvailableCustomerTags = new List<SelectListItem>();
             this.CustomerTags = new List<string>();
+            this.AvailableCustomerRoles = new List<SelectListItem>();
+            this.CustomerRoles = new List<string>();
             this.AvailableEmailAccounts = new List<EmailAccountModel>();
         }
 
@@ -74,6 +76,15 @@ namespace Grand.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CustomerTags")]
         [UIHint("MultiSelect")]
         public IList<string> CustomerTags { get; set; }
+
+
+        [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CustomerRoles")]
+        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CustomerRoles")]
+        [UIHint("MultiSelect")]
+        public IList<string> CustomerRoles { get; set; }
+
 
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.AllowedTokens")]
         public string AllowedTokens { get; set; }
