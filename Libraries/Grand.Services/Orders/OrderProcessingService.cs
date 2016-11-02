@@ -1571,7 +1571,7 @@ namespace Grand.Services.Orders
                         var vendors = GetVendorsInOrder(order);
                         foreach (var vendor in vendors)
                         {
-                            int orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, order.CustomerLanguageId);
+                            int orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
                             if (orderPlacedVendorNotificationQueuedEmailId > 0)
                             {
                                 _orderService.InsertOrderNote(new OrderNote
