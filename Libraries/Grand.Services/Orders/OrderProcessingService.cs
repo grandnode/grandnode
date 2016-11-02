@@ -1691,28 +1691,20 @@ namespace Grand.Services.Orders
                     {
                         var product = _productService.GetProductById(shipmentItem.ProductId);
                         shipmentItem.ShipmentId = shipment.Id;
-                        _productService.ReverseBookedInventory(product, shipmentItem);
+                        if (product != null)
+                            _productService.ReverseBookedInventory(product, shipmentItem);
                     }
                 }
                 //Adjust inventory
                 foreach (var orderItem in order.OrderItems)
                 {
                     var product = _productService.GetProductById(orderItem.ProductId);
-                    _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
+                    if(product!=null)
+                        _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
                 }
 
             }
 
-            //add a note
-            _orderService.InsertOrderNote(new OrderNote
-            {
-                Note = "Order has been deleted",
-                DisplayToCustomer = false,
-                CreatedOnUtc = DateTime.UtcNow,
-                OrderId = order.Id,
-
-            });
-            
             //now delete an order
             _orderService.DeleteOrder(order);
         }
@@ -2977,6 +2969,9 @@ namespace Grand.Services.Orders
             foreach (var item in order.OrderItems)
             {
                 var product = _productService.GetProductById(item.ProductId);
+                if (product == null)
+                    return false;
+
                 var qtyDelivery = shipments.Where(x => x.DeliveryDateUtc.HasValue).SelectMany(x => x.ShipmentItems).Where(x => x.OrderItemId == item.Id).Sum(x => x.Quantity);
                 var qtyReturn = _returnRequestService.SearchReturnRequests(customerId:order.CustomerId, orderItemId: item.Id).Sum(x=>x.Quantity);
 
