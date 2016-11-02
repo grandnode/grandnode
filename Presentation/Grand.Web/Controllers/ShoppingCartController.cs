@@ -1198,7 +1198,6 @@ namespace Grand.Web.Controllers
                     attributesXml = _checkoutAttributeParser.RemoveCheckoutAttribute(attributesXml, attribute);
             }
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CheckoutAttributes, attributesXml, _storeContext.CurrentStore.Id);
-            _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
         }
 
         /// <summary>
@@ -2257,7 +2256,6 @@ namespace Grand.Web.Controllers
                     {
                         //valid
                         _workContext.CurrentCustomer.ApplyDiscountCouponCode(discountcouponcode);
-                        _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
                         model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
                         model.DiscountBox.IsApplied = true;
                     }
@@ -2457,7 +2455,6 @@ namespace Grand.Web.Controllers
             if (discount != null)
             {
                 _workContext.CurrentCustomer.RemoveDiscountCouponCode(discount.CouponCode);
-                _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
             }
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems

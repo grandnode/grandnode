@@ -718,8 +718,7 @@ namespace Grand.Web.Controllers
                 //logout impersonated customer
                 _genericAttributeService.SaveAttribute<int?>(_workContext.OriginalCustomerIfImpersonated,
                     SystemCustomerAttributeNames.ImpersonatedCustomerId, null);
-                _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                
                 //redirect back to customer details page (admin area)
                 return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
 
@@ -774,8 +773,7 @@ namespace Grand.Web.Controllers
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
                     DateTime? generatedDateTime = DateTime.UtcNow;
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryTokenDateGenerated, generatedDateTime);
-                    _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                    
                     //send email
                     _workflowMessageService.SendCustomerPasswordRecoveryMessage(customer, _workContext.WorkingLanguage.Id);
 
@@ -855,8 +853,7 @@ namespace Grand.Web.Controllers
                 if (response.Success)
                 {
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
-                    _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                    
                     model.DisablePasswordChanging = true;
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
                 }
@@ -948,23 +945,19 @@ namespace Grand.Web.Controllers
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                     {
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
-                        _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
                     }
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
                     {
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
-                        _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                        
                         string vatName;
                         string vatAddress;
                         var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out vatName, out vatAddress);
                         _genericAttributeService.SaveAttribute(customer,
                             SystemCustomerAttributeNames.VatNumberStatusId,
                             (int)vatNumberStatus);
-                        _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                        
                         //send VAT number admin notification
                         if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
                             _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
@@ -1000,8 +993,6 @@ namespace Grand.Web.Controllers
                     if (_customerSettings.FaxEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
 
-                    _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
@@ -1034,8 +1025,7 @@ namespace Grand.Web.Controllers
 
                     //save customer attributes
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
-                    _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                    
                     //login customer now
                     if (isApproved)
                         _authenticationService.SignIn(customer, true);
@@ -1093,7 +1083,6 @@ namespace Grand.Web.Controllers
                             {
                                 //email validation message
                                 _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-                                _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
                                 _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
 
                                 //result
@@ -1210,8 +1199,7 @@ namespace Grand.Web.Controllers
             customer.Active = true;
             _customerService.UpdateActive(customer);
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, "");
-            _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+            
             //send welcome message
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
             
@@ -1304,8 +1292,6 @@ namespace Grand.Web.Controllers
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                     {
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.TimeZoneId, model.TimeZoneId);
-                        _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
                     }
                     //VAT number
                     if (_taxSettings.EuVatEnabled)
@@ -1313,7 +1299,6 @@ namespace Grand.Web.Controllers
                         var prevVatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
 
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
-                        _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
 
                         if (prevVatNumber != model.VatNumber)
                         {
@@ -1323,8 +1308,7 @@ namespace Grand.Web.Controllers
                             _genericAttributeService.SaveAttribute(customer,
                                     SystemCustomerAttributeNames.VatNumberStatusId,
                                     (int)vatNumberStatus);
-                            _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                            
                             //send VAT number admin notification
                             if (!String.IsNullOrEmpty(model.VatNumber) && _taxSettings.EuVatEmailAdminWhenNewVatSubmitted)
                                 _workflowMessageService.SendNewVatSubmittedStoreOwnerNotification(customer, model.VatNumber, vatAddress, _localizationSettings.DefaultAdminLanguageId);
@@ -1359,8 +1343,6 @@ namespace Grand.Web.Controllers
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Phone, model.Phone);
                     if (_customerSettings.FaxEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
-
-                    _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
 
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
@@ -1405,8 +1387,7 @@ namespace Grand.Web.Controllers
 
                     //save customer attributes
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
-                    _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                    
                     return RedirectToRoute("CustomerInfo");
                 }
             }
@@ -1815,8 +1796,7 @@ namespace Grand.Web.Controllers
                         customerAvatarId = customerAvatar.Id;
 
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AvatarPictureId, customerAvatarId);
-                    _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                    
                     model.AvatarUrl = _pictureService.GetPictureUrl(
                         customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
                         _mediaSettings.AvatarPictureSize,
@@ -1855,8 +1835,7 @@ namespace Grand.Web.Controllers
             if (customerAvatar != null)
                 _pictureService.DeletePicture(customerAvatar);
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AvatarPictureId, 0);
-            _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+            
             return RedirectToRoute("CustomerAvatar");
         }
 

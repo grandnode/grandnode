@@ -26,7 +26,10 @@ namespace Grand.Services.Common
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            var props = entity.GenericAttributes; 
+            var repository = EngineContext.Current.Resolve<IRepository<GenericAttributeBaseEntity>>();
+            var collection = repository.Database.GetCollection<GenericAttributeBaseEntity>(entity.GetType().Name).AsQueryable();
+
+            var props = collection.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes).ToList();
             if (props == null)
                 return default(TPropType);
             props = props.Where(x => x.StoreId == storeId).ToList();

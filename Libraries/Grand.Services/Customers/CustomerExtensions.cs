@@ -184,10 +184,6 @@ namespace Grand.Services.Customers
             //apply new value
             genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.DiscountCouponCode, result);
 
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            workContext.CurrentCustomer.GenericAttributes = customerService.GetCustomerById(workContext.CurrentCustomer.Id).GenericAttributes;
-
         }
         /// <summary>
         /// Removes a coupon code
@@ -209,7 +205,6 @@ namespace Grand.Services.Customers
             var customerService = EngineContext.Current.Resolve<ICustomerService>();
 
             genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.DiscountCouponCode, null);
-            workContext.CurrentCustomer.GenericAttributes = customerService.GetCustomerById(workContext.CurrentCustomer.Id).GenericAttributes;
 
             //save again except removed one
             foreach (string existingCouponCode in existingCouponCodes)
@@ -228,7 +223,6 @@ namespace Grand.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
             var existingCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes);
 
             var couponCodes = new List<string>();
@@ -335,13 +329,9 @@ namespace Grand.Services.Customers
             //get applied coupon codes
             var existingCouponCodes = customer.ParseAppliedGiftCardCouponCodes();
 
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
-
             //clear them
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
             genericAttributeService.SaveAttribute<string>(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, null);
-            workContext.CurrentCustomer.GenericAttributes = customerService.GetCustomerById(workContext.CurrentCustomer.Id).GenericAttributes;
 
             //save again except removed one
             foreach (string existingCouponCode in existingCouponCodes)

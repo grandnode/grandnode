@@ -1560,7 +1560,6 @@ namespace Grand.Web.Controllers
                         _customerService.UpdateShippingAddress(_workContext.CurrentCustomer.BillingAddress);
                         _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
                         _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, "", _storeContext.CurrentStore.Id);
-                        _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
                         return OpcLoadStepAfterShippingAddress(cart);
                     }
                     else
@@ -1588,7 +1587,6 @@ namespace Grand.Web.Controllers
                 _workContext.CurrentCustomer.ShippingAddress = null;
                 _customerService.RemoveShippingAddress(_workContext.CurrentCustomer.Id);
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
-                _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
                 //load next step
                 return OpcLoadStepAfterShippingMethod(cart);
             }
@@ -1666,7 +1664,6 @@ namespace Grand.Web.Controllers
 
                     //set value indicating that "pick up in store" option has not been chosen
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickupPoint, "", _storeContext.CurrentStore.Id);
-                    _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
 
                 }
 
@@ -1811,8 +1808,7 @@ namespace Grand.Web.Controllers
 
                 //save
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
-                _workContext.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(_workContext.CurrentCustomer.Id).GenericAttributes;
-
+                
                 //load next step
                 return OpcLoadStepAfterShippingMethod(cart);
             }

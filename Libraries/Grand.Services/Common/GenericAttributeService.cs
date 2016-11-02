@@ -79,10 +79,11 @@ namespace Grand.Services.Common
 
             string keyGroup = entity.GetType().Name;
 
-            var collection = _baseRepository.Database.GetCollection<BaseEntity>(keyGroup);
+            var collection = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup);
+            var query = _baseRepository.Database.GetCollection<GenericAttributeBaseEntity>(keyGroup).AsQueryable();
 
-            var props = entity.GenericAttributes != null ? entity.GenericAttributes.Where(x => x.StoreId == storeId) : new List<GenericAttribute>();
-            
+            var props = query.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes).ToList();
+
             var prop = props.FirstOrDefault(ga =>
                 ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
 
@@ -93,7 +94,7 @@ namespace Grand.Services.Common
                 if (string.IsNullOrWhiteSpace(valueStr))
                 {
                     //delete
-                    var builder = Builders<BaseEntity>.Update;
+                    var builder = Builders<GenericAttributeBaseEntity>.Update;
                     var updatefilter = builder.PullFilter(x => x.GenericAttributes, y => y.Key == prop.Key &&  y.StoreId == storeId);
                     var result = collection.UpdateManyAsync(new BsonDocument("_id", entity.Id), updatefilter).Result;
                 }
@@ -101,10 +102,10 @@ namespace Grand.Services.Common
                 {
                     //update
                     prop.Value = valueStr;
-                    var builder = Builders<BaseEntity>.Filter;
+                    var builder = Builders<GenericAttributeBaseEntity>.Filter;
                     var filter = builder.Eq(x => x.Id, entity.Id);
                     filter = filter & builder.Where(x => x.GenericAttributes.Any(y => y.Key == prop.Key));
-                    var update = Builders<BaseEntity>.Update
+                    var update = Builders<GenericAttributeBaseEntity>.Update
                         .Set(x => x.GenericAttributes.ElementAt(-1).Value, prop.Value);
 
                     var result = collection.UpdateManyAsync(filter, update).Result;
@@ -120,7 +121,7 @@ namespace Grand.Services.Common
                         Value = valueStr,
                         StoreId = storeId,
                     };
-                    var updatebuilder = Builders<BaseEntity>.Update;
+                    var updatebuilder = Builders<GenericAttributeBaseEntity>.Update;
                     var update = updatebuilder.AddToSet(p => p.GenericAttributes, prop);
                     var result = collection.UpdateOneAsync(new BsonDocument("_id", entity.Id), update).Result;
                 }

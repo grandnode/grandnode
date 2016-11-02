@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Configuration\GrandConfig.cs" />
     <Compile Include="Domain\Catalog\ProductDeleted.cs" />
+    <Compile Include="Domain\Common\GenericAttributeBaseEntity.cs" />
     <Compile Include="Domain\Customers\CustomerByTimeReportLine.cs" />
     <Compile Include="Domain\Customers\CustomerReminderHistory.cs" />
     <Compile Include="Domain\Directory\MeasureUnit.cs" />
