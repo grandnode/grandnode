@@ -976,15 +976,11 @@ namespace Grand.Services.Customers
                                     var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                                     if (level != null)
                                     {
-
-                                        if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                        if (CheckConditions(reminder, customer))
                                         {
-                                            if (CheckConditions(reminder, customer))
-                                            {
-                                                var send = SendEmail(customer, reminder, level.Id);
-                                                if (send)
-                                                    UpdateHistory(customer, reminder, level.Id, null);
-                                            }
+                                            var send = SendEmail(customer, reminder, level.Id);
+                                            if (send)
+                                                UpdateHistory(customer, reminder, level.Id, null);
                                         }
                                     }
                                 }
@@ -995,19 +991,40 @@ namespace Grand.Services.Customers
                             var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                             if (level != null)
                             {
-
-                                if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                if (CheckConditions(reminder, customer))
                                 {
-                                    if (CheckConditions(reminder, customer))
-                                    {
-                                        var send = SendEmail(customer, reminder, level.Id);
-                                        if (send)
-                                            UpdateHistory(customer, reminder, level.Id, null);
-                                    }
+                                    var send = SendEmail(customer, reminder, level.Id);
+                                    if (send)
+                                        UpdateHistory(customer, reminder, level.Id, null);
                                 }
                             }
                         }
                     }
+
+                    var activehistory = (from hc in _customerReminderHistoryRepository.Table
+                                   where hc.CustomerReminderId == reminder.Id && hc.Status == (int)CustomerReminderHistoryStatusEnum.Started
+                                         select hc).ToList();
+
+                    foreach (var activereminderhistory in activehistory)
+                    {
+                        var lastLevel = activereminderhistory.Levels.OrderBy(x => x.SendDate).LastOrDefault();
+                        var reminderLevel = reminder.Levels.FirstOrDefault(x => x.Level > lastLevel.Level);
+                        var customer = _customerRepository.Table.FirstOrDefault(x => x.Id == activereminderhistory.CustomerId);
+                        if (reminderLevel != null && customer != null)
+                        {
+                            if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                            {
+                                var send = SendEmail(customer, reminder, reminderLevel.Id);
+                                if (send)
+                                    UpdateHistory(customer, reminder, reminderLevel.Id, activereminderhistory);
+                            }
+                        }
+                        else
+                        {
+                            CloseHistoryReminder(customer, reminder, activereminderhistory);
+                        }
+                    }
+
                 }
             }
 
