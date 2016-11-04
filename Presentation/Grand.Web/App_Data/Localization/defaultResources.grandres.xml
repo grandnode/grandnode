@@ -8585,6 +8585,12 @@
   <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendHour.Hint">
     <Value>Select how many hours is to send.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendMinutes">
+    <Value>Send after minutes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendMinutes.Hint">
+    <Value>Select how many minutes is to send.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.Subject">
     <Value>Subject</Value>
   </LocaleResource>
@@ -8744,8 +8750,8 @@
   <LocaleResource Name="admin.customers.customerreminder.level.fields.body.required">
     <Value>Body is required</Value>
   </LocaleResource>
-  <LocaleResource Name="admin.customers.customerreminder.level.fields.dayhour.required">
-    <Value>You must enter Day or Hour.</Value>
+  <LocaleResource Name="admin.customers.customerreminder.level.fields.DayHourMin.required">
+    <Value>You must enter Day or Hour or Minutes.</Value>
   </LocaleResource>
   <LocaleResource Name="admin.customers.customerreminder.level.fields.emailaccountid">
     <Value>Email Account</Value>

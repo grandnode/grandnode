@@ -169,6 +169,7 @@ namespace Grand.Core.Domain.Customers
             public int Level { get; set; }
             public int Day { get; set; }
             public int Hour { get; set; }
+            public int Minutes { get; set; }
             public string EmailAccountId { get; set; }
             public string BccEmailAddresses { get; set; }
             public string Subject { get; set; }

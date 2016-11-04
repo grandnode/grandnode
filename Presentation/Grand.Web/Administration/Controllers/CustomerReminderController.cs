@@ -1230,6 +1230,7 @@ namespace Grand.Admin.Controllers
                     Subject = model.Subject,
                     Day = model.Day,
                     Hour = model.Hour,
+                    Minutes = model.Minutes,
                 };
 
                 customerReminder.Levels.Add(level);
@@ -1294,6 +1295,7 @@ namespace Grand.Admin.Controllers
                     level.EmailAccountId = model.EmailAccountId;
                     level.Day = model.Day;
                     level.Hour = model.Hour;
+                    level.Minutes = model.Minutes;
                     _customerReminderService.UpdateCustomerReminder(customerReminder);
 
                     _customerActivityService.InsertActivity("EditCustomerReminderCondition", customerReminder.Id, _localizationService.GetResource("ActivityLog.EditCustomerReminderLevel"), customerReminder.Name);

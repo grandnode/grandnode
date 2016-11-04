@@ -697,7 +697,7 @@ namespace Grand.Services.Customers
                             var reminderLevel = reminder.Levels.FirstOrDefault(x => x.Level > lastLevel.Level);
                             if (reminderLevel != null)
                             {
-                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
                                     var send = SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
@@ -717,7 +717,7 @@ namespace Grand.Services.Customers
                                 if (level != null)
                                 {
 
-                                    if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                                    if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                                     {
                                         if (CheckConditions(reminder, customer))
                                         {
@@ -736,7 +736,7 @@ namespace Grand.Services.Customers
                         if (level != null)
                         {
 
-                            if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour))
+                            if (DateTime.UtcNow > customer.LastUpdateCartDateUtc.Value.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                             {
                                 if (CheckConditions(reminder, customer))
                                 {
@@ -790,7 +790,7 @@ namespace Grand.Services.Customers
                             var reminderLevel = reminder.Levels.FirstOrDefault(x => x.Level > lastLevel.Level);
                             if (reminderLevel != null)
                             {
-                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
                                     var send = SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
@@ -810,7 +810,7 @@ namespace Grand.Services.Customers
                                 if (level != null)
                                 {
 
-                                    if (DateTime.UtcNow > customer.CreatedOnUtc.AddDays(level.Day).AddHours(level.Hour))
+                                    if (DateTime.UtcNow > customer.CreatedOnUtc.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                                     {
                                         if (CheckConditions(reminder, customer))
                                         {
@@ -829,7 +829,7 @@ namespace Grand.Services.Customers
                         if (level != null)
                         {
 
-                            if (DateTime.UtcNow > customer.CreatedOnUtc.AddDays(level.Day).AddHours(level.Hour))
+                            if (DateTime.UtcNow > customer.CreatedOnUtc.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                             {
                                 if (CheckConditions(reminder, customer))
                                 {
@@ -882,7 +882,7 @@ namespace Grand.Services.Customers
                             var reminderLevel = reminder.Levels.FirstOrDefault(x => x.Level > lastLevel.Level);
                             if (reminderLevel != null)
                             {
-                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
                                     var send = SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
@@ -902,7 +902,7 @@ namespace Grand.Services.Customers
                                 if (level != null)
                                 {
 
-                                    if (DateTime.UtcNow > customer.LastActivityDateUtc.AddDays(level.Day).AddHours(level.Hour))
+                                    if (DateTime.UtcNow > customer.LastActivityDateUtc.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                                     {
                                         if (CheckConditions(reminder, customer))
                                         {
@@ -920,7 +920,7 @@ namespace Grand.Services.Customers
                         var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                         if (level != null)
                         {
-                            if (DateTime.UtcNow > customer.LastActivityDateUtc.AddDays(level.Day).AddHours(level.Hour))
+                            if (DateTime.UtcNow > customer.LastActivityDateUtc.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes))
                             {
                                 if (CheckConditions(reminder, customer))
                                 {
@@ -974,7 +974,7 @@ namespace Grand.Services.Customers
                             var reminderLevel = reminder.Levels.FirstOrDefault(x => x.Level > lastLevel.Level);
                             if (reminderLevel != null)
                             {
-                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
                                     var send = SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
@@ -993,7 +993,7 @@ namespace Grand.Services.Customers
                                 var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                                 if (level != null)
                                 {
-                                    DateTime lastpurchaseDate = customer.LastPurchaseDateUtc.HasValue ? customer.LastPurchaseDateUtc.Value.AddDays(level.Day).AddHours(level.Hour) : DateTime.MinValue;
+                                    DateTime lastpurchaseDate = customer.LastPurchaseDateUtc.HasValue ? customer.LastPurchaseDateUtc.Value.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes) : DateTime.MinValue;
                                     if (DateTime.UtcNow > lastpurchaseDate)
                                     {
                                         if (CheckConditions(reminder, customer))
@@ -1012,7 +1012,7 @@ namespace Grand.Services.Customers
                         var level = reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() != null ? reminder.Levels.OrderBy(x => x.Level).FirstOrDefault() : null;
                         if (level != null)
                         {
-                            DateTime lastpurchaseDate = customer.LastPurchaseDateUtc.HasValue ? customer.LastPurchaseDateUtc.Value.AddDays(level.Day).AddHours(level.Hour) : DateTime.MinValue;
+                            DateTime lastpurchaseDate = customer.LastPurchaseDateUtc.HasValue ? customer.LastPurchaseDateUtc.Value.AddDays(level.Day).AddHours(level.Hour).AddMinutes(level.Minutes) : DateTime.MinValue;
                             if (DateTime.UtcNow > lastpurchaseDate)
                             {
                                 if (CheckConditions(reminder, customer))
@@ -1073,7 +1073,7 @@ namespace Grand.Services.Customers
                             var reminderLevel = reminder.Levels.FirstOrDefault(x => x.Level > lastLevel.Level);
                             if (reminderLevel != null)
                             {
-                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
                                     var send = SendEmail(customer, reminder, reminderLevel.Id);
                                     if (send)
@@ -1128,7 +1128,7 @@ namespace Grand.Services.Customers
                     var customer = _customerRepository.Table.FirstOrDefault(x => x.Id == activereminderhistory.CustomerId);
                     if (reminderLevel != null && customer != null)
                     {
-                        if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                        if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                         {
                             var send = SendEmail(customer, reminder, reminderLevel.Id);
                             if (send)
@@ -1190,7 +1190,7 @@ namespace Grand.Services.Customers
                             var reminderLevel = reminder.Levels.FirstOrDefault(x => x.Level > lastLevel.Level);
                             if (reminderLevel != null)
                             {
-                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
                                     var send = SendEmail(customer, order, reminder, reminderLevel.Id);
                                     if (send)
@@ -1246,7 +1246,7 @@ namespace Grand.Services.Customers
                     if (reminderLevel != null && order != null)
                     {
                         var customer = _customerRepository.Table.FirstOrDefault(x => x.Id == order.CustomerId);
-                        if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                        if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                         {
                             var send = SendEmail(customer, order, reminder, reminderLevel.Id);
                             if (send)
@@ -1308,7 +1308,7 @@ namespace Grand.Services.Customers
                             var reminderLevel = reminder.Levels.FirstOrDefault(x => x.Level > lastLevel.Level);
                             if (reminderLevel != null)
                             {
-                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                                if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                                 {
                                     var send = SendEmail(customer, order, reminder, reminderLevel.Id);
                                     if (send)
@@ -1365,7 +1365,7 @@ namespace Grand.Services.Customers
                         if (order.PaymentStatusId == (int)PaymentStatus.Pending)
                         {
                             var customer = _customerRepository.Table.FirstOrDefault(x => x.Id == order.CustomerId);
-                            if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour))
+                            if (DateTime.UtcNow > lastLevel.SendDate.AddDays(reminderLevel.Day).AddHours(reminderLevel.Hour).AddMinutes(reminderLevel.Minutes))
                             {
                                 var send = SendEmail(customer, order, reminder, reminderLevel.Id);
                                 if (send)

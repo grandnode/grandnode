@@ -178,6 +178,9 @@ namespace Grand.Admin.Models.Customers
             [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.SendHour")]
             public int Hour { get; set; }
 
+            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.SendMinutes")]
+            public int Minutes { get; set; }
+
             [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Name")]
             public string Name { get; set; }
 

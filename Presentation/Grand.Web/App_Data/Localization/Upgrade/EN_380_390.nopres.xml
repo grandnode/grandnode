@@ -281,4 +281,13 @@
   <LocaleResource Name="admin.customers.customerreminder.text7">
     <Value>Unpaid order – You can set custom reminder related to unpaid order (Activity date is counting from this order date).</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.level.fields.DayHourMin.required">
+    <Value>You must enter Day or Hour or Minutes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendMinutes">
+    <Value>Send after minutes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerReminder.Level.Fields.SendMinutes.Hint">
+    <Value>Select how many minutes is to send.</Value>
+  </LocaleResource>
 </Language>
