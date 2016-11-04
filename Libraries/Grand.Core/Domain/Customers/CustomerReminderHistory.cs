@@ -15,7 +15,6 @@ namespace Grand.Core.Domain.Customers
 
         public string CustomerReminderId { get; set; }
         public string CustomerId { get; set; }
-
         public int ReminderRuleId { get; set; }
 
         [BsonIgnoreAttribute]
@@ -34,10 +33,9 @@ namespace Grand.Core.Domain.Customers
             set { this.Status = (int)value; }
         }
         public string OrderId { get; set; }
-
+        public string BaseOrderId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-
         
         /// <summary>
         /// Gets or sets the reminder level history

@@ -354,7 +354,8 @@ namespace Grand.Admin.Controllers
             model.CustomerReminderId = customerReminderId;
             foreach (CustomerReminderConditionTypeEnum item in Enum.GetValues(typeof(CustomerReminderConditionTypeEnum)))
             {
-                if(customerReminder.ReminderRule == CustomerReminderRuleEnum.AbandonedCart)
+                if (customerReminder.ReminderRule == CustomerReminderRuleEnum.AbandonedCart || customerReminder.ReminderRule == CustomerReminderRuleEnum.CompletedOrder
+                    || customerReminder.ReminderRule == CustomerReminderRuleEnum.UnpaidOrder)
                     model.ConditionType.Add(new SelectListItem()
                     {
                         Value = ((int)item).ToString(),

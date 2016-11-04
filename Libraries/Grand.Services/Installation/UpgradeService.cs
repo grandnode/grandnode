@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Grand.Core.Domain.Forums;
+using Grand.Core.Domain.Tasks;
 
 namespace Grand.Services.Installation
 {
@@ -265,7 +266,50 @@ namespace Grand.Services.Installation
             _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
 
-            #endregion  
+            #endregion
+
+            #region Install new task
+
+            var shtask1 = new ScheduleTask
+            {
+                ScheduleTaskName = "Customer reminder - Completed order",
+                Type = "Grand.Services.Tasks.CustomerReminderCompletedOrderScheduleTask, Grand.Services",
+                Enabled = true,
+                StopOnError = false,
+                LastStartUtc = DateTime.MinValue,
+                LastNonSuccessEndUtc = DateTime.MinValue,
+                LastSuccessUtc = DateTime.MinValue,
+                TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                TimeInterval = 1,
+                MinuteOfHour = 1,
+                HourOfDay = 1,
+                DayOfWeek = DayOfWeek.Thursday,
+                MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                DayOfMonth = 1
+            };
+            EngineContext.Current.Resolve<IRepository<ScheduleTask>>().Insert(shtask1);
+
+            var shtask2 = new ScheduleTask
+            {
+                ScheduleTaskName = "Customer reminder - Unpaid order",
+                Type = "Grand.Services.Tasks.CustomerReminderUnpaidOrderScheduleTask, Grand.Services",
+                Enabled = true,
+                StopOnError = false,
+                LastStartUtc = DateTime.MinValue,
+                LastNonSuccessEndUtc = DateTime.MinValue,
+                LastSuccessUtc = DateTime.MinValue,
+                TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                TimeInterval = 1,
+                MinuteOfHour = 1,
+                HourOfDay = 1,
+                DayOfWeek = DayOfWeek.Thursday,
+                MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                DayOfMonth = 1
+            };
+            EngineContext.Current.Resolve<IRepository<ScheduleTask>>().Insert(shtask2);
+
+            #endregion
+
         }
 
         private void InstallStringResources(string filenames)

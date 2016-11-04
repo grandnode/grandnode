@@ -10518,6 +10518,40 @@ namespace Grand.Services.Installation
                     MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
                     DayOfMonth = 1
                 },
+                new ScheduleTask
+                {
+                    ScheduleTaskName = "Customer reminder - Completed order",
+                    Type = "Grand.Services.Tasks.CustomerReminderCompletedOrderScheduleTask, Grand.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
+                },
+                new ScheduleTask
+                {
+                    ScheduleTaskName = "Customer reminder - Unpaid order",
+                    Type = "Grand.Services.Tasks.CustomerReminderUnpaidOrderScheduleTask, Grand.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                    LastStartUtc = DateTime.MinValue,
+                    LastNonSuccessEndUtc = DateTime.MinValue,
+                    LastSuccessUtc = DateTime.MinValue,
+                    TimeIntervalChoice = TimeIntervalChoice.EVERY_DAYS,
+                    TimeInterval = 1,
+                    MinuteOfHour = 1,
+                    HourOfDay = 1,
+                    DayOfWeek  = DayOfWeek.Thursday,
+                    MonthOptionChoice = MonthOptionChoice.ON_SPECIFIC_DAY,
+                    DayOfMonth = 1
+                },
             };
             _scheduleTaskRepository.Insert(tasks);
         }

@@ -12,7 +12,9 @@ namespace Grand.Core.Domain.Customers
         RegisteredCustomer = 2,
         LastPurchase = 3,
         LastActivity = 4,
-        Birthday = 5
+        Birthday = 5,
+        CompletedOrder = 6,
+        UnpaidOrder = 7
     }
 
     public enum CustomerReminderConditionTypeEnum

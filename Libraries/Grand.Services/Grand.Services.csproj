@@ -288,6 +288,8 @@
     <Compile Include="Common\AddressExtensions.cs" />
     <Compile Include="Common\IGenericAttributeService.cs" />
     <Compile Include="Common\GenericAttributeService.cs" />
+    <Compile Include="Tasks\CustomerReminderUnpaidOrderScheduleTask.cs" />
+    <Compile Include="Tasks\CustomerReminderCompletedOrderScheduleTask.cs" />
     <Compile Include="Tasks\KeepAliveTask.cs" />
     <Compile Include="Common\GenericAttributeExtensions.cs" />
     <Compile Include="Common\IMiscPlugin.cs" />

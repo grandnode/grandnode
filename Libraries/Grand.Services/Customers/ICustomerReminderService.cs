@@ -55,6 +55,8 @@ namespace Grand.Services.Customers
         void Task_LastActivity(string id = "");
         void Task_LastPurchase(string id = "");
         void Task_Birthday(string id = "");
+        void Task_CompletedOrder(string id = "");
+        void Task_UnpaidOrder(string id = "");
 
     }
 }

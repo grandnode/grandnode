@@ -8783,7 +8783,6 @@
   <LocaleResource Name="admin.customers.customerreminderlevel.updated">
     <Value>Reminder level updated</Value>
   </LocaleResource>
-
   <LocaleResource Name="admin.customers.customerreminder.text1">
     <Value>Abandoned cart – You can set custom reminder to customers who left their carts without confirming order. Activity date is counting "from this date".</Value>
   </LocaleResource>
@@ -8799,7 +8798,12 @@
   <LocaleResource Name="admin.customers.customerreminder.text5">
     <Value>Birthday – You can set custom reminder related to customers birthday (field Activity date is not used).</Value>
   </LocaleResource>
-
+  <LocaleResource Name="admin.customers.customerreminder.text6">
+    <Value>Completed order – You can set custom reminder related to completed order (Activity date is counting from this order date).</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text7">
+    <Value>Unpaid order – You can set custom reminder related to unpaid order (Activity date is counting from this order date).</Value>
+  </LocaleResource>
   <LocaleResource Name="activitylog.addnewcustomerreminder">
     <Value>Add new customer reminder</Value>
   </LocaleResource>

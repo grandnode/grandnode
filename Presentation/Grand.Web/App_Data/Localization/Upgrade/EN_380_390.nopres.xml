@@ -275,4 +275,10 @@
   <LocaleResource Name="admin.promotions.campaigns.fields.CustomerRoles.hint">
     <Value>Customer roles</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text6">
+    <Value>Completed order – You can set custom reminder related to completed order (Activity date is counting from this order date).</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.customers.customerreminder.text7">
+    <Value>Unpaid order – You can set custom reminder related to unpaid order (Activity date is counting from this order date).</Value>
+  </LocaleResource>
 </Language>

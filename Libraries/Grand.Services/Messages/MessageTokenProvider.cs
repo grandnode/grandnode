@@ -1234,6 +1234,51 @@ namespace Grand.Services.Messages
                 allowedTokens.Add("%Wishlist.Products%");
                 allowedTokens.Add("%Wishlist.ProductsWithPictures%");
             }
+            if (rule == CustomerReminderRuleEnum.CompletedOrder || rule == CustomerReminderRuleEnum.UnpaidOrder)
+            {
+                allowedTokens.AddRange(
+                new List<string>{
+                "%Order.OrderNumber%",
+                "%Order.CustomerFullName%",
+                "%Order.CustomerEmail%",
+                "%Order.BillingFirstName%",
+                "%Order.BillingLastName%",
+                "%Order.BillingPhoneNumber%",
+                "%Order.BillingEmail%",
+                "%Order.BillingFaxNumber%",
+                "%Order.BillingCompany%",
+                "%Order.BillingAddress1%",
+                "%Order.BillingAddress2%",
+                "%Order.BillingCity%",
+                "%Order.BillingStateProvince%",
+                "%Order.BillingZipPostalCode%",
+                "%Order.BillingCountry%",
+                "%Order.BillingCustomAttributes%",
+                "%Order.ShippingMethod%",
+                "%Order.ShippingFirstName%",
+                "%Order.ShippingLastName%",
+                "%Order.ShippingPhoneNumber%",
+                "%Order.ShippingEmail%",
+                "%Order.ShippingFaxNumber%",
+                "%Order.ShippingCompany%",
+                "%Order.ShippingAddress1%",
+                "%Order.ShippingAddress2%",
+                "%Order.ShippingCity%",
+                "%Order.ShippingStateProvince%",
+                "%Order.ShippingZipPostalCode%", 
+                "%Order.ShippingCountry%",
+                "%Order.ShippingCustomAttributes%",
+                "%Order.PaymentMethod%",
+                "%Order.VatNumber%", 
+                "%Order.CustomValues%", 
+                "%Order.Product(s)%",
+                "%Order.CreatedOn%",
+                "%Order.OrderURLForCustomer%",
+                "%Order.NewNoteText%",
+                "%Order.OrderNoteAttachmentUrl%",
+                "%Order.AmountRefunded%"
+                });
+            }
             allowedTokens.AddRange(
                 new List<string>{
                 "%Customer.Email%",
