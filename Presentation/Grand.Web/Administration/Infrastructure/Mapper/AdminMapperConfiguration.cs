@@ -200,7 +200,6 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvailableTopicTemplates, mo => mo.Ignore())
                     .ForMember(dest => dest.Url, mo => mo.Ignore())
                     .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
-                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
@@ -534,7 +533,8 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
                 //news
                 cfg.CreateMap<NewsItem, NewsItemModel>()
-                    .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(src.LanguageId, true, false)))
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
                     .ForMember(dest => dest.Comments, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDate, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDate, mo => mo.Ignore())
@@ -546,6 +546,7 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
 
                 cfg.CreateMap<NewsItemModel, NewsItem>()
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.Id, mo => mo.Ignore())
                     .ForMember(dest => dest.NewsComments, mo => mo.Ignore())
                     .ForMember(dest => dest.CommentCount, mo => mo.Ignore())

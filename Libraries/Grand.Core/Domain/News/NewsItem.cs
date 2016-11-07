@@ -22,11 +22,7 @@ namespace Grand.Core.Domain.News
             Locales = new List<LocalizedProperty>();
             CustomerRoles = new List<string>();
         }
-        /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public string LanguageId { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the news title
         /// </summary>

@@ -80,13 +80,11 @@ namespace Grand.Services.News
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>News items</returns>
-        public virtual IPagedList<NewsItem> GetAllNews(string languageId = "", string storeId = "",
+        public virtual IPagedList<NewsItem> GetAllNews(string storeId = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool ignorAcl = false, bool showHidden = false)
         {
             var query = _newsItemRepository.Table;
 
-            if (!String.IsNullOrEmpty(languageId))
-                query = query.Where(n => languageId == n.LanguageId);
             if (!showHidden)
             {
                 var utcNow = DateTime.UtcNow;

@@ -197,7 +197,7 @@ namespace Grand.Web.Controllers
             if (newsItem == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName() });
         }
 
         public ActionResult RedirectBlogPost(string id, bool idIncludesSename = true)

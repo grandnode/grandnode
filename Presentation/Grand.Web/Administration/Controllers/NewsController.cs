@@ -18,6 +18,7 @@ using Grand.Web.Framework.Kendoui;
 using Grand.Web.Framework.Mvc;
 using Grand.Core.Infrastructure;
 using Grand.Services.Customers;
+using Grand.Core.Domain.Localization;
 
 namespace Grand.Admin.Controllers
 {
@@ -102,6 +103,75 @@ namespace Grand.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected virtual List<LocalizedProperty> UpdateLocales(NewsItem newsitem, NewsItemModel model)
+        {
+            List<LocalizedProperty> localized = new List<LocalizedProperty>();
+
+            foreach (var local in model.Locales)
+            {
+                var seName = newsitem.ValidateSeName(local.SeName, local.Title, false);
+                _urlRecordService.SaveSlug(newsitem, seName, local.LanguageId);
+
+                if (!(String.IsNullOrEmpty(seName)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "SeName",
+                        LocaleValue = seName
+                    });
+
+                if (!(String.IsNullOrEmpty(local.Short)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Short",
+                        LocaleValue = local.Short
+                    });
+
+                if (!(String.IsNullOrEmpty(local.Full)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Short",
+                        LocaleValue = local.Full
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaDescription)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaDescription",
+                        LocaleValue = local.MetaDescription
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaKeywords",
+                        LocaleValue = local.MetaKeywords
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaTitle)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaTitle",
+                        LocaleValue = local.MetaTitle
+                    });
+
+                if (!(String.IsNullOrEmpty(local.Title)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Title",
+                        LocaleValue = local.Title
+                    });
+
+            }
+            return localized;
+        }
 
         #endregion
 
@@ -132,7 +202,7 @@ namespace Grand.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            var news = _newsService.GetAllNews("", model.SearchStoreId, command.Page - 1, command.PageSize, true);
+            var news = _newsService.GetAllNews(model.SearchStoreId, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = news.Select(x =>
@@ -144,7 +214,6 @@ namespace Grand.Admin.Controllers
                     if (x.EndDateUtc.HasValue)
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    m.LanguageName = _languageService.GetLanguageById(x.LanguageId).Name;
                     m.Comments = x.CommentCount;
                     return m;
                 }),
@@ -166,6 +235,8 @@ namespace Grand.Admin.Controllers
             //default values
             model.Published = true;
             model.AllowComments = true;
+            //locales
+            AddLocales(_languageService, model.Locales);
             //ACL
             PrepareAclModel(model, null, false);
             return View(model);
@@ -189,9 +260,10 @@ namespace Grand.Admin.Controllers
 
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 newsItem.SeName = seName;
+                newsItem.Locales = UpdateLocales(newsItem, model);
                 _newsService.UpdateNews(newsItem);
                 //search engine name
-                _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
+                _urlRecordService.SaveSlug(newsItem, seName, "");
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
@@ -224,6 +296,17 @@ namespace Grand.Admin.Controllers
             PrepareStoresMappingModel(model, newsItem, false);
             //ACL
             PrepareAclModel(model, newsItem, false);
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Title = newsItem.GetLocalized(x => x.Title, languageId, false, false);
+                locale.Short = newsItem.GetLocalized(x => x.Short, languageId, false, false);
+                locale.Full = newsItem.GetLocalized(x => x.Full, languageId, false, false);
+                locale.MetaKeywords = newsItem.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaDescription = newsItem.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaTitle = newsItem.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = newsItem.GetSeName(languageId, false, false);
+            });
             return View(model);
         }
 
@@ -247,11 +330,11 @@ namespace Grand.Admin.Controllers
                 newsItem.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 var seName = newsItem.ValidateSeName(model.SeName, model.Title, true);
                 newsItem.SeName = seName;
+                newsItem.Locales = UpdateLocales(newsItem, model);
                 _newsService.UpdateNews(newsItem);
 
                 //search engine name
-                
-                _urlRecordService.SaveSlug(newsItem, seName, newsItem.LanguageId);
+                _urlRecordService.SaveSlug(newsItem, seName, "");
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));
 

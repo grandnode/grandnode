@@ -104,13 +104,13 @@ namespace Grand.Web.Controllers
                 throw new ArgumentNullException("model");
 
             model.Id = newsItem.Id;
-            model.MetaTitle = newsItem.MetaTitle;
-            model.MetaDescription = newsItem.MetaDescription;
-            model.MetaKeywords = newsItem.MetaKeywords;
-            model.SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false);
-            model.Title = newsItem.Title;
-            model.Short = newsItem.Short;
-            model.Full = newsItem.Full;
+            model.MetaTitle = newsItem.GetLocalized(x=>x.MetaTitle);
+            model.MetaDescription = newsItem.GetLocalized(x=>x.MetaDescription);
+            model.MetaKeywords = newsItem.GetLocalized(x=>x.MetaKeywords);
+            model.SeName = newsItem.GetSeName();
+            model.Title = newsItem.GetLocalized(x=>x.Title);
+            model.Short = newsItem.GetLocalized(x=>x.Short);
+            model.Full = newsItem.GetLocalized(x=>x.Full);
             model.AllowComments = newsItem.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
             model.NumberOfComments = newsItem.CommentCount;
@@ -156,7 +156,7 @@ namespace Grand.Web.Controllers
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
-                var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
+                var newsItems = _newsService.GetAllNews(_storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
                 return new HomePageNewsItemsModel
                 {
                     WorkingLanguageId = _workContext.WorkingLanguage.Id,
@@ -191,7 +191,7 @@ namespace Grand.Web.Controllers
             if (command.PageSize <= 0) command.PageSize = _newsSettings.NewsArchivePageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
-            var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id,
+            var newsItems = _newsService.GetAllNews(_storeContext.CurrentStore.Id,
                 command.PageNumber - 1, command.PageSize);
             model.PagingFilteringContext.LoadPagedList(newsItems);
 
@@ -220,10 +220,10 @@ namespace Grand.Web.Controllers
                 return new RssActionResult { Feed = feed };
 
             var items = new List<SyndicationItem>();
-            var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id);
+            var newsItems = _newsService.GetAllNews(_storeContext.CurrentStore.Id);
             foreach (var n in newsItems)
             {
-                string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("urn:store:{0}:news:blog:{1}", _storeContext.CurrentStore.Id, n.Id), n.CreatedOnUtc));
             }
             feed.Items = items;
@@ -304,7 +304,7 @@ namespace Grand.Web.Controllers
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["nop.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
-                return RedirectToRoute("NewsItem", new {SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("NewsItem", new {SeName = newsItem.GetSeName() });
             }
 
 

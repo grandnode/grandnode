@@ -79,7 +79,7 @@ namespace Grand.Web.Controllers
             if (newsItem == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("NewsItem", new { SeName = newsItem.GetSeName(newsItem.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("NewsItem", new { SeName = newsItem.GetSeName() });
         }
         //in versions 2.00-2.70 we had ID in blog URLs
         public ActionResult RedirectBlogPostById(string blogPostId)
