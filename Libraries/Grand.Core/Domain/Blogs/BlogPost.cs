@@ -18,10 +18,6 @@ namespace Grand.Core.Domain.Blogs
             Stores = new List<string>();
             Locales = new List<LocalizedProperty>();
         }
-        /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public string LanguageId { get; set; }
 
         /// <summary>
         /// Gets or sets the blog post title

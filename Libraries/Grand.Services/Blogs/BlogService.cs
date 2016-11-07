@@ -79,7 +79,7 @@ namespace Grand.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        public virtual IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", string languageId = "",
+        public virtual IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", 
             DateTime? dateFrom = null, DateTime? dateTo = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null)
         {
@@ -90,8 +90,7 @@ namespace Grand.Services.Blogs
                 query = query.Where(b => dateFrom.Value <= b.CreatedOnUtc);
             if (dateTo.HasValue)
                 query = query.Where(b => dateTo.Value >= b.CreatedOnUtc);
-            if (!String.IsNullOrEmpty(languageId))
-                query = query.Where(b => languageId == b.LanguageId);
+
             if (!showHidden)
             {
                 var utcNow = DateTime.UtcNow;
@@ -125,13 +124,13 @@ namespace Grand.Services.Blogs
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
         public virtual IPagedList<BlogPost> GetAllBlogPostsByTag(string storeId = "",
-            string languageId = "", string tag = "",
+            string tag = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             tag = tag.Trim();
 
             //we load all records and only then filter them by tag
-            var blogPostsAll = GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden, tag:tag);
+            var blogPostsAll = GetAllBlogPosts(storeId: storeId, showHidden: showHidden, tag:tag);
             var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
@@ -152,11 +151,11 @@ namespace Grand.Services.Blogs
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
-        public virtual IList<BlogPostTag> GetAllBlogPostTags(string storeId, string languageId, bool showHidden = false)
+        public virtual IList<BlogPostTag> GetAllBlogPostTags(string storeId, bool showHidden = false)
         {
             var blogPostTags = new List<BlogPostTag>();
 
-            var blogPosts = GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden);
+            var blogPosts = GetAllBlogPosts(storeId: storeId, showHidden: showHidden);
             foreach (var blogPost in blogPosts)
             {
                 var tags = blogPost.ParseTags();

@@ -7,21 +7,20 @@ using Grand.Admin.Models.Stores;
 using Grand.Admin.Validators.Blogs;
 using Grand.Web.Framework;
 using Grand.Web.Framework.Mvc;
+using Grand.Web.Framework.Localization;
 
 namespace Grand.Admin.Models.Blogs
 {
     [Validator(typeof(BlogPostValidator))]
-    public partial class BlogPostModel : BaseNopEntityModel
+    public partial class BlogPostModel : BaseNopEntityModel, ILocalizedModel<BlogLocalizedModel>
     {
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
-        public string LanguageId { get; set; }
-
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
-        [AllowHtml]
-        public string LanguageName { get; set; }
+        public BlogPostModel()
+        {
+            this.AvailableStores = new List<StoreModel>();
+            Locales = new List<BlogLocalizedModel>();
+        }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
-        [AllowHtml]
         public string Title { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
@@ -66,6 +65,8 @@ namespace Grand.Admin.Models.Blogs
         [AllowHtml]
         public string SeName { get; set; }
 
+        public IList<BlogLocalizedModel> Locales { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
@@ -76,6 +77,39 @@ namespace Grand.Admin.Models.Blogs
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
+
+    }
+
+    public partial class BlogLocalizedModel : ILocalizedModelLocal
+    {
+        public string LanguageId { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
+        public string Title { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview")]
+        [AllowHtml]
+        public string BodyOverview { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
+        [AllowHtml]
+        public string Body { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
+        [AllowHtml]
+        public string MetaKeywords { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription")]
+        [AllowHtml]
+        public string MetaDescription { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
+        [AllowHtml]
+        public string MetaTitle { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
+        [AllowHtml]
+        public string SeName { get; set; }
 
     }
 }

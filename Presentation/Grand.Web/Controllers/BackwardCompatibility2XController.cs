@@ -88,7 +88,7 @@ namespace Grand.Web.Controllers
             if (blogPost == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+            return RedirectToRoutePermanent("BlogPost", new { SeName = blogPost.GetSeName() });
         }
         //in versions 2.00-3.20 we had SystemName in topic URLs
         public ActionResult RedirectTopicBySystemName(string systemName)

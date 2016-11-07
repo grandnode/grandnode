@@ -110,13 +110,13 @@ namespace Grand.Web.Controllers
                 throw new ArgumentNullException("model");
 
             model.Id = blogPost.Id;
-            model.MetaTitle = blogPost.MetaTitle;
-            model.MetaDescription = blogPost.MetaDescription;
-            model.MetaKeywords = blogPost.MetaKeywords;
-            model.SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false);
-            model.Title = blogPost.Title;
-            model.Body = blogPost.Body;
-            model.BodyOverview = blogPost.BodyOverview;
+            model.MetaTitle = blogPost.GetLocalized(x=>x.MetaTitle);
+            model.MetaDescription = blogPost.GetLocalized(x => x.MetaDescription);
+            model.MetaKeywords = blogPost.GetLocalized(x => x.MetaKeywords);
+            model.SeName = blogPost.GetSeName();
+            model.Title = blogPost.GetLocalized(x => x.Title);
+            model.Body = blogPost.GetLocalized(x => x.Body);
+            model.BodyOverview = blogPost.GetLocalized(x=>x.BodyOverview);
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = blogPost.ParseTags().ToList();
@@ -171,13 +171,11 @@ namespace Grand.Web.Controllers
             if (String.IsNullOrEmpty(command.Tag))
             {
                 blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
-                    _workContext.WorkingLanguage.Id,
                     dateFrom, dateTo, command.PageNumber - 1, command.PageSize);
             }
             else
             {
                 blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id, 
-                    _workContext.WorkingLanguage.Id,
                     command.Tag, command.PageNumber - 1, command.PageSize);
             }
             model.PagingFilteringContext.LoadPagedList(blogPosts);
@@ -236,10 +234,10 @@ namespace Grand.Web.Controllers
                 return new RssActionResult { Feed = feed };
 
             var items = new List<SyndicationItem>();
-            var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
+            var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
             foreach (var blogPost in blogPosts)
             {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
+                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
@@ -325,7 +323,7 @@ namespace Grand.Web.Controllers
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
                 TempData["nop.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
-                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) });
+                return RedirectToRoute("BlogPost", new { SeName = blogPost.GetSeName() });
             }
 
             //If we got this far, something failed, redisplay form
@@ -345,7 +343,7 @@ namespace Grand.Web.Controllers
                 var model = new BlogPostTagListModel();
 
                 //get tags
-                var tags = _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id)
+                var tags = _blogService.GetAllBlogPostTags(_storeContext.CurrentStore.Id)
                     .OrderByDescending(x => x.BlogPostCount)
                     .Take(_blogSettings.NumberOfTags)
                     .ToList();
@@ -375,8 +373,7 @@ namespace Grand.Web.Controllers
             {
                 var model = new List<BlogPostYearModel>();
 
-                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, 
-                    _workContext.WorkingLanguage.Id);
+                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id);
                 if (blogPosts.Any())
                 {
                     var months = new SortedDictionary<DateTime, int>();

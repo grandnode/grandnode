@@ -121,6 +121,14 @@ namespace Grand.Admin.Controllers
                         LocaleValue = seName
                     });
 
+                if (!(String.IsNullOrEmpty(local.Title)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Title",
+                        LocaleValue = local.Title
+                    });
+
                 if (!(String.IsNullOrEmpty(local.Short)))
                     localized.Add(new LocalizedProperty()
                     {
@@ -133,7 +141,7 @@ namespace Grand.Admin.Controllers
                     localized.Add(new LocalizedProperty()
                     {
                         LanguageId = local.LanguageId,
-                        LocaleKey = "Short",
+                        LocaleKey = "Full",
                         LocaleValue = local.Full
                     });
 
@@ -161,13 +169,6 @@ namespace Grand.Admin.Controllers
                         LocaleValue = local.MetaTitle
                     });
 
-                if (!(String.IsNullOrEmpty(local.Title)))
-                    localized.Add(new LocalizedProperty()
-                    {
-                        LanguageId = local.LanguageId,
-                        LocaleKey = "Title",
-                        LocaleValue = local.Title
-                    });
 
             }
             return localized;

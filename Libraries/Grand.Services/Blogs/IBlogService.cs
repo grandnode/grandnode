@@ -27,14 +27,13 @@ namespace Grand.Services.Blogs
         /// Gets all blog posts
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
         /// <param name="dateFrom">Filter by created date; null if you want to get all records</param>
         /// <param name="dateTo">Filter by created date; null if you want to get all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", string languageId = "",
+        IPagedList<BlogPost> GetAllBlogPosts(string storeId = "", 
             DateTime? dateFrom = null, DateTime? dateTo = null, 
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false, string tag = null);
 
@@ -42,24 +41,22 @@ namespace Grand.Services.Blogs
         /// Gets all blog posts
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="tag">Tag</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
         IPagedList<BlogPost> GetAllBlogPostsByTag(string storeId = "",
-            string languageId = "", string tag = "",
+            string tag = "",
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Gets all blog post tags
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
-        /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
-        IList<BlogPostTag> GetAllBlogPostTags(string storeId, string languageId, bool showHidden = false);
+        IList<BlogPostTag> GetAllBlogPostTags(string storeId, bool showHidden = false);
 
         /// <summary>
         /// Inserts an blog post

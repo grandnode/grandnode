@@ -517,7 +517,8 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
                 //blogs
                 cfg.CreateMap<BlogPost, BlogPostModel>()
-                    .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(src.LanguageId, true, false)))
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName("", true, false)))
                     .ForMember(dest => dest.Comments, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDate, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDate, mo => mo.Ignore())
@@ -527,6 +528,7 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<BlogPostModel, BlogPost>()
                     .ForMember(dest => dest.Id, mo => mo.Ignore())
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.CommentCount, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())

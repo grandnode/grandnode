@@ -20,6 +20,7 @@ using Grand.Core.Infrastructure;
 using Grand.Services.Customers;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Attributes;
+using Grand.Core.Domain.Localization;
 
 namespace Grand.Admin.Controllers
 {
@@ -79,9 +80,81 @@ namespace Grand.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected virtual List<LocalizedProperty> UpdateLocales(BlogPost blogpost, BlogPostModel model)
+        {
+            List<LocalizedProperty> localized = new List<LocalizedProperty>();
+
+            foreach (var local in model.Locales)
+            {
+                var seName = blogpost.ValidateSeName(local.SeName, local.Title, false);
+                _urlRecordService.SaveSlug(blogpost, seName, local.LanguageId);
+
+                if (!(String.IsNullOrEmpty(seName)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "SeName",
+                        LocaleValue = seName
+                    });
+
+                if (!(String.IsNullOrEmpty(local.Title)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Title",
+                        LocaleValue = local.Title
+                    });
+
+                if (!(String.IsNullOrEmpty(local.BodyOverview)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "BodyOverview",
+                        LocaleValue = local.BodyOverview
+                    });
+
+                if (!(String.IsNullOrEmpty(local.Body)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Body",
+                        LocaleValue = local.Body
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaDescription)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaDescription",
+                        LocaleValue = local.MetaDescription
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaKeywords)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaKeywords",
+                        LocaleValue = local.MetaKeywords
+                    });
+
+                if (!(String.IsNullOrEmpty(local.MetaTitle)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "MetaTitle",
+                        LocaleValue = local.MetaTitle
+                    });
+
+               
+
+            }
+            return localized;
+        }
+
         #endregion
-        
-		#region Blog posts
+
+        #region Blog posts
 
         public ActionResult Index()
         {
@@ -102,7 +175,7 @@ namespace Grand.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            var blogPosts = _blogService.GetAllBlogPosts("", "", null, null, command.Page - 1, command.PageSize, true);
+            var blogPosts = _blogService.GetAllBlogPosts("", null, null, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = blogPosts.Select(x =>
@@ -114,7 +187,6 @@ namespace Grand.Admin.Controllers
                     if (x.EndDateUtc.HasValue)
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-                    m.LanguageName = _languageService.GetLanguageById(x.LanguageId).Name;
                     m.Comments = x.CommentCount;
                     return m;
                 }),
@@ -137,6 +209,9 @@ namespace Grand.Admin.Controllers
             PrepareStoresMappingModel(model, null, false);
             //default values
             model.AllowComments = true;
+            //locales
+            AddLocales(_languageService, model.Locales);
+
             return View(model);
         }
 
@@ -157,10 +232,10 @@ namespace Grand.Admin.Controllers
                 
                 //search engine name
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
-                blogPost.SeName = seName;                
+                blogPost.SeName = seName;
+                blogPost.Locales = UpdateLocales(blogPost, model);
                 _blogService.UpdateBlogPost(blogPost);
-
-                _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
+                _urlRecordService.SaveSlug(blogPost, seName, "");
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
@@ -189,6 +264,17 @@ namespace Grand.Admin.Controllers
             model.EndDate = blogPost.EndDateUtc;
             //Store
             PrepareStoresMappingModel(model, blogPost, false);
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Title = blogPost.GetLocalized(x => x.Title, languageId, false, false);
+                locale.Body = blogPost.GetLocalized(x => x.Body, languageId, false, false);
+                locale.BodyOverview = blogPost.GetLocalized(x => x.BodyOverview, languageId, false, false);
+                locale.MetaKeywords = blogPost.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaDescription = blogPost.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaTitle = blogPost.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = blogPost.GetSeName(languageId, false, false);
+            });
             return View(model);
 		}
 
@@ -215,9 +301,9 @@ namespace Grand.Admin.Controllers
                 //search engine name
                 var seName = blogPost.ValidateSeName(model.SeName, model.Title, true);
                 blogPost.SeName = seName;
+                blogPost.Locales = UpdateLocales(blogPost, model);
                 _blogService.UpdateBlogPost(blogPost);
-
-                _urlRecordService.SaveSlug(blogPost, seName, blogPost.LanguageId);
+                _urlRecordService.SaveSlug(blogPost, seName, "");
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
                 if (continueEditing)
@@ -234,6 +320,17 @@ namespace Grand.Admin.Controllers
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             //Store
             PrepareStoresMappingModel(model, blogPost, true);
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Title = blogPost.GetLocalized(x => x.Title, languageId, false, false);
+                locale.Body = blogPost.GetLocalized(x => x.Body, languageId, false, false);
+                locale.BodyOverview = blogPost.GetLocalized(x => x.BodyOverview, languageId, false, false);
+                locale.MetaKeywords = blogPost.GetLocalized(x => x.MetaKeywords, languageId, false, false);
+                locale.MetaDescription = blogPost.GetLocalized(x => x.MetaDescription, languageId, false, false);
+                locale.MetaTitle = blogPost.GetLocalized(x => x.MetaTitle, languageId, false, false);
+                locale.SeName = blogPost.GetSeName(languageId, false, false);
+            });
             return View(model);
 		}
 

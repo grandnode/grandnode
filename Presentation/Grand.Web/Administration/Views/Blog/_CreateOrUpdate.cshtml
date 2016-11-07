@@ -66,7 +66,7 @@
     <script type="text/javascript">
         @{
         //TODO move to Model
-        var blogTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags("", "", true);
+        var blogTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags("", true);
         var blogTagsSb = new StringBuilder();
         blogTagsSb.Append("var initialBlogTags = [");
         for (int i = 0; i < blogTags.Count; i++)
@@ -97,35 +97,66 @@
         });
     });
     </script>
+
+
+
     <div class="form-horizontal">
         <div class="form-body">
-            <div class="form-group">
-                    @Html.GrandLabelFor(model => model.LanguageId)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
+            @(Html.LocalizedEditor<BlogPostModel, BlogLocalizedModel>("blogpost-info-localized",
+            @<div class="form-horizontal">
+                <div class="form-body">
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.Locales[item].Title)
+                        <div class="col-md-9 col-sm-9">
+                            @Html.GrandEditorFor(model => model.Locales[item].Title)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Title)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.Locales[item].BodyOverview)
+                        <div class="col-md-9 col-sm-9">
+                            @Html.GrandTextAreaFor(model => model.Locales[item].BodyOverview, new { style = "Height: 100px;" })
+                            @Html.ValidationMessageFor(model => model.Locales[item].BodyOverview)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.Locales[item].Body)
+                        <div class="col-md-9 col-sm-9">
+                            @Html.EditorFor(x => x.Locales[item].Body, "RichEditor")
+                            @Html.ValidationMessageFor(model => model.Locales[item].Body)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
             </div>
-            <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Title)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Title)
-                    @Html.ValidationMessageFor(model => model.Title)
+            ,
+            @<div class="form-horizontal">
+                <div class="form-body">
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.Title)
+                        <div class="col-md-9 col-sm-9">
+                            @Html.GrandEditorFor(model => model.Title)
+                            @Html.ValidationMessageFor(model => model.Title)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.BodyOverview)
+                        <div class="col-md-9 col-sm-9">
+                            @Html.GrandTextAreaFor(model => model.BodyOverview, new { style = "Height: 100px;" })
+                            @Html.ValidationMessageFor(model => model.BodyOverview)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.Body)
+                        <div class="col-md-9 col-sm-9">
+                            @Html.EditorFor(x => x.Body, "RichEditor")
+                            @Html.ValidationMessageFor(model => model.Body)
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Body)
-                <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(x => x.Body, "RichEditor")
-                    @Html.ValidationMessageFor(model => model.Body)
-                </div>
-            </div>
-            <div class="form-group">
-                    @Html.GrandLabelFor(model => model.BodyOverview)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandTextAreaFor(model => model.BodyOverview, new { style = "Height: 100px;" })
-                    @Html.ValidationMessageFor(model => model.BodyOverview)
-                </div>
-            </div>
+            ))
+
             <div class="form-group">
                     @Html.GrandLabelFor(model => model.AllowComments)
                 <div class="col-md-9 col-sm-9">
@@ -159,38 +190,74 @@
 }
 @helper TabSeo()
 {
-    <div class="form-horizontal">
+    @(Html.LocalizedEditor<BlogPostModel, BlogLocalizedModel>("blogpost-seo-localized",
+    @<div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.MetaKeywords)
+                @Html.GrandLabelFor(model => model.Locales[item].MetaKeywords)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].MetaKeywords)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].MetaDescription)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(model => model.Locales[item].MetaDescription)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].MetaTitle)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.Locales[item].MetaTitle)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].SeName)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].SeName)
+                    @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.MetaKeywords)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(x => x.MetaKeywords)
                     @Html.ValidationMessageFor(model => model.MetaKeywords)
                 </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.MetaDescription)
+                @Html.GrandLabelFor(model => model.MetaDescription)
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(x => x.MetaDescription)
+                    @Html.GrandTextAreaFor(x => x.MetaDescription)
                     @Html.ValidationMessageFor(model => model.MetaDescription)
                 </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.MetaTitle)
+                @Html.GrandLabelFor(model => model.MetaTitle)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(x => x.MetaTitle)
                     @Html.ValidationMessageFor(model => model.MetaTitle)
                 </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.SeName)
+                @Html.GrandLabelFor(model => model.SeName)
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.SeName)
+                    @Html.GrandEditorFor(x => x.SeName)
                     @Html.ValidationMessageFor(model => model.SeName)
                 </div>
             </div>
         </div>
     </div>
+    ))
 }
 
 @helper TabStores()
