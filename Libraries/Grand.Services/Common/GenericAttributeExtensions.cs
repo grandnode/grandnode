@@ -26,23 +26,9 @@ namespace Grand.Services.Common
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
-            var repository = EngineContext.Current.Resolve<IRepository<GenericAttributeBaseEntity>>();
-            var collection = repository.Database.GetCollection<GenericAttributeBaseEntity>(entity.GetType().Name).AsQueryable();
+            var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+            return genericAttributeService.GetAttributesForEntity<TPropType>(entity, key, storeId);
 
-            var props = collection.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes).ToList();
-            if (props == null)
-                return default(TPropType);
-            props = props.Where(x => x.StoreId == storeId).ToList();
-            if (!props.Any())
-                return default(TPropType);
-
-            var prop = props.FirstOrDefault(ga =>
-                ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
-
-            if (prop == null || string.IsNullOrEmpty(prop.Value))
-                return default(TPropType);
-
-            return CommonHelper.To<TPropType>(prop.Value);
             
         }
 

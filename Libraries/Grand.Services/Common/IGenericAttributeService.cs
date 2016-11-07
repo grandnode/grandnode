@@ -10,5 +10,6 @@ namespace Grand.Services.Common
     public partial interface IGenericAttributeService
     {
         void SaveAttribute<TPropType>(BaseEntity entity, string key, TPropType value, string storeId = "");
+        TPropType GetAttributesForEntity<TPropType>(BaseEntity entity, string key, string storeId = "");
     }
 }

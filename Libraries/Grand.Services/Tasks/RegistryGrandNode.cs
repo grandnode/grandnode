@@ -201,9 +201,8 @@ namespace Grand.Services.Tasks
 
         public static void RunTaskNow(ScheduleTask scheduleTask)
         {
-            //elegant in its simplicity 
-            var scheduleTask02 = ScheduleTaskManager.Instance.ChangeTypeToRightOne(scheduleTask);
-            ExecuteTask(scheduleTask02);
+            var task = ScheduleTaskManager.Instance.ChangeTypeToRightOne(scheduleTask);
+            ExecuteTask(task);
         }
     }
 }

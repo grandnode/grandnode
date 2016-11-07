@@ -17,6 +17,8 @@ using Grand.Services.Localization;
 using Grand.Services.Stores;
 using Grand.Services.Vendors;
 using Grand.Web.Framework.Localization;
+using Grand.Core.Domain.Common;
+using Grand.Core.Data;
 
 namespace Grand.Web.Framework
 {
@@ -46,7 +48,6 @@ namespace Grand.Web.Framework
         private readonly LocalizationSettings _localizationSettings;
         private readonly IUserAgentHelper _userAgentHelper;
         private readonly IStoreMappingService _storeMappingService;
-
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
         private Vendor _cachedVendor;
@@ -329,7 +330,7 @@ namespace Grand.Web.Framework
                         {
                             _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageAutomaticallyDetected,
                                  true, _storeContext.CurrentStore.Id);
-                            this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
+                            //this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
                         }
                     }
                 }
@@ -340,13 +341,14 @@ namespace Grand.Web.Framework
                     {
                         _genericAttributeService.SaveAttribute(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageId,
                             detectedLanguage.Id, _storeContext.CurrentStore.Id);
-                        this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
+                        //this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
                     }
                 }
 
                 var allLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id);
                 //find current customer language
-                var languageId = this.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
+                var languageId = _genericAttributeService.GetAttributesForEntity<string>(this.CurrentCustomer, SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
+                //var languageId = this.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LanguageId, _storeContext.CurrentStore.Id);
                 var language = allLanguages.FirstOrDefault(x => x.Id == languageId);
                 if (language == null)
                 {
@@ -370,7 +372,7 @@ namespace Grand.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.LanguageId,
                     languageId, _storeContext.CurrentStore.Id);
-                this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
+                //this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
 
                 //reset cache
                 _cachedLanguage = null;
@@ -430,7 +432,7 @@ namespace Grand.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer,
                     SystemCustomerAttributeNames.CurrencyId,
                     currencyId, _storeContext.CurrentStore.Id);
-                this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
+                //this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
 
                 //reset cache
                 _cachedCurrency = null;
@@ -472,7 +474,7 @@ namespace Grand.Web.Framework
                 _genericAttributeService.SaveAttribute(this.CurrentCustomer, 
                     SystemCustomerAttributeNames.TaxDisplayTypeId,
                     (int)value, _storeContext.CurrentStore.Id);
-                this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
+                //this.CurrentCustomer.GenericAttributes = _customerService.GetCustomerById(this.CurrentCustomer.Id).GenericAttributes;
                 //reset cache
                 _cachedTaxDisplayType = null;
 

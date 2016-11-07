@@ -36,6 +36,7 @@ namespace Grand.Services.Common
         #region Fields
 
         private readonly IRepository<BaseEntity> _baseRepository;
+        private readonly IRepository<GenericAttributeBaseEntity> _genericattributeBaseEntitRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         #endregion
@@ -50,10 +51,12 @@ namespace Grand.Services.Common
         /// <param name="eventPublisher">Event published</param>
         public GenericAttributeService(ICacheManager cacheManager,
             IRepository<BaseEntity> baseRepository,
+            IRepository<GenericAttributeBaseEntity> genericattributeBaseEntitRepository,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._baseRepository = baseRepository;
+            this._genericattributeBaseEntitRepository = genericattributeBaseEntitRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -126,6 +129,29 @@ namespace Grand.Services.Common
                     var result = collection.UpdateOneAsync(new BsonDocument("_id", entity.Id), update).Result;
                 }
             }
+        }
+
+        public virtual TPropType GetAttributesForEntity<TPropType>(BaseEntity entity, string key, string storeId = "")
+        {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            var collection = _genericattributeBaseEntitRepository.Database.GetCollection<GenericAttributeBaseEntity>(entity.GetType().Name).AsQueryable();
+
+            var props = collection.Where(x => x.Id == entity.Id).SelectMany(x => x.GenericAttributes).ToList();
+            if (props == null)
+                return default(TPropType);
+            props = props.Where(x => x.StoreId == storeId).ToList();
+            if (!props.Any())
+                return default(TPropType);
+
+            var prop = props.FirstOrDefault(ga =>
+                ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
+
+            if (prop == null || string.IsNullOrEmpty(prop.Value))
+                return default(TPropType);
+
+            return CommonHelper.To<TPropType>(prop.Value);
         }
 
         #endregion
