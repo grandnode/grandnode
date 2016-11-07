@@ -5,18 +5,21 @@ using FluentValidation.Attributes;
 using Grand.Admin.Validators.Polls;
 using Grand.Web.Framework;
 using Grand.Web.Framework.Mvc;
+using Grand.Web.Framework.Localization;
+using Grand.Admin.Models.Stores;
+using System.Collections.Generic;
 
 namespace Grand.Admin.Models.Polls
 {
     [Validator(typeof(PollValidator))]
-    public partial class PollModel : BaseNopEntityModel
+    public partial class PollModel : BaseNopEntityModel, ILocalizedModel<PollLocalizedModel>
     {
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
-        public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
-        [AllowHtml]
-        public string LanguageName { get; set; }
+        public PollModel()
+        {
+            this.AvailableStores = new List<StoreModel>();
+            Locales = new List<PollLocalizedModel>();
+        }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Name")]
         [AllowHtml]
@@ -46,5 +49,23 @@ namespace Grand.Admin.Models.Polls
         [UIHint("DateTimeNullable")]
         public DateTime? EndDate { get; set; }
 
+        //Store mapping
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.AvailableStores")]
+        public IList<StoreModel> AvailableStores { get; set; }
+        public string[] SelectedStoreIds { get; set; }
+        public IList<PollLocalizedModel> Locales { get; set; }
+
     }
+
+    public partial class PollLocalizedModel : ILocalizedModelLocal
+    {
+        public string LanguageId { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Name")]
+        public string Name { get; set; }
+
+    }
+
 }

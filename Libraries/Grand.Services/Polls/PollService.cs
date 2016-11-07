@@ -6,6 +6,7 @@ using Grand.Core.Domain.Polls;
 using Grand.Services.Events;
 using MongoDB.Driver.Linq;
 using MongoDB.Driver;
+using Grand.Core.Domain.Catalog;
 
 namespace Grand.Services.Polls
 {
@@ -18,16 +19,17 @@ namespace Grand.Services.Polls
 
         private readonly IRepository<Poll> _pollRepository;
         private readonly IEventPublisher _eventPublisher;
-
+        private readonly CatalogSettings _catalogSettings;
         #endregion
 
         #region Ctor
 
         public PollService(IRepository<Poll> pollRepository, 
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher, CatalogSettings catalogSettings)
         {
             this._pollRepository = pollRepository;
             this._eventPublisher = eventPublisher;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -50,14 +52,20 @@ namespace Grand.Services.Polls
         /// <param name="systemKeyword">The poll system keyword</param>
         /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <returns>Poll</returns>
-        public virtual Poll GetPollBySystemKeyword(string systemKeyword, string languageId)
+        public virtual Poll GetPollBySystemKeyword(string systemKeyword, string storeId)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
             var query = from p in _pollRepository.Table
-                        where p.SystemKeyword == systemKeyword && p.LanguageId == languageId
+                        where p.SystemKeyword == systemKeyword 
                         select p;
+
+            if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
+            {
+                query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
+            }
+
             var poll = query.FirstOrDefault();
             return poll;
         }
@@ -71,7 +79,7 @@ namespace Grand.Services.Polls
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Polls</returns>
-        public virtual IPagedList<Poll> GetPolls(string languageId = "", bool loadShownOnHomePageOnly = false,
+        public virtual IPagedList<Poll> GetPolls(string storeId = "", bool loadShownOnHomePageOnly = false,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _pollRepository.Table;
@@ -83,13 +91,13 @@ namespace Grand.Services.Polls
                 query = query.Where(p => !p.StartDateUtc.HasValue || p.StartDateUtc <= utcNow);
                 query = query.Where(p => !p.EndDateUtc.HasValue || p.EndDateUtc >= utcNow);
             }
+            if (!String.IsNullOrEmpty(storeId) && ! _catalogSettings.IgnoreStoreLimitations)
+            {
+                query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
+            }
             if (loadShownOnHomePageOnly)
             {
                 query = query.Where(p => p.ShowOnHomePage);
-            }
-            if (!String.IsNullOrEmpty(languageId))
-            {
-                query = query.Where(p => p.LanguageId == languageId);
             }
             query = query.OrderBy(p => p.DisplayOrder);
 

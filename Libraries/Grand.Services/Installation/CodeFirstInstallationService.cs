@@ -9764,7 +9764,6 @@ namespace Grand.Services.Installation
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
             var poll1 = new Poll
             {
-                LanguageId = defaultLanguage.Id,
                 Name = "Do you like Grandnode for MongoDB?",
                 SystemKeyword = "",
                 Published = true,

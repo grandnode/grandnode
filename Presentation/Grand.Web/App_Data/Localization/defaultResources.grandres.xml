@@ -8138,6 +8138,12 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AllowGuestsToVote.Hint">
     <Value>Check to allow guests to vote.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AvailableStores.Hint">
+    <Value>Select stores for which the category will be shown.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
@@ -8155,6 +8161,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Language.Hint">
     <Value>The language of this poll. A customer will only see the polls for their selected language.</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.LimitedToStores.Hint">
+    <Value>Determines whether the attribute is available only at certain stores.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.Name">
     <Value>Name</Value>
@@ -8191,6 +8203,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Info">
     <Value>Poll Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Stores">
+    <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Updated">
     <Value>The poll has been updated successfully.</Value>

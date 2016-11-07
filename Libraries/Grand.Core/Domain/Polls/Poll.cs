@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Grand.Core.Domain.Localization;
 using MongoDB.Bson.Serialization.Attributes;
+using Grand.Core.Domain.Stores;
 
 namespace Grand.Core.Domain.Polls
 {
@@ -9,14 +10,15 @@ namespace Grand.Core.Domain.Polls
     /// Represents a poll
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class Poll : BaseEntity
+    public partial class Poll : BaseEntity, IStoreMappingSupported, ILocalizedEntity
     {
         private ICollection<PollAnswer> _pollAnswers;
 
-        /// <summary>
-        /// Gets or sets the language identifier
-        /// </summary>
-        public string LanguageId { get; set; }
+        public Poll()
+        {
+            Stores = new List<string>();
+            Locales = new List<LocalizedProperty>();
+        }
 
         /// <summary>
         /// Gets or sets the name
@@ -42,6 +44,18 @@ namespace Grand.Core.Domain.Polls
         /// Gets or sets a value indicating whether the anonymous votes are allowed
         /// </summary>
         public bool AllowGuestsToVote { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
+        /// </summary>
+        public virtual bool LimitedToStores { get; set; }
+        public IList<string> Stores { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of locales
+        /// </summary>
+        public IList<LocalizedProperty> Locales { get; set; }
+
 
         /// <summary>
         /// Gets or sets the display order

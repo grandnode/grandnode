@@ -24,6 +24,7 @@ namespace Grand.Web.Controllers
         private readonly IWorkContext _workContext;
         private readonly IPollService _pollService;
         private readonly ICacheManager _cacheManager;
+        private readonly IStoreContext _storeContext;
 
         #endregion
 
@@ -32,12 +33,14 @@ namespace Grand.Web.Controllers
         public PollController(ILocalizationService localizationService,
             IWorkContext workContext,
             IPollService pollService,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IStoreContext storeContext)
         {
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._pollService = pollService;
             this._cacheManager = cacheManager;
+            this._storeContext = storeContext;
         }
 
         #endregion
@@ -51,7 +54,7 @@ namespace Grand.Web.Controllers
             {
                 Id = poll.Id,
                 AlreadyVoted = setAlreadyVotedProperty && _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id),
-                Name = poll.Name
+                Name = poll.GetLocalized(x=>x.Name)
             };
             var answers = poll.PollAnswers.OrderBy(x => x.DisplayOrder);
             foreach (var answer in answers)
@@ -81,10 +84,10 @@ namespace Grand.Web.Controllers
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME__MODEL_KEY, systemKeyword, _workContext.WorkingLanguage.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME__MODEL_KEY, systemKeyword, _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
-                Poll poll = _pollService.GetPollBySystemKeyword(systemKeyword, _workContext.WorkingLanguage.Id);
+                Poll poll = _pollService.GetPollBySystemKeyword(systemKeyword, _storeContext.CurrentStore.Id);
                 if (poll == null ||
                     !poll.Published ||
                     (poll.StartDateUtc.HasValue && poll.StartDateUtc.Value > DateTime.UtcNow) ||
@@ -163,7 +166,7 @@ namespace Grand.Web.Controllers
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
-                _pollService.GetPolls(_workContext.WorkingLanguage.Id, true)
+                _pollService.GetPolls(_storeContext.CurrentStore.Id, true)
                 .Select(x => PreparePollModel(x, false))
                 .ToList());
             //"AlreadyVoted" property of "PollModel" object depends on the current customer. Let's update it.

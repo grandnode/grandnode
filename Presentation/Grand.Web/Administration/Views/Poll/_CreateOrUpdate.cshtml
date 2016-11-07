@@ -23,6 +23,10 @@
         <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
             @T("Admin.ContentManagement.Polls.Answers")
         </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.ContentManagement.Polls.Stores")
+        </li>
+
     </ul>
     <div>
         @TabInfo()
@@ -30,6 +34,10 @@
     <div>
         @TabAnswers()
     </div>
+    <div>
+        @TabStores()
+    </div>
+
 </div>
 
 @{
@@ -48,66 +56,79 @@
 
 @helper TabInfo()
 {
+    @(Html.LocalizedEditor<PollModel, PollLocalizedModel>("poll-info-localized",
+            @<div class="form-horizontal">
+                <div class="form-body">
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.Locales[item].Name)
+                        <div class="col-md-9 col-sm-9">
+                            @Html.GrandEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+            </div>
+            ,
+            @<div class="form-horizontal">
+                <div class="form-body">
+                    <div class="form-group">
+                        @Html.GrandLabelFor(model => model.Name)
+                        <div class="col-md-9 col-sm-9">
+                            @Html.GrandEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ))
 
     <div class="form-horizontal">
         <div class="form-body">
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.LanguageId)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandDropDownListFor(model => model.LanguageId, new SelectList(ViewBag.AllLanguages, "Id", "Name"))
-                </div>
-            </div>
-            <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Name)
-                <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.Name)
-                    @Html.ValidationMessageFor(model => model.Name)
-                </div>
-            </div>
-            <div class="form-group">
-                    @Html.GrandLabelFor(model => model.SystemKeyword)
+                @Html.GrandLabelFor(model => model.SystemKeyword)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.SystemKeyword)
                     @Html.ValidationMessageFor(model => model.SystemKeyword)
                 </div>
             </div>
-            <div class="form-group">                
-                    @Html.GrandLabelFor(model => model.Published)
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Published)
                 <div class="col-md-9 col-sm-9">
                     @Html.EditorFor(model => model.Published)
                     @Html.ValidationMessageFor(model => model.Published)
                 </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.ShowOnHomePage)
+                @Html.GrandLabelFor(model => model.ShowOnHomePage)
                 <div class="col-md-9 col-sm-9">
                     @Html.EditorFor(model => model.ShowOnHomePage)
                     @Html.ValidationMessageFor(model => model.ShowOnHomePage)
                 </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.AllowGuestsToVote)
+                @Html.GrandLabelFor(model => model.AllowGuestsToVote)
                 <div class="col-md-9 col-sm-9">
                     @Html.EditorFor(model => model.AllowGuestsToVote)
                     @Html.ValidationMessageFor(model => model.AllowGuestsToVote)
                 </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.DisplayOrder)
+                @Html.GrandLabelFor(model => model.DisplayOrder)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.DisplayOrder)
                     @Html.ValidationMessageFor(model => model.DisplayOrder)
                 </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.StartDate)
+                @Html.GrandLabelFor(model => model.StartDate)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.StartDate)
                     @Html.ValidationMessageFor(model => model.StartDate)
                 </div>
             </div>
             <div class="form-group">
-                    @Html.GrandLabelFor(model => model.EndDate)
+                @Html.GrandLabelFor(model => model.EndDate)
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandEditorFor(model => model.EndDate)
                     @Html.ValidationMessageFor(model => model.EndDate)
@@ -125,111 +146,108 @@ if (!String.IsNullOrEmpty(Model.Id))
                 <div id="answers-grid"></div>
             </div>
         </div>
-
-
-
-                    <script>
-                    $(document).ready(function () {
-                        $("#answers-grid").kendoGrid({
-                            dataSource: {                                
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new { pollId = Model.Id }))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    create: {
-                                        url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    update: {
-                                        url:"@Html.Raw(Url.Action("PollAnswerUpdate", "Poll"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("PollAnswerDelete", "Poll"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id",
-                                        fields: {
-                                            Name: { editable: true, type: "string" },
-                                            NumberOfVotes: { editable: false, type: "number" },
-                                            DisplayOrder: { editable: true, type: "number" },
-                                            Id: { editable: false, type: "string" }
-                                        }
-                                    }
-                                },
-                                requestEnd: function (e) {
-                                    if (e.type == "create" || e.type == "update") {
-                                        this.read();
-                                    }
-                                },
-                                error: function (e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
+        <script>
+            $(document).ready(function () {
+                $("#answers-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new { pollId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             },
-                            pageable: {
-                                refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false
+                            create: {
+                                url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             },
-                            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
+                            update: {
+                                url: "@Html.Raw(Url.Action("PollAnswerUpdate", "Poll"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             },
-                            scrollable: false,
-                            columns: [{
-                                field: "Name",
-                                title: "@T("Admin.ContentManagement.Polls.Answers.Fields.Name")",
-                                width: 300
-                            }, {
-                                field: "NumberOfVotes",
-                                title: "@T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes")",
-                                width: 100
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")",
-                                //integer format
-                                format: "{0:0}",
-                                width: 100
-                            }, {
-                                command: [{
-                                    name: "edit",
-                                    text: {
-                                        edit: "@T("Admin.Common.Edit")",
-                                        update: "@T("Admin.Common.Update")",
-                                        cancel: "@T("Admin.Common.Cancel")"
-                                    }
-                                }, {
-                                    name: "destroy",
-                                    text: "@T("Admin.Common.Delete")"
-                                }],
-                                width: 200
-                            }]
-                        });
-                    });
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("PollAnswerDelete", "Poll"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Name: { editable: true, type: "string" },
+                                    NumberOfVotes: { editable: false, type: "number" },
+                                    DisplayOrder: { editable: true, type: "number" },
+                                    Id: { editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "create" || e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.Name")",
+                        width: 300
+                    }, {
+                        field: "NumberOfVotes",
+                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes")",
+                        width: 100
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")",
+                        //integer format
+                        format: "{0:0}",
+                        width: 100
+                    }, {
+                        command: [{
+                            name: "edit",
+                            text: {
+                                edit: "@T("Admin.Common.Edit")",
+                                update: "@T("Admin.Common.Update")",
+                                cancel: "@T("Admin.Common.Cancel")"
+                            }
+                        }, {
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 200
+                    }]
+                });
+            });
 
-                    </script>
+        </script>
 }
 else
 {
@@ -237,4 +255,66 @@ else
             @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
         </div>
 }
+}
+
+
+@helper TabStores()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
+
+            toggleStoreMapping();
+        });
+
+
+        function toggleStoreMapping() {
+            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
+                $('#pnl-available-stores').show();
+            }
+            else {
+                $('#pnl-available-stores').hide();
+            }
+        }
+
+    </script>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LimitedToStores)
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.LimitedToStores)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.LimitedToStores)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-available-stores">
+                @Html.GrandLabelFor(model => model.AvailableStores)
+                <div class="col-md-9 col-sm-9">
+                    @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
+                    {
+                        @Html.Action("MultistoreDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var store in Model.AvailableStores)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    <span></span>
+                                </label>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="note note-info">
+                            No stores defined
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 }

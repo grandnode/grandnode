@@ -19,20 +19,18 @@ namespace Grand.Services.Polls
         /// Gets a poll
         /// </summary>
         /// <param name="systemKeyword">The poll system keyword</param>
-        /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <returns>Poll</returns>
-        Poll GetPollBySystemKeyword(string systemKeyword, string languageId);
+        Poll GetPollBySystemKeyword(string systemKeyword, string storeId);
         
         /// <summary>
         /// Gets polls
         /// </summary>
-        /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <param name="loadShownOnHomePageOnly">Retrieve only shown on home page polls</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Polls</returns>
-        IPagedList<Poll> GetPolls(string languageId = "", bool loadShownOnHomePageOnly = false,
+        IPagedList<Poll> GetPolls(string storeId = "", bool loadShownOnHomePageOnly = false,
              int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>

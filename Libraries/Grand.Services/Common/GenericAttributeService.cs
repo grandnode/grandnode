@@ -17,27 +17,11 @@ namespace Grand.Services.Common
     /// </summary>
     public partial class GenericAttributeService : IGenericAttributeService
     {
-        #region Constants
-
-        /// <summary>
-        /// Key for caching
-        /// </summary>
-        /// <remarks>
-        /// {0} : entity ID
-        /// {1} : key group
-        /// </remarks>
-        private const string GENERICATTRIBUTE_KEY = "Nop.genericattribute.{0}-{1}";
-        /// <summary>
-        /// Key pattern to clear cache
-        /// </summary>
-        private const string GENERICATTRIBUTE_PATTERN_KEY = "Nop.genericattribute.";
-        #endregion
 
         #region Fields
 
         private readonly IRepository<BaseEntity> _baseRepository;
         private readonly IRepository<GenericAttributeBaseEntity> _genericattributeBaseEntitRepository;
-        private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         #endregion
 
@@ -46,15 +30,14 @@ namespace Grand.Services.Common
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
         /// <param name="genericAttributeRepository">Generic attribute repository</param>
+        /// <param name="GenericAttributeBaseEntity">Generic attribute base repository</param>
         /// <param name="eventPublisher">Event published</param>
-        public GenericAttributeService(ICacheManager cacheManager,
+        public GenericAttributeService(
             IRepository<BaseEntity> baseRepository,
             IRepository<GenericAttributeBaseEntity> genericattributeBaseEntitRepository,
             IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
             this._baseRepository = baseRepository;
             this._genericattributeBaseEntitRepository = genericattributeBaseEntitRepository;
             this._eventPublisher = eventPublisher;
@@ -146,7 +129,7 @@ namespace Grand.Services.Common
                 return default(TPropType);
 
             var prop = props.FirstOrDefault(ga =>
-                ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
+                ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); 
 
             if (prop == null || string.IsNullOrEmpty(prop.Value))
                 return default(TPropType);

@@ -12,6 +12,9 @@ using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Kendoui;
 using Grand.Web.Framework.Mvc;
 using MongoDB.Bson;
+using Grand.Core.Domain.Localization;
+using System.Collections.Generic;
+using Grand.Services.Stores;
 
 namespace Grand.Admin.Controllers
 {
@@ -24,24 +27,68 @@ namespace Grand.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IStoreService _storeService;
+        #endregion
 
-		#endregion
-
-		#region Constructors
+        #region Constructors
 
         public PollController(IPollService pollService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, IStoreService storeService)
         {
             this._pollService = pollService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
-		}
+            this._storeService = storeService;
 
-		#endregion 
-        
+        }
+
+        #endregion
+
+        #region Utilities
+
+        [NonAction]
+        protected virtual List<LocalizedProperty> UpdateLocales(Poll poll, PollModel model)
+        {
+            List<LocalizedProperty> localized = new List<LocalizedProperty>();
+
+            foreach (var local in model.Locales)
+            {
+                if (!(String.IsNullOrEmpty(local.Name)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Name",
+                        LocaleValue = local.Name
+                    });
+
+            }
+            return localized;
+        }
+
+        [NonAction]
+        protected virtual void PrepareStoresMappingModel(PollModel model, Poll poll, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableStores = _storeService
+                .GetAllStores()
+                .Select(s => s.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (poll != null)
+                {
+                    model.SelectedStoreIds = poll.Stores.ToArray();
+                }
+            }
+        }
+
+        #endregion
+
         #region Polls
 
         public ActionResult Index()
@@ -69,12 +116,10 @@ namespace Grand.Admin.Controllers
                 Data = polls.Select(x =>
                 {
                     var m = x.ToModel();
-                    var lang = _languageService.GetLanguageById(m.LanguageId);
                     if (x.StartDateUtc.HasValue)
                         m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
                     if (x.EndDateUtc.HasValue)
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
-                    m.LanguageName = lang.Name;
                     return m;
                 }),
                 Total = polls.TotalCount
@@ -93,6 +138,11 @@ namespace Grand.Admin.Controllers
             //default values
             model.Published = true;
             model.ShowOnHomePage = true;
+            //Stores
+            PrepareStoresMappingModel(model, null, false);
+            //locales
+            AddLocales(_languageService, model.Locales);
+
             return View(model);
         }
 
@@ -107,6 +157,8 @@ namespace Grand.Admin.Controllers
                 var poll = model.ToEntity();
                 poll.StartDateUtc = model.StartDate;
                 poll.EndDateUtc = model.EndDate;
+                poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                poll.Locales = UpdateLocales(poll, model);
                 _pollService.InsertPoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
@@ -132,6 +184,16 @@ namespace Grand.Admin.Controllers
             var model = poll.ToModel();
             model.StartDate = poll.StartDateUtc;
             model.EndDate = poll.EndDateUtc;
+
+            //Store
+            PrepareStoresMappingModel(model, poll, false);
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
+            });
+
+
             return View(model);
         }
 
@@ -151,6 +213,8 @@ namespace Grand.Admin.Controllers
                 poll = model.ToEntity(poll);
                 poll.StartDateUtc = model.StartDate;
                 poll.EndDateUtc = model.EndDate;
+                poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                poll.Locales = UpdateLocales(poll, model);
                 _pollService.UpdatePoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));

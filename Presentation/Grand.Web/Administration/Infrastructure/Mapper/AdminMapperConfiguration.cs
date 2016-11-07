@@ -557,11 +557,13 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
                 //news
                 cfg.CreateMap<Poll, PollModel>()
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDate, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDate, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<PollModel, Poll>()
                     .ForMember(dest => dest.Id, mo => mo.Ignore())
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.PollAnswers, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore());

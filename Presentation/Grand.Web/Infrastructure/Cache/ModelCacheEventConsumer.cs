@@ -587,7 +587,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : poll system name
-        /// {1} : language ID
+        /// {1} : store ID
         /// </remarks>
         public const string POLL_BY_SYSTEMNAME__MODEL_KEY = "Nop.pres.poll.systemname-{0}-{1}";
         public const string POLLS_PATTERN_KEY = "Nop.pres.poll";
