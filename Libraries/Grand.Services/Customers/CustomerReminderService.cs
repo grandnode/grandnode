@@ -660,7 +660,7 @@ namespace Grand.Services.Customers
 
         public virtual void Task_AbandonedCart(string id = "")
         {
-            var datetimeUtcNow = DateTime.UtcNow;
+            var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
@@ -753,7 +753,7 @@ namespace Grand.Services.Customers
 
         public virtual void Task_RegisteredCustomer(string id = "")
         {
-            var datetimeUtcNow = DateTime.UtcNow;
+            var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
@@ -846,7 +846,7 @@ namespace Grand.Services.Customers
 
         public virtual void Task_LastActivity(string id = "")
         {
-            var datetimeUtcNow = DateTime.UtcNow;
+            var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
@@ -937,7 +937,7 @@ namespace Grand.Services.Customers
 
         public virtual void Task_LastPurchase(string id = "")
         {
-            var datetimeUtcNow = DateTime.UtcNow;
+            var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
@@ -1030,7 +1030,7 @@ namespace Grand.Services.Customers
 
         public virtual void Task_Birthday(string id = "")
         {
-            var datetimeUtcNow = DateTime.UtcNow;
+            var datetimeUtcNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
@@ -1146,6 +1146,7 @@ namespace Grand.Services.Customers
 
         public virtual void Task_CompletedOrder(string id = "")
         {
+            var dateNow = DateTime.UtcNow.Date;
             var datetimeUtcNow = DateTime.UtcNow;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
@@ -1170,7 +1171,7 @@ namespace Grand.Services.Customers
 
                 var orders = from or in _orderRepository.Table
                              where or.OrderStatusId == (int)OrderStatus.Complete
-                             && or.CreatedOnUtc >= reminder.LastUpdateDate && or.CreatedOnUtc >= datetimeUtcNow.AddDays(-day)
+                             && or.CreatedOnUtc >= reminder.LastUpdateDate && or.CreatedOnUtc >= dateNow.AddDays(-day)
                              select or;
 
                 foreach (var order in orders)
@@ -1265,6 +1266,7 @@ namespace Grand.Services.Customers
         public virtual void Task_UnpaidOrder(string id = "")
         {
             var datetimeUtcNow = DateTime.UtcNow;
+            var dateNow = DateTime.UtcNow.Date;
             var customerReminder = new List<CustomerReminder>();
             if (String.IsNullOrEmpty(id))
             {
@@ -1288,7 +1290,7 @@ namespace Grand.Services.Customers
 
                 var orders = from or in _orderRepository.Table
                              where or.PaymentStatusId == (int)PaymentStatus.Pending
-                             && or.CreatedOnUtc >= reminder.LastUpdateDate && or.CreatedOnUtc >= datetimeUtcNow.AddDays(-day)
+                             && or.CreatedOnUtc >= reminder.LastUpdateDate && or.CreatedOnUtc >= dateNow.AddDays(-day)
                              select or;
 
                 foreach (var order in orders)
