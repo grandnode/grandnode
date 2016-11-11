@@ -2321,16 +2321,14 @@ namespace Grand.Admin.Controllers
                 .Select(x =>
                 {
                     var picture = _pictureService.GetPictureById(x.PictureId);
-                    if (picture == null)
-                        throw new Exception("Picture cannot be loaded");
                     var m = new ProductModel.ProductPictureModel
                     {
                         Id = x.Id,
                         ProductId = product.Id,
                         PictureId = x.PictureId,
-                        PictureUrl = _pictureService.GetPictureUrl(picture),
-                        OverrideAltAttribute = picture.AltAttribute,
-                        OverrideTitleAttribute = picture.TitleAttribute,
+                        PictureUrl = picture!=null ? _pictureService.GetPictureUrl(picture) : null,
+                        OverrideAltAttribute = picture != null ? picture.AltAttribute : null,
+                        OverrideTitleAttribute = picture != null ? picture.TitleAttribute : null,
                         DisplayOrder = x.DisplayOrder
                     };
                     return m;
@@ -2417,9 +2415,8 @@ namespace Grand.Admin.Controllers
             _productService.DeleteProductPicture(productPicture);
 
             var picture = _pictureService.GetPictureById(pictureId);
-            if (picture == null)
-                throw new ArgumentException("No picture found with the specified id");
-            _pictureService.DeletePicture(picture);
+            if (picture != null)
+                _pictureService.DeletePicture(picture);
 
             return new NullJsonResult();
         }

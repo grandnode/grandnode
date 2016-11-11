@@ -1965,8 +1965,6 @@ namespace Grand.Services.Catalog
             if (productPicture == null)
                 throw new ArgumentNullException("productPicture");
 
-            //_productPictureRepository.Delete(productPicture);
-
             var updatebuilder = Builders<Product>.Update;
             var update = updatebuilder.Pull(p => p.ProductPictures, productPicture);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productPicture.ProductId), update);
