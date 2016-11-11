@@ -145,8 +145,8 @@
                         grid.data('kendoGrid').dataSource.read();
                         $('#addProductPicture').attr('disabled', false);
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert('Failed to add product picture.');
+                    error: function (xhr) {
+                        alert(xhr.responseJSON.Errors);
                         $('#addProductPicture').attr('disabled', false);
                     }
                 });

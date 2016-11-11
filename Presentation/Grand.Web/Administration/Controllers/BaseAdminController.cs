@@ -33,7 +33,10 @@ namespace Grand.Admin.Controllers
         protected override void OnException(ExceptionContext filterContext)
         {
             if (filterContext.Exception != null)
+            {
                 LogException(filterContext.Exception);
+                filterContext.Result = new JsonResult() { Data = filterContext.Exception.Message };
+            }
             base.OnException(filterContext);
         }
         

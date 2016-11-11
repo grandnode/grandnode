@@ -2275,6 +2275,9 @@ namespace Grand.Admin.Controllers
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
 
+            if (product.ProductPictures.Where(x => x.PictureId == pictureId).Count() > 0)
+                return new ErrorJsonResult(new DataSourceResult() { Errors = "This picture exists on the product" });
+
             _pictureService.UpdatePicture(picture.Id,
                 _pictureService.LoadPictureBinary(picture),
                 picture.MimeType,
@@ -2292,8 +2295,6 @@ namespace Grand.Admin.Controllers
                 SeoFilename = picture.SeoFilename,
                 TitleAttribute = overrideTitleAttribute
             });
-
-
 
             _pictureService.SetSeoFilename(pictureId, _pictureService.GetPictureSeName(product.Name));
 
