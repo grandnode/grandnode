@@ -17,6 +17,7 @@ using System.Web;
 using Grand.Core.Domain.Logging;
 using System.Threading.Tasks;
 using Grand.Core.Caching;
+using Grand.Services.Helpers;
 
 namespace Grand.Services.Customers
 {

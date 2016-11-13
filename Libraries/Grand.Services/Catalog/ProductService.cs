@@ -1141,12 +1141,8 @@ namespace Grand.Services.Catalog
             if (String.IsNullOrEmpty(vendorId))
                 vendorId = "";
 
-            var doc = MongoDB.Bson.Serialization.BsonSerializer
-                        .Deserialize<BsonDocument>
-                        ("{$where: \" this.MinStockQuantity >= this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0 " + vendors + " \" }");
-
-            products = _productRepository.Collection.Find(new CommandDocument(doc)).ToListAsync().Result;
-
+            var doc = "{$where: \" this.MinStockQuantity >= this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0 " + vendors + " \" }";
+            products = _productRepository.Collection.Find(doc).ToListAsync().Result;
 
             //Track inventory for product by product attributes
             var query2_1 = from p in _productRepository.Table

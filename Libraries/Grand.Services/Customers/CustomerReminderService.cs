@@ -15,6 +15,7 @@ using Grand.Services.Logging;
 using Grand.Services.Localization;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
+using Grand.Services.Helpers;
 
 namespace Grand.Services.Customers
 {

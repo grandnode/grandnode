@@ -72,10 +72,8 @@ namespace Grand.Admin.Controllers
             var model = new DashboardActivityModel();
             model.OrdersPending = _orderReportService.GetOrderAverageReportLine(os: Core.Domain.Orders.OrderStatus.Pending).CountOrders;
             model.AbandonedCarts = _customerService.GetAllCustomers(loadOnlyWithShoppingCart: true, pageSize: 1).TotalCount;
-            var doc = MongoDB.Bson.Serialization.BsonSerializer
-            .Deserialize<BsonDocument>
-            ("{$where: \" this.MinStockQuantity > this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0  \" }");
-            model.LowStockProducts = _productRepository.Collection.Find(new CommandDocument(doc)).ToListAsync().Result.Count;
+            var doc = "{$where: \" this.MinStockQuantity > this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0  \" }";
+            model.LowStockProducts = _productRepository.Collection.Find(doc).ToListAsync().Result.Count;
 
             model.ReturnRequests = (int)_returnRequestRepository.Collection.Count(new BsonDocument());
             model.TodayRegisteredCustomers = _customerService.GetAllCustomers(customerRoleIds: new string[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1).TotalCount;
