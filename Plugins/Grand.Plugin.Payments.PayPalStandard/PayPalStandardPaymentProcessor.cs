@@ -42,6 +42,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
         private readonly IProductService _productService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly HttpContextBase _httpContext;
+        private readonly ILocalizationService _localizationService;
         #endregion
 
         #region Ctor
@@ -50,7 +51,8 @@ namespace Grand.Plugin.Payments.PayPalStandard
             ISettingService settingService, ICurrencyService currencyService,
             CurrencySettings currencySettings, IWebHelper webHelper,
             ICheckoutAttributeParser checkoutAttributeParser, ITaxService taxService, IProductService productService,
-            IOrderTotalCalculationService orderTotalCalculationService, HttpContextBase httpContext)
+            IOrderTotalCalculationService orderTotalCalculationService, HttpContextBase httpContext,
+            ILocalizationService localizationService)
         {
             this._paypalStandardPaymentSettings = paypalStandardPaymentSettings;
             this._settingService = settingService;
@@ -62,6 +64,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
             this._productService = productService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._httpContext = httpContext;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -524,6 +527,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint", "For people who already have PayPal accounts and whom you already prompted for a shipping address before they choose to pay with PayPal, you can use the entered address instead of the address the person has stored with PayPal.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage", "Return to order details page");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint", "Enable if a customer should be redirected to the order details page when he clicks \"return to store\" link on PayPal site WITHOUT completing a payment");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription", "You will be redirected to PayPal site to complete the payment");
 
             base.Install();
         }
@@ -558,7 +562,7 @@ namespace Grand.Plugin.Payments.PayPalStandard
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.AddressOverride.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage.Hint");
-            
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription");
             base.Uninstall();
         }
 
@@ -640,6 +644,14 @@ namespace Grand.Plugin.Payments.PayPalStandard
             get
             {
                 return false;
+            }
+        }
+
+        public string PaymentMethodDescription
+        {
+            get
+            {
+                return _localizationService.GetResource("Plugins.Payments.PayPalStandard.PaymentMethodDescription");
             }
         }
 

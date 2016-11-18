@@ -21,16 +21,19 @@ namespace Grand.Plugin.Payments.CashOnDelivery
         private readonly CashOnDeliveryPaymentSettings _cashOnDeliveryPaymentSettings;
         private readonly ISettingService _settingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ILocalizationService _localizationService;
         #endregion
 
         #region Ctor
 
         public CashOnDeliveryPaymentProcessor(CashOnDeliveryPaymentSettings cashOnDeliveryPaymentSettings,
-            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService)
+            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService,
+            ILocalizationService localizationService)
         {
             this._cashOnDeliveryPaymentSettings = cashOnDeliveryPaymentSettings;
             this._settingService = settingService;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -202,6 +205,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery
 
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText", "Description");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.PaymentMethodDescription", "Cash On Delivery");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFee.Hint", "The additional fee.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFeePercentage", "Additional fee. Use percentage");
@@ -221,6 +225,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery
             //locales
             this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText");
             this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.PaymentMethodDescription");
             this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFeePercentage");
@@ -312,7 +317,15 @@ namespace Grand.Plugin.Payments.CashOnDelivery
             }
         }
 
+        public string PaymentMethodDescription
+        {
+            get
+            {
+                return _localizationService.GetResource("Plugins.Payment.CashOnDelivery.PaymentMethodDescription");
+            }
+        }
+
         #endregion
-        
+
     }
 }

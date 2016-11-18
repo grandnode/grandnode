@@ -3669,7 +3669,10 @@ label, label + * {
 	text-align: left;
 	vertical-align: middle;
 }
-
+.payment-description {
+    word-break: break-word;
+    padding-top: 5px;
+}
 .payment-info .info {
 	padding: 30px 15px;
 	color: #444;

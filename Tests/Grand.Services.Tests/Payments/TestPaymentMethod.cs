@@ -215,6 +215,14 @@ namespace Grand.Services.Tests.Payments {
             }
         }
 
+        public string PaymentMethodDescription
+        {
+            get
+            {
+                return "";
+            }
+        }
+
         #endregion
     }
 }

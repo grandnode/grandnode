@@ -1,7 +1,7 @@
 ﻿Group: Payment methods
 FriendlyName: Cash On Delivery (COD)
 SystemName: Payments.CashOnDelivery
-Version: 1.13
+Version: 1.14
 SupportedVersions: 3.90
 Author: grandnode team, nopcommerce team
 DisplayOrder: 1

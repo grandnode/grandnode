@@ -21,16 +21,18 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
         private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
         private readonly ISettingService _settingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ILocalizationService _localizationService;
         #endregion
 
         #region Ctor
 
         public CheckMoneyOrderPaymentProcessor(CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings,
-            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService)
+            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService, ILocalizationService localizationService)
         {
             this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
             this._settingService = settingService;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -204,6 +206,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText", "Description");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription", "Pay by check or money order");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint", "The additional fee.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage", "Additional fee. Use percentage");
@@ -223,6 +226,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
             //locales
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage");
@@ -314,7 +318,15 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder
             }
         }
 
+        public string PaymentMethodDescription
+        {
+            get
+            {
+                return _localizationService.GetResource("Plugins.Payment.CheckMoneyOrder.PaymentMethodDescription");
+            }
+        }
+
         #endregion
-        
+
     }
 }

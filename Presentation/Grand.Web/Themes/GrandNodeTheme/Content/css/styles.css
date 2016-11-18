@@ -3384,6 +3384,10 @@ input.qq-edit-filename {
 	padding: 30px 15px;
 	color: #444;
 }
+.payment-description {
+    word-break: break-word;
+    padding: 5px;
+}
 .payment-info .info tr {
 	display: block;
 	margin: 0 0 15px;

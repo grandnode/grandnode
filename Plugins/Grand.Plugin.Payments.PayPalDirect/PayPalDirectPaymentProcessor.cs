@@ -41,6 +41,8 @@ namespace Grand.Plugin.Payments.PayPalDirect
         private readonly CurrencySettings _currencySettings;
         private readonly IWebHelper _webHelper;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ILocalizationService _localizationService;
+
         #endregion
 
         #region Ctor
@@ -50,7 +52,8 @@ namespace Grand.Plugin.Payments.PayPalDirect
             ICurrencyService currencyService, ICustomerService customerService,
             IGenericAttributeService genericAttributeService,
             CurrencySettings currencySettings, IWebHelper webHelper, 
-            IOrderTotalCalculationService orderTotalCalculationService)
+            IOrderTotalCalculationService orderTotalCalculationService,
+            ILocalizationService localizationService)
         {
             this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
             this._settingService = settingService;
@@ -60,6 +63,7 @@ namespace Grand.Plugin.Payments.PayPalDirect
             this._currencySettings = currencySettings;
             this._webHelper = webHelper;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -665,7 +669,7 @@ namespace Grand.Plugin.Payments.PayPalDirect
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage", "Additional fee. Use percentage");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
-           
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription", "Pay by credit / debit card");
             base.Install();
         }
         
@@ -689,7 +693,7 @@ namespace Grand.Plugin.Payments.PayPalDirect
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage.Hint");
-           
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription");
             base.Uninstall();
         }
 
@@ -774,6 +778,13 @@ namespace Grand.Plugin.Payments.PayPalDirect
             }
         }
 
+        public string PaymentMethodDescription
+        {
+            get
+            {
+                return _localizationService.GetResource("Plugins.Payments.PayPalDirect.PaymentMethodDescription");
+            }
+        }
         #endregion
     }
 }

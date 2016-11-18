@@ -5234,6 +5234,7 @@ namespace Grand.Services.Installation
                     },
                 AllowRePostingPayments = true,
                 BypassPaymentMethodSelectionIfOnlyOne = true,
+                ShowPaymentMethodDescriptions = true,
             });
 
             settingService.SaveSetting(new TaxSettings

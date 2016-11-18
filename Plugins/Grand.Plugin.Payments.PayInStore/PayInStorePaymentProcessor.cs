@@ -21,16 +21,19 @@ namespace Grand.Plugin.Payments.PayInStore
         private readonly PayInStorePaymentSettings _payInStorePaymentSettings;
         private readonly ISettingService _settingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ILocalizationService _localizationService;
         #endregion
 
         #region Ctor
 
         public PayInStorePaymentProcessor(PayInStorePaymentSettings payInStorePaymentSettings,
-            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService)
+            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService,
+            ILocalizationService localizationService)
         {
             this._payInStorePaymentSettings = payInStorePaymentSettings;
             this._settingService = settingService;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -198,6 +201,7 @@ namespace Grand.Plugin.Payments.PayInStore
 
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText", "Description");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.PaymentMethodDescription", "Pay In Store");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee.Hint", "The additional fee.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage", "Additional fee. Use percentage");
@@ -213,13 +217,14 @@ namespace Grand.Plugin.Payments.PayInStore
             _settingService.DeleteSetting<PayInStorePaymentSettings>();
 
             //locales
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText");
-            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint");
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage");
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint");
-            
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText");
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.PaymentMethodDescription");
+
             base.Uninstall();
         }
 
@@ -301,7 +306,14 @@ namespace Grand.Plugin.Payments.PayInStore
             get { return false; }
         }
 
+        public string PaymentMethodDescription
+        {
+            get
+            {
+                return _localizationService.GetResource("Plugins.Payment.PayInStore.PaymentMethodDescription");
+            }
+        }
         #endregion
-        
+
     }
 }
