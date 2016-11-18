@@ -5191,6 +5191,7 @@ namespace Grand.Services.Installation
                 ReturnRequestsEnabled = true,
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
+                DeactivateGiftCardsAfterDeletingOrder = false,
                 CompleteOrderWhenDelivered = true
             });
 

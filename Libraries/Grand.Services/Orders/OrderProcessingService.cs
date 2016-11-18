@@ -1721,9 +1721,13 @@ namespace Grand.Services.Orders
                 }
 
             }
+            //deactivate gift cards
+            if (_orderSettings.DeactivateGiftCardsAfterDeletingOrder)
+                SetActivatedValueForPurchasedGiftCards(order, false);
 
+            order.Deleted = true;
             //now delete an order
-            _orderService.DeleteOrder(order);
+            _orderService.UpdateOrder(order);
         }
 
         /// <summary>
