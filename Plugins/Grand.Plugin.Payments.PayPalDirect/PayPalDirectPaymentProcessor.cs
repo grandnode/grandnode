@@ -266,9 +266,6 @@ namespace Grand.Plugin.Payments.PayPalDirect
             string formContent = string.Format("{0}&cmd=_notify-validate", formString);
             req.ContentLength = formContent.Length;
 
-            //PayPal requires TLS 1.2 since January 1016
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
             {
                 sw.Write(formContent);

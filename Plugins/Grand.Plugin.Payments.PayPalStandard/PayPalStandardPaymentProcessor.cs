@@ -96,9 +96,6 @@ namespace Grand.Plugin.Payments.PayPalStandard
             string formContent = string.Format("cmd=_notify-synch&at={0}&tx={1}", _paypalStandardPaymentSettings.PdtToken, tx);
             req.ContentLength = formContent.Length;
 
-            //PayPal requires TLS 1.2 since January 1016
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
                 sw.Write(formContent);
 
@@ -142,9 +139,6 @@ namespace Grand.Plugin.Payments.PayPalStandard
 
             string formContent = string.Format("{0}&cmd=_notify-validate", formString);
             req.ContentLength = formContent.Length;
-
-            //PayPal requires TLS 1.2 since January 1016
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
             {

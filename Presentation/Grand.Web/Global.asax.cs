@@ -20,6 +20,7 @@ using Grand.Web.Framework.Themes;
 using StackExchange.Profiling;
 using StackExchange.Profiling.Mvc;
 using FluentScheduler;
+using System.Net;
 
 namespace Grand.Web
 {
@@ -44,6 +45,8 @@ namespace Grand.Web
 
         protected void Application_Start()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             //disable "X-AspNetMvc-Version" header name
             MvcHandler.DisableMvcResponseHeader = true;
 
