@@ -261,6 +261,15 @@
                     @Html.ValidationMessageFor(model => model.GiftCards_Deactivated_OrderStatusId)
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.CompleteOrderWhenDelivered, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CompleteOrderWhenDelivered)
+                    @Html.ValidationMessageFor(model => model.CompleteOrderWhenDelivered)
+                </div>
+            </div>
             @if (Model.OrderIdent.HasValue)
             {
                 <div class="form-group">

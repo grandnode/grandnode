@@ -97,5 +97,10 @@ namespace Grand.Core.Domain.Orders
         /// Gets or sets an order placement interval in seconds (prevent 2 orders being placed within an X seconds time frame).
         /// </summary>
         public int MinimumOrderPlacementInterval { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether an order status should be set to "Complete" only when its shipping status is "Delivered". Otherwise, "Shipped" status will be enough.
+        /// </summary>
+        public bool CompleteOrderWhenDelivered { get; set; }
     }
 }

@@ -94,6 +94,8 @@ namespace Grand.Admin.Models.Settings
         public int GiftCards_Deactivated_OrderStatusId { get; set; }
         public IList<SelectListItem> GiftCards_Deactivated_OrderStatuses { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.CompleteOrderWhenDelivered")]
+        public bool CompleteOrderWhenDelivered { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
 
