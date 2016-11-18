@@ -821,7 +821,7 @@ namespace Grand.Services.Orders
                 {
                     _orderService.InsertOrderNote(new OrderNote
                     {
-                        Note = string.Format("\"Order completed\" email (to customer) has been queued. Queued email identifier: {0}.", orderCompletedCustomerNotificationQueuedEmailId),
+                        Note = "\"Order completed\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
@@ -839,7 +839,7 @@ namespace Grand.Services.Orders
                 {
                     _orderService.InsertOrderNote(new OrderNote
                     {
-                        Note = string.Format("\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {0}.", orderCancelledCustomerNotificationQueuedEmailId),
+                        Note = "\"Order cancelled\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
@@ -1968,7 +1968,7 @@ namespace Grand.Services.Orders
                 {
                     _orderService.InsertOrderNote(new OrderNote
                     {
-                        Note = string.Format("\"Shipped\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
+                        Note = "\"Shipped\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
@@ -2027,7 +2027,7 @@ namespace Grand.Services.Orders
                 {
                     _orderService.InsertOrderNote(new OrderNote
                     {
-                        Note = string.Format("\"Delivered\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
+                        Note = "\"Delivered\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
@@ -2406,7 +2406,7 @@ namespace Grand.Services.Orders
                     {
                         _orderService.InsertOrderNote(new OrderNote
                         {
-                            Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                            Note = "\"Order refunded\" email (to store owner) has been queued.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
                             OrderId = order.Id,
@@ -2419,7 +2419,7 @@ namespace Grand.Services.Orders
                     {
                         _orderService.InsertOrderNote(new OrderNote
                         {
-                            Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                            Note = "\"Order refunded\" email (to customer) has been queued.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
                             OrderId = order.Id,
@@ -2533,7 +2533,7 @@ namespace Grand.Services.Orders
             {
                 _orderService.InsertOrderNote(new OrderNote
                 {
-                    Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                    Note = "\"Order refunded\" email (to store owner) has been queued.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
@@ -2547,7 +2547,7 @@ namespace Grand.Services.Orders
             {
                 _orderService.InsertOrderNote(new OrderNote
                 {
-                    Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                    Note = "\"Order refunded\" email (to customer) has been queued.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
@@ -2644,7 +2644,7 @@ namespace Grand.Services.Orders
                     {
                         _orderService.InsertOrderNote(new OrderNote
                         {
-                            Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                            Note = "\"Order refunded\" email (to store owner) has been queued.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
                             OrderId = order.Id,
@@ -2657,7 +2657,7 @@ namespace Grand.Services.Orders
                     {
                         _orderService.InsertOrderNote(new OrderNote
                         {
-                            Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                            Note = "\"Order refunded\" email (to customer) has been queued.",
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow,
                             OrderId = order.Id,
@@ -2773,7 +2773,7 @@ namespace Grand.Services.Orders
             {
                 _orderService.InsertOrderNote(new OrderNote
                 {
-                    Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                    Note = "\"Order refunded\" email (to store owner) has been queued.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
@@ -2785,7 +2785,7 @@ namespace Grand.Services.Orders
             {
                 _orderService.InsertOrderNote(new OrderNote
                 {
-                    Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                    Note = "\"Order refunded\" email (to customer) has been queued.",
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow,
                     OrderId = order.Id,
