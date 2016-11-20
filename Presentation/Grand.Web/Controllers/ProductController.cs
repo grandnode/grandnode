@@ -826,25 +826,23 @@ namespace Grand.Web.Controllers
 
             if (product.HasTierPrices && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
-                model.TierPrices = product.TierPrices
-                    .OrderBy(x => x.Quantity)
-                    .ToList()
-                    .FilterByStore(_storeContext.CurrentStore.Id)
-                    .FilterForCustomer(_workContext.CurrentCustomer)
-                    .RemoveDuplicatedQuantities()
-                    .Select(tierPrice =>
-                    {
-                        var m = new ProductDetailsModel.TierPriceModel
-                        {
-                            Quantity = tierPrice.Quantity,
-                        };
-                        decimal taxRate;
-                        decimal priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
-                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
-                        m.Price = _priceFormatter.FormatPrice(price, false, false);
-                        return m;
-                    })
-                    .ToList();
+                model.TierPrices = product.TierPrices.OrderBy(x => x.Quantity)
+                                    .FilterByStore(_storeContext.CurrentStore.Id)
+                                    .FilterForCustomer(_workContext.CurrentCustomer)
+                                    .FilterByDate()
+                                    .RemoveDuplicatedQuantities().Select(tierPrice =>
+                                    {
+                                        decimal taxRate;
+                                        var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
+                                            _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
+                                        var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
+
+                                        return new ProductDetailsModel.TierPriceModel
+                                        {
+                                            Quantity = tierPrice.Quantity,
+                                            Price = _priceFormatter.FormatPrice(price, false, false)
+                                        };
+                                    }).ToList();
             }
 
             #endregion

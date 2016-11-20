@@ -367,9 +367,6 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("Price", null, product.Price.ToString());
                 xmlWriter.WriteElementString("OldPrice", null, product.OldPrice.ToString());
                 xmlWriter.WriteElementString("ProductCost", null, product.ProductCost.ToString());
-                xmlWriter.WriteElementString("SpecialPrice", null, product.SpecialPrice.HasValue ? product.SpecialPrice.ToString() : "");
-                xmlWriter.WriteElementString("SpecialPriceStartDateTimeUtc", null, product.SpecialPriceStartDateTimeUtc.HasValue ? product.SpecialPriceStartDateTimeUtc.ToString() : "");
-                xmlWriter.WriteElementString("SpecialPriceEndDateTimeUtc", null, product.SpecialPriceEndDateTimeUtc.HasValue ? product.SpecialPriceEndDateTimeUtc.ToString() : "");
                 xmlWriter.WriteElementString("CustomerEntersPrice", null, product.CustomerEntersPrice.ToString());
                 xmlWriter.WriteElementString("MinimumCustomerEnteredPrice", null, product.MinimumCustomerEnteredPrice.ToString());
                 xmlWriter.WriteElementString("MaximumCustomerEnteredPrice", null, product.MaximumCustomerEnteredPrice.ToString());
@@ -413,6 +410,8 @@ namespace Grand.Services.ExportImport
                     xmlWriter.WriteElementString("CustomerRoleId", null, !String.IsNullOrEmpty(tierPrice.CustomerRoleId) ? tierPrice.CustomerRoleId : "");
                     xmlWriter.WriteElementString("Quantity", null, tierPrice.Quantity.ToString());
                     xmlWriter.WriteElementString("Price", null, tierPrice.Price.ToString());
+                    xmlWriter.WriteElementString("StartDateTimeUtc", tierPrice.StartDateTimeUtc.HasValue ? tierPrice.StartDateTimeUtc.Value.ToString() : "");
+                    xmlWriter.WriteElementString("EndDateTimeUtc", tierPrice.EndDateTimeUtc.HasValue ? tierPrice.EndDateTimeUtc.Value.ToString() : "");
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
@@ -639,9 +638,6 @@ namespace Grand.Services.ExportImport
                 new PropertyByName<Product>("Price", p => p.Price),
                 new PropertyByName<Product>("OldPrice", p => p.OldPrice),
                 new PropertyByName<Product>("ProductCost", p => p.ProductCost),
-                new PropertyByName<Product>("SpecialPrice", p => p.SpecialPrice),
-                new PropertyByName<Product>("SpecialPriceStartDateTimeUtc", p => p.SpecialPriceStartDateTimeUtc),
-                new PropertyByName<Product>("SpecialPriceEndDateTimeUtc", p => p.SpecialPriceEndDateTimeUtc),
                 new PropertyByName<Product>("CustomerEntersPrice", p => p.CustomerEntersPrice),
                 new PropertyByName<Product>("MinimumCustomerEnteredPrice", p => p.MinimumCustomerEnteredPrice),
                 new PropertyByName<Product>("MaximumCustomerEnteredPrice", p => p.MaximumCustomerEnteredPrice),

@@ -589,27 +589,6 @@
             </div>
         </div>
         <div class="form-group">
-            @Html.GrandLabelFor(model => model.SpecialPrice)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SpecialPrice) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.SpecialPrice)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.SpecialPriceStartDateTimeUtc)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SpecialPriceStartDateTimeUtc)
-                @Html.ValidationMessageFor(model => model.SpecialPriceStartDateTimeUtc)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.SpecialPriceEndDateTimeUtc)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SpecialPriceEndDateTimeUtc)
-                @Html.ValidationMessageFor(model => model.SpecialPriceEndDateTimeUtc)
-            </div>
-        </div>
-        <div class="form-group">
             @Html.GrandLabelFor(model => model.DisableBuyButton)
             <div class="col-md-9 col-sm-9">
                 @Html.EditorFor(model => model.DisableBuyButton)

@@ -424,15 +424,6 @@ namespace Grand.Services.ExportImport
                             case "productcost":
                                 product.ProductCost = property.DecimalValue;
                                 break;
-                            case "specialprice":
-                                product.SpecialPrice = property.DecimalValueNullable;
-                                break;
-                            case "specialpricestartdatetimeutc":
-                                product.SpecialPriceStartDateTimeUtc = property.DateTimeNullable;
-                                break;
-                            case "specialpriceenddatetimeutc":
-                                product.SpecialPriceEndDateTimeUtc = property.DateTimeNullable;
-                                break;
                             case "customerentersprice":
                                 product.CustomerEntersPrice = property.BooleanValue;
                                 break;

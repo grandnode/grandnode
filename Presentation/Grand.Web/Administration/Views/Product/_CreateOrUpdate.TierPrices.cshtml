@@ -4,9 +4,14 @@
 
 @if (!String.IsNullOrEmpty(Model.Id))
 {
+
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="tierprices-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewTierPrice" value = "@T("Admin.Catalog.Products.TierPrices.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshTierPrices" style="display: none" />
         </div>
     </div>
 
@@ -17,18 +22,6 @@
                     transport: {
                         read: {
                             url: "@Html.Raw(Url.Action("TierPriceList", "Product", new { productId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        },
-                        create: {
-                            url: "@Html.Raw(Url.Action("TierPriceInsert", "Product", new { productId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        },
-                        update: {
-                            url:"@Html.Raw(Url.Action("TierPriceUpdate", "Product"))",
                             type: "POST",
                             dataType: "json",
                             data: addAntiForgeryToken
@@ -47,19 +40,17 @@
                         model: {
                             id: "Id",
                             fields: {
+                                ProductId: { editable: false, type: "string" },
                                 Store: { editable: true, type: "string" },
                                 StoreId: { editable: true, type: "string" },
                                 CustomerRole: { editable: true, type: "string" },
                                 CustomerRoleId: { editable: true, type: "string" },
                                 Quantity: { editable: true, type: "number" },
                                 Price: { editable: true, type: "number" },
+                                StartDateTimeUtc: { editable: true, type: "date" },
+                                EndDateTimeUtc: { editable: true, type: "date" },
                                 Id: { editable: false, type: "string" }
                             }
-                        }
-                    },
-                    requestEnd: function (e) {
-                        if (e.type == "create" || e.type == "update") {
-                            this.read();
                         }
                     },
                     error: function (e) {
@@ -77,7 +68,6 @@
                     previousNext: false,
                     info: false
                 },
-                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                 editable: {
                     confirmation: false,
                     mode: "inline"
@@ -86,113 +76,48 @@
                 columns: [{
                     field: "StoreId",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.Store")",
-                    width: 250,
-                    editor: storeDropDownEditor,
                     template: "#:Store#"
                 },
                 {
                     field: "CustomerRoleId",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")",
-                    width: 250,
-                    editor: customerRoleDropDownEditor,
                     template: "#:CustomerRole#"
                 },
-
                 {
                     field: "Quantity",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.Quantity")",
-                    width: 150,
                     //integer format
                     format: "{0:0}"
                 }, {
                     field: "Price",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
-                    width: 150,
-                    editor: function (container, options) {
-                        $('<input name="' + options.field + '"/>')
-                                .appendTo(container)
-                                .kendoNumericTextBox({
-                                    format: "{0:n4}",
-                                    decimals: 4
-                                });
-                    }
                 },{
-                    command: [{
-                        name: "edit",
-                        text: {
-                            edit: "@T("Admin.Common.Edit")",
-                            update: "@T("Admin.Common.Update")",
-                            cancel: "@T("Admin.Common.Cancel")"
-                        }
-                    }, {
-                        name: "destroy",
-                        text: "@T("Admin.Common.Delete")"
-                    }],
-                    width: 200
+                    field: "StartDateTimeUtc",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")",
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "EndDateTimeUtc",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")",
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "Id",
+                    title: "@T("Admin.Common.Edit")",
+                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?productId=@(Model.Id)&btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class='btn btn-default' />"
+                },{
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")"
                 }]
             });
         });
 
-        //local datasource
-        var allStores = [
-            {
-                Id : ' ',
-                Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
-            }
-            @{
-                var storeService = EngineContext.Current.Resolve<IStoreService>();
-                var allStores = storeService.GetAllStores();
-            }
-            @foreach (var store in allStores)
-            {
-                <text>
-                        , {
-                            Id: "@(store.Id)",
-                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
-                        }
-                        </text>
-            }
-
-        ];
-
-        var allCustomerRoles = [
-            {
-                Id : ' ',
-                Name : "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
-            }
-            @{
-                var customerService = EngineContext.Current.Resolve<ICustomerService>();
-                var allCustomerRoles = customerService.GetAllCustomerRoles(true);
-            }
-            @foreach (var customerRole in allCustomerRoles)
-            {
-                <text>
-                    , {
-            Id: "@(customerRole.Id)",
-            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(customerRole.Name)))"
-        }
-        </text>
-            }
-        ];
-
-        function storeDropDownEditor(container, options) {
-            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
-                .appendTo(container)
-                .kendoDropDownList({
-                    autoBind: true,
-                    dataSource: allStores,
-                });
-        }
-
-        function customerRoleDropDownEditor(container, options) {
-            $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRoleId"/>')
-                .appendTo(container)
-                .kendoDropDownList({
-                    autoBind: true,
-                    dataSource: allCustomerRoles,
-                    
-                });
-        }
+        $(document).ready(function() {
+            $('#btnRefreshTierPrices').click(function() {
+                $("#tierprices-grid").data('kendoGrid').dataSource.read();
+                return false;
+            });
+        });
     </script>
     }
     else

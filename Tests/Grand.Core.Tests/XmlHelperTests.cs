@@ -19,7 +19,7 @@ namespace Grand.Core.Tests {
         public void SerializeDateTimeTest() {
             //method sends a DateTime instance, and makes XML Marker <dateTime></dateTime>
             //Environment.NewLine is required, because if I type there normal \n it won't recognize it as the same
-            string expected = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine + "<dateTime>2000-01-02T03:04:05</dateTime>";
+            string expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + Environment.NewLine + "<dateTime>2000-01-02T03:04:05</dateTime>";
             DateTime actual = new DateTime(2000, 01, 02, 03, 04, 05);
 
             Assert.AreEqual(expected, XmlHelper.SerializeDateTime(actual));

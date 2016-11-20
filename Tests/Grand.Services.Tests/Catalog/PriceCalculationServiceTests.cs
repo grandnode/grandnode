@@ -260,37 +260,6 @@ namespace Grand.Services.Catalog.Tests {
         }
 
         [TestMethod()]
-        public void Can_get_final_product_price_with_special_price() {
-            var product = new Product {
-                Id = "1",
-                Name = "product name 01",
-                Price = 49.99M,
-                SpecialPrice = 500M, //special price for "special" people
-                SpecialPriceStartDateTimeUtc = DateTime.UtcNow.AddDays(-10),
-                SpecialPriceEndDateTimeUtc = DateTime.UtcNow.AddDays(10),
-                CustomerEntersPrice = false,
-                Published = true
-            };
-
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).Returns(new List<Discount>());
-            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).Returns(new List<Discount>());
-
-            var customer = new Customer();
-
-            //inside date range - SpecialPrice active
-            Assert.AreEqual(500M, _priceCalcService.GetFinalPrice(product, customer, 0, true, 1));
-
-            //outside date range - SpecialPrice INACTIVE
-            product.SpecialPriceStartDateTimeUtc = DateTime.UtcNow.AddDays(11);
-            Assert.AreEqual(49.99M, _priceCalcService.GetFinalPrice(product, customer, 0, true, 1));
-
-            //without date range - SpecialPrice active
-            product.SpecialPriceStartDateTimeUtc = null;
-            product.SpecialPriceEndDateTimeUtc = null;
-            Assert.AreEqual(500M, _priceCalcService.GetFinalPrice(product, customer, 0, true, 1));
-        }
-
-        [TestMethod()]
         public void Can_get_shopping_cart_item_unitPrice() {
             var customer001 = new Customer { Id = "98767" };
             tempWorkContext.Setup(x => x.CurrentCustomer).Returns(customer001);

@@ -5,6 +5,7 @@ using Grand.Core;
 using Grand.Core.Domain.Catalog;
 using Grand.Services.Directory;
 using Grand.Services.Localization;
+using Grand.Core.Domain.Customers;
 
 namespace Grand.Services.Catalog
 {
@@ -14,37 +15,30 @@ namespace Grand.Services.Catalog
     public static class ProductExtensions
     {
         /// <summary>
-        /// Get product special price
+        /// Gets an appropriate tier price
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Special price; null if product does not have special price specified</returns>
-        public static decimal? GetSpecialPrice(this Product product)
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="quantity">Quantity</param>
+        /// <returns>Price</returns>
+        public static decimal? GetAppropriateTierPrice(this Product product, Customer customer, string storeId, int quantity)
         {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            if (!product.SpecialPrice.HasValue)
+            if (!product.HasTierPrices)
                 return null;
 
-            //check date range
-            DateTime now = DateTime.UtcNow;
-            if (product.SpecialPriceStartDateTimeUtc.HasValue)
-            {
-                DateTime startDate = DateTime.SpecifyKind(product.SpecialPriceStartDateTimeUtc.Value, DateTimeKind.Utc);
-                if (startDate.CompareTo(now) > 0)
-                    return null;
-            }
-            if (product.SpecialPriceEndDateTimeUtc.HasValue)
-            {
-                DateTime endDate = DateTime.SpecifyKind(product.SpecialPriceEndDateTimeUtc.Value, DateTimeKind.Utc);
-                if (endDate.CompareTo(now) < 0)
-                    return null;
-            }
+            //get actual tier prices
+            var actualTierPrices = product.TierPrices.OrderBy(price => price.Quantity).ToList()
+                .FilterByStore(storeId)
+                .FilterForCustomer(customer)
+                .FilterByDate()
+                .RemoveDuplicatedQuantities();
 
-            return product.SpecialPrice.Value;
+            //get the most suitable tier price based on the passed quantity
+            var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
+
+            return tierPrice != null ? (decimal?)tierPrice.Price : null;
         }
-
-
         /// <summary>
         /// Finds a related product item by specified identifiers
         /// </summary>

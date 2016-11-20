@@ -3244,35 +3244,31 @@ namespace Grand.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var tierPricesModel = product.TierPrices
-                .OrderBy(x => x.StoreId)
-                .ThenBy(x => x.Quantity)
-                .ThenBy(x => x.CustomerRoleId)
-                .Select(x =>
+            var tierPricesModel = product.TierPrices.OrderBy(x => x.StoreId).ThenBy(x => x.Quantity).ThenBy(x => x.CustomerRoleId).Select(x =>
+            {
+                string storeName;
+                if (!string.IsNullOrEmpty(x.StoreId))
                 {
-                    string storeName;
-                    if (!String.IsNullOrEmpty(x.StoreId))
-                    {
-                        var store = _storeService.GetStoreById(x.StoreId);
-                        storeName = store != null ? store.Name : "Deleted";
-                    }
-                    else
-                    {
-                        storeName = _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.Store.All");
-                    }
-                    return new ProductModel.TierPriceModel
-                    {
-                        Id = x.Id,
-                        StoreId = !String.IsNullOrEmpty(x.StoreId) ? x.StoreId : " ",
-                        Store = storeName,
-                        CustomerRole = !String.IsNullOrEmpty(x.CustomerRoleId) ? _customerService.GetCustomerRoleById(x.CustomerRoleId).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
-                        ProductId = product.Id,
-                        CustomerRoleId = !String.IsNullOrEmpty(x.CustomerRoleId) ? x.CustomerRoleId : " ",
-                        Quantity = x.Quantity,
-                        Price = x.Price
-                    };
-                })
-                .ToList();
+                    var store = _storeService.GetStoreById(x.StoreId);
+                    storeName = store != null ? store.Name : "Deleted";
+                }
+                else
+                    storeName = _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.Store.All");
+
+                return new ProductModel.TierPriceModel
+                {
+                    Id = x.Id,
+                    StoreId = x.StoreId,
+                    Store = storeName,
+                    CustomerRole = !string.IsNullOrEmpty(x.CustomerRoleId) ? _customerService.GetCustomerRoleById(x.CustomerRoleId).Name : _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All"),
+                    ProductId = product.Id,
+                    CustomerRoleId = !string.IsNullOrEmpty(x.CustomerRoleId) ? x.CustomerRoleId : "",
+                    Quantity = x.Quantity,
+                    Price = x.Price,
+                    StartDateTimeUtc = x.StartDateTimeUtc,
+                    EndDateTimeUtc = x.EndDateTimeUtc
+                };
+            }).ToList();
 
             var gridModel = new DataSourceResult
             {
@@ -3283,8 +3279,29 @@ namespace Grand.Admin.Controllers
             return Json(gridModel);
         }
 
+        public ActionResult TierPriceCreatePopup(string productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new ProductModel.TierPriceModel();
+            model.ProductId = productId;
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+
+            //customer roles
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var role in _customerService.GetAllCustomerRoles(true))
+                model.AvailableCustomerRoles.Add(new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
+
+            return View(model);
+        }
+
         [HttpPost]
-        public ActionResult TierPriceInsert(ProductModel.TierPriceModel model)
+        [FormValueRequired("save")]
+        public ActionResult TierPriceCreatePopup(string btnId, string formId, ProductModel.TierPriceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3295,71 +3312,140 @@ namespace Grand.Admin.Controllers
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+                return RedirectToAction("List", "Product");
 
-            if (!String.IsNullOrEmpty(model.CustomerRoleId))
-                model.CustomerRoleId = model.CustomerRoleId.Trim();
-            else
-                model.CustomerRoleId = "";
-
-            if (!String.IsNullOrEmpty(model.StoreId))
-                model.StoreId = model.StoreId.Trim();
-            else
-                model.StoreId = "";
-
-            var tierPrice = new TierPrice
+            if (ModelState.IsValid)
             {
-                ProductId = model.ProductId,
-                StoreId = model.StoreId,
-                CustomerRoleId = model.CustomerRoleId,
-                Quantity = model.Quantity,
-                Price = model.Price,
-            };
-            _productService.InsertTierPrice(tierPrice);
+                var tierPrice = new TierPrice
+                {
+                    ProductId = model.ProductId,
+                    StoreId = model.StoreId,
+                    CustomerRoleId = model.CustomerRoleId,
+                    Quantity = model.Quantity,
+                    Price = model.Price,
+                    StartDateTimeUtc = model.StartDateTimeUtc,
+                    EndDateTimeUtc = model.EndDateTimeUtc
+                };
+                _productService.InsertTierPrice(tierPrice);
 
-            //update "HasTierPrices" property
-            _productService.UpdateHasTierPricesProperty(product.Id);
+                //update "HasTierPrices" property
+                _productService.UpdateHasTierPricesProperty(product.Id);
 
-            return new NullJsonResult();
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+
+            //customer roles
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var role in _customerService.GetAllCustomerRoles(true))
+                model.AvailableCustomerRoles.Add(new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
+
+            return View(model);
         }
 
-        [HttpPost]
-        public ActionResult TierPriceUpdate(ProductModel.TierPriceModel model)
+        public ActionResult TierPriceEditPopup(string id, string productId, string btnId, string formId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var product = _productService.GetProductById(model.ProductId);
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            var tierPrice = product.TierPrices.Where(x => x.Id == id).FirstOrDefault();
+            if (tierPrice == null)
+                return RedirectToAction("List", "Product");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+
+            var model = new ProductModel.TierPriceModel
+            {
+                Id = tierPrice.Id,
+                CustomerRoleId = tierPrice.CustomerRoleId,
+                StoreId = tierPrice.StoreId,
+                Quantity = tierPrice.Quantity,
+                Price = tierPrice.Price,
+                StartDateTimeUtc = tierPrice.StartDateTimeUtc,
+                EndDateTimeUtc = tierPrice.EndDateTimeUtc,
+                ProductId = productId
+            };
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+
+            //customer roles
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var role in _customerService.GetAllCustomerRoles(true))
+                model.AvailableCustomerRoles.Add(new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
+
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult TierPriceEditPopup(string productId, string btnId, string formId, ProductModel.TierPriceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
             var tierPrice = product.TierPrices.Where(x => x.Id == model.Id).FirstOrDefault();
             if (tierPrice == null)
-                throw new ArgumentException("No tier price found with the specified id");
+                return RedirectToAction("List", "Product");
 
 
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
+                return RedirectToAction("List", "Product");
 
-            if (!String.IsNullOrEmpty(model.CustomerRoleId))
-                model.CustomerRoleId = model.CustomerRoleId.Trim();
-            else
-                model.CustomerRoleId = "";
+            if (ModelState.IsValid)
+            {
+                tierPrice.StoreId = model.StoreId;
+                tierPrice.CustomerRoleId = model.CustomerRoleId;
+                tierPrice.Quantity = model.Quantity;
+                tierPrice.Price = model.Price;
+                tierPrice.StartDateTimeUtc = model.StartDateTimeUtc;
+                tierPrice.EndDateTimeUtc = model.EndDateTimeUtc;
+                tierPrice.ProductId = productId;
+                _productService.UpdateTierPrice(tierPrice);
 
-            if (!String.IsNullOrEmpty(model.StoreId))
-                model.StoreId = model.StoreId.Trim();
-            else
-                model.StoreId = "";
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
 
-            tierPrice.ProductId = product.Id;
-            tierPrice.StoreId = model.StoreId;
-            tierPrice.CustomerRoleId = model.CustomerRoleId;
-            tierPrice.Quantity = model.Quantity;
-            tierPrice.Price = model.Price;
-            _productService.UpdateTierPrice(tierPrice);
+                return View(model);
+            }
 
-            return new NullJsonResult();
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var store in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+
+            //customer roles
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var role in _customerService.GetAllCustomerRoles(true))
+                model.AvailableCustomerRoles.Add(new SelectListItem { Text = role.Name, Value = role.Id.ToString() });
+
+            return View(model);
         }
 
         [HttpPost]

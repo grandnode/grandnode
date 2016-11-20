@@ -437,9 +437,6 @@ namespace Grand.Services.Catalog
                 .Set(x => x.ShortDescription, product.ShortDescription)
                 .Set(x => x.ShowOnHomePage, product.ShowOnHomePage)
                 .Set(x => x.Sku, product.Sku)
-                .Set(x => x.SpecialPrice, product.SpecialPrice)
-                .Set(x => x.SpecialPriceEndDateTimeUtc, product.SpecialPriceEndDateTimeUtc)
-                .Set(x => x.SpecialPriceStartDateTimeUtc, product.SpecialPriceStartDateTimeUtc)
                 .Set(x => x.StockQuantity, product.StockQuantity)
                 .Set(x => x.Stores, product.Stores)
                 .Set(x => x.SubjectToAcl, product.SubjectToAcl)
@@ -787,47 +784,12 @@ namespace Grand.Services.Catalog
             var nowUtc = DateTime.UtcNow;
             if (priceMin.HasValue)
             {
-
-                filter = filter & builder.Where(p =>
-                    //special price (specified price and valid date range)
-                    ((p.SpecialPrice != null &&
-                      ((p.SpecialPriceStartDateTimeUtc == null ||
-                        p.SpecialPriceStartDateTimeUtc < nowUtc) &&
-                       (p.SpecialPriceEndDateTimeUtc == null ||
-                        p.SpecialPriceEndDateTimeUtc > nowUtc))) &&
-                     (p.SpecialPrice >= priceMin.Value))
-                    ||
-                    //regular price (price isn't specified or date range isn't valid)
-                    ((p.SpecialPrice == null ||
-                      ((p.SpecialPriceStartDateTimeUtc != null &&
-                        p.SpecialPriceStartDateTimeUtc > nowUtc) ||
-                       (p.SpecialPriceEndDateTimeUtc != null &&
-                        p.SpecialPriceEndDateTimeUtc < nowUtc))) &&
-                     (p.Price >= priceMin.Value)));
-                    
+                filter = filter & builder.Where(p => p.Price >= priceMin.Value);
             }
             if (priceMax.HasValue)
             {
-
-                    //max price
-                    
-                    filter = filter & builder.Where(p =>
-                                    //special price (specified price and valid date range)
-                                    ((p.SpecialPrice != null &&
-                                      ((p.SpecialPriceStartDateTimeUtc == null ||
-                                        p.SpecialPriceStartDateTimeUtc < nowUtc) &&
-                                       (p.SpecialPriceEndDateTimeUtc == null ||
-                                        p.SpecialPriceEndDateTimeUtc > nowUtc))) &&
-                                     (p.SpecialPrice <= priceMax.Value))
-                                    ||
-                                    //regular price (price isn't specified or date range isn't valid)
-                                    ((p.SpecialPrice == null ||
-                                      ((p.SpecialPriceStartDateTimeUtc != null &&
-                                        p.SpecialPriceStartDateTimeUtc > nowUtc) ||
-                                       (p.SpecialPriceEndDateTimeUtc != null &&
-                                        p.SpecialPriceEndDateTimeUtc < nowUtc))) &&
-                                     (p.Price <= priceMax.Value)));
-                    
+                //max price
+                filter = filter & builder.Where(p => p.Price <= priceMax.Value);
             }
             if (!showHidden && !_catalogSettings.IgnoreFilterableAvailableStartEndDateTime)
             {
@@ -1936,13 +1898,14 @@ namespace Grand.Services.Catalog
                 .Set(x => x.TierPrices.ElementAt(-1).Price, tierPrice.Price)
                 .Set(x => x.TierPrices.ElementAt(-1).Quantity, tierPrice.Quantity)
                 .Set(x => x.TierPrices.ElementAt(-1).StoreId, tierPrice.StoreId)
-                .Set(x => x.TierPrices.ElementAt(-1).CustomerRoleId, tierPrice.CustomerRoleId);
+                .Set(x => x.TierPrices.ElementAt(-1).CustomerRoleId, tierPrice.CustomerRoleId)
+                .Set(x => x.TierPrices.ElementAt(-1).StartDateTimeUtc, tierPrice.StartDateTimeUtc)
+                .Set(x => x.TierPrices.ElementAt(-1).EndDateTimeUtc, tierPrice.EndDateTimeUtc);
 
             var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, tierPrice.ProductId));
-
 
             //event notification
             _eventPublisher.EntityUpdated(tierPrice);

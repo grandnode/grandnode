@@ -107,34 +107,6 @@ namespace Grand.Services.Discounts.Tests {
             Assert.IsNotNull(rule);
         }
 
-        [TestMethod()]
-        public void Can_validate_discount_dateRange() {
-           
-            var discount = new Discount {
-                DiscountType = DiscountType.AssignedToSkus,
-                Name = "Discount 3",
-                UsePercentage = false,
-                DiscountPercentage = 0,
-                DiscountAmount = 5,
-                StartDateUtc = DateTime.UtcNow.AddDays(-1),
-                EndDateUtc = DateTime.UtcNow.AddDays(1),
-                RequiresCouponCode = false,
-                DiscountLimitation = DiscountLimitationType.Unlimited,
-            };
-
-            var customer = new Customer {
-                CustomerGuid = Guid.NewGuid(),
-                AdminComment = "",
-                Active = true,
-                Deleted = false,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
-                LastActivityDateUtc = new DateTime(2010, 01, 02)
-            };
-
-            Assert.IsTrue(_discountService.ValidateDiscount(discount, customer).IsValid);
-            discount.StartDateUtc = DateTime.UtcNow.AddDays(1);
-            Assert.IsFalse(_discountService.ValidateDiscount(discount, customer).IsValid);
-        }
     }
 
 }

@@ -7323,6 +7323,8 @@ namespace Grand.Services.Installation
                     {
                         Quantity = 2,
                         Price = 19,
+                        StartDateTimeUtc = DateTime.UtcNow,
+                        EndDateTimeUtc = null
                     },
                     new TierPrice
                     {

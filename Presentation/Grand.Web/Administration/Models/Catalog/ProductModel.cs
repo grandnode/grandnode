@@ -298,18 +298,6 @@ namespace Grand.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductCost")]
         public decimal ProductCost { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPrice")]
-        [UIHint("DecimalNullable")]
-        public decimal? SpecialPrice { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPriceStartDateTimeUtc")]
-        [UIHint("DateTimeNullable")]
-        public DateTime? SpecialPriceStartDateTimeUtc { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SpecialPriceEndDateTimeUtc")]
-        [UIHint("DateTimeNullable")]
-        public DateTime? SpecialPriceEndDateTimeUtc { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.CustomerEntersPrice")]
         public bool CustomerEntersPrice { get; set; }
 
@@ -714,15 +702,22 @@ namespace Grand.Admin.Models.Catalog
 
         public partial class TierPriceModel : BaseNopEntityModel
         {
+
+            public TierPriceModel()
+            {
+                AvailableStores = new List<SelectListItem>();
+                AvailableCustomerRoles = new List<SelectListItem>();
+            }
             public string ProductId { get; set; }
 
-            public string CustomerRoleId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
+            public string CustomerRoleId { get; set; }
+            public IList<SelectListItem> AvailableCustomerRoles { get; set; }
             public string CustomerRole { get; set; }
 
-
-            public string StoreId { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
+            public string StoreId { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
             public string Store { get; set; }
 
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
@@ -730,6 +725,15 @@ namespace Grand.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
             public decimal Price { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")]
+            [UIHint("DateTimeNullable")]
+            public DateTime? StartDateTimeUtc { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")]
+            [UIHint("DateTimeNullable")]
+            public DateTime? EndDateTimeUtc { get; set; }
+
         }
 
         public partial class ProductWarehouseInventoryModel : BaseNopModel
