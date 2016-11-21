@@ -46,6 +46,7 @@ using Grand.Web.Framework.Themes;
 using Grand.Core.Data;
 using Grand.Core.Domain.Configuration;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace Grand.Admin.Controllers
 {
@@ -1648,7 +1649,11 @@ namespace Grand.Admin.Controllers
             model.GiftCards_Deactivated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
 
             //order ident
-            model.OrderIdent = null;
+            var orderRepository = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<Order>>();
+            int maxOrderNumber = 0;
+            if (orderRepository.Table.Count() > 0)
+                maxOrderNumber = orderRepository.Table.Max(x => x.OrderNumber);
+            model.OrderIdent = maxOrderNumber;
 
             return View(model);
         }
@@ -1762,9 +1767,20 @@ namespace Grand.Admin.Controllers
                 _settingService.ClearCache();
                 
                 //order ident
-                if (model.OrderIdent.HasValue)
+                if (model.OrderIdent > 0)
                 {
-                    ErrorNotification("Not supported");
+                    var orderRepository = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<Order>>();
+                    int maxOrderNumber = 0;
+                    if (orderRepository.Table.Count() > 0)
+                        maxOrderNumber = orderRepository.Table.Max(x => x.OrderNumber);
+                    if(model.OrderIdent > maxOrderNumber)
+                    {
+                        orderRepository.Insert(new Order() { OrderNumber = model.OrderIdent.Value, Deleted = true, CreatedOnUtc = DateTime.UtcNow });
+                        /* another solution
+                        string command = "{ insert: \"Order\", documents: [  { \"_id\": \"" + ObjectId.GenerateNewId().ToString() + "\", \"OrderNumber\" : NumberInt(" + model.OrderIdent + "), \"Deleted\" : true } ]}";
+                        var result = orderRepository.Database.RunCommand<BsonDocument>(command);
+                        */
+                    }
                 }
 
                 //activity log

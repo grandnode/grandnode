@@ -279,17 +279,14 @@
                     @Html.ValidationMessageFor(model => model.CompleteOrderWhenDelivered)
                 </div>
             </div>
-            @if (Model.OrderIdent.HasValue)
-            {
-                <div class="form-group">
+            <div class="form-group">
                     <div class="col-md-3 col-sm-3 text-right">
                         @Html.GrandLabelFor(model => model.OrderIdent, new Dictionary<string, object> { { "class", "control-label" } }, false)
                     </div>
                     <div class="col-md-9 col-sm-9">
                         @Html.GrandEditorFor(model => model.OrderIdent)
                     </div>
-                </div>
-            }
+            </div>
         </div>
     </div>
 }
