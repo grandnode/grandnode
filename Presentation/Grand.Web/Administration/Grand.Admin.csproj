@@ -231,6 +231,7 @@
     <Compile Include="Controllers\CustomerTagController.cs" />
     <Compile Include="Controllers\JbimagesController.cs" />
     <Compile Include="Controllers\ContactFormController.cs" />
+    <Compile Include="Controllers\NewsLetterCategoryController.cs" />
     <Compile Include="Controllers\RoxyFilemanController.cs" />
     <Compile Include="Controllers\TemplateController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
@@ -315,6 +316,7 @@
     <Compile Include="Models\Messages\BannerModel.cs" />
     <Compile Include="Models\Messages\ContactFormListModel.cs" />
     <Compile Include="Models\Messages\ContactFormModel.cs" />
+    <Compile Include="Models\Messages\NewsletterCategoryModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
     <Compile Include="Models\Orders\CountryReportModel.cs" />
@@ -445,6 +447,7 @@
     <Compile Include="Validators\Customers\CustomerActionValidator.cs" />
     <Compile Include="Validators\Customers\CustomerTagValidator.cs" />
     <Compile Include="Validators\Directory\MeasureUnitValidator.cs" />
+    <Compile Include="Validators\Messages\NewsletterCategoryValidator.cs" />
     <Compile Include="Validators\Messages\BannerValidator.cs" />
     <Compile Include="Validators\Messages\TestMessageTemplateValidator.cs" />
     <Compile Include="Validators\Settings\MediaSettingsValidator.cs" />
@@ -1917,6 +1920,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\_CreateOrUpdateTierPrice.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\NewsletterCategory\_CreateOrUpdate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\NewsletterCategory\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\NewsletterCategory\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\NewsletterCategory\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

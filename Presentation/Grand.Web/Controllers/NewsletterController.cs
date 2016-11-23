@@ -16,7 +16,7 @@ namespace Grand.Web.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IStoreContext _storeContext;
-
+        private readonly INewsletterCategoryService _newsletterCategoryService;
         private readonly CustomerSettings _customerSettings;
 
         public NewsletterController(ILocalizationService localizationService,
@@ -24,6 +24,7 @@ namespace Grand.Web.Controllers
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IWorkflowMessageService workflowMessageService,
             IStoreContext storeContext,
+            INewsletterCategoryService newsletterCategoryService,
             CustomerSettings customerSettings)
         {
             this._localizationService = localizationService;
@@ -31,7 +32,26 @@ namespace Grand.Web.Controllers
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._workflowMessageService = workflowMessageService;
             this._storeContext = storeContext;
+            this._newsletterCategoryService = newsletterCategoryService;
             this._customerSettings = customerSettings;
+        }
+
+        protected virtual NewsletterCategoryModel PrepareNewsletterCategoryModel(string id)
+        {
+            var model = new NewsletterCategoryModel();
+            model.NewsletterEmailId = id;
+            var categories = _newsletterCategoryService.GetNewsletterCategoriesByStore(_storeContext.CurrentStore.Id);
+            foreach (var item in categories)
+            {
+                model.NewsletterCategories.Add(new NewsletterSimpleCategory()
+                {
+                    Id = item.Id,
+                    Name = item.GetLocalized(x=>x.Name),
+                    Description = item.GetLocalized(x=>x.Description),
+                    Selected = item.Selected
+                });
+            }
+            return model;
         }
 
         [ChildActionOnly]
@@ -52,7 +72,9 @@ namespace Grand.Web.Controllers
         public ActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
+            string resultCategory = string.Empty;
             bool success = false;
+            bool showcategories = false;
 
             if (!CommonHelper.IsValidEmail(email))
             {
@@ -97,6 +119,13 @@ namespace Grand.Web.Controllers
                     _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
 
                     result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
+                    var model = PrepareNewsletterCategoryModel(subscription.Id);
+                    if (model.NewsletterCategories.Count > 0)
+                    {
+                        showcategories = true;
+                        resultCategory = this.RenderPartialViewToString("NewsletterCategory", model);
+                    }
+
                 }
                 else
                 {
@@ -109,8 +138,58 @@ namespace Grand.Web.Controllers
             {
                 Success = success,
                 Result = result,
+                Showcategories = showcategories,
+                ResultCategory = resultCategory,
             });
         }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult SaveCategories(FormCollection form)
+        {
+
+            bool success = false;
+            string message = string.Empty;
+
+            var newsletterEmailId = form["NewsletterEmailId"];
+            if (newsletterEmailId != null)
+            {
+                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(newsletterEmailId);
+                if(subscription!=null)
+                {
+                    foreach (string formKey in form.AllKeys)
+                    {
+                        if(formKey.Contains("Category_"))
+                        {
+                            try
+                            {
+                                var category = formKey.Split('_')[1];
+                                subscription.Categories.Add(category);
+                            }
+                            catch(Exception ex)
+                            {
+                                message = ex.Message;
+                            }
+                        }
+                    }
+                    success = true;
+                    _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription, false);
+                }
+                else
+                {
+                    message = "Email not exist";
+                }
+            }
+            else
+                message = "Empty NewsletterEmailId";
+
+            return Json(new
+            {
+                Success = success,
+                Message = message
+            }, JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult SubscriptionActivation(Guid token, bool active)
         {

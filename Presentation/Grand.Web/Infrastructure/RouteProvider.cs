@@ -274,6 +274,12 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Newsletter", action = "SubscribeNewsletter" },
                             new[] { "Grand.Web.Controllers" });
 
+            //assign newsletters to categories
+            routes.MapLocalizedRoute("SubscribeNewsletterCategory",
+                "newsletter/savecategories",
+                new { controller = "Newsletter", action = "SaveCategories" },
+                new[] { "Grand.Web.Controllers" });
+
             //email wishlist
             routes.MapLocalizedRoute("EmailWishlist",
                             "emailwishlist",

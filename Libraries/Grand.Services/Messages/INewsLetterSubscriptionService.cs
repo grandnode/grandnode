@@ -71,6 +71,6 @@ namespace Grand.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
         IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
-            string storeId = "", bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue);
+            string storeId = "", bool? isActive = null, string[] categoryIds = null, int pageIndex = 0, int pageSize = int.MaxValue);
     }
 }

@@ -238,6 +238,7 @@ namespace Grand.Web.Framework
             builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerLifetimeScope();
             builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerLifetimeScope();
             builder.RegisterType<NewsLetterSubscriptionService>().As<INewsLetterSubscriptionService>().InstancePerLifetimeScope();
+            builder.RegisterType<NewsletterCategoryService>().As<INewsletterCategoryService>().InstancePerLifetimeScope();
             builder.RegisterType<CampaignService>().As<ICampaignService>().InstancePerLifetimeScope();
             builder.RegisterType<BannerService>().As<IBannerService>().InstancePerLifetimeScope();
             builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerLifetimeScope();

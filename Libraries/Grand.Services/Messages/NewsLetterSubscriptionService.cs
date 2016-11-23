@@ -211,7 +211,7 @@ namespace Grand.Services.Messages
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
         public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
-            string storeId = "", bool? isActive = null, 
+            string storeId = "", bool? isActive = null, string[] categoryIds = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             //do not filter by customer role
@@ -223,6 +223,9 @@ namespace Grand.Services.Messages
                 query = query.Where(nls => nls.StoreId == storeId);
             if (isActive.HasValue)
                 query = query.Where(nls => nls.Active == isActive.Value);
+            if (categoryIds != null && categoryIds.Length > 0)
+                query = query.Where(c => c.Categories.Any(x => categoryIds.Contains(x)));
+
             query = query.OrderBy(nls => nls.Email);
 
             var subscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);

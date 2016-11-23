@@ -1,0 +1,176 @@
+﻿@model NewsletterCategoryModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        $('#newslettercategory-edit').show();
+        $("#newslettercategory-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+<div id="newslettercategory-edit" style="display:none">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Promotions.NewsletterCategory.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Promotions.NewsletterCategory.Stores")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabStores()
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "newslettercategory-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+
+@helper TabInfo()
+{
+
+@(Html.LocalizedEditor<NewsletterCategoryModel, NewsletterCategoryLocalizedModel>("newslettercategory-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].Name)
+                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Description)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+        ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Description)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.Description, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Description)
+                </div>
+            </div>
+        </div>
+    </div>
+        ))
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Selected)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Selected)
+                    @Html.ValidationMessageFor(model => model.Selected)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.DisplayOrder)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@helper TabStores()
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
+
+            toggleStoreMapping();
+        });
+
+
+        function toggleStoreMapping() {
+            if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
+                $('#pnl-available-stores').show();
+            }
+            else {
+                $('#pnl-available-stores').hide();
+            }
+        }
+
+    </script>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LimitedToStores)
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.LimitedToStores)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.LimitedToStores)
+                </div>
+            </div>
+            <div class="form-group" id="pnl-available-stores">
+                @Html.GrandLabelFor(model => model.AvailableStores)
+                <div class="col-md-9 col-sm-9">
+                    @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
+                    {
+                        @Html.Action("MultistoreDisabledWarning", "Common")
+                        <div class="mt-checkbox-list">
+                            @foreach (var store in Model.AvailableStores)
+                            {
+                                <label class="mt-checkbox mt-checkbox-outline">
+                                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    <span></span>
+                                </label>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="note note-info">
+                            No stores defined
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

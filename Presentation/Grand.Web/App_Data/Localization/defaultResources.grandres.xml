@@ -11770,6 +11770,72 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Updated">
     <Value>The discount has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory">
+    <Value>Newsletter Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Added">
+    <Value>Added a new newsletter category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.AddNew">
+    <Value>Add a new newsletter category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.BackToList">
+    <Value>back to newsletter categories list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Deleted">
+    <Value>The newsletter category has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Edit">
+    <Value>Edit newsletter category details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Info">
+    <Value>General info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Updated">
+    <Value>The newsletter category has been updated successfully</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Stores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.AvailableStores">
+    <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.AvailableStores.hint">
+    <Value>Select stores for which the newsletter category will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Description.hint">
+    <Value>The description of the newsletter category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.DisplayOrder.hint">
+    <Value>The display order of the newsletter category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.LimitedToStores">
+    <Value>Limited to stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.LimitedToStores.hint">
+    <Value>Determines whether the newsletter category is available only at certain stores.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Name.hint">
+    <Value>The newsletter category's name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Selected">
+    <Value>Selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsletterCategory.Fields.Selected.hint">
+    <Value>This option should be selected</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
     <Value>Newsletter Subscribers</Value>
   </LocaleResource>
@@ -11778,6 +11844,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn">
     <Value>Subscribed on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.categories">
+    <Value>Assigned to categories</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email">
     <Value>Email</Value>
@@ -11796,6 +11865,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles.Hint">
     <Value>Search by a specific customer role.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.Category">
+    <Value>Newsletter category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.Category.Hint">
+    <Value>Search by a specific newsletter category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive">
     <Value>Active</Value>
@@ -14808,6 +14883,12 @@
   </LocaleResource>
   <LocaleResource Name="Newsletter.Title">
     <Value>Newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="NewsletterCategory.Title">
+    <Value>I would like to receive notifications about:</Value>
+  </LocaleResource>
+  <LocaleResource Name="NewsletterCategory.Options.Save">
+    <Value>Save options</Value>
   </LocaleResource>
   <LocaleResource Name="Order.BillingAddress">
     <Value>Billing Address</Value>

@@ -47,6 +47,14 @@
                     if (data.Success) {
                         $('#newsletter-subscribe-block').hide();
                         $('#newsletter-result-block').show();
+                        if (data.Showcategories) {
+                            $('#action-body').html(data.ResultCategory);
+                            window.setTimeout(function () {
+                                $('.popup-action-form').magnificPopup('open');
+                            }, 100);
+
+                        }
+
                     } else {
                         $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
                     }

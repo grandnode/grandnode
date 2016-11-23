@@ -492,6 +492,16 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.StoreId, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.NewsLetterSubscriptionGuid, mo => mo.Ignore());
+
+                //newsLetter categories
+                cfg.CreateMap<NewsletterCategory, NewsletterCategoryModel>()
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<NewsletterCategoryModel, NewsletterCategory>()
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.Stores, mo => mo.Ignore())
+                    .ForMember(dest => dest.Id, mo => mo.Ignore());
+
                 //forums
                 cfg.CreateMap<ForumGroup, ForumGroupModel>()
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())

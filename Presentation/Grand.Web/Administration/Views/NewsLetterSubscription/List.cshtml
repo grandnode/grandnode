@@ -50,6 +50,12 @@
                                     @Html.GrandDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
                                 </div>
                             </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchCategoryIds)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.EditorFor(model => model.SearchCategoryIds, new { SelectList = Model.AvailableCategories })
+                                </div>
+                            </div>
                         </div>
                         <div class="form-actions">
                             <div class="row">
@@ -147,11 +153,15 @@
                     }, {
                         field: "StoreName",
                         title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")",
-                        width: 300
+                        width: 150
+                    }, {
+                        field: "Categories",
+                         title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Categories")",
+                         width: 300
                     }, {
                         field: "CreatedOn",
                         title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")",
-                        width: 200,
+                        width: 150,
                         type: "date",
                         format: "{0:G}"
                     }, {
@@ -193,7 +203,14 @@
         });
 
         function additionalData() {
+            var categoryIds = [];
+            if($('#@Html.FieldIdFor(model => model.SearchCategoryIds)').val()!=null){
+                categoryIds = $('#@Html.FieldIdFor(model => model.SearchCategoryIds)').val();
+            }
+
+
             var data = {
+                SearchCategoryIds: categoryIds,
                 ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
                 StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
                 CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),

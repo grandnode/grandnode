@@ -1017,6 +1017,7 @@ namespace Grand.Web.Controllers
                     "/shoppingcart/*",
                     "/storeclosed",
                     "/subscribenewsletter",
+                    "/subscribenewsletter/SaveCategories",
                     "/topic/authenticate",
                     "/viewpm",
                     "/uploadfileproductattribute",

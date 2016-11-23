@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Messages
 {
@@ -8,7 +9,9 @@ namespace Grand.Core.Domain.Messages
     /// </summary>
     [BsonIgnoreExtraElements]
     public partial class NewsLetterSubscription : BaseEntity
-    {       
+    {
+        private ICollection<string> _categories;
+
         /// <summary>
         /// Gets or sets the newsletter subscription GUID
         /// </summary>
@@ -38,5 +41,14 @@ namespace Grand.Core.Domain.Messages
         /// Gets or sets the date and time when subscription was created
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the categories
+        /// </summary>
+        public virtual ICollection<string> Categories
+        {
+            get { return _categories ?? (_categories = new List<string>()); }
+            protected set { _categories = value; }
+        }
     }
 }

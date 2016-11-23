@@ -15,13 +15,15 @@ using Grand.Services.Stores;
 using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Kendoui;
 using Grand.Web.Framework.Mvc;
+using System.Collections.Generic;
 
 namespace Grand.Admin.Controllers
 {
 	public partial class NewsLetterSubscriptionController : BaseAdminController
 	{
 		private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-		private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly INewsletterCategoryService _newsletterCategoryService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
@@ -30,7 +32,8 @@ namespace Grand.Admin.Controllers
         private readonly IImportManager _importManager;
 
 		public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
-			IDateTimeHelper dateTimeHelper,
+            INewsletterCategoryService newsletterCategoryService,
+            IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IStoreService storeService,
@@ -39,7 +42,8 @@ namespace Grand.Admin.Controllers
             IImportManager importManager)
 		{
 			this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-			this._dateTimeHelper = dateTimeHelper;
+            this._newsletterCategoryService = newsletterCategoryService;
+            this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._storeService = storeService;
@@ -48,7 +52,28 @@ namespace Grand.Admin.Controllers
             this._importManager = importManager;
 		}
 
-		public ActionResult Index()
+        [NonAction]
+        protected virtual string GetCategoryNames(IList<string> categoryNames, string separator = ",")
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < categoryNames.Count; i++)
+            {
+                var category = _newsletterCategoryService.GetNewsletterCategoryById(categoryNames[i]);
+                if (category != null)
+                {
+                    sb.Append(category.Name);
+                    if (i != categoryNames.Count - 1)
+                    {
+                        sb.Append(separator);
+                        sb.Append(" ");
+                    }
+                }
+            }
+            return sb.ToString();
+        }
+
+
+        public ActionResult Index()
 		{
 			return RedirectToAction("List");
 		}
@@ -87,11 +112,14 @@ namespace Grand.Admin.Controllers
             foreach (var cr in _customerService.GetAllCustomerRoles(true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString() });
 
-			return View(model);
+            foreach (var ca in _newsletterCategoryService.GetAllNewsletterCategory())
+                model.AvailableCategories.Add(new SelectListItem { Text = ca.Name, Value = ca.Id.ToString() });
+
+            return View(model);
 		}
 
 		[HttpPost]
-		public ActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model)
+		public ActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model, string[] searchCategoryIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -103,7 +131,7 @@ namespace Grand.Admin.Controllers
                 isActive = false;
 
             var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
-                model.StoreId, isActive, command.Page - 1, command.PageSize);
+                model.StoreId, isActive, searchCategoryIds, command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
@@ -113,7 +141,8 @@ namespace Grand.Admin.Controllers
 				    var store = _storeService.GetStoreById(x.StoreId);
 				    m.StoreName = store != null ? store.Name : "Unknown store";
 					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-					return m;
+                    m.Categories = GetCategoryNames(x.Categories.ToList());
+                    return m;
 				}),
                 Total = newsletterSubscriptions.TotalCount
             };
@@ -156,7 +185,7 @@ namespace Grand.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportcsv")]
-		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
+		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model, string[] searchCategoryIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -168,7 +197,7 @@ namespace Grand.Admin.Controllers
                 isActive = false;
 
 			var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
-                model.StoreId, isActive);
+                model.StoreId, isActive, searchCategoryIds);
 
 		    string result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
 

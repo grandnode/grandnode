@@ -73,6 +73,7 @@ $(document).ready(function () {
         fixedBgPos: true,
         overflowY: 'auto',
         closeBtnInside: true,
+        closeOnBgClick:false,
         preloader: false,
         midClick: true,
         mainClass: 'my-mfp-zoom-in'

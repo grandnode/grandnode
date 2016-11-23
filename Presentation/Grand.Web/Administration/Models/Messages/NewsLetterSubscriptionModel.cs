@@ -20,6 +20,9 @@ namespace Grand.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")]
         public string StoreName { get; set; }
 
+        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Categories")]
+        public string Categories { get; set; }
+
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
     }
