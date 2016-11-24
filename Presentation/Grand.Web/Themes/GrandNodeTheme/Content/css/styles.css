@@ -1114,6 +1114,30 @@ label, label + * {
     color: #777;
 }
 
+.newsletter-category-title
+{
+    margin: 0 0 10px;
+    border-bottom: 1px solid #ddd;
+    padding: 0px 0px 6px 10px;
+}
+.newsletter-category-save
+{
+    display: inline-block;
+    padding-top: 10px;
+}
+
+.newsletter-category-option-list 
+{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.newsletter-category-option-list li
+{
+    height:25px;
+}
+
+
 footer.page-footer {
     background-color: #eee;
 }

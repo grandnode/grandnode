@@ -1,0 +1,58 @@
+﻿@model NewsletterCategoryModel
+@using Grand.Web.Models.Newsletter;
+@{ 
+    var storeLocation = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Core.IWebHelper>().GetStoreLocation();
+}
+<div class="newsletter-category">
+    <div class="newsletter-category-title">
+        <h5>@T("NewsletterCategory.Title")</h5>
+    </div>
+    <form id="newsletter-category-method-form" action="" >
+        @Html.HiddenFor(x=>x.NewsletterEmailId)
+        <div class="newsletter-category-body">
+            <ul class="newsletter-category-option-list">
+                @foreach (var category in Model.NewsletterCategories)
+                {
+                    <li>
+                        <input id="Category_@(category.Id)" type="checkbox" name="Category_@(category.Id)" value="@category.Id" checked="@category.Selected" />
+                        <label for="Category_@(category.Id)">@category.Name</label>
+                    </li>
+                }
+            </ul>
+            <div class="newsletter-category-save">
+                <input type="button" value="@T("NewsletterCategory.Options.Save")" id="newsletter-category-button" class="btn waves-effect waves-light newsletter-subscribe-button" />
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        function newsletter_subscribe_category() {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.RouteUrl("SubscribeNewsletterCategory"))",
+                data: $('#newsletter-category-method-form').serialize(),
+                success: function(data) {
+                    if (data.Success) {
+                        var magnificPopup = $.magnificPopup.instance;
+                        magnificPopup.close();
+                    } else {
+                        alert(data.Message);
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert('Failed to assignt to categories.');
+                    var magnificPopup = $.magnificPopup.instance;
+                    magnificPopup.close();
+                }
+            });
+        }
+        $(document).ready(function () {
+            $('#newsletter-category-button').click(function () {
+                newsletter_subscribe_category();
+            });
+
+        });
+    </script>
+
+</div>
