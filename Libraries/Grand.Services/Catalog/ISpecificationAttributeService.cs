@@ -49,6 +49,13 @@ namespace Grand.Services.Catalog
         #region Specification attribute option
 
         /// <summary>
+        /// Gets a specification attribute option
+        /// </summary>
+        /// <param name="specificationAttributeOption">The specification attribute option</param>
+        /// <returns>Specification attribute option</returns>
+        SpecificationAttribute GetSpecificationAttributeByOptionId(string specificationAttributeOption);
+
+        /// <summary>
         /// Deletes a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>

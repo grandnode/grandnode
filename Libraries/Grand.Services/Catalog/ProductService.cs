@@ -855,13 +855,10 @@ namespace Grand.Services.Catalog
             //search by specs
             if (filteredSpecs != null && filteredSpecs.Any())
             {
-                    foreach(var spec in filteredSpecs)
-                    {
-                        string _specId = spec.Split(':').FirstOrDefault();
-                        string _specOptionId = spec.Split(':').Last();
-
-                        filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y=>y.SpecificationAttributeId == _specId && y.SpecificationAttributeOptionId == _specOptionId));
-                    }
+                foreach (var item in filteredSpecs)
+                {
+                    filter = filter & builder.Where(x => x.ProductSpecificationAttributes.Any(y => y.SpecificationAttributeOptionId == item));
+                }
             }
 
             //vendor filtering
@@ -974,7 +971,6 @@ namespace Grand.Services.Catalog
                         .Project(new BsonDocument
                          {
                          {"AllowFiltering", "$ProductSpecificationAttributes.AllowFiltering"},
-                         {"SpecificationAttributeId", "$ProductSpecificationAttributes.SpecificationAttributeId"},
                          {"SpecificationAttributeOptionId", "$ProductSpecificationAttributes.SpecificationAttributeOptionId"}
                          })
                         .Match(new BsonDocument("AllowFiltering", true))
@@ -982,7 +978,6 @@ namespace Grand.Services.Catalog
                                 {
                                             {"_id",
                                                 new BsonDocument {
-                                                    { "SpecificationAttributeId", "$SpecificationAttributeId" },
                                                     { "SpecificationAttributeOptionId", "$SpecificationAttributeOptionId" },
                                                 }
                                             },
@@ -995,8 +990,7 @@ namespace Grand.Services.Catalog
                         .ToListAsync().Result;
                         foreach (var item in qspec)
                         {
-                            var so = item["_id"]["SpecificationAttributeId"].ToString() + ":" +
-                                item["_id"]["SpecificationAttributeOptionId"].ToString();
+                            var so = item["_id"]["SpecificationAttributeOptionId"].ToString();
                             specyfication.Add(so);
                         }
 

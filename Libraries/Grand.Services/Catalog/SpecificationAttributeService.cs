@@ -168,6 +168,23 @@ namespace Grand.Services.Catalog
 
         #region Specification attribute option
 
+        /// <summary>
+        /// Gets a specification attribute option
+        /// </summary>
+        /// <param name="specificationAttributeOptionId">The specification attribute option identifier</param>
+        /// <returns>Specification attribute option</returns>
+        public virtual SpecificationAttribute GetSpecificationAttributeByOptionId(string specificationAttributeOptionId)
+        {
+            if (string.IsNullOrEmpty(specificationAttributeOptionId))
+                return null;
+
+            var query = from p in _specificationAttributeRepository.Table
+                        where p.SpecificationAttributeOptions.Any(x => x.Id == specificationAttributeOptionId)
+                        select p;
+
+            return query.FirstOrDefault();
+        }
+
 
         /// <summary>
         /// Deletes a specification attribute option

@@ -298,9 +298,7 @@ namespace Grand.Web.Models.Catalog
                     var _allFilters = new List<SpecificationAttributeOptionFilter>();
                     foreach (var sao in filterableSpecificationAttributeOptionIds)
                     {
-                        string _specificationAttributeId = sao.Split(':').FirstOrDefault().ToString();
-                        string _specificationAttributeOptionId = sao.Split(':').LastOrDefault().ToString();
-                        var sa = EngineContext.Current.Resolve<ISpecificationAttributeService>().GetSpecificationAttributeById(_specificationAttributeId);
+                        var sa = specificationAttributeService.GetSpecificationAttributeByOptionId(sao);  
                         if (sa != null)
                         {
                             _allFilters.Add(new SpecificationAttributeOptionFilter
@@ -309,9 +307,9 @@ namespace Grand.Web.Models.Catalog
                                 SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
                                 SpecificationAttributeDisplayOrder = sa.DisplayOrder,
                                 SpecificationAttributeOptionId = sao, 
-                                SpecificationAttributeOptionName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == _specificationAttributeOptionId).GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
-                                SpecificationAttributeOptionDisplayOrder = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == _specificationAttributeOptionId).DisplayOrder,
-                                SpecificationAttributeOptionColorRgb = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == _specificationAttributeOptionId).ColorSquaresRgb,
+                                SpecificationAttributeOptionName = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+                                SpecificationAttributeOptionDisplayOrder = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).DisplayOrder,
+                                SpecificationAttributeOptionColorRgb = sa.SpecificationAttributeOptions.FirstOrDefault(x => x.Id == sao).ColorSquaresRgb,
                             });
                         }
                     }
