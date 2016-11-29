@@ -174,7 +174,7 @@ namespace Grand.Web.Controllers
             foreach (var fg in forumGroups)
             {
                 // Add the forum group with Value of 0 so it won't be used as a target forum
-                forumsList.Add(new SelectListItem { Text = fg.Name, Value = "0" });
+                forumsList.Add(new SelectListItem { Text = fg.Name, Value = "" });
 
                 var forums = _forumService.GetAllForumsByGroupId(fg.Id);
                 foreach (var f in forums)
@@ -1536,7 +1536,7 @@ namespace Grand.Web.Controllers
                 new SelectListItem
                 {
                     Text = _localizationService.GetResource("Forum.Search.SearchInForum.All"),
-                    Value = "0",
+                    Value = "",
                     Selected = true,
                 });
             var separator = "--";

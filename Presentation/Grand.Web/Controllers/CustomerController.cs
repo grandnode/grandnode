@@ -360,7 +360,7 @@ namespace Grand.Web.Controllers
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
                 foreach (var c in _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
@@ -377,7 +377,7 @@ namespace Grand.Web.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, _workContext.WorkingLanguage.Id).ToList();
                     if (states.Any())
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "" });
 
                         foreach (var s in states)
                         {
@@ -391,7 +391,7 @@ namespace Grand.Web.Controllers
                         model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
-                            Value = "0"
+                            Value = ""
                         });
                     }
 
@@ -496,7 +496,7 @@ namespace Grand.Web.Controllers
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
                 
                 foreach (var c in _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
                 {
@@ -514,7 +514,7 @@ namespace Grand.Web.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, _workContext.WorkingLanguage.Id).ToList();
                     if (states.Any())
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "" });
 
                         foreach (var s in states)
                         {
@@ -528,7 +528,7 @@ namespace Grand.Web.Controllers
                         model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"), 
-                            Value = "0"
+                            Value = ""
                         });
                     }
 

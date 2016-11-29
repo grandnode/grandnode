@@ -430,7 +430,7 @@ namespace Grand.Web.Controllers
                 {
                     //countries
                     string defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.CountryId : model.EstimateShipping.CountryId;
-                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
                     foreach (var c in _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id))
                         model.EstimateShipping.AvailableCountries.Add(new SelectListItem
                         {
@@ -450,7 +450,7 @@ namespace Grand.Web.Controllers
                                 Selected = s.Id == defaultEstimateStateId
                             });
                     else
-                        model.EstimateShipping.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
+                        model.EstimateShipping.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "" });
 
                     if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
                         model.EstimateShipping.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;

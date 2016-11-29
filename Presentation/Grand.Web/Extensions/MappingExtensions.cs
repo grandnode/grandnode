@@ -146,7 +146,7 @@ namespace Grand.Web.Extensions
                 if (localizationService == null)
                     throw new ArgumentNullException("localizationService");
 
-                model.AvailableCountries.Add(new SelectListItem { Text = localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = localizationService.GetResource("Address.SelectCountry"), Value = "" });
                 foreach (var c in loadCountries())
                 {
                     model.AvailableCountries.Add(new SelectListItem
@@ -168,7 +168,7 @@ namespace Grand.Web.Extensions
                         .ToList();
                     if (states.Any())
                     {
-                        model.AvailableStates.Add(new SelectListItem { Text = localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = localizationService.GetResource("Address.SelectState"), Value = "" });
 
                         foreach (var s in states)
                         {
@@ -186,7 +186,7 @@ namespace Grand.Web.Extensions
                         model.AvailableStates.Add(new SelectListItem
                         {
                             Text = localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
-                            Value = "0"
+                            Value = ""
                         });
                     }
                 }

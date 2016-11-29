@@ -7,6 +7,7 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Web.Framework;
 using Grand.Web.Infrastructure.Cache;
+using System.Collections.Generic;
 
 namespace Grand.Web.Controllers
 {
@@ -48,7 +49,9 @@ namespace Grand.Web.Controllers
         {
             //this action method gets called via an ajax request
             if (String.IsNullOrEmpty(countryId))
-                throw new ArgumentNullException("countryId");
+            {
+                return Json(new List<dynamic>() { new { id = "", name = _localizationService.GetResource("Address.SelectState") } }, JsonRequestBehavior.AllowGet);
+            }
 
             string cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addSelectStateItem, _workContext.WorkingLanguage.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
