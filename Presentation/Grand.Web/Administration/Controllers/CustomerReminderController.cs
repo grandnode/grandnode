@@ -123,6 +123,7 @@ namespace Grand.Admin.Controllers
                 Id = history.Id,
                 Email = _customerService.GetCustomerById(history.CustomerId).Email,
                 SendDate = _dateTimeHelper.ConvertToUserTime(history.SendDate, DateTimeKind.Utc),
+                Level = history.Level,
                 OrderId = !String.IsNullOrEmpty(history.OrderId)
             };
         }
