@@ -374,11 +374,14 @@ namespace Grand.Admin.Controllers
             foreach (var gcuh in _giftCardService.GetAllGiftCardUsageHistory(order.Id))
             {
                 var giftCard = _giftCardService.GetGiftCardById(gcuh.GiftCardId);
-                model.GiftCards.Add(new OrderModel.GiftCard
+                if (giftCard != null)
                 {
-                    CouponCode = giftCard.GiftCardCouponCode,
-                    Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false),
-                });
+                    model.GiftCards.Add(new OrderModel.GiftCard
+                    {
+                        CouponCode = giftCard.GiftCardCouponCode,
+                        Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false),
+                    });
+                }
             }
 
             //reward points
@@ -401,11 +404,14 @@ namespace Grand.Admin.Controllers
             foreach (var d in duh)
             {
                 var discount = _discountService.GetDiscountById(d.DiscountId);
-                model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
+                if (discount != null)
                 {
-                    DiscountId = d.DiscountId,
-                    DiscountName = discount.Name,
-                });
+                    model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
+                    {
+                        DiscountId = d.DiscountId,
+                        DiscountName = discount.Name,
+                    });
+                }
             }
 
             //profit (hide for vendors)
@@ -541,7 +547,7 @@ namespace Grand.Admin.Controllers
                         model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
                         model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
 
-                        model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (!String.IsNullOrEmpty(order.ShippingAddress.CountryId) ? _countryService.GetCountryById(order.ShippingAddress.CountryId).Name : "")));
+                        model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (!String.IsNullOrEmpty(order.ShippingAddress.CountryId) ? _countryService.GetCountryById(order.ShippingAddress.CountryId)?.Name : "")));
                     }
                 }
                 else
@@ -565,8 +571,11 @@ namespace Grand.Admin.Controllers
                 {
                     //we can ship only shippable products
                     var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                    if (!product.IsShipEnabled)
-                        continue;
+                    if (product != null)
+                    {
+                        if (!product.IsShipEnabled)
+                            continue;
+                    }
                     var totalNumberOfItemsCanBeAddedToShipment = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
                     if (totalNumberOfItemsCanBeAddedToShipment <= 0)
                         continue;
@@ -592,74 +601,79 @@ namespace Grand.Admin.Controllers
             foreach (var orderItem in products)
             {
                 var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
-                if (product.IsDownload)
-                    hasDownloadableItems = true;
 
-                var orderItemModel = new OrderModel.OrderItemModel
+                if (product != null)
                 {
-                    Id = orderItem.Id,
-                    ProductId = orderItem.ProductId,
-                    ProductName = product.Name,
-                    Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
-                    Quantity = orderItem.Quantity,
-                    IsDownload = product.IsDownload,
-                    DownloadCount = orderItem.DownloadCount,
-                    DownloadActivationType = product.DownloadActivationType,
-                    IsDownloadActivated = orderItem.IsDownloadActivated
-                };
-                //picture
-                var orderItemPicture = product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
-                orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
 
-                //license file
-                if (!String.IsNullOrEmpty(orderItem.LicenseDownloadId))
-                {
-                    var licenseDownload = _downloadService.GetDownloadById(orderItem.LicenseDownloadId);
-                    if (licenseDownload != null)
+                    if (product.IsDownload)
+                        hasDownloadableItems = true;
+
+                    var orderItemModel = new OrderModel.OrderItemModel
                     {
-                        orderItemModel.LicenseDownloadGuid = licenseDownload.DownloadGuid;
+                        Id = orderItem.Id,
+                        ProductId = orderItem.ProductId,
+                        ProductName = product.Name,
+                        Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                        Quantity = orderItem.Quantity,
+                        IsDownload = product.IsDownload,
+                        DownloadCount = orderItem.DownloadCount,
+                        DownloadActivationType = product.DownloadActivationType,
+                        IsDownloadActivated = orderItem.IsDownloadActivated
+                    };
+                    //picture
+                    var orderItemPicture = product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
+                    orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
+
+                    //license file
+                    if (!String.IsNullOrEmpty(orderItem.LicenseDownloadId))
+                    {
+                        var licenseDownload = _downloadService.GetDownloadById(orderItem.LicenseDownloadId);
+                        if (licenseDownload != null)
+                        {
+                            orderItemModel.LicenseDownloadGuid = licenseDownload.DownloadGuid;
+                        }
                     }
+                    //vendor
+                    var vendor = _vendorService.GetVendorById(orderItem.VendorId);
+                    orderItemModel.VendorName = vendor != null ? vendor.Name : "";
+
+                    //unit price
+                    orderItemModel.UnitPriceInclTaxValue = orderItem.UnitPriceInclTax;
+                    orderItemModel.UnitPriceExclTaxValue = orderItem.UnitPriceExclTax;
+                    orderItemModel.UnitPriceInclTax = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                    orderItemModel.UnitPriceExclTax = _priceFormatter.FormatPrice(orderItem.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                    //discounts
+                    orderItemModel.DiscountInclTaxValue = orderItem.DiscountAmountInclTax;
+                    orderItemModel.DiscountExclTaxValue = orderItem.DiscountAmountExclTax;
+                    orderItemModel.DiscountInclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                    orderItemModel.DiscountExclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+                    //subtotal
+                    orderItemModel.SubTotalInclTaxValue = orderItem.PriceInclTax;
+                    orderItemModel.SubTotalExclTaxValue = orderItem.PriceExclTax;
+                    orderItemModel.SubTotalInclTax = _priceFormatter.FormatPrice(orderItem.PriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
+                    orderItemModel.SubTotalExclTax = _priceFormatter.FormatPrice(orderItem.PriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
+
+                    orderItemModel.AttributeInfo = orderItem.AttributeDescription;
+                    if (product.IsRecurring)
+                        orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                    //rental info
+                    if (product.IsRental)
+                    {
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                            rentalStartDate, rentalEndDate);
+                    }
+
+                    //return requests
+                    orderItemModel.ReturnRequestIds = _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id)
+                        .Select(rr => rr.Id).ToList();
+                    //gift cards
+                    orderItemModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id)
+                        .Select(gc => gc.Id).ToList();
+
+                    model.Items.Add(orderItemModel);
                 }
-                //vendor
-                var vendor = _vendorService.GetVendorById(orderItem.VendorId);
-                orderItemModel.VendorName = vendor != null ? vendor.Name : "";
-
-                //unit price
-                orderItemModel.UnitPriceInclTaxValue = orderItem.UnitPriceInclTax;
-                orderItemModel.UnitPriceExclTaxValue = orderItem.UnitPriceExclTax;
-                orderItemModel.UnitPriceInclTax = _priceFormatter.FormatPrice(orderItem.UnitPriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
-                orderItemModel.UnitPriceExclTax = _priceFormatter.FormatPrice(orderItem.UnitPriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
-                //discounts
-                orderItemModel.DiscountInclTaxValue = orderItem.DiscountAmountInclTax;
-                orderItemModel.DiscountExclTaxValue = orderItem.DiscountAmountExclTax;
-                orderItemModel.DiscountInclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
-                orderItemModel.DiscountExclTax = _priceFormatter.FormatPrice(orderItem.DiscountAmountExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
-                //subtotal
-                orderItemModel.SubTotalInclTaxValue = orderItem.PriceInclTax;
-                orderItemModel.SubTotalExclTaxValue = orderItem.PriceExclTax;
-                orderItemModel.SubTotalInclTax = _priceFormatter.FormatPrice(orderItem.PriceInclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, true, true);
-                orderItemModel.SubTotalExclTax = _priceFormatter.FormatPrice(orderItem.PriceExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false, true);
-
-                orderItemModel.AttributeInfo = orderItem.AttributeDescription;
-                if (product.IsRecurring)
-                    orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), product.RecurringCycleLength, product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
-                //rental info
-                if (product.IsRental)
-                {
-                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                    orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                        rentalStartDate, rentalEndDate);
-                }
-
-                //return requests
-                orderItemModel.ReturnRequestIds = _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id)
-                    .Select(rr => rr.Id).ToList();
-                //gift cards
-                orderItemModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id)
-                    .Select(gc => gc.Id).ToList();
-
-                model.Items.Add(orderItemModel);
             }
             model.HasDownloadableProducts = hasDownloadableItems;
             #endregion
@@ -783,35 +797,37 @@ namespace Grand.Admin.Controllers
                     var qtyOrdered = shipmentItem.Quantity;
                     var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
                     var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
+                    if (product != null)
+                    {
+                        var warehouse = _shippingService.GetWarehouseById(shipmentItem.WarehouseId);
+                        var shipmentItemModel = new ShipmentModel.ShipmentItemModel
+                        {
+                            Id = shipmentItem.Id,
+                            OrderItemId = orderItem.Id,
+                            ProductId = orderItem.ProductId,
+                            ProductName = product.Name,
+                            Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
+                            AttributeInfo = orderItem.AttributeDescription,
+                            ShippedFromWarehouse = warehouse != null ? warehouse.Name : null,
+                            ShipSeparately = product.ShipSeparately,
+                            ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
+                            ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", product.Length, product.Width, product.Height, baseDimensionIn),
+                            QuantityOrdered = qtyOrdered,
+                            QuantityInThisShipment = qtyInThisShipment,
+                            QuantityInAllShipments = qtyInAllShipments,
+                            QuantityToAdd = maxQtyToAdd,
+                        };
+                        //rental info
+                        if (product.IsRental)
+                        {
+                            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                            shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                                rentalStartDate, rentalEndDate);
+                        }
 
-                    var warehouse = _shippingService.GetWarehouseById(shipmentItem.WarehouseId);
-                    var shipmentItemModel = new ShipmentModel.ShipmentItemModel
-                    {
-                        Id = shipmentItem.Id,
-                        OrderItemId = orderItem.Id,
-                        ProductId = orderItem.ProductId,
-                        ProductName = product.Name,
-                        Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
-                        AttributeInfo = orderItem.AttributeDescription,
-                        ShippedFromWarehouse = warehouse != null ? warehouse.Name : null,
-                        ShipSeparately = product.ShipSeparately,
-                        ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
-                        ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", product.Length, product.Width, product.Height, baseDimensionIn),
-                        QuantityOrdered = qtyOrdered,
-                        QuantityInThisShipment = qtyInThisShipment,
-                        QuantityInAllShipments = qtyInAllShipments,
-                        QuantityToAdd = maxQtyToAdd,
-                    };
-                    //rental info
-                    if (product.IsRental)
-                    {
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                        shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
-                            rentalStartDate, rentalEndDate);
+                        model.Items.Add(shipmentItemModel);
                     }
-
-                    model.Items.Add(shipmentItemModel);
                 }
             }
 
@@ -994,7 +1010,7 @@ namespace Grand.Admin.Controllers
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        CustomerEmail = x.BillingAddress.Email,
+                        CustomerEmail = x.BillingAddress?.Email,
                         CustomerFullName = string.Format("{0} {1}", x.BillingAddress?.FirstName, x.BillingAddress?.LastName),
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };

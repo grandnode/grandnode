@@ -331,17 +331,14 @@ namespace Grand.Admin.Controllers
                 //No discount found with the specified id
                 return RedirectToAction("List");
 
-            //applied to categories
-            var categories = _categoryService.GetAllCategoriesByDiscount(id);
-            //applied to manufacturers
-            var manufacturers = _manufacturerService.GetAllManufacturersByDiscount(id);
-            //applied to products
-            var products = _productService.GetProductsByDiscount(id);
+            var usagehistory = _discountService.GetAllDiscountUsageHistory(discount.Id);
+            if(usagehistory.Count > 0)
+            {
+                ErrorNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Deleted.UsageHistory"));
+                return RedirectToAction("Edit", new { id = discount.Id });
+            }
 
             _discountService.DeleteDiscount(discount);
-
-            foreach (var p in products)
-                _productService.UpdateHasDiscountsApplied(p.Id);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteDiscount", discount.Id, _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);
@@ -1035,6 +1032,7 @@ namespace Grand.Admin.Controllers
                         Id = x.Id,
                         DiscountId = x.DiscountId,
                         OrderId = x.OrderId,
+                        OrderNumber = order != null ? order.OrderNumber : 0,
                         OrderTotal = order != null ? _priceFormatter.FormatPrice(order.OrderTotal, true, false) : "",
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };

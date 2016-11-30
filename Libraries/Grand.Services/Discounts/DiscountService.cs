@@ -23,6 +23,7 @@ using Grand.Services.Stores;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Customers;
+using Grand.Services.Catalog;
 
 namespace Grand.Services.Discounts
 {
@@ -198,7 +199,9 @@ namespace Grand.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
-            _discountRepository.Delete(discount);
+            var usagehistory = GetAllDiscountUsageHistory(discount.Id);
+            if(usagehistory.Count > 0)
+                throw new ArgumentNullException("discount has a history");
 
             if (discount.DiscountType == DiscountType.AssignedToSkus)
             {
@@ -206,6 +209,12 @@ namespace Grand.Services.Discounts
                 var updatefilter = builderproduct.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
                 var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+
+                var productService = EngineContext.Current.Resolve<IProductService>();
+                var products = productService.GetProductsByDiscount(discount.Id);
+                foreach (var p in products)
+                    productService.UpdateHasDiscountsApplied(p.Id);
+
             }
 
             if (discount.DiscountType == DiscountType.AssignedToCategories)
@@ -238,6 +247,8 @@ namespace Grand.Services.Discounts
                 var result = _storeRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
             }
+
+            _discountRepository.Delete(discount);
 
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 

@@ -568,7 +568,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                         field: "ProductId",
                         title: "@T("Admin.Common.View")",
                         width: 150,
-                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                     }, {
                         command: [{
                             name: "destroy",
@@ -674,7 +674,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                         field: "CategoryId",
                         title: "@T("Admin.Common.View")",
                         width: 150,
-                        template: '<a href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">@T("Admin.Common.View")</a>'
+                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                     }, {
                         command: [{
                             name: "destroy",
@@ -781,7 +781,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                         field: "ManufacturerId",
                         title: "@T("Admin.Common.View")",
                         width: 150,
-                        template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">@T("Admin.Common.View")</a>'
+                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                     }, {
                         command: [{
                             name: "destroy",
@@ -884,7 +884,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                         field: "VendorId",
                         title: "@T("Admin.Common.View")",
                         width: 150,
-                        template: '<a href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#">@T("Admin.Common.View")</a>'
+                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                     }, {
                         command: [{
                             name: "destroy",
@@ -988,7 +988,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                         field: "StoreId",
                         title: "@T("Admin.Common.View")",
                         width: 150,
-                        template: '<a href="@Url.Content("~/Admin/Store/Edit/")#=StoreId#">@T("Admin.Common.View")</a>'
+                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Store/Edit/")#=StoreId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
                     }, {
                         command: [{
                             name: "destroy",
@@ -1090,7 +1090,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.Admin
                     field: "OrderId",
                     title: "@T("Admin.Promotions.Discounts.History.Order")",
                     width: 200,
-                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                    template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-search"></i> #=OrderNumber# - @T("Admin.Common.View")</a>'
                 }, {
                     field: "OrderTotal",
                     title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",

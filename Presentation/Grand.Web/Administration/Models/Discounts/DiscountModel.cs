@@ -98,6 +98,7 @@ namespace Grand.Admin.Models.Discounts
 
             [NopResourceDisplayName("Admin.Promotions.Discounts.History.Order")]
             public string OrderId { get; set; }
+            public int OrderNumber { get; set; }
 
             [NopResourceDisplayName("Admin.Promotions.Discounts.History.OrderTotal")]
             public string OrderTotal { get; set; }
