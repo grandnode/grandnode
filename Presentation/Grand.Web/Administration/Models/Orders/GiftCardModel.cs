@@ -12,6 +12,7 @@ namespace Grand.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.Order")]
         public string PurchasedWithOrderId { get; set; }
+        public int PurchasedWithOrderNumber { get; set; }
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.Amount")]
         public decimal Amount { get; set; }

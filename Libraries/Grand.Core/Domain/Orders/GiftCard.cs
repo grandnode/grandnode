@@ -15,11 +15,6 @@ namespace Grand.Core.Domain.Orders
         private ICollection<GiftCardUsageHistory> _giftCardUsageHistory;
         
         /// <summary>
-        /// Gets or sets the associated order item identifier
-        /// </summary>
-        public string PurchasedWithOrderItemId { get; set; }
-
-        /// <summary>
         /// Gets or sets the gift card type identifier
         /// </summary>
         public int GiftCardTypeId { get; set; }

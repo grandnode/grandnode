@@ -179,7 +179,8 @@ namespace Grand.Admin.Controllers
             if(giftCard.PurchasedWithOrderItem!=null)
                 order = _orderService.GetOrderByOrderItemId(giftCard.PurchasedWithOrderItem.Id);
 
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order.Id : null;
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderItem != null ? order?.Id : null;
+            model.PurchasedWithOrderNumber = order?.OrderNumber ?? 0;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);

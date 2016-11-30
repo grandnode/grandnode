@@ -156,7 +156,7 @@ namespace Grand.Services.Orders
 
             var query = _giftCardRepository.Table;
 
-            query = query.Where(gc => gc.PurchasedWithOrderItemId == purchasedWithOrderItemId);
+            query = query.Where(gc => gc.PurchasedWithOrderItem.Id == purchasedWithOrderItemId);
             query = query.OrderBy(gc => gc.Id);
 
             var giftCards = query.ToList();

@@ -725,7 +725,6 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<GiftCardModel, GiftCard>()
                     .ForMember(dest => dest.Id, mo => mo.Ignore())
-                    .ForMember(dest => dest.PurchasedWithOrderItemId, mo => mo.Ignore())
                     .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())
                     .ForMember(dest => dest.GiftCardUsageHistory, mo => mo.Ignore())
                     .ForMember(dest => dest.PurchasedWithOrderItem, mo => mo.Ignore())
