@@ -1224,7 +1224,50 @@ namespace Grand.Services.Messages
                 languageId, tokens,
                 toEmail, toName);
         }
-        
+
+        /// <summary>
+        /// Sends 'New Return Request' message to a customer
+        /// </summary>
+        /// <param name="returnRequest">Return request</param>
+        /// <param name="orderItem">Order item</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId)
+        {
+            if (returnRequest == null)
+                throw new ArgumentNullException("returnRequest");
+
+            var order = EngineContext.Current.Resolve<IOrderService>().GetOrderByOrderItemId(orderItem.Id);
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("NewReturnRequest.CustomerNotification", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(returnRequest.CustomerId);
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            _messageTokenProvider.AddReturnRequestTokens(tokens, returnRequest, orderItem);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = customer.IsGuest() ?
+                order.BillingAddress.Email :
+                customer.Email;
+            var toName = customer.IsGuest() ?
+                order.BillingAddress.FirstName :
+                customer.GetFullName();
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
         #endregion
 
         #region Forum Notifications

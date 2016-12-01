@@ -263,6 +263,15 @@ namespace Grand.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendReturnRequestStatusChangedCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId);
 
+        /// <summary>
+        /// Sends 'New Return Request' message to a customer
+        /// </summary>
+        /// <param name="returnRequest"></param>
+        /// <param name="orderItem"></param>
+        /// <param name="languageId"></param>
+        /// <returns></returns>
+        int SendNewReturnRequestCustomerNotification(ReturnRequest returnRequest, OrderItem orderItem, string languageId);
+        
         #endregion
 
         #region Forum Notifications

@@ -4462,6 +4462,14 @@ namespace Grand.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "NewReturnRequest.CustomerNotification",
+                                           Subject = "%Store.Name%. New return request.",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> You have just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.CustomNumber%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
                                            Name = "NewReturnRequest.StoreOwnerNotification",
                                            Subject = "%Store.Name%. New return request.",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% has just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.ID%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",

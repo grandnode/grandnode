@@ -267,6 +267,8 @@ namespace Grand.Web.Controllers
                         _returnRequestService.InsertReturnRequest(rr);
                         //notify store owner here (email)
                         _workflowMessageService.SendNewReturnRequestStoreOwnerNotification(rr, orderItem, _localizationSettings.DefaultAdminLanguageId);
+                        //notify customer
+                        _workflowMessageService.SendNewReturnRequestCustomerNotification(rr, orderItem, order.CustomerLanguageId);
 
                         count++;
                     }

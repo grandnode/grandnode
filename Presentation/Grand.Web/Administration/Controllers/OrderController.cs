@@ -770,7 +770,7 @@ namespace Grand.Admin.Controllers
                 Id = shipment.Id,
                 ShipmentNumber = shipment.ShipmentNumber,
                 OrderId = shipment.OrderId,
-                OrderNumber = order.OrderNumber,
+                OrderNumber = order!=null ? order.OrderNumber : 0,
                 TrackingNumber = shipment.TrackingNumber,
                 TotalWeight = shipment.TotalWeight.HasValue ? string.Format("{0:F2} [{1}]", shipment.TotalWeight, baseWeightIn) : "",
                 ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
