@@ -483,12 +483,13 @@ namespace Grand.Services.Customers
             bool cond = false;
             if (customer != null)
             {
+                var _genericAttributes = _customerService.GetCustomerById(customer.Id).GenericAttributes;
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
                 {
                     cond = true;
                     foreach (var item in condition.CustomerRegistration)
                     {
-                        if (customer.GenericAttributes.Where(x => x.Key == item.RegisterField && x.Value == item.RegisterValue).Count() == 0)
+                        if (_genericAttributes.Where(x => x.Key == item.RegisterField && x.Value.ToLower() == item.RegisterValue.ToLower()).Count() == 0)
                             cond = false;
                     }
                 }
@@ -496,7 +497,7 @@ namespace Grand.Services.Customers
                 {
                     foreach (var item in condition.CustomerRegistration)
                     {
-                        if (customer.GenericAttributes.Where(x => x.Key == item.RegisterField && x.Value == item.RegisterValue).Count() > 0)
+                        if (_genericAttributes.Where(x => x.Key == item.RegisterField && x.Value.ToLower() == item.RegisterValue.ToLower()).Count() > 0)
                             cond = true;
                     }
                 }
@@ -509,9 +510,10 @@ namespace Grand.Services.Customers
             bool cond = false;
             if (customer != null)
             {
+                var _genericAttributes = _customerService.GetCustomerById(customer.Id).GenericAttributes;
                 if (condition.Condition == CustomerActionConditionEnum.AllOfThem)
                 {
-                    var customCustomerAttributes = customer.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
+                    var customCustomerAttributes = _genericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
                     if (customCustomerAttributes != null)
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
@@ -534,8 +536,7 @@ namespace Grand.Services.Customers
                 }
                 if (condition.Condition == CustomerActionConditionEnum.OneOfThem)
                 {
-
-                    var customCustomerAttributes = customer.GenericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
+                    var customCustomerAttributes = _genericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
                     if(customCustomerAttributes!=null)
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
