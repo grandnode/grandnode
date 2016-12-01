@@ -47,6 +47,7 @@ namespace Grand.Data
         /// </summary>
         public MongoDBRepository()
         {            
+
         }
         public MongoDBRepository(string connectionString)
         {
@@ -148,10 +149,6 @@ namespace Grand.Data
             }
         }
 
-        public virtual IMongoQueryable<T> Table
-        {
-            get { return this._collection.AsQueryable(); }
-        }
 
         #endregion
 
@@ -160,6 +157,10 @@ namespace Grand.Data
         /// <summary>
         /// Gets a table
         /// </summary>
+        public virtual IMongoQueryable<T> Table
+        {
+            get { return this._collection.AsQueryable(); }
+        }
 
         #endregion
 

@@ -104,6 +104,7 @@ namespace Grand.Web.Framework
                 var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
                 var dataProvider = mongoDBDataProviderManager.LoadDataProvider();
                 builder.Register(c => new MongoClient(dataProviderSettings.DataConnectionString)).As(typeof(IMongoClient)).SingleInstance();
+                builder.Register(c => new MongoDBContext(dataProviderSettings.DataConnectionString)).As<IMongoDBContext>().InstancePerLifetimeScope();
             }
 
             builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();

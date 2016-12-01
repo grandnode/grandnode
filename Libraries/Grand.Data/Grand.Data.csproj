@@ -62,6 +62,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMongoDBContext.cs" />
+    <Compile Include="MongoDBContext.cs" />
     <Compile Include="MongoDBDataProviderManager.cs" />
     <Compile Include="MongoDBRepository.cs" />
     <Compile Include="MongoDBDataProvider.cs" />
