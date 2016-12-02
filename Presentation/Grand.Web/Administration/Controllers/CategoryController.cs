@@ -227,7 +227,7 @@ namespace Grand.Admin.Controllers
 
             if (!excludeProperties && category != null)
             {
-                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
+                model.SelectedDiscountIds = category.AppliedDiscounts.ToArray();
             }
         }
 
@@ -385,7 +385,7 @@ namespace Grand.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        category.AppliedDiscounts.Add(discount);
+                        category.AppliedDiscounts.Add(discount.Id);
                 }
                 _categoryService.InsertCategory(category);
 
@@ -487,14 +487,14 @@ namespace Grand.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            category.AppliedDiscounts.Add(discount);
+                        if (category.AppliedDiscounts.Count(d => d == discount.Id) == 0)
+                            category.AppliedDiscounts.Add(discount.Id);
                     }
                     else
                     {
                         //remove discount
-                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                            category.AppliedDiscounts.Remove(discount);
+                        if (category.AppliedDiscounts.Count(d => d == discount.Id) > 0)
+                            category.AppliedDiscounts.Remove(discount.Id);
                     }
                 }
                 category.CustomerRoles = model.SelectedCustomerRoleIds != null? model.SelectedCustomerRoleIds.ToList() : new List<string>();

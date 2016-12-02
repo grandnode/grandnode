@@ -303,7 +303,7 @@ namespace Grand.Web.Controllers
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page
-                TempData["nop.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
+                TempData["Grand.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
                 return RedirectToRoute("NewsItem", new {SeName = newsItem.GetSeName() });
             }
 

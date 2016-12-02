@@ -122,7 +122,7 @@ namespace Grand.Web.Framework.ViewEngines.Razor
             //keep this method synchornized with
             //"SetSelectedTabIndex" method of \Administration\Controllers\BaseNopController.cs
             int index = 0;
-            string dataKey = "nop.selected-tab-index";
+            string dataKey = "Grand.selected-tab-index";
             if (ViewData[dataKey] is int)
             {
                 index = (int)ViewData[dataKey];

@@ -20,8 +20,8 @@ namespace Grand.Plugin.Widgets.NivoSlider.Infrastructure.Cache
         /// <remarks>
         /// {0} : picture id
         /// </remarks>
-        public const string PICTURE_URL_MODEL_KEY = "Nop.plugins.widgets.nivosrlider.pictureurl-{0}";
-        public const string PICTURE_URL_PATTERN_KEY = "Nop.plugins.widgets.nivosrlider";
+        public const string PICTURE_URL_MODEL_KEY = "Grand.plugins.widgets.nivosrlider.pictureurl-{0}";
+        public const string PICTURE_URL_PATTERN_KEY = "Grand.plugins.widgets.nivosrlider";
 
         private readonly ICacheManager _cacheManager;
 

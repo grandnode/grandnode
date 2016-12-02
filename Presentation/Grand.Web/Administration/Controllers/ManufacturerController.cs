@@ -208,7 +208,7 @@ namespace Grand.Admin.Controllers
 
             if (!excludeProperties && manufacturer != null)
             {
-                model.SelectedDiscountIds = manufacturer.AppliedDiscounts.Select(d => d.Id).ToArray();
+                model.SelectedDiscountIds = manufacturer.AppliedDiscounts.ToArray();
             }
         }
 
@@ -340,7 +340,7 @@ namespace Grand.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        manufacturer.AppliedDiscounts.Add(discount);
+                        manufacturer.AppliedDiscounts.Add(discount.Id);
                 }
 
                 _manufacturerService.InsertManufacturer(manufacturer);
@@ -436,14 +436,14 @@ namespace Grand.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            manufacturer.AppliedDiscounts.Add(discount);
+                        if (manufacturer.AppliedDiscounts.Count(d => d == discount.Id) == 0)
+                            manufacturer.AppliedDiscounts.Add(discount.Id);
                     }
                     else
                     {
                         //remove discount
-                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                            manufacturer.AppliedDiscounts.Remove(discount);
+                        if (manufacturer.AppliedDiscounts.Count(d => d == discount.Id) > 0)
+                            manufacturer.AppliedDiscounts.Remove(discount.Id);
                     }
                 }
                 model.SeName = manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
@@ -24,7 +23,7 @@ namespace Grand.Core.Domain.Catalog
         private ICollection<ProductAttributeMapping> _productAttributeMappings;
         private ICollection<ProductAttributeCombination> _productAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
-        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<string> _appliedDiscounts;
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
         private ICollection<string> _crossSellProduct;
         private ICollection<RelatedProduct> _relatedProduct;
@@ -438,14 +437,6 @@ namespace Grand.Core.Domain.Catalog
         /// </remarks>
         /// </summary>
         public bool HasTierPrices { get; set; }
-        /// <summary>
-        /// Gets or sets a value indicating whether this product has discounts applied
-        /// <remarks>The same as if we run this.AppliedDiscounts.Count > 0
-        /// We use this property for performance optimization:
-        /// if this property is set to false, then we do not need to load Applied Discounts navigation property
-        /// </remarks>
-        /// </summary>
-        public bool HasDiscountsApplied { get; set; }
 
         /// <summary>
         /// Gets or sets the weight
@@ -729,9 +720,9 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts
+        public virtual ICollection<string> AppliedDiscounts
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<string>()); }
             protected set { _appliedDiscounts = value; }
         }
         

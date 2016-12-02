@@ -20,36 +20,36 @@ namespace Grand.Services.Common
         /// <summary>
         /// Key for caching
         /// </summary>
-        private const string ADDRESSATTRIBUTES_ALL_KEY = "Nop.addressattribute.all";
+        private const string ADDRESSATTRIBUTES_ALL_KEY = "Grand.addressattribute.all";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : address attribute ID
         /// </remarks>
-        private const string ADDRESSATTRIBUTES_BY_ID_KEY = "Nop.addressattribute.id-{0}";
+        private const string ADDRESSATTRIBUTES_BY_ID_KEY = "Grand.addressattribute.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : address attribute ID
         /// </remarks>
-        private const string ADDRESSATTRIBUTEVALUES_ALL_KEY = "Nop.addressattributevalue.all-{0}";
+        private const string ADDRESSATTRIBUTEVALUES_ALL_KEY = "Grand.addressattributevalue.all-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : address attribute value ID
         /// </remarks>
-        private const string ADDRESSATTRIBUTEVALUES_BY_ID_KEY = "Nop.addressattributevalue.id-{0}";
+        private const string ADDRESSATTRIBUTEVALUES_BY_ID_KEY = "Grand.addressattributevalue.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string ADDRESSATTRIBUTES_PATTERN_KEY = "Nop.addressattribute.";
+        private const string ADDRESSATTRIBUTES_PATTERN_KEY = "Grand.addressattribute.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string ADDRESSATTRIBUTEVALUES_PATTERN_KEY = "Nop.addressattributevalue.";
+        private const string ADDRESSATTRIBUTEVALUES_PATTERN_KEY = "Grand.addressattributevalue.";
         #endregion
         
         #region Fields

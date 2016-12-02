@@ -20,11 +20,11 @@ namespace Grand.Services.Common
         /// <remarks>
         /// {0} : address ID
         /// </remarks>
-        private const string ADDRESSES_BY_ID_KEY = "Nop.address.id-{0}";
+        private const string ADDRESSES_BY_ID_KEY = "Grand.address.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string ADDRESSES_PATTERN_KEY = "Nop.address.";
+        private const string ADDRESSES_PATTERN_KEY = "Grand.address.";
 
         #endregion
 

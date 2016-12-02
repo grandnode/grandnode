@@ -25,11 +25,11 @@ namespace Grand.Services.Security
         /// {0} : entity ID
         /// {1} : entity name
         /// </remarks>
-        private const string ACLRECORD_BY_ENTITYID_NAME_KEY = "Nop.aclrecord.entityid-name-{0}-{1}";
+        private const string ACLRECORD_BY_ENTITYID_NAME_KEY = "Grand.aclrecord.entityid-name-{0}-{1}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string ACLRECORD_PATTERN_KEY = "Nop.aclrecord.";
+        private const string ACLRECORD_PATTERN_KEY = "Grand.aclrecord.";
 
         #endregion
 

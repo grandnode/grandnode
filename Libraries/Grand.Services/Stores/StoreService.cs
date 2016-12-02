@@ -18,18 +18,18 @@ namespace Grand.Services.Stores
         /// <summary>
         /// Key for caching
         /// </summary>
-        private const string STORES_ALL_KEY = "Nop.stores.all";
+        private const string STORES_ALL_KEY = "Grand.stores.all";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : store ID
         /// </remarks>
-        private const string STORES_BY_ID_KEY = "Nop.stores.id-{0}";
+        private const string STORES_BY_ID_KEY = "Grand.stores.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string STORES_PATTERN_KEY = "Nop.stores.";
+        private const string STORES_PATTERN_KEY = "Grand.stores.";
 
         #endregion
         
@@ -153,7 +153,7 @@ namespace Grand.Services.Stores
         public virtual IList<Store> GetAllStoresByDiscount(string discountId)
         {
             var query = from c in _storeRepository.Table
-                        where c.AppliedDiscounts.Any(x => x.Id == discountId)
+                        where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
             var stores = query.ToList();
             return stores;

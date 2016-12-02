@@ -24,6 +24,7 @@ using Grand.Services.Directory;
 using Grand.Services.Orders;
 using Grand.Services.Shipping;
 using Grand.Services.ExportImport.Help;
+using Grand.Services.Discounts;
 
 namespace Grand.Services.ExportImport
 {
@@ -41,7 +42,7 @@ namespace Grand.Services.ExportImport
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IStoreService _storeService;
-
+        private readonly IDiscountService _discountService;
         #endregion
 
         #region Ctor
@@ -52,7 +53,8 @@ namespace Grand.Services.ExportImport
             IPictureService pictureService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IStoreService storeService,
-            IProductService productService)
+            IProductService productService,
+            IDiscountService discountService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -61,6 +63,7 @@ namespace Grand.Services.ExportImport
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._storeService = storeService;
             this._productService = productService;
+            this._discountService = discountService;
         }
 
         #endregion
@@ -389,13 +392,17 @@ namespace Grand.Services.ExportImport
 
 
                 xmlWriter.WriteStartElement("ProductDiscounts");
-                var discounts = product.AppliedDiscounts;
-                foreach (var discount in discounts)
+                
+                foreach (var appliedDiscount in product.AppliedDiscounts)
                 {
-                    xmlWriter.WriteStartElement("Discount");
-                    xmlWriter.WriteElementString("DiscountId", null, discount.Id.ToString());
-                    xmlWriter.WriteElementString("Name", null, discount.Name);
-                    xmlWriter.WriteEndElement();
+                    var discount = _discountService.GetDiscountById(appliedDiscount);
+                    if (discount != null)
+                    {
+                        xmlWriter.WriteStartElement("Discount");
+                        xmlWriter.WriteElementString("DiscountId", null, discount.Id.ToString());
+                        xmlWriter.WriteElementString("Name", null, discount.Name);
+                        xmlWriter.WriteEndElement();
+                    }
                 }
                 xmlWriter.WriteEndElement();
 

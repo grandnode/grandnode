@@ -236,7 +236,6 @@ namespace Grand.Services.Catalog.Tests {
                 Price = 49.99M,
                 CustomerEntersPrice = false,
                 Published = true,
-                HasDiscountsApplied = true //!
             };
 
             var customer = new Customer();
@@ -249,7 +248,7 @@ namespace Grand.Services.Catalog.Tests {
                 DiscountLimitation = DiscountLimitationType.Unlimited
             };
 
-            product.AppliedDiscounts.Add(discount001);
+            product.AppliedDiscounts.Add(discount001.Id);
 
             tempDiscountServiceMock.Setup(x => x.ValidateDiscount(discount001, customer)).Returns(new DiscountValidationResult() { IsValid = true });
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).Returns(new List<Discount>());

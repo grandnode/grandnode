@@ -141,15 +141,15 @@ namespace Grand.Web
             {
                 MiniProfiler.Start();
                 //store a value indicating whether profiler was started
-                HttpContext.Current.Items["nop.MiniProfilerStarted"] = true;
+                HttpContext.Current.Items["Grand.MiniProfilerStarted"] = true;
             }
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
             //miniprofiler
-            var miniProfilerStarted = HttpContext.Current.Items.Contains("nop.MiniProfilerStarted") &&
-                 Convert.ToBoolean(HttpContext.Current.Items["nop.MiniProfilerStarted"]);
+            var miniProfilerStarted = HttpContext.Current.Items.Contains("Grand.MiniProfilerStarted") &&
+                 Convert.ToBoolean(HttpContext.Current.Items["Grand.MiniProfilerStarted"]);
             if (miniProfilerStarted)
             {
                 MiniProfiler.Stop();

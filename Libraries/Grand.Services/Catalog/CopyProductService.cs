@@ -226,7 +226,6 @@ namespace Grand.Services.Catalog
                 CustomerRoles = product.CustomerRoles,
                 Stores = product.Stores,
                 HasTierPrices = product.HasTierPrices,
-                HasDiscountsApplied = product.HasDiscountsApplied,
             };
 
             // product <-> warehouses mappings

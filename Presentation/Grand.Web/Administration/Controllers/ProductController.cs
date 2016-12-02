@@ -675,7 +675,7 @@ namespace Grand.Admin.Controllers
                 .ToList();
             if (!excludeProperties && product != null)
             {
-                model.SelectedDiscountIds = product.AppliedDiscounts.Select(d => d.Id).ToArray();
+                model.SelectedDiscountIds = product.AppliedDiscounts.ToArray();
             }
 
             //default values
@@ -1001,12 +1001,11 @@ namespace Grand.Admin.Controllers
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
-                        product.AppliedDiscounts.Add(discount);
-                        _productService.InsertDiscount(discount, product.Id);
+                        product.AppliedDiscounts.Add(discount.Id);
+                        _productService.InsertDiscount(discount.Id, product.Id);
                     }
                 }
                 _productService.UpdateProduct(product);
-                _productService.UpdateHasDiscountsApplied(product.Id);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewProduct", product.Id, _localizationService.GetResource("ActivityLog.AddNewProduct"), product.Name);
@@ -1111,24 +1110,23 @@ namespace Grand.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                        if (product.AppliedDiscounts.Count(d => d == discount.Id) == 0)
                         {
-                            product.AppliedDiscounts.Add(discount);
-                            _productService.InsertDiscount(discount, product.Id);
+                            product.AppliedDiscounts.Add(discount.Id);
+                            _productService.InsertDiscount(discount.Id, product.Id);
                         }
                     }
                     else
                     {
                         //remove discount
-                        if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                        if (product.AppliedDiscounts.Count(d => d == discount.Id) > 0)
                         {
-                            product.AppliedDiscounts.Remove(discount);
-                            _productService.DeleteDiscount(discount, product.Id);
+                            product.AppliedDiscounts.Remove(discount.Id);
+                            _productService.DeleteDiscount(discount.Id, product.Id);
                         }
                     }
                 }
                 _productService.UpdateProduct(product);
-                _productService.UpdateHasDiscountsApplied(product.Id);
                 //back in stock notifications
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     product.BackorderMode == BackorderMode.NoBackorders &&

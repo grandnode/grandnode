@@ -148,8 +148,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public const string SEARCH_CATEGORIES_MODEL_KEY = "Nop.pres.search.categories-{0}-{1}-{2}";
-        public const string SEARCH_CATEGORIES_PATTERN_KEY = "Nop.pres.search.categories";
+        public const string SEARCH_CATEGORIES_MODEL_KEY = "Grand.pres.search.categories-{0}-{1}-{2}";
+        public const string SEARCH_CATEGORIES_PATTERN_KEY = "Grand.pres.search.categories";
 
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -160,14 +160,14 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : roles of the current user
         /// {3} : current store ID
         /// </remarks>
-        public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "Nop.pres.manufacturer.navigation-{0}-{1}-{2}-{3}";
-        public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "Nop.pres.manufacturer.navigation";
+        public const string MANUFACTURER_NAVIGATION_MODEL_KEY = "Grand.pres.manufacturer.navigation-{0}-{1}-{2}-{3}";
+        public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "Grand.pres.manufacturer.navigation";
 
         /// <summary>
         /// Key for VendorNavigationModel caching
         /// </summary>
-        public const string VENDOR_NAVIGATION_MODEL_KEY = "Nop.pres.vendor.navigation";
-        public const string VENDOR_NAVIGATION_PATTERN_KEY = "Nop.pres.vendor.navigation";
+        public const string VENDOR_NAVIGATION_MODEL_KEY = "Grand.pres.vendor.navigation";
+        public const string VENDOR_NAVIGATION_PATTERN_KEY = "Grand.pres.vendor.navigation";
 
         /// <summary>
         /// Key for caching of a value indicating whether a manufacturer has featured products
@@ -177,8 +177,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY = "Nop.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}";
-        public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Nop.pres.manufacturer.hasfeaturedproducts";
+        public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY = "Grand.pres.manufacturer.hasfeaturedproducts-{0}-{1}-{2}";
+        public const string MANUFACTURER_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Grand.pres.manufacturer.hasfeaturedproducts";
 
         /// <summary>
         /// Key for CategoryNavigationModel caching
@@ -188,8 +188,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// </remarks>
-        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}-{2}";
-        public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.pres.category.navigation";
+        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Grand.pres.category.navigation-{0}-{1}-{2}";
+        public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Grand.pres.category.navigation";
 
         /// <summary>
         /// Key for TopMenuModel caching
@@ -199,8 +199,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// </remarks>
-        public const string CATEGORY_MENU_MODEL_KEY = "Nop.pres.category.menu-{0}-{1}-{2}";
-        public const string CATEGORY_MENU_PATTERN_KEY = "Nop.pres.category.menu";
+        public const string CATEGORY_MENU_MODEL_KEY = "Grand.pres.category.menu-{0}-{1}-{2}";
+        public const string CATEGORY_MENU_PATTERN_KEY = "Grand.pres.category.menu";
 
         /// <summary>
         /// Key for caching
@@ -210,7 +210,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// {2} : category ID
         /// </remarks>
-        public const string CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY = "Nop.pres.category.numberofproducts-{0}-{1}-{2}";        
+        public const string CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY = "Grand.pres.category.numberofproducts-{0}-{1}-{2}";        
 
         /// <summary>
         /// Key for caching of a value indicating whether a category has featured products
@@ -220,8 +220,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public const string CATEGORY_HAS_FEATURED_PRODUCTS_KEY = "Nop.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
-        public const string CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Nop.pres.category.hasfeaturedproducts";
+        public const string CATEGORY_HAS_FEATURED_PRODUCTS_KEY = "Grand.pres.category.hasfeaturedproducts-{0}-{1}-{2}";
+        public const string CATEGORY_HAS_FEATURED_PRODUCTS_PATTERN_KEY = "Grand.pres.category.hasfeaturedproducts";
 
         /// <summary>
         /// Key for caching of category breadcrumb
@@ -232,8 +232,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : current store ID
         /// {3} : language ID
         /// </remarks>
-        public const string CATEGORY_BREADCRUMB_KEY = "Nop.pres.category.breadcrumb-{0}-{1}-{2}-{3}";
-        public const string CATEGORY_BREADCRUMB_PATTERN_KEY = "Nop.pres.category.breadcrumb";
+        public const string CATEGORY_BREADCRUMB_KEY = "Grand.pres.category.breadcrumb-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_BREADCRUMB_PATTERN_KEY = "Grand.pres.category.breadcrumb";
 
         /// <summary>
         /// Key for caching of subcategories of certain category
@@ -245,8 +245,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {3} : language ID
         /// {4} : is connection SSL secured (included in a category picture URL)
         /// </remarks>
-        public const string CATEGORY_SUBCATEGORIES_KEY = "Nop.pres.category.subcategories-{0}-{1}-{2}-{3}-{4}";
-        public const string CATEGORY_SUBCATEGORIES_PATTERN_KEY = "Nop.pres.category.subcategories";
+        public const string CATEGORY_SUBCATEGORIES_KEY = "Grand.pres.category.subcategories-{0}-{1}-{2}-{3}-{4}";
+        public const string CATEGORY_SUBCATEGORIES_PATTERN_KEY = "Grand.pres.category.subcategories";
 
         /// <summary>
         /// Key for caching of categories displayed on home page
@@ -257,8 +257,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : language ID
         /// {3} : is connection SSL secured (included in a category picture URL)
         /// </remarks>
-        public const string CATEGORY_HOMEPAGE_KEY = "Nop.pres.category.homepage-{0}-{1}-{2}-{3}";
-        public const string CATEGORY_HOMEPAGE_PATTERN_KEY = "Nop.pres.category.homepage";
+        public const string CATEGORY_HOMEPAGE_KEY = "Grand.pres.category.homepage-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_HOMEPAGE_PATTERN_KEY = "Grand.pres.category.homepage";
 
         /// <summary>
         /// Key for GetChildCategoryIds method results caching
@@ -268,8 +268,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// </remarks>
-        public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.pres.category.childidentifiers-{0}-{1}-{2}";
-        public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Nop.pres.category.childidentifiers";
+        public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "Grand.pres.category.childidentifiers-{0}-{1}-{2}";
+        public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Grand.pres.category.childidentifiers";
 
         /// <summary>
         /// Key for SpecificationAttributeOptionFilter caching
@@ -278,8 +278,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : comma separated list of specification attribute option IDs
         /// {1} : language id
         /// </remarks>
-        public const string SPECS_FILTER_MODEL_KEY = "Nop.pres.filter.specs-{0}-{1}";
-        public const string SPECS_FILTER_PATTERN_KEY = "Nop.pres.filter.specs";
+        public const string SPECS_FILTER_MODEL_KEY = "Grand.pres.filter.specs-{0}-{1}";
+        public const string SPECS_FILTER_PATTERN_KEY = "Grand.pres.filter.specs";
 
         /// <summary>
         /// Key for ProductBreadcrumbModel caching
@@ -290,8 +290,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : comma separated list of customer roles
         /// {3} : current store ID
         /// </remarks>
-        public const string PRODUCT_BREADCRUMB_MODEL_KEY = "Nop.pres.product.breadcrumb-{0}-{1}-{2}-{3}";
-        public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "Nop.pres.product.breadcrumb";
+        public const string PRODUCT_BREADCRUMB_MODEL_KEY = "Grand.pres.product.breadcrumb-{0}-{1}-{2}-{3}";
+        public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "Grand.pres.product.breadcrumb";
 
         /// <summary>
         /// Key for ProductTagModel caching
@@ -301,8 +301,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : language id
         /// {2} : current store ID
         /// </remarks>
-        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "Nop.pres.producttag.byproduct-{0}-{1}-{2}";
-        public const string PRODUCTTAG_BY_PRODUCT_PATTERN_KEY = "Nop.pres.producttag.byproduct";
+        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "Grand.pres.producttag.byproduct-{0}-{1}-{2}";
+        public const string PRODUCTTAG_BY_PRODUCT_PATTERN_KEY = "Grand.pres.producttag.byproduct";
 
         /// <summary>
         /// Key for PopularProductTagsModel caching
@@ -311,8 +311,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : language id
         /// {1} : current store ID
         /// </remarks>
-        public const string PRODUCTTAG_POPULAR_MODEL_KEY = "Nop.pres.producttag.popular-{0}-{1}";
-        public const string PRODUCTTAG_POPULAR_PATTERN_KEY = "Nop.pres.producttag.popular";
+        public const string PRODUCTTAG_POPULAR_MODEL_KEY = "Grand.pres.producttag.popular-{0}-{1}";
+        public const string PRODUCTTAG_POPULAR_PATTERN_KEY = "Grand.pres.producttag.popular";
 
         /// <summary>
         /// Key for ProductManufacturers model caching
@@ -323,8 +323,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : roles of the current user
         /// {3} : current store ID
         /// </remarks>
-        public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Nop.pres.product.manufacturers-{0}-{1}-{2}-{3}";
-        public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Nop.pres.product.manufacturers";
+        public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "Grand.pres.product.manufacturers-{0}-{1}-{2}-{3}";
+        public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "Grand.pres.product.manufacturers";
 
         /// <summary>
         /// Key for ProductSpecificationModel caching
@@ -333,8 +333,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : product id
         /// {1} : language id
         /// </remarks>
-        public const string PRODUCT_SPECS_MODEL_KEY = "Nop.pres.product.specs-{0}-{1}";
-        public const string PRODUCT_SPECS_PATTERN_KEY = "Nop.pres.product.specs";
+        public const string PRODUCT_SPECS_MODEL_KEY = "Grand.pres.product.specs-{0}-{1}";
+        public const string PRODUCT_SPECS_PATTERN_KEY = "Grand.pres.product.specs";
 
         /// <summary>
         /// Key for caching of a value indicating whether a product has product attributes
@@ -342,8 +342,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : product id
         /// </remarks>
-        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY = "Nop.pres.product.hasproductattributes-{0}";
-        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY = "Nop.pres.product.hasproductattributes";
+        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY = "Grand.pres.product.hasproductattributes-{0}";
+        public const string PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY = "Grand.pres.product.hasproductattributes";
 
         /// <summary>
         /// Key for TopicModel caching
@@ -354,7 +354,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : store id
         /// {3} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_MODEL_BY_SYSTEMNAME_KEY = "Nop.pres.topic.details.bysystemname-{0}-{1}-{2}-{3}";
+        public const string TOPIC_MODEL_BY_SYSTEMNAME_KEY = "Grand.pres.topic.details.bysystemname-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key for TopicModel caching
         /// </summary>
@@ -364,7 +364,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {2} : store id
         /// {3} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_MODEL_BY_ID_KEY = "Nop.pres.topic.details.byid-{0}-{1}-{2}-{3}";
+        public const string TOPIC_MODEL_BY_ID_KEY = "Grand.pres.topic.details.byid-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key for TopicModel caching
         /// </summary>
@@ -373,7 +373,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : language id
         /// {2} : store id
         /// </remarks>
-        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Nop.pres.topic.sename.bysystemname-{0}-{1}-{2}";
+        public const string TOPIC_SENAME_BY_SYSTEMNAME = "Grand.pres.topic.sename.bysystemname-{0}-{1}-{2}";
         /// <summary>
         /// Key for TopMenuModel caching
         /// </summary>
@@ -382,7 +382,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// {2} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_TOP_MENU_MODEL_KEY = "Nop.pres.topic.topmenu-{0}-{1}-{2}";
+        public const string TOPIC_TOP_MENU_MODEL_KEY = "Grand.pres.topic.topmenu-{0}-{1}-{2}";
         /// <summary>
         /// Key for TopMenuModel caching
         /// </summary>
@@ -391,8 +391,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// {2} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_FOOTER_MODEL_KEY = "Nop.pres.topic.footer-{0}-{1}-{2}";
-        public const string TOPIC_PATTERN_KEY = "Nop.pres.topic";
+        public const string TOPIC_FOOTER_MODEL_KEY = "Grand.pres.topic.footer-{0}-{1}-{2}";
+        public const string TOPIC_PATTERN_KEY = "Grand.pres.topic";
 
         /// <summary>
         /// Key for CategoryTemplate caching
@@ -400,8 +400,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : category template id
         /// </remarks>
-        public const string CATEGORY_TEMPLATE_MODEL_KEY = "Nop.pres.categorytemplate-{0}";
-        public const string CATEGORY_TEMPLATE_PATTERN_KEY = "Nop.pres.categorytemplate";
+        public const string CATEGORY_TEMPLATE_MODEL_KEY = "Grand.pres.categorytemplate-{0}";
+        public const string CATEGORY_TEMPLATE_PATTERN_KEY = "Grand.pres.categorytemplate";
 
         /// <summary>
         /// Key for ManufacturerTemplate caching
@@ -409,8 +409,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : manufacturer template id
         /// </remarks>
-        public const string MANUFACTURER_TEMPLATE_MODEL_KEY = "Nop.pres.manufacturertemplate-{0}";
-        public const string MANUFACTURER_TEMPLATE_PATTERN_KEY = "Nop.pres.manufacturertemplate";
+        public const string MANUFACTURER_TEMPLATE_MODEL_KEY = "Grand.pres.manufacturertemplate-{0}";
+        public const string MANUFACTURER_TEMPLATE_PATTERN_KEY = "Grand.pres.manufacturertemplate";
 
         /// <summary>
         /// Key for ProductTemplate caching
@@ -418,8 +418,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : product template id
         /// </remarks>
-        public const string PRODUCT_TEMPLATE_MODEL_KEY = "Nop.pres.producttemplate-{0}";
-        public const string PRODUCT_TEMPLATE_PATTERN_KEY = "Nop.pres.producttemplate";
+        public const string PRODUCT_TEMPLATE_MODEL_KEY = "Grand.pres.producttemplate-{0}";
+        public const string PRODUCT_TEMPLATE_PATTERN_KEY = "Grand.pres.producttemplate";
 
         /// <summary>
         /// Key for TopicTemplate caching
@@ -427,8 +427,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : topic template id
         /// </remarks>
-        public const string TOPIC_TEMPLATE_MODEL_KEY = "Nop.pres.topictemplate-{0}";
-        public const string TOPIC_TEMPLATE_PATTERN_KEY = "Nop.pres.topictemplate";
+        public const string TOPIC_TEMPLATE_MODEL_KEY = "Grand.pres.topictemplate-{0}";
+        public const string TOPIC_TEMPLATE_PATTERN_KEY = "Grand.pres.topictemplate";
 
         /// <summary>
         /// Key for bestsellers identifiers displayed on the home page
@@ -436,8 +436,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : current store ID
         /// </remarks>
-        public const string HOMEPAGE_BESTSELLERS_IDS_KEY = "Nop.pres.bestsellers.homepage-{0}";
-        public const string HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY = "Nop.pres.bestsellers.homepage";
+        public const string HOMEPAGE_BESTSELLERS_IDS_KEY = "Grand.pres.bestsellers.homepage-{0}";
+        public const string HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY = "Grand.pres.bestsellers.homepage";
 
         /// <summary>
         /// Key for "also purchased" product identifiers displayed on the product details page
@@ -446,8 +446,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : current product id
         /// {1} : current store ID
         /// </remarks>
-        public const string PRODUCTS_ALSO_PURCHASED_IDS_KEY = "Nop.pres.alsopuchased-{0}-{1}";
-        public const string PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY = "Nop.pres.alsopuchased";
+        public const string PRODUCTS_ALSO_PURCHASED_IDS_KEY = "Grand.pres.alsopuchased-{0}-{1}";
+        public const string PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY = "Grand.pres.alsopuchased";
 
         /// <summary>
         /// Key for "related" product identifiers displayed on the product details page
@@ -456,8 +456,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : current product id
         /// {1} : current store ID
         /// </remarks>
-        public const string PRODUCTS_RELATED_IDS_KEY = "Nop.pres.related-{0}-{1}";
-        public const string PRODUCTS_RELATED_IDS_PATTERN_KEY = "Nop.pres.related";
+        public const string PRODUCTS_RELATED_IDS_KEY = "Grand.pres.related-{0}-{1}";
+        public const string PRODUCTS_RELATED_IDS_PATTERN_KEY = "Grand.pres.related";
 
         /// <summary>
         /// Key for default product picture caching (all pictures)
@@ -470,8 +470,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "Nop.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "Nop.pres.product.detailspictures";
+        public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "Grand.pres.product.detailspictures-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "Grand.pres.product.detailspictures";
 
         /// <summary>
         /// Key for product picture caching on the product details page
@@ -484,8 +484,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string PRODUCT_DETAILS_TPICTURES_PATTERN_KEY = "Nop.pres.product.picture";
+        public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Grand.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string PRODUCT_DETAILS_TPICTURES_PATTERN_KEY = "Grand.pres.product.picture";
 
 
         /// Key for product reviews caching
@@ -494,7 +494,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : product id
         /// {1} : current store ID
         /// </remarks>
-        public const string PRODUCT_REVIEWS_MODEL_KEY = "Nop.pres.product.reviews-{0}-{1}";
+        public const string PRODUCT_REVIEWS_MODEL_KEY = "Grand.pres.product.reviews-{0}-{1}";
         /// <summary>
         /// Key for product attribute picture caching on the product details page
         /// </summary>
@@ -503,8 +503,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : is connection SSL secured?
         /// {2} : current store ID
         /// </remarks>
-        public const string PRODUCTATTRIBUTE_PICTURE_MODEL_KEY = "Nop.pres.productattribute.picture-{0}-{1}-{2}";
-        public const string PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY = "Nop.pres.productattribute.picture";
+        public const string PRODUCTATTRIBUTE_PICTURE_MODEL_KEY = "Grand.pres.productattribute.picture-{0}-{1}-{2}";
+        public const string PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY = "Grand.pres.productattribute.picture";
 
         /// <summary>
         /// Key for product attribute picture caching on the product details page
@@ -514,8 +514,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : is connection SSL secured?
         /// {2} : current store ID
         /// </remarks>
-        public const string PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_MODEL_KEY = "Nop.pres.productattribute.imagesquare.picture-{0}-{1}-{2}";
-        public const string PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY = "Nop.pres.productattribute.imagesquare.picture";
+        public const string PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_MODEL_KEY = "Grand.pres.productattribute.imagesquare.picture-{0}-{1}-{2}";
+        public const string PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY = "Grand.pres.productattribute.imagesquare.picture";
 
         /// <summary>
         /// Key for category picture caching
@@ -528,8 +528,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public const string CATEGORY_PICTURE_MODEL_KEY = "Nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string CATEGORY_PICTURE_PATTERN_KEY = "Nop.pres.category.picture";
+        public const string CATEGORY_PICTURE_MODEL_KEY = "Grand.pres.category.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string CATEGORY_PICTURE_PATTERN_KEY = "Grand.pres.category.picture";
 
         /// <summary>
         /// Key for manufacturer picture caching
@@ -542,8 +542,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public const string MANUFACTURER_PICTURE_MODEL_KEY = "Nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string MANUFACTURER_PICTURE_PATTERN_KEY = "Nop.pres.manufacturer.picture";
+        public const string MANUFACTURER_PICTURE_MODEL_KEY = "Grand.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string MANUFACTURER_PICTURE_PATTERN_KEY = "Grand.pres.manufacturer.picture";
 
         /// <summary>
         /// Key for vendor picture caching
@@ -556,8 +556,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public const string VENDOR_PICTURE_MODEL_KEY = "Nop.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string VENDOR_PICTURE_PATTERN_KEY = "Nop.pres.vendor.picture";
+        public const string VENDOR_PICTURE_MODEL_KEY = "Grand.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string VENDOR_PICTURE_PATTERN_KEY = "Grand.pres.vendor.picture";
 
         /// <summary>
         /// Key for cart picture caching
@@ -572,8 +572,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {4} : is connection SSL secured?
         /// {5} : current store ID
         /// </remarks>
-        public const string CART_PICTURE_MODEL_KEY = "Nop.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}";
-        public const string CART_PICTURE_PATTERN_KEY = "Nop.pres.cart.picture";
+        public const string CART_PICTURE_MODEL_KEY = "Grand.pres.cart.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string CART_PICTURE_PATTERN_KEY = "Grand.pres.cart.picture";
 
         /// <summary>
         /// Key for home page polls
@@ -581,7 +581,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public const string HOMEPAGE_POLLS_MODEL_KEY = "Nop.pres.poll.homepage-{0}";
+        public const string HOMEPAGE_POLLS_MODEL_KEY = "Grand.pres.poll.homepage-{0}";
         /// <summary>
         /// Key for polls by system name
         /// </summary>
@@ -589,8 +589,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : poll system name
         /// {1} : store ID
         /// </remarks>
-        public const string POLL_BY_SYSTEMNAME__MODEL_KEY = "Nop.pres.poll.systemname-{0}-{1}";
-        public const string POLLS_PATTERN_KEY = "Nop.pres.poll";
+        public const string POLL_BY_SYSTEMNAME__MODEL_KEY = "Grand.pres.poll.systemname-{0}-{1}";
+        public const string POLLS_PATTERN_KEY = "Grand.pres.poll";
 
         /// <summary>
         /// Key for blog tag list model
@@ -599,7 +599,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : language ID
         /// {1} : current store ID
         /// </remarks>
-        public const string BLOG_TAGS_MODEL_KEY = "Nop.pres.blog.tags-{0}-{1}";
+        public const string BLOG_TAGS_MODEL_KEY = "Grand.pres.blog.tags-{0}-{1}";
         /// <summary>
         /// Key for blog archive (years, months) block model
         /// </summary>
@@ -607,8 +607,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : language ID
         /// {1} : current store ID
         /// </remarks>
-        public const string BLOG_MONTHS_MODEL_KEY = "Nop.pres.blog.months-{0}-{1}";
-        public const string BLOG_PATTERN_KEY = "Nop.pres.blog";
+        public const string BLOG_MONTHS_MODEL_KEY = "Grand.pres.blog.months-{0}-{1}";
+        public const string BLOG_PATTERN_KEY = "Grand.pres.blog";
 
         /// <summary>
         /// Key for home page news
@@ -617,8 +617,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : language ID
         /// {1} : current store ID
         /// </remarks>
-        public const string HOMEPAGE_NEWSMODEL_KEY = "Nop.pres.news.homepage-{0}-{1}";
-        public const string NEWS_PATTERN_KEY = "Nop.pres.news";
+        public const string HOMEPAGE_NEWSMODEL_KEY = "Grand.pres.news.homepage-{0}-{1}";
+        public const string NEWS_PATTERN_KEY = "Grand.pres.news";
 
         /// <summary>
         /// Key for states by country id
@@ -628,8 +628,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : "empty" or "select" item
         /// {2} : language ID
         /// </remarks>
-        public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "Nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";
-        public const string STATEPROVINCES_PATTERN_KEY = "Nop.pres.stateprovinces";
+        public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "Grand.pres.stateprovinces.bycountry-{0}-{1}-{2}";
+        public const string STATEPROVINCES_PATTERN_KEY = "Grand.pres.stateprovinces";
 
         /// <summary>
         /// Key for return request reasons
@@ -637,8 +637,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public const string RETURNREQUESTREASONS_MODEL_KEY = "Nop.pres.returnrequesreasons-{0}";
-        public const string RETURNREQUESTREASONS_PATTERN_KEY = "Nop.pres.returnrequesreasons";
+        public const string RETURNREQUESTREASONS_MODEL_KEY = "Grand.pres.returnrequesreasons-{0}";
+        public const string RETURNREQUESTREASONS_PATTERN_KEY = "Grand.pres.returnrequesreasons";
 
         /// <summary>
         /// Key for return request actions
@@ -646,8 +646,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language ID
         /// </remarks>
-        public const string RETURNREQUESTACTIONS_MODEL_KEY = "Nop.pres.returnrequestactions-{0}";
-        public const string RETURNREQUESTACTIONS_PATTERN_KEY = "Nop.pres.returnrequestactions";
+        public const string RETURNREQUESTACTIONS_MODEL_KEY = "Grand.pres.returnrequestactions-{0}";
+        public const string RETURNREQUESTACTIONS_PATTERN_KEY = "Grand.pres.returnrequestactions";
 
 
         /// <summary>
@@ -655,16 +655,16 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : current theme
         /// {2} : is connection SSL secured (included in a picture URL)
         /// </summary>
-        public const string STORE_LOGO_PATH = "Nop.pres.logo-{0}-{1}-{2}";
-        public const string STORE_LOGO_PATH_PATTERN_KEY = "Nop.pres.logo";
+        public const string STORE_LOGO_PATH = "Grand.pres.logo-{0}-{1}-{2}";
+        public const string STORE_LOGO_PATH_PATTERN_KEY = "Grand.pres.logo";
         /// <summary>
         /// Key for available languages
         /// </summary>
         /// <remarks>
         /// {0} : current store ID
         /// </remarks>
-        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Nop.pres.languages.all-{0}";
-        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Nop.pres.languages";
+        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "Grand.pres.languages.all-{0}";
+        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "Grand.pres.languages";
 
         /// <summary>
         /// Key for available currencies
@@ -673,8 +673,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : language ID
         /// {0} : current store ID
         /// </remarks>
-        public const string AVAILABLE_CURRENCIES_MODEL_KEY = "Nop.pres.currencies.all-{0}-{1}";
-        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "Nop.pres.currencies";
+        public const string AVAILABLE_CURRENCIES_MODEL_KEY = "Grand.pres.currencies.all-{0}-{1}";
+        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "Grand.pres.currencies";
 
         /// <summary>
         /// Key for caching of a value indicating whether we have checkout attributes
@@ -683,8 +683,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {0} : current store ID
         /// {1} : true - all attributes, false - only shippable attributes
         /// </remarks>
-        public const string CHECKOUTATTRIBUTES_EXIST_KEY = "Nop.pres.checkoutattributes.exist-{0}-{1}";
-        public const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Nop.pres.checkoutattributes";
+        public const string CHECKOUTATTRIBUTES_EXIST_KEY = "Grand.pres.checkoutattributes.exist-{0}-{1}";
+        public const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Grand.pres.checkoutattributes";
 
         /// <summary>
         /// Key for sitemap on the sitemap page
@@ -694,7 +694,7 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public const string SITEMAP_PAGE_MODEL_KEY = "Nop.pres.sitemap.page-{0}-{1}-{2}";
+        public const string SITEMAP_PAGE_MODEL_KEY = "Grand.pres.sitemap.page-{0}-{1}-{2}";
         /// <summary>
         /// Key for sitemap on the sitemap SEO page
         /// </summary>
@@ -703,8 +703,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : roles of the current user
         /// {2} : current store ID
         /// </remarks>
-        public const string SITEMAP_SEO_MODEL_KEY = "Nop.pres.sitemap.seo-{0}-{1}-{2}";
-        public const string SITEMAP_PATTERN_KEY = "Nop.pres.sitemap";
+        public const string SITEMAP_SEO_MODEL_KEY = "Grand.pres.sitemap.seo-{0}-{1}-{2}";
+        public const string SITEMAP_PATTERN_KEY = "Grand.pres.sitemap";
 
         /// <summary>
         /// Key for widget info
@@ -714,8 +714,8 @@ namespace Grand.Web.Infrastructure.Cache
         /// {1} : widget zone
         /// {2} : current theme name
         /// </remarks>
-        public const string WIDGET_MODEL_KEY = "Nop.pres.widget-{0}-{1}-{2}";
-        public const string WIDGET_PATTERN_KEY = "Nop.pres.widget";
+        public const string WIDGET_MODEL_KEY = "Grand.pres.widget-{0}-{1}-{2}";
+        public const string WIDGET_PATTERN_KEY = "Grand.pres.widget";
 
         private readonly ICacheManager _cacheManager;
 

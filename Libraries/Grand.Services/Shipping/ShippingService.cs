@@ -36,26 +36,26 @@ namespace Grand.Services.Shipping
         /// <remarks>
         /// {0} : warehouse ID
         /// </remarks>
-        private const string WAREHOUSES_BY_ID_KEY = "Nop.warehouse.id-{0}";
+        private const string WAREHOUSES_BY_ID_KEY = "Grand.warehouse.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string WAREHOUSES_PATTERN_KEY = "Nop.warehouse.";
+        private const string WAREHOUSES_PATTERN_KEY = "Grand.warehouse.";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string SHIPPINGMETHOD_PATTERN_KEY = "Nop.shippingmethod.";
+        private const string SHIPPINGMETHOD_PATTERN_KEY = "Grand.shippingmethod.";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PICKUPPOINTS_PATTERN_KEY = "Nop.pickuppoint.";
+        private const string PICKUPPOINTS_PATTERN_KEY = "Grand.pickuppoint.";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
 
         #endregion
 

@@ -27,11 +27,11 @@ namespace Grand.Services.Directory
         /// {0} : language ID
         /// {1} : show hidden records?
         /// </remarks>
-        private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}-{1}";
+        private const string COUNTRIES_ALL_KEY = "Grand.country.all-{0}-{1}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string COUNTRIES_PATTERN_KEY = "Nop.country.";
+        private const string COUNTRIES_PATTERN_KEY = "Grand.country.";
 
         #endregion
         

@@ -29,18 +29,18 @@ namespace Grand.Services.Topics
         /// {0} : store ID
         /// {1} : ignore ACL?
         /// </remarks>
-        private const string TOPICS_ALL_KEY = "Nop.topics.all-{0}-{1}";
+        private const string TOPICS_ALL_KEY = "Grand.topics.all-{0}-{1}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : topic ID
         /// </remarks>
-        private const string TOPICS_BY_ID_KEY = "Nop.topics.id-{0}";
+        private const string TOPICS_BY_ID_KEY = "Grand.topics.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string TOPICS_PATTERN_KEY = "Nop.topics.";
+        private const string TOPICS_PATTERN_KEY = "Grand.topics.";
 
         #endregion
         

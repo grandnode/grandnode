@@ -656,13 +656,13 @@ namespace Grand.Core
         {
             get
             {
-                if (_httpContext.Items["nop.IsPOSTBeingDone"] == null)
+                if (_httpContext.Items["Grand.IsPOSTBeingDone"] == null)
                     return false;
-                return Convert.ToBoolean(_httpContext.Items["nop.IsPOSTBeingDone"]);
+                return Convert.ToBoolean(_httpContext.Items["Grand.IsPOSTBeingDone"]);
             }
             set
             {
-                _httpContext.Items["nop.IsPOSTBeingDone"] = value;
+                _httpContext.Items["Grand.IsPOSTBeingDone"] = value;
             }
         }
 

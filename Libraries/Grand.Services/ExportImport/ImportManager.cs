@@ -595,9 +595,6 @@ namespace Grand.Services.ExportImport
 
                     //update "HasTierPrices" and "HasDiscountsApplied" properties
                     _productService.UpdateHasTierPricesProperty(product.Id);
-                    _productService.UpdateHasDiscountsApplied(product.Id);
-
-
 
                     //next product
                     iRow++;

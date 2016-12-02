@@ -18,8 +18,8 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
         /// <summary>
         /// Key for caching
         /// </summary>
-        public const string ALL_TAX_RATES_MODEL_KEY = "Nop.plugins.tax.countrystatezip.all";
-        public const string ALL_TAX_RATES_PATTERN_KEY = "Nop.plugins.tax.countrystatezip";
+        public const string ALL_TAX_RATES_MODEL_KEY = "Grand.plugins.tax.countrystatezip.all";
+        public const string ALL_TAX_RATES_PATTERN_KEY = "Grand.plugins.tax.countrystatezip";
 
         private readonly ICacheManager _cacheManager;
         

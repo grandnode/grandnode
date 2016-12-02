@@ -69,7 +69,7 @@ namespace Grand.Admin.Controllers
             }
             if (index.HasValue)
             {
-                string dataKey = "nop.selected-tab-index";
+                string dataKey = "Grand.selected-tab-index";
                 if (persistForTheNextRequest)
                 {
                     TempData[dataKey] = index;

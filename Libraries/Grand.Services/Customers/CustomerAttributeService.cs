@@ -20,36 +20,36 @@ namespace Grand.Services.Customers
         /// <summary>
         /// Key for caching
         /// </summary>
-        private const string CUSTOMERATTRIBUTES_ALL_KEY = "Nop.customerattribute.all";
+        private const string CUSTOMERATTRIBUTES_ALL_KEY = "Grand.customerattribute.all";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : customer attribute ID
         /// </remarks>
-        private const string CUSTOMERATTRIBUTES_BY_ID_KEY = "Nop.customerattribute.id-{0}";
+        private const string CUSTOMERATTRIBUTES_BY_ID_KEY = "Grand.customerattribute.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : customer attribute ID
         /// </remarks>
-        private const string CUSTOMERATTRIBUTEVALUES_ALL_KEY = "Nop.customerattributevalue.all-{0}";
+        private const string CUSTOMERATTRIBUTEVALUES_ALL_KEY = "Grand.customerattributevalue.all-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : customer attribute value ID
         /// </remarks>
-        private const string CUSTOMERATTRIBUTEVALUES_BY_ID_KEY = "Nop.customerattributevalue.id-{0}";
+        private const string CUSTOMERATTRIBUTEVALUES_BY_ID_KEY = "Grand.customerattributevalue.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string CUSTOMERATTRIBUTES_PATTERN_KEY = "Nop.customerattribute.";
+        private const string CUSTOMERATTRIBUTES_PATTERN_KEY = "Grand.customerattribute.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string CUSTOMERATTRIBUTEVALUES_PATTERN_KEY = "Nop.customerattributevalue.";
+        private const string CUSTOMERATTRIBUTEVALUES_PATTERN_KEY = "Grand.customerattributevalue.";
         #endregion
         
         #region Fields

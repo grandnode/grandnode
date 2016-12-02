@@ -22,13 +22,13 @@ namespace Grand.Admin.Infrastructure.Cache
         /// <summary>
         /// Key for nopCommerce.com news cache
         /// </summary>
-        public const string OFFICIAL_NEWS_MODEL_KEY = "Nop.pres.admin.official.news";
-        public const string OFFICIAL_NEWS_PATTERN_KEY = "Nop.pres.admin.official.news";
+        public const string OFFICIAL_NEWS_MODEL_KEY = "Grand.pres.admin.official.news";
+        public const string OFFICIAL_NEWS_PATTERN_KEY = "Grand.pres.admin.official.news";
         /// <summary>
         /// Key for specification attributes caching (product details page)
         /// </summary>
-        public const string SPEC_ATTRIBUTES_MODEL_KEY = "Nop.pres.admin.product.specs";
-        public const string SPEC_ATTRIBUTES_PATTERN_KEY = "Nop.pres.admin.product.specs";
+        public const string SPEC_ATTRIBUTES_MODEL_KEY = "Grand.pres.admin.product.specs";
+        public const string SPEC_ATTRIBUTES_PATTERN_KEY = "Grand.pres.admin.product.specs";
 
         
         private readonly ICacheManager _cacheManager;

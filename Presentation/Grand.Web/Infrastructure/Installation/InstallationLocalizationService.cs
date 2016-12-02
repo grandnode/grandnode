@@ -18,7 +18,7 @@ namespace Grand.Web.Infrastructure.Installation
         /// <summary>
         /// Cookie name to language for the installation page
         /// </summary>
-        private const string LanguageCookieName = "nop.installation.lang";
+        private const string LanguageCookieName = "Grand.installation.lang";
 
         /// <summary>
         /// Available languages

@@ -20,12 +20,12 @@ namespace Grand.Services.Authentication.External
         public static void StoreParametersForRoundTrip(OpenAuthenticationParameters parameters)
         {
             var session = GetSession();
-            session["nop.externalauth.parameters"] = parameters;
+            session["Grand.externalauth.parameters"] = parameters;
         }
         public static OpenAuthenticationParameters RetrieveParametersFromRoundTrip(bool removeOnRetrieval)
         {
             var session = GetSession();
-            var parameters = session["nop.externalauth.parameters"];
+            var parameters = session["Grand.externalauth.parameters"];
             if (parameters != null && removeOnRetrieval)
                 RemoveParameters();
 
@@ -35,17 +35,17 @@ namespace Grand.Services.Authentication.External
         public static void RemoveParameters()
         {
             var session = GetSession();
-            session.Remove("nop.externalauth.parameters");
+            session.Remove("Grand.externalauth.parameters");
         }
 
         public static void AddErrorsToDisplay(string error)
         {
             var session = GetSession();
-            var errors = session["nop.externalauth.errors"] as IList<string>;
+            var errors = session["Grand.externalauth.errors"] as IList<string>;
             if (errors == null)
             {
                 errors = new List<string>();
-                session.Add("nop.externalauth.errors", errors);
+                session.Add("Grand.externalauth.errors", errors);
             }
             errors.Add(error);
         }
@@ -53,9 +53,9 @@ namespace Grand.Services.Authentication.External
         public static IList<string> RetrieveErrorsToDisplay(bool removeOnRetrieval)
         {
             var session = GetSession();
-            var errors = session["nop.externalauth.errors"] as IList<string>;
+            var errors = session["Grand.externalauth.errors"] as IList<string>;
             if (errors != null && removeOnRetrieval)
-                session.Remove("nop.externalauth.errors");
+                session.Remove("Grand.externalauth.errors");
             return errors;
         }
     }

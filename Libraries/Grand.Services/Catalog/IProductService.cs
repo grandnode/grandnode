@@ -282,12 +282,6 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         void UpdateHasTierPricesProperty(string productId);
 
-        /// <summary>
-        /// Update HasDiscountsApplied property (used for performance optimization)
-        /// </summary>
-        /// <param name="product">Product</param>
-        void UpdateHasDiscountsApplied(string productId);
-
         #endregion
 
         #region Inventory management methods
@@ -508,8 +502,8 @@ namespace Grand.Services.Catalog
         /// <param name="pwi">ProductWarehouseInventory</param>
         void UpdateProductWarehouseInventory(ProductWarehouseInventory pwi);
 
-        void InsertDiscount(Discount discount, string productId);
-        void DeleteDiscount(Discount discount, string productId);
+        void InsertDiscount(string discountId, string productId);
+        void DeleteDiscount(string discountId, string productId);
         #endregion
     }
 }

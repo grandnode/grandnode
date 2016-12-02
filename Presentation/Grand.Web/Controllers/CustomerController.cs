@@ -738,7 +738,7 @@ namespace Grand.Web.Controllers
                 //the only good solution in this case is to store a temporary variable
                 //indicating that the EU cookie popup window should not be displayed on the next page open (after logout redirection to homepage)
                 //but it'll be displayed for further page loads
-                TempData["nop.IgnoreEuCookieLawWarning"] = true;
+                TempData["Grand.IgnoreEuCookieLawWarning"] = true;
             }
             return RedirectToRoute("HomePage");
         }

@@ -38,19 +38,19 @@ namespace Grand.Services.Customers
         /// <remarks>
         /// {0} : show hidden records?
         /// </remarks>
-        private const string CUSTOMERROLES_ALL_KEY = "Nop.customerrole.all-{0}";
+        private const string CUSTOMERROLES_ALL_KEY = "Grand.customerrole.all-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : system name
         /// </remarks>
-        private const string CUSTOMERROLES_BY_SYSTEMNAME_KEY = "Nop.customerrole.systemname-{0}";
+        private const string CUSTOMERROLES_BY_SYSTEMNAME_KEY = "Grand.customerrole.systemname-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string CUSTOMERROLES_PATTERN_KEY = "Nop.customerrole.";
-        private const string CUSTOMERROLESPRODUCTS_PATTERN_KEY = "Nop.product.cr";
+        private const string CUSTOMERROLES_PATTERN_KEY = "Grand.customerrole.";
+        private const string CUSTOMERROLESPRODUCTS_PATTERN_KEY = "Grand.product.cr";
 
         /// <summary>
         /// Key for caching
@@ -58,7 +58,7 @@ namespace Grand.Services.Customers
         /// <remarks>
         /// {0} : customer role Id?
         /// </remarks>
-        private const string CUSTOMERROLESPRODUCTS_ROLE_KEY = "Nop.customerroleproducts.role-{0}";
+        private const string CUSTOMERROLESPRODUCTS_ROLE_KEY = "Grand.customerroleproducts.role-{0}";
 
         #endregion
 

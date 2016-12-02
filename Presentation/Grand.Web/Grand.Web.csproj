@@ -489,6 +489,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Localization\Upgrade\EN_360_370.nopres.xml" />
+    <Content Include="App_Data\Upgrade\UpgradeScript_380_390.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\BBEditor\ed.js" />
     <Content Include="Content\BBEditor\images\bold.gif" />
     <Content Include="Content\BBEditor\images\code.gif" />

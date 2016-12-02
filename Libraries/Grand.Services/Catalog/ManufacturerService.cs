@@ -27,7 +27,7 @@ namespace Grand.Services.Catalog
         /// <remarks>
         /// {0} : manufacturer ID
         /// </remarks>
-        private const string MANUFACTURERS_BY_ID_KEY = "Nop.manufacturer.id-{0}";
+        private const string MANUFACTURERS_BY_ID_KEY = "Grand.manufacturer.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -39,7 +39,7 @@ namespace Grand.Services.Catalog
         /// {4} : current customer ID
         /// {5} : store ID
         /// </remarks>
-        private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Nop.productmanufacturer.allbymanufacturerid-{0}-{1}-{2}-{3}-{4}-{5}";
+        private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Grand.productmanufacturer.allbymanufacturerid-{0}-{1}-{2}-{3}-{4}-{5}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -49,27 +49,27 @@ namespace Grand.Services.Catalog
         /// {2} : current customer ID
         /// {3} : store ID
         /// </remarks>
-        private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Nop.productmanufacturer.allbyproductid-{0}-{1}-{2}-{3}";
+        private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Grand.productmanufacturer.allbyproductid-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string MANUFACTURERS_PATTERN_KEY = "Nop.manufacturer.";
+        private const string MANUFACTURERS_PATTERN_KEY = "Grand.manufacturer.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTMANUFACTURERS_PATTERN_KEY = "Nop.productmanufacturer.";
+        private const string PRODUCTMANUFACTURERS_PATTERN_KEY = "Grand.productmanufacturer.";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>        
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
+        private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
 
         #endregion
 
@@ -391,7 +391,7 @@ namespace Grand.Services.Catalog
         public virtual IList<Manufacturer> GetAllManufacturersByDiscount(string discountId)
         {
             var query = from c in _manufacturerRepository.Table
-                        where c.AppliedDiscounts.Any(x=>x.Id == discountId)
+                        where c.AppliedDiscounts.Any(x=>x == discountId)
                         select c;
 
             var manufacturers = query.ToList();

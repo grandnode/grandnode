@@ -174,7 +174,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery
         {
             actionName = "Configure";
             controllerName = "PaymentCashOnDelivery";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.CashOnDelivery.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Payments.CashOnDelivery.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Grand.Plugin.Payments.CashOnDelivery
         {
             actionName = "PaymentInfo";
             controllerName = "PaymentCashOnDelivery";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.CashOnDelivery.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Payments.CashOnDelivery.Controllers" }, { "area", null } };
         }
 
         public Type GetControllerType()

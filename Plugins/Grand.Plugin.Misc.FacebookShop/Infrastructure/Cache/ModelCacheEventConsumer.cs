@@ -23,8 +23,8 @@ namespace Grand.Plugin.Misc.FacebookShop.Infrastructure.Cache
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
         /// </remarks>
-        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.plugins.misc.facebookshop.category.navigation-{0}-{1}-{2}";
-        public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.plugins.misc.facebookshop";
+        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Grand.plugins.misc.facebookshop.category.navigation-{0}-{1}-{2}";
+        public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Grand.plugins.misc.facebookshop";
 
         private readonly ICacheManager _cacheManager;
 

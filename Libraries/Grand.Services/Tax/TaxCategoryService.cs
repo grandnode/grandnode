@@ -20,23 +20,23 @@ namespace Grand.Services.Tax
         /// <summary>
         /// Key for caching
         /// </summary>
-        private const string TAXCATEGORIES_ALL_KEY = "Nop.taxcategory.all";
+        private const string TAXCATEGORIES_ALL_KEY = "Grand.taxcategory.all";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : tax category ID
         /// </remarks>
-        private const string TAXCATEGORIES_BY_ID_KEY = "Nop.taxcategory.id-{0}";
+        private const string TAXCATEGORIES_BY_ID_KEY = "Grand.taxcategory.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string TAXCATEGORIES_PATTERN_KEY = "Nop.taxcategory.";
+        private const string TAXCATEGORIES_PATTERN_KEY = "Grand.taxcategory.";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
 
 
         #endregion

@@ -17,13 +17,9 @@ using Grand.Core.Domain.Catalog;
 using MongoDB.Bson;
 using MongoDB.Driver.Linq;
 using Grand.Services.Localization;
-using Grand.Core.Infrastructure;
-using Grand.Services.Vendors;
-using Grand.Services.Stores;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Domain.Stores;
 using Grand.Services.Customers;
-using Grand.Services.Catalog;
 
 namespace Grand.Services.Discounts
 {
@@ -40,7 +36,7 @@ namespace Grand.Services.Discounts
         /// <remarks>
         /// {0} : discont ID
         /// </remarks>
-        private const string DISCOUNTS_BY_ID_KEY = "Nop.discount.id-{0}";
+        private const string DISCOUNTS_BY_ID_KEY = "Grand.discount.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -49,31 +45,31 @@ namespace Grand.Services.Discounts
         /// {1} : coupon code
         /// {2} : discount name
         /// </remarks>
-        private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}-{2}";
+        private const string DISCOUNTS_ALL_KEY = "Grand.discount.all-{0}-{1}-{2}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string DISCOUNTS_PATTERN_KEY = "Nop.discount.";
+        private const string DISCOUNTS_PATTERN_KEY = "Grand.discount.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string MANUFACTURERS_PATTERN_KEY = "Nop.manufacturer.";
+        private const string MANUFACTURERS_PATTERN_KEY = "Grand.manufacturer.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string CATEGORIES_PATTERN_KEY = "Nop.category.";
+        private const string CATEGORIES_PATTERN_KEY = "Grand.category.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string VENDORS_PATTERN_KEY = "Nop.vendor.";
+        private const string VENDORS_PATTERN_KEY = "Grand.vendor.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string STORES_PATTERN_KEY = "Nop.store.";
+        private const string STORES_PATTERN_KEY = "Grand.store.";
 
         #endregion
 
@@ -206,21 +202,15 @@ namespace Grand.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToSkus)
             {
                 var builderproduct = Builders<Product>.Update;
-                var updatefilter = builderproduct.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var updatefilter = builderproduct.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
                 var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-
-                var productService = EngineContext.Current.Resolve<IProductService>();
-                var products = productService.GetProductsByDiscount(discount.Id);
-                foreach (var p in products)
-                    productService.UpdateHasDiscountsApplied(p.Id);
-
             }
 
             if (discount.DiscountType == DiscountType.AssignedToCategories)
             {
                 var buildercategory = Builders<Category>.Update;
-                var updatefilter = buildercategory.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var updatefilter = buildercategory.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
                 var result = _categoryRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             }
@@ -228,14 +218,14 @@ namespace Grand.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToManufacturers)
             {
                 var buildermanufacturer = Builders<Manufacturer>.Update;
-                var updatefilter = buildermanufacturer.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var updatefilter = buildermanufacturer.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
                 var result = _manufacturerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
             if (discount.DiscountType == DiscountType.AssignedToVendors)
             {
                 var buildervendor = Builders<Vendor>.Update;
-                var updatefilter = buildervendor.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var updatefilter = buildervendor.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
                 var result = _vendorRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(VENDORS_PATTERN_KEY);
             }
@@ -243,7 +233,7 @@ namespace Grand.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToStores)
             {
                 var builderstore = Builders<Store>.Update;
-                var updatefilter = builderstore.PullFilter(x => x.AppliedDiscounts, y => y.Id == discount.Id);
+                var updatefilter = builderstore.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
                 var result = _storeRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
             }
@@ -349,56 +339,6 @@ namespace Grand.Services.Discounts
             }
 
             _discountRepository.Update(discount);
-
-
-            if (discount.DiscountType == DiscountType.AssignedToSkus)
-            {
-                var builder = Builders<Product>.Filter;
-                var filter = builder.ElemMatch(x => x.AppliedDiscounts, y => y.Id == discount.Id);
-                var update = Builders<Product>.Update
-                    .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
-                var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
-                _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
-            }
-
-            if (discount.DiscountType == DiscountType.AssignedToCategories)
-            {
-                var builder = Builders<Category>.Filter;
-                var filter = builder.ElemMatch(x => x.AppliedDiscounts, y => y.Id == discount.Id);
-                var update = Builders<Category>.Update
-                    .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
-                var result = _categoryRepository.Collection.UpdateManyAsync(filter, update).Result;
-                _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
-            }
-
-            if (discount.DiscountType == DiscountType.AssignedToManufacturers)
-            {
-                var builder = Builders<Manufacturer>.Filter;
-                var filter = builder.ElemMatch(x => x.AppliedDiscounts, y => y.Id == discount.Id);
-                var update = Builders<Manufacturer>.Update
-                    .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
-                var result = _manufacturerRepository.Collection.UpdateManyAsync(filter, update).Result;
-                _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
-            }
-            if (discount.DiscountType == DiscountType.AssignedToVendors)
-            {
-                var builder = Builders<Vendor>.Filter;
-                var filter = builder.ElemMatch(x => x.AppliedDiscounts, y => y.Id == discount.Id);
-                var update = Builders<Vendor>.Update
-                    .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
-                var result = _vendorRepository.Collection.UpdateManyAsync(filter, update).Result;
-                _cacheManager.RemoveByPattern(VENDORS_PATTERN_KEY);
-            }
-
-            if (discount.DiscountType == DiscountType.AssignedToStores)
-            {
-                var builder = Builders<Store>.Filter;
-                var filter = builder.ElemMatch(x => x.AppliedDiscounts, y => y.Id == discount.Id);
-                var update = Builders<Store>.Update
-                    .Set(x => x.AppliedDiscounts.ElementAt(-1), discount);
-                var result = _storeRepository.Collection.UpdateManyAsync(filter, update).Result;
-                _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
-            }
 
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
 
@@ -603,12 +543,9 @@ namespace Grand.Services.Discounts
             }
 
             //discount requirements
-            //UNDONE we should inject static cache manager into constructor. we we already have "per request" cache manager injected. better way to do it?
-            //we cache meta info of discount requirements. this way we should not load them for each HTTP request
-            var staticCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
             string key = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
             //var requirements = discount.DiscountRequirements;
-            var requirements = staticCacheManager.Get(key, () =>
+            var requirements = _cacheManager.Get(key, () =>
             {
                 var cachedRequirements = new List<DiscountRequirementForCaching>();
                 foreach (var dr in discount.DiscountRequirements)

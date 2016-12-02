@@ -24,11 +24,11 @@ namespace Grand.Services.Logging
         /// <summary>
         /// Key for caching
         /// </summary>
-        private const string ACTIVITYTYPE_ALL_KEY = "Nop.activitytype.all";
+        private const string ACTIVITYTYPE_ALL_KEY = "Grand.activitytype.all";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string ACTIVITYTYPE_PATTERN_KEY = "Nop.activitytype.";
+        private const string ACTIVITYTYPE_PATTERN_KEY = "Grand.activitytype.";
 
         #endregion
 

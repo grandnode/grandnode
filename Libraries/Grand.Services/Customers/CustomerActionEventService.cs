@@ -24,7 +24,7 @@ namespace Grand.Services.Customers
     public partial class CustomerActionEventService : ICustomerActionEventService
     {
         #region Fields
-        private const string CUSTOMER_ACTION_TYPE = "Nop.customer.action.type";
+        private const string CUSTOMER_ACTION_TYPE = "Grand.customer.action.type";
 
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;

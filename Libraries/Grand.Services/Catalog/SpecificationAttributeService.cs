@@ -27,23 +27,23 @@ namespace Grand.Services.Catalog
         /// {1} : allow filtering
         /// {2} : show on product page
         /// </remarks>
-        private const string PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY = "Nop.productspecificationattribute.allbyproductid-{0}-{1}-{2}";
+        private const string PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY = "Grand.productspecificationattribute.allbyproductid-{0}-{1}-{2}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY = "Nop.productspecificationattribute.";
+        private const string PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY = "Grand.productspecificationattribute.";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
+        private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
 
         #endregion
 

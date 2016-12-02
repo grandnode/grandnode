@@ -98,15 +98,16 @@ namespace Grand.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            if (product.HasDiscountsApplied)
+            if (product.AppliedDiscounts.Any())
             {
-                //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-                foreach (var discount in product.AppliedDiscounts)
+                foreach (var appliedDiscount in product.AppliedDiscounts)
                 {
-                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                        discount.DiscountType == DiscountType.AssignedToSkus &&
-                        !allowedDiscounts.ContainsDiscount(discount))
-                        allowedDiscounts.Add(discount);
+                    var discount = _discountService.GetDiscountById(appliedDiscount);
+                    if(discount!=null)
+                        if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                            discount.DiscountType == DiscountType.AssignedToSkus &&
+                            !allowedDiscounts.ContainsDiscount(discount))
+                            allowedDiscounts.Add(discount);
                 }
             }
             return allowedDiscounts;
@@ -130,17 +131,17 @@ namespace Grand.Services.Catalog
 
             foreach (var productCategory in product.ProductCategories)
             {
-
                 var category = _categoryService.GetCategoryById(productCategory.CategoryId);
                 if (category.AppliedDiscounts.Any())
                 {
-                    var categoryDiscounts = category.AppliedDiscounts;
-                    foreach (var discount in categoryDiscounts)
+                    foreach (var appliedDiscount in category.AppliedDiscounts)
                     {
-                        if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                discount.DiscountType == DiscountType.AssignedToCategories &&
-                                !allowedDiscounts.ContainsDiscount(discount))
-                            allowedDiscounts.Add(discount);
+                        var discount = _discountService.GetDiscountById(appliedDiscount);
+                        if(discount!=null)
+                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                    discount.DiscountType == DiscountType.AssignedToCategories &&
+                                    !allowedDiscounts.ContainsDiscount(discount))
+                                allowedDiscounts.Add(discount);
                     }
                 }
             }
@@ -165,14 +166,14 @@ namespace Grand.Services.Catalog
                 var manufacturer = _manufacturerService.GetManufacturerById(productManufacturer.ManufacturerId);
                 if (manufacturer.AppliedDiscounts.Any())
                 {
-                    //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-                    var manufacturerDiscounts = manufacturer.AppliedDiscounts;
-                    foreach (var discount in manufacturerDiscounts)
+                    foreach (var appliedDiscount in manufacturer.AppliedDiscounts)
                     {
-                        if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                 discount.DiscountType == DiscountType.AssignedToManufacturers &&
-                                 !allowedDiscounts.ContainsDiscount(discount))
-                            allowedDiscounts.Add(discount);
+                        var discount = _discountService.GetDiscountById(appliedDiscount);
+                        if(discount!=null)
+                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                     discount.DiscountType == DiscountType.AssignedToManufacturers &&
+                                     !allowedDiscounts.ContainsDiscount(discount))
+                                allowedDiscounts.Add(discount);
                     }
                 }
             }
@@ -197,14 +198,14 @@ namespace Grand.Services.Catalog
             {
                 if (vendor.AppliedDiscounts.Any())
                 {
-                    //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-                    var vendorDiscounts = vendor.AppliedDiscounts;
-                    foreach (var discount in vendorDiscounts)
+                    foreach (var appliedDiscount in vendor.AppliedDiscounts)
                     {
-                        if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                 discount.DiscountType == DiscountType.AssignedToVendors &&
-                                 !allowedDiscounts.ContainsDiscount(discount))
-                            allowedDiscounts.Add(discount);
+                        var discount = _discountService.GetDiscountById(appliedDiscount);
+                        if(discount!=null)
+                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                     discount.DiscountType == DiscountType.AssignedToVendors &&
+                                     !allowedDiscounts.ContainsDiscount(discount))
+                                allowedDiscounts.Add(discount);
                     }
                 }
             }
@@ -235,16 +236,16 @@ namespace Grand.Services.Catalog
                     if (!(string.IsNullOrEmpty(storeID)))
                     {
                         var store = _storeService.GetStoreById(storeID);
-                        var storeDiscounts = store.AppliedDiscounts;
-
-                        if (storeDiscounts.Any())
+                        if (store.AppliedDiscounts.Any())
                         {
-                            foreach (var discount in storeDiscounts)
+                            foreach (var appliedDiscount in store.AppliedDiscounts)
                             {
-                                if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                         discount.DiscountType == DiscountType.AssignedToStores &&
-                                         !allowedDiscounts.ContainsDiscount(discount))
-                                    allowedDiscounts.Add(discount);
+                                var discount = _discountService.GetDiscountById(appliedDiscount);
+                                if(discount!=null)
+                                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                             discount.DiscountType == DiscountType.AssignedToStores &&
+                                             !allowedDiscounts.ContainsDiscount(discount))
+                                        allowedDiscounts.Add(discount);
                             }
                         }
                     }

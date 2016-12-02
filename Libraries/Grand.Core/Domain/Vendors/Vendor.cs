@@ -13,7 +13,7 @@ namespace Grand.Core.Domain.Vendors
     public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported
     {
         private ICollection<VendorNote> _vendorNotes;
-        private ICollection<Discount> _appliedDiscounts;
+        private ICollection<string> _appliedDiscounts;
 
         public Vendor()
         {
@@ -109,9 +109,9 @@ namespace Grand.Core.Domain.Vendors
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>
-        public virtual ICollection<Discount> AppliedDiscounts
+        public virtual ICollection<string> AppliedDiscounts
         {
-            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<string>()); }
             protected set { _appliedDiscounts = value; }
         }
 

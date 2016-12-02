@@ -42,16 +42,16 @@ namespace Grand.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
+        private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTS_SHOWONHOMEPAGE = "Nop.product.showonhomepage";
+        private const string PRODUCTS_SHOWONHOMEPAGE = "Grand.product.showonhomepage";
 
         /// <summary>
         /// Key for caching
@@ -59,7 +59,7 @@ namespace Grand.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        private const string PRODUCTS_CUSTOMER_ROLE = "Nop.product.cr-{0}";
+        private const string PRODUCTS_CUSTOMER_ROLE = "Grand.product.cr-{0}";
 
         #endregion
 
@@ -301,7 +301,7 @@ namespace Grand.Services.Catalog
         public virtual IList<Product> GetProductsByDiscount(string discountId)
         {
             var query = from c in _productRepository.Table
-                        where c.AppliedDiscounts.Any(x=>x.Id == discountId)
+                        where c.AppliedDiscounts.Any(x=>x == discountId)
                         select c;
 
             var products = query.ToList();
@@ -378,7 +378,6 @@ namespace Grand.Services.Catalog
                 .Set(x => x.FullDescription, product.FullDescription)
                 .Set(x => x.GiftCardTypeId, product.GiftCardTypeId)
                 .Set(x => x.Gtin, product.Gtin)
-                .Set(x => x.HasDiscountsApplied, product.HasDiscountsApplied)
                 .Set(x => x.HasSampleDownload, product.HasSampleDownload)
                 .Set(x => x.HasTierPrices, product.HasTierPrices)
                 .Set(x => x.HasUserAgreement, product.HasUserAgreement)
@@ -1251,34 +1250,6 @@ namespace Grand.Services.Catalog
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-        }
-
-        /// <summary>
-        /// Update HasDiscountsApplied property (used for performance optimization)
-        /// </summary>
-        /// <param name="product">Product</param>
-        public virtual void UpdateHasDiscountsApplied(string productId)
-        {
-            var product = GetProductById(productId);
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            product.HasDiscountsApplied = product.AppliedDiscounts.Any();
-
-            var filter = Builders<Product>.Filter.Eq("Id", product.Id);
-            var update = Builders<Product>.Update
-                    .Set(x => x.HasDiscountsApplied, product.HasDiscountsApplied)
-                    .CurrentDate("UpdateDate");
-            _productRepository.Collection.UpdateOneAsync(filter, update);
-
-            //cache
-            _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, product.Id));
-
-
-            //event notification
-            _eventPublisher.EntityUpdated(product);
-
-            //UpdateProduct(product);
         }
 
         #endregion
@@ -2227,38 +2198,31 @@ namespace Grand.Services.Catalog
         }
 
 
-        public virtual void DeleteDiscount(Discount discount, string productId)
+        public virtual void DeleteDiscount(string discountId, string productId)
         {
-            if (discount == null)
+            if (string.IsNullOrEmpty(discountId))
                 throw new ArgumentNullException("discount");
 
-            //_productWarehouseInventoryRepository.Delete(pwi);
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.Pull(p => p.AppliedDiscounts, discount);
+            var update = updatebuilder.Pull(p => p.AppliedDiscounts, discountId);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
-
-
-            _eventPublisher.EntityDeleted(discount);
         }
 
-        public virtual void InsertDiscount(Discount discount, string productId)
+        public virtual void InsertDiscount(string discountId, string productId)
         {
-            if (discount == null)
+            if (String.IsNullOrEmpty(discountId))
                 throw new ArgumentNullException("discount");
 
-            //_productPictureRepository.Insert(productPicture);
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.AddToSet(p => p.AppliedDiscounts, discount);
+            var update = updatebuilder.AddToSet(p => p.AppliedDiscounts, discountId);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productId), update);
 
             //cache
             _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
 
-            //event notification
-            _eventPublisher.EntityInserted(discount);
         }
 
 

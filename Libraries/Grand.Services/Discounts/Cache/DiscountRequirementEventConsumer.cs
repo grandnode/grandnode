@@ -25,8 +25,8 @@ namespace Grand.Services.Discounts.Cache
         /// <remarks>
         /// {0} : discount id
         /// </remarks>
-        public const string DISCOUNT_REQUIREMENT_MODEL_KEY = "Nop.discountrequirements.all-{0}";
-        public const string DISCOUNT_REQUIREMENT_PATTERN_KEY = "Nop.discountrequirements";
+        public const string DISCOUNT_REQUIREMENT_MODEL_KEY = "Grand.discountrequirements.all-{0}";
+        public const string DISCOUNT_REQUIREMENT_PATTERN_KEY = "Grand.discountrequirements";
 
         private readonly ICacheManager _cacheManager;
 

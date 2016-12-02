@@ -25,65 +25,65 @@ namespace Grand.Services.Catalog
         /// {0} : page index
         /// {1} : page size
         /// </remarks>
-        private const string PRODUCTATTRIBUTES_ALL_KEY = "Nop.productattribute.all-{0}-{1}";
+        private const string PRODUCTATTRIBUTES_ALL_KEY = "Grand.productattribute.all-{0}-{1}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product attribute ID
         /// </remarks>
-        private const string PRODUCTATTRIBUTES_BY_ID_KEY = "Nop.productattribute.id-{0}";
+        private const string PRODUCTATTRIBUTES_BY_ID_KEY = "Grand.productattribute.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        private const string PRODUCTATTRIBUTEMAPPINGS_ALL_KEY = "Nop.productattributemapping.all-{0}";
+        private const string PRODUCTATTRIBUTEMAPPINGS_ALL_KEY = "Grand.productattributemapping.all-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product attribute mapping ID
         /// </remarks>
-        private const string PRODUCTATTRIBUTEMAPPINGS_BY_ID_KEY = "Nop.productattributemapping.id-{0}";
+        private const string PRODUCTATTRIBUTEMAPPINGS_BY_ID_KEY = "Grand.productattributemapping.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product attribute mapping ID
         /// </remarks>
-        private const string PRODUCTATTRIBUTEVALUES_ALL_KEY = "Nop.productattributevalue.all-{0}";
+        private const string PRODUCTATTRIBUTEVALUES_ALL_KEY = "Grand.productattributevalue.all-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product attribute value ID
         /// </remarks>
-        private const string PRODUCTATTRIBUTEVALUES_BY_ID_KEY = "Nop.productattributevalue.id-{0}";
+        private const string PRODUCTATTRIBUTEVALUES_BY_ID_KEY = "Grand.productattributevalue.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        private const string PRODUCTATTRIBUTECOMBINATIONS_ALL_KEY = "Nop.productattributecombination.all-{0}";
+        private const string PRODUCTATTRIBUTECOMBINATIONS_ALL_KEY = "Grand.productattributecombination.all-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTATTRIBUTES_PATTERN_KEY = "Nop.productattribute.";
+        private const string PRODUCTATTRIBUTES_PATTERN_KEY = "Grand.productattribute.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY = "Nop.productattributemapping.";
+        private const string PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY = "Grand.productattributemapping.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTATTRIBUTEVALUES_PATTERN_KEY = "Nop.productattributevalue.";
+        private const string PRODUCTATTRIBUTEVALUES_PATTERN_KEY = "Grand.productattributevalue.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY = "Nop.productattributecombination.";
+        private const string PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY = "Grand.productattributecombination.";
 
         /// <summary>
         /// Key for caching
@@ -91,12 +91,12 @@ namespace Grand.Services.Catalog
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
+        private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
 
         #endregion
 

@@ -28,36 +28,36 @@ namespace Grand.Services.Orders
         /// {1} : >A value indicating whether we should exlude shippable attributes
         /// {2} : ignore ACL?
         /// </remarks>
-        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}-{1}-{2}";
+        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Grand.checkoutattribute.all-{0}-{1}-{2}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : checkout attribute ID
         /// </remarks>
-        private const string CHECKOUTATTRIBUTES_BY_ID_KEY = "Nop.checkoutattribute.id-{0}";
+        private const string CHECKOUTATTRIBUTES_BY_ID_KEY = "Grand.checkoutattribute.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : checkout attribute ID
         /// </remarks>
-        private const string CHECKOUTATTRIBUTEVALUES_ALL_KEY = "Nop.checkoutattributevalue.all-{0}";
+        private const string CHECKOUTATTRIBUTEVALUES_ALL_KEY = "Grand.checkoutattributevalue.all-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : checkout attribute value ID
         /// </remarks>
-        private const string CHECKOUTATTRIBUTEVALUES_BY_ID_KEY = "Nop.checkoutattributevalue.id-{0}";
+        private const string CHECKOUTATTRIBUTEVALUES_BY_ID_KEY = "Grand.checkoutattributevalue.id-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Nop.checkoutattribute.";
+        private const string CHECKOUTATTRIBUTES_PATTERN_KEY = "Grand.checkoutattribute.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string CHECKOUTATTRIBUTEVALUES_PATTERN_KEY = "Nop.checkoutattributevalue.";
+        private const string CHECKOUTATTRIBUTEVALUES_PATTERN_KEY = "Grand.checkoutattributevalue.";
         #endregion
         
         #region Fields

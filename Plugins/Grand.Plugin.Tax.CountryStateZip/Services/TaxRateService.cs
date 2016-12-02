@@ -14,8 +14,8 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
     public partial class TaxRateService : ITaxRateService
     {
         #region Constants
-        private const string TAXRATE_ALL_KEY = "Nop.taxrate.all-{0}-{1}";
-        private const string TAXRATE_PATTERN_KEY = "Nop.taxrate.";
+        private const string TAXRATE_ALL_KEY = "Grand.taxrate.all-{0}-{1}";
+        private const string TAXRATE_PATTERN_KEY = "Grand.taxrate.";
         #endregion
 
         #region Fields

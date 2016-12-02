@@ -173,7 +173,7 @@ namespace Grand.Services.Vendors
         public virtual IList<Vendor> GetAllVendorsByDiscount(string discountId)
         {
             var query = from c in _vendorRepository.Table
-                        where c.AppliedDiscounts.Any(x => x.Id == discountId)
+                        where c.AppliedDiscounts.Any(x => x == discountId)
                         select c;
             var vendors = query.ToList();
             return vendors;

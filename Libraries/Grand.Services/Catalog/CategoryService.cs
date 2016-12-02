@@ -30,7 +30,7 @@ namespace Grand.Services.Catalog
         /// <remarks>
         /// {0} : category ID
         /// </remarks>
-        private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
+        private const string CATEGORIES_BY_ID_KEY = "Grand.category.id-{0}";
         /// <summary>
         /// Key for caching 
         /// </summary>
@@ -41,7 +41,7 @@ namespace Grand.Services.Catalog
         /// {3} : store ID
         /// {4} : include all levels (child)
         /// </remarks>
-        private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}-{4}";
+        private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Grand.category.byparent-{0}-{1}-{2}-{3}-{4}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -53,7 +53,7 @@ namespace Grand.Services.Catalog
         /// {4} : current customer ID
         /// {5} : store ID
         /// </remarks>
-        private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Nop.productcategory.allbycategoryid-{0}-{1}-{2}-{3}-{4}-{5}";
+        private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Grand.productcategory.allbycategoryid-{0}-{1}-{2}-{3}-{4}-{5}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -63,27 +63,27 @@ namespace Grand.Services.Catalog
         /// {2} : current customer ID
         /// {3} : store ID
         /// </remarks>
-        private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Nop.productcategory.allbyproductid-{0}-{1}-{2}-{3}";
+        private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Grand.productcategory.allbyproductid-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string CATEGORIES_PATTERN_KEY = "Nop.category.";
+        private const string CATEGORIES_PATTERN_KEY = "Grand.category.";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string PRODUCTCATEGORIES_PATTERN_KEY = "Nop.productcategory.";
+        private const string PRODUCTCATEGORIES_PATTERN_KEY = "Grand.productcategory.";
 
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>        
-        private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
+        private const string PRODUCTS_PATTERN_KEY = "Grand.product.";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : product ID
         /// </remarks>
-        private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
+        private const string PRODUCTS_BY_ID_KEY = "Grand.product.id-{0}";
 
 
         #endregion
@@ -324,7 +324,7 @@ namespace Grand.Services.Catalog
         public virtual IList<Category> GetAllCategoriesByDiscount(string discountId)
         {
             var query = from c in _categoryRepository.Table
-                        where c.AppliedDiscounts.Any(x=>x.Id == discountId)
+                        where c.AppliedDiscounts.Any(x=>x == discountId)
                         select c;
 
             var categories = query.ToList();

@@ -90,7 +90,7 @@
             @Html.GrandLabelFor(model => model.Body)
             <div class="col-md-9 col-sm-9">
                 @{
-                    ViewData["nop.RichEditor.EnableFullPage"] = true;
+                    ViewData["Grand.RichEditor.EnableFullPage"] = true;
                 }
                 @Html.EditorFor(model => model.Body, "RichEditor")
                 @Html.ValidationMessageFor(model => model.Body)

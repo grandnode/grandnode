@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Nop.Plugin.Payments.CashOnDelivery")]
+[assembly: AssemblyTitle("Grand.Plugin.Payments.CashOnDelivery")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("UNIT-SOFT Sp. z o.o.")]
-[assembly: AssemblyProduct("Nop.Plugin.Payments.CashOnDelivery")]
+[assembly: AssemblyProduct("Grand.Plugin.Payments.CashOnDelivery")]
 [assembly: AssemblyCopyright("Copyright © UNIT-SOFT Sp. z o.o., 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

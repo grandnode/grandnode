@@ -265,10 +265,8 @@ namespace Grand.Admin.Controllers
                     //update "HasDiscountsApplied" property
                     foreach (var category in categories)
                     {
-                        var item = category.AppliedDiscounts.Where(x => x.Id == discount.Id).FirstOrDefault();
+                        var item = category.AppliedDiscounts.Where(x => x == discount.Id).FirstOrDefault();
                         category.AppliedDiscounts.Remove(item);
-                        //_discountService.UpdateDiscount(discount);
-                        //_categoryService.Update(category);
                     }
                 }
                 if (prevDiscountType == DiscountType.AssignedToManufacturers
@@ -278,9 +276,8 @@ namespace Grand.Admin.Controllers
                     var manufacturers = _manufacturerService.GetAllManufacturersByDiscount(discount.Id);
                     foreach (var manufacturer in manufacturers)
                     {
-                        var item = manufacturer.AppliedDiscounts.Where(x => x.Id == discount.Id).FirstOrDefault();
+                        var item = manufacturer.AppliedDiscounts.Where(x => x == discount.Id).FirstOrDefault();
                         manufacturer.AppliedDiscounts.Remove(item);
-                        //_manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                     }
                 }
                 if (prevDiscountType == DiscountType.AssignedToSkus
@@ -292,10 +289,9 @@ namespace Grand.Admin.Controllers
 
                     foreach (var p in products)
                     {
-                        var item = p.AppliedDiscounts.Where(x => x.Id == discount.Id).FirstOrDefault();
+                        var item = p.AppliedDiscounts.Where(x => x == discount.Id).FirstOrDefault();
                         p.AppliedDiscounts.Remove(item);
                         _productService.DeleteDiscount(item, p.Id);
-                        _productService.UpdateHasDiscountsApplied(p.Id);
                     }
                 }
 
@@ -457,13 +453,11 @@ namespace Grand.Admin.Controllers
                 throw new Exception("No product found with the specified id");
 
             //remove discount
-            if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+            if (product.AppliedDiscounts.Count(d => d == discount.Id) > 0)
             {
-                product.AppliedDiscounts.Remove(discount);
-                _productService.DeleteDiscount(discount, product.Id);
+                product.AppliedDiscounts.Remove(discount.Id);
+                _productService.DeleteDiscount(discount.Id, product.Id);
             }
-            //_productService.UpdateProduct(product);
-            _productService.UpdateHasDiscountsApplied(product.Id);
 
             return new NullJsonResult();
         }
@@ -548,13 +542,11 @@ namespace Grand.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
-                        if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                        if (product.AppliedDiscounts.Count(d => d == discount.Id) == 0)
                         {
-                            product.AppliedDiscounts.Add(discount);
-                            _productService.InsertDiscount(discount, product.Id);
+                            product.AppliedDiscounts.Add(discount.Id);
+                            _productService.InsertDiscount(discount.Id, product.Id);
                         }
-                        //_productService.UpdateProduct(product);
-                        _productService.UpdateHasDiscountsApplied(product.Id);
                     }
                 }
             }
@@ -607,11 +599,10 @@ namespace Grand.Admin.Controllers
                 throw new Exception("No category found with the specified id");
 
             //remove discount
-            if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                category.AppliedDiscounts.Remove(discount);
+            if (category.AppliedDiscounts.Count(d => d == discount.Id) > 0)
+                category.AppliedDiscounts.Remove(discount.Id);
 
             _categoryService.UpdateCategory(category);
-            //_categoryService.UpdateHasDiscountsApplied(category);
 
             return new NullJsonResult();
         }
@@ -665,11 +656,10 @@ namespace Grand.Admin.Controllers
                     var category = _categoryService.GetCategoryById(id);
                     if (category != null)
                     {
-                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            category.AppliedDiscounts.Add(discount);
+                        if (category.AppliedDiscounts.Count(d => d == discount.Id) == 0)
+                            category.AppliedDiscounts.Add(discount.Id);
 
                         _categoryService.UpdateCategory(category);
-                        //_categoryService.UpdateHasDiscountsApplied(category);
                     }
                 }
             }
@@ -722,8 +712,8 @@ namespace Grand.Admin.Controllers
                 throw new Exception("No manufacturer found with the specified id");
 
             //remove discount
-            if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                manufacturer.AppliedDiscounts.Remove(discount);
+            if (manufacturer.AppliedDiscounts.Count(d => d == discount.Id) > 0)
+                manufacturer.AppliedDiscounts.Remove(discount.Id);
 
             _manufacturerService.UpdateManufacturer(manufacturer);
             return new NullJsonResult();
@@ -773,11 +763,10 @@ namespace Grand.Admin.Controllers
                     var manufacturer = _manufacturerService.GetManufacturerById(id);
                     if (manufacturer != null)
                     {
-                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            manufacturer.AppliedDiscounts.Add(discount);
+                        if (manufacturer.AppliedDiscounts.Count(d => d == discount.Id) == 0)
+                            manufacturer.AppliedDiscounts.Add(discount.Id);
 
                         _manufacturerService.UpdateManufacturer(manufacturer);
-                        //_manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                     }
                 }
             }
@@ -830,8 +819,8 @@ namespace Grand.Admin.Controllers
                 throw new Exception("No vendor found with the specified id");
 
             //remove discount
-            if (vendor.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                vendor.AppliedDiscounts.Remove(discount);
+            if (vendor.AppliedDiscounts.Count(d => d == discount.Id) > 0)
+                vendor.AppliedDiscounts.Remove(discount.Id);
 
             _vendorService.UpdateVendor(vendor);
             return new NullJsonResult();
@@ -888,8 +877,8 @@ namespace Grand.Admin.Controllers
                     var vendor = _vendorService.GetVendorById(id);
                     if (vendor != null)
                     {
-                        if (vendor.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            vendor.AppliedDiscounts.Add(discount);
+                        if (vendor.AppliedDiscounts.Count(d => d == discount.Id) == 0)
+                            vendor.AppliedDiscounts.Add(discount.Id);
 
                         _vendorService.UpdateVendor(vendor);
                     }
@@ -943,8 +932,8 @@ namespace Grand.Admin.Controllers
                 throw new Exception("No store found with the specified id");
 
             //remove discount
-            if (store.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                store.AppliedDiscounts.Remove(discount);
+            if (store.AppliedDiscounts.Count(d => d == discount.Id) > 0)
+                store.AppliedDiscounts.Remove(discount.Id);
 
             _storeService.UpdateStore(store);
             return new NullJsonResult();
@@ -993,8 +982,8 @@ namespace Grand.Admin.Controllers
                     var store = _storeService.GetStoreById(id);
                     if (store != null)
                     {
-                        if (store.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            store.AppliedDiscounts.Add(discount);
+                        if (store.AppliedDiscounts.Count(d => d == discount.Id) == 0)
+                            store.AppliedDiscounts.Add(discount.Id);
 
                         _storeService.UpdateStore(store);
                     }

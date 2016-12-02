@@ -142,7 +142,7 @@ namespace Grand.Web.Framework.Controllers
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         protected virtual void AddNotification(NotifyType type, string message, bool persistForTheNextRequest)
         {
-            string dataKey = string.Format("nop.notifications.{0}", type);
+            string dataKey = string.Format("Grand.notifications.{0}", type);
             if (persistForTheNextRequest)
             {
                 if (TempData[dataKey] == null)
@@ -161,7 +161,6 @@ namespace Grand.Web.Framework.Controllers
         {
             //We cannot use ViewData because it works only for the current controller (and we pass and then render "Edit" link data in distinct controllers)
             //that's why we use IPageHeadBuilder
-            //ViewData["nop.editpage.link"] = editPageUrl;
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AddEditPageUrl(editPageUrl);
         }

@@ -11,8 +11,8 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
     public partial class ShippingByWeightService : IShippingByWeightService
     {
         #region Constants
-        private const string SHIPPINGBYWEIGHT_ALL_KEY = "Nop.shippingbyweight.all-{0}-{1}";
-        private const string SHIPPINGBYWEIGHT_PATTERN_KEY = "Nop.shippingbyweight.";
+        private const string SHIPPINGBYWEIGHT_ALL_KEY = "Grand.shippingbyweight.all-{0}-{1}";
+        private const string SHIPPINGBYWEIGHT_PATTERN_KEY = "Grand.shippingbyweight.";
         #endregion
 
         #region Fields

@@ -203,7 +203,7 @@ namespace Grand.Core.Infrastructure
         /// The name of the assembly to check.
         /// </param>
         /// <returns>
-        /// True if the assembly should be loaded into Nop.
+        /// True if the assembly should be loaded into Grand.
         /// </returns>
         public virtual bool Matches(string assemblyFullName)
         {

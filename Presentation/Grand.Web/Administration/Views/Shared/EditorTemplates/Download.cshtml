@@ -12,7 +12,7 @@
     var downloadService = EngineContext.Current.Resolve<Grand.Services.Media.IDownloadService>();
     var download = downloadService.GetDownloadById(Model);
 
-    var disableUrl = Convert.ToBoolean(ViewData["nop.DownloadEditor.DisableUrl"] ?? false);
+    var disableUrl = Convert.ToBoolean(ViewData["Grand.DownloadEditor.DisableUrl"] ?? false);
 }
 
 <script type="text/javascript">

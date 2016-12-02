@@ -912,7 +912,7 @@ namespace Grand.Web.Controllers
 
             //ignore notification?
             //right now it's used during logout so popup window is not displayed twice
-            if (TempData["nop.IgnoreEuCookieLawWarning"] != null && Convert.ToBoolean(TempData["nop.IgnoreEuCookieLawWarning"]))
+            if (TempData["Grand.IgnoreEuCookieLawWarning"] != null && Convert.ToBoolean(TempData["Grand.IgnoreEuCookieLawWarning"]))
                 return Content("");
 
             return PartialView();

@@ -24,18 +24,18 @@ namespace Grand.Services.Directory
         /// <remarks>
         /// {0} : currency ID
         /// </remarks>
-        private const string CURRENCIES_BY_ID_KEY = "Nop.currency.id-{0}";
+        private const string CURRENCIES_BY_ID_KEY = "Grand.currency.id-{0}";
         /// <summary>
         /// Key for caching
         /// </summary>
         /// <remarks>
         /// {0} : show hidden records?
         /// </remarks>
-        private const string CURRENCIES_ALL_KEY = "Nop.currency.all-{0}";
+        private const string CURRENCIES_ALL_KEY = "Grand.currency.all-{0}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
-        private const string CURRENCIES_PATTERN_KEY = "Nop.currency.";
+        private const string CURRENCIES_PATTERN_KEY = "Grand.currency.";
 
         #endregion
 

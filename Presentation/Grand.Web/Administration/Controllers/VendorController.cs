@@ -139,7 +139,7 @@ namespace Grand.Admin.Controllers
 
             if (!excludeProperties && vendor != null)
             {
-                model.SelectedDiscountIds = vendor.AppliedDiscounts.Select(d => d.Id).ToArray();
+                model.SelectedDiscountIds = vendor.AppliedDiscounts.ToArray();
             }
         }
         #endregion
@@ -222,7 +222,7 @@ namespace Grand.Admin.Controllers
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
-                        vendor.AppliedDiscounts.Add(discount);
+                        vendor.AppliedDiscounts.Add(discount.Id);
                 }
 
                 //search engine name
@@ -308,14 +308,14 @@ namespace Grand.Admin.Controllers
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
                     {
                         //new discount
-                        if (vendor.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
-                            vendor.AppliedDiscounts.Add(discount);
+                        if (vendor.AppliedDiscounts.Count(d => d == discount.Id) == 0)
+                            vendor.AppliedDiscounts.Add(discount.Id);
                     }
                     else
                     {
                         //remove discount
-                        if (vendor.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
-                            vendor.AppliedDiscounts.Remove(discount);
+                        if (vendor.AppliedDiscounts.Count(d => d == discount.Id) > 0)
+                            vendor.AppliedDiscounts.Remove(discount.Id);
                     }
                 }
 
