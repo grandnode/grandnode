@@ -728,8 +728,7 @@ namespace Grand.Services.Catalog
 
                 if (featuredProducts.Value)
                 {
-                    string categoryId = categoryIds[0];
-                    filter = filter & builder.Where(x => x.ProductCategories.Any(y => y.CategoryId == categoryId && y.IsFeaturedProduct));
+                    filter = filter & builder.Where(x => x.ProductCategories.Any(y => categoryIds.Contains(y.CategoryId) && y.IsFeaturedProduct));
                 }
                 else
                 {
