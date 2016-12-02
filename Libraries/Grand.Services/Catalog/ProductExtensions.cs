@@ -198,7 +198,7 @@ namespace Grand.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            bool result = product.ProductTags.ToList().Find(pt => pt.Id == productTagId) != null;
+            bool result = product.ProductTags.FirstOrDefault(pt => pt == productTagId) != null;
             return result;
         }
 

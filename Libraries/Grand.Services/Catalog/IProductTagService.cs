@@ -41,12 +41,6 @@ namespace Grand.Services.Catalog
         void InsertProductTag(ProductTag productTag);
 
         /// <summary>
-        /// Updates the product tag
-        /// </summary>
-        /// <param name="productTag">Product tag</param>
-        void UpdateProductTag(ProductTag productTag);
-
-        /// <summary>
         /// Get number of products
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>

@@ -28,6 +28,7 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets product id
         /// </summary>
+        [BsonIgnoreAttribute]
         public string ProductId { get; set; }
 
         /// <summary>

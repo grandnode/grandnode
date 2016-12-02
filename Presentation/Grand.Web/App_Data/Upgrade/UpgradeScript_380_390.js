@@ -74,3 +74,16 @@ db.Product.find({ AppliedDiscounts: { $exists: true }, $where: 'this.AppliedDisc
 //remove field HasDiscountsApplied from the Product Collection
 db.Product.update({}, { $unset: { HasDiscountsApplied: 1 } }, { multi: true });
 
+//Update fields ProductTags in the Product Collection 
+db.Product.find({ProductTags:{$exists:true}, $where:'this.ProductTags.length > 0'}).forEach( function(product) {
+	if (product.ProductTags[0]["_id"] != null) {
+		var tags = product.ProductTags;
+		product.ProductTags = [];
+		for (var i = 0; i < tags.length; ++i) {
+			var tag = tags[i];
+			var tagId = tag["_id"];
+			product.ProductTags.push(tagId);
+		}
+		db.Product.save(product);
+	}
+});

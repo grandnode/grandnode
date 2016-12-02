@@ -10758,8 +10758,7 @@ namespace Grand.Services.Installation
             }
             productTag.Count = productTag.Count + 1;
             _productTagRepository.Update(productTag);
-            productTag.ProductId = product.Id;
-            product.ProductTags.Add(productTag);
+            product.ProductTags.Add(productTag.Id);
             _productRepository.Update(product);
         }
 

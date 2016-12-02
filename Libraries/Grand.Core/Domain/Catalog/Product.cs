@@ -19,7 +19,6 @@ namespace Grand.Core.Domain.Catalog
         private ICollection<ProductManufacturer> _productManufacturers;
         private ICollection<ProductPicture> _productPictures;
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
-        private ICollection<ProductTag> _productTags;
         private ICollection<ProductAttributeMapping> _productAttributeMappings;
         private ICollection<ProductAttributeCombination> _productAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
@@ -27,6 +26,7 @@ namespace Grand.Core.Domain.Catalog
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
         private ICollection<string> _crossSellProduct;
         private ICollection<RelatedProduct> _relatedProduct;
+        private ICollection<string> _productTags;
         public Product()
         {
             CustomerRoles = new List<string>();
@@ -684,9 +684,9 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product tags
         /// </summary>
-        public virtual ICollection<ProductTag> ProductTags
+        public virtual ICollection<string> ProductTags
         {
-            get { return _productTags ?? (_productTags = new List<ProductTag>()); }
+            get { return _productTags ?? (_productTags = new List<string>()); }
             protected set { _productTags = value; }
         }
 

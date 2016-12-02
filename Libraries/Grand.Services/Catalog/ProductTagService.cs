@@ -127,7 +127,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productTag");
 
             var builder = Builders<Product>.Update;
-            var updatefilter = builder.PullFilter(x => x.ProductTags, y => y.Id == productTag.Id);
+            var updatefilter = builder.PullFilter(x => x.ProductTags, y => y == productTag.Id);
             var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
 
             _productTagRepository.Delete(productTag);
@@ -192,32 +192,6 @@ namespace Grand.Services.Catalog
 
             //event notification
             _eventPublisher.EntityInserted(productTag);
-        }
-
-        /// <summary>
-        /// Updates the product tag
-        /// </summary>
-        /// <param name="productTag">Product tag</param>
-        public virtual void UpdateProductTag(ProductTag productTag)
-        {
-            if (productTag == null)
-                throw new ArgumentNullException("productTag");
-
-            _productTagRepository.Update(productTag);
-
-            var builder = Builders<Product>.Filter;
-            var filter = builder.ElemMatch(x => x.ProductTags, y => y.Id == productTag.Id);
-            var update = Builders<Product>.Update
-                .Set(x => x.ProductTags.ElementAt(-1).Name, productTag.Name)
-                .Set(x => x.ProductTags.ElementAt(-1).Locales, productTag.Locales);
-
-            var result = _productRepository.Collection.UpdateManyAsync(filter, update).Result;
-
-            //cache
-            _cacheManager.RemoveByPattern(PRODUCTTAG_PATTERN_KEY);
-
-            //event notification
-            _eventPublisher.EntityUpdated(productTag);
         }
 
         /// <summary>

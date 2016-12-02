@@ -363,15 +363,24 @@ namespace Grand.Web.Controllers
             {
                 var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
                 model.ProductTags = _cacheManager.Get(productTagsCacheKey, () =>
-                    product.ProductTags
-                    .Select(x =>  new ProductTagModel
                     {
-                        Id = x.Id,
-                        Name = x.GetLocalized(y => y.Name),
-                        SeName = x.GetSeName(),
-                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
-                    })
-                    .ToList());
+                        List<ProductTagModel> tags = new List<ProductTagModel>();
+                        foreach (var item in product.ProductTags)
+                        {
+                            var tag = _productTagService.GetProductTagById(item);
+                            if(tag!=null)
+                            {
+                                tags.Add(new ProductTagModel() {
+                                    Id = tag.Id,
+                                    Name = tag.GetLocalized(y => y.Name),
+                                    SeName = tag.GetSeName(),
+                                    ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
+                                });
+                            }
+                        }
+                        return tags;
+                    }); 
+
             }
 
             #endregion

@@ -410,13 +410,13 @@ namespace Grand.Admin.Controllers
 
             //product tags
             var existingProductTags = product.ProductTags.ToList();
-            var productTagsToRemove = new List<ProductTag>();
+            var productTagsToRemove = new List<string>();
             foreach (var existingProductTag in existingProductTags)
             {
                 bool found = false;
                 foreach (string newProductTag in productTags)
                 {
-                    if (existingProductTag.Name.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
+                    if (existingProductTag.Equals(newProductTag, StringComparison.InvariantCultureIgnoreCase))
                     {
                         found = true;
                         break;
@@ -429,8 +429,7 @@ namespace Grand.Admin.Controllers
             }
             foreach (var productTag in productTagsToRemove)
             {
-                productTag.ProductId = product.Id;
-                _productService.DeleteProductTag(productTag);
+                _productService.DeleteProductTag(new ProductTag() { ProductId = product.Id, Id = productTag });
             }
             foreach (string productTagName in productTags)
             {
@@ -639,9 +638,13 @@ namespace Grand.Admin.Controllers
                 for (int i = 0; i < product.ProductTags.Count; i++)
                 {
                     var pt = product.ProductTags.ToList()[i];
-                    result.Append(pt.Name);
-                    if (i != product.ProductTags.Count - 1)
-                        result.Append(", ");
+                    var productTag = _productTagService.GetProductTagById(pt);
+                    if (productTag != null)
+                    {
+                        result.Append(productTag.Name);
+                        if (i != product.ProductTags.Count - 1)
+                            result.Append(", ");
+                    }
                 }
                 model.ProductTags = result.ToString();
             }
@@ -2698,7 +2701,6 @@ namespace Grand.Admin.Controllers
             {
                 productTag.Name = model.Name;
                 productTag.Locales = UpdateLocales(productTag, model);
-                _productTagService.UpdateProductTag(productTag);
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;

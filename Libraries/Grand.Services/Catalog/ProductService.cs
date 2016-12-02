@@ -877,7 +877,7 @@ namespace Grand.Services.Catalog
             //tag filtering
             if (!String.IsNullOrEmpty(productTagId))
             {
-                filter = filter & builder.Where(x => x.ProductTags.Any(y => y.Id == productTagId));
+                filter = filter & builder.Where(x => x.ProductTags.Any(y => y == productTagId));
             }
 
 
@@ -1932,7 +1932,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productTag");
            
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.AddToSet(p => p.ProductTags, productTag);
+            var update = updatebuilder.AddToSet(p => p.ProductTags, productTag.Id);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
 
             var builder = Builders<ProductTag>.Filter;
@@ -1955,7 +1955,7 @@ namespace Grand.Services.Catalog
                 throw new ArgumentNullException("productTag");
 
             var updatebuilder = Builders<Product>.Update;
-            var update = updatebuilder.Pull(p => p.ProductTags, productTag);
+            var update = updatebuilder.Pull(p => p.ProductTags, productTag.Id);
             _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productTag.ProductId), update);
 
             var builder = Builders<ProductTag>.Filter;
