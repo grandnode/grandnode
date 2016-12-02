@@ -133,6 +133,8 @@ namespace Grand.Services.Installation
         private readonly IRepository<BannerArchive> _bannerArchive;
         private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
+        private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
+
         private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
@@ -226,6 +228,7 @@ namespace Grand.Services.Installation
             IRepository<BannerArchive> bannerArchive,
             IRepository<CustomerReminder> customerReminder,
             IRepository<CustomerReminderHistory> customerReminderHistoryRepository,
+            IRepository<RecentlyViewedProduct> recentlyViewedProductRepository,
             IGenericAttributeService genericAttributeService,
             ICustomerActionService customerActionService,
             IWebHelper webHelper)
@@ -286,6 +289,7 @@ namespace Grand.Services.Installation
             this._activityLogRepository = activityLogRepository;
             this._productTagRepository = productTagRepository;
             this._productTemplateRepository = productTemplateRepository;
+            this._recentlyViewedProductRepository = recentlyViewedProductRepository;
             this._categoryTemplateRepository = categoryTemplateRepository;
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
             this._topicTemplateRepository = topicTemplateRepository;
@@ -10840,6 +10844,10 @@ namespace Grand.Services.Installation
             _pictureRepository.Collection.Indexes.CreateOneAsync(Builders<Picture>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _productTagRepository.Collection.Indexes.CreateOneAsync(Builders<ProductTag>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _productTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<ProductTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //Recently Viewed Products
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId.ProductId" });
 
             //Product also purchased
             _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

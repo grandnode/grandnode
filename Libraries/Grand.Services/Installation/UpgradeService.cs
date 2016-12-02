@@ -330,6 +330,13 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Recently Viewed products
+
+            var _recentlyViewedProductRepository = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IRepository<RecentlyViewedProduct>>();
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId.ProductId" });
+
+            #endregion
         }
 
         private void InstallStringResources(string filenames)

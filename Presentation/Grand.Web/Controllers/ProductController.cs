@@ -1015,7 +1015,7 @@ namespace Grand.Web.Controllers
             var model = PrepareProductDetailsPageModel(product, updatecartitem, false);
 
             //save as recently viewed
-            _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
+            _recentlyViewedProductsService.AddProductToRecentlyViewedList(_workContext.CurrentCustomer.Id, product.Id);
 
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) &&
@@ -1126,7 +1126,7 @@ namespace Grand.Web.Controllers
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");
 
-            var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+            var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_workContext.CurrentCustomer.Id, _catalogSettings.RecentlyViewedProductsNumber);
 
             var model = new List<ProductOverviewModel>();
             model.AddRange(PrepareProductOverviewModels(products));
@@ -1141,7 +1141,7 @@ namespace Grand.Web.Controllers
                 return Content("");
 
             var preparePictureModel = productThumbPictureSize.HasValue;
-            var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
+            var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_workContext.CurrentCustomer.Id, _catalogSettings.RecentlyViewedProductsNumber);
 
             //ACL and store mapping
             products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
