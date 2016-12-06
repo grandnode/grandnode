@@ -20,6 +20,7 @@ using Grand.Services.Stores;
 using Rhino.Mocks;
 using Moq;
 using MongoDB.Driver;
+using Grand.Services.Discounts;
 
 namespace Grand.Services.ExportImport.Tests {
     [TestClass()]
@@ -32,7 +33,7 @@ namespace Grand.Services.ExportImport.Tests {
         private IExportManager _exportManager;
         private IStoreService _storeService;
         private IProductService _productService;
-
+        private IDiscountService _discountService;
         [TestInitialize()]
         public void TestInitialize() {
             _storeService = new Mock<IStoreService>().Object;
@@ -42,11 +43,12 @@ namespace Grand.Services.ExportImport.Tests {
             _pictureService = new Mock<IPictureService>().Object;
             _productService = new Mock<IProductService>().Object;
             _newsLetterSubscriptionService = new Mock<INewsLetterSubscriptionService>().Object;
+            _discountService = new Mock<IDiscountService>().Object;
 
             _exportManager = new ExportManager(_categoryService,
                 _manufacturerService, _productAttributeService,
                 _pictureService, _newsLetterSubscriptionService,
-                _storeService, _productService);
+                _storeService, _productService, _discountService);
         }
 
         [TestMethod()]
