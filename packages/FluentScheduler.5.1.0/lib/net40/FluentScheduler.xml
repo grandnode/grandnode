@@ -563,6 +563,11 @@
             Stops the job manager.
             </summary>
         </member>
+        <member name="M:FluentScheduler.JobManager.StopAndBlock">
+            <summary>
+            Stops the job manager and blocks until all running schedules finishes.
+            </summary>
+        </member>
         <member name="M:FluentScheduler.JobManager.GetSchedule(System.String)">
             <summary>
             Returns the schedule of the given name.
