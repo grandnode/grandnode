@@ -108,7 +108,7 @@ namespace Grand.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
             model.AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerTags.Contains(ct.Id) }).ToList();
-
+            model.CustomerTags = new List<string>();
         }
         [NonAction]
         protected virtual void PrepareCustomerRolesModel(CampaignModel model)
@@ -116,7 +116,7 @@ namespace Grand.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
             model.AvailableCustomerRoles = _customerService.GetAllCustomerRoles().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerRoles.Contains(ct.Id) }).ToList();
-
+            model.CustomerRoles = new List<string>();
         }
 
         [NonAction]
@@ -359,7 +359,8 @@ namespace Grand.Admin.Controllers
             PrepareCustomerTagsModel(model);
             //email
             PrepareEmailAccounts(model);
-
+            //Roles
+            PrepareCustomerRolesModel(model);
             try
             {
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
