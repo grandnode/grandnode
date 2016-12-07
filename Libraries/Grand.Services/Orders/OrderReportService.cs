@@ -138,7 +138,7 @@ namespace Grand.Services.Orders
             var builder = Builders<Order>.Filter;
 
             var filter = builder.Where(o => !o.Deleted);
-            filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc && o.CreatedOnUtc <= endTime);
+            filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc.Value && o.CreatedOnUtc <= endTime);
 
             var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
             if(daydiff > 32)

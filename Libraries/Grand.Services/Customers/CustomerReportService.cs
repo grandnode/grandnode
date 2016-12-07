@@ -170,7 +170,7 @@ namespace Grand.Services.Customers
             var builder = Builders<Customer>.Filter;
             var customerRoleRegister = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id;
             var filter = builder.Where(o => !o.Deleted);
-            filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc && o.CreatedOnUtc <= endTime);
+            filter = filter & builder.Where(o => o.CreatedOnUtc >= startTimeUtc.Value && o.CreatedOnUtc <= endTime);
             filter = filter & builder.Where(o => o.CustomerRoles.Any(y => y.Id == customerRoleRegister));
 
             var daydiff = (endTimeUtc.Value - startTimeUtc.Value).TotalDays;
