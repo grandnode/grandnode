@@ -229,9 +229,8 @@ namespace Grand.Services.Catalog
             return _cacheManager.Get(PRODUCTS_SHOWONHOMEPAGE, () =>
                 {
                     var query = from p in _productRepository.Table
+                                where p.Published && p.ShowOnHomePage
                                 orderby p.DisplayOrder, p.Name
-                                where p.Published &&
-                                p.ShowOnHomePage
                                 select p;
                     var products = query.ToList();
                     return products;
@@ -1127,7 +1126,6 @@ namespace Grand.Services.Catalog
             sku = sku.Trim();
 
             var query = from p in _productRepository.Table
-                        orderby p.Id
                         where p.Sku == sku
                         select p;
             var product = query.FirstOrDefault();
@@ -2015,8 +2013,8 @@ namespace Grand.Services.Catalog
                 () =>
                 {
                     var query = from cr in _customerRoleProductRepository.Table
-                                orderby cr.DisplayOrder
                                 where customerRoleIds.Contains(cr.CustomerRoleId)
+                                orderby cr.DisplayOrder
                                 select cr.ProductId;
 
                     var productIds = query.ToList().Distinct();
