@@ -7,7 +7,7 @@ namespace Grand.Services.Infrastructure
     /// <summary>
     /// Azure websites machine name provider
     /// </summary>
-    public class AzureWebsitesMachineNameProvider : IMachineNameProvider
+    public class AzureWebAppsMachineNameProvider : IMachineNameProvider
     {
         /// <summary>
         /// Returns the name of the machine (instance) running the application.

@@ -56,9 +56,9 @@ namespace Grand.Core.Configuration
                 if (multipleInstancesEnabledAttribute != null)
                     config.MultipleInstancesEnabled = Convert.ToBoolean(multipleInstancesEnabledAttribute.Value);
 
-                var runOnAzureWebsitesAttribute = webFarmsNode.Attributes["RunOnAzureWebsites"];
-                if (runOnAzureWebsitesAttribute != null)
-                    config.RunOnAzureWebsites = Convert.ToBoolean(runOnAzureWebsitesAttribute.Value);
+                var runOnAzureWebApps = webFarmsNode.Attributes["RunOnAzureWebApps"];
+                if (runOnAzureWebApps != null)
+                    config.RunOnAzureWebApps = Convert.ToBoolean(runOnAzureWebApps.Value);
             }
 
             var azureBlobStorageNode = section.SelectSingleNode("AzureBlobStorage");
@@ -125,9 +125,9 @@ namespace Grand.Core.Configuration
         public bool MultipleInstancesEnabled { get; private set; }
 
         /// <summary>
-        /// A value indicating whether the site is run on Windows Azure Websites
+        /// A value indicating whether the site is run on Windows Azure Web Apps
         /// </summary>
-        public bool RunOnAzureWebsites { get; private set; }
+        public bool RunOnAzureWebApps { get; private set; }
 
         /// <summary>
         /// Connection string for Azure BLOB storage

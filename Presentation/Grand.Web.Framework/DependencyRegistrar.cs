@@ -125,9 +125,9 @@ namespace Grand.Web.Framework
                 builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
             }
 
-            if (config.RunOnAzureWebsites)
+            if (config.RunOnAzureWebApps)
             {
-                builder.RegisterType<AzureWebsitesMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
+                builder.RegisterType<AzureWebAppsMachineNameProvider>().As<IMachineNameProvider>().SingleInstance();
             }
             else
             {

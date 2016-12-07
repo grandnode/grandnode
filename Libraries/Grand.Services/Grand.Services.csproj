@@ -346,7 +346,7 @@
     <Compile Include="Orders\RewardPointsService.cs" />
     <Compile Include="Helpers\IUserAgentHelper.cs" />
     <Compile Include="Helpers\UserAgentHelper.cs" />
-    <Compile Include="Infrastructure\AzureWebsitesMachineNameProvider.cs" />
+    <Compile Include="Infrastructure\AzureWebAppsMachineNameProvider.cs" />
     <Compile Include="Infrastructure\DefaultMachineNameProvider.cs" />
     <Compile Include="Infrastructure\IMachineNameProvider.cs" />
     <Compile Include="Tasks\ClearLogScheduleTask.cs" />
