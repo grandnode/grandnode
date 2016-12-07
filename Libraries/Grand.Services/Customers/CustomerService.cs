@@ -337,7 +337,6 @@ namespace Grand.Services.Customers
 
             var query = from c in _customerRepository.Table
                         where c.CustomerGuid == customerGuid
-                        orderby c.Id
                         select c;
             var customer = query.FirstOrDefault();
             return customer;
@@ -353,7 +352,6 @@ namespace Grand.Services.Customers
             if (string.IsNullOrWhiteSpace(email))
                 return null;
             var query = from c in _customerRepository.Table
-                        orderby c.Id
                         where c.Email != null && c.Email.ToLower() == email.ToLower()
                         select c;
             var customer = query.FirstOrDefault();
@@ -371,7 +369,6 @@ namespace Grand.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        orderby c.Id
                         where c.SystemName == systemName
                         select c;
             var customer = query.FirstOrDefault();
@@ -389,7 +386,6 @@ namespace Grand.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        orderby c.Id
                         where c.Username != null && c.Username.ToLower() == username.ToLower()
                         select c;
             var customer = query.FirstOrDefault();
@@ -821,7 +817,6 @@ namespace Grand.Services.Customers
             //don't delete system accounts
             query = query.Where(c => !c.IsSystemAccount);
 
-            query = query.OrderBy(c => c.Id);
             var customers = query.ToList();
 
             int totalRecordsDeleted = 0;
@@ -894,7 +889,6 @@ namespace Grand.Services.Customers
             return _cacheManager.Get(key, () =>
             {
                 var query = from cr in _customerRoleRepository.Table
-                            orderby cr.Id
                             where cr.SystemName == systemName
                             select cr;
                 var customerRole = query.FirstOrDefault();
@@ -913,8 +907,8 @@ namespace Grand.Services.Customers
             return _cacheManager.Get(key, () =>
             {
                 var query = from cr in _customerRoleRepository.Table
-                            orderby cr.Name
                             where (showHidden || cr.Active)
+                            orderby cr.Name
                             select cr;
                 var customerRoles = query.ToList();
                 return customerRoles;
@@ -1066,8 +1060,8 @@ namespace Grand.Services.Customers
             return _cacheManager.Get(key, () =>
             {
                 var query = from cr in _customerRoleProductRepository.Table
-                            orderby cr.DisplayOrder
                             where (cr.CustomerRoleId == customerRoleId)
+                            orderby cr.DisplayOrder
                             select cr;
                 var customerRoles = query.ToList();
                 return customerRoles;
@@ -1083,8 +1077,8 @@ namespace Grand.Services.Customers
         public virtual CustomerRoleProduct GetCustomerRoleProduct(string customerRoleId, string productId)
         {
             var query = from cr in _customerRoleProductRepository.Table
-                        orderby cr.DisplayOrder
                         where cr.CustomerRoleId == customerRoleId && cr.ProductId == productId
+                        orderby cr.DisplayOrder
                         select cr;
             var customerRoles = query.ToList();
             return query.FirstOrDefault();
@@ -1098,8 +1092,8 @@ namespace Grand.Services.Customers
         public virtual CustomerRoleProduct GetCustomerRoleProductById(string id)
         {
             var query = from cr in _customerRoleProductRepository.Table
-                        orderby cr.DisplayOrder
                         where cr.Id == id
+                        orderby cr.DisplayOrder
                         select cr;
             var customerRoles = query.ToList();
             return query.FirstOrDefault();
