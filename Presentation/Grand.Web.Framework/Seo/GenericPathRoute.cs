@@ -91,14 +91,6 @@ namespace Grand.Web.Framework.Seo
                 if (urlRecord == null)
                 {
                     //no URL record found
-
-                    //var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                    //var response = httpContext.Response;
-                    //response.Status = "302 Found";
-                    //response.RedirectLocation = webHelper.GetStoreLocation(false);
-                    //response.End();
-                    //return null;
-
                     data.Values["controller"] = "Common";
                     data.Values["action"] = "PageNotFound";
                     return data;
@@ -111,14 +103,6 @@ namespace Grand.Web.Framework.Seo
                     if (string.IsNullOrWhiteSpace(activeSlug))
                     {
                         //no active slug found
-
-                        //var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                        //var response = httpContext.Response;
-                        //response.Status = "302 Found";
-                        //response.RedirectLocation = webHelper.GetStoreLocation(false);
-                        //response.End();
-                        //return null;
-
                         data.Values["controller"] = "Common";
                         data.Values["action"] = "PageNotFound";
                         return data;
@@ -128,7 +112,7 @@ namespace Grand.Web.Framework.Seo
                     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                     var response = httpContext.Response;
                     response.Status = "301 Moved Permanently";
-                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(false), activeSlug);
+                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(), activeSlug);
                     response.End();
                     return null;
                 }
@@ -145,7 +129,7 @@ namespace Grand.Web.Framework.Seo
                     var response = httpContext.Response;
                     //response.Status = "302 Found";
                     response.Status = "302 Moved Temporarily";
-                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(false), slugForCurrentLanguage);
+                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(), slugForCurrentLanguage);
                     response.End();
                     return null;
                 }
