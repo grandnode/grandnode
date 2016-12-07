@@ -6,7 +6,6 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Security;
-using Grand.Core.Domain.Stores;
 using Grand.Services.Customers;
 using Grand.Services.Events;
 using MongoDB.Driver;
@@ -167,8 +166,6 @@ namespace Grand.Services.Catalog
             if (!String.IsNullOrWhiteSpace(manufacturerName))
                 query = query.Where(m => m.Name != null && m.Name.ToLower().Contains(manufacturerName.ToLower()));
             
-            query = query.OrderBy(m => m.DisplayOrder);
-
             if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)))
             { 
                 if (!_catalogSettings.IgnoreAcl)
@@ -187,9 +184,8 @@ namespace Grand.Services.Catalog
                             where !p.LimitedToStores || p.Stores.Contains(storeId)
                             select p;
                 }
-
-                query = query.OrderBy(m => m.DisplayOrder);
             }
+            query = query.OrderBy(m => m.DisplayOrder);
 
             return new PagedList<Manufacturer>(query, pageIndex, pageSize);
         }
@@ -322,63 +318,6 @@ namespace Grand.Services.Catalog
                          select pm;
                 
                 var productManufacturers = new PagedList<ProductManufacturer>(query2, pageIndex, pageSize);
-                return productManufacturers;
-            });
-        }
-
-        /// <summary>
-        /// Gets a product manufacturer mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product manufacturer mapping collection</returns>
-        public virtual IList<ProductManufacturer> GetProductManufacturersByProductId(string productId, bool showHidden = false)
-        {
-            string key = string.Format(PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from p in _productRepository.Table
-                            from pm in p.ProductManufacturers
-                            where pm.ProductId == productId 
-                            orderby pm.DisplayOrder
-                            select p;
-
-
-                if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
-                {
-                    if (!_catalogSettings.IgnoreAcl)
-                    {
-                        //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-                        query = from p in query
-                                where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
-                                select p;
-                    }
-
-                    if (!_catalogSettings.IgnoreStoreLimitations)
-                    {
-                        //Store mapping
-                        var currentStoreId = _storeContext.CurrentStore.Id;
-                        query = from p in query
-                                where !p.LimitedToStores || p.Stores.Contains(currentStoreId)
-                                select p;
-                    }
-
-                }
-                var query2 = from p in query
-                             from pm in p.ProductManufacturers
-                             select new SerializeProductManufacturer
-                             {
-                                 Id = pm.Id,
-                                 ProductId = p.Id,
-                                 DisplayOrder = pm.DisplayOrder,
-                                 IsFeaturedProduct = pm.IsFeaturedProduct,
-                                 ManufacturerId = pm.ManufacturerId
-                             };
-
-
-                List<ProductManufacturer> productManufacturers = new List<ProductManufacturer>();
-                productManufacturers.AddRange(query2.ToList());
                 return productManufacturers;
             });
         }
