@@ -198,8 +198,6 @@ namespace Grand.Services.Catalog
             if (!String.IsNullOrWhiteSpace(categoryName))
                 query = query.Where(m => m.Name != null && m.Name.ToLower().Contains(categoryName.ToLower()));
 
-            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
-            
             if ((!_catalogSettings.IgnoreAcl || (!String.IsNullOrEmpty(storeId) &&  !_catalogSettings.IgnoreStoreLimitations)))
             {
                 if (!_catalogSettings.IgnoreAcl)
@@ -217,13 +215,10 @@ namespace Grand.Services.Catalog
                             where !p.LimitedToStores || p.Stores.Contains(storeId)
                             select p;
                 }
-
-                query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
-                
             }
-            
-            var unsortedCategories = query.ToList();
 
+            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
+            var unsortedCategories = query.ToList();
             //sort categories
             var sortedCategories = unsortedCategories.SortCategoriesForTree();
 
@@ -301,9 +296,8 @@ namespace Grand.Services.Catalog
         public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false)
         {
             var query = from c in _categoryRepository.Table
+                        where c.Published && c.ShowOnHomePage
                         orderby c.DisplayOrder
-                        where c.Published &&                        
-                        c.ShowOnHomePage
                         select c;
 
             var categories = query.ToList();
@@ -484,55 +478,7 @@ namespace Grand.Services.Catalog
             });
         }
 
-        /// <summary>
-        /// Gets a product category mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
-        /// <param name="showHidden"> A value indicating whether to show hidden records</param>
-        /// <returns> Product category mapping collection</returns>
-        public virtual IList<ProductCategory> GetProductCategoriesByProductId(string productId, string storeId, bool showHidden = false)
-        {
-            if (String.IsNullOrEmpty(productId))
-                return new List<ProductCategory>();
-
-            string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, storeId);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from pc in _productRepository.Table
-                            from c in pc.ProductCategories 
-                            where pc.Id == productId 
-                            orderby pc.DisplayOrder
-                            select new SerializeProductCategory() {
-                                 CategoryId = c.CategoryId,
-                                 DisplayOrder = c.DisplayOrder,
-                                 Id = c.Id,
-                                 IsFeaturedProduct = c.IsFeaturedProduct,
-                                 ProductId = pc.Id
-                            };
-
-                var allProductCategories = query.ToList();
-                var result = new List<ProductCategory>();
-                if (!showHidden)
-                {
-                    foreach (var pc in allProductCategories)
-                    {
-                        //ACL (access control list) and store mapping
-                        var category = _categoryRepository.GetById(pc.CategoryId);
-                        if (_aclService.Authorize(category) && _storeMappingService.Authorize(category, storeId))
-                            result.Add(pc);
-                    }
-                }
-                else
-                {
-                    //no filtering
-                    result.AddRange(allProductCategories);
-                }
-                return result;
-            });
-        }
-
-
+       
         /// <summary>
         /// Inserts a product category mapping
         /// </summary>
