@@ -621,7 +621,7 @@ namespace Grand.Services.Orders
             var cc = query1.ToList();
             var query2 = from rp in _recurringPaymentRepository.Table
                          where cc.Contains(rp.Id)
-                         orderby rp.StartDateUtc, rp.Id
+                         orderby rp.StartDateUtc
                          select rp;
 
             var recurringPayments = new PagedList<RecurringPayment>(query2, pageIndex, pageSize);
