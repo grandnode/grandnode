@@ -247,7 +247,7 @@ namespace Grand.Services.Catalog.Tests {
                 DiscountAmount = 10,
                 DiscountLimitation = DiscountLimitationType.Unlimited
             };
-
+            _discountService.InsertDiscount(discount001);
             product.AppliedDiscounts.Add(discount001.Id);
 
             tempDiscountServiceMock.Setup(x => x.ValidateDiscount(discount001, customer)).Returns(new DiscountValidationResult() { IsValid = true });
