@@ -4,6 +4,41 @@
         <name>MaxMind.Db</name>
     </assembly>
     <members>
+        <member name="M:MaxMind.Db.Buffer.ReadBigInteger(System.Int64,System.Int32)">
+            <summary>
+                Read a big integer from the buffer.
+            </summary>
+        </member>
+        <member name="M:MaxMind.Db.Buffer.ReadDouble(System.Int64)">
+            <summary>
+                Read a double from the buffer.
+            </summary>
+        </member>
+        <member name="M:MaxMind.Db.Buffer.ReadFloat(System.Int64)">
+            <summary>
+                Read a float from the buffer.
+            </summary>
+        </member>
+        <member name="M:MaxMind.Db.Buffer.ReadInteger(System.Int32,System.Int64,System.Int32)">
+            <summary>
+                Read an integer from the buffer.
+            </summary>
+        </member>
+        <member name="M:MaxMind.Db.Buffer.ReadLong(System.Int64,System.Int32)">
+            <summary>
+                Read a long from the buffer.
+            </summary>
+        </member>
+        <member name="M:MaxMind.Db.Buffer.ReadULong(System.Int64,System.Int32)">
+            <summary>
+                Read a uint64 from the buffer.
+            </summary>
+        </member>
+        <member name="T:MaxMind.Db.ConstructorAttribute">
+            <summary>
+                Instruct <code>Reader</code> to use the constructor when deserializing.
+            </summary>
+        </member>
         <member name="T:MaxMind.Db.ObjectType">
             <summary>
                 Enumeration representing the types of objects read from the database
@@ -143,43 +178,6 @@
             <param name="message"></param>
             <param name="innerException">The underlying exception that caused this one.</param>
         </member>
-        <member name="M:MaxMind.Db.DeserializationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-                Constructor for deserialization.
-            </summary>
-            <param name="info">The SerializationInfo with data.</param>
-            <param name="context">The source for this deserialization.</param>
-        </member>
-        <member name="M:MaxMind.Db.Buffer.ReadBigInteger(System.Int64,System.Int32)">
-            <summary>
-                Read a big integer from the buffer.
-            </summary>
-        </member>
-        <member name="M:MaxMind.Db.Buffer.ReadDouble(System.Int64)">
-            <summary>
-                Read a double from the buffer.
-            </summary>
-        </member>
-        <member name="M:MaxMind.Db.Buffer.ReadFloat(System.Int64)">
-            <summary>
-                Read a float from the buffer.
-            </summary>
-        </member>
-        <member name="M:MaxMind.Db.Buffer.ReadInteger(System.Int32,System.Int64,System.Int32)">
-            <summary>
-                Read an integer from the buffer.
-            </summary>
-        </member>
-        <member name="M:MaxMind.Db.Buffer.ReadLong(System.Int64,System.Int32)">
-            <summary>
-                Read a long from the buffer.
-            </summary>
-        </member>
-        <member name="M:MaxMind.Db.Buffer.ReadULong(System.Int64,System.Int32)">
-            <summary>
-                Read a uint64 from the buffer.
-            </summary>
-        </member>
         <member name="T:MaxMind.Db.InjectableValues">
             <summary>
                 Values to be injected into classes during deserialization.
@@ -194,6 +192,22 @@
                 where to inject the value.
             </param>
             <param name="value">The value to be injected.</param>
+        </member>
+        <member name="T:MaxMind.Db.InjectAttribute">
+            <summary>
+                Instruct <code>Reader</code> to map database key to constructor parameter.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.InjectAttribute.ParameterName">
+            <summary>
+                The name to use for the property.
+            </summary>
+        </member>
+        <member name="M:MaxMind.Db.InjectAttribute.#ctor(System.String)">
+            <summary>
+                Create a new instance of <code>InjectAttribute</code>.
+            </summary>
+            <param name="parameterName"></param>
         </member>
         <member name="T:MaxMind.Db.InvalidDatabaseException">
             <summary>
@@ -217,33 +231,70 @@
                 block that handles the inner exception.
             </param>
         </member>
-        <member name="M:MaxMind.Db.InvalidDatabaseException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+        <member name="M:MaxMind.Db.MemoryMapBuffer.Dispose">
             <summary>
-                Constructor for deserialization.
-            </summary>
-            <param name="info">The SerializationInfo with data.</param>
-            <param name="context">The source for this deserialization.</param>
-        </member>
-        <member name="T:MaxMind.Db.ConstructorAttribute">
-            <summary>
-                Instruct <code>Reader</code> to use the constructor when deserializing.
+                Release resources back to the system.
             </summary>
         </member>
-        <member name="T:MaxMind.Db.InjectAttribute">
+        <member name="M:MaxMind.Db.MemoryMapBuffer.Dispose(System.Boolean)">
             <summary>
-                Instruct <code>Reader</code> to map database key to constructor parameter.
+                Release resources back to the system.
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="T:MaxMind.Db.Metadata">
+            <summary>
+                Data about the database file itself
             </summary>
         </member>
-        <member name="P:MaxMind.Db.InjectAttribute.ParameterName">
+        <member name="M:MaxMind.Db.Metadata.#ctor(System.Int32,System.Int32,System.UInt64,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Int32,System.Collections.Generic.IReadOnlyList{System.String},System.Int64,System.Int32)">
             <summary>
-                The name to use for the property.
+                Construct a metadata object.
+            </summary>
+            <param name="binaryFormatMajorVersion"></param>
+            <param name="binaryFormatMinorVersion"></param>
+            <param name="buildEpoch"></param>
+            <param name="databaseType"></param>
+            <param name="description"></param>
+            <param name="ipVersion"></param>
+            <param name="languages"></param>
+            <param name="nodeCount"></param>
+            <param name="recordSize"></param>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.BinaryFormatMajorVersion">
+            <summary>
+                The major version number for the MaxMind DB binary format used by the database.
             </summary>
         </member>
-        <member name="M:MaxMind.Db.InjectAttribute.#ctor(System.String)">
+        <member name="P:MaxMind.Db.Metadata.BinaryFormatMinorVersion">
             <summary>
-                Create a new instance of <code>InjectAttribute</code>.
+                The minor version number for the MaxMind DB binary format used by the database.
             </summary>
-            <param name="parameterName"></param>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.BuildDate">
+            <summary>
+                The date-time of the database build.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.DatabaseType">
+            <summary>
+                The MaxMind DB database type.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.Description">
+            <summary>
+                A map from locale codes to the database description in that language.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.IPVersion">
+            <summary>
+                The IP version that the database supports. This will be 4 or 6.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.Languages">
+            <summary>
+                A list of locale codes for languages that the database supports.
+            </summary>
         </member>
         <member name="T:MaxMind.Db.ParameterAttribute">
             <summary>
@@ -272,17 +323,6 @@
                 is not present in the database. If this is false, the default value will be used
                 (null for nullable types)
             </param>
-        </member>
-        <member name="M:MaxMind.Db.MemoryMapBuffer.Dispose">
-            <summary>
-                Release resources back to the system.
-            </summary>
-        </member>
-        <member name="M:MaxMind.Db.MemoryMapBuffer.Dispose(System.Boolean)">
-            <summary>
-                Release resources back to the system.
-            </summary>
-            <param name="disposing"></param>
         </member>
         <member name="T:MaxMind.Db.FileAccessMode">
             <summary>
@@ -359,60 +399,6 @@
             <param name="prefixLength">The network prefix length for the network record in the database containing the IP address looked up.</param>
             <param name="injectables">Value to inject during deserialization</param>
             <returns>An object containing the IP related data</returns>
-        </member>
-        <member name="T:MaxMind.Db.Metadata">
-            <summary>
-                Data about the database file itself
-            </summary>
-        </member>
-        <member name="M:MaxMind.Db.Metadata.#ctor(System.Int32,System.Int32,System.UInt64,System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Int32,System.Collections.Generic.IReadOnlyList{System.String},System.Int64,System.Int32)">
-            <summary>
-                Construct a metadata object.
-            </summary>
-            <param name="binaryFormatMajorVersion"></param>
-            <param name="binaryFormatMinorVersion"></param>
-            <param name="buildEpoch"></param>
-            <param name="databaseType"></param>
-            <param name="description"></param>
-            <param name="ipVersion"></param>
-            <param name="languages"></param>
-            <param name="nodeCount"></param>
-            <param name="recordSize"></param>
-        </member>
-        <member name="P:MaxMind.Db.Metadata.BinaryFormatMajorVersion">
-            <summary>
-                The major version number for the MaxMind DB binary format used by the database.
-            </summary>
-        </member>
-        <member name="P:MaxMind.Db.Metadata.BinaryFormatMinorVersion">
-            <summary>
-                The minor version number for the MaxMind DB binary format used by the database.
-            </summary>
-        </member>
-        <member name="P:MaxMind.Db.Metadata.BuildDate">
-            <summary>
-                The date-time of the database build.
-            </summary>
-        </member>
-        <member name="P:MaxMind.Db.Metadata.DatabaseType">
-            <summary>
-                The MaxMind DB database type.
-            </summary>
-        </member>
-        <member name="P:MaxMind.Db.Metadata.Description">
-            <summary>
-                A map from locale codes to the database description in that language.
-            </summary>
-        </member>
-        <member name="P:MaxMind.Db.Metadata.IPVersion">
-            <summary>
-                The IP version that the database supports. This will be 4 or 6.
-            </summary>
-        </member>
-        <member name="P:MaxMind.Db.Metadata.Languages">
-            <summary>
-                A list of locale codes for languages that the database supports.
-            </summary>
         </member>
     </members>
 </doc>
