@@ -430,8 +430,7 @@ namespace Grand.Services.Catalog
             string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
-                var query = from p in _productRepository.Collection.AsQueryable()
-                            select p;
+                var query = _productRepository.Table.Where(x => x.ProductCategories.Any(y => y.CategoryId == categoryId));
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
@@ -455,8 +454,7 @@ namespace Grand.Services.Catalog
 
                     
                 }
-
-                var query2 = from prod in query
+                var query_productCategories = from prod in query
                              from pc in prod.ProductCategories
                              select new SerializeProductCategory
                              {
@@ -467,13 +465,11 @@ namespace Grand.Services.Catalog
                                  IsFeaturedProduct = pc.IsFeaturedProduct,
                              };
 
-                query2 = from pm in query2
-                         where pm.CategoryId == categoryId
+                query_productCategories = from pm in query_productCategories
                          orderby pm.DisplayOrder
                          select pm;
 
-
-                var productCategories = new PagedList<ProductCategory>(query2, pageIndex, pageSize);
+                var productCategories = new PagedList<ProductCategory>(query_productCategories, pageIndex, pageSize);
                 return productCategories;
             });
         }

@@ -276,8 +276,7 @@ namespace Grand.Services.Catalog
             string key = string.Format(PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY, showHidden, manufacturerId, pageIndex, pageSize, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
             return _cacheManager.Get(key, () =>
             {
-                var query = from p in _productRepository.Table                            
-                            select p;
+                var query = _productRepository.Table.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == manufacturerId));
 
                 if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
                 {
@@ -301,7 +300,7 @@ namespace Grand.Services.Catalog
 
                 }
 
-                var query2 = from prod in query
+                var query_ProductManufacturer = from prod in query
                              from pm in prod.ProductManufacturers
                              select new SerializeProductManufacturer
                                 {
@@ -312,12 +311,11 @@ namespace Grand.Services.Catalog
                                     ManufacturerId = pm.ManufacturerId    
                                 };
 
-                query2 = from pm in query2
-                         where pm.ManufacturerId == manufacturerId
-                         orderby pm.DisplayOrder
-                         select pm;
+                query_ProductManufacturer = from pm in query_ProductManufacturer
+                                            orderby pm.DisplayOrder
+                                            select pm;
                 
-                var productManufacturers = new PagedList<ProductManufacturer>(query2, pageIndex, pageSize);
+                var productManufacturers = new PagedList<ProductManufacturer>(query_ProductManufacturer, pageIndex, pageSize);
                 return productManufacturers;
             });
         }
