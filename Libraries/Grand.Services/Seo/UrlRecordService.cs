@@ -199,7 +199,7 @@ namespace Grand.Services.Seo
 
             var query = from ur in _urlRecordRepository.Table
                         where ur.Slug == slug
-                        orderby ur.IsActive descending, ur.Id
+                        orderby ur.IsActive
                         select ur;
             var urlRecord = query.FirstOrDefault();
             return urlRecord;
@@ -223,7 +223,7 @@ namespace Grand.Services.Seo
                 var source = GetAllUrlRecordsCached();
                 var query = from ur in source
                             where ur.Slug != null && ur.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase)
-                            orderby ur.IsActive descending, ur.Id
+                            orderby ur.IsActive
                             select ur;
                 var urlRecordForCaching = query.FirstOrDefault();
                 return urlRecordForCaching;
@@ -283,7 +283,6 @@ namespace Grand.Services.Seo
                                 ur.EntityName == entityName &&
                                 ur.LanguageId == languageId &&
                                 ur.IsActive
-                                orderby ur.Id descending
                                 select ur.Slug;
                     var slug = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
@@ -305,7 +304,6 @@ namespace Grand.Services.Seo
                                 ur.EntityName == entityName &&
                                 ur.LanguageId == languageId &&
                                 ur.IsActive
-                                orderby ur.Id descending
                                 select ur.Slug;
                     var slug = query.FirstOrDefault();
                     //little hack here. nulls aren't cacheable so set it to ""
@@ -335,7 +333,6 @@ namespace Grand.Services.Seo
                         where ur.EntityId == entityId &&
                         ur.EntityName == entityName &&
                         ur.LanguageId == languageId
-                        orderby ur.Id descending
                         select ur;
 
             var allUrlRecords = query.ToList();

@@ -826,12 +826,9 @@ namespace Grand.Web.Controllers
                     model.FeaturedProducts = PrepareProductOverviewModels(featuredProducts).ToList();
                 }
             }
-
-
-
             //products
             IList<string> filterableSpecificationAttributeOptionIds;
-            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
+            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, false,
                 manufacturerId: manufacturer.Id,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,

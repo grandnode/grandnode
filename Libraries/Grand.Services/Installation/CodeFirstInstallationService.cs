@@ -10791,247 +10791,279 @@ namespace Grand.Services.Installation
 
         private void CreateIndexes()
         {
-            _versionRepository.Collection.Indexes.CreateOneAsync(Builders<GrandNodeVersion>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _versionRepository.Collection.Indexes.CreateOne(Builders<GrandNodeVersion>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             //Store
-            _storeRepository.Collection.Indexes.CreateOneAsync(Builders<Store>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _storeRepository.Collection.Indexes.CreateOneAsync(Builders<Store>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _storeRepository.Collection.Indexes.CreateOne(Builders<Store>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _storeRepository.Collection.Indexes.CreateOne(Builders<Store>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
 
             //measure
-            _measureDimensionRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureDimension>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _measureWeightRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureWeight>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _measureUnitRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureUnit>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _measureDimensionRepository.Collection.Indexes.CreateOne(Builders<MeasureDimension>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _measureWeightRepository.Collection.Indexes.CreateOne(Builders<MeasureWeight>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _measureUnitRepository.Collection.Indexes.CreateOne(Builders<MeasureUnit>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //TaxCategory
-            _taxCategoryRepository.Collection.Indexes.CreateOneAsync(Builders<TaxCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _taxCategoryRepository.Collection.Indexes.CreateOne(Builders<TaxCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //Language
-            _languageRepository.Collection.Indexes.CreateOneAsync(Builders<Language>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId), new CreateIndexOptions() { Name = "Language" });
-            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "ResourceName" });
+            _languageRepository.Collection.Indexes.CreateOne(Builders<Language>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _lsrRepository.Collection.Indexes.CreateOne(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _lsrRepository.Collection.Indexes.CreateOne(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId), new CreateIndexOptions() { Name = "Language" });
+            _lsrRepository.Collection.Indexes.CreateOne(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "ResourceName" });
 
             //Currency
-            _currencyRepository.Collection.Indexes.CreateOneAsync(Builders<Currency>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _currencyRepository.Collection.Indexes.CreateOne(Builders<Currency>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //customer
-            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email" });
-            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Username), new CreateIndexOptions() { Name = "Username" });
+            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.CreatedOnUtc).Ascending("CustomerRoles._id"), new CreateIndexOptions() { Name = "CreatedOnUtc_1_CustomerRoles._id_1", Unique = false });
+            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.LastActivityDateUtc), new CreateIndexOptions() { Name = "LastActivityDateUtc_1", Unique = false });
+            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.CustomerGuid), new CreateIndexOptions() { Name = "CustomerGuid_1", Unique = false });
 
-            _customerRoleRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x=>x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
+            //customer role
+            _customerRoleRepository.Collection.Indexes.CreateOne(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerRoleProductRepository.Collection.Indexes.CreateOne(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerRoleProductRepository.Collection.Indexes.CreateOne(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x=>x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
 
-            _addressRepository.Collection.Indexes.CreateOneAsync(Builders<Address>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            //address
+            _addressRepository.Collection.Indexes.CreateOne(Builders<Address>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //specificationAttribute
-            _specificationAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _specificationAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _specificationAttributeRepository.Collection.Indexes.CreateOne(Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _specificationAttributeRepository.Collection.Indexes.CreateOne(Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
 
             //checkoutAttribute
-            _checkoutAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _checkoutAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _checkoutAttributeRepository.Collection.Indexes.CreateOne(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _checkoutAttributeRepository.Collection.Indexes.CreateOne(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
 
             //productAttribute
-            _productAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productAttributeRepository.Collection.Indexes.CreateOne(Builders<ProductAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //category
-            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _categoryRepository.Collection.Indexes.CreateOne(Builders<Category>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _categoryRepository.Collection.Indexes.CreateOne(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
+            _categoryRepository.Collection.Indexes.CreateOne(Builders<Category>.IndexKeys.Ascending(x => x.ParentCategoryId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentCategoryId_1_DisplayOrder_1", Unique = false });
 
             //manufacturer
-            _manufacturerRepository.Collection.Indexes.CreateOneAsync(Builders<Manufacturer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _manufacturerRepository.Collection.Indexes.CreateOneAsync(Builders<Manufacturer>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _manufacturerRepository.Collection.Indexes.CreateOne(Builders<Manufacturer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _manufacturerRepository.Collection.Indexes.CreateOne(Builders<Manufacturer>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
+            _manufacturerRepository.Collection.Indexes.CreateOne(Builders<Manufacturer>.IndexKeys.Ascending("AppliedDiscounts"), new CreateIndexOptions() { Name = "AppliedDiscounts._id_1", Unique = false });
+
 
             //Product
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Sku), new CreateIndexOptions() { Name = "Sku", Unique = false });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.ShowOnHomePage), new CreateIndexOptions() { Name = "ShowOnHomePage" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name_asc" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Name), new CreateIndexOptions() { Name = "Name_desc" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_asc" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_desc" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Price), new CreateIndexOptions() { Name = "Price_asc" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Price), new CreateIndexOptions() { Name = "Price_desc" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.OnSale), new CreateIndexOptions() { Name = "OnSale_desc" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Viewed), new CreateIndexOptions() { Name = "Viewed_desc" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Descending(x => x.Sold), new CreateIndexOptions() { Name = "Sold_desc" });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.MarkAsNew).Ascending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "MarkAsNew_1_CreatedOnUtc_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.ShowOnHomePage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ShowOnHomePage_1_Published_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.ParentGroupedProductId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentGroupedProductId_1_DisplayOrder_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.ProductTags).Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductTags._id_1_Name_1", Unique = false });
 
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductTags.Id").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "Tags" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "ProductCategories" });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending("Published").Ascending("VisibleIndividually"), new CreateIndexOptions() { Name = "ProductManufacturers" });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x=>x.Published).Ascending(x=>x.VisibleIndividually).Ascending(x=>x.DisplayOrderCategory), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_OrderCategory_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Name_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Sold), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Sold_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Price), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Price_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("ProductCategories.IsFeaturedProduct").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_IsFeaturedProduct_1", Unique = false });
 
-            _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "ProductId", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.DisplayOrderManufacturer), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_OrderCategory_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Name_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Sold), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Sold_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Price), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Price_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending("ProductManufacturers.IsFeaturedProduct").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_IsFeaturedProduct_1", Unique = false });
 
-            _pictureRepository.Collection.Indexes.CreateOneAsync(Builders<Picture>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productTagRepository.Collection.Indexes.CreateOneAsync(Builders<ProductTag>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<ProductTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending("ProductSpecificationAttributes.SpecificationAttributeOptionId").Ascending("ProductSpecificationAttributes.AllowFiltering"), new CreateIndexOptions() { Name = "ProductSpecificationAttributes", Unique = false });
+
+
+            //ProductReview
+            _productReviewRepository.Collection.Indexes.CreateOne(Builders<ProductReview>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productReviewRepository.Collection.Indexes.CreateOne(Builders<ProductReview>.IndexKeys.Ascending(x => x.ProductId).Ascending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "ProductId", Unique = false });
+            
+            //Picture
+            _pictureRepository.Collection.Indexes.CreateOne(Builders<Picture>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //ProductTag
+            _productTagRepository.Collection.Indexes.CreateOne(Builders<ProductTag>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //ProductTemplate
+            _productTemplateRepository.Collection.Indexes.CreateOne(Builders<ProductTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //Recently Viewed Products
-            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId.ProductId" });
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOne(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOne(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId.ProductId" });
 
             //Product also purchased
-            _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "ProductId", Unique = false, Background = true });
+            _productalsopurchasedRepository.Collection.Indexes.CreateOne(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productalsopurchasedRepository.Collection.Indexes.CreateOne(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "ProductId", Unique = false, Background = true });
 
             //url record
-            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Slug), new CreateIndexOptions() { Name = "Slug" });
-            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.EntityId).Ascending(x=>x.EntityName).Ascending(x=>x.LanguageId).Ascending(x=>x.IsActive).Descending(x=>x.Id), new CreateIndexOptions() { Name = "Slug2" });
+            _urlRecordRepository.Collection.Indexes.CreateOne(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _urlRecordRepository.Collection.Indexes.CreateOne(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Slug).Ascending(x=>x.IsActive), new CreateIndexOptions() { Name = "Slug" });
+            _urlRecordRepository.Collection.Indexes.CreateOne(Builders<UrlRecord>.IndexKeys.Ascending(x => x.EntityId).Ascending(x=>x.EntityName).Ascending(x=>x.LanguageId).Ascending(x=>x.IsActive), new CreateIndexOptions() { Name = "UrlRecord" });
 
             //email
-            _emailAccountRepository.Collection.Indexes.CreateOneAsync(Builders<EmailAccount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _queuedemailRepository.Collection.Indexes.CreateOneAsync(Builders<QueuedEmail>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _emailAccountRepository.Collection.Indexes.CreateOne(Builders<EmailAccount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _queuedemailRepository.Collection.Indexes.CreateOne(Builders<QueuedEmail>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //message template
-            _messageTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<MessageTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _messageTemplateRepository.Collection.Indexes.CreateOne(Builders<MessageTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //forum
-            _forumGroupRepository.Collection.Indexes.CreateOneAsync(Builders<ForumGroup>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumRepository.Collection.Indexes.CreateOneAsync(Builders<Forum>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumpostRepository.Collection.Indexes.CreateOneAsync(Builders<ForumPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumtopicRepository.Collection.Indexes.CreateOneAsync(Builders<ForumTopic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumsubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<ForumSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x=>x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
+            _forumGroupRepository.Collection.Indexes.CreateOne(Builders<ForumGroup>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumRepository.Collection.Indexes.CreateOne(Builders<Forum>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumpostRepository.Collection.Indexes.CreateOne(Builders<ForumPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumtopicRepository.Collection.Indexes.CreateOne(Builders<ForumTopic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumsubscriptionRepository.Collection.Indexes.CreateOne(Builders<ForumSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumPostVote.Collection.Indexes.CreateOne(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumPostVote.Collection.Indexes.CreateOne(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x=>x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
 
             // Country and Stateprovince
-            _countryRepository.Collection.Indexes.CreateOneAsync(Builders<Country>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _countryRepository.Collection.Indexes.CreateOneAsync(Builders<Country>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
-            _stateProvinceRepository.Collection.Indexes.CreateOneAsync(Builders<StateProvince>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _stateProvinceRepository.Collection.Indexes.CreateOneAsync(Builders<StateProvince>.IndexKeys.Ascending(x => x.CountryId).Ascending(x => x.DisplayOrder).Ascending(x => x.Id), new CreateIndexOptions() { Name = "Country" });
+            _countryRepository.Collection.Indexes.CreateOne(Builders<Country>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _countryRepository.Collection.Indexes.CreateOne(Builders<Country>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _stateProvinceRepository.Collection.Indexes.CreateOne(Builders<StateProvince>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _stateProvinceRepository.Collection.Indexes.CreateOne(Builders<StateProvince>.IndexKeys.Ascending(x => x.CountryId).Ascending(x => x.DisplayOrder).Ascending(x => x.Id), new CreateIndexOptions() { Name = "Country" });
 
             //discount
-            _discountRepository.Collection.Indexes.CreateOneAsync(Builders<Discount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
-            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });
-            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
+            _discountRepository.Collection.Indexes.CreateOne(Builders<Discount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountusageRepository.Collection.Indexes.CreateOne(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountusageRepository.Collection.Indexes.CreateOne(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
+            _discountusageRepository.Collection.Indexes.CreateOne(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });
+            _discountusageRepository.Collection.Indexes.CreateOne(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
 
 
             //blog
-            _blogPostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _blogcommentRepository.Collection.Indexes.CreateOneAsync(Builders<BlogComment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _blogpostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _blogPostRepository.Collection.Indexes.CreateOne(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _blogcommentRepository.Collection.Indexes.CreateOne(Builders<BlogComment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _blogpostRepository.Collection.Indexes.CreateOne(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //topic
-            _topicRepository.Collection.Indexes.CreateOneAsync(Builders<Topic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _topicRepository.Collection.Indexes.CreateOne(Builders<Topic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _topicRepository.Collection.Indexes.CreateOne(Builders<Topic>.IndexKeys.Ascending(x => x.SystemName), new CreateIndexOptions() { Name = "SystemName", Unique = false });
 
             //news
-            _newsItemRepository.Collection.Indexes.CreateOneAsync(Builders<NewsItem>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _newsItemRepository.Collection.Indexes.CreateOne(Builders<NewsItem>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _newsItemRepository.Collection.Indexes.CreateOne(Builders<NewsItem>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
             //newsletter
-            _newslettersubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _newslettersubscriptionRepository.Collection.Indexes.CreateOne(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _newslettersubscriptionRepository.Collection.Indexes.CreateOne(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
+            _newslettersubscriptionRepository.Collection.Indexes.CreateOne(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
 
             //poll
-            _pollRepository.Collection.Indexes.CreateOneAsync(Builders<Poll>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _pollRepository.Collection.Indexes.CreateOne(Builders<Poll>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
-            _shippingMethodRepository.Collection.Indexes.CreateOneAsync(Builders<ShippingMethod>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _deliveryDateRepository.Collection.Indexes.CreateOneAsync(Builders<DeliveryDate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            //shipping method
+            _shippingMethodRepository.Collection.Indexes.CreateOne(Builders<ShippingMethod>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
-            // Activity log
-            _activityLogTypeRepository.Collection.Indexes.CreateOneAsync(Builders<ActivityLogType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _activityLogRepository.Collection.Indexes.CreateOneAsync(Builders<ActivityLog>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _logRepository.Collection.Indexes.CreateOneAsync(Builders<Log>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            //delivery date
+            _deliveryDateRepository.Collection.Indexes.CreateOne(Builders<DeliveryDate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            // Activity log type
+            _activityLogTypeRepository.Collection.Indexes.CreateOne(Builders<ActivityLogType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            // Activity log 
+            _activityLogRepository.Collection.Indexes.CreateOne(Builders<ActivityLog>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //Log
+            _logRepository.Collection.Indexes.CreateOne(Builders<Log>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _logRepository.Collection.Indexes.CreateOne(Builders<Log>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
             //Affiliate
-            _affiliateRepository.Collection.Indexes.CreateOneAsync(Builders<Affiliate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _affiliateRepository.Collection.Indexes.CreateOne(Builders<Affiliate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //Campaign
-            _campaignRepository.Collection.Indexes.CreateOneAsync(Builders<Campaign>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.CampaignId).Descending(x=>x.CreatedDateUtc), new CreateIndexOptions() { Name = "CampaignId", Unique = false });
+            _campaignRepository.Collection.Indexes.CreateOne(Builders<Campaign>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
+            //Campaign history
+            _campaignHistoryRepository.Collection.Indexes.CreateOne(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _campaignHistoryRepository.Collection.Indexes.CreateOne(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.CampaignId).Descending(x=>x.CreatedDateUtc), new CreateIndexOptions() { Name = "CampaignId", Unique = false });
 
             //download
-            _downloadRepository.Collection.Indexes.CreateOneAsync(Builders<Download>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _downloadRepository.Collection.Indexes.CreateOne(Builders<Download>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //giftcard
-            _giftcardRepository.Collection.Indexes.CreateOneAsync(Builders<GiftCard>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _giftcardRepository.Collection.Indexes.CreateOne(Builders<GiftCard>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //private message
-            _privatemessageRepository.Collection.Indexes.CreateOneAsync(Builders<PrivateMessage>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _privatemessageRepository.Collection.Indexes.CreateOne(Builders<PrivateMessage>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
 
             //template
-            _categoryTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<CategoryTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _manufacturerTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<ManufacturerTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _topicTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<TopicTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _categoryTemplateRepository.Collection.Indexes.CreateOne(Builders<CategoryTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _manufacturerTemplateRepository.Collection.Indexes.CreateOne(Builders<ManufacturerTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _topicTemplateRepository.Collection.Indexes.CreateOne(Builders<TopicTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //sheduled
-            _scheduleTaskRepository.Collection.Indexes.CreateOneAsync(Builders<ScheduleTask>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _scheduleTaskRepository.Collection.Indexes.CreateOne(Builders<ScheduleTask>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //reward points
-            _rewardpointshistoryRepository.Collection.Indexes.CreateOneAsync(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _rewardpointshistoryRepository.Collection.Indexes.CreateOneAsync(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
+            _rewardpointshistoryRepository.Collection.Indexes.CreateOne(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _rewardpointshistoryRepository.Collection.Indexes.CreateOne(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
 
             //search term
-            _searchtermRepository.Collection.Indexes.CreateOneAsync(Builders<SearchTerm>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _searchtermRepository.Collection.Indexes.CreateOne(Builders<SearchTerm>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _searchtermRepository.Collection.Indexes.CreateOne(Builders<SearchTerm>.IndexKeys.Descending(x => x.Count), new CreateIndexOptions() { Name = "Count", Unique = false });
 
             //setting
-            _settingRepository.Collection.Indexes.CreateOneAsync(Builders<Setting>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _settingRepository.Collection.Indexes.CreateOne(Builders<Setting>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _settingRepository.Collection.Indexes.CreateOne(Builders<Setting>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name", Unique = false });
 
             //shipment
-            _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.ShipmentNumber), new CreateIndexOptions() { Name = "ShipmentNumber", Unique = true });
-            _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
+            _shipmentRepository.Collection.Indexes.CreateOne(Builders<Shipment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _shipmentRepository.Collection.Indexes.CreateOne(Builders<Shipment>.IndexKeys.Ascending(x => x.ShipmentNumber), new CreateIndexOptions() { Name = "ShipmentNumber", Unique = true });
+            _shipmentRepository.Collection.Indexes.CreateOne(Builders<Shipment>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
 
             //warehouse
-            _warehouseRepository.Collection.Indexes.CreateOneAsync(Builders<Warehouse>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _warehouseRepository.Collection.Indexes.CreateOne(Builders<Warehouse>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //pickup points
-            _pickupPointsRepository.Collection.Indexes.CreateOneAsync(Builders<PickupPoint>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _pickupPointsRepository.Collection.Indexes.CreateOne(Builders<PickupPoint>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //order
-            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
-            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
-            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending("OrderItem.ProductId"), new CreateIndexOptions() { Name = "OrderItemProductId" });
-            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.StoreId).Ascending(x=>x.CustomerId).Ascending(x=>x.Deleted).Descending(x=>x.CreatedOnUtc) , new CreateIndexOptions() { Name = "F1Index", Unique = true });
+            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending(x => x.Id),new CreateIndexOptions() { Name = "Id", Unique = true });
+            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId_1_CreatedOnUtc_-1", Unique = false });
+            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_-1", Unique = false });
+            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
+            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending("OrderItem.ProductId"), new CreateIndexOptions() { Name = "OrderItemProductId" });
 
-            _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.OrderId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true });
+            _orderNoteRepository.Collection.Indexes.CreateOne(Builders<OrderNote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _orderNoteRepository.Collection.Indexes.CreateOne(Builders<OrderNote>.IndexKeys.Ascending(x => x.OrderId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true });
 
             //permision
-            _permissionRepository.Collection.Indexes.CreateOneAsync(Builders<PermissionRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _permissionRepository.Collection.Indexes.CreateOne(Builders<PermissionRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //vendor
-            _vendorRepository.Collection.Indexes.CreateOneAsync(Builders<Vendor>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _vendorRepository.Collection.Indexes.CreateOne(Builders<Vendor>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //externalauth
-            _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
+            _externalAuthenticationRepository.Collection.Indexes.CreateOne(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _externalAuthenticationRepository.Collection.Indexes.CreateOne(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
 
             //return request
-            _returnRequestActionRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _returnRequestReasonRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestReason>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _returnrequestRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _returnrequestRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true });
+            _returnRequestActionRepository.Collection.Indexes.CreateOne(Builders<ReturnRequestAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _returnRequestReasonRepository.Collection.Indexes.CreateOne(Builders<ReturnRequestReason>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _returnrequestRepository.Collection.Indexes.CreateOne(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _returnrequestRepository.Collection.Indexes.CreateOne(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true });
 
             //contactus
-            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
-            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
+            _contactUsRepository.Collection.Indexes.CreateOne(Builders<ContactUs>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _contactUsRepository.Collection.Indexes.CreateOne(Builders<ContactUs>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
+            _contactUsRepository.Collection.Indexes.CreateOne(Builders<ContactUs>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
             //customer action
-            _customerActionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.ActionTypeId), new CreateIndexOptions() { Name = "ActionTypeId", Unique = false });
+            _customerActionType.Collection.Indexes.CreateOne(Builders<CustomerActionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerAction.Collection.Indexes.CreateOne(Builders<CustomerAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerAction.Collection.Indexes.CreateOne(Builders<CustomerAction>.IndexKeys.Ascending(x => x.ActionTypeId), new CreateIndexOptions() { Name = "ActionTypeId", Unique = false });
 
-            _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
+            _customerActionHistory.Collection.Indexes.CreateOne(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerActionHistory.Collection.Indexes.CreateOne(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
             
 
             //banner
-            _banner.Collection.Indexes.CreateOneAsync(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _bannerArchive.Collection.Indexes.CreateOneAsync(Builders<BannerArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _bannerArchive.Collection.Indexes.CreateOneAsync(Builders<BannerArchive>.IndexKeys.Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "CustomerActionId", Unique = false });
+            _banner.Collection.Indexes.CreateOne(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _bannerArchive.Collection.Indexes.CreateOne(Builders<BannerArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _bannerArchive.Collection.Indexes.CreateOne(Builders<BannerArchive>.IndexKeys.Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "CustomerActionId", Unique = false });
 
             //customer reminder
-            _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
+            _customerReminder.Collection.Indexes.CreateOne(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerReminderHistoryRepository.Collection.Indexes.CreateOne(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerReminderHistoryRepository.Collection.Indexes.CreateOne(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
 
         }
 

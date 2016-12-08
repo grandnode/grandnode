@@ -92,7 +92,6 @@ namespace Grand.Services.News
                 query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
                 query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
             }
-            query = query.OrderByDescending(n => n.CreatedOnUtc);
 
             if ((!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations) ||
                     (!ignorAcl && !_catalogSettings.IgnoreAcl))
@@ -112,6 +111,7 @@ namespace Grand.Services.News
                             select p;
                 }
             }
+            query = query.OrderByDescending(n => n.CreatedOnUtc);
 
             var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
             return news;

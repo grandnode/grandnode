@@ -936,34 +936,27 @@ namespace Grand.Services.Catalog
                 //best seller
                 builderSort = Builders<Product>.Sort.Descending(x => x.Sold);
             }
-            else
+
+            var products = new PagedList<Product>();
+            Task taskProduct = Task.Run(() =>
             {
-                //actually this code is not reachable
-                builderSort = Builders<Product>.Sort.Ascending(x => x.Id);
-            }
+                products = new PagedList<Product>(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
 
-           var products = new PagedList<Product>();
-           Task taskProduct = Task.Run(() =>
-           {
-               products = new PagedList<Product>(_productRepository.Collection, filter, builderSort, pageIndex, pageSize);
-
-           });
+            });
 
             if (loadFilterableSpecificationAttributeOptionIds && !_catalogSettings.IgnoreFilterableSpecAttributeOption)
             {
                 IList<string> specyfication = new List<string>();
                 Task t = Task.Run(() =>
                 {
-                    var filterSpec = filter &
-                        builder.Where(x => x.ProductSpecificationAttributes.Any());
-
-                    var taskCount = _productRepository.Collection.CountAsync(filterSpec);
-                    taskCount.Wait();
-                    if ((int)taskCount.Result > 0)
+                    var filterSpecExists = filter &
+                        builder.Where(x => x.ProductSpecificationAttributes.Count > 0);
+                    var productSpec = _productRepository.Collection.Find(filterSpecExists).Limit(1);
+                    if (productSpec!=null)
                     {
                         var qspec = _productRepository.Collection
                         .Aggregate()
-                        .Match(filterSpec)
+                        .Match(filter)
                         .Unwind(x => x.ProductSpecificationAttributes)
                         .Project(new BsonDocument
                          {
@@ -990,8 +983,6 @@ namespace Grand.Services.Catalog
                             var so = item["_id"]["SpecificationAttributeOptionId"].ToString();
                             specyfication.Add(so);
                         }
-
-
                     }
                     
                 });
@@ -1145,7 +1136,7 @@ namespace Grand.Services.Catalog
             int notApprovedRatingSum = 0;
             int approvedTotalReviews = 0;
             int notApprovedTotalReviews = 0;
-            var reviews = _productReviewRepository.Table.Where(x => x.ProductId == product.Id); //product.ProductReviews;
+            var reviews = _productReviewRepository.Table.Where(x => x.ProductId == product.Id); 
             foreach (var pr in reviews)
             {
                 if (pr.IsApproved)

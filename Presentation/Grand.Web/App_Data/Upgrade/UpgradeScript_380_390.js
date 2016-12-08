@@ -87,3 +87,5 @@ db.Product.find({ProductTags:{$exists:true}, $where:'this.ProductTags.length > 0
 		db.Product.save(product);
 	}
 });
+
+print("Update executed");
