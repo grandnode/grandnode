@@ -355,6 +355,11 @@ namespace Grand.Core.Domain.Catalog
         /// Gets or sets the default value to use for Manufacturer page size (for new manufacturers)
         /// </summary>
         public int DefaultManufacturerPageSize { get; set; }
+
+        /// <summary>
+        /// Limit of featured products
+        /// </summary>
+        public int LimitOfFeaturedProducts { get; set; }
         /// <summary>
         /// Gets or sets a list of disabled values of ProductSortingEnum
         /// </summary>

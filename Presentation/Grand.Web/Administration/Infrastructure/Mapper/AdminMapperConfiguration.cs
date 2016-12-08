@@ -931,6 +931,7 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CompareProductsNumber, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultCategoryPageSizeOptions, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultCategoryPageSize, mo => mo.Ignore())
+                    .ForMember(dest => dest.LimitOfFeaturedProducts, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultManufacturerPageSizeOptions, mo => mo.Ignore())
                     .ForMember(dest => dest.DefaultManufacturerPageSize, mo => mo.Ignore())
                     .ForMember(dest => dest.ProductSortingEnumDisabled, mo => mo.Ignore())

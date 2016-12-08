@@ -536,6 +536,7 @@ namespace Grand.Web.Controllers
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
                     featuredProducts = _productService.SearchProducts(
+                       pageSize: _catalogSettings.LimitOfFeaturedProducts, 
                        categoryIds: new List<string> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
@@ -548,6 +549,7 @@ namespace Grand.Web.Controllers
                     //cache indicates that the category has featured products
                     //let's load them
                     featuredProducts = _productService.SearchProducts(
+                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        categoryIds: new List<string> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
@@ -804,6 +806,7 @@ namespace Grand.Web.Controllers
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
                     featuredProducts = _productService.SearchProducts(
+                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
@@ -816,6 +819,7 @@ namespace Grand.Web.Controllers
                     //cache indicates that the manufacturer has featured products
                     //let's load them
                     featuredProducts = _productService.SearchProducts(
+                       pageSize: _catalogSettings.LimitOfFeaturedProducts,
                        manufacturerId: manufacturer.Id,
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,

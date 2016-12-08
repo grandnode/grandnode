@@ -5026,7 +5026,8 @@ namespace Grand.Services.Installation
                 DisplayTaxShippingInfoWishlist = false,
                 DisplayTaxShippingInfoOrderDetailsPage = false,
                 DefaultCategoryPageSizeOptions = "6, 3, 9",
-                DefaultManufacturerPageSize = 6
+                DefaultManufacturerPageSize = 6,
+                LimitOfFeaturedProducts = 30,
             });
 
             settingService.SaveSetting(new LocalizationSettings

@@ -451,6 +451,12 @@ namespace Grand.Services.Installation
             _urlRecordRepository.Collection.Indexes.CreateOne(Builders<UrlRecord>.IndexKeys.Ascending(x => x.EntityId).Ascending(x => x.EntityName).Ascending(x => x.LanguageId).Ascending(x => x.IsActive), new CreateIndexOptions() { Name = "UrlRecord" });
 
             #endregion
+
+            #region Settings
+
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.LimitOfFeaturedProducts", Value = "30" });
+
+            #endregion
         }
 
         private void InstallStringResources(string filenames)
