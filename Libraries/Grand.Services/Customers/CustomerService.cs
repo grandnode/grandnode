@@ -208,8 +208,8 @@ namespace Grand.Services.Customers
                     sctId = (int)sct.Value;
 
                 query = sct.HasValue ?
-                    query.Where(c => c.ShoppingCartItems.Any(x => x.ShoppingCartTypeId == sctId)) :
-                    query.Where(c => c.ShoppingCartItems.Any());
+                    query.Where(c => c.ShoppingCartItems.Count(x => x.ShoppingCartTypeId == sctId) > 0) :
+                    query.Where(c => c.ShoppingCartItems.Count() > 0);
             }
             
             query = query.OrderByDescending(c => c.CreatedOnUtc);
@@ -352,7 +352,7 @@ namespace Grand.Services.Customers
             if (string.IsNullOrWhiteSpace(email))
                 return null;
             var query = from c in _customerRepository.Table
-                        where c.Email != null && c.Email.ToLower() == email.ToLower()
+                        where c.Email == email.ToLower()
                         select c;
             var customer = query.FirstOrDefault();
             return customer;
@@ -386,7 +386,7 @@ namespace Grand.Services.Customers
                 return null;
 
             var query = from c in _customerRepository.Table
-                        where c.Username != null && c.Username.ToLower() == username.ToLower()
+                        where c.Username == username.ToLower()
                         select c;
             var customer = query.FirstOrDefault();
             return customer;
@@ -426,6 +426,12 @@ namespace Grand.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
+            if (!string.IsNullOrEmpty(customer.Email))
+                customer.Email = customer.Email.ToLower();
+
+            if (!string.IsNullOrEmpty(customer.Username))
+                customer.Username = customer.Username.ToLower();
+
             _customerRepository.Insert(customer);
 
             //event notification
@@ -444,12 +450,12 @@ namespace Grand.Services.Customers
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
-                .Set(x => x.Email, customer.Email)
+                .Set(x => x.Email, string.IsNullOrEmpty(customer.Email) ? "" : customer.Email.ToLower())
                 .Set(x => x.PasswordFormatId, customer.PasswordFormatId)
                 .Set(x => x.PasswordSalt, customer.PasswordSalt)
                 .Set(x => x.Active, customer.Active)
                 .Set(x => x.Password, customer.Password)
-                .Set(x => x.Username, customer.Username)
+                .Set(x => x.Username, string.IsNullOrEmpty(customer.Username) ? "" : customer.Username.ToLower())
                 .Set(x => x.Deleted, customer.Deleted);
 
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
@@ -553,14 +559,13 @@ namespace Grand.Services.Customers
                 .Set(x => x.Active, customer.Active)
                 .Set(x => x.AdminComment, customer.AdminComment)
                 .Set(x => x.AffiliateId, customer.AffiliateId)
-                .Set(x => x.Email, customer.Email)
                 .Set(x => x.IsSystemAccount, customer.IsSystemAccount)
                 .Set(x => x.Active, customer.Active)
-                .Set(x => x.Email, customer.Email)
+                .Set(x => x.Email, string.IsNullOrEmpty(customer.Email) ? "" : customer.Email.ToLower())
                 .Set(x => x.IsTaxExempt, customer.IsTaxExempt)
                 .Set(x => x.Password, customer.Password)
                 .Set(x => x.SystemName, customer.SystemName)
-                .Set(x => x.Username, customer.Username)
+                .Set(x => x.Username, string.IsNullOrEmpty(customer.Username) ? "" : customer.Username.ToLower())
                 .Set(x => x.CustomerRoles, customer.CustomerRoles)
                 .Set(x => x.Addresses, customer.Addresses)
                 .Set(x => x.FreeShipping, customer.FreeShipping)

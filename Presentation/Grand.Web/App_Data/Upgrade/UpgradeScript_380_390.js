@@ -88,4 +88,16 @@ db.Product.find({ProductTags:{$exists:true}, $where:'this.ProductTags.length > 0
 	}
 });
 
+//Update email addresses and UserName to lowercase - required changes
+db.Customer.find().forEach(
+  function (e) {
+      if (e.Email != null)
+          e.Email = e.Email.toLowerCase();
+      if (e.Username != null)
+          e.Username = e.Username.toLowerCase();
+      if (e.Email != null || e.Username != null)
+          db.Customer.save(e);
+  }
+)
+
 print("Update executed");

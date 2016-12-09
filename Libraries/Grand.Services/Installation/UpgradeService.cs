@@ -350,6 +350,7 @@ namespace Grand.Services.Installation
             _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Descending(x => x.CreatedOnUtc).Ascending(x => x.Deleted).Ascending("CustomerRoles._id"), new CreateIndexOptions() { Name = "CreatedOnUtc_1_CustomerRoles._id_1", Unique = false });
             _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.LastActivityDateUtc), new CreateIndexOptions() { Name = "LastActivityDateUtc_1", Unique = false });
             _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.CustomerGuid), new CreateIndexOptions() { Name = "CustomerGuid_1", Unique = false });
+            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email_1", Unique = false });
 
 
             //category
