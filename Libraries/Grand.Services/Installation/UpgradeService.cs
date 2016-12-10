@@ -443,8 +443,10 @@ namespace Grand.Services.Installation
             _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId_1_CreatedOnUtc_-1", Unique = false });
             _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_-1", Unique = false });
-            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
-            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending("OrderItem.ProductId"), new CreateIndexOptions() { Name = "OrderItemProductId" });
+            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Descending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
+            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending("OrderItems.ProductId"), new CreateIndexOptions() { Name = "OrderItemsProductId" });
+            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending("OrderItems._id"), new CreateIndexOptions() { Name = "OrderItemId" });
+
 
             //url record
             var _urlRecordRepository = EngineContext.Current.Resolve<IRepository<UrlRecord>>();

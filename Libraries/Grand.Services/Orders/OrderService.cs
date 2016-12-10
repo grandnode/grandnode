@@ -288,8 +288,8 @@ namespace Grand.Services.Orders
 
             lock (_locker)
             {
-                var orderExists = _orderRepository.Table.FirstOrDefault();
-                var orderNumber = orderExists != null ? _orderRepository.Table.Max(x => x.OrderNumber) + 1 : 1;
+                int orderExists = _orderRepository.Table.OrderByDescending(x=>x.OrderNumber).Select(x=>x.OrderNumber).FirstOrDefault();
+                var orderNumber = orderExists != 0 ? orderExists + 1 : 1;
                 order.OrderNumber = orderNumber;
 
                 _orderRepository.Insert(order);

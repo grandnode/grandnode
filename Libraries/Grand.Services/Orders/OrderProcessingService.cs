@@ -1243,8 +1243,6 @@ namespace Grand.Services.Orders
                         VatNumber = details.VatNumber,
                         CreatedOnUtc = DateTime.UtcNow
                     };
-                    _orderService.InsertOrder(order);
-                    result.PlacedOrder = order;
 
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
@@ -1266,15 +1264,6 @@ namespace Grand.Services.Orders
                             decimal scSubTotalExclTax = prices.SubTotalExclTax;
                             decimal discountAmountInclTax = prices.discountAmountInclTax;
                             decimal discountAmountExclTax = prices.discountAmountExclTax;
-
-                            /* old method
-                            decimal scUnitPriceInclTax = _taxService.GetProductPrice(product, scUnitPrice, true, details.Customer, out taxRate);
-                            decimal scUnitPriceExclTax = _taxService.GetProductPrice(product, scUnitPrice, false, details.Customer, out taxRate);
-                            decimal scSubTotalInclTax = _taxService.GetProductPrice(product, scSubTotal, true, details.Customer, out taxRate);
-                            decimal scSubTotalExclTax = _taxService.GetProductPrice(product, scSubTotal, false, details.Customer, out taxRate);
-                            decimal discountAmountInclTax = _taxService.GetProductPrice(product, discountAmount, true, details.Customer, out taxRate);
-                            decimal discountAmountExclTax = _taxService.GetProductPrice(product, discountAmount, false, details.Customer, out taxRate);
-                            */
 
                             foreach (var disc in scDiscounts)
                                 if (!details.AppliedDiscounts.ContainsDiscount(disc))
@@ -1310,7 +1299,7 @@ namespace Grand.Services.Orders
                                 CreatedOnUtc = DateTime.UtcNow,
                             };
                             order.OrderItems.Add(orderItem);
-                            _orderService.UpdateOrder(order);
+
                             _productService.UpdateSold(sc.ProductId, sc.Quantity);
 
                             //gift cards
@@ -1347,6 +1336,10 @@ namespace Grand.Services.Orders
                             _productService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml);
                         }
 
+                        //insert order
+                        _orderService.InsertOrder(order);
+                        result.PlacedOrder = order;
+
                         //clear shopping cart
                         _customerService.ClearShoppingCartItem(details.Customer.Id, processPaymentRequest.StoreId, ShoppingCartType.ShoppingCart);
                         //product also purchased
@@ -1357,11 +1350,11 @@ namespace Grand.Services.Orders
                             details.Customer.IsHasOrders = true;
                             _customerService.UpdateHasOrders(details.Customer.Id);
                         }
-
                     }
                     else
                     {
-                        //recurring payment
+                        #region recurring payment
+
                         var initialOrderItems = details.InitialOrder.OrderItems;
                         foreach (var orderItem in initialOrderItems)
                         {
@@ -1391,7 +1384,6 @@ namespace Grand.Services.Orders
                                 CreatedOnUtc = DateTime.UtcNow,
                             };
                             order.OrderItems.Add(newOrderItem);
-                            _orderService.UpdateOrder(order);
 
                             //gift cards
                             var product = _productService.GetProductById(orderItem.ProductId);
@@ -1427,6 +1419,13 @@ namespace Grand.Services.Orders
                             //inventory
                             _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml);
                         }
+
+                        //insert order
+                        _orderService.InsertOrder(order);
+                        result.PlacedOrder = order;
+
+                        #endregion
+
                     }
 
                     //discount usage history
