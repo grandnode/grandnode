@@ -4231,7 +4231,7 @@ namespace Grand.Services.Installation
                 FirstName = "John",
                 LastName = "Smith",
                 PhoneNumber = "12345678",
-                Email = "admin@yourStore.com",
+                Email = "admin@yourstore.com",
                 FaxNumber = "",
                 Company = "GrandNode LTD",
                 Address1 = "21 West 52nd Street",

@@ -41,9 +41,10 @@ namespace Grand.Core
         }
         public PagedList(IMongoCollection<T> source, FilterDefinition<T> filterdefinition, SortDefinition<T> sortdefinition, int pageIndex, int pageSize)
         {
-            var task = source.CountAsync(filterdefinition);
-            task.Wait();
-            TotalCount = (int)task.Result;
+            var taskCount = source.CountAsync(filterdefinition);
+            AddRange(source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync().Result);
+            taskCount.Wait();
+            TotalCount = (int)taskCount.Result;
             TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
@@ -51,8 +52,7 @@ namespace Grand.Core
 
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
-            this.AddRange(source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync().Result);
-        }               
+        }
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
         {
             Init(source, pageIndex, pageSize, totalCount);
@@ -65,7 +65,11 @@ namespace Grand.Core
             if (pageSize <= 0)
                 throw new ArgumentException("pageSize must be greater than zero");
 
-            TotalCount = totalCount ?? source.Count();
+            var taskCount = source.CountAsync();
+            source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
+            AddRange(source);
+            taskCount.Wait();
+            TotalCount = totalCount ?? (int)taskCount.Result; //source.Count();
             TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
@@ -73,8 +77,6 @@ namespace Grand.Core
 
             PageSize = pageSize;
             PageIndex = pageIndex;
-            source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
-            AddRange(source);
         }
         private void Init(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount = null)
         {

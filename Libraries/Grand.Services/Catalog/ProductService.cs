@@ -947,7 +947,7 @@ namespace Grand.Services.Catalog
             if (loadFilterableSpecificationAttributeOptionIds && !_catalogSettings.IgnoreFilterableSpecAttributeOption)
             {
                 IList<string> specyfication = new List<string>();
-                Task t = Task.Run(() =>
+                Task taskfilterSpec = Task.Run(() =>
                 {
                     var filterSpecExists = filter &
                         builder.Where(x => x.ProductSpecificationAttributes.Count > 0);
@@ -986,7 +986,7 @@ namespace Grand.Services.Catalog
                     }
                     
                 });
-                t.Wait();
+                taskfilterSpec.Wait();
                 filterableSpecificationAttributeOptionIds = specyfication;
             }
 

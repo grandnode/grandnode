@@ -103,7 +103,7 @@ namespace Grand.Web.Controllers
 
             var model = new InstallModel
             {
-                AdminEmail = "admin@yourStore.com",
+                AdminEmail = "admin@yourstore.com",
                 InstallSampleData = false,
                 DatabaseConnectionString = "",
                 DataProvider = "mongodb",
