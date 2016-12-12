@@ -73,7 +73,7 @@ namespace Grand.Services.Seo
             return _securitySettings.ForceSslForAllPages ? "https" : "http";
         }
 
-    /// <summary>
+        /// <summary>
         /// Writes the url location to the writer.
         /// </summary>
         /// <param name="url">Url of indexed location (don't put root url information in).</param>
@@ -138,8 +138,12 @@ namespace Grand.Services.Seo
             {
                 WriteProducts(urlHelper);
             }
+
             //topics
             WriteTopics(urlHelper);
+
+            //custom url
+            WriteCustomUrls();
         }
 
         protected virtual void WriteCategories(UrlHelper urlHelper, string parentCategoryId)
@@ -151,6 +155,18 @@ namespace Grand.Services.Seo
                 WriteUrlLocation(url, UpdateFrequency.Weekly, category.UpdatedOnUtc);
 
                 WriteCategories(urlHelper, category.Id);
+            }
+        }
+
+        protected virtual void WriteCustomUrls()
+        {
+            foreach (var customUrl in _commonSettings.SitemapCustomUrls)
+            {
+                var url = _securitySettings.ForceSslForAllPages
+                    ? _storeContext.CurrentStore.SecureUrl
+                    : _storeContext.CurrentStore.Url;
+                url += customUrl;
+                WriteUrlLocation(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             }
         }
 

@@ -178,19 +178,20 @@ namespace Grand.Services.Installation
 
             #region Settings
 
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.AllowViewUnpublishedProductPage", Value = "true" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts", Value = "true" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.PublishBackProductWhenCancellingOrders", Value = "false" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.NewProductsNumber", Value = "6" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.NewProductsEnabled", Value = "true" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.AjaxProcessAttributeChange", Value = "true" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.DisplayTaxShippingInfoShoppingCart", Value = "false" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CustomerSettings.DateOfBirthRequired", Value = "true" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "MediaSettings.VendorThumbPictureSize", Value = "450" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "StoreInformationSettings.HidePoweredByGrandNode", Value = "false" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "RewardPointsSettings.PointsAccumulatedForAllStores", Value = "true" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "VendorSettings.AllowCustomersToApplyForVendorAccount", Value = "true" });
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "PaymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods", Value = "false" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.AllowViewUnpublishedProductPage", Value = "true", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts", Value = "true", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.PublishBackProductWhenCancellingOrders", Value = "false", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.NewProductsNumber", Value = "6", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.NewProductsEnabled", Value = "true", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.AjaxProcessAttributeChange", Value = "true", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.DisplayTaxShippingInfoShoppingCart", Value = "false", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CustomerSettings.DateOfBirthRequired", Value = "true", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "MediaSettings.VendorThumbPictureSize", Value = "450", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "StoreInformationSettings.HidePoweredByGrandNode", Value = "false", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "RewardPointsSettings.PointsAccumulatedForAllStores", Value = "true", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "VendorSettings.AllowCustomersToApplyForVendorAccount", Value = "true", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "PaymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods", Value = "false", StoreId = "" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CommonSettings.SitemapCustomUrls", Value = "", StoreId = "" });
 
             #endregion
 

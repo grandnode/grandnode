@@ -8,6 +8,7 @@ namespace Grand.Core.Domain.Common
         public CommonSettings()
         {
             IgnoreLogWordlist = new List<string>();
+            SitemapCustomUrls = new List<string>();
         }
         public bool StoreInDatabaseContactUsForm { get; set; }
         public bool SubjectFieldOnContactUsForm { get; set; }
@@ -21,6 +22,11 @@ namespace Grand.Core.Domain.Common
         public bool SitemapIncludeCategories { get; set; }
         public bool SitemapIncludeManufacturers { get; set; }
         public bool SitemapIncludeProducts { get; set; }
+
+        /// <summary>
+        /// A list of custom URLs to be added to sitemap.xml (include page names only)
+        /// </summary>
+        public List<string> SitemapCustomUrls { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display a warning if java-script is disabled
