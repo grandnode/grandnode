@@ -29,5 +29,10 @@ namespace Grand.Core.Domain.Payments
         /// Gets or sets a value indicating whether to show payment method descriptions on checkout pages in the public store
         /// </summary>
         public bool ShowPaymentMethodDescriptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether we should skip 'payment info' page for redirection payment methods
+        /// </summary>
+        public bool SkipPaymentInfoStepForRedirectionPaymentMethods { get; set; }
     }
 }

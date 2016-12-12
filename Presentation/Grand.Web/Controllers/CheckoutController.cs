@@ -1112,7 +1112,9 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentMethod");
 
             //Check whether payment info should be skipped
-            if (paymentMethod.SkipPaymentInfo)
+            if (paymentMethod.SkipPaymentInfo ||
+                    (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection 
+                    && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
@@ -1392,7 +1394,9 @@ namespace Grand.Web.Controllers
         [NonAction]
         protected JsonResult OpcLoadStepAfterPaymentMethod(IPaymentMethod paymentMethod, List<ShoppingCartItem> cart)
         {
-            if (paymentMethod.SkipPaymentInfo)
+            if (paymentMethod.SkipPaymentInfo ||
+                    (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection 
+                    && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();

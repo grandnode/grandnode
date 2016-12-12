@@ -190,6 +190,7 @@ namespace Grand.Services.Installation
             EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "StoreInformationSettings.HidePoweredByGrandNode", Value = "false" });
             EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "RewardPointsSettings.PointsAccumulatedForAllStores", Value = "true" });
             EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "VendorSettings.AllowCustomersToApplyForVendorAccount", Value = "true" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "PaymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods", Value = "false" });
 
             #endregion
 
