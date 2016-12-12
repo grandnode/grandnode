@@ -11080,6 +11080,9 @@ namespace Grand.Services.Installation
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {
+
+            defaultUserEmail = defaultUserEmail.ToLower();
+
             CreateIndexes();
             InstallVersion();
             InstallStores();
