@@ -44,6 +44,9 @@ using Grand.Core.Domain.Affiliates;
 using Grand.Core.Domain.Configuration;
 using Grand.Data;
 using Grand.Services.Tasks;
+using Grand.Services.Security;
+using Grand.Core.Caching;
+using Grand.Services.Events;
 
 namespace Grand.Services.Installation
 {
@@ -134,12 +137,18 @@ namespace Grand.Services.Installation
         private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
-
         private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
+        private readonly IEncryptionService _encryptionService;
+        private readonly ISettingService _settingService;
 
-
+        private ProductAttributeService _productAttributeService;
+        private LocalizationService _localizationService;
+        private PictureService _pictureService;
+        private DownloadService _downloadService;
+        private SecuritySettings _securitySettings;
+        private MediaSettings _mediaSettings;
 
         #endregion
 
@@ -231,7 +240,11 @@ namespace Grand.Services.Installation
             IRepository<RecentlyViewedProduct> recentlyViewedProductRepository,
             IGenericAttributeService genericAttributeService,
             ICustomerActionService customerActionService,
-            IWebHelper webHelper)
+            IWebHelper webHelper,
+            ISettingService settingService,
+            ICacheManager _cacheManager,
+            IEventPublisher _eventPublisher
+            )
         {
             this._versionRepository = versionRepository;
             this._addressRepository = addressRepository;
@@ -319,6 +332,43 @@ namespace Grand.Services.Installation
             this._customerActionService = customerActionService;
             this._banner = banner;
             this._bannerArchive = bannerArchive;
+            this._settingService = settingService;
+
+            _securitySettings = new SecuritySettings
+            {
+                ForceSslForAllPages = false,
+                EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
+                AdminAreaAllowedIpAddresses = null,
+                EnableXsrfProtectionForAdminArea = true,
+                EnableXsrfProtectionForPublicStore = true,
+                HoneypotEnabled = false,
+                HoneypotInputName = "hpinput"
+            };
+            _mediaSettings = new MediaSettings
+            {
+                AvatarPictureSize = 120,
+                ProductThumbPictureSize = 415,
+                ProductDetailsPictureSize = 550,
+                ProductThumbPictureSizeOnProductDetailsPage = 100,
+                AssociatedProductPictureSize = 220,
+                CategoryThumbPictureSize = 450,
+                ManufacturerThumbPictureSize = 420,
+                VendorThumbPictureSize = 450,
+                CartThumbPictureSize = 80,
+                MiniCartThumbPictureSize = 70,
+                AutoCompleteSearchThumbPictureSize = 20,
+                ImageSquarePictureSize = 32,
+                MaximumImageSize = 1980,
+                DefaultPictureZoomEnabled = false,
+                DefaultImageQuality = 80,
+                MultipleThumbDirectories = false
+            };
+
+            this._downloadService = new DownloadService(_downloadRepository, _eventPublisher);
+            this._encryptionService = new EncryptionService(_securitySettings);
+            this._localizationService = new LocalizationService(_cacheManager, null, null, _lsrRepository, null, null, null);
+            this._pictureService = new PictureService(_pictureRepository, _settingService, null, null, _eventPublisher, _mediaSettings);
+            this._productAttributeService = new ProductAttributeService(_cacheManager, _productAttributeRepository, _productRepository, _eventPublisher);
         }
 
         #endregion
@@ -508,8 +558,7 @@ namespace Grand.Services.Installation
             foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/"), "*.grandres.xml", SearchOption.TopDirectoryOnly))
             {
                 var localesXml = File.ReadAllText(filePath);
-                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-                localizationService.ImportResourcesFromXmlInstall(language, localesXml);
+                _localizationService.ImportResourcesFromXmlInstall(language, localesXml);
             }
 
         }
@@ -4214,14 +4263,15 @@ namespace Grand.Services.Installation
 
 
             //admin user
+            string saltKey = _encryptionService.CreateSaltKey(5);
             var adminUser = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
                 Username = defaultUserEmail,
-                Password = defaultUserPassword,
-                PasswordFormat = PasswordFormat.Clear,
-                PasswordSalt = "",
+                Password = _encryptionService.CreatePasswordHash(defaultUserPassword, saltKey, "SHA1"),
+                PasswordFormat = PasswordFormat.Hashed,
+                PasswordSalt = saltKey,
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
@@ -4349,13 +4399,6 @@ namespace Grand.Services.Installation
             };
             _customerActionType.Insert(customerActionType);
 
-        }
-
-        protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
-        {
-            var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
-            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
-                 PasswordFormat.Hashed, defaultUserPassword));
         }
 
         protected virtual void InstallEmailAccounts()
@@ -4829,7 +4872,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var topic in ltopics)
             {
-                var seName = topic.ValidateSeName("", !String.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true);
+                var seName = SeoExtensions.GetSeName((!String.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName), false, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = topic.Id,
@@ -4846,8 +4889,7 @@ namespace Grand.Services.Installation
 
         protected virtual void InstallSettings()
         {
-            var settingService = EngineContext.Current.Resolve<ISettingService>();
-            settingService.SaveSetting(new PdfSettings
+            _settingService.SaveSetting(new PdfSettings
             {
                 LogoPictureId = "",
                 LetterPageSizeEnabled = false,
@@ -4857,7 +4899,7 @@ namespace Grand.Services.Installation
                 InvoiceFooterTextColumn2 = null,
             });
 
-            settingService.SaveSetting(new CommonSettings
+            _settingService.SaveSetting(new CommonSettings
             {
                 StoreInDatabaseContactUsForm = true,
                 UseSystemEmailForContactUsForm = true,
@@ -4876,7 +4918,7 @@ namespace Grand.Services.Installation
                 DeleteGuestTaskOlderThanMinutes = 1440,
             });
 
-            settingService.SaveSetting(new SeoSettings
+            _settingService.SaveSetting(new SeoSettings
             {
                 PageTitleSeparator = ". ",
                 PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
@@ -4949,7 +4991,7 @@ namespace Grand.Services.Installation
                     },
             });
 
-            settingService.SaveSetting(new AdminAreaSettings
+            _settingService.SaveSetting(new AdminAreaSettings
             {
                 DefaultGridPageSize = 15,
                 GridPageSizes = "10, 15, 20, 50, 100",
@@ -4957,7 +4999,7 @@ namespace Grand.Services.Installation
                 RichEditorAllowJavaScript = false
             });
 
-            settingService.SaveSetting(new CatalogSettings
+            _settingService.SaveSetting(new CatalogSettings
             {
                 AllowViewUnpublishedProductPage = true,
                 DisplayDiscontinuedMessageForUnpublishedProducts = true,
@@ -5030,7 +5072,7 @@ namespace Grand.Services.Installation
                 LimitOfFeaturedProducts = 30,
             });
 
-            settingService.SaveSetting(new LocalizationSettings
+            _settingService.SaveSetting(new LocalizationSettings
             {
                 DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                 UseImagesForLanguageSelection = false,
@@ -5042,7 +5084,7 @@ namespace Grand.Services.Installation
                 IgnoreRtlPropertyForAdminArea = false,
             });
 
-            settingService.SaveSetting(new CustomerSettings
+            _settingService.SaveSetting(new CustomerSettings
             {
                 UsernamesEnabled = false,
                 CheckUsernameAvailabilityEnabled = false,
@@ -5090,7 +5132,7 @@ namespace Grand.Services.Installation
                 SuffixDeletedCustomers = false,
             });
 
-            settingService.SaveSetting(new AddressSettings
+            _settingService.SaveSetting(new AddressSettings
             {
                 CompanyEnabled = true,
                 StreetAddressEnabled = true,
@@ -5107,27 +5149,9 @@ namespace Grand.Services.Installation
                 FaxEnabled = true,
             });
 
-            settingService.SaveSetting(new MediaSettings
-            {
-                AvatarPictureSize = 120,
-                ProductThumbPictureSize = 415,
-                ProductDetailsPictureSize = 550,
-                ProductThumbPictureSizeOnProductDetailsPage = 100,
-                AssociatedProductPictureSize = 220,
-                CategoryThumbPictureSize = 450,
-                ManufacturerThumbPictureSize = 420,
-                VendorThumbPictureSize = 450,
-                CartThumbPictureSize = 80,
-                MiniCartThumbPictureSize = 70,
-                AutoCompleteSearchThumbPictureSize = 20,
-                ImageSquarePictureSize = 32,
-                MaximumImageSize = 1980,
-                DefaultPictureZoomEnabled = false,
-                DefaultImageQuality = 80,
-                MultipleThumbDirectories = false
-            });
+            _settingService.SaveSetting(_mediaSettings);
 
-            settingService.SaveSetting(new StoreInformationSettings
+            _settingService.SaveSetting(new StoreInformationSettings
             {
                 StoreClosed = false,
                 DefaultStoreTheme = "GrandNodeTheme",
@@ -5141,13 +5165,13 @@ namespace Grand.Services.Installation
                 HidePoweredByGrandNode = false
             });
 
-            settingService.SaveSetting(new ExternalAuthenticationSettings
+            _settingService.SaveSetting(new ExternalAuthenticationSettings
             {
                 AutoRegisterEnabled = true,
                 RequireEmailValidation = false
             });
 
-            settingService.SaveSetting(new RewardPointsSettings
+            _settingService.SaveSetting(new RewardPointsSettings
             {
                 Enabled = true,
                 ExchangeRate = 1,
@@ -5160,7 +5184,7 @@ namespace Grand.Services.Installation
                 PointsAccumulatedForAllStores = true,
             });
 
-            settingService.SaveSetting(new CurrencySettings
+            _settingService.SaveSetting(new CurrencySettings
             {
                 DisplayCurrencyLabel = false,
                 PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
@@ -5169,13 +5193,13 @@ namespace Grand.Services.Installation
                 AutoUpdateEnabled = false
             });
 
-            settingService.SaveSetting(new MeasureSettings
+            _settingService.SaveSetting(new MeasureSettings
             {
                 BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == "inches").Id,
                 BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == "lb").Id,
             });
 
-            settingService.SaveSetting(new MessageTemplatesSettings
+            _settingService.SaveSetting(new MessageTemplatesSettings
             {
                 CaseInvariantReplacement = false,
                 Color1 = "#b9babe",
@@ -5184,7 +5208,7 @@ namespace Grand.Services.Installation
                 PictureSize = 50,
             });
 
-            settingService.SaveSetting(new ShoppingCartSettings
+            _settingService.SaveSetting(new ShoppingCartSettings
             {
                 DisplayCartAfterAddingProduct = false,
                 DisplayWishlistAfterAddingProduct = false,
@@ -5208,7 +5232,7 @@ namespace Grand.Services.Installation
                 RenderAssociatedAttributeValueQuantity = false
             });
 
-            settingService.SaveSetting(new OrderSettings
+            _settingService.SaveSetting(new OrderSettings
             {
                 IsReOrderAllowed = true,
                 MinOrderSubtotalAmount = 0,
@@ -5231,18 +5255,9 @@ namespace Grand.Services.Installation
                 CompleteOrderWhenDelivered = true
             });
 
-            settingService.SaveSetting(new SecuritySettings
-            {
-                ForceSslForAllPages = false,
-                EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
-                AdminAreaAllowedIpAddresses = null,
-                EnableXsrfProtectionForAdminArea = true,
-                EnableXsrfProtectionForPublicStore = true,
-                HoneypotEnabled = false,
-                HoneypotInputName = "hpinput"
-            });
+            _settingService.SaveSetting(_securitySettings);
 
-            settingService.SaveSetting(new ShippingSettings
+            _settingService.SaveSetting(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
                 ShipToSameAddress = false, 
@@ -5260,7 +5275,7 @@ namespace Grand.Services.Installation
                 UseCubeRootMethod = true
             });
 
-            settingService.SaveSetting(new PaymentSettings
+            _settingService.SaveSetting(new PaymentSettings
             {
                 ActivePaymentMethodSystemNames = new List<string>
                     {
@@ -5274,7 +5289,7 @@ namespace Grand.Services.Installation
                 SkipPaymentInfoStepForRedirectionPaymentMethods = false,
             });
 
-            settingService.SaveSetting(new TaxSettings
+            _settingService.SaveSetting(new TaxSettings
             {
                 TaxBasedOn = TaxBasedOn.BillingAddress,
                 TaxDisplayType = TaxDisplayType.ExcludingTax,
@@ -5302,13 +5317,13 @@ namespace Grand.Services.Installation
                 EuVatEmailAdminWhenNewVatSubmitted = false
             });
 
-            settingService.SaveSetting(new DateTimeSettings
+            _settingService.SaveSetting(new DateTimeSettings
             {
                 DefaultStoreTimeZoneId = "",
                 AllowCustomersToSetTimeZone = false
             });
 
-            settingService.SaveSetting(new BlogSettings
+            _settingService.SaveSetting(new BlogSettings
             {
                 Enabled = true,
                 PostsPageSize = 10,
@@ -5317,7 +5332,7 @@ namespace Grand.Services.Installation
                 NumberOfTags = 15,
                 ShowHeaderRssUrl = false,
             });
-            settingService.SaveSetting(new NewsSettings
+            _settingService.SaveSetting(new NewsSettings
             {
                 Enabled = true,
                 AllowNotRegisteredUsersToLeaveComments = true,
@@ -5328,7 +5343,7 @@ namespace Grand.Services.Installation
                 ShowHeaderRssUrl = false,
             });
 
-            settingService.SaveSetting(new ForumSettings
+            _settingService.SaveSetting(new ForumSettings
             {
                 ForumsEnabled = false,
                 RelativeDateTimeFormattingEnabled = true,
@@ -5365,7 +5380,7 @@ namespace Grand.Services.Installation
                 ForumSearchTermMinimumLength = 3,
             });
 
-            settingService.SaveSetting(new VendorSettings
+            _settingService.SaveSetting(new VendorSettings
             {
                 DefaultVendorPageSizeOptions = "6, 3, 9",
                 VendorsBlockItemsToDisplay = 0,
@@ -5377,17 +5392,17 @@ namespace Grand.Services.Installation
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)
                 throw new Exception("Default email account cannot be loaded");
-            settingService.SaveSetting(new EmailAccountSettings
+            _settingService.SaveSetting(new EmailAccountSettings
             {
                 DefaultEmailAccountId = eaGeneral.Id
             });
 
-            settingService.SaveSetting(new WidgetSettings
+            _settingService.SaveSetting(new WidgetSettings
             {
                 ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" },
             });
 
-            settingService.SaveSetting(new GoogleAnalyticsSettings()
+            _settingService.SaveSetting(new GoogleAnalyticsSettings()
             {
                 gaprivateKey = "",
                 gaserviceAccountEmail = "",
@@ -5587,11 +5602,8 @@ namespace Grand.Services.Installation
 
         protected virtual void InstallCategories()
         {
-            //pictures
-            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+            //sample pictures
             var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
-
-
 
             var categoryTemplateInGridAndLines = _categoryTemplateRepository
                 .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -5609,7 +5621,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = "",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Computers")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -5626,7 +5638,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Desktops")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Desktops")).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5644,7 +5656,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Notebooks")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Notebooks")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5661,7 +5673,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Software")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Software")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 3,
@@ -5678,7 +5690,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Electronics")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5696,7 +5708,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Camera, photo")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Camera, photo")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5714,7 +5726,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Cell phones")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Cell phones")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5731,7 +5743,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Accessories")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Accessories")).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -5749,7 +5761,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Apparel")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5767,7 +5779,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Shoes")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Shoes")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5785,7 +5797,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Clothing")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Clothing")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5802,7 +5814,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apparel Accessories")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Apparel Accessories")).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -5820,7 +5832,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Digital downloads")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5840,7 +5852,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Book")).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5858,7 +5870,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Jewelry")).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5876,7 +5888,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Gift Cards")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Gift Cards")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 7,
@@ -5889,7 +5901,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var category in allCategories)
             {
-                category.SeName = category.ValidateSeName("", category.Name, true);
+                category.SeName = SeoExtensions.GetSeName(category.Name, false, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = category.Id,
@@ -5904,7 +5916,6 @@ namespace Grand.Services.Installation
 
         protected virtual void InstallManufacturers()
         {
-            var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
             var manufacturerTemplateInGridAndLines =
@@ -5921,7 +5932,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apple")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Apple")).Id,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5938,7 +5949,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Hp")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Hp")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5955,7 +5966,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Nike")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Nike")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5966,7 +5977,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var manufacturer in allManufacturers)
             {
-                manufacturer.SeName = manufacturer.ValidateSeName("", manufacturer.Name, true);
+                manufacturer.SeName = SeoExtensions.GetSeName(manufacturer.Name, false, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = manufacturer.Id,
@@ -5999,11 +6010,9 @@ namespace Grand.Services.Installation
                 throw new Exception("Cannot load default customer");
 
             //pictures
-            var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
             //downloads
-            var downloadService = EngineContext.Current.Resolve<IDownloadService>();
             var sampleDownloadsPath = CommonHelper.MapPath("~/content/samples/");
 
             //default store
@@ -6189,8 +6198,8 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productBuildComputer);
 
-            var Picture1 = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
-            var Picture2 = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture1 = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture2 = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBuildComputer.Name));
 
             _productRepository.Insert(productBuildComputer);
 
@@ -6250,7 +6259,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productDigitalStorm);
             productDigitalStorm.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productDigitalStorm.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productDigitalStorm);
@@ -6295,7 +6304,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productLenovoIdeaCentre);
             productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLenovoIdeaCentre);
@@ -6382,12 +6391,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productAppleMacBookPro);
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
                 DisplayOrder = 1,
             });
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productAppleMacBookPro);
@@ -6468,7 +6477,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productAsusN551JK);
             productAsusN551JK.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAsusN551JK.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAsusN551JK);
@@ -6549,7 +6558,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productSamsungSeries);
             productSamsungSeries.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productSamsungSeries.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSamsungSeries);
@@ -6637,12 +6646,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productHpSpectre);
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
                 DisplayOrder = 1,
             });
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHpSpectre);
@@ -6731,7 +6740,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productHpEnvy);
             productHpEnvy.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHpEnvy.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHpEnvy);
@@ -6796,7 +6805,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productLenovoThinkpad);
             productLenovoThinkpad.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productLenovoThinkpad.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLenovoThinkpad);
@@ -6846,7 +6855,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productAdobePhotoshop);
             productAdobePhotoshop.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAdobePhotoshop.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAdobePhotoshop);
@@ -6892,7 +6901,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productWindows8Pro);
             productWindows8Pro.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productWindows8Pro.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productWindows8Pro);
@@ -6938,7 +6947,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productSoundForge);
             productSoundForge.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productSoundForge.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSoundForge);
@@ -6990,12 +6999,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikonD5500DSLR);
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
                 DisplayOrder = 1,
             });
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productNikonD5500DSLR);
@@ -7030,7 +7039,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikonD5500DSLR_associated_1);
             productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_1);
@@ -7065,7 +7074,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikonD5500DSLR_associated_2);
             productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_2);
@@ -7110,7 +7119,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productLeica);
             productLeica.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productLeica.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLeica);
@@ -7164,7 +7173,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productAppleICam);
             productAppleICam.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAppleICam.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAppleICam);
@@ -7215,7 +7224,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productHtcOne);
             productHtcOne.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHtcOne.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHtcOne);
@@ -7261,12 +7270,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productHtcOneMini);
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
                 DisplayOrder = 1,
             });
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHtcOneMini);
@@ -7312,7 +7321,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNokiaLumia);
             productNokiaLumia.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productNokiaLumia.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNokiaLumia);
@@ -7387,12 +7396,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productBeatsPill);
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
                 DisplayOrder = 1,
             });
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productBeatsPill);
@@ -7438,7 +7447,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productUniversalTabletCover);
             productUniversalTabletCover.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productUniversalTabletCover.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productUniversalTabletCover);
@@ -7484,7 +7493,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productPortableSoundSpeakers);
             productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPortableSoundSpeakers);
@@ -7600,12 +7609,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikeFloral);
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
                 DisplayOrder = 1,
             });
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productNikeFloral);
@@ -7718,24 +7727,24 @@ namespace Grand.Services.Installation
             allProducts.Add(productAdidas);
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 1,
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 2,
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 3,
             });
 
 
             _productRepository.Insert(productAdidas);
 
-            var productAttribute = EngineContext.Current.Resolve<IProductAttributeService>().GetAllProductAttributes().Where(x => x.Name == "Color").FirstOrDefault();
+            var productAttribute = _productAttributeService.GetAllProductAttributes().Where(x => x.Name == "Color").FirstOrDefault();
 
             productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Red").First().PictureId = productAdidas.ProductPictures.ElementAt(0).PictureId;
             productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
@@ -7791,7 +7800,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikeZoom);
             productNikeZoom.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productNikeZoom.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikeZoom);
@@ -7898,7 +7907,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikeTailwind);
             productNikeTailwind.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productNikeTailwind.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikeTailwind);
@@ -7962,7 +7971,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productOversizedWomenTShirt);
             productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productOversizedWomenTShirt);
@@ -8018,7 +8027,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productCustomTShirt);
             productCustomTShirt.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productCustomTShirt.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCustomTShirt);
@@ -8085,12 +8094,12 @@ namespace Grand.Services.Installation
 
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
                 DisplayOrder = 1,
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productLeviJeans);
@@ -8177,7 +8186,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productObeyHat);
             productObeyHat.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productObeyHat.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productObeyHat);
@@ -8224,7 +8233,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productBelt);
             productBelt.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBelt.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBelt);
@@ -8271,7 +8280,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productSunglasses);
             productSunglasses.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productSunglasses.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSunglasses);
@@ -8290,7 +8299,7 @@ namespace Grand.Services.Installation
                 Filename = "Night_Vision_1",
                 IsNew = true,
             };
-            downloadService.InsertDownload(downloadNightVision1);
+            _downloadService.InsertDownload(downloadNightVision1);
             var downloadNightVision2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8300,7 +8309,7 @@ namespace Grand.Services.Installation
                 Filename = "Night_Vision_1",
                 IsNew = true,
             };
-            downloadService.InsertDownload(downloadNightVision2);
+            _downloadService.InsertDownload(downloadNightVision2);
             var productNightVision = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -8343,7 +8352,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNightVision);
             productNightVision.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productNightVision.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNightVision);
@@ -8359,7 +8368,7 @@ namespace Grand.Services.Installation
                 Filename = "If_You_Wait_1",
                 IsNew = true,
             };
-            downloadService.InsertDownload(downloadIfYouWait1);
+            _downloadService.InsertDownload(downloadIfYouWait1);
             var downloadIfYouWait2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8369,7 +8378,7 @@ namespace Grand.Services.Installation
                 Filename = "If_You_Wait_1",
                 IsNew = true,
             };
-            downloadService.InsertDownload(downloadIfYouWait2);
+            _downloadService.InsertDownload(downloadIfYouWait2);
             var productIfYouWait = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -8413,7 +8422,7 @@ namespace Grand.Services.Installation
 
             productIfYouWait.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productIfYouWait.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productIfYouWait);
@@ -8428,7 +8437,7 @@ namespace Grand.Services.Installation
                 Filename = "Science_And_Faith",
                 IsNew = true,
             };
-            downloadService.InsertDownload(downloadScienceAndFaith);
+            _downloadService.InsertDownload(downloadScienceAndFaith);
             var productScienceAndFaith = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -8469,7 +8478,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productScienceAndFaith);
             productScienceAndFaith.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productScienceAndFaith.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productScienceAndFaith);
@@ -8522,7 +8531,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productFahrenheit);
             productFahrenheit.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productFahrenheit.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFahrenheit);
@@ -8570,7 +8579,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productFirstPrizePies);
             productFirstPrizePies.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productFirstPrizePies.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFirstPrizePies);
@@ -8616,7 +8625,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productPrideAndPrejudice);
             productPrideAndPrejudice.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productPrideAndPrejudice.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPrideAndPrejudice);
@@ -8668,7 +8677,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productElegantGemstoneNecklace);
             productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productElegantGemstoneNecklace);
@@ -8715,7 +8724,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productFlowerGirlBracelet);
             productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFlowerGirlBracelet);
@@ -8761,7 +8770,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productEngagementRing);
             productEngagementRing.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productEngagementRing.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productEngagementRing);
@@ -8807,7 +8816,7 @@ namespace Grand.Services.Installation
             allProducts.Add(product25GiftCard);
             product25GiftCard.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(product25GiftCard.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product25GiftCard);
@@ -8854,7 +8863,7 @@ namespace Grand.Services.Installation
             allProducts.Add(product50GiftCard);
             product50GiftCard.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(product50GiftCard.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product50GiftCard);
@@ -8899,7 +8908,7 @@ namespace Grand.Services.Installation
             allProducts.Add(product100GiftCard);
             product100GiftCard.ProductPictures.Add(new ProductPicture
             {
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name)).Id,
+                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(product100GiftCard.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product100GiftCard);
@@ -8909,7 +8918,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var product in allProducts)
             {
-                product.SeName = product.ValidateSeName("", product.Name, true);
+                product.SeName = SeoExtensions.GetSeName(product.Name, false, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = product.Id,
@@ -9441,7 +9450,6 @@ namespace Grand.Services.Installation
 
             #endregion
 
-
             #region Product Tags
 
             //product tags
@@ -9692,7 +9700,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var blogPost in blogPosts)
             {
-                var seName = blogPost.ValidateSeName("", blogPost.Title, true);
+                var seName = SeoExtensions.GetSeName(blogPost.Title, false, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = blogPost.Id,
@@ -9736,14 +9744,14 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var blogPost in blogPosts)
             {
-                blogPost.SeName = blogPost.ValidateSeName("", blogPost.Title, true);
+                blogPost.SeName = SeoExtensions.GetSeName(blogPost.Title, false, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = blogPost.Id,
                     EntityName = "BlogPost",
                     LanguageId = "",
                     IsActive = true,
-                    Slug = blogPost.ValidateSeName("", blogPost.Title, true)
+                    Slug = blogPost.SeName
                 });
                 _blogPostRepository.Update(blogPost);
             }
@@ -9788,7 +9796,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var newsItem in news)
             {
-                newsItem.SeName = newsItem.ValidateSeName("", newsItem.Title, true);
+                newsItem.SeName = SeoExtensions.GetSeName(newsItem.Title, false, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = newsItem.Id,
@@ -10732,7 +10740,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var vendor in vendors)
             {
-                var seName = vendor.ValidateSeName(vendor.SeName, vendor.Name, true);
+                var seName = SeoExtensions.GetSeName(vendor.Name, false, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = vendor.Id,
@@ -10793,283 +10801,283 @@ namespace Grand.Services.Installation
 
         private void CreateIndexes()
         {
-            _versionRepository.Collection.Indexes.CreateOne(Builders<GrandNodeVersion>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _versionRepository.Collection.Indexes.CreateOneAsync(Builders<GrandNodeVersion>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             //Store
-            _storeRepository.Collection.Indexes.CreateOne(Builders<Store>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _storeRepository.Collection.Indexes.CreateOne(Builders<Store>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _storeRepository.Collection.Indexes.CreateOneAsync(Builders<Store>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _storeRepository.Collection.Indexes.CreateOneAsync(Builders<Store>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
 
             //measure
-            _measureDimensionRepository.Collection.Indexes.CreateOne(Builders<MeasureDimension>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _measureWeightRepository.Collection.Indexes.CreateOne(Builders<MeasureWeight>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _measureUnitRepository.Collection.Indexes.CreateOne(Builders<MeasureUnit>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _measureDimensionRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureDimension>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _measureWeightRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureWeight>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _measureUnitRepository.Collection.Indexes.CreateOneAsync(Builders<MeasureUnit>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //TaxCategory
-            _taxCategoryRepository.Collection.Indexes.CreateOne(Builders<TaxCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _taxCategoryRepository.Collection.Indexes.CreateOneAsync(Builders<TaxCategory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //Language
-            _languageRepository.Collection.Indexes.CreateOne(Builders<Language>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _lsrRepository.Collection.Indexes.CreateOne(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _lsrRepository.Collection.Indexes.CreateOne(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId), new CreateIndexOptions() { Name = "Language" });
-            _lsrRepository.Collection.Indexes.CreateOne(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "ResourceName" });
+            _languageRepository.Collection.Indexes.CreateOneAsync(Builders<Language>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId), new CreateIndexOptions() { Name = "Language" });
+            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "ResourceName" });
 
             //Currency
-            _currencyRepository.Collection.Indexes.CreateOne(Builders<Currency>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _currencyRepository.Collection.Indexes.CreateOneAsync(Builders<Currency>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //customer
-            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Descending(x => x.CreatedOnUtc).Ascending(x=>x.Deleted).Ascending("CustomerRoles._id"), new CreateIndexOptions() { Name = "CreatedOnUtc_1_CustomerRoles._id_1", Unique = false });
-            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.LastActivityDateUtc), new CreateIndexOptions() { Name = "LastActivityDateUtc_1", Unique = false });
-            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.CustomerGuid), new CreateIndexOptions() { Name = "CustomerGuid_1", Unique = false });
-            _customerRepository.Collection.Indexes.CreateOne(Builders<Customer>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email_1", Unique = false });
+            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Descending(x => x.CreatedOnUtc).Ascending(x=>x.Deleted).Ascending("CustomerRoles._id"), new CreateIndexOptions() { Name = "CreatedOnUtc_1_CustomerRoles._id_1", Unique = false });
+            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.LastActivityDateUtc), new CreateIndexOptions() { Name = "LastActivityDateUtc_1", Unique = false });
+            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.CustomerGuid), new CreateIndexOptions() { Name = "CustomerGuid_1", Unique = false });
+            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email_1", Unique = false });
 
             //customer role
-            _customerRoleRepository.Collection.Indexes.CreateOne(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerRoleProductRepository.Collection.Indexes.CreateOne(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerRoleProductRepository.Collection.Indexes.CreateOne(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x=>x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
+            _customerRoleRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x=>x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
 
             //address
-            _addressRepository.Collection.Indexes.CreateOne(Builders<Address>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _addressRepository.Collection.Indexes.CreateOneAsync(Builders<Address>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //specificationAttribute
-            _specificationAttributeRepository.Collection.Indexes.CreateOne(Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _specificationAttributeRepository.Collection.Indexes.CreateOne(Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _specificationAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _specificationAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<SpecificationAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
 
             //checkoutAttribute
-            _checkoutAttributeRepository.Collection.Indexes.CreateOne(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _checkoutAttributeRepository.Collection.Indexes.CreateOne(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _checkoutAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _checkoutAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<CheckoutAttribute>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
 
             //productAttribute
-            _productAttributeRepository.Collection.Indexes.CreateOne(Builders<ProductAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productAttributeRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAttribute>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //category
-            _categoryRepository.Collection.Indexes.CreateOne(Builders<Category>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _categoryRepository.Collection.Indexes.CreateOne(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
-            _categoryRepository.Collection.Indexes.CreateOne(Builders<Category>.IndexKeys.Ascending(x => x.ParentCategoryId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentCategoryId_1_DisplayOrder_1", Unique = false });
+            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
+            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.ParentCategoryId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentCategoryId_1_DisplayOrder_1", Unique = false });
 
             //manufacturer
-            _manufacturerRepository.Collection.Indexes.CreateOne(Builders<Manufacturer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _manufacturerRepository.Collection.Indexes.CreateOne(Builders<Manufacturer>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
-            _manufacturerRepository.Collection.Indexes.CreateOne(Builders<Manufacturer>.IndexKeys.Ascending("AppliedDiscounts"), new CreateIndexOptions() { Name = "AppliedDiscounts._id_1", Unique = false });
+            _manufacturerRepository.Collection.Indexes.CreateOneAsync(Builders<Manufacturer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _manufacturerRepository.Collection.Indexes.CreateOneAsync(Builders<Manufacturer>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
+            _manufacturerRepository.Collection.Indexes.CreateOneAsync(Builders<Manufacturer>.IndexKeys.Ascending("AppliedDiscounts"), new CreateIndexOptions() { Name = "AppliedDiscounts._id_1", Unique = false });
 
 
             //Product
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.MarkAsNew).Ascending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "MarkAsNew_1_CreatedOnUtc_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.ShowOnHomePage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ShowOnHomePage_1_Published_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.ParentGroupedProductId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentGroupedProductId_1_DisplayOrder_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.ProductTags).Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductTags._id_1_Name_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.MarkAsNew).Ascending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "MarkAsNew_1_CreatedOnUtc_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.ShowOnHomePage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ShowOnHomePage_1_Published_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.ParentGroupedProductId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentGroupedProductId_1_DisplayOrder_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.ProductTags).Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductTags._id_1_Name_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name_1", Unique = false });
 
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("ProductCategories.DisplayOrder"), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_DisplayOrder_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x=>x.Published).Ascending(x=>x.VisibleIndividually).Ascending(x=>x.DisplayOrderCategory), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_OrderCategory_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Name_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Sold), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Sold_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Price), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Price_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("ProductCategories.IsFeaturedProduct").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_IsFeaturedProduct_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("ProductCategories.DisplayOrder"), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_DisplayOrder_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x=>x.Published).Ascending(x=>x.VisibleIndividually).Ascending(x=>x.DisplayOrderCategory), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_OrderCategory_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Name_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Sold), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Sold_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Price), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Price_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("ProductCategories.IsFeaturedProduct").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_IsFeaturedProduct_1", Unique = false });
 
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.DisplayOrderManufacturer), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_OrderCategory_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Name_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Sold), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Sold_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Price), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Price_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending("ProductManufacturers.IsFeaturedProduct").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_IsFeaturedProduct_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.DisplayOrderManufacturer), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_OrderCategory_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Name_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Sold), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Sold_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Price), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_Price_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductManufacturers.ManufacturerId").Ascending("ProductManufacturers.IsFeaturedProduct").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually), new CreateIndexOptions() { Name = "ProductManufacturers.ManufacturerId_1_IsFeaturedProduct_1", Unique = false });
 
-            _productRepository.Collection.Indexes.CreateOne(Builders<Product>.IndexKeys.Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending("ProductSpecificationAttributes.SpecificationAttributeOptionId").Ascending("ProductSpecificationAttributes.AllowFiltering"), new CreateIndexOptions() { Name = "ProductSpecificationAttributes", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending("ProductSpecificationAttributes.SpecificationAttributeOptionId").Ascending("ProductSpecificationAttributes.AllowFiltering"), new CreateIndexOptions() { Name = "ProductSpecificationAttributes", Unique = false });
 
 
             //ProductReview
-            _productReviewRepository.Collection.Indexes.CreateOne(Builders<ProductReview>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productReviewRepository.Collection.Indexes.CreateOne(Builders<ProductReview>.IndexKeys.Ascending(x => x.ProductId).Ascending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "ProductId", Unique = false });
+            _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.ProductId).Ascending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "ProductId", Unique = false });
             
             //Picture
-            _pictureRepository.Collection.Indexes.CreateOne(Builders<Picture>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _pictureRepository.Collection.Indexes.CreateOneAsync(Builders<Picture>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //ProductTag
-            _productTagRepository.Collection.Indexes.CreateOne(Builders<ProductTag>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productTagRepository.Collection.Indexes.CreateOneAsync(Builders<ProductTag>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //ProductTemplate
-            _productTemplateRepository.Collection.Indexes.CreateOne(Builders<ProductTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<ProductTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //Recently Viewed Products
-            _recentlyViewedProductRepository.Collection.Indexes.CreateOne(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _recentlyViewedProductRepository.Collection.Indexes.CreateOne(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId.ProductId" });
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId.ProductId" });
 
             //Product also purchased
-            _productalsopurchasedRepository.Collection.Indexes.CreateOne(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productalsopurchasedRepository.Collection.Indexes.CreateOne(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "ProductId", Unique = false, Background = true });
+            _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "ProductId", Unique = false, Background = true });
 
             //url record
-            _urlRecordRepository.Collection.Indexes.CreateOne(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _urlRecordRepository.Collection.Indexes.CreateOne(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Slug).Ascending(x=>x.IsActive), new CreateIndexOptions() { Name = "Slug" });
-            _urlRecordRepository.Collection.Indexes.CreateOne(Builders<UrlRecord>.IndexKeys.Ascending(x => x.EntityId).Ascending(x=>x.EntityName).Ascending(x=>x.LanguageId).Ascending(x=>x.IsActive), new CreateIndexOptions() { Name = "UrlRecord" });
+            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Slug).Ascending(x=>x.IsActive), new CreateIndexOptions() { Name = "Slug" });
+            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.EntityId).Ascending(x=>x.EntityName).Ascending(x=>x.LanguageId).Ascending(x=>x.IsActive), new CreateIndexOptions() { Name = "UrlRecord" });
 
             //email
-            _emailAccountRepository.Collection.Indexes.CreateOne(Builders<EmailAccount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _queuedemailRepository.Collection.Indexes.CreateOne(Builders<QueuedEmail>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _emailAccountRepository.Collection.Indexes.CreateOneAsync(Builders<EmailAccount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _queuedemailRepository.Collection.Indexes.CreateOneAsync(Builders<QueuedEmail>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //message template
-            _messageTemplateRepository.Collection.Indexes.CreateOne(Builders<MessageTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _messageTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<MessageTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //forum
-            _forumGroupRepository.Collection.Indexes.CreateOne(Builders<ForumGroup>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumRepository.Collection.Indexes.CreateOne(Builders<Forum>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumpostRepository.Collection.Indexes.CreateOne(Builders<ForumPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumtopicRepository.Collection.Indexes.CreateOne(Builders<ForumTopic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumsubscriptionRepository.Collection.Indexes.CreateOne(Builders<ForumSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumPostVote.Collection.Indexes.CreateOne(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumPostVote.Collection.Indexes.CreateOne(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x=>x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
+            _forumGroupRepository.Collection.Indexes.CreateOneAsync(Builders<ForumGroup>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumRepository.Collection.Indexes.CreateOneAsync(Builders<Forum>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumpostRepository.Collection.Indexes.CreateOneAsync(Builders<ForumPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumtopicRepository.Collection.Indexes.CreateOneAsync(Builders<ForumTopic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumsubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<ForumSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x=>x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
 
             // Country and Stateprovince
-            _countryRepository.Collection.Indexes.CreateOne(Builders<Country>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _countryRepository.Collection.Indexes.CreateOne(Builders<Country>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
-            _stateProvinceRepository.Collection.Indexes.CreateOne(Builders<StateProvince>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _stateProvinceRepository.Collection.Indexes.CreateOne(Builders<StateProvince>.IndexKeys.Ascending(x => x.CountryId).Ascending(x => x.DisplayOrder).Ascending(x => x.Id), new CreateIndexOptions() { Name = "Country" });
+            _countryRepository.Collection.Indexes.CreateOneAsync(Builders<Country>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _countryRepository.Collection.Indexes.CreateOneAsync(Builders<Country>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder" });
+            _stateProvinceRepository.Collection.Indexes.CreateOneAsync(Builders<StateProvince>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _stateProvinceRepository.Collection.Indexes.CreateOneAsync(Builders<StateProvince>.IndexKeys.Ascending(x => x.CountryId).Ascending(x => x.DisplayOrder).Ascending(x => x.Id), new CreateIndexOptions() { Name = "Country" });
 
             //discount
-            _discountRepository.Collection.Indexes.CreateOne(Builders<Discount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _discountusageRepository.Collection.Indexes.CreateOne(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _discountusageRepository.Collection.Indexes.CreateOne(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
-            _discountusageRepository.Collection.Indexes.CreateOne(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });
-            _discountusageRepository.Collection.Indexes.CreateOne(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
+            _discountRepository.Collection.Indexes.CreateOneAsync(Builders<Discount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
+            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.DiscountId), new CreateIndexOptions() { Name = "DiscountId" });
+            _discountusageRepository.Collection.Indexes.CreateOneAsync(Builders<DiscountUsageHistory>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
 
 
             //blog
-            _blogPostRepository.Collection.Indexes.CreateOne(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _blogcommentRepository.Collection.Indexes.CreateOne(Builders<BlogComment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _blogpostRepository.Collection.Indexes.CreateOne(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _blogPostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _blogcommentRepository.Collection.Indexes.CreateOneAsync(Builders<BlogComment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _blogpostRepository.Collection.Indexes.CreateOneAsync(Builders<BlogPost>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //topic
-            _topicRepository.Collection.Indexes.CreateOne(Builders<Topic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _topicRepository.Collection.Indexes.CreateOne(Builders<Topic>.IndexKeys.Ascending(x => x.SystemName), new CreateIndexOptions() { Name = "SystemName", Unique = false });
+            _topicRepository.Collection.Indexes.CreateOneAsync(Builders<Topic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _topicRepository.Collection.Indexes.CreateOneAsync(Builders<Topic>.IndexKeys.Ascending(x => x.SystemName), new CreateIndexOptions() { Name = "SystemName", Unique = false });
 
             //news
-            _newsItemRepository.Collection.Indexes.CreateOne(Builders<NewsItem>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _newsItemRepository.Collection.Indexes.CreateOne(Builders<NewsItem>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
+            _newsItemRepository.Collection.Indexes.CreateOneAsync(Builders<NewsItem>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _newsItemRepository.Collection.Indexes.CreateOneAsync(Builders<NewsItem>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
             //newsletter
-            _newslettersubscriptionRepository.Collection.Indexes.CreateOne(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _newslettersubscriptionRepository.Collection.Indexes.CreateOne(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
-            _newslettersubscriptionRepository.Collection.Indexes.CreateOne(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
+            _newslettersubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _newslettersubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
+            _newslettersubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<NewsLetterSubscription>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
 
             //poll
-            _pollRepository.Collection.Indexes.CreateOne(Builders<Poll>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _pollRepository.Collection.Indexes.CreateOneAsync(Builders<Poll>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //shipping method
-            _shippingMethodRepository.Collection.Indexes.CreateOne(Builders<ShippingMethod>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _shippingMethodRepository.Collection.Indexes.CreateOneAsync(Builders<ShippingMethod>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //delivery date
-            _deliveryDateRepository.Collection.Indexes.CreateOne(Builders<DeliveryDate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _deliveryDateRepository.Collection.Indexes.CreateOneAsync(Builders<DeliveryDate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             // Activity log type
-            _activityLogTypeRepository.Collection.Indexes.CreateOne(Builders<ActivityLogType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _activityLogTypeRepository.Collection.Indexes.CreateOneAsync(Builders<ActivityLogType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             // Activity log 
-            _activityLogRepository.Collection.Indexes.CreateOne(Builders<ActivityLog>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _activityLogRepository.Collection.Indexes.CreateOneAsync(Builders<ActivityLog>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //Log
-            _logRepository.Collection.Indexes.CreateOne(Builders<Log>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _logRepository.Collection.Indexes.CreateOne(Builders<Log>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
+            _logRepository.Collection.Indexes.CreateOneAsync(Builders<Log>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _logRepository.Collection.Indexes.CreateOneAsync(Builders<Log>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
             //Affiliate
-            _affiliateRepository.Collection.Indexes.CreateOne(Builders<Affiliate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _affiliateRepository.Collection.Indexes.CreateOneAsync(Builders<Affiliate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //Campaign
-            _campaignRepository.Collection.Indexes.CreateOne(Builders<Campaign>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _campaignRepository.Collection.Indexes.CreateOneAsync(Builders<Campaign>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //Campaign history
-            _campaignHistoryRepository.Collection.Indexes.CreateOne(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _campaignHistoryRepository.Collection.Indexes.CreateOne(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.CampaignId).Descending(x=>x.CreatedDateUtc), new CreateIndexOptions() { Name = "CampaignId", Unique = false });
+            _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.CampaignId).Descending(x=>x.CreatedDateUtc), new CreateIndexOptions() { Name = "CampaignId", Unique = false });
 
             //download
-            _downloadRepository.Collection.Indexes.CreateOne(Builders<Download>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _downloadRepository.Collection.Indexes.CreateOneAsync(Builders<Download>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //giftcard
-            _giftcardRepository.Collection.Indexes.CreateOne(Builders<GiftCard>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _giftcardRepository.Collection.Indexes.CreateOneAsync(Builders<GiftCard>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //private message
-            _privatemessageRepository.Collection.Indexes.CreateOne(Builders<PrivateMessage>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _privatemessageRepository.Collection.Indexes.CreateOneAsync(Builders<PrivateMessage>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
 
             //template
-            _categoryTemplateRepository.Collection.Indexes.CreateOne(Builders<CategoryTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _manufacturerTemplateRepository.Collection.Indexes.CreateOne(Builders<ManufacturerTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _topicTemplateRepository.Collection.Indexes.CreateOne(Builders<TopicTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _categoryTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<CategoryTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _manufacturerTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<ManufacturerTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _topicTemplateRepository.Collection.Indexes.CreateOneAsync(Builders<TopicTemplate>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //sheduled
-            _scheduleTaskRepository.Collection.Indexes.CreateOne(Builders<ScheduleTask>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _scheduleTaskRepository.Collection.Indexes.CreateOneAsync(Builders<ScheduleTask>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //reward points
-            _rewardpointshistoryRepository.Collection.Indexes.CreateOne(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _rewardpointshistoryRepository.Collection.Indexes.CreateOne(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
+            _rewardpointshistoryRepository.Collection.Indexes.CreateOneAsync(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _rewardpointshistoryRepository.Collection.Indexes.CreateOneAsync(Builders<RewardPointsHistory>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
 
             //search term
-            _searchtermRepository.Collection.Indexes.CreateOne(Builders<SearchTerm>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _searchtermRepository.Collection.Indexes.CreateOne(Builders<SearchTerm>.IndexKeys.Descending(x => x.Count), new CreateIndexOptions() { Name = "Count", Unique = false });
+            _searchtermRepository.Collection.Indexes.CreateOneAsync(Builders<SearchTerm>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _searchtermRepository.Collection.Indexes.CreateOneAsync(Builders<SearchTerm>.IndexKeys.Descending(x => x.Count), new CreateIndexOptions() { Name = "Count", Unique = false });
 
             //setting
-            _settingRepository.Collection.Indexes.CreateOne(Builders<Setting>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _settingRepository.Collection.Indexes.CreateOne(Builders<Setting>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name", Unique = false });
+            _settingRepository.Collection.Indexes.CreateOneAsync(Builders<Setting>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _settingRepository.Collection.Indexes.CreateOneAsync(Builders<Setting>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name", Unique = false });
 
             //shipment
-            _shipmentRepository.Collection.Indexes.CreateOne(Builders<Shipment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _shipmentRepository.Collection.Indexes.CreateOne(Builders<Shipment>.IndexKeys.Ascending(x => x.ShipmentNumber), new CreateIndexOptions() { Name = "ShipmentNumber", Unique = true });
-            _shipmentRepository.Collection.Indexes.CreateOne(Builders<Shipment>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
+            _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.ShipmentNumber), new CreateIndexOptions() { Name = "ShipmentNumber", Unique = true });
+            _shipmentRepository.Collection.Indexes.CreateOneAsync(Builders<Shipment>.IndexKeys.Ascending(x => x.OrderId), new CreateIndexOptions() { Name = "OrderId" });
 
             //warehouse
-            _warehouseRepository.Collection.Indexes.CreateOne(Builders<Warehouse>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _warehouseRepository.Collection.Indexes.CreateOneAsync(Builders<Warehouse>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //pickup points
-            _pickupPointsRepository.Collection.Indexes.CreateOne(Builders<PickupPoint>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _pickupPointsRepository.Collection.Indexes.CreateOneAsync(Builders<PickupPoint>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //order
-            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending(x => x.Id),new CreateIndexOptions() { Name = "Id", Unique = true });
-            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId_1_CreatedOnUtc_-1", Unique = false });
-            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_-1", Unique = false });
-            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Descending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
-            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending("OrderItems.ProductId"), new CreateIndexOptions() { Name = "OrderItemsProductId" });
-            _orderRepository.Collection.Indexes.CreateOne(Builders<Order>.IndexKeys.Ascending("OrderItems._id"), new CreateIndexOptions() { Name = "OrderItemId" });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.Id),new CreateIndexOptions() { Name = "Id", Unique = true });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId_1_CreatedOnUtc_-1", Unique = false });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_-1", Unique = false });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Descending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending("OrderItems.ProductId"), new CreateIndexOptions() { Name = "OrderItemsProductId" });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending("OrderItems._id"), new CreateIndexOptions() { Name = "OrderItemId" });
 
-            _orderNoteRepository.Collection.Indexes.CreateOne(Builders<OrderNote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _orderNoteRepository.Collection.Indexes.CreateOne(Builders<OrderNote>.IndexKeys.Ascending(x => x.OrderId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true });
+            _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.OrderId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true });
 
             //permision
-            _permissionRepository.Collection.Indexes.CreateOne(Builders<PermissionRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _permissionRepository.Collection.Indexes.CreateOneAsync(Builders<PermissionRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //vendor
-            _vendorRepository.Collection.Indexes.CreateOne(Builders<Vendor>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _vendorRepository.Collection.Indexes.CreateOneAsync(Builders<Vendor>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //externalauth
-            _externalAuthenticationRepository.Collection.Indexes.CreateOne(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _externalAuthenticationRepository.Collection.Indexes.CreateOne(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
+            _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _externalAuthenticationRepository.Collection.Indexes.CreateOneAsync(Builders<ExternalAuthenticationRecord>.IndexKeys.Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "CustomerId" });
 
             //return request
-            _returnRequestActionRepository.Collection.Indexes.CreateOne(Builders<ReturnRequestAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _returnRequestReasonRepository.Collection.Indexes.CreateOne(Builders<ReturnRequestReason>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _returnrequestRepository.Collection.Indexes.CreateOne(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _returnrequestRepository.Collection.Indexes.CreateOne(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true });
+            _returnRequestActionRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _returnRequestReasonRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequestReason>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _returnrequestRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _returnrequestRepository.Collection.Indexes.CreateOneAsync(Builders<ReturnRequest>.IndexKeys.Ascending(x => x.ReturnNumber), new CreateIndexOptions() { Name = "ReturnNumber", Unique = true });
 
             //contactus
-            _contactUsRepository.Collection.Indexes.CreateOne(Builders<ContactUs>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _contactUsRepository.Collection.Indexes.CreateOne(Builders<ContactUs>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
-            _contactUsRepository.Collection.Indexes.CreateOne(Builders<ContactUs>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
+            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
+            _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
             //customer action
-            _customerActionType.Collection.Indexes.CreateOne(Builders<CustomerActionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerAction.Collection.Indexes.CreateOne(Builders<CustomerAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerAction.Collection.Indexes.CreateOne(Builders<CustomerAction>.IndexKeys.Ascending(x => x.ActionTypeId), new CreateIndexOptions() { Name = "ActionTypeId", Unique = false });
+            _customerActionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.ActionTypeId), new CreateIndexOptions() { Name = "ActionTypeId", Unique = false });
 
-            _customerActionHistory.Collection.Indexes.CreateOne(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerActionHistory.Collection.Indexes.CreateOne(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
+            _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
             
 
             //banner
-            _banner.Collection.Indexes.CreateOne(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _bannerArchive.Collection.Indexes.CreateOne(Builders<BannerArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _bannerArchive.Collection.Indexes.CreateOne(Builders<BannerArchive>.IndexKeys.Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "CustomerActionId", Unique = false });
+            _banner.Collection.Indexes.CreateOneAsync(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _bannerArchive.Collection.Indexes.CreateOneAsync(Builders<BannerArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _bannerArchive.Collection.Indexes.CreateOneAsync(Builders<BannerArchive>.IndexKeys.Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "CustomerActionId", Unique = false });
 
             //customer reminder
-            _customerReminder.Collection.Indexes.CreateOne(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerReminderHistoryRepository.Collection.Indexes.CreateOne(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerReminderHistoryRepository.Collection.Indexes.CreateOne(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
+            _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
 
         }
 
@@ -11103,7 +11111,6 @@ namespace Grand.Services.Installation
             InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();
-            HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
             InstallProductTemplates();
             InstallCategoryTemplates();
             InstallManufacturerTemplates();

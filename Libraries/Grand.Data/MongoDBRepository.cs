@@ -46,7 +46,7 @@ namespace Grand.Data
         /// Ctor
         /// </summary>
         public MongoDBRepository()
-        {            
+        {
 
         }
         public MongoDBRepository(string connectionString)

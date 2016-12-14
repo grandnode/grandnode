@@ -103,8 +103,13 @@ namespace Grand.Web.Framework
             {
                 var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
                 var dataProvider = mongoDBDataProviderManager.LoadDataProvider();
-                builder.Register(c => new MongoClient(dataProviderSettings.DataConnectionString)).As(typeof(IMongoClient)).SingleInstance();
-                builder.Register(c => new MongoDBContext(dataProviderSettings.DataConnectionString)).As<IMongoDBContext>().InstancePerLifetimeScope();
+                builder.Register<IMongoClient>(c => new MongoClient(dataProviderSettings.DataConnectionString)).SingleInstance();
+                builder.Register<IMongoDBContext>(c => new MongoDBContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
+            }
+            else
+            {
+                builder.RegisterType<MongoClient>().As<IMongoClient>().SingleInstance();
+                builder.RegisterType<MongoDBContext>().As<IMongoDBContext>().InstancePerLifetimeScope();
             }
 
             builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
@@ -346,7 +351,10 @@ namespace Grand.Web.Framework
             return RegistrationBuilder
                 .ForDelegate((c, p) =>
                 {
-                    var currentStoreId = c.Resolve<IStoreContext>().CurrentStore.Id;
+                    var storecontext = c.Resolve<IStoreContext>();
+                    string currentStoreId = "";
+                    if(storecontext!=null)
+                        currentStoreId = storecontext.CurrentStore!=null ? storecontext.CurrentStore.Id: "";
                     //uncomment the code below if you want load settings per store only when you have two stores installed.
                     //var currentStoreId = c.Resolve<IStoreService>().GetAllStores().Count > 1
                     //    c.Resolve<IStoreContext>().CurrentStore.Id : 0;

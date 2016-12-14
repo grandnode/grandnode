@@ -20,6 +20,8 @@ using MongoDB.Driver;
 using Grand.Data;
 using Autofac;
 using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Services.Stores;
+using Grand.Services.Configuration;
 
 namespace Grand.Web.Controllers
 {
@@ -202,13 +204,18 @@ namespace Grand.Web.Controllers
                     var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
                     var dataProviderInstall = mongoDBDataProviderManager.LoadDataProvider();
 
-                    var builder = new ContainerBuilder();
-                    builder.Register(c => new MongoClient(dataProviderSettings.DataConnectionString)).As(typeof(IMongoClient)).SingleInstance();
-                    builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-                    builder.Update(EngineContext.Current.ContainerManager.Container);
-
-                    var installationService = EngineContext.Current.Resolve<IInstallationService>();
-                    installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
+                    using (var scope = EngineContext.Current.ContainerManager.Container.BeginLifetimeScope(builder =>
+                    {
+                        builder.Register<IMongoClient>(c => new MongoClient(dataProviderSettings.DataConnectionString)).SingleInstance();
+                        builder.Register<IMongoDBContext>(c => new MongoDBContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
+                        builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+                        builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
+                        
+                    }))
+                    {
+                        var installationService = scope.Resolve<IInstallationService>();
+                        installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
+                    }
 
                     //reset cache
                     DataSettingsHelper.ResetCache();
