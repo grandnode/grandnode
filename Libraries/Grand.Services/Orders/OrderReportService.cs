@@ -253,7 +253,7 @@ namespace Grand.Services.Orders
                 filter = filter & builder.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
 
             if (endTimeUtc.HasValue)
-                filter = filter & builder.Where(o => startTimeUtc.Value >= o.CreatedOnUtc);
+                filter = filter & builder.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
 
             if (!String.IsNullOrEmpty(billingEmail))
                 filter = filter & builder.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));

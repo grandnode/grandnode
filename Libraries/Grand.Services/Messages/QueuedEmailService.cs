@@ -146,9 +146,9 @@ namespace Grand.Services.Messages
             if (!String.IsNullOrEmpty(toEmail))
                 query = query.Where(qe => qe.To.ToLower().Contains(toEmail.ToLower()));
             if (createdFromUtc.HasValue)
-                query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc);
+                query = query.Where(qe => qe.CreatedOnUtc >= createdFromUtc.Value);
             if (createdToUtc.HasValue)
-                query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
+                query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc.Value);
             if (loadNotSentItemsOnly)
                 query = query.Where(qe => !qe.SentOnUtc.HasValue);
 

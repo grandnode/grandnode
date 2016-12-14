@@ -441,8 +441,8 @@ namespace Grand.Services.Orders
             if (createdFromUtc.HasValue)
                 filter = filter & builder.Where(o => o.CreatedOnUtc >= createdFromUtc.Value);
 
-            if (createdFromUtc.HasValue)
-                filter = filter & builder.Where(o => o.CreatedOnUtc >= createdFromUtc.Value);
+            if (createdToUtc.HasValue)
+                filter = filter & builder.Where(o => o.CreatedOnUtc <= createdToUtc.Value);
 
             var query = _orderRepository.Collection.Aggregate().Match(filter).Unwind<Order, UnwindOrderItem>(x => x.OrderItems).ToListAsync().Result;
             var items = new List<OrderItem>();

@@ -2041,7 +2041,7 @@ namespace Grand.Services.Catalog
                         select p;
 
             if (approved.HasValue)
-                query = query.Where(c => c.IsApproved == approved);
+                query = query.Where(c => c.IsApproved == approved.Value);
             if (!String.IsNullOrEmpty(customerId))
                 query = query.Where(c => c.CustomerId == customerId);
             if (fromUtc.HasValue)

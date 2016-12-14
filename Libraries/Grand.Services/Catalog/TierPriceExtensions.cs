@@ -86,8 +86,8 @@ namespace Grand.Services.Catalog
                 date = DateTime.UtcNow;
 
             return source.Where(tierPrice =>
-                (!tierPrice.StartDateTimeUtc.HasValue || tierPrice.StartDateTimeUtc.Value < date) &&
-                (!tierPrice.EndDateTimeUtc.HasValue || tierPrice.EndDateTimeUtc.Value > date));
+                (!tierPrice.StartDateTimeUtc.HasValue || tierPrice.StartDateTimeUtc.Value < date.Value) &&
+                (!tierPrice.EndDateTimeUtc.HasValue || tierPrice.EndDateTimeUtc.Value > date.Value));
         }
     }
 }
