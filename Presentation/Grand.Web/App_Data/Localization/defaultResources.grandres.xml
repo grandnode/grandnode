@@ -14731,6 +14731,12 @@
   <LocaleResource Name="Messages.Order.GiftCardInfo">
     <Value>Gift card ({0}):</Value>
   </LocaleResource>
+  <LocaleResource Name="Messages.RecentlyViewedProducts.Product(s).Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.RecentlyViewedProducts.Product(s).Name">
+    <Value>Product name</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.RecommendedProducts.Product(s).Picture">
     <Value>Picture</Value>
   </LocaleResource>

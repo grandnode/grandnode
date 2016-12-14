@@ -299,12 +299,13 @@ namespace Grand.Services.Messages
                 var tokens = new List<Token>();
                 _messageTokenProvider.AddStoreTokens(tokens, _storeContext.CurrentStore, emailAccount);
                 _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
-                _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
                 if (customer != null)
+                {
                     _messageTokenProvider.AddCustomerTokens(tokens, customer);
-
-                _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
-                _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
+                    _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
+                    _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
+                    _messageTokenProvider.AddRecentlyViewedProductsTokens(tokens, customer);
+                }
 
                 string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
                 string body = _tokenizer.Replace(campaign.Body, tokens, true);
@@ -356,6 +357,7 @@ namespace Grand.Services.Messages
                 _messageTokenProvider.AddCustomerTokens(tokens, customer);
                 _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
                 _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
+                _messageTokenProvider.AddRecentlyViewedProductsTokens(tokens, customer);
             }
 
             string subject = _tokenizer.Replace(campaign.Subject, tokens, false);

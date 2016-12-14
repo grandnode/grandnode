@@ -98,6 +98,7 @@ namespace Grand.Services.Customers
             _messageTokenProvider.AddCustomerTokens(tokens, customer);
             _messageTokenProvider.AddShoppingCartTokens(tokens, customer);
             _messageTokenProvider.AddRecommendedProductsTokens(tokens, customer);
+            _messageTokenProvider.AddRecentlyViewedProductsTokens(tokens, customer);
 
             //Replace subject and body tokens 
             var subjectReplaced = _tokenizer.Replace(subject, tokens, false);

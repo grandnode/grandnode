@@ -428,5 +428,10 @@
   <LocaleResource Name="NewsletterCategory.Options.Save">
     <Value>Save options</Value>
   </LocaleResource>
-
+  <LocaleResource Name="Messages.RecentlyViewedProducts.Product(s).Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.RecentlyViewedProducts.Product(s).Name">
+    <Value>Product name</Value>
+  </LocaleResource>
 </Language>
