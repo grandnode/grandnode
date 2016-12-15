@@ -72,22 +72,23 @@
                 scrollable: false,
                 columns: [{
                     field: "Title",
-                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")"
+                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")",
+                    width: 400,
                 }, {
                     field: "Comments",
                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
-                    width: 300,
+                    width: 200,
                     template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=Comments# </a>'
                 }, {
                     field: "StartDate",
                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",
-                    width: 200,
+                    width: 150,
                     type: "date",
                     format: "{0:G}"
                 }, {
                     field: "EndDate",
                     title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")",
-                    width: 200,
+                    width: 150,
                     type: "date",
                     format: "{0:G}"
                 },  {
