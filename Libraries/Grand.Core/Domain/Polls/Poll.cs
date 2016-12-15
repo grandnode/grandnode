@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Grand.Core.Domain.Localization;
 using MongoDB.Bson.Serialization.Attributes;
 using Grand.Core.Domain.Stores;
+using Grand.Core.Domain.Security;
 
 namespace Grand.Core.Domain.Polls
 {
@@ -10,7 +11,7 @@ namespace Grand.Core.Domain.Polls
     /// Represents a poll
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class Poll : BaseEntity, IStoreMappingSupported, ILocalizedEntity
+    public partial class Poll : BaseEntity, IStoreMappingSupported, ILocalizedEntity, IAclSupported
     {
         private ICollection<PollAnswer> _pollAnswers;
 
@@ -18,6 +19,7 @@ namespace Grand.Core.Domain.Polls
         {
             Stores = new List<string>();
             Locales = new List<LocalizedProperty>();
+            CustomerRoles = new List<string>();
         }
 
         /// <summary>
@@ -80,6 +82,12 @@ namespace Grand.Core.Domain.Polls
             get { return _pollAnswers ?? (_pollAnswers = new List<PollAnswer>()); }
             protected set { _pollAnswers = value; }
         }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+        /// </summary>
+        public bool SubjectToAcl { get; set; }
+        public IList<string> CustomerRoles { get; set; }
+
     }
 }

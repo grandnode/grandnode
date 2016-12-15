@@ -8165,6 +8165,12 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.EditPollDetails">
     <Value>Edit poll details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the poll will be shown.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AllowGuestsToVote">
     <Value>Allow guests to vote</Value>
   </LocaleResource>
@@ -8228,6 +8234,12 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.StartDate.Hint">
     <Value>Set the poll start date in Coordinated Universal Time (UTC). You can also leave it empty.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the poll is subject to ACL (access control list).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SystemKeyword">
     <Value>System keyword</Value>
   </LocaleResource>
@@ -8236,6 +8248,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Info">
     <Value>Poll Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.polls.acl">
+    <Value>Access control list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Stores">
     <Value>Stores</Value>

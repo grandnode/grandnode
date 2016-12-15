@@ -443,4 +443,19 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.Answer.EditDetails">
     <Value>Edit poll answer</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.contentmanagement.polls.acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the poll will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the poll is subject to ACL (access control list).</Value>
+  </LocaleResource>
 </Language>

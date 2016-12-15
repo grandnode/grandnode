@@ -569,7 +569,12 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDate, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDate, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
+                    .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
+                    .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+
                 cfg.CreateMap<PollModel, Poll>()
                     .ForMember(dest => dest.Id, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())

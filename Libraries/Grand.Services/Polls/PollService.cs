@@ -7,6 +7,7 @@ using Grand.Services.Events;
 using MongoDB.Driver.Linq;
 using MongoDB.Driver;
 using Grand.Core.Domain.Catalog;
+using Grand.Services.Customers;
 
 namespace Grand.Services.Polls
 {
@@ -19,16 +20,21 @@ namespace Grand.Services.Polls
 
         private readonly IRepository<Poll> _pollRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IWorkContext _workContext;
         private readonly CatalogSettings _catalogSettings;
+
         #endregion
 
         #region Ctor
 
         public PollService(IRepository<Poll> pollRepository, 
-            IEventPublisher eventPublisher, CatalogSettings catalogSettings)
+            IEventPublisher eventPublisher,
+            IWorkContext workContext,
+            CatalogSettings catalogSettings)
         {
             this._pollRepository = pollRepository;
             this._eventPublisher = eventPublisher;
+            this._workContext = workContext;
             this._catalogSettings = catalogSettings;
         }
 
@@ -91,9 +97,21 @@ namespace Grand.Services.Polls
                 query = query.Where(p => !p.StartDateUtc.HasValue || p.StartDateUtc <= utcNow);
                 query = query.Where(p => !p.EndDateUtc.HasValue || p.EndDateUtc >= utcNow);
             }
-            if (!String.IsNullOrEmpty(storeId) && ! _catalogSettings.IgnoreStoreLimitations)
+            if (!showHidden)
             {
-                query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
+                if (!String.IsNullOrEmpty(storeId) && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    query = query.Where(b => b.Stores.Contains(storeId) || !b.LimitedToStores);
+                }
+                if (!_catalogSettings.IgnoreAcl)
+                {
+                    //ACL (access control list)
+                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                    query = from p in query
+                            where !p.SubjectToAcl || allowedCustomerRolesIds.Any(x => p.CustomerRoles.Contains(x))
+                            select p;
+
+                }
             }
             if (loadShownOnHomePageOnly)
             {

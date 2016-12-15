@@ -8,6 +8,7 @@ using Grand.Web.Framework.Mvc;
 using Grand.Web.Framework.Localization;
 using Grand.Admin.Models.Stores;
 using System.Collections.Generic;
+using Grand.Admin.Models.Customers;
 
 namespace Grand.Admin.Models.Polls
 {
@@ -17,8 +18,9 @@ namespace Grand.Admin.Models.Polls
 
         public PollModel()
         {
-            this.AvailableStores = new List<StoreModel>();
+            AvailableStores = new List<StoreModel>();
             Locales = new List<PollLocalizedModel>();
+            AvailableCustomerRoles = new List<CustomerRoleModel>();
         }
 
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Name")]
@@ -56,6 +58,14 @@ namespace Grand.Admin.Models.Polls
         public IList<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
         public IList<PollLocalizedModel> Locales { get; set; }
+
+
+        //ACL
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.SubjectToAcl")]
+        public bool SubjectToAcl { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.AclCustomerRoles")]
+        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
+        public string[] SelectedCustomerRoleIds { get; set; }
 
     }
 

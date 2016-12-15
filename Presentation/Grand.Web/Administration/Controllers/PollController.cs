@@ -15,6 +15,7 @@ using MongoDB.Bson;
 using Grand.Core.Domain.Localization;
 using System.Collections.Generic;
 using Grand.Services.Stores;
+using Grand.Services.Customers;
 
 namespace Grand.Admin.Controllers
 {
@@ -28,13 +29,15 @@ namespace Grand.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
+        private readonly ICustomerService _customerService;
         #endregion
 
         #region Constructors
 
         public PollController(IPollService pollService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService, IStoreService storeService)
+            IPermissionService permissionService, IStoreService storeService,
+            ICustomerService customerService)
         {
             this._pollService = pollService;
             this._languageService = languageService;
@@ -42,7 +45,7 @@ namespace Grand.Admin.Controllers
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._storeService = storeService;
-
+            this._customerService = customerService;
         }
 
         #endregion
@@ -105,6 +108,25 @@ namespace Grand.Admin.Controllers
             }
         }
 
+        [NonAction]
+        protected virtual void PrepareAclModel(PollModel model, Poll poll, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (poll != null)
+                {
+                    model.SelectedCustomerRoleIds = poll.CustomerRoles.ToArray();
+                }
+            }
+        }
+
         #endregion
 
         #region Polls
@@ -160,6 +182,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresMappingModel(model, null, false);
             //locales
             AddLocales(_languageService, model.Locales);
+            //ACL
+            PrepareAclModel(model, null, false);
 
             return View(model);
         }
@@ -176,6 +200,7 @@ namespace Grand.Admin.Controllers
                 poll.StartDateUtc = model.StartDate;
                 poll.EndDateUtc = model.EndDate;
                 poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
+                poll.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 poll.Locales = UpdateLocales(poll, model);
                 _pollService.InsertPoll(poll);
 
@@ -185,6 +210,13 @@ namespace Grand.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+
+            //Stores
+            PrepareStoresMappingModel(model, null, true);
+            //locales
+            AddLocales(_languageService, model.Locales);
+            //ACL
+            PrepareAclModel(model, null, true);
             return View(model);
         }
 
@@ -210,7 +242,8 @@ namespace Grand.Admin.Controllers
             {
                 locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
             });
-
+            //ACL
+            PrepareAclModel(model, poll, false);
 
             return View(model);
         }
@@ -233,6 +266,7 @@ namespace Grand.Admin.Controllers
                 poll.EndDateUtc = model.EndDate;
                 poll.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<string>();
                 poll.Locales = UpdateLocales(poll, model);
+                poll.CustomerRoles = model.SelectedCustomerRoleIds != null ? model.SelectedCustomerRoleIds.ToList() : new List<string>();
                 _pollService.UpdatePoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Updated"));
@@ -249,6 +283,17 @@ namespace Grand.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
+
+            //Store
+            PrepareStoresMappingModel(model, poll, false);
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = poll.GetLocalized(x => x.Name, languageId, false, false);
+            });
+            //ACL
+            PrepareAclModel(model, poll, false);
+
             return View(model);
         }
 

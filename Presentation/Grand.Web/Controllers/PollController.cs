@@ -13,6 +13,7 @@ using Grand.Web.Models.Polls;
 using Grand.Core.Infrastructure;
 using Grand.Services.Customers;
 using MongoDB.Bson;
+using Grand.Services.Security;
 
 namespace Grand.Web.Controllers
 {
@@ -25,7 +26,7 @@ namespace Grand.Web.Controllers
         private readonly IPollService _pollService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
-
+        private readonly IAclService _aclService;
         #endregion
 
         #region Constructors
@@ -34,7 +35,8 @@ namespace Grand.Web.Controllers
             IWorkContext workContext,
             IPollService pollService,
             ICacheManager cacheManager,
-            IStoreContext storeContext)
+            IStoreContext storeContext,
+            IAclService aclService)
         {
             this._localizationService = localizationService;
             this._workContext = workContext;
@@ -88,6 +90,10 @@ namespace Grand.Web.Controllers
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 Poll poll = _pollService.GetPollBySystemKeyword(systemKeyword, _storeContext.CurrentStore.Id);
+                //ACL (access control list)
+                if (!_aclService.Authorize(poll))
+                    return new PollModel { Id = "" };
+
                 if (poll == null ||
                     !poll.Published ||
                     (poll.StartDateUtc.HasValue && poll.StartDateUtc.Value > DateTime.UtcNow) ||
