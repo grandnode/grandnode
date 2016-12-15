@@ -69,6 +69,24 @@ namespace Grand.Admin.Controllers
         }
 
         [NonAction]
+        protected virtual List<LocalizedProperty> UpdateOptionLocales(PollAnswer pollanswer, PollAnswerModel model)
+        {
+            List<LocalizedProperty> localized = new List<LocalizedProperty>();
+            foreach (var local in model.Locales)
+            {
+                if (!(String.IsNullOrEmpty(local.Name)))
+                    localized.Add(new LocalizedProperty()
+                    {
+                        LanguageId = local.LanguageId,
+                        LocaleKey = "Name",
+                        LocaleValue = local.Name,
+                    });
+            }
+            return localized;
+        }
+
+
+        [NonAction]
         protected virtual void PrepareStoresMappingModel(PollModel model, Poll poll, bool excludeProperties)
         {
             if (model == null)
@@ -254,7 +272,7 @@ namespace Grand.Admin.Controllers
         #endregion
 
         #region Poll answer
-
+        
         [HttpPost]
         public ActionResult PollAnswers(string pollId, DataSourceRequest command)
         {
@@ -283,7 +301,7 @@ namespace Grand.Admin.Controllers
             return Json(gridModel);
         }
 
-
+        /*
         [HttpPost]
         public ActionResult PollAnswerUpdate(PollAnswerModel model)
         {
@@ -329,6 +347,104 @@ namespace Grand.Admin.Controllers
             _pollService.UpdatePoll(poll);
 
             return new NullJsonResult();
+        }
+        */
+
+
+        //create
+        public ActionResult PollAnswerCreatePopup(string pollId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
+            var model = new PollAnswerModel();
+            model.PollId = pollId;
+
+            //locales
+            AddLocales(_languageService, model.Locales);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult PollAnswerCreatePopup(string btnId, string formId, PollAnswerModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
+            var poll = _pollService.GetPollById(model.PollId);
+            if (poll == null)
+                //No poll found with the specified id
+                return RedirectToAction("List");
+
+            if (ModelState.IsValid)
+            {
+                var pa = model.ToEntity();
+                pa.Locales = UpdateOptionLocales(pa, model);
+                poll.PollAnswers.Add(pa);
+                _pollService.UpdatePoll(poll);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //edit
+        public ActionResult PollAnswerEditPopup(string id, string pollId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
+            var pollAnswer = _pollService.GetPollById(pollId).PollAnswers.Where(x => x.Id == id).FirstOrDefault();
+            if (pollAnswer == null)
+                //No poll answer found with the specified id
+                return RedirectToAction("List");
+
+            var model = pollAnswer.ToModel();
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = pollAnswer.GetLocalized(x => x.Name, languageId, false, false);
+            });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult PollAnswerEditPopup(string btnId, string formId, PollAnswerModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
+                return AccessDeniedView();
+
+            var poll = _pollService.GetPollById(model.PollId);
+            if (poll == null)
+                //No poll found with the specified id
+                return RedirectToAction("List");
+
+            var pollAnswer = poll.PollAnswers.Where(x => x.Id == model.Id).FirstOrDefault();
+            if (pollAnswer == null)
+                //No poll answer found with the specified id
+                return RedirectToAction("List");
+
+            if (ModelState.IsValid)
+            {
+                pollAnswer = model.ToEntity(pollAnswer);
+                pollAnswer.Locales = UpdateOptionLocales(pollAnswer, model);
+
+                _pollService.UpdatePoll(poll);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
 

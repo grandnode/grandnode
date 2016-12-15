@@ -576,6 +576,15 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.PollAnswers, mo => mo.Ignore())
                     .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore());
+
+                cfg.CreateMap<PollAnswer, PollAnswerModel>()
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<PollAnswerModel, PollAnswer>()
+                    .ForMember(dest => dest.Id, mo => mo.Ignore())
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
+
                 //customer roles
                 cfg.CreateMap<CustomerRole, CustomerRoleModel>()
                     .ForMember(dest => dest.PurchasedWithProductName, mo => mo.Ignore())
@@ -652,7 +661,6 @@ namespace Grand.Admin.Infrastructure.Mapper
                 cfg.CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.NumberOfAssociatedProducts, mo => mo.Ignore())
-                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>()
                     .ForMember(dest => dest.Id, mo => mo.Ignore())

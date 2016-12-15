@@ -145,7 +145,12 @@ if (!String.IsNullOrEmpty(Model.Id))
             <div class="panel-body">
                 <div id="answers-grid"></div>
             </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewOption" value="@T("Admin.ContentManagement.Polls.Answer.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("PollAnswerCreatePopup", "Poll", new { pollId = Model.Id, btnId = "btnRefresh", formId = "poll-form" }))', 800, 350, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefresh" style="display: none" />
+            </div>
         </div>
+
         <script>
             $(document).ready(function () {
                 $("#answers-grid").kendoGrid({
@@ -153,18 +158,6 @@ if (!String.IsNullOrEmpty(Model.Id))
                         transport: {
                             read: {
                                 url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new { pollId = Model.Id }))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
-                            create: {
-                                url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
-                                type: "POST",
-                                dataType: "json",
-                                data: addAntiForgeryToken
-                            },
-                            update: {
-                                url: "@Html.Raw(Url.Action("PollAnswerUpdate", "Poll"))",
                                 type: "POST",
                                 dataType: "json",
                                 data: addAntiForgeryToken
@@ -210,7 +203,6 @@ if (!String.IsNullOrEmpty(Model.Id))
                         previousNext: false,
                         info: false
                     },
-                    toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                     editable: {
                         confirmation: false,
                         mode: "inline"
@@ -230,15 +222,15 @@ if (!String.IsNullOrEmpty(Model.Id))
                         //integer format
                         format: "{0:0}",
                         width: 100
-                    }, {
+                    },
+                    {
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Poll/PollAnswerEditPopup/")#=Id#?pollId=#=PollId#&btnId=btnRefresh&formId=poll-form', 800, 450, true); return false;\" class='k-button' />"
+                    }, 
+                    {
                         command: [{
-                            name: "edit",
-                            text: {
-                                edit: "@T("Admin.Common.Edit")",
-                                update: "@T("Admin.Common.Update")",
-                                cancel: "@T("Admin.Common.Cancel")"
-                            }
-                        }, {
                             name: "destroy",
                             text: "@T("Admin.Common.Delete")"
                         }],
@@ -248,6 +240,18 @@ if (!String.IsNullOrEmpty(Model.Id))
             });
 
         </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    var grid = $("#answers-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+
 }
 else
 {

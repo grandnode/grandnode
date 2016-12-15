@@ -1,3 +1,4 @@
+using Grand.Core.Domain.Localization;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
@@ -7,9 +8,14 @@ namespace Grand.Core.Domain.Polls
     /// Represents a poll answer
     /// </summary>
     [BsonIgnoreExtraElements]
-    public partial class PollAnswer : SubBaseEntity
+    public partial class PollAnswer : SubBaseEntity, ILocalizedEntity
     {
         private ICollection<PollVotingRecord> _pollVotingRecords;
+
+        public PollAnswer()
+        {
+            Locales = new List<LocalizedProperty>();
+        }
 
         /// <summary>
         /// Gets or sets the poll identifier
@@ -30,7 +36,12 @@ namespace Grand.Core.Domain.Polls
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the collection of locales
+        /// </summary>
+        public IList<LocalizedProperty> Locales { get; set; }
+
         /// <summary>
         /// Gets or sets the poll voting records
         /// </summary>

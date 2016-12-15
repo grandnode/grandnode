@@ -868,6 +868,23 @@ namespace Grand.Admin.Extensions
             return model.MapTo(destination);
         }
 
+        //poll answer
+        public static PollAnswerModel ToModel(this PollAnswer entity)
+        {
+            return entity.MapTo<PollAnswer, PollAnswerModel>();
+        }
+
+        public static PollAnswer ToEntity(this PollAnswerModel model)
+        {
+            return model.MapTo<PollAnswerModel, PollAnswer>();
+        }
+
+        public static PollAnswer ToEntity(this PollAnswerModel model, PollAnswer destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
         #endregion
 
         #region Customer roles

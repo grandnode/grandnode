@@ -8128,6 +8128,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.AddNew">
     <Value>Add a new poll</Value>
+  </LocaleResource>     
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answer.AddNew">
+    <Value>Add new poll answer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answer.EditDetails">
+    <Value>Edit poll answer</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Answers">
     <Value>Poll answers</Value>
@@ -8136,6 +8142,9 @@
     <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name.hint">
     <Value>Name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name.Required">

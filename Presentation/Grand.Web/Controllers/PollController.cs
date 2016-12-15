@@ -65,7 +65,7 @@ namespace Grand.Web.Controllers
                 {
                     Id = pa.Id,
                     PollId = poll.Id,
-                    Name = pa.Name,
+                    Name = pa.GetLocalized(x=>x.Name),
                     NumberOfVotes = pa.NumberOfVotes,
                     PercentOfTotalVotes = model.TotalVotes > 0 ? ((Convert.ToDouble(pa.NumberOfVotes) / Convert.ToDouble(model.TotalVotes)) * Convert.ToDouble(100)) : 0,
                 });

@@ -1937,6 +1937,15 @@
   <ItemGroup>
     <Content Include="Views\NewsletterCategory\List.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Poll\_CreateOrUpdateAnswer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Poll\PollAnswerCreatePopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Poll\PollAnswerEditPopup.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

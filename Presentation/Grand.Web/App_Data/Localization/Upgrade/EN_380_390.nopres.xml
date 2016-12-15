@@ -434,4 +434,13 @@
   <LocaleResource Name="Messages.RecentlyViewedProducts.Product(s).Name">
     <Value>Product name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answers.Fields.Name.hint">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answer.AddNew">
+    <Value>Add new poll answer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Answer.EditDetails">
+    <Value>Edit poll answer</Value>
+  </LocaleResource>
 </Language>
