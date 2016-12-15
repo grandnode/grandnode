@@ -93,22 +93,23 @@
             scrollable: false,
             columns: [{
                 field: "Title",
+                width: 300,
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Title")"
             }, {
                 field: "Comments",
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")",
-                width: 300,
+                width: 200,
                 template: '<a href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=Comments# </a>'
             }, {
                 field: "StartDate",
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.StartDate")",
-                width: 200,
+                width: 150,
                 type: "date",
                 format: "{0:G}"
             }, {
                 field: "EndDate",
                 title: "@T("Admin.ContentManagement.News.NewsItems.Fields.EndDate")",
-                width: 200,
+                width: 150,
                 type: "date",
                 format: "{0:G}"
             }, {
