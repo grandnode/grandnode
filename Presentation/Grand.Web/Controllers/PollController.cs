@@ -43,6 +43,7 @@ namespace Grand.Web.Controllers
             this._pollService = pollService;
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
+            this._aclService = aclService;
         }
 
         #endregion

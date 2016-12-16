@@ -19,6 +19,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using Grand.Core.Infrastructure;
+using Grand.Web.Framework.Localization;
 
 namespace Grand.Web.Extensions
 {
@@ -96,15 +97,32 @@ namespace Grand.Web.Extensions
             if (products == null)
                 throw new ArgumentNullException("products");
 
+            var displayPrices = permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+            var enableShoppingCart = permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
+            var enableWishlist = permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
+            var currentCustomer = workContext.CurrentCustomer;
+            var currentCurrency = workContext.WorkingCurrency;
+            var currentStoreId = storeContext.CurrentStore.Id;
+            var currentLanguageId = workContext.WorkingLanguage;
+            int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : mediaSettings.ProductThumbPictureSize;
+
+            var res = new Dictionary<string, string>
+            {
+                { "Products.CallForPrice", localizationService.GetResource("Products.CallForPrice") },
+                { "Products.PriceRangeFrom", localizationService.GetResource("Products.PriceRangeFrom")},
+                { "Media.Product.ImageLinkTitleFormat", localizationService.GetResource("Media.Product.ImageLinkTitleFormat") },
+                { "Media.Product.ImageAlternateTextFormat", localizationService.GetResource("Media.Product.ImageAlternateTextFormat") }
+            };
+
             var models = new List<ProductOverviewModel>();
             foreach (var product in products)
             {
                 var model = new ProductOverviewModel
                 {
                     Id = product.Id,
-                    Name = product.GetLocalized(x => x.Name),
-                    ShortDescription = product.GetLocalized(x => x.ShortDescription),
-                    FullDescription = product.GetLocalized(x => x.FullDescription),
+                    Name = product.GetLocalized(x => x.Name, currentLanguageId.Id),
+                    ShortDescription = product.GetLocalized(x => x.ShortDescription, currentLanguageId.Id),
+                    FullDescription = product.GetLocalized(x => x.FullDescription, currentLanguageId.Id),
                     SeName = product.GetSeName(),
                     ProductType = product.ProductType,
                     MarkAsNew = product.MarkAsNew &&
@@ -127,15 +145,13 @@ namespace Grand.Web.Extensions
                             {
                                 #region Grouped product
 
-                                var associatedProducts = productService.GetAssociatedProducts(product.Id, storeContext.CurrentStore.Id);
+                                var associatedProducts = productService.GetAssociatedProducts(product.Id, currentStoreId);
 
                                 //add to cart button (ignore "DisableBuyButton" property for grouped products)
-                                priceModel.DisableBuyButton = !permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
-                                    !permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                priceModel.DisableBuyButton = !enableShoppingCart || !displayPrices;
 
                                 //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
-                                priceModel.DisableWishlistButton = !permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
-                                    !permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                priceModel.DisableWishlistButton = !enableWishlist || !displayPrices;
 
                                 //compare products
                                 priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
@@ -154,7 +170,7 @@ namespace Grand.Web.Extensions
                                             priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
                                             //priceModel.AvailableForPreOrder = false;
 
-                                            if (permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                                            if (displayPrices)
                                             {
                                                 //find a minimum possible price
                                                 decimal? minPossiblePrice = null;
@@ -163,7 +179,7 @@ namespace Grand.Web.Extensions
                                                 {
                                                     //calculate for the maximum quantity (in case if we have tier prices)
                                                     var tmpPrice = priceCalculationService.GetFinalPrice(associatedProduct,
-                                                        workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+                                                        currentCustomer, decimal.Zero, true, int.MaxValue);
                                                     if (!minPossiblePrice.HasValue || tmpPrice < minPossiblePrice.Value)
                                                     {
                                                         minPriceProduct = associatedProduct;
@@ -175,17 +191,17 @@ namespace Grand.Web.Extensions
                                                     if (minPriceProduct.CallForPrice)
                                                     {
                                                         priceModel.OldPrice = null;
-                                                        priceModel.Price = localizationService.GetResource("Products.CallForPrice");
+                                                        priceModel.Price = res["Products.CallForPrice"];
                                                     }
                                                     else if (minPossiblePrice.HasValue)
                                                     {
                                                         //calculate prices
                                                         decimal taxRate;
                                                         decimal finalPriceBase = taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
-                                                        decimal finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, workContext.WorkingCurrency);
+                                                        decimal finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
 
                                                         priceModel.OldPrice = null;
-                                                        priceModel.Price = String.Format(localizationService.GetResource("Products.PriceRangeFrom"), priceFormatter.FormatPrice(finalPrice));
+                                                        priceModel.Price = String.Format(res["Products.PriceRangeFrom"], priceFormatter.FormatPrice(finalPrice));
                                                         priceModel.PriceValue = finalPrice;
 
                                                         //PAngV baseprice (used in Germany)
@@ -219,14 +235,10 @@ namespace Grand.Web.Extensions
                                 #region Simple product
 
                                 //add to cart button
-                                priceModel.DisableBuyButton = product.DisableBuyButton ||
-                                    !permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
-                                    !permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                priceModel.DisableBuyButton = product.DisableBuyButton || !enableShoppingCart || !displayPrices;
 
                                 //add to wishlist button
-                                priceModel.DisableWishlistButton = product.DisableWishlistButton ||
-                                    !permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
-                                    !permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                priceModel.DisableWishlistButton = product.DisableWishlistButton || !enableWishlist || !displayPrices;
                                 //compare products
                                 priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
 
@@ -242,7 +254,7 @@ namespace Grand.Web.Extensions
                                 }
 
                                 //prices
-                                if (permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                                if (displayPrices)
                                 {
                                     if (!product.CustomerEntersPrice)
                                     {
@@ -250,7 +262,7 @@ namespace Grand.Web.Extensions
                                         {
                                             //call for price
                                             priceModel.OldPrice = null;
-                                            priceModel.Price = localizationService.GetResource("Products.CallForPrice");
+                                            priceModel.Price = res["Products.CallForPrice"];
                                         }
                                         else
                                         {
@@ -258,22 +270,22 @@ namespace Grand.Web.Extensions
 
                                             //calculate for the maximum quantity (in case if we have tier prices)
                                             decimal minPossiblePrice = priceCalculationService.GetFinalPrice(product,
-                                                workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+                                                currentCustomer, decimal.Zero, true, int.MaxValue);
 
                                             decimal taxRate;
                                             decimal oldPriceBase = taxService.GetProductPrice(product, product.OldPrice, out taxRate);
                                             decimal finalPriceBase = taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 
-                                            decimal oldPrice = currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, workContext.WorkingCurrency);
-                                            decimal finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, workContext.WorkingCurrency);
+                                            decimal oldPrice = currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, currentCurrency);
+                                            decimal finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currentCurrency);
 
                                             //do we have tier prices configured?
                                             var tierPrices = new List<TierPrice>();
                                             if (product.HasTierPrices)
                                             {
                                                 tierPrices.AddRange(product.TierPrices.OrderBy(tp => tp.Quantity)
-                                                    .FilterByStore(storeContext.CurrentStore.Id)
-                                                    .FilterForCustomer(workContext.CurrentCustomer)
+                                                    .FilterByStore(currentStoreId)
+                                                    .FilterForCustomer(currentCustomer)
                                                     .FilterByDate()
                                                     .RemoveDuplicatedQuantities());
                                             }
@@ -283,7 +295,7 @@ namespace Grand.Web.Extensions
                                             if (displayFromMessage)
                                             {
                                                 priceModel.OldPrice = null;
-                                                priceModel.Price = String.Format(localizationService.GetResource("Products.PriceRangeFrom"), priceFormatter.FormatPrice(finalPrice));
+                                                priceModel.Price = String.Format(res["Products.PriceRangeFrom"], priceFormatter.FormatPrice(finalPrice));
                                                 priceModel.PriceValue = finalPrice;
                                             }
                                             else
@@ -312,13 +324,11 @@ namespace Grand.Web.Extensions
                                             //property for German market
                                             //we display tax/shipping info only with "shipping enabled" for this product
                                             //we also ensure this it's not free shipping
-                                            priceModel.DisplayTaxShippingInfo = catalogSettings.DisplayTaxShippingInfoProductBoxes
-                                                && product.IsShipEnabled &&
-                                                !product.IsFreeShipping;
+                                            priceModel.DisplayTaxShippingInfo = catalogSettings.DisplayTaxShippingInfoProductBoxes && product.IsShipEnabled && !product.IsFreeShipping;
 
                                             //PAngV baseprice (used in Germany)
-                                            priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice,
-                                                localizationService, measureService, currencyService, workContext, priceFormatter);
+                                            if(product.BasepriceEnabled)
+                                                priceModel.BasePricePAngV = product.FormatBasePrice(finalPrice, localizationService, measureService, currencyService, workContext, priceFormatter);
 
                                         }
                                     }
@@ -344,14 +354,11 @@ namespace Grand.Web.Extensions
                 if (preparePictureModel)
                 {
                     #region Prepare product picture
-
-                    //If a size has been set in the view, we use it in priority
-                    int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : mediaSettings.ProductThumbPictureSize;
                     //prepare picture model
-                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, workContext.WorkingLanguage.Id, webHelper.IsCurrentConnectionSecured(), storeContext.CurrentStore.Id);
+                    var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguageId, webHelper.IsCurrentConnectionSecured(), currentStoreId);
                     model.DefaultPictureModel = cacheManager.Get(defaultProductPictureCacheKey, () =>
                     {
-                        var picture = product.ProductPictures.FirstOrDefault(); //pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                        var picture = product.ProductPictures.FirstOrDefault(); 
                         if (picture == null)
                             picture = new ProductPicture();
 
@@ -363,11 +370,11 @@ namespace Grand.Web.Extensions
                         //"title" attribute
                         pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
                             picture.TitleAttribute :
-                            string.Format(localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
+                            string.Format(res["Media.Product.ImageLinkTitleFormat"], model.Name);
                         //"alt" attribute
                         pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
                             picture.AltAttribute :
-                            string.Format(localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
+                            string.Format(res["Media.Product.ImageAlternateTextFormat"], model.Name);
                         
                         return pictureModel;
                     });
