@@ -87,8 +87,11 @@ namespace Grand.Services.Events
         /// <param name="eventMessage">Event message</param>
         public virtual void Publish<T>(T eventMessage)
         {
-            var subscriptions = _subscriptionService.GetSubscriptions<T>();
-            subscriptions.ToList().ForEach(x => PublishToConsumer(x, eventMessage));
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                var subscriptions = _subscriptionService.GetSubscriptions<T>();
+                subscriptions.ToList().ForEach(x => PublishToConsumer(x, eventMessage));
+            });
         }
 
     }
