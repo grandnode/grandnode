@@ -157,8 +157,6 @@ namespace Grand.Services.Configuration
             if (clearCache)
                 _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
-            //event notification
-            _eventPublisher.EntityUpdated(setting);
         }
 
         /// <summary>
