@@ -43,6 +43,7 @@ using MongoDB.Driver;
 using Grand.Core.Data;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Tax;
+using Grand.Core.Domain.Customers;
 
 namespace Grand.Admin.Controllers
 {
@@ -796,6 +797,38 @@ namespace Grand.Admin.Controllers
 
 
         }
+
+        [NonAction]
+        protected virtual void PrepareProductReviewModel(ProductReviewModel model,
+            ProductReview productReview, bool excludeProperties, bool formatReviewText)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (productReview == null)
+                throw new ArgumentNullException("productReview");
+            var product = _productService.GetProductById(productReview.ProductId);
+            var customer = _customerService.GetCustomerById(productReview.CustomerId);
+            var store = _storeService.GetStoreById(productReview.StoreId);
+            model.Id = productReview.Id;
+            model.StoreName = store != null ? store.Name : "";
+            model.ProductId = productReview.ProductId;
+            model.ProductName = product.Name;
+            model.CustomerId = productReview.CustomerId;
+            model.CustomerInfo = customer!=null ? customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
+            model.Rating = productReview.Rating;
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
+            if (!excludeProperties)
+            {
+                model.Title = productReview.Title;
+                if (formatReviewText)
+                    model.ReviewText = Core.Html.HtmlHelper.FormatText(productReview.ReviewText, false, true, false, false, false, false);
+                else
+                    model.ReviewText = productReview.ReviewText;
+                model.IsApproved = productReview.IsApproved;
+            }
+        }
+
 
         #endregion
 
@@ -2752,6 +2785,41 @@ namespace Grand.Admin.Controllers
                     };
                 }),
                 Total = orders.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        #endregion
+
+        #region Reviews
+
+        [HttpPost]
+        public ActionResult Reviews(DataSourceRequest command, string productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            var productReviews = _productService.GetAllProductReviews("", null,
+                null, null, "", null, productId);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = productReviews.PagedForCommand(command).Select(x =>
+                {
+                    var m = new ProductReviewModel();
+                    PrepareProductReviewModel(m, x, false, true);
+                    return m;
+                }),
+                Total = productReviews.Count,
             };
 
             return Json(gridModel);

@@ -2232,8 +2232,8 @@
   <LocaleResource Name="Admin.Catalog.Products">
     <Value>Products</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Acl">
-    <Value>Access control list</Value>
+  <LocaleResource Name="Admin.Catalog.Products.AclStores">
+    <Value>ACL and Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ActivityLog">
     <Value>Activity Log</Value>
@@ -2991,8 +2991,14 @@
   <LocaleResource Name="Admin.Catalog.Products.Imported">
     <Value>Products have been imported successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Additional">
+    <Value>Additional info</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Info">
-    <Value>Product Info</Value>
+    <Value>General</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Inventory">
+    <Value>Inventory</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.DownloadPDF">
     <Value>Download catalog as PDF</Value>
@@ -3072,6 +3078,9 @@
   <LocaleResource Name="Admin.Catalog.Products.Manage">
     <Value>Manage products</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manufacturers">
     <Value>Manufacturer mappings</Value>
   </LocaleResource>
@@ -3125,6 +3134,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.SaveBeforeEdit">
     <Value>You need to save the product before you can upload pictures for this product page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Prices">
+    <Value>Prices</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes">
     <Value>Product attributes</Value>
@@ -3419,6 +3431,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.PurchasedWithOrders.Hint">
     <Value>Here you can see a list of orders in which this product was purchased.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Reviews">
+    <Value>Product Reviews</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.RelatedProducts">
     <Value>Related products</Value>

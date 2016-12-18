@@ -1,0 +1,266 @@
+﻿@using Grand.Services.Customers
+@using Grand.Services.Stores
+@model ProductModel
+
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-prices">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Price)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Price) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.Price)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OldPrice)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.OldPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.OldPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ProductCost)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ProductCost) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.ProductCost)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisableBuyButton)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.DisableBuyButton)
+                @Html.ValidationMessageFor(model => model.DisableBuyButton)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisableWishlistButton)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.DisableWishlistButton)
+                @Html.ValidationMessageFor(model => model.DisableWishlistButton)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AvailableForPreOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.AvailableForPreOrder)
+                @Html.ValidationMessageFor(model => model.AvailableForPreOrder)
+            </div>
+        </div>
+        <div class="form-group" id="pnlPreOrderAvailabilityStartDateTimeUtc">
+            @Html.GrandLabelFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.PreOrderAvailabilityStartDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CallForPrice)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.CallForPrice)
+                @Html.ValidationMessageFor(model => model.CallForPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerEntersPrice)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.CustomerEntersPrice)
+                @Html.ValidationMessageFor(model => model.CustomerEntersPrice)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMinimumCustomerEnteredPrice">
+            @Html.GrandLabelFor(model => model.MinimumCustomerEnteredPrice)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.MinimumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.MinimumCustomerEnteredPrice)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMaximumCustomerEnteredPrice">
+            @Html.GrandLabelFor(model => model.MaximumCustomerEnteredPrice)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.MaximumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.BasepriceEnabled)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.BasepriceEnabled)
+                @Html.ValidationMessageFor(model => model.BasepriceEnabled)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBasepriceAmount">
+            @Html.GrandLabelFor(model => model.BasepriceAmount)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.BasepriceAmount)
+                @Html.ValidationMessageFor(model => model.BasepriceAmount)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBasepriceUnit">
+            @Html.GrandLabelFor(model => model.BasepriceUnitId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.BasepriceUnitId, Model.AvailableBasepriceUnits)
+                @Html.ValidationMessageFor(model => model.BasepriceUnitId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBasepriceBaseAmount">
+            @Html.GrandLabelFor(model => model.BasepriceBaseAmount)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.BasepriceBaseAmount)
+                @Html.ValidationMessageFor(model => model.BasepriceBaseAmount)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBasepriceBaseUnit">
+            @Html.GrandLabelFor(model => model.BasepriceBaseUnitId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.BasepriceBaseUnitId, Model.AvailableBasepriceBaseUnits)
+                @Html.ValidationMessageFor(model => model.BasepriceBaseUnitId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsTaxExempt)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsTaxExempt)
+                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+            </div>
+        </div>
+        <div class="form-group" id="pnlTaxCategory">
+            @Html.GrandLabelFor(model => model.TaxCategoryId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
+                @Html.ValidationMessageFor(model => model.TaxCategoryId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
+            @Html.GrandLabelFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                @Html.ValidationMessageFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="tierprices-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewTierPrice" value = "@T("Admin.Catalog.Products.TierPrices.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshTierPrices" style="display: none" />
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#tierprices-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("TierPriceList", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("TierPriceDelete", "Product"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                ProductId: { editable: false, type: "string" },
+                                Store: { editable: true, type: "string" },
+                                StoreId: { editable: true, type: "string" },
+                                CustomerRole: { editable: true, type: "string" },
+                                CustomerRoleId: { editable: true, type: "string" },
+                                Quantity: { editable: true, type: "number" },
+                                Price: { editable: true, type: "number" },
+                                StartDateTimeUtc: { editable: true, type: "date" },
+                                EndDateTimeUtc: { editable: true, type: "date" },
+                                Id: { editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "StoreId",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.Store")",
+                    template: "#:Store#"
+                },
+                {
+                    field: "CustomerRoleId",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")",
+                    template: "#:CustomerRole#"
+                },
+                {
+                    field: "Quantity",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.Quantity")",
+                    //integer format
+                    format: "{0:0}"
+                }, {
+                    field: "Price",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
+                },{
+                    field: "StartDateTimeUtc",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")",
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "EndDateTimeUtc",
+                    title: "@T("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")",
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "Id",
+                    title: "@T("Admin.Common.Edit")",
+                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?productId=@(Model.Id)&btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class='btn btn-default' />"
+                },{
+                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                    title: "@T("Admin.Common.Delete")"
+                }]
+            });
+        });
+
+        $(document).ready(function() {
+            $('#btnRefreshTierPrices').click(function() {
+                $("#tierprices-grid").data('kendoGrid').dataSource.read();
+                return false;
+            });
+        });
+    </script>
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
+        </div>
+    }

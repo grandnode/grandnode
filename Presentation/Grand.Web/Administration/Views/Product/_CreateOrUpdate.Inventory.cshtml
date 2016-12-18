@@ -1,0 +1,273 @@
+﻿@using Grand.Services.Customers
+@using Grand.Services.Stores
+@using Grand.Core.Domain.Catalog;
+
+@model ProductModel
+
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-inventory">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ManageInventoryMethodId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ManageInventoryMethodId, ((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ManageInventoryMethodId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlUseMultipleWarehouses">
+            @Html.GrandLabelFor(model => model.UseMultipleWarehouses)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.UseMultipleWarehouses)
+                @Html.ValidationMessageFor(model => model.UseMultipleWarehouses)
+            </div>
+        </div>
+        <div class="form-group" id="pnlWarehouse">
+            @Html.GrandLabelFor(model => model.WarehouseId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
+                @Html.ValidationMessageFor(model => model.WarehouseId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMultipleWarehouses">
+            @Html.GrandLabelFor(model => model.ProductWarehouseInventoryModels)
+            <div class="col-md-9 col-sm-9">
+                @if (Model.ProductWarehouseInventoryModels.Count > 0)
+                {
+                    <table style="width: 600px; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")
+                                </th>
+                                <th align="center">
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")
+                                </th>
+                                <th align="center">
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")
+                                </th>
+                                <th align="center">
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")
+                                </th>
+                                <th align="center">
+                                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ProductWarehouseInventoryModels)
+                            {
+                                <tr>
+                                    <td style="width: 40%;">
+                                        <div style="padding-left: 10px; padding-right: 10px;">
+                                            @item.WarehouseName
+                                        </div>
+                                    </td>
+                                    <td align="center" style="width: 10%;">
+                                        <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
+                                        <script type="text/javascript">
+                                                $(document).ready(function() {
+                                                    $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
+                                                    toggleWarehouseUsed_@(item.WarehouseId)();
+                                                });
+
+                                                function toggleWarehouseUsed_@(item.WarehouseId)() {
+                                                    if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
+                                                        $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
+                                                        $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', false);
+                                                    } else {
+                                                        $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
+                                                        $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', true);
+                                                    }
+                                                }
+                                        </script>
+                                    <td align="center" style="width: 20%;">
+                                        <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width: 70px;" />
+                                    </td>
+                                    <td align="center" style="width: 20%;">
+                                        <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="adminInput" style="width: 70px;" />
+                                    </td>
+                                    <td align="center" style="width: 10%;">
+                                        @item.PlannedQuantity
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                        <p>
+                            <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description1")</em>
+                        </p>
+                        <p>
+                            <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description2")</em>
+                        </p>
+                        <p>
+                            <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description3")</em>
+                        </p>
+                }
+                else
+                {
+                    @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse.NotDefined")
+                }
+            </div>
+        </div>
+        <div class="form-inline" id="pnlStockQuantity">
+            @Html.GrandLabelFor(model => model.StockQuantity)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.StockQuantity)
+                @Html.ValidationMessageFor(model => model.StockQuantity)
+                <span>
+                    @Html.GrandDropDownListFor(model => model.UnitId, Model.AvailableUnits, new { @class = "form-control input-xsmall", style = "height: 30px;padding: 0px;" })
+                </span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlDisplayStockAvailability">
+            @Html.GrandLabelFor(model => model.DisplayStockAvailability)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.DisplayStockAvailability)
+                @Html.ValidationMessageFor(model => model.DisplayStockAvailability)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDisplayStockQuantity">
+            @Html.GrandLabelFor(model => model.DisplayStockQuantity)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.DisplayStockQuantity)
+                @Html.ValidationMessageFor(model => model.DisplayStockQuantity)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMinStockQuantity">
+            @Html.GrandLabelFor(model => model.MinStockQuantity)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.MinStockQuantity)
+                @Html.ValidationMessageFor(model => model.MinStockQuantity)
+            </div>
+        </div>
+        <div class="form-group" id="pnlLowStockActivity">
+            @Html.GrandLabelFor(model => model.LowStockActivityId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.LowStockActivityId, ((LowStockActivity)Model.LowStockActivityId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.LowStockActivityId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlNotifyForQuantityBelow">
+            @Html.GrandLabelFor(model => model.NotifyAdminForQuantityBelow)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.NotifyAdminForQuantityBelow)
+                @Html.ValidationMessageFor(model => model.NotifyAdminForQuantityBelow)
+            </div>
+        </div>
+        <div class="form-group" id="pnlBackorders">
+            @Html.GrandLabelFor(model => model.BackorderModeId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.BackorderModeId, ((BackorderMode)Model.BackorderModeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.BackorderModeId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlAllowBackInStockSubscriptions">
+            @Html.GrandLabelFor(model => model.AllowBackInStockSubscriptions)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.AllowBackInStockSubscriptions)
+                @Html.ValidationMessageFor(model => model.AllowBackInStockSubscriptions)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OrderMinimumQuantity)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.OrderMinimumQuantity)
+                @Html.ValidationMessageFor(model => model.OrderMinimumQuantity)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OrderMaximumQuantity)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.OrderMaximumQuantity)
+                @Html.ValidationMessageFor(model => model.OrderMaximumQuantity)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AllowedQuantities)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.AllowedQuantities)
+                @Html.ValidationMessageFor(model => model.AllowedQuantities)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.NotReturnable)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.NotReturnable)
+                @Html.ValidationMessageFor(model => model.NotReturnable)
+            </div>
+        </div>
+        <div class="form-group" id="pnlAllowAddingOnlyExistingAttributeCombinations">
+            @Html.GrandLabelFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+                @Html.ValidationMessageFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-shipping">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsShipEnabled)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsShipEnabled)
+                @Html.ValidationMessageFor(model => model.IsShipEnabled)
+            </div>
+        </div>
+        <div class="form-group" id="pnlFreeShipping">
+            @Html.GrandLabelFor(model => model.IsFreeShipping)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsFreeShipping)
+                @Html.ValidationMessageFor(model => model.IsFreeShipping)
+            </div>
+        </div>
+        <div class="form-group" id="pnlShipSeparately">
+            @Html.GrandLabelFor(model => model.ShipSeparately)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.ShipSeparately)
+                @Html.ValidationMessageFor(model => model.ShipSeparately)
+            </div>
+        </div>
+        <div class="form-group" id="pnlAdditionalShippingCharge">
+            @Html.GrandLabelFor(model => model.AdditionalShippingCharge)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.AdditionalShippingCharge) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.AdditionalShippingCharge)
+            </div>
+        </div>
+        <div class="form-group" id="pnlWeight">
+            @Html.GrandLabelFor(model => model.Weight)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Weight) [@Model.BaseWeightIn]
+                @Html.ValidationMessageFor(model => model.Weight)
+            </div>
+        </div>
+        <div class="form-group" id="pnlLength">
+            @Html.GrandLabelFor(model => model.Length)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Length) [@Model.BaseDimensionIn]
+                @Html.ValidationMessageFor(model => model.Length)
+            </div>
+        </div>
+        <div class="form-group" id="pnlWidth">
+            @Html.GrandLabelFor(model => model.Width)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Width) [@Model.BaseDimensionIn]
+                @Html.ValidationMessageFor(model => model.Width)
+            </div>
+        </div>
+        <div class="form-group" id="pnlHeight">
+            @Html.GrandLabelFor(model => model.Height)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Height) [@Model.BaseDimensionIn]
+                @Html.ValidationMessageFor(model => model.Height)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDeliveryDate">
+            @Html.GrandLabelFor(model => model.DeliveryDateId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.DeliveryDateId, Model.AvailableDeliveryDates)
+                @Html.ValidationMessageFor(model => model.DeliveryDateId)
+            </div>
+        </div>
+    </div>
+</div>

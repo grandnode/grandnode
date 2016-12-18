@@ -1,0 +1,232 @@
+﻿@using Grand.Services.Customers
+@using Grand.Services.Stores
+@using Grand.Core.Domain.Catalog;
+
+@model ProductModel
+
+
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-order">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrderCategory)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrderCategory)
+                @Html.ValidationMessageFor(model => model.DisplayOrderCategory)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrderManufacturer)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrderManufacturer)
+                @Html.ValidationMessageFor(model => model.DisplayOrderManufacturer)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.OnSale)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.OnSale)
+                @Html.ValidationMessageFor(model => model.OnSale)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-horizontal" id="group-giftcard">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsGiftCard)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsGiftCard)
+                @Html.ValidationMessageFor(model => model.IsGiftCard)
+            </div>
+        </div>
+        <div class="form-group" id="pnlGiftCardType">
+            @Html.GrandLabelFor(model => model.GiftCardTypeId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlOverriddenGiftCardAmount">
+            @Html.GrandLabelFor(model => model.OverriddenGiftCardAmount)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.OverriddenGiftCardAmount)
+                @Html.ValidationMessageFor(model => model.OverriddenGiftCardAmount)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-downloads">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsDownload)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsDownload)
+                @Html.ValidationMessageFor(model => model.IsDownload)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadFile">
+            @Html.GrandLabelFor(model => model.DownloadId)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.DownloadId)
+                @Html.ValidationMessageFor(model => model.DownloadId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlUnlimitedDownloads">
+            @Html.GrandLabelFor(model => model.UnlimitedDownloads)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.UnlimitedDownloads)
+                @Html.ValidationMessageFor(model => model.UnlimitedDownloads)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMaxNumberOfDownloads">
+            @Html.GrandLabelFor(model => model.MaxNumberOfDownloads)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.MaxNumberOfDownloads)
+                @Html.ValidationMessageFor(model => model.MaxNumberOfDownloads)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadExpirationDays">
+            @Html.GrandLabelFor(model => model.DownloadExpirationDays)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DownloadExpirationDays)
+                @Html.ValidationMessageFor(model => model.DownloadExpirationDays)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadActivationType">
+            @Html.GrandLabelFor(model => model.DownloadActivationTypeId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.DownloadActivationTypeId, ((DownloadActivationType)Model.DownloadActivationTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.DownloadActivationTypeId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlHasUserAgreement">
+            @Html.GrandLabelFor(model => model.HasUserAgreement)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.HasUserAgreement)
+                @Html.ValidationMessageFor(model => model.HasUserAgreement)
+            </div>
+        </div>
+        <div class="form-group" id="pnlUserAgreementText">
+            @Html.GrandLabelFor(model => model.UserAgreementText)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandTextAreaFor(model => model.UserAgreementText)
+                @Html.ValidationMessageFor(model => model.UserAgreementText)
+            </div>
+        </div>
+        <div class="form-group" id="pnlHasSampleDownload">
+            @Html.GrandLabelFor(model => model.HasSampleDownload)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.HasSampleDownload)
+                @Html.ValidationMessageFor(model => model.HasSampleDownload)
+            </div>
+        </div>
+        <div class="form-group" id="pnlSampleDownloadFile">
+            @Html.GrandLabelFor(model => model.SampleDownloadId)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.SampleDownloadId)
+                @Html.ValidationMessageFor(model => model.SampleDownloadId)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-horizontal" id="group-rental">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsRental)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsRental)
+                @Html.ValidationMessageFor(model => model.IsRental)
+            </div>
+        </div>
+        <div class="form-group" id="pnlRentalPriceLength">
+            @Html.GrandLabelFor(model => model.RentalPriceLength)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.RentalPriceLength)
+                @Html.ValidationMessageFor(model => model.RentalPriceLength)
+            </div>
+        </div>
+        <div class="form-group" id="pnlRentalPricePeriod">
+            @Html.GrandLabelFor(model => model.RentalPricePeriodId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.RentalPricePeriodId, ((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.RentalPricePeriodId)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-horizontal portlet light bg-inverse form-fit" id="group-recurring">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsRecurring)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsRecurring)
+                @Html.ValidationMessageFor(model => model.IsRecurring)
+            </div>
+        </div>
+        <div class="form-group" id="pnlCycleLength">
+            @Html.GrandLabelFor(model => model.RecurringCycleLength)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.RecurringCycleLength)
+                @Html.ValidationMessageFor(model => model.RecurringCycleLength)
+            </div>
+        </div>
+        <div class="form-group" id="pnlCyclePeriod">
+            @Html.GrandLabelFor(model => model.RecurringCyclePeriodId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.RecurringCyclePeriodId, ((RecurringProductCyclePeriod)Model.RecurringCyclePeriodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.RecurringCyclePeriodId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlTotalCycles">
+            @Html.GrandLabelFor(model => model.RecurringTotalCycles)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.RecurringTotalCycles)
+                @Html.ValidationMessageFor(model => model.RecurringTotalCycles)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-horizontal" id="group-required-other-products">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.RequireOtherProducts)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.RequireOtherProducts)
+                @Html.ValidationMessageFor(model => model.RequireOtherProducts)
+            </div>
+        </div>
+        <div class="form-group" id="pnlRequiredProductIds">
+            @Html.GrandLabelFor(model => model.RequiredProductIds)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.RequiredProductIds)
+                @Html.ValidationMessageFor(model => model.RequiredProductIds)
+                <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")"
+                       onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product",
+                                                       new { btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshRequiredProducts').click(function () {
+                            loadRequiredProductFriendlyNames();
+                            return false;
+                        });
+                    });
+                </script>
+                <span id="required-product-names" class="required-product-names"></span>
+            </div>
+        </div>
+        <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
+            @Html.GrandLabelFor(model => model.AutomaticallyAddRequiredProducts)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.AutomaticallyAddRequiredProducts)
+                @Html.ValidationMessageFor(model => model.AutomaticallyAddRequiredProducts)
+            </div>
+        </div>
+    </div>
+</div>

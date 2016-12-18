@@ -70,7 +70,7 @@ namespace Grand.Admin.Controllers
             model.ProductId = productReview.ProductId;
             model.ProductName = product.Name;
             model.CustomerId = productReview.CustomerId;
-            model.CustomerInfo = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest");
+            model.CustomerInfo = customer != null ? customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
             model.Rating = productReview.Rating;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
             if (!excludeProperties)

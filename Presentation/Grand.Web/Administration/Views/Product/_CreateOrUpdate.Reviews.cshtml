@@ -1,0 +1,86 @@
+﻿@model ProductModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="reviews-grid"></div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#reviews-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("Reviews", "Product", new { productId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "CustomerId",
+                    title: "@T("Admin.Catalog.ProductReviews.Fields.Customer")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                },
+                {
+                    field: "Title",
+                    title: "@T("Admin.Catalog.ProductReviews.Fields.Title")",
+                    width: 300
+                },
+                {
+                    field: "Rating",
+                    title: "@T("Admin.Catalog.ProductReviews.Fields.Rating")",
+                    width: 100
+                },
+                {
+                    field: "IsApproved",
+                    title: "@T("Admin.Catalog.ProductReviews.Fields.IsApproved")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(IsApproved) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                },
+                {
+                    field: "CreatedOn",
+                    title: "@T("Admin.Orders.Fields.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                },
+                {
+                    field: "Id",
+                    title: "@T("Admin.Common.View")",
+                    width: 100,
+                    template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/ProductReview/Edit/")#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                }]
+            });
+        });
+    </script>

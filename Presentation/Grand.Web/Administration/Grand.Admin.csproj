@@ -1454,7 +1454,6 @@
     <Content Include="Views\Product\_CreateOrUpdate.SpecificationAttributes.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.Acl.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.ProductAttributes.cshtml" />
-    <Content Include="Views\Product\_CreateOrUpdate.TierPrices.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.Discounts.cshtml" />
     <Content Include="Views\Product\_CreateOrUpdate.AssociatedProducts.cshtml" />
     <Content Include="Views\Product\AssociatedProductAddPopup.cshtml" />
@@ -1945,6 +1944,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Poll\PollAnswerEditPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Prices.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Inventory.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Reviews.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Product\_CreateOrUpdate.Additional.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

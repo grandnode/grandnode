@@ -458,4 +458,25 @@
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SubjectToAcl.Hint">
     <Value>Determines whether the poll is subject to ACL (access control list).</Value>
   </LocaleResource>
+  <LocaleResource Name="admin.catalog.products.prices">
+    <Value>Prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Inventory">
+    <Value>Inventory</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Mappings">
+    <Value>Mappings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AclStores">
+    <Value>ACL and Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Reviews">
+    <Value>Product Reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Additional">
+    <Value>Additional info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Info">
+    <Value>General</Value>
+  </LocaleResource>
 </Language>
