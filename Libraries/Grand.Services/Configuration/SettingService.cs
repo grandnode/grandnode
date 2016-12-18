@@ -138,7 +138,8 @@ namespace Grand.Services.Configuration
                 _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityInserted(setting);
+            //Removed because of write performance settings
+            //_eventPublisher.EntityInserted(setting);
         }
 
         /// <summary>
@@ -157,6 +158,10 @@ namespace Grand.Services.Configuration
             if (clearCache)
                 _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
+            //event notification
+            //Removed because of write performance settings
+            //_eventPublisher.EntityUpdated(setting);
+
         }
 
         /// <summary>
@@ -174,7 +179,8 @@ namespace Grand.Services.Configuration
             _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
 
             //event notification
-            _eventPublisher.EntityDeleted(setting);
+            //Removed because of write performance settings
+            //_eventPublisher.EntityDeleted(setting);
         }
 
         /// <summary>
