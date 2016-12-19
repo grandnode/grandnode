@@ -479,4 +479,10 @@
   <LocaleResource Name="Admin.Catalog.Products.Info">
     <Value>General</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Deleted.usagehistory">
+    <Value>The discount cannot be deleted, it was used!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
 </Language>

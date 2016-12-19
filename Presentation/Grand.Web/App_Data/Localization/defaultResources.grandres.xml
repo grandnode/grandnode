@@ -11632,6 +11632,9 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Deleted">
     <Value>The discount has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Deleted.usagehistory">
+    <Value>The discount cannot be deleted, it was used!</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.EditDiscountDetails">
     <Value>Edit discount details</Value>
   </LocaleResource>
@@ -13209,6 +13212,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Discounts">
     <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.EditVendorDetails">
     <Value>Edit vendor details</Value>
