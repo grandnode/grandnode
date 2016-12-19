@@ -553,6 +553,7 @@ namespace Grand.Services.Discounts
                     cachedRequirements.Add(new DiscountRequirementForCaching
                     {
                         Id = dr.Id,
+                        DiscountId = discount.Id,
                         SystemName = dr.DiscountRequirementRuleSystemName
                     });
                 return cachedRequirements;
@@ -573,6 +574,7 @@ namespace Grand.Services.Discounts
                 var ruleRequest = new DiscountRequirementValidationRequest
                 {
                     DiscountRequirementId = req.Id,
+                    DiscountId = req.DiscountId,
                     Customer = customer,
                     Store = _storeContext.CurrentStore
                 };
