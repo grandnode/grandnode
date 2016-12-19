@@ -7,7 +7,6 @@
 
     //title
     Html.AddTitleParts(T("PageTitle.Login").Text);
-
     //register URL with return URL (if specified)
     var registerUrl = Url.RouteUrl("Register");
     if (!String.IsNullOrEmpty(this.Context.Request.QueryString["returnUrl"]))

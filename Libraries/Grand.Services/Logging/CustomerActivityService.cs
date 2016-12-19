@@ -196,10 +196,9 @@ namespace Grand.Services.Logging
         {
             Task.Run(()=>
             {
-                InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer, commentParams);
+                InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer.Id, commentParams);
             });
         }
-        
 
         /// <summary>
         /// Inserts an activity log item
