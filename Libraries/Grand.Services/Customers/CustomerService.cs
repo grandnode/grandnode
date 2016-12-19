@@ -208,7 +208,7 @@ namespace Grand.Services.Customers
                     sctId = (int)sct.Value;
 
                 query = sct.HasValue ?
-                    query.Where(c => c.ShoppingCartItems.Count(x => x.ShoppingCartTypeId == sctId) > 0) :
+                    query.Where(c => c.ShoppingCartItems.Any(x => x.ShoppingCartTypeId == sctId.Value)) :
                     query.Where(c => c.ShoppingCartItems.Count() > 0);
             }
             
