@@ -199,10 +199,11 @@ namespace Grand.Services.Discounts
             if(usagehistory.Count > 0)
                 throw new ArgumentNullException("discount has a history");
 
+            var builder = Builders<BsonDocument>.Filter;
             if (discount.DiscountType == DiscountType.AssignedToSkus)
             {
                 var builderproduct = Builders<Product>.Update;
-                var updatefilter = builderproduct.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
+                var updatefilter = builderproduct.Pull(x => x.AppliedDiscounts, discount.Id);
                 var result = _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             }
@@ -210,7 +211,7 @@ namespace Grand.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToCategories)
             {
                 var buildercategory = Builders<Category>.Update;
-                var updatefilter = buildercategory.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
+                var updatefilter = buildercategory.Pull(x => x.AppliedDiscounts, discount.Id);
                 var result = _categoryRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             }
@@ -218,14 +219,14 @@ namespace Grand.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToManufacturers)
             {
                 var buildermanufacturer = Builders<Manufacturer>.Update;
-                var updatefilter = buildermanufacturer.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
+                var updatefilter = buildermanufacturer.Pull(x => x.AppliedDiscounts, discount.Id);
                 var result = _manufacturerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             }
             if (discount.DiscountType == DiscountType.AssignedToVendors)
             {
                 var buildervendor = Builders<Vendor>.Update;
-                var updatefilter = buildervendor.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
+                var updatefilter = buildervendor.Pull(x => x.AppliedDiscounts, discount.Id);
                 var result = _vendorRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(VENDORS_PATTERN_KEY);
             }
@@ -233,7 +234,7 @@ namespace Grand.Services.Discounts
             if (discount.DiscountType == DiscountType.AssignedToStores)
             {
                 var builderstore = Builders<Store>.Update;
-                var updatefilter = builderstore.PullFilter(x => x.AppliedDiscounts, y => y == discount.Id);
+                var updatefilter = builderstore.Pull(x => x.AppliedDiscounts, discount.Id);
                 var result = _storeRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter).Result;
                 _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
             }
