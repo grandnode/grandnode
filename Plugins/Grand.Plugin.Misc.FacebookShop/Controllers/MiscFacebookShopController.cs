@@ -20,6 +20,7 @@ using Grand.Services.Tax;
 using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Security;
 using MongoDB.Driver.Linq;
+using Grand.Core.Domain.Media;
 
 namespace Grand.Plugin.Misc.FacebookShop.Controllers
 {
@@ -43,9 +44,9 @@ namespace Grand.Plugin.Misc.FacebookShop.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
-
+        private readonly MediaSettings _mediaSettings;
         #endregion
-        
+
         #region Ctor
 
         public MiscFacebookShopController(IAclService aclService,
@@ -62,7 +63,8 @@ namespace Grand.Plugin.Misc.FacebookShop.Controllers
             IStoreContext storeContext,
             IStoreMappingService storeMappingService,
             ITaxService taxService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            MediaSettings mediaSettings)
         {
             this._aclService = aclService;
             this._cacheManager = cacheManager;
@@ -79,6 +81,7 @@ namespace Grand.Plugin.Misc.FacebookShop.Controllers
             this._storeMappingService = storeMappingService;
             this._taxService = taxService;
             this._workContext = workContext;
+            this._mediaSettings = mediaSettings;
         }
         
         #endregion
@@ -370,8 +373,8 @@ namespace Grand.Plugin.Misc.FacebookShop.Controllers
                         picture = new ProductPicture();
                     model.DefaultPictureModel = new PictureModel
                         {
-                            ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId)
+                            ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ApplyWatermarkForProduct, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ApplyWatermarkForProduct)
                         };
                     //"title" attribute
                     model.DefaultPictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
@@ -481,8 +484,8 @@ namespace Grand.Plugin.Misc.FacebookShop.Controllers
                     var picture = _pictureService.GetPictureById(x.PictureId);
                     subCatModel.PictureModel = new PictureModel
                         {
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                            ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForCategory),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForCategory, pictureSize),
                             Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName),
                             AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName)
                         };

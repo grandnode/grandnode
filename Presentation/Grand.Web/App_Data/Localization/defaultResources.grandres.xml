@@ -6221,6 +6221,24 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media">
     <Value>Media settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkForProduct">
+    <Value>Watermark On Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkForProduct.Hint">
+    <Value>Apply Watermark to Pictures of Products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkForCategory">
+    <Value>Watermark On Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkForCategory.Hint">
+    <Value>Apply Watermark to Pictures of Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkForManufacturer">
+    <Value>Watermark On Manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkForManufacturer.Hint">
+    <Value>Apply Watermark to Pictures of Manufacturers</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.AssociatedProductPictureSize">
     <Value>Associated product image size</Value>
   </LocaleResource>
@@ -6402,7 +6420,7 @@
     <Value>Apply Watermark To Pictures Above Size (px)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkOnPicturesWithOriginalSize">
-    <Value>Watermark On Original Size Picutres</Value>
+    <Value>Watermark On Original Size Pictures</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkOnPicturesWithOriginalSize.Hint">
     <Value>Indicates if pictures with no change in size should have a watermark onto them</Value>

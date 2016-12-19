@@ -375,7 +375,8 @@ namespace Grand.Services.Media
         /// <returns>Picture URL</returns>
         public virtual string GetDefaultPictureUrl(int targetSize = 0,
             PictureType defaultPictureType = PictureType.Entity,
-            string storeLocation = null)
+            string storeLocation = null,
+            bool applyWatermarkForSpecified = false)
         {
             string defaultImageFileName;
             switch (defaultPictureType)
@@ -428,7 +429,7 @@ namespace Grand.Services.Media
                                 b.Dispose();
 
                                 //UX these 2 pictureBinar'ies aren't the same byte array, assignation is needed
-                                if (targetSize >= _mediaSettings.WatermarkForPicturesAboveSize)
+                                if (targetSize >= _mediaSettings.WatermarkForPicturesAboveSize && applyWatermarkForSpecified)
                                 {
                                     pictureBinary = ApplyWatermark(pictureBinary);
                                 }
@@ -455,13 +456,14 @@ namespace Grand.Services.Media
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
         public virtual string GetPictureUrl(string pictureId,
+            bool applyWatermarkForSpecified = false,
             int targetSize = 0,
             bool showDefaultPicture = true,
             string storeLocation = null,
             PictureType defaultPictureType = PictureType.Entity)
         {
             var picture = GetPictureById(pictureId);
-            return GetPictureUrl(picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            return GetPictureUrl(picture, applyWatermarkForSpecified, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
         }
 
         /// <summary>
@@ -474,6 +476,7 @@ namespace Grand.Services.Media
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
         public virtual string GetPictureUrl(Picture picture,
+            bool applyWatermarkForSpecified = false,
             int targetSize = 0,
             bool showDefaultPicture = true,
             string storeLocation = null,
@@ -487,7 +490,7 @@ namespace Grand.Services.Media
             {
                 if (showDefaultPicture)
                 {
-                    url = GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation);
+                    url = GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation, applyWatermarkForSpecified);
                 }
                 return url;
             }
@@ -526,7 +529,7 @@ namespace Grand.Services.Media
                             if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                             {
                                 {
-                                    if (_mediaSettings.ApplyWatermarkOnPicturesWithOriginalSize)
+                                    if (_mediaSettings.ApplyWatermarkOnPicturesWithOriginalSize && applyWatermarkForSpecified)
                                     {
                                         using (var stream = new MemoryStream(pictureBinary))
                                         {
@@ -594,7 +597,7 @@ namespace Grand.Services.Media
                                         b.Dispose();
 
                                         //UX these 2 pictureBinar'ies aren't the same byte array, assignation is needed
-                                        if (targetSize >= _mediaSettings.WatermarkForPicturesAboveSize)
+                                        if (targetSize >= _mediaSettings.WatermarkForPicturesAboveSize && applyWatermarkForSpecified)
                                         {
                                             pictureBinary = ApplyWatermark(pictureBinary);
                                         }
@@ -620,7 +623,7 @@ namespace Grand.Services.Media
         /// <returns></returns>
         public virtual string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
         {
-            string url = GetPictureUrl(picture, targetSize, showDefaultPicture);
+            string url = GetPictureUrl(picture, false, targetSize, showDefaultPicture);
             if (String.IsNullOrEmpty(url))
                 return String.Empty;
 

@@ -122,6 +122,19 @@ namespace Grand.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.ApplyWatermarkOnPicturesWithOriginalSize")]
         public bool ApplyWatermarkOnPicturesWithOriginalSize { get; set; }
         public bool ApplyWatermarkOnPicturesWithOriginalSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.ApplyWatermarkForProduct")]
+        public bool ApplyWatermarkForProduct { get; set; }
+        public bool ApplyWatermarkForProduct_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.ApplyWatermarkForCategory")]
+        public bool ApplyWatermarkForCategory { get; set; }
+        public bool ApplyWatermarkForCategory_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.ApplyWatermarkForManufacturer")]
+        public bool ApplyWatermarkForManufacturer { get; set; }
+        public bool ApplyWatermarkForManufacturer_OverrideForStore { get; set; }
+
         #endregion
 
         #region Watermark Overlay

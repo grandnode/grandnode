@@ -381,6 +381,36 @@
                                     @Html.ValidationMessageFor(model => model.ApplyWatermarkOnPicturesWithOriginalSize)
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ApplyWatermarkForProduct_OverrideForStore, model => model.ApplyWatermarkForProduct, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ApplyWatermarkForProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ApplyWatermarkForProduct)
+                                    @Html.ValidationMessageFor(model => model.ApplyWatermarkForProduct)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ApplyWatermarkForCategory_OverrideForStore, model => model.ApplyWatermarkForCategory, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ApplyWatermarkForCategory, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ApplyWatermarkForCategory)
+                                    @Html.ValidationMessageFor(model => model.ApplyWatermarkForCategory)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-3 col-sm-3 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ApplyWatermarkForManufacturer_OverrideForStore, model => model.ApplyWatermarkForManufacturer, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ApplyWatermarkForManufacturer, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.ApplyWatermarkForManufacturer)
+                                    @Html.ValidationMessageFor(model => model.ApplyWatermarkForManufacturer)
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

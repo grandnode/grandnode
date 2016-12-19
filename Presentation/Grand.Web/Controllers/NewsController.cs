@@ -134,7 +134,8 @@ namespace Grand.Web.Controllers
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
                         commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId), 
+                            customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                            false,
                             _mediaSettings.AvatarPictureSize, 
                             _customerSettings.DefaultAvatarEnabled,
                             defaultPictureType:PictureType.Avatar);

@@ -44,7 +44,7 @@ namespace Grand.Plugin.Widgets.NivoSlider.Controllers
             string cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, pictureId);
             return _cacheManager.Get(cacheKey, () =>
             {
-                var url = _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);
+                var url = _pictureService.GetPictureUrl(pictureId, false, showDefaultPicture: false);
                 //little hack here. nulls aren't cacheable so set it to ""
                 if (url == null)
                     url = "";

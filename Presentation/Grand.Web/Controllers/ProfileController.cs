@@ -120,6 +120,7 @@ namespace Grand.Web.Controllers
             {
                 avatarUrl =_pictureService.GetPictureUrl(
                  customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                 false,
                  _mediaSettings.AvatarPictureSize,
                  _customerSettings.DefaultAvatarEnabled,
                  defaultPictureType: PictureType.Avatar);

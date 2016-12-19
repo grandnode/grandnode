@@ -16,7 +16,7 @@
     @Html.HiddenFor(x => x)
 </div>
 <div id="@(clientId + "image")">
-    <img src="@(pictureService.GetPictureUrl(Model, 100, true))" />
+    <img src="@(pictureService.GetPictureUrl(Model, targetSize: 100, showDefaultPicture: true))" />
 </div>
 @if (picture != null)
 {

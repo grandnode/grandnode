@@ -1755,6 +1755,7 @@ namespace Grand.Web.Controllers
             var model = new CustomerAvatarModel();
             model.AvatarUrl = _pictureService.GetPictureUrl(
                 customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                false,
                 _mediaSettings.AvatarPictureSize,
                 false);
             return View(model);
@@ -1799,6 +1800,7 @@ namespace Grand.Web.Controllers
                     
                     model.AvatarUrl = _pictureService.GetPictureUrl(
                         customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                        false,
                         _mediaSettings.AvatarPictureSize,
                         false);
                     return View(model);
@@ -1813,6 +1815,7 @@ namespace Grand.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.AvatarUrl = _pictureService.GetPictureUrl(
                 customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
+                false,
                 _mediaSettings.AvatarPictureSize,
                 false);
             return View(model);

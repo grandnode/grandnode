@@ -2250,6 +2250,9 @@ namespace Grand.Admin.Controllers
                 //Watermark Misc Options
                 model.WatermarkForPicturesAboveSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkForPicturesAboveSize, storeScope);
                 model.ApplyWatermarkOnPicturesWithOriginalSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ApplyWatermarkOnPicturesWithOriginalSize, storeScope);
+                model.ApplyWatermarkForProduct_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ApplyWatermarkForProduct, storeScope);
+                model.ApplyWatermarkForCategory_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ApplyWatermarkForCategory, storeScope);
+                model.ApplyWatermarkForManufacturer_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ApplyWatermarkForManufacturer, storeScope);
 
                 //Watermark Overlay
                 model.WatermarkOverlayID_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.WatermarkOverlayID, storeScope);
@@ -2405,6 +2408,20 @@ namespace Grand.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.ApplyWatermarkOnPicturesWithOriginalSize, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(mediaSettings, x => x.ApplyWatermarkOnPicturesWithOriginalSize, storeScope);
+
+            if (model.ApplyWatermarkForProduct_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.ApplyWatermarkForProduct, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.ApplyWatermarkForProduct, storeScope);
+            if (model.ApplyWatermarkForCategory_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.ApplyWatermarkForCategory, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.ApplyWatermarkForCategory, storeScope);
+            if (model.ApplyWatermarkForManufacturer_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(mediaSettings, x => x.ApplyWatermarkForManufacturer, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(mediaSettings, x => x.ApplyWatermarkForManufacturer, storeScope);
+
 
             //Watermark Overlay section
             if (model.WatermarkOverlayID_OverrideForStore || storeScope == "")

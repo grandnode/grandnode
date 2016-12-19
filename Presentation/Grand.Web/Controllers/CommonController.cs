@@ -224,7 +224,7 @@ namespace Grand.Web.Controllers
                 var logoPictureId = _storeInformationSettings.LogoPictureId;
                 if (!String.IsNullOrEmpty(logoPictureId))
                 {
-                    logo = _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
+                    logo = _pictureService.GetPictureUrl(logoPictureId, false, showDefaultPicture: false);
                 }
                 if (String.IsNullOrEmpty(logo))
                 {

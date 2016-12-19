@@ -510,8 +510,8 @@ namespace Grand.Web.Controllers
                         var picture = _pictureService.GetPictureById(x.PictureId);
                         var pictureModel = new PictureModel
                         {
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                            ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForCategory),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForCategory, pictureSize),
                             Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatModel.Name),
                             AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatModel.Name)
                         };
@@ -709,8 +709,8 @@ namespace Grand.Web.Controllers
                         var picture = _pictureService.GetPictureById(x.PictureId);
                         var pictureModel = new PictureModel
                         {
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                            ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForCategory),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForCategory, pictureSize),
                             Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
                             AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
                         };
@@ -887,8 +887,8 @@ namespace Grand.Web.Controllers
                     var picture = _pictureService.GetPictureById(manufacturer.PictureId);
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForManufacturer),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForManufacturer, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
                     };
@@ -1036,8 +1036,8 @@ namespace Grand.Web.Controllers
                     var picture = _pictureService.GetPictureById(vendor.PictureId);
                     var pictureModel = new PictureModel
                     {
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture, false),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, false, pictureSize),
                         Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
                     };

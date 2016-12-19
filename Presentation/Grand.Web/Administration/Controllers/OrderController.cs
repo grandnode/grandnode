@@ -95,7 +95,7 @@ namespace Grand.Admin.Controllers
         private readonly MeasureSettings _measureSettings;
         private readonly AddressSettings _addressSettings;
 	    private readonly ShippingSettings _shippingSettings;
-
+        private readonly MediaSettings _mediaSettings;
         #endregion
 
         #region Ctor
@@ -146,7 +146,8 @@ namespace Grand.Admin.Controllers
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
             AddressSettings addressSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            MediaSettings mediaSettings)
 		{
             this._orderService = orderService;
             this._orderReportService = orderReportService;
@@ -195,6 +196,7 @@ namespace Grand.Admin.Controllers
             this._addressSettings = addressSettings;
             this._shippingSettings = shippingSettings;
             this._customerService = customerService;
+            this._mediaSettings = mediaSettings;
         }
         
         #endregion
@@ -622,7 +624,7 @@ namespace Grand.Admin.Controllers
                     };
                     //picture
                     var orderItemPicture = product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
-                    orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
+                    orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, _mediaSettings.ApplyWatermarkForProduct ,75, true);
 
                     //license file
                     if (!String.IsNullOrEmpty(orderItem.LicenseDownloadId))

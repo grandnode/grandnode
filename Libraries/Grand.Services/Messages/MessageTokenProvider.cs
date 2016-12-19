@@ -36,6 +36,7 @@ using Grand.Services.News;
 using Grand.Services.Shipping;
 using Grand.Core.Domain.Vendors;
 using Grand.Core.Domain;
+using Grand.Core.Domain.Media;
 
 namespace Grand.Services.Messages
 {
@@ -64,6 +65,7 @@ namespace Grand.Services.Messages
         private readonly CurrencySettings _currencySettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly MediaSettings _mediaSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -90,6 +92,7 @@ namespace Grand.Services.Messages
             CurrencySettings currencySettings,
             ShippingSettings shippingSettings,
             StoreInformationSettings storeInformationSettings,
+            MediaSettings _mediaSettings,
             IEventPublisher eventPublisher)
         {
             this._languageService = languageService;
@@ -112,6 +115,7 @@ namespace Grand.Services.Messages
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._mediaSettings = _mediaSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -561,7 +565,7 @@ namespace Grand.Services.Messages
                         var picture = pictureService.GetPictureById(product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault().PictureId);
                         if(picture!=null)
                         {
-                            pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
+                            pictureUrl = pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForProduct, _templatesSettings.PictureSize);
                         }
                     }
                     sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
@@ -618,7 +622,7 @@ namespace Grand.Services.Messages
                         var picture = pictureService.GetPictureById(item.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
                         if (picture != null)
                         {
-                            pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
+                            pictureUrl = pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForProduct, _templatesSettings.PictureSize);
                         }
                     }
                     sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
@@ -666,7 +670,7 @@ namespace Grand.Services.Messages
                         var picture = pictureService.GetPictureById(item.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
                         if (picture != null)
                         {
-                            pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
+                            pictureUrl = pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForProduct, _templatesSettings.PictureSize);
                         }
                     }
                     sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));

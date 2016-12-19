@@ -93,7 +93,7 @@ namespace Grand.Admin.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IRepository<Product> _productRepository;
         private readonly ICacheManager _cacheManager;
-
+        private readonly MediaSettings _mediaSettings;
         #endregion
 
         #region Constructors
@@ -139,7 +139,8 @@ namespace Grand.Admin.Controllers
             IProductAttributeParser productAttributeParser,
             IDownloadService downloadService,
             IRepository<Product> productRepository,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            MediaSettings mediaSettings)
         {
             this._productService = productService;
             this._productTemplateService = productTemplateService;
@@ -183,6 +184,7 @@ namespace Grand.Admin.Controllers
             this._downloadService = downloadService;
             this._productRepository = productRepository;
             this._cacheManager = cacheManager;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion 
@@ -949,7 +951,7 @@ namespace Grand.Admin.Controllers
                 var defaultProductPicture = x.ProductPictures.FirstOrDefault();  //_pictureService.GetPicturesByProductId(x.Id, 1).FirstOrDefault();
                 if (defaultProductPicture == null)
                     defaultProductPicture = new ProductPicture();
-                productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture.PictureId, 75, true);
+                productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture.PictureId, _mediaSettings.ApplyWatermarkForProduct, 75, true);
                 //product type
                 productModel.ProductTypeName = x.ProductType.GetLocalizedEnum(_localizationService, _workContext);
                 //friendly stock qantity
@@ -2361,7 +2363,7 @@ namespace Grand.Admin.Controllers
                         Id = x.Id,
                         ProductId = product.Id,
                         PictureId = x.PictureId,
-                        PictureUrl = picture!=null ? _pictureService.GetPictureUrl(picture) : null,
+                        PictureUrl = picture!=null ? _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForProduct) : null,
                         OverrideAltAttribute = picture != null ? picture.AltAttribute : null,
                         OverrideTitleAttribute = picture != null ? picture.TitleAttribute : null,
                         DisplayOrder = x.DisplayOrder
@@ -4124,10 +4126,10 @@ namespace Grand.Admin.Controllers
                     {
                         associatedProduct = _productService.GetProductById(x.AssociatedProductId);
                     }
-                    var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false);
+                    var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct, 75, false);
                     //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
                     if (String.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetPictureUrl("", 1, true);
+                        pictureThumbnailUrl = _pictureService.GetPictureUrl("", false, 1, true);
                     return new ProductModel.ProductAttributeValueModel
                     {
                         Id = x.Id,
@@ -4194,13 +4196,13 @@ namespace Grand.Admin.Controllers
             AddLocales(_languageService, model.Locales);
 
             //pictures
-            model.ProductPictureModels = product.ProductPictures //_productService.GetProductPicturesByProductId(product.Id)
+            model.ProductPictureModels = product.ProductPictures 
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct),
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
@@ -4288,7 +4290,7 @@ namespace Grand.Admin.Controllers
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct),
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
@@ -4360,7 +4362,7 @@ namespace Grand.Admin.Controllers
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct),
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
@@ -4444,7 +4446,7 @@ namespace Grand.Admin.Controllers
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct),
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();

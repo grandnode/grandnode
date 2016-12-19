@@ -29,21 +29,25 @@ namespace Grand.Services.Media
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
+        /// <param name="applyWatermarkForSpecified">apply watermark</param>
         /// <returns>Picture URL</returns>
         string GetDefaultPictureUrl(int targetSize = 0, 
             PictureType defaultPictureType = PictureType.Entity,
-            string storeLocation = null);
+            string storeLocation = null,
+            bool applyWatermarkForSpecified = false);
 
         /// <summary>
         /// Get a picture URL
         /// </summary>
         /// <param name="pictureId">Picture identifier</param>
+        /// <param name="applyWatermarkForSpecified">apply watermark</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        string GetPictureUrl(string pictureId, 
+        string GetPictureUrl(string pictureId,
+            bool applyWatermarkForSpecified = false,
             int targetSize = 0,
             bool showDefaultPicture = true, 
             string storeLocation = null, 
@@ -53,12 +57,14 @@ namespace Grand.Services.Media
         /// Get a picture URL
         /// </summary>
         /// <param name="picture">Picture instance</param>
+        /// <param name="applyWatermarkForSpecified">apply watermark</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
         /// <returns>Picture URL</returns>
-        string GetPictureUrl(Picture picture, 
+        string GetPictureUrl(Picture picture,
+            bool applyWatermarkForSpecified = false,
             int targetSize = 0,
             bool showDefaultPicture = true, 
             string storeLocation = null, 

@@ -18,8 +18,6 @@ using Grand.Services.Tax;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
-using Grand.Core.Infrastructure;
-using Grand.Web.Framework.Localization;
 
 namespace Grand.Web.Extensions
 {
@@ -364,8 +362,8 @@ namespace Grand.Web.Extensions
 
                         var pictureModel = new PictureModel
                         {
-                            ImageUrl = pictureService.GetPictureUrl(picture.PictureId, pictureSize),
-                            FullSizeImageUrl = pictureService.GetPictureUrl(picture.PictureId)
+                            ImageUrl = pictureService.GetPictureUrl(picture.PictureId, mediaSettings.ApplyWatermarkForProduct ,pictureSize),
+                            FullSizeImageUrl = pictureService.GetPictureUrl(picture.PictureId, mediaSettings.ApplyWatermarkForProduct)
                         };
                         //"title" attribute
                         pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?

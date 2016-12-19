@@ -89,7 +89,7 @@ namespace Grand.Admin.Controllers
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new { success = true, pictureId = picture.Id,
-                imageUrl = _pictureService.GetPictureUrl(picture, 100) },
+                imageUrl = _pictureService.GetPictureUrl(picture, false, 100) },
                 "text/plain");
         }
     }

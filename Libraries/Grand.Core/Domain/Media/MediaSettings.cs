@@ -56,6 +56,10 @@ namespace Grand.Core.Domain.Media
         #region Watermark Misc Options
         public int WatermarkForPicturesAboveSize { get; set; }
         public bool ApplyWatermarkOnPicturesWithOriginalSize { get; set; }
+        public bool ApplyWatermarkForProduct { get; set; }
+        public bool ApplyWatermarkForCategory { get; set; }
+        public bool ApplyWatermarkForManufacturer { get; set; }
+
         #endregion
 
 

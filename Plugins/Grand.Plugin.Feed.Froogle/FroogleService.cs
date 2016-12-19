@@ -21,6 +21,7 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using Grand.Services.Tax;
+using Grand.Core.Domain.Media;
 
 namespace Grand.Plugin.Feed.Froogle
 {
@@ -43,7 +44,7 @@ namespace Grand.Plugin.Feed.Froogle
         private readonly MeasureSettings _measureSettings;
         private readonly FroogleSettings _froogleSettings;
         private readonly CurrencySettings _currencySettings;
-        //private readonly GoogleProductObjectContext _objectContext;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -62,7 +63,8 @@ namespace Grand.Plugin.Feed.Froogle
             IMeasureService measureService,
             MeasureSettings measureSettings,
             FroogleSettings froogleSettings,
-            CurrencySettings currencySettings)
+            CurrencySettings currencySettings,
+            MediaSettings mediaSettings)
         {
             this._googleService = googleService;
             this._priceCalculationService = priceCalculationService;
@@ -79,7 +81,7 @@ namespace Grand.Plugin.Feed.Froogle
             this._measureSettings = measureSettings;
             this._froogleSettings = froogleSettings;
             this._currencySettings = currencySettings;
-            //this._objectContext = objectContext;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -294,11 +296,12 @@ namespace Grand.Plugin.Feed.Froogle
                         //additional images [additional_image_link]
                         //up to 10 pictures
                         const int maximumPictures = 10;
-                        var pictures = product.ProductPictures.Take(maximumPictures).ToList(); //_pictureService.GetPicturesByProductId(product.Id, maximumPictures);
+                        var pictures = product.ProductPictures.Take(maximumPictures).ToList(); 
                         for (int i = 0; i < pictures.Count; i++)
                         {
                             var picture = pictures[i];
                             var imageUrl = _pictureService.GetPictureUrl(picture.PictureId,
+                                _mediaSettings.ApplyWatermarkForProduct,
                                 _froogleSettings.ProductPictureSize,
                                 storeLocation: store.Url);
 
