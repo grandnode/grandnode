@@ -51,30 +51,27 @@
             @T("Admin.Catalog.Products.ProductAttributes")
         </li>
         <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Products.Discounts")
-        </li>
-        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.AclStores")
         </li>
-        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.RelatedProducts")
         </li>
-        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.CrossSells")
         </li>
-        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-associated-products">
+        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex()) id="tab-associated-products">
             @T("Admin.Catalog.Products.AssociatedProducts")
         </li>
-        <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.ActivityLog")
         </li>
 
         @if (!String.IsNullOrEmpty(Model.Id))
         {
-            <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.PurchasedWithOrders")
             </li>
-            <li @Html.RenderSelectedTabIndex(16, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(15, GetSelectedTabIndex())>
                 @T("Admin.Catalog.Products.Reviews")
             </li>
         }
@@ -105,9 +102,6 @@
     </div>
     <div>
         @TabProductAttributes()
-    </div>
-    <div>
-        @TabDiscounts()
     </div>
     <div>
         @TabAclStores()
@@ -189,10 +183,6 @@
 @helper TabProductAttributes()
 {
     @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
-}
-@helper TabDiscounts()
-{
-    @Html.Partial("_CreateOrUpdate.Discounts", Model)
 }
 @helper TabRelatedProducts()
 {

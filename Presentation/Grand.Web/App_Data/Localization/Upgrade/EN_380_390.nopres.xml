@@ -485,4 +485,7 @@
   <LocaleResource Name="Admin.Vendors.Discounts.NoDiscounts">
     <Value>No discounts available. Create at least one discount before mapping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AvailableDiscounts">
+    <Value>Available discount</Value>
+  </LocaleResource>
 </Language>

@@ -148,7 +148,7 @@
             <div id="tierprices-grid"></div>
         </div>
         <div class="panel-footer">
-            <input type="submit" id="btnAddNewTierPrice" value = "@T("Admin.Catalog.Products.TierPrices.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="k-button" />
+            <input type="submit" id="btnAddNewTierPrice" value="@T("Admin.Catalog.Products.TierPrices.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("TierPriceCreatePopup", "Product", new { productId = Model.Id, btnId = "btnRefreshTierPrices", formId = "product-form"}))', 800, 600, true); return false;" class="k-button" />
             <input type="submit" id="btnRefreshTierPrices" style="display: none" />
         </div>
     </div>
@@ -229,7 +229,7 @@
                 }, {
                     field: "Price",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
-                },{
+                }, {
                     field: "StartDateTimeUtc",
                     title: "@T("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")",
                     type: "date",
@@ -243,24 +243,53 @@
                     field: "Id",
                     title: "@T("Admin.Common.Edit")",
                     template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/TierPriceEditPopup/")#=Id#?productId=@(Model.Id)&btnId=btnRefreshTierPrices&formId=product-form', 800, 600, true); return false;\" class='btn btn-default' />"
-                },{
+                }, {
                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                     title: "@T("Admin.Common.Delete")"
                 }]
             });
         });
 
-        $(document).ready(function() {
-            $('#btnRefreshTierPrices').click(function() {
+        $(document).ready(function () {
+            $('#btnRefreshTierPrices').click(function () {
                 $("#tierprices-grid").data('kendoGrid').dataSource.read();
                 return false;
             });
         });
     </script>
-    }
-    else
-    {
-        <div class="note note-info">
-            @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
+    </div>
+}
+
+
+@if (Model.AvailableDiscounts != null && Model.AvailableDiscounts.Count > 0)
+{
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            @T("Admin.Catalog.Products.AvailableDiscounts")
         </div>
-    }
+        <div class="panel-body">
+            <div class="mt-checkbox-list">
+                @foreach (var discount in Model.AvailableDiscounts)
+                {
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
+                               @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>     } />@discount.Name
+                            <span></span>
+                        </label>
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Catalog.Manufacturers.Discounts.NoDiscounts")
+    </div>
+}
