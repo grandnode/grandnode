@@ -1241,6 +1241,7 @@ namespace Grand.Services.Orders
                         ShippingRateComputationMethodSystemName = details.ShippingRateComputationMethodSystemName,
                         CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
                         VatNumber = details.VatNumber,
+                        UrlReferrer = details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer),
                         CreatedOnUtc = DateTime.UtcNow
                     };
 

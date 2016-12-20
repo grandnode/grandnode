@@ -601,6 +601,7 @@ namespace Grand.Admin.Controllers
                         model.LastPurchaseDate = _dateTimeHelper.ConvertToUserTime(customer.LastPurchaseDateUtc.Value, DateTimeKind.Utc);
                     model.LastIpAddress = customer.LastIpAddress;
                     model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+                    model.LastUrlReferrer = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer);
 
                     model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
                     //newsletter subscriptions

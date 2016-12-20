@@ -9671,6 +9671,12 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.LastVisitedPage.Hint">
     <Value>The last visited date (public store).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.LastUrlReferrer">
+    <Value>Last url referrer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.LastUrlReferrer.Hint">
+    <Value>The url referrer.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter">
     <Value>Newsletter</Value>
   </LocaleResource>
@@ -10803,6 +10809,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Tax.Hint">
     <Value>Total tax applied to this order. Manage your tax settings from Configuration : Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.UrlReferrer">
+    <Value>Url referrer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.UrlReferrer.Hint">
+    <Value>The last url referrer from customer at the time of the order.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.UsedDiscounts">
     <Value>Used discounts</Value>

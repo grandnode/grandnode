@@ -575,6 +575,16 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                     </div>
                 </div>
             }
+            @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastUrlReferrer))
+            {
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.LastUrlReferrer)
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label"> @Html.DisplayFor(model => model.LastUrlReferrer)</label>
+                    </div>
+                </div>
+            }
+
             @if (!String.IsNullOrEmpty(Model.Id) && Model.LastPurchaseDate.HasValue)
             {
                 <div class="form-group">

@@ -700,6 +700,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("CustomerLanguageId", null, order.CustomerLanguageId.ToString());
                 xmlWriter.WriteElementString("CustomerTaxDisplayTypeId", null, order.CustomerTaxDisplayTypeId.ToString());
                 xmlWriter.WriteElementString("CustomerIp", null, order.CustomerIp);
+                xmlWriter.WriteElementString("UrlReferrer", null, order.UrlReferrer);
                 xmlWriter.WriteElementString("OrderSubtotalInclTax", null, order.OrderSubtotalInclTax.ToString());
                 xmlWriter.WriteElementString("OrderSubtotalExclTax", null, order.OrderSubtotalExclTax.ToString());
                 xmlWriter.WriteElementString("OrderSubTotalDiscountInclTax", null, order.OrderSubTotalDiscountInclTax.ToString());

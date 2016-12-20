@@ -83,6 +83,7 @@ namespace Grand.Services.ExportImport.Tests {
                 CustomerLanguageId = "14",
                 AffiliateId= "15",
                 CustomerIp="CustomerIp1",
+                UrlReferrer = "",
                 AllowStoringCreditCardNumber= true,
                 CardType= "Visa",
                 CardName = "John Smith",

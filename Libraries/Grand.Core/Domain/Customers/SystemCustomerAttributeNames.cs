@@ -32,6 +32,7 @@ namespace Grand.Core.Domain.Customers
         public static string PasswordRecoveryTokenDateGenerated { get { return "PasswordRecoveryTokenDateGenerated"; } }
         public static string AccountActivationToken { get { return "AccountActivationToken"; } }
         public static string LastVisitedPage { get { return "LastVisitedPage"; } }
+        public static string LastUrlReferrer { get { return "LastUrlReferrer"; } }
         public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
         public static string AdminAreaStoreScopeConfiguration { get { return "AdminAreaStoreScopeConfiguration"; } }
 

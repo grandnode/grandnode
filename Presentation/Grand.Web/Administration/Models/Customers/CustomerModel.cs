@@ -168,6 +168,8 @@ namespace Grand.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastVisitedPage")]
         public string LastVisitedPage { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastUrlReferrer")]
+        public string LastUrlReferrer { get; set; }
 
         //customer roles
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]

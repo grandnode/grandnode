@@ -26,6 +26,10 @@ namespace Grand.Web.Framework
             if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 return;
 
+            //ajax request should not save
+            if (filterContext.HttpContext.Request.IsAjaxRequest())
+                return;
+
             var customerSettings = EngineContext.Current.Resolve<CustomerSettings>();
             if (!customerSettings.StoreLastVisitedPage)
                 return;
@@ -42,6 +46,17 @@ namespace Grand.Web.Framework
                 {
                     genericAttributeService.SaveAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
                 }
+
+                if (filterContext.HttpContext.Request.UrlReferrer != null)
+                    if (filterContext.HttpContext.Request.Url.Host != filterContext.HttpContext.Request.UrlReferrer.Host)
+                    {
+                        var previousUrlReferrer = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer);
+                        var actualUrlReferrer = filterContext.HttpContext.Request.UrlReferrer.ToString();
+                        if (previousUrlReferrer != actualUrlReferrer)
+                        {
+                            genericAttributeService.SaveAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastUrlReferrer, actualUrlReferrer);
+                        }
+                    }
             }
         }
     }

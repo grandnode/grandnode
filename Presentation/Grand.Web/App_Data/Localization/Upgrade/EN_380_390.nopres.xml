@@ -506,4 +506,16 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.ApplyWatermarkForManufacturer.Hint">
     <Value>Apply Watermark to Pictures of Manufacturers</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.LastUrlReferrer">
+    <Value>Last url referrer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.LastUrlReferrer.Hint">
+    <Value>The url referrer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.UrlReferrer">
+    <Value>Url referrer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.UrlReferrer.Hint">
+    <Value>The last url referrer from customer at the time of the order.</Value>
+  </LocaleResource>
 </Language>
