@@ -194,10 +194,7 @@ namespace Grand.Services.Logging
         public virtual void InsertActivity(string systemKeyword, string entityKeyId,
             string comment, params object[] commentParams)
         {
-            Task.Run(()=>
-            {
-                InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer.Id, commentParams);
-            });
+            InsertActivity(systemKeyword, entityKeyId, comment, _workContext.CurrentCustomer, commentParams);
         }
 
         /// <summary>

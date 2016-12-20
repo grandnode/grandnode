@@ -1523,117 +1523,113 @@ namespace Grand.Services.Orders
                     #endregion
 
                     #region Notifications & notes
-                    Task.Run(() =>
+                    //notes, messages
+                    if (_workContext.OriginalCustomerIfImpersonated != null)
                     {
-
-                        //notes, messages
-                        if (_workContext.OriginalCustomerIfImpersonated != null)
+                        //this order is placed by a store administrator impersonating a customer
+                        _orderService.InsertOrderNote(new OrderNote
                         {
-                            //this order is placed by a store administrator impersonating a customer
+                            Note = string.Format("Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
+                                _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow,
+                            OrderId = order.Id,
+                        });
+                    }
+                    else
+                    {
+                        _orderService.InsertOrderNote(new OrderNote
+                        {
+                            Note = "Order placed",
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow,
+                            OrderId = order.Id,
+
+                        });
+                    }
+
+
+                    //send email notifications
+                    int orderPlacedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                    if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
+                    {
+                        _orderService.InsertOrderNote(new OrderNote
+                        {
+                            Note = "\"Order placed\" email (to store owner) has been queued",
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow,
+                            OrderId = order.Id,
+
+                        });
+                    }
+
+                    var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+                        _pdfService.PrintOrderToPdf(order, order.CustomerLanguageId) : null;
+                    var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
+                        "order.pdf" : null;
+                    int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService
+                        .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
+                    if (orderPlacedCustomerNotificationQueuedEmailId > 0)
+                    {
+                        _orderService.InsertOrderNote(new OrderNote
+                        {
+                            Note = "\"Order placed\" email (to customer) has been queued",
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow,
+                            OrderId = order.Id,
+
+                        });
+                    }
+
+                    var vendors = GetVendorsInOrder(order);
+                    foreach (var vendor in vendors)
+                    {
+                        int orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
+                        if (orderPlacedVendorNotificationQueuedEmailId > 0)
+                        {
                             _orderService.InsertOrderNote(new OrderNote
                             {
-                                Note = string.Format("Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
-                                    _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
+                                Note = "\"Order placed\" email (to vendor) has been queued",
                                 DisplayToCustomer = false,
                                 CreatedOnUtc = DateTime.UtcNow,
                                 OrderId = order.Id,
                             });
                         }
-                        else
-                        {
-                            _orderService.InsertOrderNote(new OrderNote
-                            {
-                                Note = "Order placed",
-                                DisplayToCustomer = false,
-                                CreatedOnUtc = DateTime.UtcNow,
-                                OrderId = order.Id,
+                    }
 
-                            });
-                        }
+                    //check order status
+                    CheckOrderStatus(order);
 
+                    //reset checkout data
+                    if (!processPaymentRequest.IsRecurringPayment)
+                        _customerService.ResetCheckoutData(details.Customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
 
-                        //send email notifications
-                        int orderPlacedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
-                        if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
-                        {
-                            _orderService.InsertOrderNote(new OrderNote
-                            {
-                                Note = "\"Order placed\" email (to store owner) has been queued",
-                                DisplayToCustomer = false,
-                                CreatedOnUtc = DateTime.UtcNow,
-                                OrderId = order.Id,
+                    if (!processPaymentRequest.IsRecurringPayment)
+                    {
+                        _customerActivityService.InsertActivity(
+                            "PublicStore.PlaceOrder", "",
+                            _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"),
+                            order.Id);
+                    }
 
-                            });
-                        }
+                    //Updated field "free shipping" after added a new order
+                    _customerService.UpdateFreeShipping(order.CustomerId, false);
 
-                        var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                            _pdfService.PrintOrderToPdf(order, order.CustomerLanguageId) : null;
-                        var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                            "order.pdf" : null;
-                        int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService
-                            .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
-                        if (orderPlacedCustomerNotificationQueuedEmailId > 0)
-                        {
-                            _orderService.InsertOrderNote(new OrderNote
-                            {
-                                Note = "\"Order placed\" email (to customer) has been queued",
-                                DisplayToCustomer = false,
-                                CreatedOnUtc = DateTime.UtcNow,
-                                OrderId = order.Id,
+                    //Update customer reminder history
+                    _customerService.UpdateCustomerReminderHistory(order.CustomerId, order.Id);
 
-                            });
-                        }
+                    //Update field Last purchase date after added a new order
+                    _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
 
-                        var vendors = GetVendorsInOrder(order);
-                        foreach (var vendor in vendors)
-                        {
-                            int orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
-                            if (orderPlacedVendorNotificationQueuedEmailId > 0)
-                            {
-                                _orderService.InsertOrderNote(new OrderNote
-                                {
-                                    Note = "\"Order placed\" email (to vendor) has been queued",
-                                    DisplayToCustomer = false,
-                                    CreatedOnUtc = DateTime.UtcNow,
-                                    OrderId = order.Id,
-                                });
-                            }
-                        }
-
-                        //check order status
-                        CheckOrderStatus(order);
-
-                        //reset checkout data
-                        if (!processPaymentRequest.IsRecurringPayment)
-                            _customerService.ResetCheckoutData(details.Customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
-
-                        if (!processPaymentRequest.IsRecurringPayment)
-                        {
-                            _customerActivityService.InsertActivity(
-                                "PublicStore.PlaceOrder", "",
-                                _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"),
-                                order.Id);
-                        }
-
-                        //Updated field "free shipping" after added a new order
-                        _customerService.UpdateFreeShipping(order.CustomerId, false);
-
-                        //Update customer reminder history
-                        _customerService.UpdateCustomerReminderHistory(order.CustomerId, order.Id);
-
-                        //Update field Last purchase date after added a new order
-                        _customerService.UpdateCustomerLastPurchaseDate(order.CustomerId, order.CreatedOnUtc);
-
-                        //Update field last update cart
-                        _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
-                        //raise event       
-                        _eventPublisher.Publish(new OrderPlacedEvent(order));
-                        _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);
-                        if (order.PaymentStatus == PaymentStatus.Paid)
-                        {
-                            ProcessOrderPaid(order);
-                        }
-                    });
+                    //Update field last update cart
+                    _customerService.UpdateCustomerLastUpdateCartDate(order.CustomerId, null);
+                    //raise event       
+                    _eventPublisher.Publish(new OrderPlacedEvent(order));
+                    _customerActionEventService.AddOrder(order, _workContext.CurrentCustomer);
+                    if (order.PaymentStatus == PaymentStatus.Paid)
+                    {
+                        ProcessOrderPaid(order);
+                    }
                     #endregion
                 }
                 else

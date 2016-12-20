@@ -679,9 +679,8 @@ namespace Grand.Services.Media
                 return;
             foreach (string str in System.IO.Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories))
             {
-                if (str.Contains("pingo.exe"))
+                if (str.Contains("pingo.exe") || str.Contains("placeholder.txt"))
                     continue;
-
                 try
                 {
                     File.Delete(this.GetThumbLocalPath(str));

@@ -514,6 +514,7 @@ namespace Grand.Services.Catalog
             {
                 var update = new UpdateDefinitionBuilder<Product>().Inc(x => x.Viewed, qty);
                 var result = _productRepository.Collection.UpdateManyAsync(x => x.Id == productId, update).Result;
+                _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
             });
         }
 
@@ -523,6 +524,7 @@ namespace Grand.Services.Catalog
             {
                 var update = new UpdateDefinitionBuilder<Product>().Inc(x => x.Sold, qty);
                 var result = _productRepository.Collection.UpdateManyAsync(x => x.Id == productId, update).Result;
+                _cacheManager.RemoveByPattern(string.Format(PRODUCTS_BY_ID_KEY, productId));
             });
         }
 
