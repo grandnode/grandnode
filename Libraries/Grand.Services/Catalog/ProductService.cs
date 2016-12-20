@@ -456,7 +456,8 @@ namespace Grand.Services.Catalog
                 oldProduct.IsFreeShipping!=product.IsFreeShipping ||
                 oldProduct.IsGiftCard != product.IsGiftCard ||
                 oldProduct.IsShipEnabled != product.IsShipEnabled ||
-                oldProduct.IsTaxExempt != product.IsTaxExempt
+                oldProduct.IsTaxExempt != product.IsTaxExempt ||
+                oldProduct.IsRecurring != product.IsRecurring
                 )
             {
 
@@ -471,7 +472,8 @@ namespace Grand.Services.Catalog
                             .Set(x => x.ShoppingCartItems.ElementAt(-1).IsFreeShipping, product.IsFreeShipping)
                             .Set(x => x.ShoppingCartItems.ElementAt(-1).IsGiftCard, product.IsGiftCard)
                             .Set(x => x.ShoppingCartItems.ElementAt(-1).IsShipEnabled, product.IsShipEnabled)
-                            .Set(x => x.ShoppingCartItems.ElementAt(-1).IsTaxExempt, product.IsTaxExempt);
+                            .Set(x => x.ShoppingCartItems.ElementAt(-1).IsTaxExempt, product.IsTaxExempt)
+                            .Set(x => x.ShoppingCartItems.ElementAt(-1).IsRecurring, product.IsRecurring);
 
                         var _builderCustomer = Builders<Customer>.Filter;
                         var _filterCustomer = _builderCustomer.ElemMatch(x => x.ShoppingCartItems, y => y.Id == item.Id);
