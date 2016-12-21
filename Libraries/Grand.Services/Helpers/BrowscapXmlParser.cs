@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Grand.Core;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Grand.Services.Helpers
 {
@@ -28,34 +29,32 @@ namespace Grand.Services.Helpers
 
         private void Initialize(string filePath)
         {
-            var sr = new StreamReader(filePath);
-            var text = sr.ReadToEnd().Replace("&", "&amp;");
+            using (var sr = new StreamReader(filePath))
+            {
+                var browsercapItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null);
+                if (browsercapItems == null)
+                    throw new Exception("Incorrect file format");
 
-            var browsercapItems = XDocument.Parse(text).Root.Return(x => x.Element("browsercapitems"), null);
-
-            if (browsercapItems == null)
-                throw new Exception("Incorrect file format");
-
-            _crawlerUserAgentsRegexp.AddRange(browsercapItems.Elements("browscapitem")
-                //only crawlers
-                .Where(IsBrowscapItemIsCrawler)
-                //get only user agent names
-                .Select(e => e.Attribute("name").Return(a => a.Value.Replace("&amp;", "&"), ""))
-                .Where(s => !string.IsNullOrEmpty(s))
-                .Select(ToRegexp));
+                _crawlerUserAgentsRegexp.AddRange(browsercapItems.Elements("browscapitem")
+                    .Where(IsBrowscapItemIsCrawler)
+                    .Select(e => e.Attribute("name"))
+                    .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
+                    .Select(e => e.Value)
+                    .Select(ToRegexp));
+            }
         }
 
         private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
         {
             var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name").Return(a => a.Value, "") == "Crawler");
-
-            return el == null ? false : el.Attribute("value").Return(a => a.Value.ToLower() == "true", false);
+            return el != null && el.Attribute("value").Return(a => a.Value.ToLower() == "true", false);
         }
 
-        private string ToRegexp(string str)
+        private static string ToRegexp(string str)
         {
-            str = String.Format("^{0}$", Regex.Escape(str));
-            return str.Replace("\\?", ".").Replace("\\*", ".*?");
+            var sb = new StringBuilder(Regex.Escape(str));
+            sb.Replace("&amp;", "&").Replace("\\?", ".").Replace("\\*", ".*?");
+            return string.Format("^{0}$", sb);
         }
 
         /// <summary>
