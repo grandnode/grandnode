@@ -680,8 +680,8 @@ namespace Grand.Services.Orders
         {
             var customer = _customerService.GetCustomerById(order.CustomerId);
 
-            int points = _orderTotalCalculationService.CalculateRewardPoints(customer, order.OrderTotal);
-            if (points == 0)
+            int points = _orderTotalCalculationService.CalculateRewardPoints(customer, order.OrderTotal - order.OrderShippingInclTax);
+            if (points <= 0)
                 return;
 
             //Ensure that reward points were not added before. We should not add reward points if they were already earned for this order
@@ -690,9 +690,7 @@ namespace Grand.Services.Orders
 
             //add reward points
             _rewardPointsService.AddRewardPointsHistory(customer.Id, points, order.StoreId, string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.OrderNumber));
-            //order.RewardPointsWereAdded = true;
-            //order.RedeemedRewardPointsEntry = rph;
-            //_orderService.UpdateOrder(order);
+
         }
 
         /// <summary>
@@ -702,8 +700,8 @@ namespace Grand.Services.Orders
         protected virtual void ReduceRewardPoints(Order order)
         {
             var customer = _customerService.GetCustomerById(order.CustomerId);
-            int points = _orderTotalCalculationService.CalculateRewardPoints(customer, order.OrderTotal);
-            if (points == 0)
+            int points = _orderTotalCalculationService.CalculateRewardPoints(customer, order.OrderTotal - order.OrderShippingInclTax);
+            if (points <= 0)
                 return;
 
             //ensure that reward points were already earned for this order before

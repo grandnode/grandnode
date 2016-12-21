@@ -1077,8 +1077,13 @@ namespace Grand.Web.Controllers
                     _rewardPointsSettings.DisplayHowMuchWillBeEarned &&
                     shoppingCartTotalBase.HasValue)
                 {
-                    model.WillEarnRewardPoints = _orderTotalCalculationService
-                        .CalculateRewardPoints(_workContext.CurrentCustomer, shoppingCartTotalBase.Value);
+                    decimal? shippingBaseInclTax = model.RequiresShipping
+                        ? _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, true)
+                        : 0;
+                    var earnRewardPoints = shoppingCartTotalBase.Value - shippingBaseInclTax.Value;
+                    if(earnRewardPoints > 0)
+                        model.WillEarnRewardPoints = _orderTotalCalculationService
+                            .CalculateRewardPoints(_workContext.CurrentCustomer, earnRewardPoints);
                 }
 
             }
