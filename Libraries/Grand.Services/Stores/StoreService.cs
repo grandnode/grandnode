@@ -77,7 +77,8 @@ namespace Grand.Services.Stores
 
             _storeRepository.Delete(store);
 
-            _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
+            //clear cache
+            _cacheManager.Clear();
 
             //event notification
             _eventPublisher.EntityDeleted(store);
@@ -122,7 +123,8 @@ namespace Grand.Services.Stores
 
             _storeRepository.Insert(store);
 
-            _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
+            //clear cache
+            _cacheManager.Clear();
 
             //event notification
             _eventPublisher.EntityInserted(store);
@@ -139,7 +141,8 @@ namespace Grand.Services.Stores
 
             _storeRepository.Update(store);
 
-            _cacheManager.RemoveByPattern(STORES_PATTERN_KEY);
+            //clear cache
+            _cacheManager.Clear();
 
             //event notification
             _eventPublisher.EntityUpdated(store);
