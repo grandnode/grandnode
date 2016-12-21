@@ -116,7 +116,6 @@ namespace Grand.Web.Framework
 
             //plugins
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerLifetimeScope();
-            builder.RegisterType<OfficialFeedManager>().As<IOfficialFeedManager>().InstancePerLifetimeScope();
 
             //cache manager
             if (config.RedisCachingEnabled)
