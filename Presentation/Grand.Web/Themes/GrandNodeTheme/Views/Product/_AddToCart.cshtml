@@ -5,7 +5,7 @@
 {
     @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
 }
-@if (!Model.DisableBuyButton || Model.CustomerEntersPrice)
+@if (!Model.DisableBuyButton)
 {
     if (Model.CustomerEntersPrice)
     {
