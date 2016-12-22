@@ -161,15 +161,15 @@
                                     @Html.ValidationMessageFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    @T("admin.configuration.settings.shipping.shippingoriginaddress") 
                                     @Html.OverrideStoreCheckboxFor(model => model.ShippingOriginAddress_OverrideForStore, "pnlShippingOriginAddress", Model.ActiveStoreScopeConfiguration)
-                                    <strong>@Html.GrandLabelFor(model => model.ShippingOriginAddress, new Dictionary<string, object> { { "class", "control-label" } }, false)</strong>
                                 </div>
-                            </div>
-                            <div class="form-group" id="pnlShippingOriginAddress">
-                                <div>
-                                    @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
+                                <div class="form-group" id="pnlShippingOriginAddress">
+                                    <div>
+                                        @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
+                                    </div>
                                 </div>
                             </div>
                         </div>
