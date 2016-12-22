@@ -233,7 +233,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                         field: "Id",
                         title: "@T("Admin.Common.Edit")",
                         width: 100,
-                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Poll/PollAnswerEditPopup/")#=Id#?pollId=#=PollId#&btnId=btnRefresh&formId=poll-form', 800, 450, true); return false;\" class='k-button' />"
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Poll/PollAnswerEditPopup/")#=Id#?pollId=@(Model.Id)&btnId=btnRefresh&formId=poll-form', 800, 450, true); return false;\" class='k-button' />"
                     }, 
                     {
                         command: [{

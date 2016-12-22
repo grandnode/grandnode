@@ -326,7 +326,7 @@ namespace Grand.Web.Framework
         }
     }
 
-
+    
     public class SettingsSource : IRegistrationSource
     {
         static readonly MethodInfo BuildMethod = typeof(SettingsSource).GetMethod(
@@ -368,5 +368,5 @@ namespace Grand.Web.Framework
 
         public bool IsAdapterForIndividualComponents { get { return false; } }
     }
-
+    
 }

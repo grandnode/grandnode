@@ -345,57 +345,6 @@ namespace Grand.Admin.Controllers
 
             return Json(gridModel);
         }
-
-        /*
-        [HttpPost]
-        public ActionResult PollAnswerUpdate(PollAnswerModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-            
-            if (!ModelState.IsValid)
-            {
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
-            var poll = _pollService.GetPollById(model.PollId);
-            var pollAnswer = poll.PollAnswers.FirstOrDefault(x=>x.Id == model.Id);
-            if (pollAnswer == null)
-                throw new ArgumentException("No poll answer found with the specified id");
-            pollAnswer.Name = model.Name;
-            pollAnswer.DisplayOrder = model.DisplayOrder;
-            _pollService.UpdatePoll(poll);
-
-            return new NullJsonResult();
-        }
-
-        [HttpPost]
-        public ActionResult PollAnswerAdd(string pollId, [Bind(Exclude = "Id")] PollAnswerModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
-                return AccessDeniedView();
-           
-            if (!ModelState.IsValid)
-            {
-                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
-            }
-
-            var poll = _pollService.GetPollById(pollId);
-            if (poll == null)
-                throw new ArgumentException("No poll found with the specified id", "pollId");
-
-            poll.PollAnswers.Add(new PollAnswer 
-            {
-                Name = model.Name,
-                PollId = pollId,
-                DisplayOrder = model.DisplayOrder
-            });
-            _pollService.UpdatePoll(poll);
-
-            return new NullJsonResult();
-        }
-        */
-
-
         //create
         public ActionResult PollAnswerCreatePopup(string pollId)
         {
