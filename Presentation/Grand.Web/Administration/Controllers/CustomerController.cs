@@ -2110,9 +2110,10 @@ namespace Grand.Admin.Controllers
                     var m = new CustomerModel.ActivityLogModel
                     {
                         Id = x.Id,
-                        ActivityLogTypeName = x.ActivityLogType.Name,
+                        ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
                         Comment = x.Comment,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
+                        IpAddress = x.IpAddress
                     };
                     return m;
 

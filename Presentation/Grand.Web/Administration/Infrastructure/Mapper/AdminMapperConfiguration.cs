@@ -351,7 +351,6 @@ namespace Grand.Admin.Infrastructure.Mapper
                 cfg.CreateMap<ActivityLogType, ActivityLogTypeModel>()
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<ActivityLog, ActivityLogModel>()
-                    .ForMember(dest => dest.ActivityLogTypeName, mo => mo.MapFrom(src => src.ActivityLogType.Name))
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<ActivityStats, ActivityStatsModel>()

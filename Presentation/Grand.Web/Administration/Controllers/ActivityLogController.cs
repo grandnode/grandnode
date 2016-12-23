@@ -130,6 +130,7 @@ namespace Grand.Admin.Controllers
                     var customer = _customerService.GetCustomerById(x.CustomerId);
                     var m = x.ToModel();
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    m.ActivityLogTypeName = _customerActivityService.GetActivityTypeById(m.ActivityLogTypeId)?.Name;
                     m.CustomerEmail = customer != null ? customer.Email : "NULL";
                     return m;
 

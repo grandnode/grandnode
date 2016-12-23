@@ -8,6 +8,8 @@ namespace Grand.Admin.Models.Logging
     {
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")]
         public string ActivityLogTypeName { get; set; }
+        public string ActivityLogTypeId { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")]
         public string CustomerId { get; set; }
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")]

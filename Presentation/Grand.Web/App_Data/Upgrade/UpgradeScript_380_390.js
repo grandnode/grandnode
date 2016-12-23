@@ -100,4 +100,7 @@ db.Customer.find().forEach(
   }
 )
 
+//remove field ActivityLogType from the ActivityLog Collection
+db.ActivityLog.update({}, { $unset: { ActivityLogType: 1 } }, { multi: true });
+
 print("Update executed");

@@ -1144,16 +1144,21 @@ var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.Admin
                             columns: [{
                                 field: "ActivityLogTypeName",
                                 title: "@T("Admin.Customers.Customers.ActivityLog.ActivityLogType")",
-                                width: 150,
+                                width: 140,
                             }, {
                                 field: "Comment",
-                                title: "@T("Admin.Customers.Customers.ActivityLog.Comment")"
+                                title: "@T("Admin.Customers.Customers.ActivityLog.Comment")",
+                                width: 250,
                             }, {
                                 field: "CreatedOn",
                                 title: "@T("Admin.Customers.Customers.ActivityLog.CreatedOn")",
-                                width: 300,
+                                width: 120,
                                 type: "date",
                                 format: "{0:G}"
+                            }, {
+                                field: "IpAddress",
+                                title: "@T("Admin.Customers.Customers.ActivityLog.IpAddress")",
+                                width: 50,
                             }]
                         });
                     });

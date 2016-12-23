@@ -776,7 +776,7 @@ namespace Grand.Admin.Controllers
                     var m = new ManufacturerModel.ActivityLogModel
                     {
                         Id = x.Id,
-                        ActivityLogTypeName = x.ActivityLogType.Name,
+                        ActivityLogTypeName = _customerActivityService.GetActivityTypeById(x.ActivityLogTypeId)?.Name,
                         Comment = x.Comment,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
                         CustomerId = x.CustomerId,

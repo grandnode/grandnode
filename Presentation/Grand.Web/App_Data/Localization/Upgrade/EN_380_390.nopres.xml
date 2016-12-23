@@ -518,4 +518,7 @@
   <LocaleResource Name="Admin.Orders.Fields.UrlReferrer.Hint">
     <Value>The last url referrer from customer at the time of the order.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress">
+    <Value>Ip address</Value>
+  </LocaleResource>
 </Language>

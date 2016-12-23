@@ -219,7 +219,6 @@ namespace Grand.Services.Logging
             comment = CommonHelper.EnsureNotNull(comment);
             comment = string.Format(comment, commentParams);
             comment = CommonHelper.EnsureMaximumLength(comment, 4000);
-
             
             var activity = new ActivityLog();
             activity.ActivityLogTypeId = activityType.Id;
@@ -227,9 +226,6 @@ namespace Grand.Services.Logging
             activity.EntityKeyId = entityKeyId;
             activity.Comment = comment;
             activity.CreatedOnUtc = DateTime.UtcNow;
-            activity.ActivityLogType = new ActivityLogType();            
-            activity.ActivityLogType.Name = activityType.Name;
-            activity.ActivityLogType.SystemKeyword = activityType.SystemKeyword;
             activity.IpAddress = _webHelper.GetCurrentIpAddress();
             _activityLogRepository.Insert(activity);
 

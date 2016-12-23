@@ -39,10 +39,6 @@ namespace Grand.Core.Domain.Logging
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
 
-        /// <summary>
-        /// Gets the activity log type
-        /// </summary>
-        public virtual ActivityLogType ActivityLogType { get; set; }
 
     }
 

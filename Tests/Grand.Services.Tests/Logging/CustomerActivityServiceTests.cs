@@ -57,12 +57,12 @@ namespace Grand.Services.Logging.Tests {
 
             _activity1 = new ActivityLog {
                 Id = "1",
-                ActivityLogType = _activityType1,
+                ActivityLogTypeId = _activityType1.Id,
                 CustomerId = _customer1.Id,
             };
             _activity2 = new ActivityLog {
                 Id = "2",
-                ActivityLogType = _activityType1,
+                ActivityLogTypeId = _activityType1.Id,
                 CustomerId = _customer2.Id,
             };
 
