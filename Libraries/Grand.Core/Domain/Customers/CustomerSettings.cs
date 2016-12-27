@@ -134,6 +134,12 @@ namespace Grand.Core.Domain.Customers
         /// Gets or sets a value indicating we should store last visited page URL for each customer
         /// </summary>
         public bool StoreLastVisitedPage { get; set; }
+
+        /// <summary>
+        /// For the reasons of efficiency it is required to set, besides settings in activity Log - PublicStore.Url
+        /// </summary>
+        public bool SaveVisitedPage { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether during registration the customer has a free shipping to the next a order
         /// </summary>
@@ -143,7 +149,8 @@ namespace Grand.Core.Domain.Customers
         /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
         /// </summary>
         public bool SuffixDeletedCustomers { get; set; }
-        
+
+
         #region Form fields
 
         /// <summary>

@@ -248,7 +248,12 @@ namespace Grand.Admin.Controllers
                             if (product != null)
                                 _name = product.Name;
                         }
-
+                        IList<string> systemKeywordsUrl = new List<string>();
+                        systemKeywordsUrl.Add("PublicStore.Url");
+                        if (systemKeywordsUrl.Contains(activityLogType.SystemKeyword))
+                        {
+                            _name = x.EntityKeyId;
+                        }
                     }
 
                     var m = x.ToModel();

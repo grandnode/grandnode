@@ -231,7 +231,40 @@ namespace Grand.Services.Logging
 
             return activity;
         }
-        
+
+        /// <summary>
+        /// Inserts an activity log item async
+        /// </summary>
+        /// <param name="systemKeyword">The system keyword</param>
+        /// <param name="entityKeyId">Entity Key</param>
+        /// <param name="comment">The activity comment</param>
+        /// <param name="customerId">The customer</param>
+        /// <param name="addressIp">IP Address</param>
+        /// <returns>Activity log item</returns>
+        public virtual void InsertActivityAsync(string systemKeyword, string entityKeyId,
+            string comment, string customerId, string addressIp)
+        {
+            Task.Run(() =>
+            {
+               var activityTypes = GetAllActivityTypesCached();
+               var activityType = activityTypes.ToList().Find(at => at.SystemKeyword == systemKeyword);
+               if (activityType == null || !activityType.Enabled)
+                   return;
+
+               comment = CommonHelper.EnsureNotNull(comment);
+               comment = CommonHelper.EnsureMaximumLength(comment, 4000);
+
+               var activity = new ActivityLog();
+               activity.ActivityLogTypeId = activityType.Id;
+               activity.CustomerId = customerId;
+               activity.EntityKeyId = entityKeyId;
+               activity.Comment = comment;
+               activity.CreatedOnUtc = DateTime.UtcNow;
+               activity.IpAddress = addressIp;
+               _activityLogRepository.Insert(activity);
+           });
+        }
+
         /// <summary>
         /// Deletes an activity log item
         /// </summary>

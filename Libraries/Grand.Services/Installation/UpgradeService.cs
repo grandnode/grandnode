@@ -466,6 +466,18 @@ namespace Grand.Services.Installation
             EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.LimitOfFeaturedProducts", Value = "30" });
 
             #endregion
+
+            #region ActivityLog
+
+            var _activityLogTypeRepository = EngineContext.Current.Resolve<IRepository<ActivityLogType>>();
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "PublicStore.Url",
+                Enabled = false,
+                Name = "Public store. Viewed Url"
+            });
+
+            #endregion
         }
 
         private void InstallStringResources(string filenames)

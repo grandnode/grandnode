@@ -62,6 +62,19 @@ namespace Grand.Services.Logging
         ActivityLog InsertActivity(string systemKeyword, string entityKeyId,
             string comment, Customer customer, params object[] commentParams);
 
+
+        /// <summary>
+        /// Inserts an activity log item async
+        /// </summary>
+        /// <param name="systemKeyword">The system keyword</param>
+        /// <param name="entityKeyId">Entity Key</param>
+        /// <param name="comment">The activity comment</param>
+        /// <param name="customerId">The customer</param>
+        /// <param name="addressIp">IP Address</param>
+        /// <returns>Activity log item</returns>
+        void InsertActivityAsync(string systemKeyword, string entityKeyId,
+            string comment, string customerId, string addressIp);
+
         /// <summary>
         /// Deletes an activity log item
         /// </summary>

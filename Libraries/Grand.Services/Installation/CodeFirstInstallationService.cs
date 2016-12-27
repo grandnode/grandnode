@@ -5129,6 +5129,7 @@ namespace Grand.Services.Installation
                 OnlineCustomerMinutes = 20,
                 OnlineShoppingCartMinutes = 60,
                 StoreLastVisitedPage = false,
+                SaveVisitedPage = false,
                 SuffixDeletedCustomers = false,
             });
 
@@ -10114,6 +10115,12 @@ namespace Grand.Services.Installation
                                                   Name = "Edit a widget"
                                               },
                                               //public store activities
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.Url",
+                                                  Enabled = false,
+                                                  Name = "Public store. Viewed Url"
+                                              },
                                           new ActivityLogType
                                               {
                                                   SystemKeyword = "PublicStore.ViewCategory",

@@ -5,6 +5,7 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure;
 using Grand.Services.Common;
+using Grand.Services.Logging;
 
 namespace Grand.Web.Framework
 {
@@ -38,25 +39,34 @@ namespace Grand.Web.Framework
             var pageUrl = webHelper.GetThisPageUrl(true);
             if (!String.IsNullOrEmpty(pageUrl))
             {
-                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
                 var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
 
-                var previousPageUrl = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+                var previousPageUrl = currentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
                 if (!pageUrl.Equals(previousPageUrl))
                 {
-                    genericAttributeService.SaveAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
+                    genericAttributeService.SaveAttribute(currentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
                 }
 
                 if (filterContext.HttpContext.Request.UrlReferrer != null)
                     if (filterContext.HttpContext.Request.Url.Host != filterContext.HttpContext.Request.UrlReferrer.Host)
                     {
-                        var previousUrlReferrer = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer);
+                        var previousUrlReferrer = currentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer);
                         var actualUrlReferrer = filterContext.HttpContext.Request.UrlReferrer.ToString();
                         if (previousUrlReferrer != actualUrlReferrer)
                         {
-                            genericAttributeService.SaveAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastUrlReferrer, actualUrlReferrer);
+                            genericAttributeService.SaveAttribute(currentCustomer, SystemCustomerAttributeNames.LastUrlReferrer, actualUrlReferrer);
                         }
                     }
+
+                if(customerSettings.SaveVisitedPage)
+                {
+                    if (!currentCustomer.IsSearchEngineAccount())
+                    {
+                        var customerActivity = EngineContext.Current.Resolve<ICustomerActivityService>();
+                        customerActivity.InsertActivityAsync("PublicStore.Url", pageUrl, pageUrl, currentCustomer.Id, webHelper.GetCurrentIpAddress());
+                    }
+                }
             }
         }
     }
