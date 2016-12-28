@@ -6,7 +6,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="row">
         <div class="col-md-12">
             <div class="portlet light form-fit">
@@ -36,36 +36,45 @@
 }
 @Html.DeleteConfirmation("language-delete")
 
-
 @*import resources form*@
-<div id="importxml-window" style="display:none;">
+
+<div class="modal-dialog" id="importxml-window" style="display:none; padding: 0 10px;">
+
     @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
+            {
         @Html.AntiForgeryToken()
-        <table style="text-align: left;">
-            <tr>
-                <td>
-                    @T("Admin.Configuration.Languages.XmlFile"):
-                </td>
-                <td>
-                    <input type="file" id="importxmlfile" name="importxmlfile" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>
-                    <br />
-                    <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input id="importxmlsubmit" type="submit" class="k-button" value="@T("Admin.Configuration.Languages.Import")" />
-                </td>
-            </tr>
-        </table>
+        <ul class="common-list">
+            <li>
+                <strong>NOTE: It can take up to several minutes.</strong>
+            </li>
+            <li>
+                <strong>NOTE: DO NOT click twice.</strong>
+            </li>
+        </ul>
+        <div class="form-group">
+            <div class="col-md-2" style="margin-top: 7px; height: 34px; padding-left: 25px;">
+                <label class="control-label">
+                    Xml file
+                </label>
+            </div>
+            <div class="col-md-10">
+                <input id="importxmlfile" name="importxmlfile" class="form-control" type="file">
+            </div>
+        </div>
+        <div class="form-group">
+            &nbsp;
+        </div>
+        <div class="form-group">
+            <div class="col-md-2">
+                &nbsp;
+            </div>
+            <div class="col-md-10 text-right mt-10">
+                <input id="importxmlsubmit" class="btn blue" value="@T("Admin.Configuration.Languages.Import")" type="submit">
+            </div>
+        </div>
     }
 </div>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#importxml").click(function (e) {
@@ -74,7 +83,6 @@
             if (!window.data("kendoWindow")) {
                 window.kendoWindow({
                     modal: true,
-                    width: "400px",
                     title: "@T("Admin.Configuration.Languages.Import")",
                     actions: ["Close"]
                 });
