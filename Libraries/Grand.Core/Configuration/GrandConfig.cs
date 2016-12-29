@@ -106,7 +106,10 @@ namespace Grand.Core.Configuration
         /// </summary>
         public string UserAgentStringsPath { get; private set; }
 
-
+        /// <summary>
+        /// Path to database with crawler only user agent strings
+        /// </summary>
+        public string CrawlerOnlyUserAgentStringsPath { get; private set; }
 
         /// <summary>
         /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
