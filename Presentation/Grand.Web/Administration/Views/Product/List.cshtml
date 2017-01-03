@@ -36,7 +36,7 @@
                                     <input type="submit" name="exportxml-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.All")" />
                                 </li>
                                 <li>
-                                    <input type="button" id="exportxml-selected" class="btn default" style="width: 100%;"value="@T("Admin.Common.ExportToXml.Selected")" />
+                                    <input type="button" id="exportxml-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.Selected")" />
                                 </li>
                                 <li>
                                     <input type="submit" name="exportexcel-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.All")" />
@@ -59,15 +59,13 @@
                             <i class="fa fa-trash-o"></i>
                             @T("Admin.Common.Delete.Selected")
                         </button>
-
                     </div>
                 </div>
-
                 <div class="portlet-body form">
                     <div class="form-horizontal">
                         <div class="form-body col-md-6">
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.SearchProductName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false )
+                                @Html.GrandLabelFor(model => model.SearchProductName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
                                 <div class="col-md-8 col-sm-8">
                                     @Html.GrandEditorFor(model => model.SearchProductName)
                                 </div>
@@ -90,7 +88,6 @@
                                     @Html.GrandDropDownListFor(model => model.SearchWarehouseId, Model.AvailableWarehouses)
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.GoDirectlyToSku, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
                                 <div class="col-md-8 col-sm-8">
@@ -145,9 +142,9 @@
                             </div>
                         </div>
                         <div class="portlet-body">
-                            <div id="products-grid" ></div>
+                            <div id="products-grid"></div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -367,52 +364,56 @@
     </script>
 }
 
-
 @*import products form*@
-<div id="importexcel-window" style="display:none;">
+<div class="modal-dialog" id="importexcel-window" style="display:none; padding: 0 10px;">
     @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
-        <table style="text-align:left;">
-            <tr>
-                <td colspan="2">
-                    <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @T("Admin.Common.ExcelFile"):
-                </td>
-                <td>
-                    <input type="file" id="importexcelfile" name="importexcelfile" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
-                </td>
-            </tr>
-        </table>
+
+        <em>@T("Admin.Catalog.Products.List.ImportFromExcelTip")</em>
+        <div class="form-group">
+            &nbsp;
+        </div>
+        <div class="form-group">
+            <div class="col-md-2" style="margin-top: 2px; height: 34px; padding-left: 25px;">
+                <label class="control-label">
+                    @T("Admin.Common.ExcelFile")
+                </label>
+            </div>
+            <div class="col-md-10">
+                <input type="file" id="importexcelfile" name="importexcelfile" />
+            </div>
+        </div>
+        <div class="form-group">
+            &nbsp;
+        </div>
+        <div class="form-group">
+            <div class="col-md-2">
+                &nbsp;
+            </div>
+            <div class="col-md-10 text-right mt-10">
+                <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
+            </div>
+        </div>
     }
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#importexcel").click(function (e) {
-            e.preventDefault();
-            var window = $("#importexcel-window");
-            if (!window.data("kendoWindow")) {
-                window.kendoWindow({
-                    modal: true,
-                    width: "400px",
-                    title: "@T("Admin.Common.ImportFromExcel")",
-                    actions: ["Close"]
-                });
-            }
-            window.data('kendoWindow').center().open();
-        });
-    });
-</script>
 
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#importexcel").click(function (e) {
+                e.preventDefault();
+                var window = $("#importexcel-window");
+                if (!window.data("kendoWindow")) {
+                    window.kendoWindow({
+                        modal: true,
+                        title: "@T("Admin.Common.ImportFromExcel")",
+                        actions: ["Close"]
+                    });
+                }
+                window.data('kendoWindow').center().open();
+            });
+        });
+</script>
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportXmlSelected", "Product", FormMethod.Post, new { id = "export-xml-selected-form" }))
 {
@@ -421,18 +422,17 @@
 }
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        $('#exportxml-selected').click(function (e) {
-            e.preventDefault();
-            var ids = selectedIds.join(",");
-            $('#export-xml-selected-form #selectedIds').val(ids);
-            $('#export-xml-selected-form').submit();
-            return false;
+        $(document).ready(function () {
+            $('#exportxml-selected').click(function (e) {
+                e.preventDefault();
+                var ids = selectedIds.join(",");
+                $('#export-xml-selected-form #selectedIds').val(ids);
+                $('#export-xml-selected-form').submit();
+                return false;
+            });
         });
-    });
 
 </script>
-
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportExcelSelected", "Product", FormMethod.Post, new { id = "export-excel-selected-form" }))
 {
@@ -441,14 +441,14 @@
 }
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        $('#exportexcel-selected').click(function (e) {
-            e.preventDefault();
-            var ids = selectedIds.join(",");
-            $('#export-excel-selected-form #selectedIds').val(ids);
-            $('#export-excel-selected-form').submit();
-            return false;
+        $(document).ready(function () {
+            $('#exportexcel-selected').click(function (e) {
+                e.preventDefault();
+                var ids = selectedIds.join(",");
+                $('#export-excel-selected-form #selectedIds').val(ids);
+                $('#export-excel-selected-form').submit();
+                return false;
+            });
         });
-    });
 
 </script>
