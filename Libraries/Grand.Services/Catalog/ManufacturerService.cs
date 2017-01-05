@@ -312,6 +312,7 @@ namespace Grand.Services.Catalog
                                 };
 
                 query_ProductManufacturer = from pm in query_ProductManufacturer
+                                            where pm.ManufacturerId == manufacturerId
                                             orderby pm.DisplayOrder
                                             select pm;
                 

@@ -466,9 +466,10 @@ namespace Grand.Services.Catalog
                              };
 
                 query_productCategories = from pm in query_productCategories
-                         orderby pm.DisplayOrder
-                         select pm;
-
+                                          where pm.CategoryId == categoryId
+                                          orderby pm.DisplayOrder
+                                          select pm;
+                                          
                 var productCategories = new PagedList<ProductCategory>(query_productCategories, pageIndex, pageSize);
                 return productCategories;
             });
