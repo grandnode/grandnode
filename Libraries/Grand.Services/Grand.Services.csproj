@@ -245,8 +245,12 @@
     <Compile Include="Customers\CustomerAttributeFormatter.cs" />
     <Compile Include="Customers\ICustomerAttributeFormatter.cs" />
     <Compile Include="Helpers\ExtendedLinq.cs" />
+    <Compile Include="Messages\IInteractiveFormService.cs" />
+    <Compile Include="Messages\InteractiveFormService.cs" />
+    <Compile Include="Messages\IPopupService.cs" />
     <Compile Include="Messages\NewsletterCategoryService.cs" />
     <Compile Include="Messages\INewsletterCategoryService.cs" />
+    <Compile Include="Messages\PopupService.cs" />
     <Compile Include="Tasks\ClearCacheScheduleTask.cs" />
     <Compile Include="Catalog\BackInStockSubscriptionService.cs" />
     <Compile Include="Catalog\Cache\PriceCacheEventConsumer.cs" />

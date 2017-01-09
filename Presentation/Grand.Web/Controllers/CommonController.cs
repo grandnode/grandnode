@@ -43,6 +43,7 @@ using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Common;
 using Grand.Web.Models.Topics;
 using Grand.Web.Framework.UI;
+using System.Text.RegularExpressions;
 
 namespace Grand.Web.Controllers
 {
@@ -73,7 +74,8 @@ namespace Grand.Web.Controllers
         private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IVendorService _vendorService;
         private readonly IContactUsService _contactUsService;
-        private readonly IBannerService _bannerService;
+        private readonly IPopupService _popupService;
+        private readonly IInteractiveFormService _interactiveFormService;
         private readonly IPictureService _pictureService;
         private readonly IPageHeadBuilder _pageHeadBuilder;
         private readonly CustomerSettings _customerSettings;
@@ -100,15 +102,15 @@ namespace Grand.Web.Controllers
             ILanguageService languageService,
             ICurrencyService currencyService,
             ILocalizationService localizationService,
-            IWorkContext workContext, 
+            IWorkContext workContext,
             IStoreContext storeContext,
-            IQueuedEmailService queuedEmailService, 
+            IQueuedEmailService queuedEmailService,
             IEmailAccountService emailAccountService,
             ISitemapGenerator sitemapGenerator,
             IThemeContext themeContext,
             IThemeProvider themeProvider,
             IForumService forumService,
-            IGenericAttributeService genericAttributeService, 
+            IGenericAttributeService genericAttributeService,
             IWebHelper webHelper,
             IPermissionService permissionService,
             ICacheManager cacheManager,
@@ -116,19 +118,20 @@ namespace Grand.Web.Controllers
             ICustomerActionEventService customerActionEventService,
             IVendorService vendorService,
             IContactUsService contactUsService,
-            IBannerService bannerService,
+            IPopupService popupService,
+            IInteractiveFormService interactiveFormService,
             IPictureService pictureService,
             IPageHeadBuilder pageHeadBuilder,
-            CustomerSettings customerSettings, 
-            TaxSettings taxSettings, 
+            CustomerSettings customerSettings,
+            TaxSettings taxSettings,
             CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings,
             EmailAccountSettings emailAccountSettings,
-            CommonSettings commonSettings, 
-            BlogSettings blogSettings, 
+            CommonSettings commonSettings,
+            BlogSettings blogSettings,
             NewsSettings newsSettings,
             ForumSettings forumSettings,
-            LocalizationSettings localizationSettings, 
+            LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
             VendorSettings vendorSettings)
         {
@@ -155,7 +158,8 @@ namespace Grand.Web.Controllers
             this._customerActionEventService = customerActionEventService;
             this._vendorService = vendorService;
             this._contactUsService = contactUsService;
-            this._bannerService = bannerService;
+            this._popupService = popupService;
+            this._interactiveFormService = interactiveFormService;
             this._pictureService = pictureService;
             this._pageHeadBuilder = pageHeadBuilder;
             this._customerSettings = customerSettings;
@@ -287,7 +291,7 @@ namespace Grand.Web.Controllers
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
-            
+
             //language part in URL
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
@@ -353,7 +357,7 @@ namespace Grand.Web.Controllers
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
-            
+
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
@@ -392,7 +396,7 @@ namespace Grand.Web.Controllers
 
             return Redirect(returnUrl);
         }
-        
+
         //footer
         [ChildActionOnly]
         public ActionResult JavaScriptDisabledWarning()
@@ -474,7 +478,7 @@ namespace Grand.Web.Controllers
         {
             //footer topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
-                _workContext.WorkingLanguage.Id, 
+                _workContext.WorkingLanguage.Id,
                 _storeContext.CurrentStore.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
@@ -572,8 +576,8 @@ namespace Grand.Web.Controllers
                 {
                     from = emailAccount.Email;
                     fromName = emailAccount.DisplayName;
-                    body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}", 
-                        Server.HtmlEncode(fullName), 
+                    body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
+                        Server.HtmlEncode(fullName),
                         Server.HtmlEncode(email), body);
                 }
                 else
@@ -595,7 +599,7 @@ namespace Grand.Web.Controllers
                     CreatedOnUtc = DateTime.UtcNow,
                     EmailAccountId = emailAccount.Id
                 });
-                
+
                 model.SuccessfullySent = true;
                 model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
 
@@ -603,7 +607,7 @@ namespace Grand.Web.Controllers
                 _customerActivityService.InsertActivity("PublicStore.ContactUs", "", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
 
                 //store in database
-                if(_commonSettings.StoreInDatabaseContactUsForm)
+                if (_commonSettings.StoreInDatabaseContactUsForm)
                 {
                     var contactus = new ContactUs()
                     {
@@ -754,7 +758,7 @@ namespace Grand.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY, 
+            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -823,7 +827,7 @@ namespace Grand.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, 
+            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
@@ -857,7 +861,7 @@ namespace Grand.Web.Controllers
         public ActionResult SetStoreTheme(string themeName, string returnUrl = "")
         {
             _themeContext.WorkingThemeName = themeName;
-            
+
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
@@ -1008,6 +1012,7 @@ namespace Grand.Web.Controllers
                     "/orderdetails",
                     "/passwordrecovery/confirm",
                     "/poll/vote",
+                    "/popupinteractiveform",
                     "/privatemessages",
                     "/returnrequest",
                     "/returnrequest/history",
@@ -1103,14 +1108,14 @@ namespace Grand.Web.Controllers
 
         //Get banner for customer
         [HttpGet]
-        public ActionResult GetActiveBanner()
+        public ActionResult GetActivePopup()
         {
-            var result = _bannerService.GetActiveBannerByCustomerId(_workContext.CurrentCustomer.Id);
-            if(result!=null)
+            var result = _popupService.GetActivePopupByCustomerId(_workContext.CurrentCustomer.Id);
+            if (result != null)
             {
                 return Json
                     (
-                        new { Id = result.Id, Body = result.Body },
+                        new { Id = result.Id, Body = result.Body, PopupTypeId = result.PopupTypeId },
                         JsonRequestBehavior.AllowGet
                     );
             }
@@ -1123,10 +1128,10 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult RemoveBanner(string Id)
+        public ActionResult RemovePopup(string Id)
         {
-            _bannerService.MoveBannerToArchive(Id, _workContext.CurrentCustomer.Id);
-            return Json (JsonRequestBehavior.AllowGet);
+            _popupService.MovepopupToArchive(Id, _workContext.CurrentCustomer.Id);
+            return Json(JsonRequestBehavior.AllowGet);
         }
 
 
@@ -1141,6 +1146,103 @@ namespace Grand.Web.Controllers
                 );
         }
 
+        [HttpPost, ActionName("PopupInteractiveForm")]
+        public ActionResult PopupInteractiveForm(FormCollection formCollection)
+        {
+
+            var formid = formCollection["Id"];
+            var form = _interactiveFormService.GetFormById(formid);
+            if (form == null)
+                return Content("");
+            string enquiry = "";
+            foreach (var item in form.FormAttributes)
+            {
+                enquiry += string.Format("{0}: {1} <br />", item.Name, formCollection[item.SystemName]);
+
+                if (!string.IsNullOrEmpty(item.RegexValidation))
+                {
+                    var valuesStr = formCollection[item.SystemName];
+                    Regex regex = new Regex(item.RegexValidation);
+                    Match match = regex.Match(valuesStr);
+                    if (!match.Success)
+                    {
+                        ModelState.AddModelError("", string.Format(_localizationService.GetResource("PopupInteractiveForm.Fields.Regex"), item.GetLocalized(a => a.Name)));
+                    }
+                }
+                if (item.IsRequired)
+                {
+                    var valuesStr = formCollection[item.SystemName];
+                    if (string.IsNullOrEmpty(valuesStr))
+                        ModelState.AddModelError("", string.Format(_localizationService.GetResource("PopupInteractiveForm.Fields.IsRequired"), item.GetLocalized(a => a.Name)));
+                }
+                if (item.ValidationMinLength.HasValue)
+                {
+                    if (item.AttributeControlType == FormControlType.TextBox ||
+                        item.AttributeControlType == FormControlType.MultilineTextbox)
+                    {
+                        var valuesStr = formCollection[item.SystemName];
+                        int enteredTextLength = String.IsNullOrEmpty(valuesStr) ? 0 : valuesStr.Length;
+                        if (item.ValidationMinLength.Value > enteredTextLength)
+                        {
+                            ModelState.AddModelError("", string.Format(_localizationService.GetResource("PopupInteractiveForm.Fields.TextboxMinimumLength"), item.GetLocalized(a => a.Name), item.ValidationMinLength.Value));
+                        }
+                    }
+                }
+                if (item.ValidationMaxLength.HasValue)
+                {
+                    if (item.AttributeControlType == FormControlType.TextBox ||
+                        item.AttributeControlType == FormControlType.MultilineTextbox)
+                    {
+                        var valuesStr = formCollection[item.SystemName];
+                        int enteredTextLength = String.IsNullOrEmpty(valuesStr) ? 0 : valuesStr.Length;
+                        if (item.ValidationMaxLength.Value < enteredTextLength)
+                        {
+                            ModelState.AddModelError("", string.Format(_localizationService.GetResource("PopupInteractiveForm.Fields.TextboxMaximumLength"), item.GetLocalized(a => a.Name), item.ValidationMaxLength.Value));
+                        }
+                    }
+                }
+
+            }
+
+            if (ModelState.Keys.Count == 0)
+            {
+                var emailAccount = _emailAccountService.GetEmailAccountById(form.EmailAccountId);
+                if (emailAccount == null)
+                    emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+                if (emailAccount == null)
+                    throw new Exception("No email account could be loaded");
+
+                string from;
+                string fromName;
+                string subject = string.Format(_localizationService.GetResource("PopupInteractiveForm.EmailForm"), form.Name);
+                from = emailAccount.Email;
+                fromName = emailAccount.DisplayName;
+
+                _queuedEmailService.InsertQueuedEmail(new QueuedEmail
+                {
+                    From = from,
+                    FromName = fromName,
+                    To = emailAccount.Email,
+                    ToName = emailAccount.DisplayName,
+                    Priority = QueuedEmailPriority.High,
+                    Subject = subject,
+                    Body = enquiry,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    EmailAccountId = emailAccount.Id
+                });
+
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.InteractiveForm", form.Id, string.Format(_localizationService.GetResource("ActivityLog.PublicStore.InteractiveForm"), form.Name));
+            }
+
+            return Json(new
+            {
+                success = ModelState.Keys.Count == 0,
+                errors = ModelState.Keys.SelectMany(k => ModelState[k].Errors)
+                                .Select(m => m.ErrorMessage).ToArray()
+            });
+
+        }
 
         #endregion
     }

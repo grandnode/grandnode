@@ -124,11 +124,14 @@
     <Compile Include="Domain\Customers\CustomerReminderHistory.cs" />
     <Compile Include="Domain\Directory\MeasureUnit.cs" />
     <Compile Include="Domain\Forums\ForumPostVote.cs" />
-    <Compile Include="Domain\Messages\BannerArchive.cs" />
+    <Compile Include="Domain\Messages\PopupArchive.cs" />
     <Compile Include="Domain\Messages\CampaignHistory.cs" />
     <Compile Include="Domain\Messages\CampaignCondition.cs" />
     <Compile Include="Domain\Messages\CampaignCustomerSubscription.cs" />
+    <Compile Include="Domain\Messages\FormControlType.cs" />
+    <Compile Include="Domain\Messages\InteractiveForm.cs" />
     <Compile Include="Domain\Messages\NewsletterCategory.cs" />
+    <Compile Include="Domain\Messages\PopupType.cs" />
     <Compile Include="Domain\Orders\OrderByTimeReportLine.cs" />
     <Compile Include="Domain\Payments\PaymentRestrictionAmount.cs" />
     <Compile Include="Domain\Seo\SeoSettings.cs" />
@@ -163,7 +166,7 @@
     <Compile Include="Domain\Customers\CustomerRoleProducts.cs" />
     <Compile Include="Domain\Customers\CustomerAction.cs" />
     <Compile Include="Domain\Customers\CustomerTag.cs" />
-    <Compile Include="Domain\Messages\BannerActive.cs" />
+    <Compile Include="Domain\Messages\PopupActive.cs" />
     <Compile Include="Domain\Messages\Banner.cs" />
     <Compile Include="Domain\Messages\ContactUs.cs" />
     <Compile Include="Domain\Common\SearchTermReportLine.cs" />

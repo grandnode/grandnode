@@ -42,7 +42,8 @@ namespace Grand.Core.Domain.Customers
         Banner = 1,
         Email = 2,
         AssignToCustomerRole = 3,
-        AssignToCustomerTag = 4,            
+        AssignToCustomerTag = 4,
+        InteractiveForm = 5,
     }
 
     

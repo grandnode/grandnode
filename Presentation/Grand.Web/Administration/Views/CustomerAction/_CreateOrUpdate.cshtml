@@ -30,6 +30,15 @@
             if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.Banner).ToString()))
             {
                 $('#plnBanner').show();
+                $('#plnInteractiveForm').hide();
+                $('#plnMessage').hide();
+                $('#plnRole').hide();
+                $('#plnTag').hide();
+            }
+            if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.InteractiveForm).ToString()))
+            {
+                $('#plnBanner').hide();
+                $('#plnInteractiveForm').show();
                 $('#plnMessage').hide();
                 $('#plnRole').hide();
                 $('#plnTag').hide();
@@ -37,6 +46,7 @@
             else if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.Email).ToString()))
             {
                 $('#plnBanner').hide();
+                $('#plnInteractiveForm').hide();
                 $('#plnMessage').show();
                 $('#plnRole').hide();
                 $('#plnTag').hide();
@@ -44,6 +54,7 @@
             } else if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.AssignToCustomerRole).ToString()))
             {
                 $('#plnBanner').hide();
+                $('#plnInteractiveForm').hide();
                 $('#plnMessage').hide();
                 $('#plnRole').show();
                 $('#plnTag').hide();
@@ -51,15 +62,10 @@
             } else if (selectedReactionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerReactionTypeEnum.AssignToCustomerTag).ToString()))
             {
                 $('#plnBanner').hide();
+                $('#plnInteractiveForm').hide();
                 $('#plnMessage').hide();
                 $('#plnRole').hide();
                 $('#plnTag').show();
-            } else
-            {
-                $('#plnBanner').hide();
-                $('#plnMessage').hide();
-                $('#plnRole').hide();
-                $('#plnTag').hide();
             }
         }
 
@@ -71,7 +77,7 @@
 </script>
 
 
-   
+
 <div id="customeraction-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -116,87 +122,87 @@
 
 @helper TabInfo()
 {
-<div class="form-horizontal">
-    <div class="form-body">
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.Name)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.Active)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Active)
-                @Html.ValidationMessageFor(model => model.Active)
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.StartDateTimeUtc)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.StartDateTimeUtc)
-                @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.EndDateTimeUtc)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.EndDateTimeUtc)
-                @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.ActionTypeId)
-            <div class="col-md-9 col-sm-9">
-                @if (Model.ConditionCount > 0)
-                {
-                    @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType, new { @disabled = "disabled" })
-                }
-                else
-                {
-                    @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType)
-                }
-
-                @Html.ValidationMessageFor(model => model.ActionTypeId)
-                <div class="note note-info margin-top-10">
-                    <p>@T("admin.customers.actiontype.helpText.AddToCart")</p>
-                    <p>@T("admin.customers.actiontype.helpText.AddOrder")</p>
-                    <p>@T("admin.customers.actiontype.helpText.Viewed")</p>
-                    <p>@T("admin.customers.actiontype.helpText.Url")</p>
-                    <p>@T("admin.customers.actiontype.helpText.Registration")</p>
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            @Html.GrandLabelFor(model => model.ConditionId)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandDropDownListFor(model => model.ConditionId, ((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.ConditionId)
-                <div class="note note-info margin-top-10">
-                    <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>
-                    <p>@T("admin.customers.actiontype.helpText.AllOfThem")</p>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Active)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Active)
+                    @Html.ValidationMessageFor(model => model.Active)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.StartDateTimeUtc)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.StartDateTimeUtc)
+                    @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.EndDateTimeUtc)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.EndDateTimeUtc)
+                    @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.ActionTypeId)
+                <div class="col-md-9 col-sm-9">
+                    @if (Model.ConditionCount > 0)
+                    {
+                        @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType, new { @disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType)
+                    }
+
+                    @Html.ValidationMessageFor(model => model.ActionTypeId)
+                    <div class="note note-info margin-top-10">
+                        <p>@T("admin.customers.actiontype.helpText.AddToCart")</p>
+                        <p>@T("admin.customers.actiontype.helpText.AddOrder")</p>
+                        <p>@T("admin.customers.actiontype.helpText.Viewed")</p>
+                        <p>@T("admin.customers.actiontype.helpText.Url")</p>
+                        <p>@T("admin.customers.actiontype.helpText.Registration")</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.ConditionId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.ConditionId, ((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
+                    @Html.ValidationMessageFor(model => model.ConditionId)
+                    <div class="note note-info margin-top-10">
+                        <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>
+                        <p>@T("admin.customers.actiontype.helpText.AllOfThem")</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @helper TabConditions()
 {
 
-    if (String.IsNullOrEmpty(Model.Id))
-    {
+if (String.IsNullOrEmpty(Model.Id))
+{
         <div class="note note-info">
             @T("Admin.Customers.CustomerAction.SaveBeforeEdit")
         </div>
-    }
+}
 
-    if (!String.IsNullOrEmpty(Model.Id))
-    {
+if (!String.IsNullOrEmpty(Model.Id))
+{
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="conditions-grid"></div>
@@ -206,10 +212,10 @@
             </div>
         </div>
 
-            var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-            var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-                    
-                    
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+
         <script>
             $(document).ready(function () {
                 $("#conditions-grid").kendoGrid({
@@ -282,9 +288,9 @@
                     }]
                 });
             });
-    </script>                                        
-           
-    }
+        </script>
+
+}
 }
 @helper TabReaction()
 {
@@ -297,6 +303,7 @@
                     @Html.ValidationMessageFor(model => model.ReactionTypeId)
                     <div class="note note-info margin-top-10">
                         <p>@T("admin.customers.actiontype.helpText.Banner")</p>
+                        <p>@T("admin.customers.actiontype.helpText.InteractiveForm")</p>
                         <p>@T("admin.customers.actiontype.helpText.Email")</p>
                         <p>@T("admin.customers.actiontype.helpText.Customerrole")</p>
                         <p>@T("admin.customers.actiontype.helpText.Customertag")</p>
@@ -308,6 +315,13 @@
                 <div class="col-md-9 col-sm-9">
                     @Html.GrandDropDownListFor(model => model.BannerId, Model.Banners)
                     @Html.ValidationMessageFor(model => model.BannerId)
+                </div>
+            </div>
+            <div class="form-group" id="plnInteractiveForm">
+                @Html.GrandLabelFor(model => model.InteractiveFormId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.InteractiveFormId, Model.InteractiveForms)
+                    @Html.ValidationMessageFor(model => model.InteractiveFormId)
                 </div>
             </div>
             <div class="form-group" id="plnMessage">
@@ -352,14 +366,14 @@ if (!String.IsNullOrEmpty(Model.Id))
     var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
-       
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="history-grid"></div>
-        </div>
-    </div>
 
-    <script>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="history-grid"></div>
+            </div>
+        </div>
+
+        <script>
         $(document).ready(function () {
             $("#history-grid").kendoGrid({
                 dataSource: {
@@ -410,11 +424,7 @@ if (!String.IsNullOrEmpty(Model.Id))
                 }]
             });
         });
-    </script>
+        </script>
 
-        }
 }
-
-
-
-
+}

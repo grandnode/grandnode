@@ -30,7 +30,8 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
         private readonly IRepository<Banner> _bannerRepository;
-        private readonly IRepository<BannerActive> _bannerActiveRepository;
+        private readonly IRepository<InteractiveForm> _interactiveFormRepository;
+        private readonly IRepository<PopupActive> _popupActiveRepository;
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -45,6 +46,7 @@ namespace Grand.Services.Customers
         private readonly ICustomerTagService _customerTagService;
         private readonly HttpContextBase _httpContext;
         private readonly ICacheManager _cacheManager;
+        private readonly IPopupService _popupService;
 
         #endregion
 
@@ -54,7 +56,8 @@ namespace Grand.Services.Customers
             IRepository<CustomerActionType> customerActionTypeRepository,
             IRepository<CustomerActionHistory> customerActionHistoryRepository,
             IRepository<Banner> bannerRepository,
-            IRepository<BannerActive> bannerActiveRepository,
+            IRepository<InteractiveForm> interactiveFormRepository,
+            IRepository<PopupActive> popupActiveRepository,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
             IEventPublisher eventPublisher,
@@ -68,13 +71,15 @@ namespace Grand.Services.Customers
             ICustomerAttributeParser customerAttributeParser,
             ICustomerTagService customerTagService,
             HttpContextBase httpContext,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IPopupService popupService)
         {
             this._customerActionRepository = customerActionRepository;
             this._customerActionTypeRepository = customerActionTypeRepository;
             this._customerActionHistoryRepository = customerActionHistoryRepository;
             this._bannerRepository = bannerRepository;
-            this._bannerActiveRepository = bannerActiveRepository;
+            this._interactiveFormRepository = interactiveFormRepository;
+            this._popupActiveRepository = popupActiveRepository;
             this._activityLogRepository = activityLogRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._eventPublisher = eventPublisher;
@@ -89,6 +94,7 @@ namespace Grand.Services.Customers
             this._customerTagService = customerTagService;
             this._httpContext = httpContext;
             this._cacheManager = cacheManager;
+            this._popupService = popupService;
         }
 
         #endregion
@@ -97,7 +103,7 @@ namespace Grand.Services.Customers
         protected IList<CustomerActionType> GetAllCustomerActionType()
         {
             return _cacheManager.Get(CUSTOMER_ACTION_TYPE, () =>
-            {                
+            {
                 return _customerActionTypeRepository.Table.AsQueryable().ToList();
             });
         }
@@ -112,7 +118,7 @@ namespace Grand.Services.Customers
                         select u.Id;
             if (query.Count() > 0)
                 return true;
-            
+
             return false;
         }
 
@@ -173,21 +179,21 @@ namespace Grand.Services.Customers
                 #endregion
 
                 #region Action type viewed
-                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "Viewed").Id) 
+                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "Viewed").Id)
                 {
                     cond = false;
                     if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.Category)
                     {
                         var _actLogType = (from a in _activityLogTypeRepository.Table
-                                  where a.SystemKeyword == "PublicStore.ViewCategory"
+                                           where a.SystemKeyword == "PublicStore.ViewCategory"
                                            select a).FirstOrDefault();
-                        if(_actLogType != null)
+                        if (_actLogType != null)
                         {
-                            if(_actLogType.Enabled)
+                            if (_actLogType.Enabled)
                             {
                                 var productCategory = (from p in _activityLogRepository.Table
-                                          where p.CustomerId == customer.Id && p.ActivityLogTypeId == _actLogType.Id
-                                          select p.EntityKeyId).Distinct().ToList();
+                                                       where p.CustomerId == customer.Id && p.ActivityLogTypeId == _actLogType.Id
+                                                       select p.EntityKeyId).Distinct().ToList();
                                 cond = ConditionCategory(item, productCategory);
                             }
                         }
@@ -197,8 +203,8 @@ namespace Grand.Services.Customers
                     {
                         cond = false;
                         var _actLogType = (from a in _activityLogTypeRepository.Table
-                                            where a.SystemKeyword == "PublicStore.ViewManufacturer"
-                                            select a).FirstOrDefault();
+                                           where a.SystemKeyword == "PublicStore.ViewManufacturer"
+                                           select a).FirstOrDefault();
                         if (_actLogType != null)
                         {
                             if (_actLogType.Enabled)
@@ -215,15 +221,15 @@ namespace Grand.Services.Customers
                     {
                         cond = false;
                         var _actLogType = (from a in _activityLogTypeRepository.Table
-                                            where a.SystemKeyword == "PublicStore.ViewProduct"
-                                            select a).FirstOrDefault();
+                                           where a.SystemKeyword == "PublicStore.ViewProduct"
+                                           select a).FirstOrDefault();
                         if (_actLogType != null)
                         {
                             if (_actLogType.Enabled)
                             {
                                 var products = (from p in _activityLogRepository.Table
-                                                    where p.CustomerId == customer.Id && p.ActivityLogTypeId == _actLogType.Id
-                                                    select p.EntityKeyId).Distinct().ToList();
+                                                where p.CustomerId == customer.Id && p.ActivityLogTypeId == _actLogType.Id
+                                                select p.EntityKeyId).Distinct().ToList();
                                 cond = ConditionProducts(item, products);
                             }
                         }
@@ -253,7 +259,7 @@ namespace Grand.Services.Customers
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.UrlCurrent)
                 {
-                    cond = item.UrlCurrent.Select(x=>x.Name).Contains(currentUrl);
+                    cond = item.UrlCurrent.Select(x => x.Name).Contains(currentUrl);
                 }
 
                 if (item.CustomerActionConditionType == CustomerActionConditionTypeEnum.UrlReferrer)
@@ -395,16 +401,16 @@ namespace Grand.Services.Customers
                                 }
                                 else
                                 {
-                                    return false; 
+                                    return false;
                                 }
                             }
                         }
                         if (!cond)
-                            return false; 
+                            return false;
                     }
                     else
                     {
-                        return false; 
+                        return false;
                     }
                 }
             }
@@ -537,7 +543,7 @@ namespace Grand.Services.Customers
                 if (condition.Condition == CustomerActionConditionEnum.OneOfThem)
                 {
                     var customCustomerAttributes = _genericAttributes.FirstOrDefault(x => x.Key == "CustomCustomerAttributes");
-                    if(customCustomerAttributes!=null)
+                    if (customCustomerAttributes != null)
                     {
                         if (!String.IsNullOrEmpty(customCustomerAttributes.Value))
                         {
@@ -545,9 +551,9 @@ namespace Grand.Services.Customers
                             foreach (var item in condition.CustomCustomerAttributes)
                             {
                                 var _fields = item.RegisterField.Split(':');
-                                if(_fields.Count() > 1)
+                                if (_fields.Count() > 1)
                                 {
-                                    if (selectedValues.Where(x => x.CustomerAttributeId== _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() > 0)
+                                    if (selectedValues.Where(x => x.CustomerAttributeId == _fields.FirstOrDefault() && x.Id == _fields.LastOrDefault()).Count() > 0)
                                         cond = true;
                                 }
                             }
@@ -561,36 +567,42 @@ namespace Grand.Services.Customers
         #endregion
 
         #region Reaction
-        protected void Reaction(CustomerAction action, Customer customer, ShoppingCartItem cartItem, Order order)
+        public void Reaction(CustomerAction action, Customer customer, ShoppingCartItem cartItem, Order order)
         {
             if (action.ReactionType == CustomerReactionTypeEnum.Banner)
             {
                 var banner = _bannerRepository.GetById(action.BannerId);
-                if(banner!=null)
+                if (banner != null)
                     PrepareBanner(action, banner, customer.Id);
+            }
+            if (action.ReactionType == CustomerReactionTypeEnum.InteractiveForm)
+            {
+                var interactiveform = _interactiveFormRepository.GetById(action.InteractiveFormId);
+                if (interactiveform != null)
+                    PrepareInteractiveForm(action, interactiveform, customer.Id);
             }
 
             var _cat = GetAllCustomerActionType();
 
             if (action.ReactionType == CustomerReactionTypeEnum.Email)
             {
-                if (action.ActionTypeId == _cat.FirstOrDefault(x=>x.SystemKeyword== "AddToCart").Id) 
+                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id)
                 {
-                    if(cartItem!=null)
+                    if (cartItem != null)
                         _workflowMessageService.SendCustomerActionEvent_AddToCart_Notification(action, cartItem,
                             _workContext.WorkingLanguage.Id, customer);
                 }
 
-                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id) 
+                if (action.ActionTypeId == _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id)
                 {
-                    if(order!=null)
+                    if (order != null)
                         _workflowMessageService.SendCustomerActionEvent_AddToOrder_Notification(action, order, customer,
                             _workContext.WorkingLanguage.Id);
                 }
 
-                if (action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id && action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id) 
+                if (action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddOrder").Id && action.ActionTypeId != _cat.FirstOrDefault(x => x.SystemKeyword == "AddToCart").Id)
                 {
-                    _workflowMessageService.SendCustomerActionEvent_Notification(action, 
+                    _workflowMessageService.SendCustomerActionEvent_Notification(action,
                         _workContext.WorkingLanguage.Id, customer);
                 }
             }
@@ -610,23 +622,107 @@ namespace Grand.Services.Customers
         }
         protected void PrepareBanner(CustomerAction action, Banner banner, string customerId)
         {
-            var banneractive = new BannerActive()
+            var banneractive = new PopupActive()
             {
                 Body = banner.Body,
                 CreatedOnUtc = DateTime.UtcNow,
                 CustomerId = customerId,
                 CustomerActionId = action.Id,
-                Name = banner.Name
+                Name = banner.Name,
+                PopupTypeId = (int)PopupType.Banner
             };
-            _bannerActiveRepository.Insert(banneractive);
+            _popupService.InsertPopupActive(banneractive);
+        }
+
+        protected void PrepareInteractiveForm(CustomerAction action, InteractiveForm form, string customerId)
+        {
+
+            var body = PrepareDataInteractiveForm(form);
+
+            var formactive = new PopupActive()
+            {
+                Body = body,
+                CreatedOnUtc = DateTime.UtcNow,
+                CustomerId = customerId,
+                CustomerActionId = action.Id,
+                Name = form.Name,
+                PopupTypeId = (int)PopupType.InteractiveForm
+            };
+            _popupService.InsertPopupActive(formactive);
+        }
+
+        protected string PrepareDataInteractiveForm(InteractiveForm form)
+        {
+            var body = form.Body;
+            body += "<input type=\"hidden\" name=\"Id\" value=\"" + form.Id + "\">";
+            foreach (var item in form.FormAttributes)
+            {
+                string style = "";
+                if (!string.IsNullOrEmpty(item.Style))
+                    style += string.Format(" style=\"{0}\"", item.Style);
+
+                if (!string.IsNullOrEmpty(item.Class))
+                    style += string.Format(" class=\"{0}\"", item.Class);
+
+                if (item.AttributeControlType == FormControlType.TextBox)
+                {
+                    if (!string.IsNullOrEmpty(item.DefaultValue))
+                        style += string.Format(" value=\"{0}\" ", item.DefaultValue);
+                    var textbox = string.Format("<input type=\"text\"  name=\"{0}\" {1} {2}>", item.SystemName, style, item.IsRequired ? "required" : "");
+                    body = body.Replace(string.Format("%{0}%", item.SystemName), textbox);
+                }
+                if (item.AttributeControlType == FormControlType.MultilineTextbox)
+                {
+                    body = body.Replace(string.Format("%{0}%", item.SystemName),
+                        string.Format("<textarea name=\"{0}\" {1}>{2}</textarea>", item.SystemName, style, item.DefaultValue));
+                }
+                if (item.AttributeControlType == FormControlType.Checkboxes)
+                {
+                    var checkbox = string.Empty;
+                    foreach (var itemcheck in item.FormAttributeValues.OrderBy(x => x.DisplayOrder))
+                    {
+                        checkbox += string.Format("<div {0}>", style);
+                        checkbox += string.Format("<input type=\"checkbox\" id=\"{0}\" name=\"{1}\" value=\"{2}\" {3}> <label for=\"{4}\">{5}</label>",
+                            itemcheck.Id, item.SystemName, itemcheck.GetLocalized(x => x.Name), itemcheck.IsPreSelected ? "checked" : "", itemcheck.Id, itemcheck.GetLocalized(x => x.Name));
+                        checkbox += "</div>";
+                    }
+                    body = body.Replace(string.Format("%{0}%", item.SystemName), checkbox);
+                }
+
+                if (item.AttributeControlType == FormControlType.DropdownList)
+                {
+                    var dropdown = string.Empty;
+                    dropdown = string.Format("<select name=\"{0}\" {1} >", item.SystemName, style);
+                    foreach (var itemdropdown in item.FormAttributeValues.OrderBy(x => x.DisplayOrder))
+                    {
+                        dropdown += string.Format("<option value=\"{0}\" {1}>{2}</option>", itemdropdown.GetLocalized(x => x.Name), itemdropdown.IsPreSelected ? "selected" : "", itemdropdown.GetLocalized(x => x.Name));
+                    }
+                    dropdown += "</select>";
+                    body = body.Replace(string.Format("%{0}%", item.SystemName), dropdown);
+                }
+                if (item.AttributeControlType == FormControlType.RadioList)
+                {
+                    var radio = string.Empty;
+                    foreach (var itemradio in item.FormAttributeValues.OrderBy(x => x.DisplayOrder))
+                    {
+                        radio += string.Format("<div {0}>", style);
+                        radio += string.Format("<input type=\"radio\" id=\"{0}\" name=\"{1}\" value=\"{2}\" {3} {4}><label for=\"{5}\">{6}</label>",
+                            itemradio.Id, item.SystemName, itemradio.GetLocalized(x => x.Name), itemradio.IsPreSelected ? "checked" : "", style, itemradio.Id, itemradio.GetLocalized(x => x.Name));
+                        radio += "</div>";
+                    }
+                    body = body.Replace(string.Format("%{0}%", item.SystemName), radio);
+                }
+            }
+
+            return body;
         }
 
         protected void AssignToCustomerRole(CustomerAction action, Customer customer)
         {
-            if(customer.CustomerRoles.Where(x=>x.Id == action.CustomerRoleId).Count() == 0)
+            if (customer.CustomerRoles.Where(x => x.Id == action.CustomerRoleId).Count() == 0)
             {
                 var customerRole = _customerService.GetCustomerRoleById(action.CustomerRoleId);
-                if(customerRole!=null)
+                if (customerRole != null)
                 {
                     customerRole.CustomerId = customer.Id;
                     _customerService.InsertCustomerRoleInCustomer(customerRole);
@@ -713,33 +809,29 @@ namespace Grand.Services.Customers
 
         public virtual void Url(Customer customer, string currentUrl, string previousUrl)
         {
-            Task.Run(() =>
+            if (!customer.IsSystemAccount)
             {
-                if (!customer.IsSystemAccount)
+                var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
+                if (actionType.Enabled)
                 {
-                    var actionType = GetAllCustomerActionType().Where(x => x.SystemKeyword == CustomerActionTypeEnum.Url.ToString()).FirstOrDefault();
-                    if (actionType.Enabled)
-                    {
-                        var datetimeUtcNow = DateTime.UtcNow;
-                        var query = from a in _customerActionRepository.Table
-                                    where a.Active == true && a.ActionTypeId == actionType.Id
-                                            && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
-                                    select a;
+                    var datetimeUtcNow = DateTime.UtcNow;
+                    var query = from a in _customerActionRepository.Table
+                                where a.Active == true && a.ActionTypeId == actionType.Id
+                                        && datetimeUtcNow >= a.StartDateTimeUtc && datetimeUtcNow <= a.EndDateTimeUtc
+                                select a;
 
-                        foreach (var item in query.ToList())
+                    foreach (var item in query.ToList())
+                    {
+                        if (!UsedAction(item.Id, customer.Id))
                         {
-                            if (!UsedAction(item.Id, customer.Id))
+                            if (Condition(item, null, null, customer, currentUrl, previousUrl))
                             {
-                                if (Condition(item, null, null, customer, currentUrl, previousUrl))
-                                {
-                                    Reaction(item, customer, null, null);
-                                }
+                                Reaction(item, customer, null, null);
                             }
                         }
-
                     }
                 }
-            });
+            }
         }
 
         public virtual void Viewed(Customer customer, string currentUrl, string previousUrl)

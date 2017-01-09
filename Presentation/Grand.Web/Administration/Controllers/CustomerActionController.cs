@@ -25,10 +25,10 @@ using Grand.Services.Helpers;
 namespace Grand.Admin.Controllers
 {
     public partial class CustomerActionController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
-		private readonly ICustomerService _customerService;
+        private readonly ICustomerService _customerService;
         private readonly ICustomerAttributeService _customerAttributeService;
         private readonly ICustomerTagService _customerTagService;
         private readonly ILocalizationService _localizationService;
@@ -44,6 +44,7 @@ namespace Grand.Admin.Controllers
         private readonly IProductAttributeService _productAttributeService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IBannerService _bannerService;
+        private readonly IInteractiveFormService _interactiveFormService;
         private readonly IMessageTemplateService _messageTemplateService;
         private readonly IDateTimeHelper _dateTimeHelper;
         #endregion
@@ -53,7 +54,7 @@ namespace Grand.Admin.Controllers
         public CustomerActionController(ICustomerService customerService,
             ICustomerAttributeService customerAttributeService,
             ICustomerTagService customerTagService,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService,
             IProductService productService,
@@ -66,9 +67,10 @@ namespace Grand.Admin.Controllers
             IProductAttributeService productAttributeService,
             ISpecificationAttributeService specificationAttributeService,
             IBannerService bannerService,
+            IInteractiveFormService interactiveFormService,
             IMessageTemplateService messageTemplateService,
             IDateTimeHelper dateTimeHelper)
-		{
+        {
             this._customerService = customerService;
             this._customerAttributeService = customerAttributeService;
             this._customerTagService = customerTagService;
@@ -85,6 +87,7 @@ namespace Grand.Admin.Controllers
             this._productAttributeService = productAttributeService;
             this._specificationAttributeService = specificationAttributeService;
             this._bannerService = bannerService;
+            this._interactiveFormService = interactiveFormService;
             this._messageTemplateService = messageTemplateService;
             this._dateTimeHelper = dateTimeHelper;
         }
@@ -114,8 +117,8 @@ namespace Grand.Admin.Controllers
             {
                 model.MessageTemplates.Add(new SelectListItem
                 {
-                        Text = item.Name,
-                        Value = item.Id.ToString()
+                    Text = item.Name,
+                    Value = item.Id.ToString()
                 });
             }
             var customerRole = _customerService.GetAllCustomerRoles();
@@ -147,6 +150,16 @@ namespace Grand.Admin.Controllers
                 });
             }
 
+            foreach (var item in _interactiveFormService.GetAllForms())
+            {
+                model.InteractiveForms.Add(new SelectListItem()
+                {
+                    Text = item.Name,
+                    Value = item.Id.ToString()
+                });
+
+            }
+
 
         }
 
@@ -161,7 +174,7 @@ namespace Grand.Admin.Controllers
             var customer = _customerService.GetCustomerById(history.CustomerId);
             return new SerializeCustomerActionHistory
             {
-                Email = customer!=null ? String.IsNullOrEmpty(customer.Email) ? "(unknown)" : customer.Email: "(unknown)",
+                Email = customer != null ? String.IsNullOrEmpty(customer.Email) ? "(unknown)" : customer.Email : "(unknown)",
                 CreateDateUtc = _dateTimeHelper.ConvertToUserTime(history.CreateDateUtc, DateTimeKind.Utc),
             };
         }
@@ -170,6 +183,8 @@ namespace Grand.Admin.Controllers
         {
             if ((model.ReactionType == CustomerReactionTypeEnum.Banner) && String.IsNullOrEmpty(model.BannerId))
                 ModelState.AddModelError("error", "Banner is required");
+            if ((model.ReactionType == CustomerReactionTypeEnum.InteractiveForm) && String.IsNullOrEmpty(model.InteractiveFormId))
+                ModelState.AddModelError("error", "Interactive form is required");
             if ((model.ReactionType == CustomerReactionTypeEnum.Email) && String.IsNullOrEmpty(model.MessageTemplateId))
                 ModelState.AddModelError("error", "Email is required");
             if ((model.ReactionType == CustomerReactionTypeEnum.AssignToCustomerRole) && String.IsNullOrEmpty(model.CustomerRoleId))
@@ -188,37 +203,37 @@ namespace Grand.Admin.Controllers
             return RedirectToAction("List");
         }
 
-		public ActionResult List()
+        public ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
-            
-			return View();
-		}
 
-		[HttpPost]
-		public ActionResult List(DataSourceRequest command)
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult List(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
             var customeractions = _customerActionService.GetCustomerActions();
             var gridModel = new DataSourceResult
-			{
-                Data = customeractions.Select(x=> new { Id = x.Id, Name = x.Name, Active = x.Active, ActionType = _customerActionService.GetCustomerActionTypeById(x.ActionTypeId).Name }),
+            {
+                Data = customeractions.Select(x => new { Id = x.Id, Name = x.Name, Active = x.Active, ActionType = _customerActionService.GetCustomerActionTypeById(x.ActionTypeId).Name }),
                 Total = customeractions.Count()
-			};
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
 
         public ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
-            
+
             var model = new CustomerActionModel();
             model.Active = true;
             model.StartDateTimeUtc = DateTime.UtcNow;
@@ -247,7 +262,7 @@ namespace Grand.Admin.Controllers
             return View(model);
         }
 
-		public ActionResult Edit(string id)
+        public ActionResult Edit(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
@@ -259,10 +274,10 @@ namespace Grand.Admin.Controllers
             var model = customerAction.ToModel();
             model.ConditionCount = customerAction.Conditions.Count();
             PrepareReactObjectModel(model);
-           
-            
+
+
             return View(model);
-		}
+        }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public ActionResult Edit(CustomerActionModel model, bool continueEditing)
@@ -285,14 +300,14 @@ namespace Grand.Admin.Controllers
                         model.ActionTypeId = customeraction.ActionTypeId;
 
                     customeraction = model.ToEntity(customeraction);
-                    
+
 
                     _customerActionService.UpdateCustomerAction(customeraction);
 
                     _customerActivityService.InsertActivity("EditCustomerAction", customeraction.Id, _localizationService.GetResource("ActivityLog.EditCustomerAction"), customeraction.Name);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAction.Updated"));
-                    return continueEditing ? RedirectToAction("Edit", new { id = customeraction.Id}) : RedirectToAction("List");
+                    return continueEditing ? RedirectToAction("Edit", new { id = customeraction.Id }) : RedirectToAction("List");
                 }
                 PrepareReactObjectModel(model);
                 return View(model);
@@ -329,7 +344,7 @@ namespace Grand.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
-            
+
             var customerAction = _customerActionService.GetCustomerActionById(id);
             if (customerAction == null)
                 return RedirectToAction("List");
@@ -349,7 +364,7 @@ namespace Grand.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = customerAction.Id });
             }
-		}
+        }
 
         [HttpPost]
         public ActionResult Conditions(string customerActionId)
@@ -360,7 +375,7 @@ namespace Grand.Admin.Controllers
             var conditions = _customerActionService.GetCustomerActionById(customerActionId);
             var gridModel = new DataSourceResult
             {
-                Data = conditions.Conditions.Select(x=> new { Id = x.Id, Name = x.Name, Condition = x.CustomerActionConditionType.ToString()}),
+                Data = conditions.Conditions.Select(x => new { Id = x.Id, Name = x.Name, Condition = x.CustomerActionConditionType.ToString() }),
                 Total = conditions.Conditions.Count()
             };
             return new JsonResult
@@ -407,7 +422,7 @@ namespace Grand.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
-                if(customerAction==null)
+                if (customerAction == null)
                 {
                     return RedirectToAction("List");
                 }
@@ -415,8 +430,8 @@ namespace Grand.Admin.Controllers
                 var condition = new CustomerAction.ActionCondition()
                 {
                     Name = model.Name,
-                    CustomerActionConditionTypeId = model.CustomerActionConditionTypeId,                    
-                    ConditionId = model.ConditionId,                    
+                    CustomerActionConditionTypeId = model.CustomerActionConditionTypeId,
+                    ConditionId = model.ConditionId,
                 };
                 customerAction.Conditions.Add(condition);
                 _customerActionService.UpdateCustomerAction(customerAction);
@@ -534,7 +549,7 @@ namespace Grand.Admin.Controllers
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.ProductAttribute)
             {
-                condition.ProductAttribute.Remove(condition.ProductAttribute.FirstOrDefault(x=>x.Id == id));
+                condition.ProductAttribute.Remove(condition.ProductAttribute.FirstOrDefault(x => x.Id == id));
                 _customerActionService.UpdateCustomerAction(customerActions);
             }
             if (condition.CustomerActionConditionTypeId == (int)CustomerActionConditionTypeEnum.ProductSpecification)
@@ -589,10 +604,10 @@ namespace Grand.Admin.Controllers
 
             var customerActions = _customerActionService.GetCustomerActionById(customerActionId);
             var condition = customerActions.Conditions.FirstOrDefault(x => x.Id == conditionId);
-            
+
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z)!= null ? _productService.GetProductById(z).Name : ""}) : null,
+                Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z) != null ? _productService.GetProductById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -678,12 +693,12 @@ namespace Grand.Admin.Controllers
                 foreach (string id in model.SelectedProductIds)
                 {
                     var customerAction = _customerActionService.GetCustomerActionById(model.CustomerActionId);
-                    if(customerAction!=null)
+                    if (customerAction != null)
                     {
                         var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.CustomerActionConditionId);
-                        if(condition!=null)
+                        if (condition != null)
                         {
-                            if(condition.Products.Where(x=>x == id).Count()==0)
+                            if (condition.Products.Where(x => x == id).Count() == 0)
                             {
                                 condition.Products.Add(id);
                                 _customerActionService.UpdateCustomerAction(customerAction);
@@ -711,7 +726,7 @@ namespace Grand.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z)!=null ? _categoryService.GetCategoryById(z).Name: "" }) : null,
+                Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z) != null ? _categoryService.GetCategoryById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -800,7 +815,7 @@ namespace Grand.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.Manufacturers.Select(z => new { Id = z, ManufacturerName = _manufacturerService.GetManufacturerById(z)!=null ? _manufacturerService.GetManufacturerById(z).Name : "" }) : null,
+                Data = condition != null ? condition.Manufacturers.Select(z => new { Id = z, ManufacturerName = _manufacturerService.GetManufacturerById(z) != null ? _manufacturerService.GetManufacturerById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -824,7 +839,7 @@ namespace Grand.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
-            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,"",
+            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName, "",
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -943,7 +958,7 @@ namespace Grand.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerRoles.Select(z => new { Id = z, CustomerRole = _customerService.GetCustomerRoleById(z) != null ?  _customerService.GetCustomerRoleById(z).Name : "" }) : null,
+                Data = condition != null ? condition.CustomerRoles.Select(z => new { Id = z, CustomerRole = _customerService.GetCustomerRoleById(z) != null ? _customerService.GetCustomerRoleById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -1003,7 +1018,7 @@ namespace Grand.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerTags.Select(z => new { Id = z, CustomerTag = _customerTagService.GetCustomerTagById(z)!= null ? _customerTagService.GetCustomerTagById(z).Name : "" }) : null,
+                Data = condition != null ? condition.CustomerTags.Select(z => new { Id = z, CustomerTag = _customerTagService.GetCustomerTagById(z) != null ? _customerTagService.GetCustomerTagById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult
@@ -1073,7 +1088,7 @@ namespace Grand.Admin.Controllers
                 Data = gridModel
             };
         }
-       
+
         [HttpPost]
         public ActionResult ConditionProductAttributeInsert(CustomerActionConditionModel.AddProductAttributeConditionModel model)
         {
@@ -1086,7 +1101,8 @@ namespace Grand.Admin.Controllers
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
                 if (condition != null)
                 {
-                    var _pv = new CustomerAction.ActionCondition.ProductAttributeValue() {                        
+                    var _pv = new CustomerAction.ActionCondition.ProductAttributeValue()
+                    {
                         ProductAttributeId = model.ProductAttributeId,
                         Name = model.Name
                     };
@@ -1147,9 +1163,11 @@ namespace Grand.Admin.Controllers
             var gridModel = new DataSourceResult
             {
                 Data = condition != null ? condition.ProductSpecifications
-                        .Select(z => new { Id = z.Id, SpecificationId = z.ProductSpecyficationId,
+                        .Select(z => new {
+                            Id = z.Id,
+                            SpecificationId = z.ProductSpecyficationId,
                             SpecificationName = _specificationAttributeService.GetSpecificationAttributeById(z.ProductSpecyficationId).Name,
-                            SpecificationValueName = !String.IsNullOrEmpty(z.ProductSpecyficationValueId) ? _specificationAttributeService.GetSpecificationAttributeById(z.ProductSpecyficationId).SpecificationAttributeOptions.FirstOrDefault(x=>x.Id == z.ProductSpecyficationValueId).Name: "Undefined"
+                            SpecificationValueName = !String.IsNullOrEmpty(z.ProductSpecyficationValueId) ? _specificationAttributeService.GetSpecificationAttributeById(z.ProductSpecyficationId).SpecificationAttributeOptions.FirstOrDefault(x => x.Id == z.ProductSpecyficationValueId).Name : "Undefined"
                         }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
@@ -1172,7 +1190,7 @@ namespace Grand.Admin.Controllers
                 var condition = customerAction.Conditions.FirstOrDefault(x => x.Id == model.ConditionId);
                 if (condition != null)
                 {
-                    if(condition.ProductSpecifications.Where(x=>x.ProductSpecyficationId == model.SpecificationId && x.ProductSpecyficationValueId == model.SpecificationValueId).Count() == 0)
+                    if (condition.ProductSpecifications.Where(x => x.ProductSpecyficationId == model.SpecificationId && x.ProductSpecyficationValueId == model.SpecificationValueId).Count() == 0)
                     {
                         var _ps = new CustomerAction.ActionCondition.ProductSpecification()
                         {
@@ -1205,7 +1223,7 @@ namespace Grand.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageActions))
                 return AccessDeniedView();
 
-            if(String.IsNullOrEmpty(specificationId))
+            if (String.IsNullOrEmpty(specificationId))
                 return new NullJsonResult();
 
             var customerSpec = _specificationAttributeService.GetSpecificationAttributeById(specificationId).SpecificationAttributeOptions.Select(x => new { Id = x.Id, Name = x.Name });
@@ -1235,8 +1253,11 @@ namespace Grand.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.CustomerRegistration.Select(z => new { Id = z.Id,
-                    CustomerRegisterName = z.RegisterField, CustomerRegisterValue = z.RegisterValue }) 
+                Data = condition != null ? condition.CustomerRegistration.Select(z => new {
+                    Id = z.Id,
+                    CustomerRegisterName = z.RegisterField,
+                    CustomerRegisterValue = z.RegisterValue
+                })
                     : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
@@ -1322,15 +1343,15 @@ namespace Grand.Admin.Controllers
         {
             string _field = registerField;
             var _rf = registerField.Split(':');
-            if(_rf.Count() > 1)
+            if (_rf.Count() > 1)
             {
                 var ca = _customerAttributeService.GetCustomerAttributeById(_rf.FirstOrDefault());
                 if (ca != null)
                 {
                     _field = ca.Name;
-                    if(ca.CustomerAttributeValues.FirstOrDefault(x=>x.Id == _rf.LastOrDefault())!=null)
+                    if (ca.CustomerAttributeValues.FirstOrDefault(x => x.Id == _rf.LastOrDefault()) != null)
                     {
-                        _field = ca.Name + "->"+ ca.CustomerAttributeValues.FirstOrDefault(x => x.Id == _rf.LastOrDefault()).Name;
+                        _field = ca.Name + "->" + ca.CustomerAttributeValues.FirstOrDefault(x => x.Id == _rf.LastOrDefault()).Name;
                     }
                 }
 
@@ -1417,13 +1438,13 @@ namespace Grand.Admin.Controllers
             var list = new List<Tuple<string, string>>();
             foreach (var item in _customerAttributeService.GetAllCustomerAttributes())
             {
-                if(item.AttributeControlType == AttributeControlType.Checkboxes ||
+                if (item.AttributeControlType == AttributeControlType.Checkboxes ||
                     item.AttributeControlType == AttributeControlType.DropdownList ||
                     item.AttributeControlType == AttributeControlType.RadioList)
                 {
                     foreach (var value in item.CustomerAttributeValues)
                     {
-                        list.Add(Tuple.Create(string.Format("{0}:{1}", item.Id, value.Id), item.Name + "->"+value.Name));
+                        list.Add(Tuple.Create(string.Format("{0}:{1}", item.Id, value.Id), item.Name + "->" + value.Name));
                     }
                 }
             }
@@ -1450,7 +1471,7 @@ namespace Grand.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = condition != null ? condition.UrlReferrer.Select(z => new { Id = z.Id, Name = z.Name}) : null,
+                Data = condition != null ? condition.UrlReferrer.Select(z => new { Id = z.Id, Name = z.Name }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
             return new JsonResult

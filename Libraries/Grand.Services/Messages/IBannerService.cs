@@ -36,12 +36,6 @@ namespace Grand.Services.Messages
         /// <returns>Banners</returns>
         IList<Banner> GetAllBanners();
 
-        /// <summary>
-        /// Gets active banner for customer
-        /// </summary>
-        /// <returns>BannerActive</returns>
-        BannerActive GetActiveBannerByCustomerId(string customerId);
-        void MoveBannerToArchive(string id, string customerId);
 
     }
 }

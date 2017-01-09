@@ -1,0 +1,205 @@
+﻿@model InteractiveFormModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+
+<script>
+    $(document).ready(function () {
+        $("#interactiveform-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+<div id="interactiveform-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Promotions.InteractiveForms.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Promotions.InteractiveForms.Attribute")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabValues()
+    </div>
+</div>
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "interactiveform-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@helper TabInfo()
+{
+@(Html.LocalizedEditor<InteractiveFormModel, InteractiveFormLocalizedModel>("InteractiveForm-localized",
+    @<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Locales[item].Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Locales[item].Name)
+                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Locales[item].Body)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
+                @Html.ValidationMessageFor(model => model.Locales[item].Body)
+            </div>
+        </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+    </div>
+</div>
+        ,
+    @<div class="form-horizontal">
+         <div class="form-body">
+             <div class="form-group">
+                 @Html.GrandLabelFor(model => model.Name)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.GrandEditorFor(model => model.Name)
+                     @Html.ValidationMessageFor(model => model.Name)
+                 </div>
+             </div>
+             <div class="form-group">
+                 @Html.GrandLabelFor(model => model.Body)
+                 <div class="col-md-9 col-sm-9">
+                     @Html.EditorFor(model => model.Body, "RichEditor")
+                     @Html.ValidationMessageFor(model => model.Body)
+                 </div>
+             </div>
+         </div>
+    </div>
+    ))
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.AvailableTokens)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label">
+                        @Html.DisplayFor(model => model.AvailableTokens)
+                    </label>
+                    @Html.ValidationMessageFor(model => model.AvailableTokens)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.EmailAccountId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName"))
+                    @Html.ValidationMessageFor(model => model.EmailAccountId)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper  TabValues()
+{
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="interactiveformattributes-grid"></div>
+                </div>
+                <div class="panel-footer">
+                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Promotions.InteractiveForms.Attribute.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddAttribute", "InteractiveForm", new { formId = Model.Id }))'); return false;" class="k-button" />
+                </div>
+            </div>
+
+            <script>
+            $(document).ready(function () {
+                $("#interactiveformattributes-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("FormAttributesList", "InteractiveForm", new { formId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("FormAttributesDelete", "InteractiveForm", new { formId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id"
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Fields.Name")"
+                    }, {
+                        field: "SystemName",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName")"
+                    }, {
+                        field: "Type",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Fields.FormControlTypeId")",
+                        width: 200
+                    },{
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: '<a href="@Url.Content("~/Admin/InteractiveForm/EditAttribute")?formId=@(Model.Id)&aid=#=Id#">@T("Admin.Common.Edit")</a>'
+                    },
+                    {
+                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }]
+                });
+            });
+            </script>
+
+}
+else
+{
+        <div class="note note-info">
+            @T("Admin.Promotions.InteractiveForms.SaveBeforeEdit")
+        </div>
+}
+}

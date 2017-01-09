@@ -286,15 +286,7 @@ namespace Grand.Services.Security
             if (customer == null)
                 return false;
 
-            //old implementation of Authorize method
-            //var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
-            //foreach (var role in customerRoles)
-            //    foreach (var permission1 in role.PermissionRecords)
-            //        if (permission1.SystemName.Equals(permission.SystemName, StringComparison.InvariantCultureIgnoreCase))
-            //            return true;
-
-            //return false;
-
+           
             return Authorize(permission.SystemName, customer);
         }
 

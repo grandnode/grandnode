@@ -233,6 +233,7 @@
     <Compile Include="Controllers\CustomerActionController.cs" />
     <Compile Include="Controllers\CustomerReminderController.cs" />
     <Compile Include="Controllers\CustomerTagController.cs" />
+    <Compile Include="Controllers\InteractiveFormController.cs" />
     <Compile Include="Controllers\JbimagesController.cs" />
     <Compile Include="Controllers\ContactFormController.cs" />
     <Compile Include="Controllers\NewsLetterCategoryController.cs" />
@@ -320,6 +321,9 @@
     <Compile Include="Models\Messages\BannerModel.cs" />
     <Compile Include="Models\Messages\ContactFormListModel.cs" />
     <Compile Include="Models\Messages\ContactFormModel.cs" />
+    <Compile Include="Models\Messages\InteractiveFormAttributeModel.cs" />
+    <Compile Include="Models\Messages\InteractiveFormAttributeValueModel.cs" />
+    <Compile Include="Models\Messages\InteractiveFormModel.cs" />
     <Compile Include="Models\Messages\NewsletterCategoryModel.cs" />
     <Compile Include="Models\Messages\TestMessageTemplateModel.cs" />
     <Compile Include="Models\Orders\CountryReportLineModel.cs" />
@@ -451,6 +455,9 @@
     <Compile Include="Validators\Customers\CustomerActionValidator.cs" />
     <Compile Include="Validators\Customers\CustomerTagValidator.cs" />
     <Compile Include="Validators\Directory\MeasureUnitValidator.cs" />
+    <Compile Include="Validators\Messages\InteractiveFormAttributeValidator.cs" />
+    <Compile Include="Validators\Messages\InteractiveFormAttributeValueValidator.cs" />
+    <Compile Include="Validators\Messages\InteractiveFormValidator.cs" />
     <Compile Include="Validators\Messages\NewsletterCategoryValidator.cs" />
     <Compile Include="Validators\Messages\BannerValidator.cs" />
     <Compile Include="Validators\Messages\TestMessageTemplateValidator.cs" />
@@ -1956,6 +1963,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\_CreateOrUpdate.Additional.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\InteractiveForm\AddAttribute.cshtml" />
+    <Content Include="Views\InteractiveForm\Create.cshtml" />
+    <Content Include="Views\InteractiveForm\Edit.cshtml" />
+    <Content Include="Views\InteractiveForm\EditAttribute.cshtml" />
+    <Content Include="Views\InteractiveForm\List.cshtml" />
+    <Content Include="Views\InteractiveForm\ValueCreatePopup.cshtml" />
+    <Content Include="Views\InteractiveForm\ValueEditPopup.cshtml" />
+    <Content Include="Views\InteractiveForm\_CreateOrUpdate.cshtml" />
+    <Content Include="Views\InteractiveForm\_CreateOrUpdateAttribute.cshtml" />
+    <Content Include="Views\InteractiveForm\_CreateOrUpdateAttributeValue.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

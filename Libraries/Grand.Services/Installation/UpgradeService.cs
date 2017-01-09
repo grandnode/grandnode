@@ -28,6 +28,8 @@ using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Logging;
+using Grand.Core.Domain.Security;
+using Grand.Services.Security;
 
 namespace Grand.Services.Installation
 {
@@ -476,7 +478,33 @@ namespace Grand.Services.Installation
                 Enabled = false,
                 Name = "Public store. Viewed Url"
             });
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "InteractiveFormDelete",
+                Enabled = true,
+                Name = "Delete a interactive form"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "InteractiveFormEdit",
+                Enabled = true,
+                Name = "Edit a interactive form"
+            });
+            _activityLogTypeRepository.Insert(new ActivityLogType()
+            {
+                SystemKeyword = "InteractiveFormAdd",
+                Enabled = true,
+                Name = "Add a interactive form"
+            });
 
+
+            #endregion
+
+            #region Permisions
+
+            IPermissionProvider provider = new StandardPermissionProvider();
+            EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+             
             #endregion
         }
 

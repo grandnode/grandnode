@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace Grand.Core.Domain.Messages
 {
     /// <summary>
-    /// Represents a campaign
+    /// Represents a banner
     /// </summary>
     [BsonIgnoreExtraElements]
     public partial class Banner : BaseEntity, ILocalizedEntity

@@ -133,7 +133,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<CustomerActionType> _customerActionType;
         private readonly IRepository<CustomerActionHistory> _customerActionHistory;
         private readonly IRepository<Banner> _banner;
-        private readonly IRepository<BannerArchive> _bannerArchive;
+        private readonly IRepository<PopupArchive> _popupArchive;
         private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
@@ -234,7 +234,7 @@ namespace Grand.Services.Installation
             IRepository<CustomerActionType> customerActionType,
             IRepository<CustomerActionHistory> customerActionHistory,
             IRepository<Banner> banner,
-            IRepository<BannerArchive> bannerArchive,
+            IRepository<PopupArchive> popupArchive,
             IRepository<CustomerReminder> customerReminder,
             IRepository<CustomerReminderHistory> customerReminderHistoryRepository,
             IRepository<RecentlyViewedProduct> recentlyViewedProductRepository,
@@ -331,7 +331,7 @@ namespace Grand.Services.Installation
             this._customerReminderHistoryRepository = customerReminderHistoryRepository; ;
             this._customerActionService = customerActionService;
             this._banner = banner;
-            this._bannerArchive = bannerArchive;
+            this._popupArchive = popupArchive;
             this._settingService = settingService;
 
             _securitySettings = new SecuritySettings
@@ -10110,6 +10110,24 @@ namespace Grand.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "InteractiveFormDelete",
+                                                  Enabled = true,
+                                                  Name = "Delete a interactive form"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "InteractiveFormEdit",
+                                                  Enabled = true,
+                                                  Name = "Edit a interactive form"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "InteractiveFormAdd",
+                                                  Enabled = true,
+                                                  Name = "Add a interactive form"
+                                              },
+                                           new ActivityLogType
+                                              {
                                                   SystemKeyword = "EditWidget",
                                                   Enabled = true,
                                                   Name = "Edit a widget"
@@ -10145,7 +10163,12 @@ namespace Grand.Services.Installation
                                                   Enabled = false,
                                                   Name = "Public store. Ask a question about product"
                                               },
-
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.InteractiveForm",
+                                                  Enabled = false,
+                                                  Name = "Public store. Show interactive form"
+                                              },
                                           new ActivityLogType
                                               {
                                                   SystemKeyword = "PublicStore.PlaceOrder",
@@ -11078,8 +11101,8 @@ namespace Grand.Services.Installation
 
             //banner
             _banner.Collection.Indexes.CreateOneAsync(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _bannerArchive.Collection.Indexes.CreateOneAsync(Builders<BannerArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _bannerArchive.Collection.Indexes.CreateOneAsync(Builders<BannerArchive>.IndexKeys.Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "CustomerActionId", Unique = false });
+            _popupArchive.Collection.Indexes.CreateOneAsync(Builders<PopupArchive>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _popupArchive.Collection.Indexes.CreateOneAsync(Builders<PopupArchive>.IndexKeys.Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "CustomerActionId", Unique = false });
 
             //customer reminder
             _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

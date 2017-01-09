@@ -521,4 +521,238 @@
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress">
     <Value>Ip address</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms">
+    <Value>Interactive Forms</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.AddAttribute">
+    <Value>Add Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Added">
+    <Value>Interactive Form Added</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute">
+    <Value>Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Added">
+    <Value>Attribute added</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Info">
+    <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="admin.promotions.interactiveforms.attribute.updated">
+    <Value>Attribute has been updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values">
+    <Value>Values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.Class">
+    <Value>Css class</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.Class.hint">
+    <Value>Enter css class for element</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.DefaultValue">
+    <Value>Default Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.DefaultValue.hint">
+    <Value>Enter default value of the attribute field.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.IsRequired">
+    <Value>Is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.IsRequired.hint">
+    <Value>Check this box if this attribute is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.FormControlTypeId">
+    <Value>Choose Form Control</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.FormControlTypeId.hint">
+    <Value>Choose form control type from the list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.Name.hint">
+    <Value>Enter name of the attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.RegexValidation">
+    <Value>Regex Expression</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.RegexValidation.hint">
+    <Value>Enter regex expression for the attribute to the validation</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.Style">
+    <Value>Css style</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.Style.hint">
+    <Value>Enter css style for element</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName">
+    <Value>System Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName.hint">
+    <Value>Enter system name of the attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName.Required">
+    <Value>System name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.ValidationMinLength">
+    <Value>Validation Min. Length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.ValidationMinLength.hint">
+    <Value>Minimal lenght to validate.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.ValidationMaxLength">
+    <Value>Validation Max. Length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Fields.ValidationMaxLength.hint">
+    <Value>Maximal lenght to validate.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.EditValue">
+    <Value>Edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.Fields.DisplayOrder">
+    <Value>Display Order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.Fields.DisplayOrder.hint">
+    <Value>Display Order of attribute value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name.hint">
+    <Value>Enter name of the value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.Fields.IsPreSelected">
+    <Value>Is pre selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Attribute.Values.Fields.IsPreSelected.hint">
+    <Value>Check this box if this value must be pre selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.BackToForm">
+    <Value>Back to form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.BackToList">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Deleted">
+    <Value>Interactive form deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.EditAttribute">
+    <Value>Edit Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.EditDetails">
+    <Value>Edit Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Info">
+    <Value>Info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.AvailableTokens">
+    <Value>Available tokens</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.AvailableTokens.hint">
+    <Value>Available tokens</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.Body">
+    <Value>Body</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.Body.hint">
+    <Value>Enter body of interactive form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.Body.Required">
+    <Value>Body is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.EmailAccount">
+    <Value>Email Accounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.EmailAccount.hint">
+    <Value>The email account that will be used to send this message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.Name.hint">
+    <Value>Enter name of the interactive form</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Fields.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.SaveBeforeEdit">
+    <Value>You need to save form before edit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.InteractiveForms.Updated">
+    <Value>Updated</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormAdd">
+    <Value>Add Interactive form - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormUpdate">
+    <Value>Update Interactive form - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormDeleted">
+    <Value>Deleted Interactive form - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormAddAttribute">
+    <Value>Add interactive form attribute - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormUpdateAttribute">
+    <Value>Update Interactive Form Attribute - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormDeleteAttribute">
+    <Value>Delete Interactive Form Attribute - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormAddAttributeValue">
+    <Value>Add Interactive Form Attribute Value - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormUpdateAttributeValue">
+    <Value>Update Interactive Form Attribute Value - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.InteractiveFormDeleteAttributeValue">
+    <Value>Delete Interactive Form Attribute Value - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.InteractiveForm">
+    <Value>PublicStore - Sent interactive form - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PopupInteractiveForm.Send">
+    <Value>SEND</Value>
+  </LocaleResource>
+  <LocaleResource Name="PopupInteractiveForm.Fields.Regex">
+    <Value>The value of the {0} does not meet the requirements</Value>
+  </LocaleResource>
+  <LocaleResource Name="PopupInteractiveForm.Fields.IsRequired">
+    <Value>The value of the field {0} is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="PopupInteractiveForm.Fields.TextboxMinimumLength">
+    <Value>{0} : minimum length is {1} chars</Value>
+  </LocaleResource>
+  <LocaleResource Name="PopupInteractiveForm.Fields.TextboxMaximumLength">
+    <Value>{0} : maximum length is {1} chars</Value>
+  </LocaleResource>
+  <LocaleResource Name="PopupInteractiveForm.EmailForm">
+    <Value>Message from form {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.InteractiveForm">
+    <Value>Interactive forms</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerAction.Fields.InteractiveForm.hint">
+    <Value>Please select a interactive forms</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Actiontype.helptext.interactiveform">
+    <Value>Interactive form – Store automatically view form which is assigned to a particular action.</Value>
+  </LocaleResource>
 </Language>

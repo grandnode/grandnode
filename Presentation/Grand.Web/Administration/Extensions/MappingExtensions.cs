@@ -359,6 +359,42 @@ namespace Grand.Admin.Extensions
 
         #endregion
 
+        #region Interactive form
+
+        public static InteractiveFormModel ToModel(this InteractiveForm entity)
+        {
+            return entity.MapTo<InteractiveForm, InteractiveFormModel>();
+        }
+
+        public static InteractiveForm ToEntity(this InteractiveFormModel model)
+        {
+            return model.MapTo<InteractiveFormModel, InteractiveForm>();
+        }
+
+        public static InteractiveForm ToEntity(this InteractiveFormModel model, InteractiveForm destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
+        public static InteractiveFormAttributeModel ToModel(this InteractiveForm.FormAttribute entity)
+        {
+            return entity.MapTo<InteractiveForm.FormAttribute, InteractiveFormAttributeModel>();
+        }
+
+        public static InteractiveForm.FormAttribute ToEntity(this InteractiveFormAttributeModel model)
+        {
+            return model.MapTo<InteractiveFormAttributeModel, InteractiveForm.FormAttribute>();
+        }
+
+        public static InteractiveForm.FormAttribute ToEntity(this InteractiveFormAttributeModel model, InteractiveForm.FormAttribute destination)
+        {
+            return model.MapTo(destination);
+        }
+
+
+        #endregion
+
 
         #region Campaigns
 

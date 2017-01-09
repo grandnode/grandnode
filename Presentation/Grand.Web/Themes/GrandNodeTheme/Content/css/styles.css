@@ -677,7 +677,16 @@ label, label + * {
 
 /*********** CUSTOMER ACTION POPUP **************/
 
-#action_modal {
+#action_modal_banner {
+    position: relative;
+    background: #FFF;
+    padding: 20px;
+    width: auto;
+    max-width: 650px; 
+    margin: 20px auto;
+}
+
+#action_modal_form {
     position: relative;
     background: #FFF;
     padding: 20px;

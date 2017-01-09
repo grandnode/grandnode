@@ -103,4 +103,9 @@ db.Customer.find().forEach(
 //remove field ActivityLogType from the ActivityLog Collection
 db.ActivityLog.update({}, { $unset: { ActivityLogType: 1 } }, { multi: true });
 
+//rename collections BannerActive / BannerArchive to PopupActive / PopupArchive
+db.BannerActive.renameCollection("PopupActive")
+db.BannerArchive.renameCollection("PopupArchive")
+
+
 print("Update executed");

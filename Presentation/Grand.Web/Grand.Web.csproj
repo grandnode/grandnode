@@ -2525,6 +2525,7 @@
     <Content Include="Themes\GrandNodeTheme\Content\images\wishlist-button.png" />
     <Content Include="Themes\GrandNodeTheme\Content\js\materialize.js" />
     <Content Include="Themes\GrandNodeTheme\Content\js\materialize.min.js" />
+    <Content Include="Themes\GrandNodeTheme\Content\js\public.actions.js" />
     <Content Include="Themes\GrandNodeTheme\preview.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -2739,6 +2740,7 @@
     <Content Include="Themes\GrandNodeTheme\Views\Profile\Index.cshtml" />
     <Content Include="Views\Newsletter\NewsletterCategory.cshtml" />
     <Content Include="Themes\GrandNodeTheme\Views\Newsletter\NewsletterCategory.cshtml" />
+    <Content Include="Themes\GrandNodeTheme\Views\Shared\_Notifications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

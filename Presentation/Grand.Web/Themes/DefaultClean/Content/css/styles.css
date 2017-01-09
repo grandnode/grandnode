@@ -628,7 +628,16 @@ label, label + * {
 
 /*********** CUSTOMER ACTION POPUP **************/
 
-#action_modal {
+#action_modal_banner {
+    position: relative;
+    background: #FFF;
+    padding: 20px;
+    width: auto;
+    max-width: 650px; 
+    margin: 20px auto;
+}
+
+#action_modal_form {
     position: relative;
     background: #FFF;
     padding: 20px;
@@ -2861,7 +2870,8 @@ label, label + * {
 .email-a-friend-page .button-1,
 .ask-a-question-page .button-1,
 .apply-vendor-page .button-1,
-.ask-a-question-page .button-1 {
+.ask-a-question-page .button-1,
+.interactive-form-button{
 	min-width: 140px;
 	border: none;
 	background-color: #4ab2f1;

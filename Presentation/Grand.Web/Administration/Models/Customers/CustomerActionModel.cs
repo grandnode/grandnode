@@ -19,9 +19,11 @@ namespace Grand.Admin.Models.Customers
         {
             this.ActionType = new List<SelectListItem>();
             this.Banners = new List<SelectListItem>();
+            this.InteractiveForms = new List<SelectListItem>();
             this.MessageTemplates = new List<SelectListItem>();
             this.CustomerRoles = new List<SelectListItem>();
             this.CustomerTags = new List<SelectListItem>();
+
         }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.Name")]
@@ -33,7 +35,7 @@ namespace Grand.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.ActionTypeId")]
         public string ActionTypeId { get; set; }
         public IList<SelectListItem> ActionType { get; set; }
-        
+
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.ConditionId")]
         public int ConditionId { get; set; }
@@ -50,6 +52,10 @@ namespace Grand.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.Banner")]
         public string BannerId { get; set; }
         public IList<SelectListItem> Banners { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.InteractiveForm")]
+        public string InteractiveFormId { get; set; }
+        public IList<SelectListItem> InteractiveForms { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.MessageTemplate")]
         public string MessageTemplateId { get; set; }

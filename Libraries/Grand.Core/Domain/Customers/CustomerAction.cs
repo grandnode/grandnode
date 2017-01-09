@@ -53,6 +53,7 @@ namespace Grand.Core.Domain.Customers
         }
 
         public string BannerId { get; set; }
+        public string InteractiveFormId { get; set; }
 
         public string MessageTemplateId { get; set; }
 

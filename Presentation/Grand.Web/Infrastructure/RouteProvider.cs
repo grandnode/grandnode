@@ -83,6 +83,11 @@ namespace Grand.Web.Infrastructure
                             "sitemap",
                             new { controller = "Common", action = "Sitemap" },
                             new[] { "Grand.Web.Controllers" });
+            //interactive form
+            routes.MapLocalizedRoute("PopupInteractiveForm",
+                            "popupinteractiveform",
+                            new { controller = "Common", action = "PopupInteractiveForm" },
+                            new[] { "Grand.Web.Controllers" });
 
             //product search
             routes.MapLocalizedRoute("ProductSearch",

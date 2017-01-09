@@ -31,6 +31,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageAffiliates = new PermissionRecord { Name = "Admin area. Manage Affiliates", SystemName = "ManageAffiliates", Category = "Promo" };
         public static readonly PermissionRecord ManageCampaigns = new PermissionRecord { Name = "Admin area. Manage Campaigns", SystemName = "ManageCampaigns", Category = "Promo" };
         public static readonly PermissionRecord ManageBanners = new PermissionRecord { Name = "Admin area. Manage Banners", SystemName = "ManageBanners", Category = "Promo" };
+        public static readonly PermissionRecord ManageInteractiveForm = new PermissionRecord { Name = "Admin area. Manage Interactive Forms", SystemName = "ManageInteractiveForms", Category = "Promo" };
         public static readonly PermissionRecord ManageDiscounts = new PermissionRecord { Name = "Admin area. Manage Discounts", SystemName = "ManageDiscounts", Category = "Promo" };
         public static readonly PermissionRecord ManageNewsletterSubscribers = new PermissionRecord { Name = "Admin area. Manage Newsletter Subscribers", SystemName = "ManageNewsletterSubscribers", Category = "Promo" };
         public static readonly PermissionRecord ManagePolls = new PermissionRecord { Name = "Admin area. Manage Polls", SystemName = "ManagePolls", Category = "Content Management" };
@@ -84,6 +85,7 @@ namespace Grand.Services.Security
                 ManageActions,
                 ManageReminders,
                 ManageBanners,
+                ManageInteractiveForm,
                 ManageVendors,
                 ManageCurrentCarts,
                 ManageOrders,
@@ -192,6 +194,7 @@ namespace Grand.Services.Security
                         PublicStoreAllowNavigation,
                         AccessClosedStore,
                         ManageBanners,
+                        ManageInteractiveForm,
                         ManageActions,
                         ManageReminders
                     }

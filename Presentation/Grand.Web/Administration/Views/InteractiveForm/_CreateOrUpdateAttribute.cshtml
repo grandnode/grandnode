@@ -1,0 +1,292 @@
+﻿@model InteractiveFormAttributeModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.FormId)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#attribute-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+<div id="attribute-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Promotions.InteractiveForms.Attribute.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-values">
+            @T("Admin.Promotions.InteractiveForms.Attribute.Values")
+        </li>
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    <div>
+        @TabValues()
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "attribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@helper TabInfo()
+{
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.FormControlTypeId)").change(toggleAttributeControlType);
+
+            toggleAttributeControlType();
+
+            function toggleAttributeControlType() {
+                var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.FormControlTypeId)").val();
+                if (selectedAttributeControlTypeId == @(((int)Grand.Core.Domain.Messages.FormControlType.TextBox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlDefaultValue').show();
+                    $('#pnlRegexValidation').show();
+                    $('#tab-values').hide();
+                } else if (selectedAttributeControlTypeId == @(((int)Grand.Core.Domain.Messages.FormControlType.MultilineTextbox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlDefaultValue').show();
+                    $('#pnlRegexValidation').show();
+                    $('#tab-values').hide();
+                } else {
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                    $('#pnlDefaultValue').hide();
+                    $('#pnlRegexValidation').hide();
+                    $('#tab-values').show();
+                }
+            }
+
+        });
+
+    </script>
+
+    @(Html.LocalizedEditor<InteractiveFormAttributeModel, InteractiveFormAttributeLocalizedModel>("attribute-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].Name)
+                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+        </div>
+    </div>
+    ))
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SystemName)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SystemName)
+                    @Html.ValidationMessageFor(model => model.SystemName)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Style)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Style)
+                    @Html.ValidationMessageFor(model => model.Style)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Class)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Class)
+                    @Html.ValidationMessageFor(model => model.Class)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.IsRequired)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IsRequired)
+                    @Html.ValidationMessageFor(model => model.IsRequired)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.FormControlTypeId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.FormControlTypeId, ((Grand.Core.Domain.Messages.FormControlType)Model.FormControlTypeId).ToSelectList())
+                    @Html.ValidationMessageFor(model => model.FormControlTypeId)
+                </div>
+            </div>
+            <div class="form-group" id="pnlRegexValidation">
+                @Html.GrandLabelFor(model => model.RegexValidation)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.RegexValidation)
+                    @Html.ValidationMessageFor(model => model.RegexValidation)
+                </div>
+            </div>
+            <div class="form-group" id="pnlValidationMinLength">
+                @Html.GrandLabelFor(model => model.ValidationMinLength)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ValidationMinLength)
+                    @Html.ValidationMessageFor(model => model.ValidationMinLength)
+                </div>
+            </div>
+            <div class="form-group" id="pnlValidationMaxLength">
+                @Html.GrandLabelFor(model => model.ValidationMaxLength)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ValidationMaxLength)
+                    @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+                </div>
+            </div>
+            <div class="form-group" id="pnlDefaultValue">
+                @Html.GrandLabelFor(model => model.DefaultValue)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DefaultValue)
+                    @Html.ValidationMessageFor(model => model.DefaultValue)
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@helper TabValues()
+{
+
+if (!string.IsNullOrEmpty(Model.Id))
+{
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="attributeValues-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewValues" value="@T("Admin.Promotions.InteractiveForms.Attribute.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "InteractiveForm", new { form = Model.FormId, aId = Model.Id, formId = "attribute-form", btnId = "btnRefreshValues" }))', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="btnRefreshValues" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#attributeValues-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("AttributeValuesList", "InteractiveForm", new { formId = Model.FormId, aId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("AttributeValuesDelete", "InteractiveForm", new { formId = Model.FormId, aId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken,
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name")"
+                    },  
+                    {
+                        field: "IsPreSelected",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.IsPreSelected")",
+                        width: 200,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(IsPreSelected) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                     }, 
+                     {
+                         field: "DisplayOrder",
+                         title: "@T("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.DisplayOrder")",
+                        width: 150
+                    },
+                    {
+                        field: "Id",
+                        title: "@T("Admin.Common.View")",
+                        width: 150,
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/InteractiveForm/ValueEditPopup/")#=Id#?form=@Model.FormId&aId=@Model.Id&btnId=btnRefreshValues&formId=attribute-form', 800, 350, true); return false;\" class='k-button' />"
+
+                    }, {
+                        command: [{
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 150
+                    }]
+                });
+            });
+        </script>
+                <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefreshValues').click(function () {
+                                var grid = $("#attributeValues-grid").data('kendoGrid');
+                                grid.dataSource.read();
+                                return false;
+                            });
+                        });
+                </script>
+
+}
+else
+{
+        <div class="note note-info">
+            @T("Admin.Promotions.InteractiveForms.SaveBeforeEdit")
+        </div>
+}
+}

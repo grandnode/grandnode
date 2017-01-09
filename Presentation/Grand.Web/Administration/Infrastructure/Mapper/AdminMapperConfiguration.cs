@@ -183,6 +183,24 @@ namespace Grand.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.Id, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore());
 
+                //InteractiveForm
+                cfg.CreateMap<InteractiveForm, InteractiveFormModel>()
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableEmailAccounts, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableTokens, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<InteractiveFormModel, InteractiveForm>()
+                    .ForMember(dest => dest.Id, mo => mo.Ignore())
+                    .ForMember(dest => dest.FormAttributes, mo => mo.Ignore())
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
+                cfg.CreateMap<InteractiveForm.FormAttribute, InteractiveFormAttributeModel>()
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+                cfg.CreateMap<InteractiveFormAttributeModel, InteractiveForm.FormAttribute>()
+                    .ForMember(dest => dest.Id, mo => mo.Ignore())
+                    .ForMember(dest => dest.Locales, mo => mo.Ignore());
+
 
                 //campaign
                 cfg.CreateMap<Campaign, CampaignModel>()
