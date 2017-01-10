@@ -38,21 +38,21 @@ namespace Grand.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of country identifiers</returns>
-        IList<string> GetRestictedCountryIds(IPaymentMethod paymentMethod);
+        IList<string> GetRestrictedCountryIds(IPaymentMethod paymentMethod);
 
         /// <summary>
         /// Gets a list of role identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of role identifiers</returns>
-        IList<string> GetRestictedRoleIds(IPaymentMethod paymentMethod);
+        IList<string> GetRestrictedRoleIds(IPaymentMethod paymentMethod);
 
         /// <summary>
         /// Gets a list of shipping identifiers in which a certain payment method is now allowed
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of role identifiers</returns>
-        IList<string> GetRestictedShippingIds(IPaymentMethod paymentMethod);
+        IList<string> GetRestrictedShippingIds(IPaymentMethod paymentMethod);
 
         /// <summary>
         /// Saves a list of country identifiers in which a certain payment method is now allowed

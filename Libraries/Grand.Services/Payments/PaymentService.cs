@@ -71,7 +71,7 @@ namespace Grand.Services.Payments
 
                 for (int i = pm.Count - 1; i >= 0; i--)
                 {
-                    var restictedRoleIds = GetRestictedRoleIds(pm[i]);
+                    var restictedRoleIds = GetRestrictedRoleIds(pm[i]);
                     if (filterByCustomer.CustomerRoles.Where(x => restictedRoleIds.Contains(x.Id)).Count() > 0)
                     {
                         pm.Remove(pm[i]);
@@ -82,7 +82,7 @@ namespace Grand.Services.Payments
                 {
                     for (int i = pm.Count - 1; i >= 0; i--)
                     {
-                        var restictedRoleIds = GetRestictedShippingIds(pm[i]);
+                        var restictedRoleIds = GetRestrictedShippingIds(pm[i]);
                         if (restictedRoleIds.Contains(selectedShippingOption.Name))
                         {
                             pm.Remove(pm[i]);
@@ -125,7 +125,7 @@ namespace Grand.Services.Payments
             var paymentMetodsByCountry = new List<IPaymentMethod>();
             foreach (var pm in paymentMethods)
             {
-                var restictedCountryIds = GetRestictedCountryIds(pm);
+                var restictedCountryIds = GetRestrictedCountryIds(pm);
                 if (!restictedCountryIds.Contains(filterByCountryId))
                 {
                     paymentMetodsByCountry.Add(pm);
@@ -139,7 +139,7 @@ namespace Grand.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of country identifiers</returns>
-        public virtual IList<string> GetRestictedCountryIds(IPaymentMethod paymentMethod)
+        public virtual IList<string> GetRestrictedCountryIds(IPaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException("paymentMethod");
@@ -156,7 +156,7 @@ namespace Grand.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of role identifiers</returns>
-        public virtual IList<string> GetRestictedRoleIds(IPaymentMethod paymentMethod)
+        public virtual IList<string> GetRestrictedRoleIds(IPaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException("paymentMethod");
@@ -173,7 +173,7 @@ namespace Grand.Services.Payments
         /// </summary>
         /// <param name="paymentMethod">Payment method</param>
         /// <returns>A list of role identifiers</returns>
-        public virtual IList<string> GetRestictedShippingIds(IPaymentMethod paymentMethod)
+        public virtual IList<string> GetRestrictedShippingIds(IPaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
                 throw new ArgumentNullException("paymentMethod");

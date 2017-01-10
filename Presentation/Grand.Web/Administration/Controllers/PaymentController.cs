@@ -188,7 +188,7 @@ namespace Grand.Admin.Controllers
 
             foreach (var pm in paymentMethods)
             {
-                var restictedCountries = _paymentService.GetRestictedCountryIds(pm);
+                var restictedCountries = _paymentService.GetRestrictedCountryIds(pm);
                 foreach (var c in countries)
                 {
                     bool resticted = restictedCountries.Contains(c.Id);
@@ -197,7 +197,7 @@ namespace Grand.Admin.Controllers
                     model.Resticted[pm.PluginDescriptor.SystemName][c.Id] = resticted;
                 }
 
-                var restictedRoles = _paymentService.GetRestictedRoleIds(pm);
+                var restictedRoles = _paymentService.GetRestrictedRoleIds(pm);
                 foreach (var r in customerroles)
                 {
                     bool resticted = restictedRoles.Contains(r.Id);
@@ -206,7 +206,7 @@ namespace Grand.Admin.Controllers
                     model.RestictedRole[pm.PluginDescriptor.SystemName][r.Id] = resticted;
                 }
 
-                var restictedShipping = _paymentService.GetRestictedShippingIds(pm);
+                var restictedShipping = _paymentService.GetRestrictedShippingIds(pm);
                 foreach (var s in shippings)
                 {
                     bool resticted = restictedShipping.Contains(s.Name);
