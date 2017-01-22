@@ -171,16 +171,6 @@ namespace Grand.Core.Tests {
             public string tempProperty { get; set; }
         }
 
-       
-        [TestMethod()]
-        public void GetNopCustomTypeConverterTest()
-        {
-            var arg = typeof(System.Collections.Generic.List<int>);
-            Assert.AreEqual(
-                new Grand.Core.ComponentModel.GenericListTypeConverter<int>().GetType(),
-                CommonHelper.GetNopCustomTypeConverter(arg).GetType()
-                );
-        }
 
         [TestMethod()]
         public void ToTest_Generic_Method() {

@@ -200,26 +200,25 @@ namespace Grand.Core
             return _trustLevel.Value;
         }
 
-        public static TypeConverter GetNopCustomTypeConverter(Type type)
+        /// Sets a property on an object to a valuae.
+        /// </summary>
+        /// <param name="instance">The object whose property to set.</param>
+        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="value">The value to set the property to.</param>
+        public static void SetProperty(object instance, string propertyName, object value)
         {
-            //we can't use the following code in order to register our custom type descriptors
-            //TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
-            //so we do it manually here
+            if (instance == null) throw new ArgumentNullException("instance");
+            if (propertyName == null) throw new ArgumentNullException("propertyName");
 
-            if (type == typeof(List<int>))
-                return new GenericListTypeConverter<int>();
-            if (type == typeof(List<decimal>))
-                return new GenericListTypeConverter<decimal>();
-            if (type == typeof(List<string>))
-                return new GenericListTypeConverter<string>();
-            if (type == typeof(ShippingOption))
-                return new ShippingOptionTypeConverter();
-            if (type == typeof(List<ShippingOption>) || type == typeof(IList<ShippingOption>))
-                return new ShippingOptionListTypeConverter();
-            if (type == typeof(Dictionary<int, int>))
-                return new GenericDictionaryTypeConverter<int, int>();
-
-            return TypeDescriptor.GetConverter(type);
+            Type instanceType = instance.GetType();
+            PropertyInfo pi = instanceType.GetProperty(propertyName);
+            if (pi == null)
+                throw new GrandException(string.Format("No property '{0}' found on the instance of type '{1}'.", propertyName, instanceType));
+            if (!pi.CanWrite)
+                throw new GrandException(string.Format("The property '{0}' on the instance of type '{1}' does not have a setter.", propertyName, instanceType));
+            if (value != null && !value.GetType().IsAssignableFrom(pi.PropertyType))
+                value = To(value, pi.PropertyType);
+            pi.SetValue(instance, value, new object[0]);
         }
 
         /// <summary>
@@ -240,20 +239,30 @@ namespace Grand.Core
         /// <param name="destinationType">The type to convert the value to.</param>
         /// <param name="culture">Culture</param>
         /// <returns>The converted value.</returns>
+        /// <summary>
+        /// Converts a value to a destination type.
+        /// </summary>
+        /// <param name="value">The value to convert.</param>
+        /// <param name="destinationType">The type to convert the value to.</param>
+        /// <param name="culture">Culture</param>
+        /// <returns>The converted value.</returns>
         public static object To(object value, Type destinationType, CultureInfo culture)
         {
             if (value != null)
             {
                 var sourceType = value.GetType();
 
-                TypeConverter destinationConverter = GetNopCustomTypeConverter(destinationType);
-                TypeConverter sourceConverter = GetNopCustomTypeConverter(sourceType);
+                var destinationConverter = TypeDescriptor.GetConverter(destinationType);
                 if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
                     return destinationConverter.ConvertFrom(null, culture, value);
+
+                var sourceConverter = TypeDescriptor.GetConverter(sourceType);
                 if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
                     return sourceConverter.ConvertTo(null, culture, value, destinationType);
+
                 if (destinationType.IsEnum && value is int)
                     return Enum.ToObject(destinationType, (int)value);
+
                 if (!destinationType.IsInstanceOfType(value))
                     return Convert.ChangeType(value, destinationType, culture);
             }
