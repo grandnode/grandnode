@@ -15,67 +15,32 @@ namespace Grand.Services.Helpers
     public class BrowscapXmlHelper
     {
         private readonly List<string> _crawlerUserAgentsRegexp;
+        private readonly List<string> _crawlerUserAgents;
+        private readonly List<string> _notCrawlerUserAgents;
 
-        public BrowscapXmlHelper(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
+        public BrowscapXmlHelper(string filePath)
         {
+            _crawlerUserAgents = new List<string>();
             _crawlerUserAgentsRegexp = new List<string>();
-            Initialize(userAgentStringsPath, crawlerOnlyUserAgentStringsPath);
+            _notCrawlerUserAgents = new List<string>();
+
+            Initialize(filePath);
         }
 
-        private void Initialize(string userAgentStringsPath, string crawlerOnlyUserAgentStringsPath)
+        private void Initialize(string filePath)
         {
-            List<XElement> crawlerItems = null;
-
-            if (!string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) && File.Exists(crawlerOnlyUserAgentStringsPath))
+            using (var sr = new StreamReader(filePath))
             {
-                //try to load crawler list from crawlers only file
-                using (var sr = new StreamReader(crawlerOnlyUserAgentStringsPath))
-                {
-                    crawlerItems = XDocument.Load(sr).Root.Return(x => x.Elements("browscapitem").ToList(), null);
-                }
-            }
+                var browsercapItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null);
+                if (browsercapItems == null)
+                    throw new Exception("Incorrect file format");
 
-            if (crawlerItems == null)
-            {
-                //try to load crawler list from full user agents file
-                using (var sr = new StreamReader(userAgentStringsPath))
-                {
-                    crawlerItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null)
-                        //only crawlers
-                        .Return(x => x.Elements("browscapitem").Where(IsBrowscapItemIsCrawler).ToList(), null);
-                }
-            }
-
-            if (crawlerItems == null)
-                throw new Exception("Incorrect file format");
-
-            _crawlerUserAgentsRegexp.AddRange(crawlerItems
-                //get only user agent names
-                .Select(e => e.Attribute("name"))
-                .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
-                .Select(e => e.Value)
-                .Select(ToRegexp));
-
-            if (string.IsNullOrEmpty(crawlerOnlyUserAgentStringsPath) || File.Exists(crawlerOnlyUserAgentStringsPath))
-                return;
-
-            //try to write crawlers file
-            using (var sw = new StreamWriter(crawlerOnlyUserAgentStringsPath))
-            {
-                var root = new XElement("browsercapitems");
-
-                foreach (var crawler in crawlerItems)
-                {
-                    foreach (var element in crawler.Elements().ToList())
-                    {
-                        if (element.Attribute("name").Return(x => x.Value.ToLower(), string.Empty) == "crawler")
-                            continue;
-                        element.Remove();
-                    }
-
-                    root.Add(crawler);
-                }
-                root.Save(sw);
+                _crawlerUserAgentsRegexp.AddRange(browsercapItems.Elements("browscapitem")
+                    .Where(IsBrowscapItemIsCrawler)
+                    .Select(e => e.Attribute("name"))
+                    .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
+                    .Select(e => e.Value)
+                    .Select(ToRegexp));
             }
         }
 
@@ -99,7 +64,19 @@ namespace Grand.Services.Helpers
         /// <returns>True if user agent is a crawler, otherwise false</returns>
         public bool IsCrawler(string userAgent)
         {
-            return _crawlerUserAgentsRegexp.Any(p => Regex.IsMatch(userAgent, p));
+            if (_crawlerUserAgents.Any(p => p == userAgent))
+                return true;
+
+            if (_notCrawlerUserAgents.Any(p => p == userAgent))
+                return false;
+
+            var flag = _crawlerUserAgentsRegexp.Any(p => Regex.IsMatch(userAgent, p));
+            if (flag)
+                _crawlerUserAgents.Add(userAgent);
+            else
+                _notCrawlerUserAgents.Add(userAgent);
+
+            return flag;
         }
     }
 }
