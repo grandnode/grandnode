@@ -185,7 +185,6 @@ namespace Grand.Services.Catalog
             return query.FirstOrDefault();
         }
 
-
         /// <summary>
         /// Deletes a specification attribute option
         /// </summary>
