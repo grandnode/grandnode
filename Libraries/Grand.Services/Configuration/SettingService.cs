@@ -9,7 +9,6 @@ using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Domain.Configuration;
 using Grand.Services.Events;
-using System.ComponentModel;
 
 namespace Grand.Services.Configuration
 {
@@ -93,12 +92,12 @@ namespace Grand.Services.Configuration
                 {
                     var resourceName = s.Name.ToLowerInvariant();
                     var settingForCaching = new SettingForCaching
-                            {
-                                Id = s.Id,
-                                Name = s.Name,
-                                Value = s.Value,
-                                StoreId = s.StoreId
-                            };
+                    {
+                        Id = s.Id,
+                        Name = s.Name,
+                        Value = s.Value,
+                        StoreId = s.StoreId
+                    };
                     if (!dictionary.ContainsKey(resourceName))
                     {
                         //first setting
@@ -191,8 +190,6 @@ namespace Grand.Services.Configuration
         /// <returns>Setting</returns>
         public virtual Setting GetSettingById(string settingId)
         {
-            if (string.IsNullOrEmpty(settingId))
-                return null;
             return _settingRepository.GetById(settingId);
         }
 
@@ -235,7 +232,7 @@ namespace Grand.Services.Configuration
         /// <param name="storeId">Store identifier</param>
         /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
         /// <returns>Setting value</returns>
-        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T), 
+        public virtual T GetSettingByKey<T>(string key, T defaultValue = default(T),
             string storeId = "", bool loadSharedValueIfNotFound = false)
         {
             if (String.IsNullOrEmpty(key))
@@ -272,10 +269,10 @@ namespace Grand.Services.Configuration
             if (key == null)
                 throw new ArgumentNullException("key");
             key = key.Trim().ToLowerInvariant();
-            string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
+            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
 
             var allSettings = GetAllSettingsCached();
-            var settingForCaching = allSettings.ContainsKey(key) ? 
+            var settingForCaching = allSettings.ContainsKey(key) ?
                 allSettings[key].FirstOrDefault(x => x.StoreId == storeId) : null;
             if (settingForCaching != null)
             {
@@ -319,8 +316,8 @@ namespace Grand.Services.Configuration
         /// <param name="keySelector">Key selector</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>true -setting exists; false - does not exist</returns>
-        public virtual bool SettingExists<T, TPropType>(T settings, 
-            Expression<Func<T, TPropType>> keySelector, string storeId = "") 
+        public virtual bool SettingExists<T, TPropType>(T settings,
+            Expression<Func<T, TPropType>> keySelector, string storeId = "")
             where T : ISettings, new()
         {
             string key = settings.GetSettingKey(keySelector);
@@ -339,7 +336,9 @@ namespace Grand.Services.Configuration
             string cachekey = string.Format("{0}{1}.{2}", SETTINGS_PATTERN_KEY, typeof(T).Name, storeId);
             return _cacheManager.Get<T>(cachekey, () =>
             {
+
                 var settings = Activator.CreateInstance<T>();
+
                 foreach (var prop in typeof(T).GetProperties())
                 {
                     // get properties we can read and write to
@@ -352,18 +351,17 @@ namespace Grand.Services.Configuration
                     if (setting == null)
                         continue;
 
-                    if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                    if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                         continue;
 
-                    if (!TypeDescriptor.GetConverter(prop.PropertyType).IsValid(setting))
+                    if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting))
                         continue;
 
-                    object value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting);
+                    object value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting);
 
                     //set property
                     prop.SetValue(settings, value, null);
                 }
-
                 return settings;
             });
         }
@@ -385,10 +383,11 @@ namespace Grand.Services.Configuration
                 if (!prop.CanRead || !prop.CanWrite)
                     continue;
 
-                if (!TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
+                if (!CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string)))
                     continue;
 
                 string key = typeof(T).Name + "." + prop.Name;
+                //Duck typing is not supported in C#. That's why we're using dynamic type
                 dynamic value = prop.GetValue(settings, null);
                 if (value != null)
                     SetSetting(key, value, storeId, false);

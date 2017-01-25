@@ -1,4 +1,4 @@
-﻿Group: Shipping rate computation
+Group: Shipping rate computation
 FriendlyName: Fixed Rate Shipping
 SystemName: Shipping.FixedRate
 Version: 1.19
