@@ -68,9 +68,10 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly IVendorService _vendorService;
         private readonly IContactUsService _contactUsService;
-
+        private readonly IBannerService _bannerService;
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -108,8 +109,10 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
+            ICustomerActionEventService customerActionEventService,
             IVendorService vendorService,
             IContactUsService contactUsService,
+            IBannerService bannerService,
             CustomerSettings customerSettings, 
             TaxSettings taxSettings, 
             CatalogSettings catalogSettings,
@@ -143,8 +146,10 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
+            this._customerActionEventService = customerActionEventService;
             this._vendorService = vendorService;
             this._contactUsService = contactUsService;
+            this._bannerService = bannerService;
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -901,7 +906,7 @@ namespace Nop.Web.Controllers
             var sb = new StringBuilder();
 
             //if robots.txt exists, let's use it
-            string robotsFile = System.IO.Path.Combine(_webHelper.MapPath("~/"), "robots.custom.txt");
+            string robotsFile = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
             if (System.IO.File.Exists(robotsFile))
             {
                 //the robots.txt file exists
@@ -1028,7 +1033,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //load and add robots.txt additions to the end of file.
-                string robotsAdditionsFile = System.IO.Path.Combine(_webHelper.MapPath("~/"), "robots.additions.txt");
+                string robotsAdditionsFile = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.additions.txt");
                 if (System.IO.File.Exists(robotsAdditionsFile))
                 {
                     string robotsFileContent = System.IO.File.ReadAllText(robotsAdditionsFile);
@@ -1055,6 +1060,48 @@ namespace Nop.Web.Controllers
         {
             return View();
         }
+
+
+        //Get banner for customer
+        [HttpGet]
+        public ActionResult GetActiveBanner()
+        {
+            var result = _bannerService.GetActiveBannerByCustomerId(_workContext.CurrentCustomer.Id);
+            if(result!=null)
+            {
+                return Json
+                    (
+                        new { Id = result.Id, Body = result.Body },
+                        JsonRequestBehavior.AllowGet
+                    );
+            }
+            else
+                return Json
+                    (
+                        new { empty = "" },
+                        JsonRequestBehavior.AllowGet
+                    );
+        }
+
+        [HttpPost]
+        public ActionResult RemoveBanner(int Id)
+        {
+            _bannerService.MoveBannerToArchive(Id, _workContext.CurrentCustomer.Id);
+            return Json (JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public ActionResult CustomerActionEventUrl(string curl, string purl)
+        {
+            _customerActionEventService.Url(_workContext.CurrentCustomer.Id, curl, purl);
+            return Json
+                (
+                    new { empty = "" },
+                    JsonRequestBehavior.AllowGet
+                );
+        }
+
 
         #endregion
     }

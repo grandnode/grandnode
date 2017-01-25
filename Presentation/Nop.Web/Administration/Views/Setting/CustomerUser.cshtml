@@ -279,6 +279,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.RegistrationFreeShipping):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.RegistrationFreeShipping)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.RegistrationFreeShipping)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.StoreLastVisitedPage):
             </td>
             <td class="adminData">

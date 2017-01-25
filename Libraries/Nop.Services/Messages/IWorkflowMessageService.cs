@@ -381,6 +381,38 @@ namespace Nop.Services.Messages
         int SendTestEmail(int messageTemplateId, string sendToEmail,
             List<Token> tokens, int languageId);
 
+
+        /// <summary>
+        /// Sends a customer action event - Add to cart notification to a customer
+        /// </summary>
+        /// <param name="CustomerAction">Customer action</param>
+        /// <param name="ShoppingCartItem">Item</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, 
+            int languageId, int customerId);
+
+
+        /// <summary>
+        /// Sends a customer action event - Add order notification to a customer
+        /// </summary>
+        /// <param name="CustomerAction">Customer action</param>
+        /// <param name="Order">Order</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendCustomerActionEvent_AddToOrder_Notification(CustomerAction action, Order order, int languageId);
+
+
+        /// <summary>
+        /// Sends a customer action event 
+        /// </summary>
+        /// <param name="CustomerAction">Customer action</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendCustomerActionEvent_Notification(CustomerAction action, int languageId, int customerId);
+
         #endregion
     }
 }

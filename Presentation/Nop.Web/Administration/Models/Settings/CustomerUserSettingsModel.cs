@@ -84,11 +84,11 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe")]
             public bool NewsletterBlockAllowToUnsubscribe { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.RegistrationFreeShipping")]
+            public bool RegistrationFreeShipping { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage")]
             public bool StoreLastVisitedPage { get; set; }
-
-
-
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
             public bool GenderEnabled { get; set; }

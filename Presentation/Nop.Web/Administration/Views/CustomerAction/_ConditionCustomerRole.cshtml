@@ -1,0 +1,123 @@
+﻿@model CustomerActionConditionModel
+
+
+<table class="adminContent">
+    <tr>
+        <td>
+            @if (Model.Id == 0)
+            {
+                @T("Admin.Customers.CustomerActionCondition.SaveBeforeEdit")
+            }
+        </td>
+    </tr>
+    @if (Model.Id > 0)
+    {
+        <tr>
+            <td>
+
+                <div id="customerrole-grid"></div>
+
+                <script>
+            $(document).ready(function () {
+                $("#customerrole-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ConditionCustomerRole", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            create: {
+                                url: "@Html.Raw(Url.Action("ConditionCustomerRoleInsert", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ConditionDeletePosition", "CustomerAction", new { customerActionId = Model.CustomerActionId, conditionId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    CustomerRole: { editable: true, type: "string" },
+                                    CustomerRoleId: { editable: true, type: "number" },
+                                    Id: { editable: false, type: "number" }
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "create" || e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }, { name: "save", text: "@T("Admin.Common.Save")" }, { name: "cancel", text: "@T("Admin.Common.Cancel")" }],
+                    editable: {
+                        confirmation: false,
+                        mode: "inline",
+                    },
+                    scrollable: false,
+                    columns: [{
+                            field: "CustomerRole",
+                            title: "@T("Admin.Customers.CustomerActionCondition.Fields.CustomerRoleName")",
+                            width: 200,
+                            editor: customerRoleDropDownEditor,
+                            template: "#:CustomerRole#"
+                        },
+                        {
+                        command: [
+                        {
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 200
+                    }]
+                });
+            });
+
+
+            function customerRoleDropDownEditor(container, options) {
+                $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CustomerRoleId"/>')
+                    .appendTo(container)
+                    .kendoDropDownList({
+                        autoBind: false,
+                        dataSource:
+                        {
+                            type: "json",
+                            transport: {
+                                read: "@Html.Raw(Url.Action("CustomerRoles", "CustomerAction"))"
+                            }
+                        },
+                        optionLabel: " -- Select -- "
+                    });
+                }
+                </script>
+
+            </td>
+        </tr>
+    }
+</table>

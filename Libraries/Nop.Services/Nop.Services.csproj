@@ -105,24 +105,24 @@
       <HintPath>..\..\packages\WindowsAzure.Storage.6.2.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MongoDB.Bson, Version=2.2.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MongoDB.Bson.2.2.1\lib\net45\MongoDB.Bson.dll</HintPath>
+    <Reference Include="MongoDB.Bson, Version=2.2.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MongoDB.Bson.2.2.3\lib\net45\MongoDB.Bson.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MongoDB.Driver, Version=2.2.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MongoDB.Driver.2.2.1\lib\net45\MongoDB.Driver.dll</HintPath>
+    <Reference Include="MongoDB.Driver, Version=2.2.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MongoDB.Driver.2.2.3\lib\net45\MongoDB.Driver.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MongoDB.Driver.Core, Version=2.2.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MongoDB.Driver.Core.2.2.1\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+    <Reference Include="MongoDB.Driver.Core, Version=2.2.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MongoDB.Driver.Core.2.2.3\lib\net45\MongoDB.Driver.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MongoDB.Driver.GridFS, Version=2.2.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MongoDB.Driver.GridFS.2.2.1\lib\net45\MongoDB.Driver.GridFS.dll</HintPath>
+    <Reference Include="MongoDB.Driver.GridFS, Version=2.2.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MongoDB.Driver.GridFS.2.2.3\lib\net45\MongoDB.Driver.GridFS.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MongoDB.Driver.Legacy, Version=2.2.1.6, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\mongocsharpdriver.2.2.1\lib\net45\MongoDB.Driver.Legacy.dll</HintPath>
+    <Reference Include="MongoDB.Driver.Legacy, Version=2.2.3.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\mongocsharpdriver.2.2.3\lib\net45\MongoDB.Driver.Legacy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -268,6 +268,10 @@
     <Compile Include="Common\AddressAttributeFormatter.cs" />
     <Compile Include="Common\IAddressAttributeFormatter.cs" />
     <Compile Include="Configuration\SettingExtensions.cs" />
+    <Compile Include="Customers\CustomerActionEventService.cs" />
+    <Compile Include="Customers\CustomerActionService.cs" />
+    <Compile Include="Customers\ICustomerActionEventService.cs" />
+    <Compile Include="Customers\ICustomerActionService.cs" />
     <Compile Include="Customers\ICustomerAttributeParser.cs" />
     <Compile Include="Customers\CustomerAttributeParser.cs" />
     <Compile Include="Customers\ICustomerAttributeService.cs" />
@@ -286,7 +290,9 @@
     <Compile Include="Logging\ActivityKeywordsProvider.cs" />
     <Compile Include="Logging\IActivityKeywordsProvider.cs" />
     <Compile Include="Media\AzurePictureService.cs" />
+    <Compile Include="Messages\BannerService.cs" />
     <Compile Include="Messages\ContactUsService.cs" />
+    <Compile Include="Messages\IBannerService.cs" />
     <Compile Include="Messages\IContactUsService.cs" />
     <Compile Include="Orders\IReturnRequestService.cs" />
     <Compile Include="Orders\IRewardPoints.cs" />

@@ -1,4 +1,8 @@
 ﻿@{
+    Html.AddScriptParts("~/Scripts/public.actions.js");
+    Html.AddScriptParts("~/Scripts/jquery.magnific-popup.js");
+    Html.AddCssFileParts("~/Content/magnific-popup/magnific-popup.css");
+
     //success messages
     var successMessages = new List<string>();
     if (TempData[string.Format("nop.notifications.{0}", NotifyType.Success)] != null)
@@ -47,4 +51,15 @@
 <div id="bar-notification" class="bar-notification">
     <span class="close" title="@T("Common.Close")">&nbsp;</span>
 </div>
+
+<a class="popup-action-form" data-mfp-src="#action_modal" style="display:none"></a>
+<div id="action_modal" class="zoom-anim-dialog mfp-hide">
+    <div id="action-body"></div>
+</div>
+
+<script>
+    CustomerAction.init('@Url.Action("CustomerActionEventUrl", "Common")', '@Url.Action("GetActiveBanner", "Common")', '@Url.Action("RemoveBanner", "Common")');
+    CustomerAction.checkActiveUrl('@Request.Url.ToString()', '@Request.UrlReferrer');
+</script>
+
 @Html.Widget("notifications")

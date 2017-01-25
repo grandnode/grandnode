@@ -84,6 +84,7 @@ namespace Nop.Web.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly SecuritySettings _securitySettings;
@@ -129,6 +130,7 @@ namespace Nop.Web.Controllers
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService,
+            ICustomerActionEventService customerActionEventService,
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
             SecuritySettings securitySettings,
@@ -171,6 +173,7 @@ namespace Nop.Web.Controllers
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
+            this._customerActionEventService = customerActionEventService;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
             this._securitySettings = securitySettings;
@@ -1063,7 +1066,7 @@ namespace Nop.Web.Controllers
                         CreatedOnUtc = customer.CreatedOnUtc,
                         Id = customer.Addresses.Count > 0 ? customer.Addresses.Max(x => x.Id) + 1 : 1,
                         _id = ObjectId.GenerateNewId().ToString()
-                };
+                    };
                     if (this._addressService.IsAddressValid(defaultAddress))
                     {
                         //set default address
@@ -1073,13 +1076,18 @@ namespace Nop.Web.Controllers
                         customer.BillingAddress = defaultAddress;
                         _customerService.UpdateBillingAddress(defaultAddress);
                         customer.ShippingAddress = defaultAddress;
-                        _customerService.UpdateShippingAddress(defaultAddress);
-                        //_customerService.UpdateCustomer(customer);
+                        _customerService.UpdateShippingAddress(defaultAddress);                        
                     }
 
                     //notifications
                     if (_customerSettings.NotifyNewCustomerRegistration)
                         _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, _localizationSettings.DefaultAdminLanguageId);
+
+                    //New customer has a free shipping for the first order
+                    if (_customerSettings.RegistrationFreeShipping)
+                        _customerService.UpdateFreeShipping(customer.Id, true);
+
+                    _customerActionEventService.Registration(customer.Id);
 
                     //raise event       
                     _eventPublisher.Publish(new CustomerRegisteredEvent(customer));

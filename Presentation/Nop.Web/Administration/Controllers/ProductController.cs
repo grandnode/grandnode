@@ -3433,9 +3433,47 @@ namespace Nop.Admin.Controllers
                         attributeModel.TotalValues = x.ProductAttributeValues.Count;
                     }
 
-                    attributeModel.ValidationRulesAllowed = x.ValidationRulesAllowed();
+                    if (x.ValidationRulesAllowed())
+                    {
+                        var validationRules = new StringBuilder(string.Empty);
+                        attributeModel.ValidationRulesAllowed = true;
+                        if (x.ValidationMinLength != null)
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
+                                x.ValidationMinLength);
+                        if (x.ValidationMaxLength != null)
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
+                                x.ValidationMaxLength);
+                        if (!string.IsNullOrEmpty(x.ValidationFileAllowedExtensions))
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
+                                HttpUtility.HtmlEncode(x.ValidationFileAllowedExtensions));
+                        if (x.ValidationFileMaximumSize != null)
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
+                                x.ValidationFileMaximumSize);
+                        if (!string.IsNullOrEmpty(x.DefaultValue))
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
+                                HttpUtility.HtmlEncode(x.DefaultValue));
+                        attributeModel.ValidationRulesString = validationRules.ToString();
+                    }
+
                     //currenty any attribute can have condition. why not?
                     attributeModel.ConditionAllowed = true;
+                    var conditionAttribute = _productAttributeParser.ParseProductAttributeMappings(product, x.ConditionAttributeXml).FirstOrDefault();
+                    var conditionValue = _productAttributeParser.ParseProductAttributeValues(product, x.ConditionAttributeXml).FirstOrDefault();
+                    if (conditionAttribute != null && conditionValue != null)
+                    {
+                        var productAttribute = _productAttributeService.GetProductAttributeById(conditionAttribute.ProductAttributeId);
+                        string _paname = productAttribute != null ? productAttribute.Name : "";
+                        attributeModel.ConditionString = string.Format("{0}: {1}",
+                            HttpUtility.HtmlEncode(_paname),
+                            HttpUtility.HtmlEncode(conditionValue.Name));
+                    }
+                    else
+                        attributeModel.ConditionString = string.Empty;
                     return attributeModel;
                 })
                 .ToList();

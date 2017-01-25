@@ -74,8 +74,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         public override void Install()
         {
             //pictures
-            var sampleImagesPath = _webHelper.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
-
+            var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
 
             //settings
             var settings = new NivoSliderSettings

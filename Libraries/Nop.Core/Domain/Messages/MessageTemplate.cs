@@ -42,6 +42,16 @@ namespace Nop.Core.Domain.Messages
         public bool IsActive { get; set; }
 
         /// <summary>
+        /// Gets or sets the delay before sending message
+        /// </summary>
+        public int? DelayBeforeSend { get; set; }
+
+        /// <summary>
+        /// Gets or sets the period of message delay 
+        /// </summary>
+        public int DelayPeriodId { get; set; }
+
+        /// <summary>
         /// Gets or sets the download identifier of attached file
         /// </summary>
         public int AttachedDownloadId { get; set; }
@@ -57,6 +67,15 @@ namespace Nop.Core.Domain.Messages
         public bool LimitedToStores { get; set; }
         public IList<int> Stores { get; set; }
 
+        /// <summary>
+        /// Gets or sets the period of message delay
+        /// </summary>
+        [BsonIgnoreAttribute]
+        public MessageDelayPeriod DelayPeriod
+        {
+            get { return (MessageDelayPeriod)this.DelayPeriodId; }
+            set { this.DelayPeriodId = (int)value; }
+        }
         /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>

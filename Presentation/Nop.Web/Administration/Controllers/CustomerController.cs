@@ -577,6 +577,7 @@ namespace Nop.Admin.Controllers
                     model.VendorId = customer.VendorId;
                     model.AdminComment = customer.AdminComment;
                     model.IsTaxExempt = customer.IsTaxExempt;
+                    model.FreeShipping = customer.FreeShipping;
                     model.Active = customer.Active;
                     var result = new StringBuilder();
                     foreach (var item in customer.CustomerTags)
@@ -848,11 +849,11 @@ namespace Nop.Admin.Controllers
             var model = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
-                DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled,
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
+                AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id.ToString() }).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds,
             };
             return View(model);
@@ -860,27 +861,19 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         public ActionResult CustomerList(DataSourceRequest command, CustomerListModel model,
-            [ModelBinder(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds)
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds, int[] searchCustomerTagIds)
         {
             //we use own own binder for searchCustomerRoleIds property 
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
-            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
-                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
-            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
-                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-            
             var customers = _customerService.GetAllCustomers(
                 customerRoleIds: searchCustomerRoleIds,
+                customerTagIds: searchCustomerTagIds,
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
                 lastName: model.SearchLastName,
-                dayOfBirth: searchDayOfBirth,
-                monthOfBirth: searchMonthOfBirth,
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode,
@@ -952,6 +945,7 @@ namespace Nop.Admin.Controllers
                     VendorId = model.VendorId,
                     AdminComment = model.AdminComment,
                     IsTaxExempt = model.IsTaxExempt,
+                    FreeShipping = model.FreeShipping,
                     Active = model.Active,
                     CreatedOnUtc = DateTime.UtcNow,
                     LastActivityDateUtc = DateTime.UtcNow,
@@ -1136,6 +1130,7 @@ namespace Nop.Admin.Controllers
                 {
                     customer.AdminComment = model.AdminComment;
                     customer.IsTaxExempt = model.IsTaxExempt;
+                    customer.FreeShipping = model.FreeShipping;
                     customer.Active = model.Active;
                     //email
                     if (!String.IsNullOrWhiteSpace(model.Email))
@@ -1557,6 +1552,8 @@ namespace Nop.Admin.Controllers
                     Subject = model.SendEmail.Subject,
                     Body = model.SendEmail.Body,
                     CreatedOnUtc = DateTime.UtcNow,
+                    DontSendBeforeDateUtc = (model.SendEmail.SendImmediately || !model.SendEmail.DontSendBeforeDate.HasValue) ?
+                        null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SendEmail.DontSendBeforeDate.Value)
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));
@@ -2188,21 +2185,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
-            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
-                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
-            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
-                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-
             var customers = _customerService.GetAllCustomers(
                 customerRoleIds: model.SearchCustomerRoleIds,
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
                 lastName: model.SearchLastName,
-                dayOfBirth: searchDayOfBirth,
-                monthOfBirth: searchMonthOfBirth,
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode,
@@ -2247,21 +2235,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            var searchDayOfBirth = 0;
-            int searchMonthOfBirth = 0;
-            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
-                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
-            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
-                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-
             var customers = _customerService.GetAllCustomers(
                 customerRoleIds: model.SearchCustomerRoleIds,
                 email: model.SearchEmail,
                 username: model.SearchUsername,
                 firstName: model.SearchFirstName,
                 lastName: model.SearchLastName,
-                dayOfBirth: searchDayOfBirth,
-                monthOfBirth: searchMonthOfBirth,
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode,

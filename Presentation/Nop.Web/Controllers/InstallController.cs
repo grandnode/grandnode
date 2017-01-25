@@ -202,12 +202,12 @@ namespace Nop.Web.Controllers
             //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
-            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(webHelper);
+            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
             foreach (string dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), WindowsIdentity.GetCurrent().Name, dir));
 
-            var filesToCheck = FilePermissionHelper.GetFilesWrite(webHelper);
+            var filesToCheck = FilePermissionHelper.GetFilesWrite();
             foreach (string file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureFilePermissions"), WindowsIdentity.GetCurrent().Name, file));

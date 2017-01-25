@@ -1476,8 +1476,9 @@ namespace Nop.Web.Controllers
                         goto_section = "shipping"
                     });
                 }
-
                 //shipping is not required
+                _workContext.CurrentCustomer.ShippingAddress = null;
+                _customerService.RemoveShippingAddress(_workContext.CurrentCustomer.Id);
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
 
                 //load next step

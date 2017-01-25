@@ -42,7 +42,6 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
-        //private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly ILanguageService _languageService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly CatalogSettings _catalogSettings;
@@ -57,7 +56,6 @@ namespace Nop.Services.Messages
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="languageService">Language service</param>
         /// <param name="localizedEntityService">Localized entity service</param>
         /// <param name="storeMappingService">Store mapping service</param>
@@ -65,7 +63,6 @@ namespace Nop.Services.Messages
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event published</param>
         public MessageTemplateService(ICacheManager cacheManager,
-            //IRepository<StoreMapping> storeMappingRepository,
             ILanguageService languageService,
             IStoreMappingService storeMappingService,
             IRepository<MessageTemplate> messageTemplateRepository,
@@ -73,7 +70,6 @@ namespace Nop.Services.Messages
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
-            //this._storeMappingRepository = storeMappingRepository;
             this._languageService = languageService;
             this._storeMappingService = storeMappingService;
             this._messageTemplateRepository = messageTemplateRepository;
@@ -203,13 +199,6 @@ namespace Nop.Services.Messages
                     query = from p in query
                             where !p.LimitedToStores || p.Stores.Contains(storeId)
                             select p;
-                    //query = from t in query
-                    //        join sm in _storeMappingRepository.Table
-                    //        on new { c1 = t.Id, c2 = "MessageTemplate" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
-                    //        from sm in t_sm.DefaultIfEmpty()
-                    //        where !t.LimitedToStores || storeId == sm.StoreId
-                    //        select t;
-
                     query = query.OrderBy(t => t.Name);
                 }
 
@@ -238,41 +227,12 @@ namespace Nop.Services.Messages
                 EmailAccountId = messageTemplate.EmailAccountId,
                 LimitedToStores = messageTemplate.LimitedToStores,
                 Locales = messageTemplate.Locales,
-                Stores = messageTemplate.Stores
+                Stores = messageTemplate.Stores,
+                DelayBeforeSend = messageTemplate.DelayBeforeSend,
+                DelayPeriod = messageTemplate.DelayPeriod
             };
 
             InsertMessageTemplate(mtCopy);
-
-            //var languages = _languageService.GetAllLanguages(true);
-
-            //localization
-            /*
-            foreach (var lang in languages)
-            {
-                var bccEmailAddresses = messageTemplate.GetLocalized(x => x.BccEmailAddresses, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(bccEmailAddresses))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
-
-                var subject = messageTemplate.GetLocalized(x => x.Subject, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(subject))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id);
-
-                var body = messageTemplate.GetLocalized(x => x.Body, lang.Id, false, false);
-                if (!String.IsNullOrEmpty(body))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id);
-
-                var emailAccountId = messageTemplate.GetLocalized(x => x.EmailAccountId, lang.Id, false, false);
-                if (emailAccountId > 0)
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.EmailAccountId, emailAccountId, lang.Id);
-            }
-            */
-
-            //store mapping
-            //var selectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate);
-            //foreach (var id in selectedStoreIds)
-            //{
-            //    _storeMappingService.InsertStoreMapping(mtCopy, id);
-            //}
 
             return mtCopy;
         }

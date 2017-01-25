@@ -73,6 +73,11 @@ namespace Nop.Core.Domain.Customers
         public bool IsTaxExempt { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the customer has a free shipping to the next a order
+        /// </summary>
+        public bool FreeShipping { get; set; }
+
+        /// <summary>
         /// Gets or sets the affiliate identifier
         /// </summary>
         public int AffiliateId { get; set; }

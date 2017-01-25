@@ -60,6 +60,7 @@ namespace Nop.Web.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly ITopicService _topicService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISearchTermService _searchTermService;
@@ -96,6 +97,7 @@ namespace Nop.Web.Controllers
             IStoreMappingService storeMappingService,
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
+            ICustomerActionEventService customerActionEventService,
             ITopicService topicService,
             IEventPublisher eventPublisher,
             ISearchTermService searchTermService,
@@ -128,6 +130,7 @@ namespace Nop.Web.Controllers
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
+            this._customerActionEventService = customerActionEventService;
             this._topicService = topicService;
             this._eventPublisher = eventPublisher;
             this._searchTermService = searchTermService;
@@ -439,9 +442,6 @@ namespace Nop.Web.Controllers
 
             var model = category.ToModel();
             
-
-
-
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
             //view mode
@@ -490,10 +490,6 @@ namespace Nop.Web.Controllers
                 );
             }
 
-
-
-
-
             //subcategories
             string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
                 categoryId,
@@ -533,9 +529,6 @@ namespace Nop.Web.Controllers
                 })
                 .ToList()
             );
-
-
-
 
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
@@ -619,6 +612,7 @@ namespace Nop.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewCategory", category.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
+            _customerActionEventService.Viewed(_workContext.CurrentCustomer.Id, Request.Url.ToString(), Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "");
 
             return View(templateViewPath, model);
         }
@@ -869,6 +863,7 @@ namespace Nop.Web.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", manufacturer.Id, _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
+            _customerActionEventService.Viewed(_workContext.CurrentCustomer.Id, Request.Url.ToString(), Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "");
 
             return View(templateViewPath, model);
         }

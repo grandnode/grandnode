@@ -117,7 +117,7 @@ namespace Nop.Web.Infrastructure.Installation
             {
                 _availableLanguages = new List<InstallationLanguage>();
                 var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                foreach (var filePath in Directory.EnumerateFiles(webHelper.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
+                foreach (var filePath in Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/Installation/"), "*.xml"))
                 {
                     var xmlDocument = new XmlDocument();
                     xmlDocument.Load(filePath);

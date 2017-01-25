@@ -200,6 +200,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
             
             var model = messageTemplate.ToModel();
+            model.SendImmediately = !model.DelayBeforeSend.HasValue;
             model.HasAttachedDownload = model.AttachedDownloadId > 0;
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
@@ -239,6 +240,8 @@ namespace Nop.Admin.Controllers
                 //attached file
                 if (!model.HasAttachedDownload)
                     messageTemplate.AttachedDownloadId = 0;
+                if (model.SendImmediately)
+                    messageTemplate.DelayBeforeSend = null;
                 messageTemplate.Locales = UpdateLocales(messageTemplate, model);
                 messageTemplate.Stores = model.SelectedStoreIds != null ? model.SelectedStoreIds.ToList() : new List<int>();
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);

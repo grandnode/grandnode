@@ -43,6 +43,13 @@ namespace Nop.Admin.Models.Messages
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.IsActive")]
         [AllowHtml]
         public bool IsActive { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.SendImmediately")]
+        public bool SendImmediately { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend")]
+        [UIHint("Int32Nullable")]
+        public int? DelayBeforeSend { get; set; }
+        public int DelayPeriodId { get; set; }
 
         public bool HasAttachedDownload { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload")]

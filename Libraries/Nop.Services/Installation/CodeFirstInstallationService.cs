@@ -119,7 +119,10 @@ namespace Nop.Services.Installation
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IRepository<ContactUs> _contactUsRepository;
-
+        private readonly IRepository<CustomerAction> _customerAction;
+        private readonly IRepository<CustomerActionType> _customerActionType;
+        private readonly IRepository<CustomerActionConditionType> _customerActionConditionType;
+        private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -200,7 +203,11 @@ namespace Nop.Services.Installation
             IRepository<ReturnRequestReason> returnRequestReasonRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
             IRepository<ContactUs> contactUsRepository,
+            IRepository<CustomerAction> customerAction,
+            IRepository<CustomerActionType> customerActionType,
+            IRepository<CustomerActionConditionType> customerActionConditionType,
             IGenericAttributeService genericAttributeService,
+            ICustomerActionService customerActionService,
             IWebHelper webHelper)
         {
             this._versionRepository = versionRepository;
@@ -275,6 +282,10 @@ namespace Nop.Services.Installation
             this._returnRequestReasonRepository = returnRequestReasonRepository;
             this._contactUsRepository = contactUsRepository;
             this._returnRequestActionRepository = returnRequestActionRepository;
+            this._customerAction = customerAction;
+            this._customerActionType = customerActionType;
+            this._customerActionConditionType = customerActionConditionType;
+            this._customerActionService = customerActionService;
         }
 
         #endregion
@@ -439,7 +450,7 @@ namespace Nop.Services.Installation
             var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resources
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
             {
                 var localesXml = File.ReadAllText(filePath);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
@@ -4238,6 +4249,120 @@ namespace Nop.Services.Installation
             _customerRepository.Insert(backgroundTaskUser);
         }
 
+        protected virtual void InstallCustomerAction()
+        {
+            var customerActionConditionType = new List<CustomerActionConditionType>()
+            {
+                new CustomerActionConditionType()
+                {
+                    Id = 1,
+                    Name = "Product"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 2,
+                    Name = "Category"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 3,
+                    Name = "Manufacturer"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 4,
+                    Name = "Vendor"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 5,
+                    Name = "Product attribute"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 6,
+                    Name = "Product specification"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 7,
+                    Name = "Customer role"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 8,
+                    Name = "Customer tag"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 9,
+                    Name = "Customer register field"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 10,
+                    Name = "Custom Customer Attribute"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 11,
+                    Name = "URL Referrer"
+                },
+                new CustomerActionConditionType()
+                {
+                    Id = 12,
+                    Name = "Url Current"
+                }
+            };
+            _customerActionConditionType.Insert(customerActionConditionType);
+
+            var customerActionType = new List<CustomerActionType>()
+            {
+                new CustomerActionType()
+                {
+                    Id = 1,
+                    Name = "Add to cart",
+                    SystemKeyword = "AddToCart",
+                    Enabled = false,
+                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+                },
+                new CustomerActionType()
+                {
+                    Id = 2,
+                    Name = "Add order",
+                    SystemKeyword = "AddOrder",
+                    Enabled = false,
+                    ConditionType = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+                },
+                new CustomerActionType()
+                {
+                    Id = 3,
+                    Name = "Viewed",
+                    SystemKeyword = "Viewed",
+                    Enabled = false,
+                    ConditionType = {1, 2, 3, 6, 7, 8, 9, 10}
+                },
+                new CustomerActionType()
+                {
+                    Id = 4,
+                    Name = "Url",
+                    SystemKeyword = "Url",
+                    Enabled = false,
+                    ConditionType = {7, 8, 9, 10, 11, 12}
+                },
+                new CustomerActionType()
+                {
+                    Id = 5,
+                    Name = "Customer Registration",
+                    SystemKeyword = "Registration",
+                    Enabled = false,
+                    ConditionType = {7, 8, 9, 10}
+                }
+            };
+            _customerActionType.Insert(customerActionType);
+
+        }
+
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
         {
             var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
@@ -4926,6 +5051,7 @@ namespace Nop.Services.Installation
                 NewsletterEnabled = true,
                 NewsletterTickedByDefault = true,
                 HideNewsletterBlock = false,
+                RegistrationFreeShipping = false,
                 NewsletterBlockAllowToUnsubscribe = false,
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,
@@ -5450,7 +5576,7 @@ namespace Nop.Services.Installation
         {
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
 
 
@@ -5775,7 +5901,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallManufacturers()
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -5873,11 +5999,11 @@ namespace Nop.Services.Installation
 
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
             //downloads
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            var sampleDownloadsPath = _webHelper.MapPath("~/content/samples/");
+            var sampleDownloadsPath = CommonHelper.MapPath("~/content/samples/");
 
             //default store
             var defaultStore = _storeRepository.Table.FirstOrDefault();
@@ -11493,6 +11619,11 @@ namespace Nop.Services.Installation
             _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email", Unique = false });
             _contactUsRepository.Collection.Indexes.CreateOneAsync(Builders<ContactUs>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc", Unique = false });
 
+            //customer action
+            _customerActionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerActionConditionType.Collection.Indexes.CreateOneAsync(Builders<CustomerActionConditionType>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+
         }
 
         #endregion
@@ -11516,6 +11647,7 @@ namespace Nop.Services.Installation
             InstallCustomersAndUsers(defaultUserEmail, defaultUserPassword);
             InstallEmailAccounts();
             InstallMessageTemplates();
+            InstallCustomerAction();
             InstallSettings();
             InstallTopicTemplates();
             InstallTopics();

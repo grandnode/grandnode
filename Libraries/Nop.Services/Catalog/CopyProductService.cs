@@ -377,9 +377,11 @@ namespace Nop.Services.Catalog
 
 
             // product <-> attributes mappings
-            var associatedAttributes = new Dictionary<int, int>();
-            var associatedAttributeValues = new Dictionary<int, int>();
-            foreach (var productAttributeMapping in product.ProductAttributeMappings) //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id))
+            
+            //var associatedAttributes = new Dictionary<int, int>();
+            //var associatedAttributeValues = new Dictionary<int, int>();
+
+            foreach (var productAttributeMapping in product.ProductAttributeMappings) 
             {
                 var productAttributeMappingCopy = new ProductAttributeMapping
                 {
@@ -399,8 +401,9 @@ namespace Nop.Services.Catalog
                     //UNDONE copy ConditionAttributeXml (we should replace attribute IDs with new values)
                 };
                 _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
+
                 //save associated value (used for combinations copying)
-                associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
+                //associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
 
                 // product attribute values
                 var productAttributeValues = product.ProductAttributeMappings.Where(x => x.Id == productAttributeMapping.Id).FirstOrDefault().ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
@@ -415,6 +418,7 @@ namespace Nop.Services.Catalog
                     {
                         Id = productAttributeValue.Id,
                         _id = productAttributeValue._id,
+                        ProductId = productCopy.Id,
                         ProductAttributeMappingId = productAttributeMappingCopy.Id,
                         AttributeValueTypeId = productAttributeValue.AttributeValueTypeId,
                         AssociatedProductId = productAttributeValue.AssociatedProductId,
@@ -431,46 +435,39 @@ namespace Nop.Services.Catalog
                     };
                     _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
 
-                    //save associated value (used for combinations copying)
-                    associatedAttributeValues.Add(productAttributeValue.Id, attributeValueCopy.Id);
                 }
             }
+
             //attribute combinations
-            foreach (var combination in product.ProductAttributeCombinations)//_productAttributeService.GetAllProductAttributeCombinations(product.Id))
+            foreach (var combination in product.ProductAttributeCombinations)
             {
                 //generate new AttributesXml according to new value IDs
                 string newAttributesXml = "";
                 var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(product, combination.AttributesXml);
                 foreach (var oldAttribute in parsedProductAttributes)
                 {
-                    if (associatedAttributes.ContainsKey(oldAttribute.Id))
+                    var newAttribute = product.ProductAttributeMappings.Where(x => x.Id == oldAttribute.Id).FirstOrDefault(); //_productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
+                    if (newAttribute != null)
                     {
-                        var newAttribute = product.ProductAttributeMappings.Where(x => x.Id == associatedAttributes[oldAttribute.Id]).FirstOrDefault(); //_productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
-                        if (newAttribute != null)
+                        var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
+                        foreach (var oldAttributeValueStr in oldAttributeValuesStr)
                         {
-                            var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
-                            foreach (var oldAttributeValueStr in oldAttributeValuesStr)
+                            if (newAttribute.ShouldHaveValues())
                             {
-                                if (newAttribute.ShouldHaveValues())
+                                //attribute values
+                                int oldAttributeValue = int.Parse(oldAttributeValueStr);
+                                var newAttributeValue = newAttribute.ProductAttributeValues.Where(x => x.Id == oldAttributeValue).FirstOrDefault(); //_productAttributeService.GetProductAttributeValueById(associatedAttributeValues[oldAttributeValue]);
+                                if (newAttributeValue != null)
                                 {
-                                    //attribute values
-                                    int oldAttributeValue = int.Parse(oldAttributeValueStr);
-                                    if (associatedAttributeValues.ContainsKey(oldAttributeValue))
-                                    {
-                                        var newAttributeValue = newAttribute.ProductAttributeValues.Where(x => x.Id == associatedAttributeValues[oldAttributeValue]).FirstOrDefault(); //_productAttributeService.GetProductAttributeValueById(associatedAttributeValues[oldAttributeValue]);
-                                        if (newAttributeValue != null)
-                                        {
-                                            newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                                newAttribute, newAttributeValue.Id.ToString());
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    //just a text
                                     newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                        newAttribute, oldAttributeValueStr);
+                                        newAttribute, newAttributeValue.Id.ToString());
                                 }
+                            }
+                            else
+                            {
+                                //just a text
+                                newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
+                                    newAttribute, oldAttributeValueStr);
                             }
                         }
                     }

@@ -16,7 +16,7 @@ namespace Nop.Admin.Models.Customers
         public CustomerModel()
         {
             this.AvailableTimeZones = new List<SelectListItem>();
-            this.SendEmail = new SendEmailModel();
+            this.SendEmail = new SendEmailModel() { SendImmediately = true }; 
             this.SendPm = new SendPmModel();
             this.AvailableCustomerRoles = new List<CustomerRoleModel>();
             this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
@@ -126,6 +126,9 @@ namespace Nop.Admin.Models.Customers
         
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.FreeShipping")]
+        public bool FreeShipping { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Active")]
         public bool Active { get; set; }
@@ -272,6 +275,12 @@ namespace Nop.Admin.Models.Customers
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Body")]
             [AllowHtml]
             public string Body { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.SendImmediately")]
+            public bool SendImmediately { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.DontSendBeforeDate")]
+            [UIHint("DateTimeNullable")]
+            public DateTime? DontSendBeforeDate { get; set; }
         }
 
         public partial class SendPmModel : BaseNopModel

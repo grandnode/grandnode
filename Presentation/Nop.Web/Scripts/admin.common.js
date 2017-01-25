@@ -81,7 +81,7 @@ function display_kendoui_grid_error(e) {
             //display the message
             alert(message);
         }
-    } else {
+    } else if (e.errorThrown) {
         alert('Error happened');
     }
 }

@@ -155,6 +155,8 @@ glob:*.user
 *.patch
 *.hg
 Presentation/Nop.Web/Plugins/*
-Presentation/Nop.Web/Content/Images/Thumbs/*
+Presentation/Nop.Web/Content/Images/Thumbs/*.png
+Presentation/Nop.Web/Content/Images/Thumbs/*.jpg
+Presentation/Nop.Web/Content/Images/Thumbs/*.jpeg
 Presentation/Nop.Web/App_Data/InstalledPlugins.txt
 Presentation/Nop.Web/App_Data/Settings.txt
