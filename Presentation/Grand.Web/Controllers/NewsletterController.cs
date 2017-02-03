@@ -55,7 +55,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult NewsletterBox()
+        public virtual ActionResult NewsletterBox()
         {
             if (_customerSettings.HideNewsletterBlock)
                 return Content("");
@@ -69,7 +69,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SubscribeNewsletter(string email, bool subscribe)
+        public virtual ActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
             string resultCategory = string.Empty;
@@ -145,7 +145,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SaveCategories(FormCollection form)
+        public virtual ActionResult SaveCategories(FormCollection form)
         {
 
             bool success = false;
@@ -191,7 +191,7 @@ namespace Grand.Web.Controllers
         }
 
 
-        public ActionResult SubscriptionActivation(Guid token, bool active)
+        public virtual ActionResult SubscriptionActivation(Guid token, bool active)
         {
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByGuid(token);
             if (subscription == null)

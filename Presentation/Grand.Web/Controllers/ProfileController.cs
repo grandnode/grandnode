@@ -57,7 +57,7 @@ namespace Grand.Web.Controllers
             this._mediaSettings = mediaSettings;
         }
 
-        public ActionResult Index(string id, int? page)
+        public virtual ActionResult Index(string id, int? page)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
@@ -106,7 +106,7 @@ namespace Grand.Web.Controllers
 
         //profile info tab
         [ChildActionOnly]
-        public ActionResult Info(string customerProfileId)
+        public virtual ActionResult Info(string customerProfileId)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
@@ -200,7 +200,7 @@ namespace Grand.Web.Controllers
 
         //latest posts tab
         [ChildActionOnly]
-        public ActionResult Posts(string customerProfileId, int page)
+        public virtual ActionResult Posts(string customerProfileId, int page)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)

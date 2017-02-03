@@ -553,7 +553,7 @@ namespace Grand.Web.Controllers
 
         //My account / Orders
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult CustomerOrders()
+        public virtual ActionResult CustomerOrders()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -566,7 +566,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("CustomerOrders")]
         [PublicAntiForgery]
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
-        public ActionResult CancelRecurringPayment(FormCollection form)
+        public virtual ActionResult CancelRecurringPayment(FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -600,7 +600,7 @@ namespace Grand.Web.Controllers
 
         //My account / Reward points
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult CustomerRewardPoints()
+        public virtual ActionResult CustomerRewardPoints()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -638,7 +638,7 @@ namespace Grand.Web.Controllers
 
         //My account / Order details page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult Details(string orderId)
+        public virtual ActionResult Details(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -651,7 +651,7 @@ namespace Grand.Web.Controllers
 
         //My account / Order details page / Print
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult PrintOrderDetails(string orderId)
+        public virtual ActionResult PrintOrderDetails(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -664,7 +664,7 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page / PDF invoice
-        public ActionResult GetPdfInvoice(string orderId)
+        public virtual ActionResult GetPdfInvoice(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -682,7 +682,7 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page / re-order
-        public ActionResult ReOrder(string orderId)
+        public virtual ActionResult ReOrder(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -696,7 +696,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("Details")]
         [FormValueRequired("repost-payment")]
         [PublicAntiForgery]
-        public ActionResult RePostPayment(string orderId)
+        public virtual ActionResult RePostPayment(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -724,7 +724,7 @@ namespace Grand.Web.Controllers
 
         //My account / Order details page / Shipment details page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ShipmentDetails(string shipmentId)
+        public virtual ActionResult ShipmentDetails(string shipmentId)
         {
             var shipment = _shipmentService.GetShipmentById(shipmentId);
             if (shipment == null)

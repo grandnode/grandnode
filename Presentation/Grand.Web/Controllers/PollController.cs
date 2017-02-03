@@ -82,7 +82,7 @@ namespace Grand.Web.Controllers
         #region Methods
 
         [ChildActionOnly]
-        public ActionResult PollBlock(string systemKeyword)
+        public virtual ActionResult PollBlock(string systemKeyword)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
@@ -117,7 +117,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Vote(string pollAnswerId, string pollId)
+        public virtual ActionResult Vote(string pollAnswerId, string pollId)
         {
             var poll = _pollService.GetPollById(pollId); //pollAnswer.Poll;
             if (!poll.Published)
@@ -169,7 +169,7 @@ namespace Grand.Web.Controllers
         }
         
         [ChildActionOnly]
-        public ActionResult HomePagePolls()
+        public virtual ActionResult HomePagePolls()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>

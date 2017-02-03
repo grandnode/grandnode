@@ -21,7 +21,7 @@ namespace Grand.Web.Controllers
         }
         #endregion
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("Install");
@@ -34,7 +34,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(UpgradeModel m)
+        public virtual ActionResult Index(UpgradeModel m)
         {
             var model = new UpgradeModel();
             model.ApplicationVersion = GrandVersion.CurrentVersion;

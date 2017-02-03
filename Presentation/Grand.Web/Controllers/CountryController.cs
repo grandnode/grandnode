@@ -45,7 +45,7 @@ namespace Grand.Web.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
+        public virtual ActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {
             //this action method gets called via an ajax request
             if (String.IsNullOrEmpty(countryId))

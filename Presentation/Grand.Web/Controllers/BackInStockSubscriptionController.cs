@@ -49,7 +49,7 @@ namespace Grand.Web.Controllers
         #region Methods
 
         // Product details page > back in stock subscribe
-        public ActionResult SubscribePopup(string productId)
+        public virtual ActionResult SubscribePopup(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -77,7 +77,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("SubscribePopup")]
-        public ActionResult SubscribePopupPOST(string productId)
+        public virtual ActionResult SubscribePopupPOST(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null )
@@ -127,7 +127,7 @@ namespace Grand.Web.Controllers
 
 
         // My account / Back in stock subscriptions
-        public ActionResult CustomerSubscriptions(int? page)
+        public virtual ActionResult CustomerSubscriptions(int? page)
         {
             if (_customerSettings.HideBackInStockSubscriptionsTab)
             {
@@ -179,7 +179,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("CustomerSubscriptions")]
-        public ActionResult CustomerSubscriptionsPOST(FormCollection formCollection)
+        public virtual ActionResult CustomerSubscriptionsPOST(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {

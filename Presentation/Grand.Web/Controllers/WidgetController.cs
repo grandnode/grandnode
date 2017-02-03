@@ -40,7 +40,7 @@ namespace Grand.Web.Controllers
         #region Methods
 
         [ChildActionOnly]
-        public ActionResult WidgetsByZone(string widgetZone, object additionalData = null)
+        public virtual ActionResult WidgetsByZone(string widgetZone, object additionalData = null)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
             var cacheModel = _cacheManager.Get(cacheKey, () =>

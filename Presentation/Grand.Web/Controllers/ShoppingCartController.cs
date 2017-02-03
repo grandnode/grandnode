@@ -1406,7 +1406,7 @@ namespace Grand.Web.Controllers
         //add product to cart using AJAX
         //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
-        public ActionResult AddProductToCart_Catalog(string productId, int shoppingCartTypeId,
+        public virtual ActionResult AddProductToCart_Catalog(string productId, int shoppingCartTypeId,
             int quantity, bool forceredirection = false)
         {
             var cartType = (ShoppingCartType)shoppingCartTypeId;
@@ -1590,7 +1590,7 @@ namespace Grand.Web.Controllers
         //currently we use this method on the product details pages
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AddProductToCart_Details(string productId, int shoppingCartTypeId, FormCollection form)
+        public virtual ActionResult AddProductToCart_Details(string productId, int shoppingCartTypeId, FormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -1810,7 +1810,7 @@ namespace Grand.Web.Controllers
         //currently we use this method on the product details pages
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ProductDetails_AttributeChange(string productId, bool validateAttributeConditions, FormCollection form)
+        public virtual ActionResult ProductDetails_AttributeChange(string productId, bool validateAttributeConditions, FormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -1884,7 +1884,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult CheckoutAttributeChange(FormCollection form)
+        public virtual ActionResult CheckoutAttributeChange(FormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -1918,7 +1918,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadFileProductAttribute(string attributeId, string productId)
+        public virtual ActionResult UploadFileProductAttribute(string attributeId, string productId)
         {
             var product = _productService.GetProductById(productId);
             var attribute = product.ProductAttributeMappings.Where(x => x.Id == attributeId).FirstOrDefault(); //_productAttributeService.GetProductAttributeMappingById(attributeId);
@@ -2003,7 +2003,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult UploadFileCheckoutAttribute(string attributeId)
+        public virtual ActionResult UploadFileCheckoutAttribute(string attributeId)
         {
             var attribute = _checkoutAttributeService.GetCheckoutAttributeById(attributeId);
             if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
@@ -2088,7 +2088,7 @@ namespace Grand.Web.Controllers
 
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult Cart()
+        public virtual ActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -2103,7 +2103,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult OrderSummary(bool? prepareAndDisplayOrderReviewData)
+        public virtual ActionResult OrderSummary(bool? prepareAndDisplayOrderReviewData)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -2120,7 +2120,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("updatecart")]
-        public ActionResult UpdateCart(FormCollection form)
+        public virtual ActionResult UpdateCart(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -2187,7 +2187,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("continueshopping")]
-        public ActionResult ContinueShopping()
+        public virtual ActionResult ContinueShopping()
         {
             var returnUrl = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastContinueShoppingPage, _storeContext.CurrentStore.Id);
             if (!String.IsNullOrEmpty(returnUrl))
@@ -2203,7 +2203,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("checkout")]
-        public ActionResult StartCheckout(FormCollection form)
+        public virtual ActionResult StartCheckout(FormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -2239,7 +2239,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("applydiscountcouponcode")]
-        public ActionResult ApplyDiscountCoupon(string discountcouponcode, FormCollection form)
+        public virtual ActionResult ApplyDiscountCoupon(string discountcouponcode, FormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -2299,7 +2299,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("applygiftcardcouponcode")]
-        public ActionResult ApplyGiftCard(string giftcardcouponcode, FormCollection form)
+        public virtual ActionResult ApplyGiftCard(string giftcardcouponcode, FormCollection form)
         {
             //trim
             if (giftcardcouponcode != null)
@@ -2352,7 +2352,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [PublicAntiForgery]
         [HttpPost]
-        public ActionResult GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, FormCollection form)
+        public virtual ActionResult GetEstimateShipping(string countryId, string stateProvinceId, string zipPostalCode, FormCollection form)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -2435,7 +2435,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult OrderTotals(bool isEditable)
+        public virtual ActionResult OrderTotals(bool isEditable)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -2448,7 +2448,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removediscount-")]
-        public ActionResult RemoveDiscountCoupon(FormCollection form)
+        public virtual ActionResult RemoveDiscountCoupon(FormCollection form)
         {          
             var model = new ShoppingCartModel();
             string discountId = string.Empty;
@@ -2474,7 +2474,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removegiftcard-")]
-        public ActionResult RemoveGiftCardCode(FormCollection form)
+        public virtual ActionResult RemoveGiftCardCode(FormCollection form)
         {
             var model = new ShoppingCartModel();
 
@@ -2499,7 +2499,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult FlyoutShoppingCart()
+        public virtual ActionResult FlyoutShoppingCart()
         {
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
@@ -2516,7 +2516,7 @@ namespace Grand.Web.Controllers
         #region Wishlist
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult Wishlist(Guid? customerGuid)
+        public virtual ActionResult Wishlist(Guid? customerGuid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
@@ -2538,7 +2538,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("updatecart")]
-        public ActionResult UpdateWishlist(FormCollection form)
+        public virtual ActionResult UpdateWishlist(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
@@ -2608,7 +2608,7 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("addtocartbutton")]
-        public ActionResult AddItemsToCartFromWishlist(Guid? customerGuid, FormCollection form)
+        public virtual ActionResult AddItemsToCartFromWishlist(Guid? customerGuid, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -2688,7 +2688,7 @@ namespace Grand.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult EmailWishlist()
+        public virtual ActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");
@@ -2713,7 +2713,7 @@ namespace Grand.Web.Controllers
         [FormValueRequired("send-email")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
+        public virtual ActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToRoute("HomePage");

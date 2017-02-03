@@ -487,7 +487,7 @@ namespace Grand.Web.Controllers
 
         #region Methods (common)
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -533,7 +533,7 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("CheckoutBillingAddress");
         }
 
-        public ActionResult Completed(string orderId)
+        public virtual ActionResult Completed(string orderId)
         {
             //validation
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -576,7 +576,7 @@ namespace Grand.Web.Controllers
 
         #region Methods (multistep checkout)
 
-        public ActionResult BillingAddress(FormCollection form)
+        public virtual ActionResult BillingAddress(FormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -611,7 +611,7 @@ namespace Grand.Web.Controllers
 
             return View(model);
         }
-        public ActionResult SelectBillingAddress(string addressId, bool shipToSameAddress = false)
+        public virtual ActionResult SelectBillingAddress(string addressId, bool shipToSameAddress = false)
         {
             var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
@@ -643,7 +643,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("BillingAddress")]
         [FormValueRequired("nextstep")]
         [ValidateInput(false)]
-        public ActionResult NewBillingAddress(CheckoutBillingAddressModel model, FormCollection form)
+        public virtual ActionResult NewBillingAddress(CheckoutBillingAddressModel model, FormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -711,7 +711,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ShippingAddress()
+        public virtual ActionResult ShippingAddress()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -739,7 +739,7 @@ namespace Grand.Web.Controllers
 
             return View(model);
         }
-        public ActionResult SelectShippingAddress(string addressId)
+        public virtual ActionResult SelectShippingAddress(string addressId)
         {
             var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == addressId);
             if (address == null)
@@ -760,7 +760,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("ShippingAddress")]
         [FormValueRequired("nextstep")]
         [ValidateInput(false)]
-        public ActionResult NewShippingAddress(CheckoutShippingAddressModel model, FormCollection form)
+        public virtual ActionResult NewShippingAddress(CheckoutShippingAddressModel model, FormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -870,7 +870,7 @@ namespace Grand.Web.Controllers
         }
         
 
-        public ActionResult ShippingMethod()
+        public virtual ActionResult ShippingMethod()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -912,7 +912,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("ShippingMethod")]
         [FormValueRequired("nextstep")]
         [ValidateInput(false)]
-        public ActionResult SelectShippingMethod(string shippingoption)
+        public virtual ActionResult SelectShippingMethod(string shippingoption)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -974,7 +974,7 @@ namespace Grand.Web.Controllers
         }
         
         
-        public ActionResult PaymentMethod()
+        public virtual ActionResult PaymentMethod()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1030,7 +1030,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("PaymentMethod")]
         [FormValueRequired("nextstep")]
         [ValidateInput(false)]
-        public ActionResult SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
+        public virtual ActionResult SelectPaymentMethod(string paymentmethod, CheckoutPaymentMethodModel model)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1080,7 +1080,7 @@ namespace Grand.Web.Controllers
         }
 
 
-        public ActionResult PaymentInfo()
+        public virtual ActionResult PaymentInfo()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1131,7 +1131,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("PaymentInfo")]
         [FormValueRequired("nextstep")]
         [ValidateInput(false)]
-        public ActionResult EnterPaymentInfo(FormCollection form)
+        public virtual ActionResult EnterPaymentInfo(FormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1186,7 +1186,7 @@ namespace Grand.Web.Controllers
         }
         
 
-        public ActionResult Confirm()
+        public virtual ActionResult Confirm()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1208,7 +1208,7 @@ namespace Grand.Web.Controllers
         }
         [HttpPost, ActionName("Confirm")]
         [ValidateInput(false)]
-        public ActionResult ConfirmOrder()
+        public virtual ActionResult ConfirmOrder()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1283,7 +1283,7 @@ namespace Grand.Web.Controllers
 
 
         [ChildActionOnly]
-        public ActionResult CheckoutProgress(CheckoutProgressStep step)
+        public virtual ActionResult CheckoutProgress(CheckoutProgressStep step)
         {
             var model = new CheckoutProgressModel {CheckoutProgressStep = step};
             return PartialView(model);
@@ -1429,7 +1429,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        public ActionResult OnePageCheckout()
+        public virtual ActionResult OnePageCheckout()
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -1454,7 +1454,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult OpcBillingForm()
+        public virtual ActionResult OpcBillingForm()
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -1466,7 +1466,7 @@ namespace Grand.Web.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult OpcSaveBilling(FormCollection form)
+        public virtual ActionResult OpcSaveBilling(FormCollection form)
         {
             try
             {
@@ -1603,7 +1603,7 @@ namespace Grand.Web.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult OpcSaveShipping(FormCollection form)
+        public virtual ActionResult OpcSaveShipping(FormCollection form)
         {
             try
             {
@@ -1757,7 +1757,7 @@ namespace Grand.Web.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult OpcSaveShippingMethod(FormCollection form)
+        public virtual ActionResult OpcSaveShippingMethod(FormCollection form)
         {
             try
             {
@@ -1825,7 +1825,7 @@ namespace Grand.Web.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult OpcSavePaymentMethod(FormCollection form)
+        public virtual ActionResult OpcSavePaymentMethod(FormCollection form)
         {
             try
             {
@@ -1900,7 +1900,7 @@ namespace Grand.Web.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult OpcSavePaymentInfo(FormCollection form)
+        public virtual ActionResult OpcSavePaymentInfo(FormCollection form)
         {
             try
             {
@@ -1971,7 +1971,7 @@ namespace Grand.Web.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult OpcConfirmOrder()
+        public virtual ActionResult OpcConfirmOrder()
         {
             try
             {
@@ -2066,7 +2066,7 @@ namespace Grand.Web.Controllers
             }
         }
 
-        public ActionResult OpcCompleteRedirectionPayment()
+        public virtual ActionResult OpcCompleteRedirectionPayment()
         {
             try
             {

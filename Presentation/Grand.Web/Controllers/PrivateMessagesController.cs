@@ -60,7 +60,7 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public ActionResult Index(int? page, string tab)
+        public virtual ActionResult Index(int? page, string tab)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -107,7 +107,7 @@ namespace Grand.Web.Controllers
 
         //inbox tab
         [ChildActionOnly]
-        public ActionResult Inbox(int page, string tab)
+        public virtual ActionResult Inbox(int page, string tab)
         {
             if (page > 0)
             {
@@ -163,7 +163,7 @@ namespace Grand.Web.Controllers
 
         //sent items tab
         [ChildActionOnly]
-        public ActionResult SentItems(int page, string tab)
+        public virtual ActionResult SentItems(int page, string tab)
         {
             if (page > 0)
             {
@@ -220,7 +220,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
         [PublicAntiForgery]
-        public ActionResult DeleteInboxPM(FormCollection formCollection)
+        public virtual ActionResult DeleteInboxPM(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -245,7 +245,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
         [PublicAntiForgery]
-        public ActionResult MarkUnread(FormCollection formCollection)
+        public virtual ActionResult MarkUnread(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -271,7 +271,7 @@ namespace Grand.Web.Controllers
         //updates sent items (deletes PrivateMessages)
         [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
         [PublicAntiForgery]
-        public ActionResult DeleteSentPM(FormCollection formCollection)
+        public virtual ActionResult DeleteSentPM(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -295,7 +295,7 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("PrivateMessages", new {tab = "sent"});
         }
 
-        public ActionResult SendPM(string toCustomerId, string replyToMessageId)
+        public virtual ActionResult SendPM(string toCustomerId, string replyToMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -342,7 +342,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public ActionResult SendPM(SendPrivateMessageModel model)
+        public virtual ActionResult SendPM(SendPrivateMessageModel model)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -430,7 +430,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ViewPM(string privateMessageId)
+        public virtual ActionResult ViewPM(string privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -483,7 +483,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult DeletePM(string privateMessageId)
+        public virtual ActionResult DeletePM(string privateMessageId)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {

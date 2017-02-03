@@ -94,7 +94,7 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -124,7 +124,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(InstallModel model)
+        public virtual ActionResult Index(InstallModel model)
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -290,7 +290,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ChangeLanguage(string language)
+        public virtual ActionResult ChangeLanguage(string language)
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");
@@ -301,7 +301,7 @@ namespace Grand.Web.Controllers
             return RedirectToAction("Index", "Install");
         }
 
-        public ActionResult RestartInstall()
+        public virtual ActionResult RestartInstall()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
                 return RedirectToRoute("HomePage");

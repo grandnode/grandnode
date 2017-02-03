@@ -61,7 +61,7 @@ namespace Grand.Web.Controllers
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ApplyVendor()
+        public virtual ActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
@@ -86,7 +86,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid)
+        public virtual ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");

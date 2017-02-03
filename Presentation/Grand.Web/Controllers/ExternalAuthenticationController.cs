@@ -40,7 +40,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ExternalMethods()
+        public virtual ActionResult ExternalMethods()
         {
             //model
             var model = new List<ExternalAuthenticationMethodModel>();

@@ -954,7 +954,7 @@ namespace Grand.Web.Controllers
         #region Product details page
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductDetails(string productId, string updatecartitemid = "")
+        public virtual ActionResult ProductDetails(string productId, string updatecartitemid = "")
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -1036,7 +1036,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RelatedProducts(string productId, int? productThumbPictureSize)
+        public virtual ActionResult RelatedProducts(string productId, int? productThumbPictureSize)
         {
             //load and cache report
             var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
@@ -1059,7 +1059,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ProductsAlsoPurchased(string productId, int? productThumbPictureSize)
+        public virtual ActionResult ProductsAlsoPurchased(string productId, int? productThumbPictureSize)
         {
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
@@ -1088,7 +1088,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult CrossSellProducts(int? productThumbPictureSize)
+        public virtual ActionResult CrossSellProducts(int? productThumbPictureSize)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
@@ -1121,7 +1121,7 @@ namespace Grand.Web.Controllers
         #region Recently viewed products
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult RecentlyViewedProducts()
+        public virtual ActionResult RecentlyViewedProducts()
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");
@@ -1135,7 +1135,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize, bool? preparePriceModel)
+        public virtual ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize, bool? preparePriceModel)
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
                 return Content("");
@@ -1166,7 +1166,7 @@ namespace Grand.Web.Controllers
         #region Recently added products
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult NewProducts()
+        public virtual ActionResult NewProducts()
         {
             if (!_catalogSettings.NewProductsEnabled)
                 return Content("");
@@ -1184,7 +1184,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult NewProductsRss()
+        public virtual ActionResult NewProductsRss()
         {
             var feed = new SyndicationFeed(
                                     string.Format("{0}: New products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
@@ -1221,7 +1221,7 @@ namespace Grand.Web.Controllers
         #region Home page bestseller, recommended and products
 
         [ChildActionOnly]
-        public ActionResult HomepageBestSellers(int? productThumbPictureSize)
+        public virtual ActionResult HomepageBestSellers(int? productThumbPictureSize)
         {
             if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
                 return Content("");
@@ -1250,7 +1250,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult HomepageProducts(int? productThumbPictureSize)
+        public virtual ActionResult HomepageProducts(int? productThumbPictureSize)
         {
 
             var products = _productService.GetAllProductsDisplayedOnHomePage();
@@ -1268,7 +1268,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RecommendedProducts(int? productThumbPictureSize)
+        public virtual ActionResult RecommendedProducts(int? productThumbPictureSize)
         {
             if (!_catalogSettings.RecommendedProductsEnabled)
                 return Content("");
@@ -1294,7 +1294,7 @@ namespace Grand.Web.Controllers
         #region Product reviews
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductReviews(string productId)
+        public virtual ActionResult ProductReviews(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published || !product.AllowCustomerReviews)
@@ -1314,7 +1314,7 @@ namespace Grand.Web.Controllers
         [FormValueRequired("add-review")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult ProductReviewsAdd(string productId, ProductReviewsModel model, bool captchaValid)
+        public virtual ActionResult ProductReviewsAdd(string productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published || !product.AllowCustomerReviews)
@@ -1397,7 +1397,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult SetProductReviewHelpfulness(string productReviewId, string productId, bool washelpful)
+        public virtual ActionResult SetProductReviewHelpfulness(string productReviewId, string productId, bool washelpful)
         {
             var product = _productService.GetProductById(productId);
             var productReview = _productService.GetProductReviewById(productReviewId);
@@ -1469,7 +1469,7 @@ namespace Grand.Web.Controllers
         #region Email a friend
         
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductEmailAFriend(string productId)
+        public virtual ActionResult ProductEmailAFriend(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published || !_catalogSettings.EmailAFriendEnabled)
@@ -1488,7 +1488,7 @@ namespace Grand.Web.Controllers
         [FormValueRequired("send-email")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
+        public virtual ActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(model.ProductId);
             if (product == null || !product.Published || !_catalogSettings.EmailAFriendEnabled)
@@ -1537,7 +1537,7 @@ namespace Grand.Web.Controllers
         #region Ask question
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult AskQuestion(string productId)
+        public virtual ActionResult AskQuestion(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null ||  !product.Published || !_catalogSettings.AskQuestionEnabled)
@@ -1562,7 +1562,7 @@ namespace Grand.Web.Controllers
         [FormValueRequired("send-email")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult AskQuestion(ProductAskQuestionModel model, bool captchaValid)
+        public virtual ActionResult AskQuestion(ProductAskQuestionModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(model.ProductId);
             if (product == null || !product.Published || !_catalogSettings.AskQuestionEnabled)
@@ -1610,7 +1610,7 @@ namespace Grand.Web.Controllers
         #region Comparing products
 
         [HttpPost]
-        public ActionResult AddProductToCompareList(string productId)
+        public virtual ActionResult AddProductToCompareList(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || !product.Published)
@@ -1641,7 +1641,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        public ActionResult RemoveProductFromCompareList(string productId)
+        public virtual ActionResult RemoveProductFromCompareList(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -1656,7 +1656,7 @@ namespace Grand.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult CompareProducts()
+        public virtual ActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("HomePage");
@@ -1681,7 +1681,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ClearCompareList()
+        public virtual ActionResult ClearCompareList()
         {
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("HomePage");

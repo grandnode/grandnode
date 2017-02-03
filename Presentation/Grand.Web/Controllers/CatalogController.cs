@@ -408,7 +408,7 @@ namespace Grand.Web.Controllers
         #region Categories
         
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Category(string categoryId, CatalogPagingFilteringModel command)
+        public virtual ActionResult Category(string categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null)
@@ -617,7 +617,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult CategoryNavigation(string currentCategoryId, string currentProductId)
+        public virtual ActionResult CategoryNavigation(string currentCategoryId, string currentProductId)
         {
             //get active category
             string activeCategoryId = "";
@@ -650,7 +650,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult TopMenu()
+        public virtual ActionResult TopMenu()
         {
             //categories
             string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY,
@@ -687,7 +687,7 @@ namespace Grand.Web.Controllers
         }
         
         [ChildActionOnly]
-        public ActionResult HomepageCategories()
+        public virtual ActionResult HomepageCategories()
         {
             string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
@@ -733,7 +733,7 @@ namespace Grand.Web.Controllers
         #region Manufacturers
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Manufacturer(string manufacturerId, CatalogPagingFilteringModel command)
+        public virtual ActionResult Manufacturer(string manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
@@ -871,7 +871,7 @@ namespace Grand.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ManufacturerAll()
+        public virtual ActionResult ManufacturerAll()
         {
             var model = new List<ManufacturerModel>();
             var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
@@ -901,7 +901,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ManufacturerNavigation(string currentManufacturerId)
+        public virtual ActionResult ManufacturerNavigation(string currentManufacturerId)
         {
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
@@ -946,7 +946,7 @@ namespace Grand.Web.Controllers
         #region Vendors
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Vendor(string vendorId, CatalogPagingFilteringModel command)
+        public virtual ActionResult Vendor(string vendorId, CatalogPagingFilteringModel command)
         {
             var vendor = _vendorService.GetVendorById(vendorId);
             if (vendor == null || vendor.Deleted || !vendor.Active)
@@ -1007,7 +1007,7 @@ namespace Grand.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult VendorAll()
+        public virtual ActionResult VendorAll()
         {
             //we don't allow viewing of vendors if "vendors" block is hidden
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
@@ -1050,7 +1050,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult VendorNavigation()
+        public virtual ActionResult VendorNavigation()
         {
             if (_vendorSettings.VendorsBlockItemsToDisplay == 0)
                 return Content("");
@@ -1087,7 +1087,7 @@ namespace Grand.Web.Controllers
         #region Product tags
         
         [ChildActionOnly]
-        public ActionResult PopularProductTags()
+        public virtual ActionResult PopularProductTags()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
@@ -1126,7 +1126,7 @@ namespace Grand.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductsByTag(string productTagId, CatalogPagingFilteringModel command)
+        public virtual ActionResult ProductsByTag(string productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductTagById(productTagId);
             if (productTag == null)
@@ -1166,7 +1166,7 @@ namespace Grand.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult ProductTagsAll()
+        public virtual ActionResult ProductTagsAll()
         {
             var model = new PopularProductTagsModel();
             model.Tags = _productTagService
@@ -1193,7 +1193,7 @@ namespace Grand.Web.Controllers
 
         [NopHttpsRequirement(SslRequirement.No)]
         [ValidateInput(false)]
-        public ActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
+        public virtual ActionResult Search(SearchModel model, CatalogPagingFilteringModel command)
         {
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
@@ -1433,7 +1433,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult SearchBox()
+        public virtual ActionResult SearchBox()
         {
             var model = new SearchBoxModel
             {
@@ -1445,7 +1445,7 @@ namespace Grand.Web.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult SearchTermAutoComplete(string term)
+        public virtual ActionResult SearchTermAutoComplete(string term)
         {
             if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 return Content("");

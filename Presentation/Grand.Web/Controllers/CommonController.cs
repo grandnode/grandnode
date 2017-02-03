@@ -204,7 +204,7 @@ namespace Grand.Web.Controllers
         #region Methods
 
         //page not found
-        public ActionResult PageNotFound()
+        public virtual ActionResult PageNotFound()
         {
             this.Response.StatusCode = 404;
             this.Response.TrySkipIisCustomErrors = true;
@@ -214,7 +214,7 @@ namespace Grand.Web.Controllers
 
         //logo
         [ChildActionOnly]
-        public ActionResult Logo()
+        public virtual ActionResult Logo()
         {
             var model = new LogoModel
             {
@@ -243,7 +243,7 @@ namespace Grand.Web.Controllers
 
         //language
         [ChildActionOnly]
-        public ActionResult LanguageSelector()
+        public virtual ActionResult LanguageSelector()
         {
             var availableLanguages = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, _storeContext.CurrentStore.Id), () =>
             {
@@ -276,7 +276,7 @@ namespace Grand.Web.Controllers
         [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult SetLanguage(string langid, string returnUrl = "")
+        public virtual ActionResult SetLanguage(string langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
             if (language != null && language.Published)
@@ -308,7 +308,7 @@ namespace Grand.Web.Controllers
 
         //currency
         [ChildActionOnly]
-        public ActionResult CurrencySelector()
+        public virtual ActionResult CurrencySelector()
         {
             var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id), () =>
             {
@@ -348,7 +348,7 @@ namespace Grand.Web.Controllers
         }
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult SetCurrency(string customerCurrency, string returnUrl = "")
+        public virtual ActionResult SetCurrency(string customerCurrency, string returnUrl = "")
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
@@ -367,7 +367,7 @@ namespace Grand.Web.Controllers
 
         //tax type
         [ChildActionOnly]
-        public ActionResult TaxTypeSelector()
+        public virtual ActionResult TaxTypeSelector()
         {
             if (!_taxSettings.AllowCustomersToSelectTaxDisplayType)
                 return Content("");
@@ -381,7 +381,7 @@ namespace Grand.Web.Controllers
         }
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
+        public virtual ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
@@ -399,7 +399,7 @@ namespace Grand.Web.Controllers
 
         //footer
         [ChildActionOnly]
-        public ActionResult JavaScriptDisabledWarning()
+        public virtual ActionResult JavaScriptDisabledWarning()
         {
             if (!_commonSettings.DisplayJavaScriptDisabledWarning)
                 return Content("");
@@ -409,7 +409,7 @@ namespace Grand.Web.Controllers
 
         //header links
         [ChildActionOnly]
-        public ActionResult HeaderLinks()
+        public virtual ActionResult HeaderLinks()
         {
             var customer = _workContext.CurrentCustomer;
 
@@ -457,7 +457,7 @@ namespace Grand.Web.Controllers
             return PartialView(model);
         }
         [ChildActionOnly]
-        public ActionResult AdminHeaderLinks()
+        public virtual ActionResult AdminHeaderLinks()
         {
             var customer = _workContext.CurrentCustomer;
 
@@ -474,7 +474,7 @@ namespace Grand.Web.Controllers
 
         //footer
         [ChildActionOnly]
-        public ActionResult Footer()
+        public virtual ActionResult Footer()
         {
             //footer topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
@@ -529,7 +529,7 @@ namespace Grand.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult ContactUs()
+        public virtual ActionResult ContactUs()
         {
             var model = new ContactUsModel
             {
@@ -546,7 +546,7 @@ namespace Grand.Web.Controllers
         [CaptchaValidator]
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
+        public virtual ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
         {
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
@@ -633,7 +633,7 @@ namespace Grand.Web.Controllers
         }
         //contact vendor page
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ContactVendor(string vendorId)
+        public virtual ActionResult ContactVendor(string vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("HomePage");
@@ -656,7 +656,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("ContactVendor")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
+        public virtual ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
                 return RedirectToRoute("HomePage");
@@ -753,7 +753,7 @@ namespace Grand.Web.Controllers
 
         //sitemap page
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult Sitemap()
+        public virtual ActionResult Sitemap()
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
@@ -822,7 +822,7 @@ namespace Grand.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult SitemapXml()
+        public virtual ActionResult SitemapXml()
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
@@ -837,7 +837,7 @@ namespace Grand.Web.Controllers
 
         //store theme
         [ChildActionOnly]
-        public ActionResult StoreThemeSelector()
+        public virtual ActionResult StoreThemeSelector()
         {
             if (!_storeInformationSettings.AllowCustomerToSelectTheme)
                 return Content("");
@@ -858,7 +858,7 @@ namespace Grand.Web.Controllers
                 .ToList();
             return PartialView(model);
         }
-        public ActionResult SetStoreTheme(string themeName, string returnUrl = "")
+        public virtual ActionResult SetStoreTheme(string themeName, string returnUrl = "")
         {
             _themeContext.WorkingThemeName = themeName;
 
@@ -875,7 +875,7 @@ namespace Grand.Web.Controllers
 
         //favicon
         [ChildActionOnly]
-        public ActionResult Favicon()
+        public virtual ActionResult Favicon()
         {
             //try loading a store specific favicon
             var faviconFileName = string.Format("favicon-{0}.ico", _storeContext.CurrentStore.Id);
@@ -900,7 +900,7 @@ namespace Grand.Web.Controllers
 
         //EU Cookie law
         [ChildActionOnly]
-        public ActionResult EuCookieLaw()
+        public virtual ActionResult EuCookieLaw()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
@@ -926,7 +926,7 @@ namespace Grand.Web.Controllers
         [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult EuCookieLawAccept()
+        public virtual ActionResult EuCookieLawAccept()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
                 //disabled
@@ -942,7 +942,7 @@ namespace Grand.Web.Controllers
         [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
-        public ActionResult RobotsTextFile()
+        public virtual ActionResult RobotsTextFile()
         {
             var sb = new StringBuilder();
 
@@ -1091,7 +1091,7 @@ namespace Grand.Web.Controllers
             return null;
         }
 
-        public ActionResult GenericUrl()
+        public virtual ActionResult GenericUrl()
         {
             //seems that no entity was found
             return InvokeHttp404();
@@ -1100,7 +1100,7 @@ namespace Grand.Web.Controllers
         //store is closed
         //available even when a store is closed
         [StoreClosed(true)]
-        public ActionResult StoreClosed()
+        public virtual ActionResult StoreClosed()
         {
             return View();
         }
@@ -1108,7 +1108,7 @@ namespace Grand.Web.Controllers
 
         //Get banner for customer
         [HttpGet]
-        public ActionResult GetActivePopup()
+        public virtual ActionResult GetActivePopup()
         {
             var result = _popupService.GetActivePopupByCustomerId(_workContext.CurrentCustomer.Id);
             if (result != null)
@@ -1128,7 +1128,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult RemovePopup(string Id)
+        public virtual ActionResult RemovePopup(string Id)
         {
             _popupService.MovepopupToArchive(Id, _workContext.CurrentCustomer.Id);
             return Json(JsonRequestBehavior.AllowGet);
@@ -1136,7 +1136,7 @@ namespace Grand.Web.Controllers
 
 
         [HttpGet]
-        public ActionResult CustomerActionEventUrl(string curl, string purl)
+        public virtual ActionResult CustomerActionEventUrl(string curl, string purl)
         {
             _customerActionEventService.Url(_workContext.CurrentCustomer, curl, purl);
             return Json
@@ -1147,7 +1147,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ActionName("PopupInteractiveForm")]
-        public ActionResult PopupInteractiveForm(FormCollection formCollection)
+        public virtual ActionResult PopupInteractiveForm(FormCollection formCollection)
         {
 
             var formid = formCollection["Id"];

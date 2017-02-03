@@ -149,7 +149,7 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public ActionResult HomePageNews()
+        public virtual ActionResult HomePageNews()
         {
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
@@ -181,7 +181,7 @@ namespace Grand.Web.Controllers
             return PartialView(model);
         }
 
-        public ActionResult List(NewsPagingFilteringModel command)
+        public virtual ActionResult List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -208,7 +208,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ListRss(string languageId)
+        public virtual ActionResult ListRss(string languageId)
         {
             var feed = new SyndicationFeed(
                                     string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
@@ -231,7 +231,7 @@ namespace Grand.Web.Controllers
             return new RssActionResult { Feed = feed };
         }
 
-        public ActionResult NewsItem(string newsItemId)
+        public virtual ActionResult NewsItem(string newsItemId)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -259,7 +259,7 @@ namespace Grand.Web.Controllers
         [FormValueRequired("add-comment")]
         [PublicAntiForgery]
         [CaptchaValidator]
-        public ActionResult NewsCommentAdd(string newsItemId, NewsItemModel model, bool captchaValid)
+        public virtual ActionResult NewsCommentAdd(string newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
@@ -315,7 +315,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RssHeaderLink()
+        public virtual ActionResult RssHeaderLink()
         {
             if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
                 return Content("");

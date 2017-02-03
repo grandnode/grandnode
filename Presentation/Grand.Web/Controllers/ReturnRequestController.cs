@@ -165,7 +165,7 @@ namespace Grand.Web.Controllers
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult CustomerReturnRequests()
+        public virtual ActionResult CustomerReturnRequests()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -204,7 +204,7 @@ namespace Grand.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ReturnRequest(string orderId)
+        public virtual ActionResult ReturnRequest(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
@@ -221,7 +221,7 @@ namespace Grand.Web.Controllers
         [HttpPost, ActionName("ReturnRequest")]
         [ValidateInput(false)]
         [PublicAntiForgery]
-        public ActionResult ReturnRequestSubmit(string orderId, SubmitReturnRequestModel model, FormCollection form)
+        public virtual ActionResult ReturnRequestSubmit(string orderId, SubmitReturnRequestModel model, FormCollection form)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)

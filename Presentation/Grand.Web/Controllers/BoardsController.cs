@@ -190,7 +190,7 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -210,7 +210,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ActiveDiscussionsSmall()
+        public virtual ActionResult ActiveDiscussionsSmall()
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -234,7 +234,7 @@ namespace Grand.Web.Controllers
             return PartialView(model);
         }
 
-        public ActionResult ActiveDiscussions(string forumId = "", int page = 1)
+        public virtual ActionResult ActiveDiscussions(string forumId = "", int page = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -261,7 +261,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ActiveDiscussionsRss(string forumId = "")
+        public virtual ActionResult ActiveDiscussionsRss(string forumId = "")
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -304,7 +304,7 @@ namespace Grand.Web.Controllers
             return new RssActionResult { Feed = feed };
         }
 
-        public ActionResult ForumGroup(string id)
+        public virtual ActionResult ForumGroup(string id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -319,7 +319,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Forum(string id, int page = 1)
+        public virtual ActionResult Forum(string id, int page = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -370,7 +370,7 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("Boards");
         }
 
-        public ActionResult ForumRss(string id)
+        public virtual ActionResult ForumRss(string id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -425,7 +425,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult ForumWatch(string id)
+        public virtual ActionResult ForumWatch(string id)
         {
             string watchTopic = _localizationService.GetResource("Forum.WatchForum");
             string unwatchTopic = _localizationService.GetResource("Forum.UnwatchForum");
@@ -468,7 +468,7 @@ namespace Grand.Web.Controllers
             return Json(new { Subscribed = subscribed, Text = returnText, Error = false });
         }
 
-        public ActionResult Topic(string id, int page = 1)
+        public virtual ActionResult Topic(string id, int page = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -585,7 +585,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult TopicWatch(string id)
+        public virtual ActionResult TopicWatch(string id)
         {
             string watchTopic = _localizationService.GetResource("Forum.WatchTopic");
             string unwatchTopic = _localizationService.GetResource("Forum.UnwatchTopic");
@@ -628,7 +628,7 @@ namespace Grand.Web.Controllers
             return Json(new { Subscribed = subscribed, Text = returnText, Error = false });
         }
 
-        public ActionResult TopicMove(string id)
+        public virtual ActionResult TopicMove(string id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -652,7 +652,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        public ActionResult TopicMove(TopicMoveModel model)
+        public virtual ActionResult TopicMove(TopicMoveModel model)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -680,7 +680,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult TopicDelete(string id)
+        public virtual ActionResult TopicDelete(string id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -717,7 +717,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        public ActionResult TopicCreate(string id)
+        public virtual ActionResult TopicCreate(string id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -753,7 +753,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
-        public ActionResult TopicCreate(EditForumTopicModel model)
+        public virtual ActionResult TopicCreate(EditForumTopicModel model)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -879,7 +879,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult TopicEdit(string id)
+        public virtual ActionResult TopicEdit(string id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -934,7 +934,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
-        public ActionResult TopicEdit(EditForumTopicModel model)
+        public virtual ActionResult TopicEdit(EditForumTopicModel model)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -1073,7 +1073,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult PostDelete(string id)
+        public virtual ActionResult PostDelete(string id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -1119,7 +1119,7 @@ namespace Grand.Web.Controllers
             });
         }
 
-        public ActionResult PostCreate(string id, string quote)
+        public virtual ActionResult PostCreate(string id, string quote)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -1193,7 +1193,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
-        public ActionResult PostCreate(EditForumPostModel model)
+        public virtual ActionResult PostCreate(EditForumPostModel model)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -1308,7 +1308,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult PostEdit(string id)
+        public virtual ActionResult PostEdit(string id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -1365,7 +1365,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         [PublicAntiForgery]
         [ValidateInput(false)]
-        public ActionResult PostEdit(EditForumPostModel model)
+        public virtual ActionResult PostEdit(EditForumPostModel model)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -1473,7 +1473,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Search(string searchterms, bool? adv, string forumId,
+        public virtual ActionResult Search(string searchterms, bool? adv, string forumId,
             string within, string limitDays, int page = 1)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -1658,7 +1658,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult LastPost(string forumPostId, bool showTopic)
+        public virtual ActionResult LastPost(string forumPostId, bool showTopic)
         {
             var post = _forumService.GetPostById(forumPostId);
             var model = new LastPostModel();
@@ -1688,7 +1688,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult ForumBreadcrumb(string forumGroupId, string forumId, string forumTopicId)
+        public virtual ActionResult ForumBreadcrumb(string forumGroupId, string forumId, string forumTopicId)
         {
             var model = new ForumBreadcrumbModel();
 
@@ -1724,7 +1724,7 @@ namespace Grand.Web.Controllers
         }
 
 
-        public ActionResult CustomerForumSubscriptions(int? page)
+        public virtual ActionResult CustomerForumSubscriptions(int? page)
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
             {
@@ -1798,7 +1798,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("CustomerForumSubscriptions")]
-        public ActionResult CustomerForumSubscriptionsPOST(FormCollection formCollection)
+        public virtual ActionResult CustomerForumSubscriptionsPOST(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -1819,7 +1819,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostVote(string postId, bool isUp)
+        public virtual ActionResult PostVote(string postId, bool isUp)
         {
             if (!_forumSettings.AllowPostVoting)
                 return new NullJsonResult();

@@ -87,7 +87,7 @@ namespace Grand.Web.Controllers
         #region Methods
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult TopicDetails(string topicId)
+        public virtual ActionResult TopicDetails(string topicId)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_ID_KEY,
                 topicId,
@@ -132,7 +132,7 @@ namespace Grand.Web.Controllers
             return View(templateViewPath, cacheModel);
         }
 
-        public ActionResult TopicDetailsPopup(string systemName)
+        public virtual ActionResult TopicDetailsPopup(string systemName)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
                 systemName,
@@ -172,7 +172,7 @@ namespace Grand.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult TopicBlock(string systemName)
+        public virtual ActionResult TopicBlock(string systemName)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_SYSTEMNAME_KEY,
                             systemName,
@@ -200,7 +200,7 @@ namespace Grand.Web.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult Authenticate(string id, string password)
+        public virtual ActionResult Authenticate(string id, string password)
         {
             var authResult = false;
             var title = string.Empty;

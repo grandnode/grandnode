@@ -34,7 +34,7 @@ namespace Grand.Web.Controllers
             this._customerSettings = customerSettings;
         }
         
-        public ActionResult Sample(string productId)
+        public virtual ActionResult Sample(string productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -58,7 +58,7 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension }; 
         }
 
-        public ActionResult GetDownload(Guid orderItemId, bool agree = false)
+        public virtual ActionResult GetDownload(Guid orderItemId, bool agree = false)
         {
             var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
             if (orderItem == null)
@@ -117,7 +117,7 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };  
         }
 
-        public ActionResult GetLicense(Guid orderItemId)
+        public virtual ActionResult GetLicense(Guid orderItemId)
         {
             var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
             if (orderItem == null)
@@ -151,7 +151,7 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public ActionResult GetFileUpload(Guid downloadId)
+        public virtual ActionResult GetFileUpload(Guid downloadId)
         {
             var download = _downloadService.GetDownloadByGuid(downloadId);
             if (download == null)
@@ -170,7 +170,7 @@ namespace Grand.Web.Controllers
             return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
-        public ActionResult GetOrderNoteFile(string orderId, string orderNoteId)
+        public virtual ActionResult GetOrderNoteFile(string orderId, string orderNoteId)
         {
             var order = _orderService.GetOrderById(orderId);
 
