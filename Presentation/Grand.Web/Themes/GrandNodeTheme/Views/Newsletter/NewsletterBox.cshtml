@@ -52,7 +52,7 @@
                         $('#newsletter-subscribe-block').hide();
                         $('#newsletter-result-block').show();
                         if (data.Showcategories) {
-                            $('#action-body').html(data.ResultCategory);
+                            $('#action_modal_form').html(data.ResultCategory);
                             window.setTimeout(function () {
                                 $('.popup-action-form').magnificPopup('open');
                             }, 100);
