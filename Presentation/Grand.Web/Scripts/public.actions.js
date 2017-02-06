@@ -88,6 +88,18 @@ $(document).ready(function () {
         mainClass: 'my-mfp-zoom-in'
     });
 
+    $('.popup-action-banner').magnificPopup({
+        type: 'inline',
+        fixedContentPos: false,
+        fixedBgPos: true,
+        overflowY: 'auto',
+        closeBtnInside: true,
+        closeOnBgClick: false,
+        preloader: false,
+        midClick: true,
+        mainClass: 'my-mfp-zoom-in'
+    });
+
     $("#interactive-form").submit(function (event) {
         event.preventDefault();
         var $form = $(this),
