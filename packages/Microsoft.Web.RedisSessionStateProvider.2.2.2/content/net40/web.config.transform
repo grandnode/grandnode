@@ -23,6 +23,7 @@
             settingsMethodName = "<Settings method should be defined in settingsClass. It should be public, static, does not take any parameters and should have a return type of 'String', which is basically 'connectionString' value.>" [String]
             loggingClassName = "<Assembly qualified class name that contains logging method specified below>" [String]
             loggingMethodName = "<Logging method should be defined in loggingClass. It should be public, static, does not take any parameters and should have a return type of System.IO.TextWriter.>" [String]
+            redisSerializerType = "<Assembly qualified class name that implements Microsoft.Web.Redis.ISerializer>" [String]
           />
         -->
         <add name="MySessionStateStore" type="Microsoft.Web.Redis.RedisSessionStateProvider"
