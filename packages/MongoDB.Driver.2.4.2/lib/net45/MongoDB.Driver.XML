@@ -11682,6 +11682,15 @@
       <param name="fieldName">The field name.</param>
       <param name="fieldSerializer">The field serializer.</param>
     </member>
+    <member name="M:MongoDB.Driver.RenderedFieldDefinition`1.#ctor(System.String,MongoDB.Bson.Serialization.IBsonSerializer{`0},MongoDB.Bson.Serialization.IBsonSerializer{`0},MongoDB.Bson.Serialization.IBsonSerializer)">
+      <summary>
+            Initializes a new instance of the <see cref="T:MongoDB.Driver.RenderedFieldDefinition`1" /> class.
+            </summary>
+      <param name="fieldName">The field name.</param>
+      <param name="fieldSerializer">The field serializer.</param>
+      <param name="valueSerializer">The value serializer.</param>
+      <param name="underlyingSerializer">The underlying serializer.</param>
+    </member>
     <member name="P:MongoDB.Driver.RenderedFieldDefinition`1.FieldName">
       <summary>
             Gets the field name.
@@ -11690,6 +11699,16 @@
     <member name="P:MongoDB.Driver.RenderedFieldDefinition`1.FieldSerializer">
       <summary>
             Gets the field serializer.
+            </summary>
+    </member>
+    <member name="P:MongoDB.Driver.RenderedFieldDefinition`1.UnderlyingSerializer">
+      <summary>
+            Gets the underlying serializer.
+            </summary>
+    </member>
+    <member name="P:MongoDB.Driver.RenderedFieldDefinition`1.ValueSerializer">
+      <summary>
+            Gets the value serializer.
             </summary>
     </member>
     <member name="T:MongoDB.Driver.RenderedPipelineDefinition`1">
