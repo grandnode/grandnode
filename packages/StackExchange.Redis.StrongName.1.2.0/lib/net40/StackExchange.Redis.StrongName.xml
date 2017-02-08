@@ -534,21 +534,6 @@
             Deduces a link to the redis documentation about the specified command
             </summary>
         </member>
-        <member name="T:StackExchange.Redis.ConvertHelper">
-            <summary>
-            Helper for Array.ConvertAll() as it's missing on .Net Core.
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConvertHelper.ConvertAll``2(``0[],System.Func{``0,``1})">
-            <summary>
-            Converts array of one type to an array of another type.
-            </summary>
-            <typeparam name="TInput">Input type</typeparam>
-            <typeparam name="TOutput">Output type</typeparam>
-            <param name="source">source</param>
-            <param name="selector">selector</param>
-            <returns></returns>
-        </member>
         <member name="T:StackExchange.Redis.ProfiledCommandEnumerable">
             <summary>
             A collection of IProfiledCommands.
@@ -901,7 +886,7 @@
         </member>
         <member name="P:StackExchange.Redis.ConfigurationOptions.Proxy">
             <summary>
-            Indicates whether admin operations should be allowed
+            Type of proxy to use (if any); for example Proxy.Twemproxy
             </summary>
         </member>
         <member name="P:StackExchange.Redis.ConfigurationOptions.ResolveDns">
@@ -984,7 +969,13 @@
         </member>
         <member name="M:StackExchange.Redis.ConfigurationOptions.ToString">
             <summary>
+            Returns the effective configuration string for this configuration, including Redis credentials.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConfigurationOptions.ToString(System.Boolean)">
+            <summary>
             Returns the effective configuration string for this configuration
+            with the option to include or exclude the password from the string.
             </summary>
         </member>
         <member name="T:StackExchange.Redis.ConnectionCounters">
@@ -1181,11 +1172,6 @@
         <member name="E:StackExchange.Redis.ConnectionMultiplexer.ErrorMessage">
             <summary>
             A server replied with an error message;
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.ConnectionMultiplexer.ExportConfiguration(System.IO.Stream,StackExchange.Redis.ExportOptions)">
-            <summary>
-            Write the configuration of all servers to an output stream
             </summary>
         </member>
         <member name="P:StackExchange.Redis.ConnectionMultiplexer.LogSyncLock">
@@ -1627,6 +1613,211 @@
             Create an array of strings from an array of values
             </summary>
         </member>
+        <member name="T:StackExchange.Redis.GeoRadiusOptions">
+            <summary>
+            GeoRadius command options.
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoRadiusOptions.None">
+            <summary>
+            No Options
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoRadiusOptions.WithCoordinates">
+            <summary>
+            Redis will return the coordinates of any results.
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoRadiusOptions.WithDistance">
+            <summary>
+            Redis will return the distance from center for all results.
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoRadiusOptions.WithGeoHash">
+            <summary>
+            Redis will return the geo hash value as an integer. (This is the score in the sorted set)
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoRadiusOptions.Default">
+            <summary>
+            Populates the commonly used values from the entry (the integer hash is not returned as it is not commonly useful)
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.GeoRadiusResult">
+            <summary>
+            The result of a GeoRadius command.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoRadiusResult.ToString">
+            <summary>
+            Indicate the member being represented
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoRadiusResult.Member">
+            <summary>
+            The matched member.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoRadiusResult.Distance">
+            <summary>
+            The distance of the matched member from the center of the geo radius command.
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoRadiusResult.Hash">
+            <summary>
+            The hash value of the matched member as an integer. (The key in the sorted set)
+            </summary>
+            <remarks>Note that this is not the same as the hash returned from GeoHash</remarks>
+        </member>
+        <member name="P:StackExchange.Redis.GeoRadiusResult.Position">
+            <summary>
+            The coordinates of the matched member.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoRadiusResult.#ctor(StackExchange.Redis.RedisValue,System.Nullable{System.Double},System.Nullable{System.Int64},System.Nullable{StackExchange.Redis.GeoPosition})">
+            <summary>
+            Returns a new GeoRadiusResult
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.GeoPosition">
+            <summary>
+            Describes the longitude and latitude of a GeoEntry
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoPosition.Latitude">
+            <summary>
+            The Latitude of the GeoPosition
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoPosition.Longitude">
+            <summary>
+            The Logitude of the GeoPosition
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoPosition.#ctor(System.Double,System.Double)">
+            <summary>
+            Creates a new GeoPosition
+            </summary>
+            <param name="longitude"></param>
+            <param name="latitude"></param>
+        </member>
+        <member name="M:StackExchange.Redis.GeoPosition.ToString">
+            <summary>
+            See Object.ToString()
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoPosition.GetHashCode">
+            <summary>
+            See Object.GetHashCode()
+            Diagonals not an issue in the case of lat/long
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoPosition.Equals(System.Object)">
+            <summary>
+            Compares two values for equality
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoPosition.Equals(StackExchange.Redis.GeoPosition)">
+            <summary>
+            Compares two values for equality
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoPosition.op_Equality(StackExchange.Redis.GeoPosition,StackExchange.Redis.GeoPosition)">
+            <summary>
+            Compares two values for equality
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoPosition.op_Inequality(StackExchange.Redis.GeoPosition,StackExchange.Redis.GeoPosition)">
+            <summary>
+            Compares two values for non-equality
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.GeoEntry">
+            <summary>
+            Describes a GeoEntry element with the corresponding value
+            GeoEntries are stored in redis as SortedSetEntries
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoEntry.Member">
+            <summary>
+            The name of the geo entry
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoEntry.Position">
+            <summary>
+            Describes the longitude and latitude of a GeoEntry
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoEntry.#ctor(System.Double,System.Double,StackExchange.Redis.RedisValue)">
+            <summary>
+            Initializes a GeoEntry value
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoEntry.Longitude">
+            <summary>
+            The longitude of the geo entry
+            </summary>
+        </member>
+        <member name="P:StackExchange.Redis.GeoEntry.Latitude">
+            <summary>
+            The latitude of the geo entry
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoEntry.ToString">
+            <summary>
+            See Object.ToString()
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoEntry.GetHashCode">
+            <summary>
+            See Object.GetHashCode()
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoEntry.Equals(System.Object)">
+            <summary>
+            Compares two values for equality
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoEntry.Equals(StackExchange.Redis.GeoEntry)">
+            <summary>
+            Compares two values for equality
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoEntry.op_Equality(StackExchange.Redis.GeoEntry,StackExchange.Redis.GeoEntry)">
+            <summary>
+            Compares two values for equality
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.GeoEntry.op_Inequality(StackExchange.Redis.GeoEntry,StackExchange.Redis.GeoEntry)">
+            <summary>
+            Compares two values for non-equality
+            </summary>
+        </member>
+        <member name="T:StackExchange.Redis.GeoUnit">
+            <summary>
+            Units associated with Geo Commands
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoUnit.Meters">
+            <summary>
+            Meters
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoUnit.Kilometers">
+            <summary>
+            Kilometers
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoUnit.Miles">
+            <summary>
+            Miles
+            </summary>
+        </member>
+        <member name="F:StackExchange.Redis.GeoUnit.Feet">
+            <summary>
+            Feet
+            </summary>
+        </member>
         <member name="T:StackExchange.Redis.HashEntry">
             <summary>
             Describes a hash-field (a name/value pair)
@@ -1996,6 +2187,83 @@
             Returns the raw DEBUG OBJECT output for a key; this command is not fully documented and should be avoided unless you have good reason, and then avoided anyway.
             </summary>
             <remarks>http://redis.io/commands/debug-object</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoAdd(StackExchange.Redis.RedisKey,System.Double,System.Double,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Add the specified member to the set stored at key. Specified members that are already a member of this set are ignored. If key does not exist, a new set is created before adding the specified members.
+            </summary>
+            <returns>True if the specified member was not already present in the set, else False</returns>
+            <remarks>http://redis.io/commands/geoadd</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoAdd(StackExchange.Redis.RedisKey,StackExchange.Redis.GeoEntry,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Add the specified member to the set stored at key. Specified members that are already a member of this set are ignored. If key does not exist, a new set is created before adding the specified members.
+            </summary>
+            <returns>True if the specified member was not already present in the set, else False</returns>
+            <remarks>http://redis.io/commands/geoadd</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoAdd(StackExchange.Redis.RedisKey,StackExchange.Redis.GeoEntry[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Add the specified members to the set stored at key. Specified members that are already a member of this set are ignored. If key does not exist, a new set is created before adding the specified members.
+            </summary>
+            <returns>the number of elements that were added to the set, not including all the elements already present into the set.</returns>
+            <remarks>http://redis.io/commands/geoadd</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoRemove(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Removes the specified member from the geo sorted set stored at key. Non existing members are ignored.
+            </summary>
+            <returns>True if the member existed in the sorted set and was removed; False otherwise.</returns>
+            <remarks>http://redis.io/commands/zrem</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoDistance(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.RedisValue,StackExchange.Redis.GeoUnit,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the distance between two members in the geospatial index represented by the sorted set.
+            </summary>
+            <returns>The command returns the distance as a double (represented as a string) in the specified unit, or NULL if one or both the elements are missing.</returns>
+            <remarks>http://redis.io/commands/geodist</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoHash(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return valid Geohash strings representing the position of one or more elements in a sorted set value representing a geospatial index (where elements were added using GEOADD).
+            </summary>
+            <returns>The command returns an array where each element is the Geohash corresponding to each member name passed as argument to the command.</returns>
+            <remarks>http://redis.io/commands/geohash</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoHash(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return valid Geohash strings representing the position of one or more elements in a sorted set value representing a geospatial index (where elements were added using GEOADD).
+            </summary>
+            <returns>The command returns an array where each element is the Geohash corresponding to each member name passed as argument to the command.</returns>
+            <remarks>http://redis.io/commands/geohash</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoPosition(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the positions (longitude,latitude) of all the specified members of the geospatial index represented by the sorted set at key.
+            </summary>
+            <returns>The command returns an array where each element is a two elements array representing longitude and latitude (x,y) of each member name passed as argument to the command.Non existing elements are reported as NULL elements of the array.</returns>
+            <remarks>http://redis.io/commands/geopos</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoPosition(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the positions (longitude,latitude) of all the specified members of the geospatial index represented by the sorted set at key.
+            </summary>
+            <returns>The command returns an array where each element is a two elements array representing longitude and latitude (x,y) of each member name passed as argument to the command.Non existing elements are reported as NULL elements of the array.</returns>
+            <remarks>http://redis.io/commands/geopos</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoRadius(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Double,StackExchange.Redis.GeoUnit,System.Int32,System.Nullable{StackExchange.Redis.Order},StackExchange.Redis.GeoRadiusOptions,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+            </summary>
+            <returns>GeoRadiusResult[]</returns>
+            <remarks>http://redis.io/commands/georadius</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.GeoRadius(StackExchange.Redis.RedisKey,System.Double,System.Double,System.Double,StackExchange.Redis.GeoUnit,System.Int32,System.Nullable{StackExchange.Redis.Order},StackExchange.Redis.GeoRadiusOptions,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+            </summary>
+            <returns>GeoRadiusResult[]</returns>
+            <remarks>http://redis.io/commands/georadius</remarks>
         </member>
         <member name="M:StackExchange.Redis.IDatabase.HashDecrement(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Int64,StackExchange.Redis.CommandFlags)">
             <summary>
@@ -2590,7 +2858,21 @@
             <returns>True if the value was added, False if it already existed (the score is still updated)</returns>
             <remarks>http://redis.io/commands/zadd</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IDatabase.SortedSetAdd(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Double,StackExchange.Redis.When,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Adds the specified member with the specified score to the sorted set stored at key. If the specified member is already a member of the sorted set, the score is updated and the element reinserted at the right position to ensure the correct ordering.
+            </summary>
+            <returns>True if the value was added, False if it already existed (the score is still updated)</returns>
+            <remarks>http://redis.io/commands/zadd</remarks>
+        </member>
         <member name="M:StackExchange.Redis.IDatabase.SortedSetAdd(StackExchange.Redis.RedisKey,StackExchange.Redis.SortedSetEntry[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Adds all the specified members with the specified scores to the sorted set stored at key. If a specified member is already a member of the sorted set, the score is updated and the element reinserted at the right position to ensure the correct ordering.
+            </summary>
+            <returns>The number of elements added to the sorted sets, not including elements already existing for which the score was updated.</returns>
+            <remarks>http://redis.io/commands/zadd</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabase.SortedSetAdd(StackExchange.Redis.RedisKey,StackExchange.Redis.SortedSetEntry[],StackExchange.Redis.When,StackExchange.Redis.CommandFlags)">
             <summary>
             Adds all the specified members with the specified scores to the sorted set stored at key. If a specified member is already a member of the sorted set, the score is updated and the element reinserted at the right position to ensure the correct ordering.
             </summary>
@@ -2915,6 +3197,83 @@
             Returns the raw DEBUG OBJECT output for a key; this command is not fully documented and should be avoided unless you have good reason, and then avoided anyway.
             </summary>
             <remarks>http://redis.io/commands/debug-object</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoAddAsync(StackExchange.Redis.RedisKey,System.Double,System.Double,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Add the specified member to the set stored at key. Specified members that are already a member of this set are ignored. If key does not exist, a new set is created before adding the specified members.
+            </summary>
+            <returns>True if the specified member was not already present in the set, else False</returns>
+            <remarks>http://redis.io/commands/geoadd</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoAddAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.GeoEntry,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Add the specified member to the set stored at key. Specified members that are already a member of this set are ignored. If key does not exist, a new set is created before adding the specified members.
+            </summary>
+            <returns>True if the specified member was not already present in the set, else False</returns>
+            <remarks>http://redis.io/commands/geoadd</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoAddAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.GeoEntry[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Add the specified members to the set stored at key. Specified members that are already a member of this set are ignored. If key does not exist, a new set is created before adding the specified members.
+            </summary>
+            <returns>the number of elements that were added to the set, not including all the elements already present into the set.</returns>
+            <remarks>http://redis.io/commands/geoadd</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoRemoveAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Removes the specified member from the geo sorted set stored at key. Non existing members are ignored.
+            </summary>
+            <returns>True if the member existed in the sorted set and was removed; False otherwise.</returns>
+            <remarks>http://redis.io/commands/zrem</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoDistanceAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.RedisValue,StackExchange.Redis.GeoUnit,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the distance between two members in the geospatial index represented by the sorted set.
+            </summary>
+            <returns>The command returns the distance as a double (represented as a string) in the specified unit, or NULL if one or both the elements are missing.</returns>
+            <remarks>http://redis.io/commands/geodist</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoHashAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return valid Geohash strings representing the position of one or more elements in a sorted set value representing a geospatial index (where elements were added using GEOADD).
+            </summary>
+            <returns>The command returns an array where each element is the Geohash corresponding to each member name passed as argument to the command.</returns>
+            <remarks>http://redis.io/commands/geohash</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoHashAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return valid Geohash strings representing the position of one or more elements in a sorted set value representing a geospatial index (where elements were added using GEOADD).
+            </summary>
+            <returns>The command returns an array where each element is the Geohash corresponding to each member name passed as argument to the command.</returns>
+            <remarks>http://redis.io/commands/geohash</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoPositionAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the positions (longitude,latitude) of all the specified members of the geospatial index represented by the sorted set at key.
+            </summary>
+            <returns>The command returns an array where each element is a two elements array representing longitude and latitude (x,y) of each member name passed as argument to the command.Non existing elements are reported as NULL elements of the array.</returns>
+            <remarks>http://redis.io/commands/geopos</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoPositionAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the positions (longitude,latitude) of all the specified members of the geospatial index represented by the sorted set at key.
+            </summary>
+            <returns>The command returns an array where each element is a two elements array representing longitude and latitude (x,y) of each member name passed as argument to the command.Non existing elements are reported as NULL elements of the array.</returns>
+            <remarks>http://redis.io/commands/geopos</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoRadiusAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Double,StackExchange.Redis.GeoUnit,System.Int32,System.Nullable{StackExchange.Redis.Order},StackExchange.Redis.GeoRadiusOptions,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+            </summary>
+            <returns>GeoRadiusResult[]</returns>
+            <remarks>http://redis.io/commands/georadius</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.GeoRadiusAsync(StackExchange.Redis.RedisKey,System.Double,System.Double,System.Double,StackExchange.Redis.GeoUnit,System.Int32,System.Nullable{StackExchange.Redis.Order},StackExchange.Redis.GeoRadiusOptions,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the members of a sorted set populated with geospatial information using GEOADD, which are within the borders of the area specified with the center location and the maximum distance from the center (the radius).
+            </summary>
+            <returns>GeoRadiusResult[]</returns>
+            <remarks>http://redis.io/commands/georadius</remarks>
         </member>
         <member name="M:StackExchange.Redis.IDatabaseAsync.HashDecrementAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Int64,StackExchange.Redis.CommandFlags)">
             <summary>
@@ -3493,7 +3852,21 @@
             <returns>True if the value was added, False if it already existed (the score is still updated)</returns>
             <remarks>http://redis.io/commands/zadd</remarks>
         </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.SortedSetAddAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.RedisValue,System.Double,StackExchange.Redis.When,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Adds the specified member with the specified score to the sorted set stored at key. If the specified member is already a member of the sorted set, the score is updated and the element reinserted at the right position to ensure the correct ordering.
+            </summary>
+            <returns>True if the value was added, False if it already existed (the score is still updated)</returns>
+            <remarks>http://redis.io/commands/zadd</remarks>
+        </member>
         <member name="M:StackExchange.Redis.IDatabaseAsync.SortedSetAddAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.SortedSetEntry[],StackExchange.Redis.CommandFlags)">
+            <summary>
+            Adds all the specified members with the specified scores to the sorted set stored at key. If a specified member is already a member of the sorted set, the score is updated and the element reinserted at the right position to ensure the correct ordering.
+            </summary>
+            <returns>The number of elements added to the sorted sets, not including elements already existing for which the score was updated.</returns>
+            <remarks>http://redis.io/commands/zadd</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IDatabaseAsync.SortedSetAddAsync(StackExchange.Redis.RedisKey,StackExchange.Redis.SortedSetEntry[],StackExchange.Redis.When,StackExchange.Redis.CommandFlags)">
             <summary>
             Adds all the specified members with the specified scores to the sorted set stored at key. If a specified member is already a member of the sorted set, the score is updated and the element reinserted at the right position to ensure the correct ordering.
             </summary>
@@ -3833,19 +4206,6 @@
             The underlying origin of the error
             </summary>
         </member>
-        <member name="T:StackExchange.Redis.InternalRegexCompiledOption">
-            <summary>
-            Credits to Sam Harwell https://github.com/dotnet/corefx/issues/340#issuecomment-120749951
-            </summary>
-        </member>
-        <member name="P:StackExchange.Redis.InternalRegexCompiledOption.Default">
-            <summary>
-            Gets the default <see cref="T:System.Text.RegularExpressions.RegexOptions"/> to use.
-            <see cref="F:System.Text.RegularExpressions.RegexOptions.Compiled"/> option isn't available yet for dnxcore50.
-            This returns <see cref="F:System.Text.RegularExpressions.RegexOptions.Compiled"/> if it is supported; 
-            <see cref="F:System.Text.RegularExpressions.RegexOptions.None"/> otherwise.
-            </summary>
-        </member>
         <member name="T:StackExchange.Redis.RetransmissionReasonType">
             <summary>
             If an IProfiledCommand is a retransmission of a previous command, this enum
@@ -3934,7 +4294,7 @@
         </member>
         <member name="P:StackExchange.Redis.IProfiledCommand.ElapsedTime">
             <summary>
-            How long it took this redis command to be processed, from creation to deserializing the final resposne.
+            How long it took this redis command to be processed, from creation to deserializing the final response.
             
             Note that this TimeSpan *does not* include time spent awaiting a Task in consumer code.
             </summary>
@@ -4208,6 +4568,18 @@
             Return the number of keys in the database.
             </summary>
             <remarks>http://redis.io/commands/dbsize</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.Echo(StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the same message passed in
+            </summary>
+            <remarks>http://redis.io/commands/echo</remarks>
+        </member>
+        <member name="M:StackExchange.Redis.IServer.EchoAsync(StackExchange.Redis.RedisValue,StackExchange.Redis.CommandFlags)">
+            <summary>
+            Return the same message passed in
+            </summary>
+            <remarks>http://redis.io/commands/echo</remarks>
         </member>
         <member name="M:StackExchange.Redis.IServer.FlushAllDatabases(StackExchange.Redis.CommandFlags)">
             <summary>
@@ -4664,43 +5036,6 @@
             <summary>
             Execute the batch operation, sending all queued commands to the server.
             </summary>
-        </member>
-        <member name="T:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions">
-            <summary>
-                Provides the <see cref="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)"/> extension method to <see cref="T:StackExchange.Redis.IDatabase"/>.
-            </summary>
-        </member>
-        <member name="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)">
-            <summary>
-                Creates a new <see cref="T:StackExchange.Redis.IDatabase"/> instance that provides an isolated key space
-                of the specified underyling database instance.
-            </summary>
-            <param name="database">
-                The underlying database instance that the returned instance shall use.
-            </param>
-            <param name="keyPrefix">
-                The prefix that defines a key space isolation for the returned database instance.
-            </param>
-            <returns>
-                A new <see cref="T:StackExchange.Redis.IDatabase"/> instance that invokes the specified underlying
-                <paramref name="database"/> but prepends the specified <paramref name="keyPrefix"/>
-                to all key paramters and thus forms a logical key space isolation.
-            </returns>
-            <remarks>
-            <para>
-                The following methods are not supported in a key space isolated database and
-                will throw an <see cref="T:System.NotSupportedException"/> when invoked:
-            </para>    
-            <list type="bullet">
-                <item><see cref="M:StackExchange.Redis.IDatabaseAsync.KeyRandomAsync(StackExchange.Redis.CommandFlags)"/></item>
-                <item><see cref="M:StackExchange.Redis.IDatabase.KeyRandom(StackExchange.Redis.CommandFlags)"/></item>
-            </list>
-            <para>
-                Please notice that keys passed to a script are prefixed (as normal) but care must
-                be taken when a script returns the name of a key as that will (currently) not be
-                "unprefixed".
-            </para>
-            </remarks>
         </member>
         <member name="T:StackExchange.Redis.LuaScript">
             <summary>
@@ -5254,6 +5589,11 @@
             Is PFCOUNT supported on slaves?
             </summary>
         </member>
+        <member name="P:StackExchange.Redis.RedisFeatures.Geo">
+            <summary>
+            Are the GEO commands available?
+            </summary>
+        </member>
         <member name="P:StackExchange.Redis.RedisFeatures.Version">
             <summary>
             The Redis version of the server
@@ -5384,6 +5724,12 @@
             <summary>
             Represents a general-purpose result from redis, that may be cast into various anticipated types
             </summary>
+        </member>
+        <member name="M:StackExchange.Redis.RedisResult.Create(StackExchange.Redis.RedisValue)">
+            <summary>
+            Create a new RedisResult.
+            </summary>
+            <returns></returns>
         </member>
         <member name="P:StackExchange.Redis.RedisResult.IsNull">
             <summary>
@@ -5714,25 +6060,25 @@
             </summary>
         </member>
         <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Int64@)">
-            <summary>
-            Convert to a long if possible, returning true.
+             <summary>
+             Convert to a long if possible, returning true.
             
-            Returns false otherwise.
-            </summary>
+             Returns false otherwise.
+             </summary>
         </member>
         <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Int32@)">
-            <summary>
-            Convert to a int if possible, returning true.
+             <summary>
+             Convert to a int if possible, returning true.
             
-            Returns false otherwise.
-            </summary>
+             Returns false otherwise.
+             </summary>
         </member>
         <member name="M:StackExchange.Redis.RedisValue.TryParse(System.Double@)">
-            <summary>
-            Convert to a double if possible, returning true.
+             <summary>
+             Convert to a double if possible, returning true.
             
-            Returns false otherwise.
-            </summary>
+             Returns false otherwise.
+             </summary>
         </member>
         <member name="T:StackExchange.Redis.ReplicationChangeOptions">
             <summary>
@@ -6071,6 +6417,11 @@
             thanks to Eli Arbel for spotting this (even though it is pure evil; it is *my kind of evil*)
             </summary>
         </member>
+        <member name="F:StackExchange.Redis.TaskSource.IsSyncSafe">
+            <summary>
+            Indicates whether the specified task will not hijack threads when results are set
+            </summary>
+        </member>
         <member name="M:StackExchange.Redis.TaskSource.Create``1(System.Object)">
             <summary>
             Create a new TaskCompletion source
@@ -6100,6 +6451,58 @@
             <summary>
             The operation should only occur when there is not an existing value 
             </summary>
+        </member>
+        <member name="T:StackExchange.Redis.ConvertHelper">
+            <summary>
+            Helper for Array.ConvertAll() as it's missing on .Net Core.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.ConvertHelper.ConvertAll``2(``0[],System.Func{``0,``1})">
+            <summary>
+            Converts array of one type to an array of another type.
+            </summary>
+            <typeparam name="TInput">Input type</typeparam>
+            <typeparam name="TOutput">Output type</typeparam>
+            <param name="source">source</param>
+            <param name="selector">selector</param>
+            <returns></returns>
+        </member>
+        <member name="T:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions">
+            <summary>
+                Provides the <see cref="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)"/> extension method to <see cref="T:StackExchange.Redis.IDatabase"/>.
+            </summary>
+        </member>
+        <member name="M:StackExchange.Redis.KeyspaceIsolation.DatabaseExtensions.WithKeyPrefix(StackExchange.Redis.IDatabase,StackExchange.Redis.RedisKey)">
+            <summary>
+                Creates a new <see cref="T:StackExchange.Redis.IDatabase"/> instance that provides an isolated key space
+                of the specified underyling database instance.
+            </summary>
+            <param name="database">
+                The underlying database instance that the returned instance shall use.
+            </param>
+            <param name="keyPrefix">
+                The prefix that defines a key space isolation for the returned database instance.
+            </param>
+            <returns>
+                A new <see cref="T:StackExchange.Redis.IDatabase"/> instance that invokes the specified underlying
+                <paramref name="database"/> but prepends the specified <paramref name="keyPrefix"/>
+                to all key paramters and thus forms a logical key space isolation.
+            </returns>
+            <remarks>
+            <para>
+                The following methods are not supported in a key space isolated database and
+                will throw an <see cref="T:System.NotSupportedException"/> when invoked:
+            </para>    
+            <list type="bullet">
+                <item><see cref="M:StackExchange.Redis.IDatabaseAsync.KeyRandomAsync(StackExchange.Redis.CommandFlags)"/></item>
+                <item><see cref="M:StackExchange.Redis.IDatabase.KeyRandom(StackExchange.Redis.CommandFlags)"/></item>
+            </list>
+            <para>
+                Please notice that keys passed to a script are prefixed (as normal) but care must
+                be taken when a script returns the name of a key as that will (currently) not be
+                "unprefixed".
+            </para>
+            </remarks>
         </member>
     </members>
 </doc>
