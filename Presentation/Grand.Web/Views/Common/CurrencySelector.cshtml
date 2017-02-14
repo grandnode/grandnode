@@ -9,7 +9,7 @@
     var currencies = Model.AvailableCurrencies.Select(x => new 
     {
 		Name = x.Name,
-        Text = x.CurrencySymbol,
+        Text = x.CurrencyCode,
         Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
         Selected = x.Id.Equals(Model.CurrentCurrencyId)
     });

@@ -327,6 +327,7 @@ namespace Grand.Web.Controllers
                         {
                             Id = x.Id,
                             Name = x.GetLocalized(y => y.Name),
+                            CurrencyCode = x.CurrencyCode,
                             CurrencySymbol = currencySymbol
                         };
                         return currencyModel;

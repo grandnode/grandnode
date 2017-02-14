@@ -4,8 +4,8 @@
     var storeLocation = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Core.IWebHelper>().GetStoreLocation();
 }
 <div class="newsletter-category">
-    <div class="newsletter-category-title">
-        <h3>@T("NewsletterCategory.Title")</h3>
+    <div class="newsletter-category-title pb-3">
+        <h5>@T("NewsletterCategory.Title")</h5>
     </div>
     <form id="newsletter-category-method-form" action="" >
         @Html.HiddenFor(x=>x.NewsletterEmailId)

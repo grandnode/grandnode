@@ -755,4 +755,10 @@
   <LocaleResource Name="Admin.Customers.Actiontype.helptext.interactiveform">
     <Value>Interactive form – Store automatically view form which is assigned to a particular action.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart">
+    <Value>Shopping Cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="products.description">
+    <Value>Description</Value>
+  </LocaleResource>
 </Language>

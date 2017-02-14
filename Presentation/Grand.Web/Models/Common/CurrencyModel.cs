@@ -7,5 +7,6 @@ namespace Grand.Web.Models.Common
         public string Name { get; set; }
 
         public string CurrencySymbol { get; set; }
+        public string CurrencyCode { get; set; }
     }
 }

@@ -16120,6 +16120,9 @@
   <LocaleResource Name="Products.DeliveryDate">
     <Value>Delivery date</Value>
   </LocaleResource>
+  <LocaleResource Name="products.description">
+    <Value>Description</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Details">
     <Value>Details</Value>
   </LocaleResource>
@@ -16574,7 +16577,7 @@
     <Value>Vendor</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
-    <Value>Cart</Value>
+    <Value>Shopping Cart</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.AddToCart">
     <Value>Add to cart</Value>
