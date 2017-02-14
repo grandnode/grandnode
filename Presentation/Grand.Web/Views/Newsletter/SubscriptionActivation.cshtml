@@ -4,12 +4,8 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 }
 <div class="page newsletter-page">
-    <div class="page-title">
-        <h1>@T("Newsletter.Title")</h1>
-    </div>
-    <div class="page-body">
-        <strong>
-            @Model.Result
-        </strong>
-    </div>
+    <h1 class="h2 text-xs-center generalTitle">@T("Newsletter.Title")</h1>
+    <strong>
+        @Model.Result
+    </strong>
 </div>

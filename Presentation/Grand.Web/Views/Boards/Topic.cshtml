@@ -10,70 +10,32 @@
     @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
     @Html.Partial("_ForumHeader")
     @Html.AntiForgeryToken()
-    <div class="topic-name">
-        <h1>@Model.Subject</h1>
-    </div>
+
+    <h2 class="generalTitle text--center">@Model.Subject</h2>
     <div class="topic-actions upper">
-        <div class="actions">
+        <div class="btn-group btn-group-sm" role="group">
             @if (Model.IsCustomerAllowedToEditTopic)
             {
-                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-button" })
+                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "btn btn-secondary edit-topic-button" })
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
-                <a href="#" class="delete-topic-button" onclick="deletetopic('@(Model.Id)')">@T("Forum.DeleteTopic").Text</a>
-                <script type="text/javascript">
-                    function deletetopic(topicId) {
-                        if (confirm('@T("Common.AreYouSure")')) {
-                            var postData = {
-                                id: topicId
-                            };
-                            addAntiForgeryToken(postData);
-                            $.ajax({
-                                cache: false,
-                                type: 'POST',
-                                url: '@Url.Action("TopicDelete", "Boards")',
-                                data: postData,
-                                dataType: 'json',
-                                success: function(data) {
-                                    location.href = data.redirect;
-                                },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to delete');
-                                }
-                            });
-                        }
-                        return false;
-                    }
-                </script>
+                <a href="#" class="btn btn-secondary delete-topic-button" onclick="deletetopic('@(Model.Id)')">
+                    <span class="hidden-sm-down">@T("Forum.DeleteTopic").Text</span>
+                    <i class="fa fa-trash hidden-md-up" aria-hidden="true"></i>
+                </a>
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
             {
-                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-button" })
+                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "btn btn-secondary move-topic-button" })
             }
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
-                <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
-                <script type="text/javascript">
-                    $(function () {
-                        $('#watch-topic-top').click(function () {
-                            $.ajax({
-                                cache: false,
-                                type: 'POST',
-                                url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
-                                dataType: 'json',
-                                success: function (data) {
-                                    $('#watch-topic-top').text(data.Text);
-                                    $('#watch-topic-bottom').text(data.Text);
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to watch');
-                                }
-                            });
-                        });
-                    });
-                </script>
+                <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-top">
+                    <span class="hidden-sm-down">@Model.WatchTopicText</span>
+                    <i class="fa fa-ban hidden-md-up" aria-hidden="true"></i>
+                </a>
             }
         </div>
         @{
@@ -90,7 +52,7 @@
         }
         @if (!MvcHtmlString.IsNullOrEmpty(pager))
         {
-            <div class="pager upper">
+            <div class="pager upper my-3">
                 @pager
             </div>
         }
@@ -103,35 +65,12 @@
         }
     </div>
 
-    <div class="topic-actions lower">
+    <div class="topic-actions">
         <div class="actions">
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "btn btn-secondary reply-topic-button mt-1 mb-1" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
-                <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
-                <script type="text/javascript">
-                $(function () {
-                    $('#watch-topic-bottom').click(function () {
-                        var postData = {};
-                        addAntiForgeryToken(postData);
-
-                        $.ajax({
-                            cache: false,
-                            type: 'POST',
-                            url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
-                            data: postData,
-                            dataType: 'json',
-                            success: function (data) {
-                                $('#watch-topic-top').text(data.Text);
-                                $('#watch-topic-bottom').text(data.Text);
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                alert('Failed to watch');
-                            }
-                        });
-                    });
-                });
-                </script>
+                <a class="btn btn-secondary watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
             }
         </div>
         @if (!MvcHtmlString.IsNullOrEmpty(pager))
@@ -166,4 +105,64 @@
         }
         return false;
     }
+        function deletetopic(topicId) {
+            if (confirm('@T("Common.AreYouSure")')) {
+                var postData = {
+                    id: topicId
+                };
+                addAntiForgeryToken(postData);
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.Action("TopicDelete", "Boards")',
+                    data: postData,
+                    dataType: 'json',
+                    success: function(data) {
+                        location.href = data.redirect;
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Failed to delete');
+                    }
+                });
+            }
+            return false;
+        }
+        $(function () {
+            $('#watch-topic-bottom').click(function () {
+                var postData = {};
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#watch-topic-top').text(data.Text);
+                        $('#watch-topic-bottom').text(data.Text);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to watch');
+                    }
+                });
+            });
+        });
+        $(function () {
+            $('#watch-topic-top').click(function () {
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#watch-topic-top').text(data.Text);
+                        $('#watch-topic-bottom').text(data.Text);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to watch');
+                    }
+                });
+            });
+        });
 </script>

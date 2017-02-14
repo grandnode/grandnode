@@ -8,12 +8,12 @@
     if (Model.ShowTopic)
     {
         <div class="origin">
-            <label>@T("Forum.In"):</label>
+            <span>@T("Forum.In"):</span>
             @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })
         </div>
     }
     <div class="author">
-        <label>@T("Forum.By"):</label>
+        <span>@T("Forum.By"):</span>
         @if (Model.AllowViewingProfiles)
         {
             @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })

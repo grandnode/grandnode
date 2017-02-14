@@ -4,67 +4,66 @@
 
 @Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
 <div class="page forum-edit-page">
-    <div class="page-title">
         @if (Model.IsEdit)
         {
-            <h1>@T("Forum.EditTopic")</h1>
+            <h2 class="generalTitle">@T("Forum.EditTopic")</h2>
         }
         else
         {
-            <h1>@T("Forum.NewTopic")</h1>
+            <h2 class="generalTitle">@T("Forum.NewTopic")</h2>
         }
-    </div>
-    <div class="page-body">
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
             var validationSummary = Html.ValidationSummary(true);
             if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
             {
-                <div class="message-error">@validationSummary</div>
+                <div class="message-error text-danger">@validationSummary</div>
             }
             @Html.HiddenFor(model => model.Id)
             @Html.HiddenFor(model => model.ForumId)
-            <div class="fieldset">
                 <div class="form-fields">
-                    <div class="inputs">
-                        <label>@T("Forum.ForumName"):</label>
+                    <fieldset class="form-group">
+                        <label class="col-form-label">@T("Forum.ForumName"):</label>
                         <strong>@Model.ForumName</strong>
-                    </div>
-                    <div class="inputs">
-                        <label>@T("Forum.TopicTitle"):</label>
-                        @Html.TextBoxFor(model => model.Subject, new { @class = "forum-topic-title-text" })
-                        @Html.ValidationMessageFor(model => model.Subject)
-                    </div>
-                    <div class="inputs">
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label class="col-form-label">@T("Forum.TopicTitle"):</label>
+                            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control forum-topic-title-text" })
+                            @Html.ValidationMessageFor(model => model.Subject)
+                    </fieldset>
+                    <fieldset class="form-group">
                         @if (Model.ForumEditor == EditorType.BBCodeEditor)
                         {
-                            @Html.BBCodeEditor("Text")
+                            <label class="col-12 col-form-label text-sm-right">
+                                @Html.BBCodeEditor("Text")
+                            </label>
                         }
-                        @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
-                        @Html.ValidationMessageFor(model => model.Text)
-                    </div>
+                            @Html.TextAreaFor(model => model.Text, new { @class = "form-control forum-post-text", TextMode = "MultiLine" })
+                            @Html.ValidationMessageFor(model => model.Text)
+                    </fieldset>
                     @if (Model.IsCustomerAllowedToSetTopicPriority)
                     {
-                        <div class="inputs">
-                            <label>@T("Forum.Priority"):</label>
-                            @Html.DropDownList("TopicTypeId", new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))
-                        </div>
+                        <fieldset class="form-group">
+                            <label class="col-form-label">@T("Forum.Priority"):</label>
+                                @Html.DropDownList("TopicTypeId", new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId), new { @class = "custom-select" })
+                        </fieldset>
                     }
                     @if (Model.IsCustomerAllowedToSubscribe)
                     {
-                        <div class="inputs reversed">
-                            @Html.EditorFor(model => model.Subscribed)
-                            <label>@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
-                        </div>
+                        <fieldset class="form-group">
+                            <label class="custom-control custom-checkbox text-sm-center">
+                                <input class="custom-control-input" id="Subscribed" type="checkbox" name="Subscribed" value="true" @(Model.Subscribed ? Html.Raw("checked") : Html.Raw("")) />
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</span>
+                            </label>
+                        </fieldset>
                     }
+                    <fieldset class="form-group">
+                        <input type="submit" value="@T("Forum.Submit")" class="btn btn-success submit-topic-button" />
+                        <input type="button" class="btn btn-outline-danger cancel-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')" />
+                    </fieldset>
                 </div>
-            </div>
-            <div class="buttons">
-                <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-topic-button" />
-                <input type="button" class="button-2 cancel-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')" />
-            </div>
         }
-    </div>
 </div>
 

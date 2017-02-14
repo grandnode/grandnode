@@ -12,21 +12,20 @@
     @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Orders })
 }
 <div class="page account-page order-list-page">
-    <div class="page-title">
-        <h1>@T("Account.MyAccount") - @T("Account.CustomerOrders")</h1>
-    </div>
-    <div class="page-body">
+        <h2 class="generalTitle">@T("Account.CustomerOrders")</h2>
         @if (Model.RecurringOrders.Count > 0)
         {
-            <div class="section recurring-payments">
-                <div class="title">
-                    <strong>@T("Account.CustomerOrders.RecurringOrders")</strong>
-                </div>
+            <div class="recurring-payments">
+                <h5>
+                    <strong>
+                        @T("Account.CustomerOrders.RecurringOrders")
+                    </strong>
+                </h5>
                 @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
-                    <div class="table-wrapper">
-                        <table class="data-table">
+                    <div class="table-responsive">
+                        <table class="table teble-hover data-table">
                             <colgroup>
                                 <col />
                                 <col />
@@ -86,7 +85,7 @@
                                         <td class="cancel">
                                             @if (item.CanCancel)
                                             {
-                                                <input type="submit" name="cancelRecurringPayment@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.Cancel")" class="button-2 cancel-recurring-order-button" />
+                                                <input type="submit" name="cancelRecurringPayment@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.Cancel")" class="btn btn-outline-success cancel-recurring-order-button" />
                                             }
                                         </td>
                                     </tr>
@@ -111,27 +110,43 @@
 
         @if (Model.Orders.Count > 0)
         {
-            <div class="order-list">
-                @foreach (var order in Model.Orders)
-                {
-                    <div class="section order-item">
-                        <div class="title">
-                            <strong>@T("Account.CustomerOrders.OrderNumber"): @order.OrderNumber</strong>
-                        </div>
-                        <ul class="info">
-                            <li>@T("Account.CustomerOrders.OrderStatus"): <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
-                            <li>@T("Account.CustomerOrders.OrderDate"): <span class="order-date">@order.CreatedOn.ToString()</span></li>
-                            <li>@T("Account.CustomerOrders.OrderTotal"): <span class="order-total">@order.OrderTotal</span></li>
-                        </ul>
-                        <div class="buttons">
-                            @if (order.IsReturnRequestAllowed)
-                            {
-                                <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
-                            }
-                            <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
-                        </div>
+            <div class="account-order">
+                    <div class="row flex-grid">
+                        @foreach (var order in Model.Orders)
+                        {
+                            <div class="col-lg-4 col-md-6 col-12">
+                                <div class="card">
+                                    <h6 class="card-header">
+                                        <strong>
+                                            <span>
+                                                @T("Account.CustomerOrders.OrderNumber"): 
+                                            </span>
+                                            <span>
+                                                @order.OrderNumber
+                                            </span>
+                                        </strong>
+                                    </h6>
+                                    <div class="card-block small">
+                                        <ul class="info">
+                                            <li><span>@T("Account.CustomerOrders.OrderStatus"):</span> <span class="order-status @order.OrderStatusEnum.ToString().ToLowerInvariant()">@order.OrderStatus</span></li>
+                                            <li><span class="order-date"><span>@T("Account.CustomerOrders.OrderDate"):</span> <span>@order.CreatedOn.ToString()</span></span></li>
+                                            <li><span>@T("Account.CustomerOrders.OrderTotal"):</span> <span class="order-total">@order.OrderTotal</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="buttons">
+                                            <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="btn btn-sm btn-outline-success order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = order.Id })')" />
+
+                                            @if (order.IsReturnRequestAllowed)
+                                            {
+                                                <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="btn btn-sm btn-success return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = order.Id })')" />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
-                }
             </div>
         }
         else
@@ -141,4 +156,3 @@
             </div>
         }
     </div>
-</div>

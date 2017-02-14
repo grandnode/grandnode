@@ -1,32 +1,31 @@
 ﻿@model ForumGroupModel
 @using Grand.Web.Models.Boards;
 <div class="forums-table-section forum-group">
-    <div class="forums-table-section-title">
-        @Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })
-    </div>
+        <h5>@Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })</h5>
     <div class="forums-table-section-body">
-        <div class="table-wrapper">
-            <table class="forum-table">
+            <table class="table table-hover">
                 <colgroup>
-                    <col width="1" />
                     <col />
-                    <col width="1" />
-                    <col width="1" />
-                    <col width="1" />
                 </colgroup>
-                <thead>
+                <thead class="table-inverse">
                     <tr>
-                        <th class="forum-details" colspan="2">
-                            @T("Forum.Forum")
-                        </th>
-                        <th class="topics">
-                            @T("Forum.Topics")
-                        </th>
-                        <th class="posts">
-                            @T("Forum.Posts")
-                        </th>
-                        <th class="latest-post">
-                            @T("Forum.LatestPost")
+                        <th>
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="forum-details offset-md-1 col-md-5">
+                                        @T("Forum.Forum")
+                                    </div>
+                                    <div class="topics col-md-1 hidden-sm-down">
+                                        @T("Forum.Topics")
+                                    </div>
+                                    <div class="posts col-md-1 hidden-sm-down">
+                                        @T("Forum.Posts")
+                                    </div>
+                                    <div class="latest-post col-md-3 hidden-sm-down">
+                                        @T("Forum.LatestPost")
+                                    </div>
+                                </div>
+                            </div>
                         </th>
                     </tr>
                 </thead>
@@ -34,21 +33,27 @@
                     @foreach (var forum in Model.Forums)
                     {
                         <tr>
-                            <td class="image">
-                                <div class="post"></div>
-                            </td>
-                            <td class="forum-details">
-                                <div class="forum-title">
-                                    @Html.RouteLink(forum.Name, "ForumSlug", new { id = forum.Id, slug = forum.SeName })
+                            <td>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="post col-12 col-md-1">
+                                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="forum-details col-12 col-md-6">
+                                            <div class="forum-title">
+                                                @Html.RouteLink(forum.Name, "ForumSlug", new { id = forum.Id, slug = forum.SeName })
+                                            </div>
+                                            <div class="forum-description">
+                                                @forum.Description
+                                            </div>
+                                        </div>
+                                        <div class="topics col-12 col-md-1 hidden-sm-down">@forum.NumTopics</div>
+                                        <div class="posts col-12 col-md-1 hidden-sm-down">@forum.NumPosts</div>
+                                        <div class="latest-post col-12 col-md-3">
+                                            @Html.Action("LastPost", new { forumPostId = forum.LastPostId, showTopic = true })
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="forum-description">
-                                    @forum.Description
-                                </div>
-                            </td>
-                            <td class="topics">@forum.NumTopics</td>
-                            <td class="posts">@forum.NumPosts</td>
-                            <td class="latest-post">
-                                @Html.Action("LastPost", new { forumPostId = forum.LastPostId, showTopic = true })
                             </td>
                         </tr>            
                     }
@@ -56,4 +61,3 @@
             </table>
         </div>
     </div>
-</div>

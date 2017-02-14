@@ -1,0 +1,16 @@
+﻿@media all and (max-width:991px){
+    .container {
+        width: 720px;
+        max-width: 100%;
+    }
+ .newsletter-subscribe-text{
+     max-width: 150px;
+    }
+ .dateHelper{
+    display: block;
+    margin-bottom: 10px;
+    }
+}
+.dateHelper{
+    max-width: 260px;
+}

@@ -56,17 +56,15 @@
 }
 @if (Model.Categories.Count > 0)
 {
-    <div class="block block-category-navigation">
-        <div class="title">
-            <strong>@T("Categories")</strong>
-        </div>
-        <div class="listbox">
-            <ul class="list">
-                @foreach (var category in Model.Categories)
+    <div id="block-category-navigation" class="col-sm--12 block block-category-navigation hidden-md-down">
+            <h2 class="h5 generalTitle"><strong>@T("Categories")</strong></h2>
+            <div class="viewBox listbox">
+                <ul class="list">
+                    @foreach (var category in Model.Categories)
                 {
-                    @RenderCategoryLine(category)
-                }
-            </ul>
-        </div>
+                        @RenderCategoryLine(category)
+                    }
+                </ul>
+            </div>
     </div>
 }

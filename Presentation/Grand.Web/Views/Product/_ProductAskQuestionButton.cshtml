@@ -2,7 +2,8 @@
 @using Grand.Web.Models.Catalog;
 @if (Model.AskQuestionEnabled)
 {
-    <div class="ask-a-question">
-        <input type="button" value="@T("Products.AskQuestion")" class="button-2 ask-a-question-button" onclick="setLocation('@Url.RouteUrl("AskQuestion", new { productId = Model.Id })')" />
-    </div>
+        <button type="button" value="@T("Products.AskQuestion")" class="btn btn-secondary ask-a-question-button" onclick="setLocation('@Url.RouteUrl("AskQuestion", new { productId = Model.Id })')">
+            <i class="fa fa-question"></i>
+            <span class="sr-only">@T("Products.AskQuestion")</span>
+        </button>
 }

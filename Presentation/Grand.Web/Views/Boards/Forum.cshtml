@@ -12,22 +12,26 @@
     @Html.Partial("_ForumHeader")
     <div class="forum-info">
         <div class="forum-name">
-            @if (Model.ForumFeedsEnabled)
-            {
-                <a href="@Url.RouteUrl("ForumRSS", new { id = Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
-            }
-            <h1>@Model.Name</h1>
+            <h1 class="h2 generalTitle text-sm-center">
+
+                @if (Model.ForumFeedsEnabled)
+                {
+                    <a href="@Url.RouteUrl("ForumRSS", new { id = Model.Id })" class="btn btn-outline-success btn-sm link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
+                }
+
+                @Model.Name
+            </h1>
         </div>
         <div class="forum-description">
             <p>@Model.Description</p>
         </div>
     </div>
     <div class="forum-actions">
-        <div class="actions">
-            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new { id = Model.Id }, new { @class = "new-topic" })
+        <div class="actions mt-1 mb-1">
+            @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new { id = Model.Id }, new { @class = "new-topic btn btn-secondary" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
-                <a class="watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
+                <a class="btn btn-secondary watch-forum" href="#" id="watch-forum">@Model.WatchForumText</a>
                 <script type="text/javascript">
                     $(function () {
                         $('#watch-forum').click(function () {
@@ -62,7 +66,7 @@
         }
         @if (!MvcHtmlString.IsNullOrEmpty(pager))
         {
-            <div class="pager upper">
+            <div class="pager upper my-3">
                 @pager
             </div>
         }
@@ -71,8 +75,7 @@
     <div class="forums-table-section topic-group">
         @if (Model.ForumTopics.Count > 0)
         {
-            <div class="table-wrapper">
-                <table class="forum-table">
+                <table class="table table-hover forum-table">
                     <colgroup>
                         <col width="1" />
                         <col />
@@ -80,25 +83,39 @@
                         <col width="1" />
                         <col width="1" />
                     </colgroup>
-                    <thead>
+                    <thead class="table-inverse">
                         <tr>
-                            <th class="topic-details" colspan="2">
-                                @T("Forum.TopicTitle")
-                            </th>
-                            <th class="replies">
-                                @T("Forum.Replies")
-                            </th>
-                            <th class="views">
-                                @T("Forum.Views")
-                            </th>
-                            @if (Model.AllowPostVoting)
-                            {
-                                <th class="votes">
-                                    @T("Forum.Votes")
-                                </th>
-                            }
-                            <th class="latest-post">
-                                @T("Forum.LatestPost")
+                            <th>
+                                <div class="col-sm-12">
+                                    <div class="d-flex justify-content-md-between">
+                                        <div class="topic-details col-12 col-md-5 col-lg-6">
+                                            <div class="row">
+                                                @T("Forum.TopicTitle")
+                                            </div>
+                                        </div>
+                                        <div class="replies col-sm-12 col-md-2 col-lg-1 hidden-sm-down">
+                                            <div class="row">
+                                                @T("Forum.Replies")
+                                            </div>
+                                        </div>
+                                        <div class="views col-sm-12 col-md-1 hidden-sm-down">
+                                            <div class="row">
+                                                @T("Forum.Views")
+                                            </div>
+                                        </div>
+                                        @if (Model.AllowPostVoting)
+                                        {
+                                            <div class="votes col-sm-12 col-md-1 hidden-sm-down">
+                                                <div class="row">
+                                                    @T("Forum.Votes")
+                                                </div>
+                                            </div>
+                                        }
+                                        <div class="latest-post col-12 col-md-3 justify-content-center text-center text-md-right hidden-md-down">
+                                                @T("Forum.LatestPost")
+                                        </div>
+                                    </div>
+                                </div>
                             </th>
                         </tr>
                     </thead>
@@ -125,58 +142,71 @@
                                     break;
                             }
                             <tr>
-                                <td class="image">
-                                    <div class="@topicType"></div>
-                                </td>
-                                <td class="topic-details">
-                                    <div class="topic-title">
-                                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
-                                        @if (!String.IsNullOrEmpty(topicText))
-                                        {
-                                            <span class="topic-type">@topicText</span>
-                                        }
-                                    </div>
-                                    @if (topic.NumPosts > Model.PostsPageSize)
-                                    {
-                                        <div class="topic-pager">
-                                            @Html.ForumTopicSmallPager(topic)
+                                <td>
+                                    <div class="col-sm-12 text-center text-md-left">
+                                        <div class="d-flex justify-content-md-between flex-column flex-md-row">
+                                            <div class="image">
+                                                <div class="@topicType"></div>
+                                            </div>
+                                            <div class="topic-details col-12 col-md-5 col-lg-6 px-0">
+                                                <div class="d-flex flex-column">
+                                                    <div class="topic-title">
+                                                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName })
+                                                        @if (!String.IsNullOrEmpty(topicText))
+                                                        {
+                                                            <span class="topic-type">@topicText</span>
+                                                        }
+                                                    </div>
+                                                    @if (topic.NumPosts > Model.PostsPageSize)
+                                                    {
+                                                        <div class="topic-pager">
+                                                            @Html.ForumTopicSmallPager(topic)
+                                                        </div>
+                                                    }
+                                                    <div class="topic-starter">
+                                                        @if (!String.IsNullOrEmpty(topic.CustomerId))
+                                                        {
+                                                            <label>@T("Forum.Author"):</label>
+                                                            if (topic.AllowViewingProfiles)
+                                                            {
+                                                                @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                                            }
+                                                            else
+                                                            {
+                                                                @topic.CustomerName
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="replies col-sm-12 col-md-2 col-lg-1 hidden-sm-down">
+                                                <div class="row">
+                                                    @topic.NumReplies
+                                                </div>
+                                            </div>
+                                            <div class="views col-sm-12 col-md-1 hidden-sm-down">
+                                                <div class="row">
+                                                    @topic.Views
+                                                </div>
+                                            </div>
+                                            @if (Model.AllowPostVoting)
+                                            {
+                                                <div class="votes col-sm-12 col-md-1 hidden-sm-down">
+                                                    <div class="row">
+                                                        @topic.Votes
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="latest-post col-12 col-md-3 justify-content-center text-center text-md-right">
+                                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                            </div>
                                         </div>
-                                    }
-                                    <div class="topic-starter">
-                                        @if (!String.IsNullOrEmpty(topic.CustomerId))
-                                        {
-                                            <label>@T("Forum.Author"):</label>
-                                            if (topic.AllowViewingProfiles)
-                                            {
-                                                @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
-                                            }
-                                            else
-                                            {
-                                                @topic.CustomerName
-                                            }
-                                        }
                                     </div>
-                                </td>
-                                <td class="replies">
-                                    @topic.NumReplies
-                                </td>
-                                <td class="views">
-                                    @topic.Views
-                                </td>
-                                @if (Model.AllowPostVoting)
-                                {
-                                    <td class="votes">
-                                        @topic.Votes
-                                    </td>
-                                }
-                                <td class="latest-post">
-                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
-            </div>
         }
     </div>
     @if (!MvcHtmlString.IsNullOrEmpty(pager))

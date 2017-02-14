@@ -5,65 +5,69 @@
 }
 @if (Model.Enabled)
 {
-    <div class="product-filter product-spec-filter">
-        <div class="filter-title">
-            <strong>@T("Filtering.SpecificationFilter")</strong>
-        </div>
-        <div class="filter-content">
-            @if (Model.NotFilteredItems.Count > 0)
-            {
-                <div class="available-items">
-                    @foreach (var group in notFilteredItemsGroups)
+    <div id="block-product-spec-filter" class="block product-filter product-spec-filter">
+            <h2 class="h5 bg-faded p-3 hidden-lg-up"><strong>@T("Filtering.SpecificationFilter")</strong><i id="specificationFilter-navigator" class="fa fa-angle-down fa-1x float-right" aria-hidden="true"></i></h2>
+            <h2 class="h5 generalTitle hidden-md-down">
+                <strong>@T("Filtering.SpecificationFilter")</strong>
+            </h2>
+
+            <div class="filter-content viewBox">
+                    @if (Model.NotFilteredItems.Count > 0)
+                {
+                        <div class="available-items">
+                                @foreach (var group in notFilteredItemsGroups)
                     {
                         var groupList = group.ToList();
-                        
-                        <ul class="group product-spec-group">
-                            <li class="title">
-                                <strong>@groupList[0].SpecificationAttributeName</strong>
-                            </li>
-
-                            @foreach (var spec in groupList)
-                            {                               
-                                <li class="item @(!String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb) ? "color-item" : null)">
-                                    <a href="@spec.FilterUrl">
-                                        @if (String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb))
-                                        {
-                                            @spec.SpecificationAttributeOptionName 
-                                        }
-                                        else
-                                        {
-                                            <div class="color-squares">
-                                                <span class="color-container" title="@spec.SpecificationAttributeOptionName">
-                                                    <span class="color" style="background-color: @(spec.SpecificationAttributeOptionColorRgb);">&nbsp;</span>
-                                                </span>
-                                            </div>
-                                        }
-                                    </a>
-                                </li>
-                            }
-                        </ul>
+                                    <div class="col-12 px-0">
+                                        <ul class="group product-spec-group">
+                                            <li class="title">
+                                                @groupList[0].SpecificationAttributeName
+                                            </li>
+                                            <li>
+                                                <div class="btn-group-sm">
+                                                    @foreach (var spec in groupList)
+                                                    {
+                                                        <a class="btn btn-sm btn-secondary mb-1" href="@spec.FilterUrl">
+                                                            @if (String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb))
+                                                            {
+                                                                @spec.SpecificationAttributeOptionName
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="color-squares">
+                                                                    <span class="color-container" title="@spec.SpecificationAttributeOptionName">
+                                                                        <span class="color" style="background-color: @(spec.SpecificationAttributeOptionColorRgb);">&nbsp;</span>
+                                                                    </span>
+                                                                </div>
+                                                            }
+                                                        </a>
+                                                    }
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
+                            </div>
                     }
-                </div>
-            }
+            </div>
             @if (Model.AlreadyFilteredItems.Count > 0)
             {
                 <div class="filtered-items">
-                    <ul>
-                        <li class="title">
-                            @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
-                        </li>
-                        @foreach (var item in Model.AlreadyFilteredItems)
-                        {
-                            <li class="item">
-                                <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
+                        <ul class="pl-0">
+                            <li class="title">
+                                @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
                             </li>
-                        }
-                    </ul>
-                </div>
-                <div class="remove-filter">
-                    <a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>
-                </div>
+                            @foreach (var item in Model.AlreadyFilteredItems)
+                            {
+                                <li class="item">
+                                    <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
+                                </li>
+                            }
+                        </ul>
+                        <div class="remove-filter mb-1">
+                            <a class="btn btn-secondary btn-sm" href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>
+                        </div>
+                    </div>
             }
         </div>
-    </div>
 }

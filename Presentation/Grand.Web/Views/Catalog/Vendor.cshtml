@@ -16,42 +16,53 @@
 @using Grand.Core.Infrastructure;
 @using Grand.Web.Models.Catalog;
 <div class="page vendor-page">
-    <div class="page-title">
-        <h1>@Model.Name</h1>
-    </div>
-    <div class="page-body">
-        @Html.Widget("vendordetails_top", Model.Id)
-        @*description*@
-        @if (!String.IsNullOrWhiteSpace(Model.Description))
-        {
-            <div class="vendor-description">
-                @Html.Raw(Model.Description)
-            </div>
-        }
-        @*contact vendor*@
-        @if (Model.AllowCustomersToContactVendors)
-        {
-            <div class="contact-vendor">
-                <input type="button" value="@T("ContactVendor")" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')" />
-            </div>
-        }
-        @if (Model.Products.Count > 0)
-        {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
-        }
+       <div class="col-12"> 
+    <h1 class="h2 generalTitle">
+        @Model.Name
+    </h1> 
+           @if (Model.AllowCustomersToContactVendors)
+           {
+               <input type="button" value="@T("ContactVendor")" class="btn btn-sm btn-secondary contact-vendor-button float-xs-right" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')" />
+           }
+           @Html.Widget("vendordetails_top", Model.Id)
+           @*description*@
+           @if (!String.IsNullOrWhiteSpace(Model.Description))
+           {
+               <article class="text-xs-center generalMarginSupporter vendor-description">
+                   @Html.Raw(Model.Description)
+               </article>
+           }
+           @*contact vendor*@
+           @if (Model.Products.Count > 0)
+           {
+               @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+           }
+       </div>
         @*product list*@
         @if (Model.Products.Count > 0)
-        {
-            <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">
-                <div class="item-grid">
+            {
+                if (Model.PagingFilteringContext.ViewMode == "grid")
+                {
+                <div class="col-12">
+                    <div class="row flex-grid">
+                        @foreach (var product in Model.Products)
+                    {
+                            <div class="col-lg-4 col-sm-6 col-12">
+                                @Html.Partial("_ProductBox", product)
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-12">
                     @foreach (var product in Model.Products)
                     {
-                        <div class="item-box">
-                            @Html.Partial("_ProductBox", product)
-                        </div>
+                        @Html.Partial("_ProductBoxList", product)
                     }
                 </div>
-            </div>
+            }
         }
         @{
             var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
@@ -64,4 +75,3 @@
         }
         @Html.Widget("vendordetails_bottom", Model.Id)
     </div>
-</div>

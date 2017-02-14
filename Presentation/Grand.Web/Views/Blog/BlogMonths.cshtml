@@ -2,11 +2,13 @@
 @using Grand.Web.Models.Blogs;
 @if (Model.Count > 0)
 {
-    <div class="block block-blog-archive">
-        <div class="title">
+    <section id="block-blog-archive" class="block block-blog-archive mt-1">
+        <h5 class="generalTitle hidden-md-down"><strong>@T("Blog.Archive")</strong></h5>
+        <h5 class="bg-faded p-3 hidden-lg-up">
             <strong>@T("Blog.Archive")</strong>
-        </div>
-        <div class="listbox">
+            <i id="computers" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i>
+        </h5>
+        <div class="viewBox">
             <ul class="list" id="blog-month-list">
                 @foreach (var yearItem in Model)
                 {
@@ -16,8 +18,10 @@
                             @foreach (var monthItem in yearItem.Months)
                             {
                                 <li class="month">
-                                    <a href="@Url.RouteUrl("BlogByMonth", new { month = yearItem.Year + "-" + monthItem.Month })">@(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))
-                                    (@(monthItem.BlogPostCount))</a>
+                                    <a href="@Url.RouteUrl("BlogByMonth", new { month = yearItem.Year + "-" + monthItem.Month })">
+                                        @(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))
+                                        (@(monthItem.BlogPostCount))
+                                    </a>
                                 </li>
                             }
                         </ul>
@@ -25,5 +29,5 @@
                 }
             </ul>
         </div>
-    </div>
+    </section>
 }

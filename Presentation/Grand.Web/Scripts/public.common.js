@@ -2,8 +2,6 @@
 ** custom js functions
 */
 
-
-
 function OpenWindow(query, w, h, scroll) {
     var l = (screen.width - w) / 2;
     var t = (screen.height - h) / 2;
@@ -26,20 +24,22 @@ function displayAjaxLoading(display) {
     }
 }
 
+
+
 function displayPopupNotification(message, messagetype, modal) {
     //types: success, error
     var container;
     if (messagetype == 'success') {
         //success
-        container = $('#dialog-notifications-success');
+        container = $('#dialog-error');
     }
     else if (messagetype == 'error') {
         //error
-        container = $('#dialog-notifications-error');
+        container = $('#dialog-error');
     }
     else {
         //other
-        container = $('#dialog-notifications-success');
+        container = $('#dialog-error');
     }
 
     //we do not encode displayed message
@@ -51,11 +51,8 @@ function displayPopupNotification(message, messagetype, modal) {
             htmlcode = htmlcode + '<p>' + message[i] + '</p>';
         }
     }
-
-    container.html(htmlcode);
-
-    var isModal = (modal ? true : false);
-    container.dialog({ modal: isModal });
+    container.append(htmlcode);
+    $('#generalModal').modal('show');
 }
 
 
@@ -66,18 +63,16 @@ function displayBarNotification(message, messagetype, timeout) {
     //types: success, error
     var cssclass = 'success';
     if (messagetype == 'success') {
-        cssclass = 'success';
+        cssclass = 'card-success';
     }
     else if (messagetype == 'error') {
-        cssclass = 'error';
+        cssclass = 'card-danger';
     }
     //remove previous CSS classes and notifications
     $('#bar-notification')
-        .removeClass('success')
-        .removeClass('error');
+        .removeClass('card-success')
+        .removeClass('card-danger');
     $('#bar-notification .content').remove();
-
-    //we do not encode displayed message
 
     //add new notifications
     var htmlcode = '';

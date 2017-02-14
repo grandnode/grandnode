@@ -396,17 +396,31 @@ namespace Grand.Web.Framework
             bool localizeLabels = true, object htmlAttributes = null)
         {
             var daysList = new TagBuilder("select");
+            var labeldays = new TagBuilder("label");
+
             var monthsList = new TagBuilder("select");
+            var labelmonths = new TagBuilder("label");
+
             var yearsList = new TagBuilder("select");
+            var labelyears = new TagBuilder("label");
 
             daysList.Attributes.Add("name", dayName);
+            daysList.Attributes.Add("id", dayName);
             daysList.Attributes.Add("class", "browser-default");
+            labeldays.Attributes.Add("for", dayName);
+            labeldays.Attributes.Add("class", "sr-only");
 
             monthsList.Attributes.Add("name", monthName);
+            monthsList.Attributes.Add("id", monthName);
             monthsList.Attributes.Add("class", "browser-default");
+            labelmonths.Attributes.Add("for", monthName);
+            labelmonths.Attributes.Add("class", "sr-only");
 
             yearsList.Attributes.Add("name", yearName);
+            yearsList.Attributes.Add("id", yearName);
             yearsList.Attributes.Add("class", "browser-default");
+            labelyears.Attributes.Add("for", yearName);
+            labelyears.Attributes.Add("class", "sr-only");
 
             var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             daysList.MergeAttributes(htmlAttributesDictionary, true);
@@ -421,15 +435,26 @@ namespace Grand.Web.Framework
             if (localizeLabels)
             {
                 var locService = EngineContext.Current.Resolve<ILocalizationService>();
+
                 dayLocale = locService.GetResource("Common.Day");
+                labeldays.InnerHtml = locService.GetResource("Common.Day");
+
                 monthLocale = locService.GetResource("Common.Month");
+                labelmonths.InnerHtml = locService.GetResource("Common.Month");
+
                 yearLocale = locService.GetResource("Common.Year");
+                labelyears.InnerHtml = locService.GetResource("Common.Year");
             }
             else
             {
                 dayLocale = "Day";
+                labeldays.InnerHtml = "Day";
+
                 monthLocale = "Month";
+                labelmonths.InnerHtml = "Month";
+
                 yearLocale = "Year";
+                labelyears.InnerHtml = "Year";
             }
 
             days.AppendFormat("<option value='{0}'>{1}</option>", "0", dayLocale);
@@ -467,12 +492,12 @@ namespace Grand.Web.Framework
                     years.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                         (selectedYear.HasValue && selectedYear.Value == i) ? " selected=\"selected\"" : null);
             }
-
+            
             daysList.InnerHtml = days.ToString();
             monthsList.InnerHtml = months.ToString();
             yearsList.InnerHtml = years.ToString();
 
-            return MvcHtmlString.Create(string.Concat(daysList, monthsList, yearsList));
+            return MvcHtmlString.Create(string.Concat(labeldays, daysList, labelmonths, monthsList, labelyears, yearsList));
         }
 
         public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone, object additionalData = null, string area = null)

@@ -1,37 +1,57 @@
 ﻿@model CatalogPagingFilteringModel
 @using Grand.Web.Models.Catalog;
 
-<div class="product-selectors">
-    @*view mode*@
-    @if (Model.AllowProductViewModeChanging)
-    {
-        <div class="product-viewmode">
-            <span>@T("Catalog.ViewMode")</span>
-            @if (Model.AvailableViewModes.Count > 1)
+    <div class="generalMarginSupporter categoryGrid">
+        <div class="d-flex flex-row justify-content-end row">
+            @*sorting*@
+            @if (Model.AllowProductSorting)
             {
-                var gridMode = Model.AvailableViewModes[0];
-                var listMode = Model.AvailableViewModes[1];
+                <div class="col-4">
+                    <label class="mb-0" for="custom-select">@T("Catalog.OrderBy")</label>
+                    @Html.DropDownList("custom-select", Model.AvailableSortOptions, new { @class = "form-control custom-select", onchange = "setLocation(this.value);" })
+                </div>
+            }
+            @*page size*@
+            @if (Model.AllowCustomersToSelectPageSize)
+            {
+                <div class="col-4">
+                    <div class="col-12 px-0">
+                            <span class="mb-1">@T("Catalog.PageSize")</span>
+                    </div>
+                    <div class="d-flex flex-row">
+                        <div class="col">
+                            <div class="row">
+                                <label for="products-pagesize" class="sr-only">@T("Catalog.PageSize")</label>
+                                @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { @class = "custom-select form-control", onchange = "setLocation(this.value);" })
+                            </div>
+                         </div>
+                        <div class="hidden-md-down pt-2 pl-2">
+                            @T("Catalog.PageSize.PerPage")
+                        </div>
+                    </div>
+                </div>
+            }
+            @*view mode*@
+            @if (Model.AllowProductViewModeChanging)
+            {
+                <div class="ml-auto col-4 text-sm-right rightHead hidden-sm-down pr-0">
+                        <div class="col hidden-sm-down text-right">
+                                <span>@T("Catalog.ViewMode")</span>
+                        </div>
 
-                <a class="viewmode-icon grid @if(gridMode.Selected){<text>selected</text>}" href="@gridMode.Value" title="@gridMode.Text">@gridMode.Text</a>
-                <a class="viewmode-icon list @if (listMode.Selected){<text>selected</text>}" href="@listMode.Value" title="@listMode.Text">@listMode.Text</a>
+                        @if (Model.AvailableViewModes.Count > 1)
+                        {
+
+                            var gridMode = Model.AvailableViewModes[0];
+                            var listMode = Model.AvailableViewModes[1];
+
+                            <div class="col justify-content-end d-flex flex-row">
+                                    <a class="btn btn-secondary viewmode-icon grid ml-1 @if(gridMode.Selected){<text>selected</text>}" href="@gridMode.Value" title="@gridMode.Text"><i class="fa fa-th-large"></i>
+                                    <span class="sr-only">viewmode grid</span></a>
+                                    <a class="btn btn-secondary viewmode-icon list ml-1 @if (listMode.Selected){<text>selected</text>}" href="@listMode.Value" title="@listMode.Text"><i class="fa fa-th-list"></i><span class="sr-only">viewmode list</span></a>
+                            </div>
+                        }
+                </div>
             }
         </div>
-    }
-    @*sorting*@
-    @if (Model.AllowProductSorting)
-    {
-        <div class="product-sorting">
-            <span>@T("Catalog.OrderBy")</span>
-            @Html.DropDownList("products-orderby", Model.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
-        </div>
-    }
-    @*page size*@
-    @if (Model.AllowCustomersToSelectPageSize)
-    {
-        <div class="product-page-size">
-            <span>@T("Catalog.PageSize")</span>
-            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);" })
-            <span>@T("Catalog.PageSize.PerPage")</span>
-        </div>
-    }
-</div>
+    </div>

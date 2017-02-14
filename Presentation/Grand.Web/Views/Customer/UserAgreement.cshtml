@@ -10,7 +10,6 @@
 
         toggleContinueButton();
     });
-
     function toggleContinueButton() {
         if ($('#agreement-agree').is(':checked')) {
             $('#continue-downloading').removeAttr('disabled');
@@ -20,16 +19,17 @@
     }
 </script>
 <div class="page user-agreement-page">
-    <div class="page-title">
-        <h1>@T("DownloadableProducts.UserAgreement")</h1>
-    </div>
-    <div class="page-body">
-        <div class="terms-of-agreement">
-            <input id="agreement-agree" type="checkbox" value="@T("DownloadableProducts.IAgree")" />
-            @Html.Raw(Model.UserAgreementText)
+        <h1 class="generalTitle text-xs-center">@T("DownloadableProducts.UserAgreement")</h1>
+        <div class="terms-of-agreement text-xs-center">
+            <label class="custom-control custom-checkbox">
+                <input id="agreement-agree" class="custom-control-input" type="checkbox" value="@T("DownloadableProducts.IAgree")" />
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">@Html.Raw(Model.UserAgreementText)</span>
+            </label>
         </div>
-        <div class="buttons">
-            <input type="submit" id="continue-downloading" class="button-1 user-agreement-button" value="@T("Common.Continue")" onclick="setLocation('@Url.RouteUrl("GetDownload", new { orderItemId = Model.OrderItemGuid, agree = true })')" />
+        <div class="buttons text-xs-center generalMarginSupporter">
+            <input type="submit" id="continue-downloading" class="btn btn-success user-agreement-button" value="@T("Common.Continue")" onclick="setLocation('@Url.RouteUrl("GetDownload", new { orderItemId = Model.OrderItemGuid, agree = true })')" />
         </div>
-    </div>
 </div>
+
+

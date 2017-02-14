@@ -33,7 +33,7 @@
                 <span>@Model.OldPrice</span>
             </div>
         }
-        <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        <div class="generalMarginSupporter @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
                     {<text>product-price</text>}
                     else
                     {<text>non-discounted-price</text>}">
@@ -44,7 +44,7 @@
             }
             @*render price*@
             <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)" </text>   }>
-                @Html.Raw(Model.Price)
+                <strong>@Html.Raw(Model.Price)</strong>
             </span>
         </div>
         if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
@@ -53,7 +53,7 @@
             <div class="product-price discounted-price">
                 <label>@T("Products.Price.WithDiscount"):</label>
                 <span itemprop="price" content="@Model.PriceValue.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" class="price-value-@(Model.ProductId)">
-                    @Html.Raw(Model.PriceWithDiscount)
+                    <strong>@Html.Raw(Model.PriceWithDiscount)</strong>
                 </span>
             </div>
         }
@@ -68,7 +68,7 @@
             var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
             //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
             //of course, you can modify appropriate locales to include VAT info there
-            <div class="tax-shipping-info">
+            <div class="tax-shipping-info generalMarginSupporter">
                 @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
             </div>
         }

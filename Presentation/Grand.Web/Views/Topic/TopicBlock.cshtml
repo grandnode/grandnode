@@ -57,26 +57,26 @@
             </div>
         }
     </div>
+
+
     <div class="topic-block" id="ph-topic-@Model.Id">
         <div class="topic-block-title" id="ph-title-@Model.Id">
             <h2>@Model.Title</h2>
         </div>
-        <div class="topic-block-body">
+        <div class="col-12">
             @Html.Raw(Model.Body)
         </div>
     </div>
 }
 else
 {
-    <div class="topic-block">
-        @if (!String.IsNullOrEmpty(Model.Title))
-        {
-            <div class="topic-block-title">
-                <h2>@Model.Title</h2>
+    <div class="generalMarginSupporter">
+            @if (!String.IsNullOrEmpty(Model.Title))
+            {
+                    <h2 class="generalTitle text-sm-center">@Model.Title</h2>
+            }
+            <div class="topic-block-body mpt-3 pt-3">
+                @Html.Raw(Model.Body)
             </div>
-        }
-        <div class="topic-block-body">
-            @Html.Raw(Model.Body)
-        </div>
     </div>
 }

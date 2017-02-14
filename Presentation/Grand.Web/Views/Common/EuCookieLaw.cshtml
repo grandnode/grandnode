@@ -20,12 +20,13 @@
     });
     });
 </script>
-<div id="eu-cookie-bar-notification" class="eu-cookie-bar-notification">
-    <div class="content">
-        <div class="text">@T("EUCookieLaw.Description2")</div>
-        <div class="buttons-more">
-            <button type="button" class="ok-button button-1" id="eu-cookie-ok">@T("Common.OK")</button>
-            <a class="learn-more" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("privacyinfo") })">@T("EUCookieLaw.LearnMore")</a>
-        </div>
+
+<div id="eu-cookie-bar-notification" class="eu-cookie-bar-notification generalNote card card-inverse card-success text-xs-center" style="display:none;">
+    <div class="buttons-more">
+        <blockquote class="card-blockquote">
+            <p>@T("EUCookieLaw.Description2")</p>
+        </blockquote>
+            <a class="ok-button btn-sm btn btn-success" id="eu-cookie-ok">@T("Common.OK")</a>
+            <a class="btn btn-sm btn-secondary learn-more" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("privacyinfo") })">@T("EUCookieLaw.LearnMore")</a>
     </div>
 </div>

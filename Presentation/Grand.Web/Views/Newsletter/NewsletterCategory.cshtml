@@ -9,18 +9,17 @@
     </div>
     <form id="newsletter-category-method-form" action="" >
         @Html.HiddenFor(x=>x.NewsletterEmailId)
-        <div class="newsletter-category-body">
-            <ul class="newsletter-category-option-list">
+        <div class="newsletter-category-body form-group">
                 @foreach (var category in Model.NewsletterCategories)
                 {
-                    <li>
-                        <input id="Category_@(category.Id)" type="checkbox" name="Category_@(category.Id)" value="@category.Id" checked="@category.Selected" />
-                        <label for="Category_@(category.Id)">@category.Name</label>
-                    </li>
+                    <label for="Category_@(category.Id)" class="custom-control custom-checkbox col-12">
+                        <input id="Category_@(category.Id)"  name="Category_@(category.Id)" type="checkbox" class="custom-control-input">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">@category.Name</span>
+                    </label>
                 }
-            </ul>
-            <div class="newsletter-category-save">
-                <input type="button" value="@T("NewsletterCategory.Options.Save")" id="newsletter-category-button" class="button-1 newsletter-subscribe-button" />
+            <div class="newsletter-category-save pt-1 pb-1">
+                <input type="button" value="@T("NewsletterCategory.Options.Save")" id="newsletter-category-button" class="btn btn-success newsletter-subscribe-button" />
             </div>
         </div>
     </form>

@@ -6,11 +6,8 @@
     //title
     Html.AddTitleParts(T("PageTitle.ContactVendor", Model.VendorName).Text);
 }
-<div class="page contact-page">
-    <div class="page-title">
-        <h1>@T("PageTitle.ContactVendor", Model.VendorName)</h1>
-    </div>
-    <div class="page-body">
+<div class="page vendor-page">
+        <h1 class="h2 generalTitle text-xs-center">@T("PageTitle.ContactVendor", Model.VendorName)</h1>
         @Html.Widget("contactvendor_top")
         @if (Model.SuccessfullySent)
         {
@@ -28,48 +25,41 @@
                 {
                     <div class="message-error">@validationSummary</div>
                 }
-                <div class="fieldset">
-                    <div class="form-fields">
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.FullName)
-                            @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactVendor.FullName.Hint") })
-                            @Html.RequiredHint()
+                    <div class="form-fields d-flex row">
+                        <div class="form-group col-12 col-sm-6">
+                            @Html.LabelFor(model => model.FullName, new { @class = "col-form-label" }, ":")
+                            @Html.TextBoxFor(model => model.FullName, new { @class = "form-control fullname", placeholder = T("ContactVendor.FullName.Hint") })
                             @Html.ValidationMessageFor(model => model.FullName)
                         </div>
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.Email)
-                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactVendor.Email.Hint") })
-                            @Html.RequiredHint()
+                        <div class="form-group col-12 col-sm-6">
+                            @Html.LabelFor(model => model.Email, new { @class = "col-form-label" }, ":")
+                            @Html.TextBoxFor(model => model.Email, new { @class = "form-control email", placeholder = T("ContactVendor.Email.Hint") })
                             @Html.ValidationMessageFor(model => model.Email)
                         </div>
                         @if (Model.SubjectEnabled)
                         {
-                            <div class="inputs">
-                                @Html.LabelFor(model => model.Subject)
-                                @Html.TextBoxFor(model => model.Subject, new { @class = "subject", placeholder = T("ContactVendor.Subject.Hint") })
-                                @Html.RequiredHint()
+                            <div class="form-group col-12">
+                                @Html.LabelFor(model => model.Subject, new { @class = "col-form-label" }, ":")
+                                @Html.TextBoxFor(model => model.Subject, new { @class = "form-control subject", placeholder = T("ContactVendor.Subject.Hint") })
                                 @Html.ValidationMessageFor(model => model.Subject)
                             </div>
                         }
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.Enquiry)
-                            @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactVendor.Enquiry.Hint") })
-                            @Html.RequiredHint()
+                        <div class="form-group col-12">
+                            @Html.LabelFor(model => model.Enquiry, new { @class = "col-form-label" }, ":")
+                            @Html.TextAreaFor(model => model.Enquiry, new { @class = "form-control enquiry", placeholder = T("ContactVendor.Enquiry.Hint") })
                             @Html.ValidationMessageFor(model => model.Enquiry)
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
-                            <div class="captcha-box">
+                            <div class="captcha-box px-3">
                                 @Html.Raw(Html.GenerateCaptcha())
                             </div>
                         }
                     </div>
-                </div>
-                <div class="buttons">
-                    <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactVendor.Button")" />
+                <div class="btn-group text-sm-center pt-3 pb-3">
+                    <input type="submit" name="send-email" class="btn btn-success contact-us-button" value="@T("ContactVendor.Button")" />
                 </div>
             }
         }
         @Html.Widget("contactvendor_bottom")
     </div>
-</div>

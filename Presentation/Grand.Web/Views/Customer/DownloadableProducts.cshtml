@@ -10,22 +10,19 @@
 {
     @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
 }
-<div class="page account-page downloadable-products-page">
-    <div class="page-title">
-        <h1>@T("Account.MyAccount") - @T("Account.DownloadableProducts")</h1>
-    </div>
-    <div class="page-body">
+<section class="page account-page downloadable-products-page">
+        <h1 class="h2 generalTitle">@T("Account.DownloadableProducts")</h1>
         @if (Model.Items.Count > 0)
         {
-            <div class="table-wrapper">
-                <table class="data-table">
+            <div class="table-responsive">
+                <table class="table table-hover data-table">
                     <colgroup>
-                        <col width="1" />
-                        <col width="1" />
+                        <col />
+                        <col />
                         <col />
                         <col width="1" />
                     </colgroup>
-                    <thead>
+                    <thead class="table-inverse">
                         <tr>
                             <th class="order">
                                 @T("DownloadableProducts.Fields.Order")
@@ -93,5 +90,4 @@
                 @T("DownloadableProducts.NoItems")
             </div>
         }
-    </div>
-</div>
+</section>

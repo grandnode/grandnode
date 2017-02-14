@@ -7,10 +7,8 @@
     Html.AddTitleParts(T("PageTitle.ContactUs").Text);
 }
 <div class="page contact-page">
-    <div class="page-title">
-        <h1>@T("PageTitle.ContactUs")</h1>
-    </div>
-    <div class="page-body">
+        <h1 class="generalTitle">@T("PageTitle.ContactUs")</h1>
+    <div class="generalMarginSupporter text-xs-left">
         @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
         @Html.Widget("contactus_top")
         @if (Model.SuccessfullySent)
@@ -29,34 +27,29 @@
                 {
                     <div class="message-error">@validationSummary</div>
                 }
-                <div class="fieldset">
                     <div class="form-fields">
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.FullName)
-                            @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactUs.FullName.Hint") })
-                            @Html.RequiredHint()
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FullName, new { @class = "col-form-labe" })
+                                @Html.TextBoxFor(model => model.FullName, new { @class = "fullname form-control", placeholder = T("ContactUs.FullName.Hint") })
                             @Html.ValidationMessageFor(model => model.FullName)
                         </div>
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.Email)
-                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactUs.Email.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Email)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Email, new { @class = "col-form-labe" })
+                                @Html.TextBoxFor(model => model.Email, new { @class = "email form-control", placeholder = T("ContactUs.Email.Hint") })
+                                @Html.ValidationMessageFor(model => model.Email)
                         </div>
                         @if (Model.SubjectEnabled)
                         {
-                            <div class="inputs">
-                                @Html.LabelFor(model => model.Subject)
-                                @Html.TextBoxFor(model => model.Subject, new { @class = "subject", placeholder = T("ContactUs.Subject.Hint") })
-                                @Html.RequiredHint()
-                                @Html.ValidationMessageFor(model => model.Subject)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Subject, new { @class = "col-form-labe" })
+                                    @Html.TextBoxFor(model => model.Subject, new { @class = "subject form-control", placeholder = T("ContactUs.Subject.Hint") })
+                                    @Html.ValidationMessageFor(model => model.Subject)
                             </div>
                         }
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.Enquiry)
-                            @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Enquiry)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Enquiry, new { @class = "col-form-labe" })
+                                @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry form-control", placeholder = T("ContactUs.Enquiry.Hint") })
+                                @Html.ValidationMessageFor(model => model.Enquiry)
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
@@ -65,9 +58,8 @@
                             </div>
                         }
                     </div>
-                </div>
-                <div class="buttons">
-                    <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />
+                <div class="buttons mt-1 mb-1">
+                    <input type="submit" name="send-email" class="btn btn-success contact-us-button" value="@T("ContactUs.Button")" />
                 </div>
             }
         }

@@ -701,7 +701,7 @@ namespace Grand.Web.Controllers
             var customer = cart.GetCustomer();
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
-            model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
+            model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
             model.ShowSku = _catalogSettings.ShowProductSku;
             
             //cart warnings
@@ -800,7 +800,7 @@ namespace Grand.Web.Controllers
                 }
 
                 //picture
-                if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
+                if (_shoppingCartSettings.ShowProductImagesOnWishList)
                 {
                     cartItemModel.Picture = PrepareCartItemPictureModel(sci,
                         _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);

@@ -7,15 +7,12 @@
     Html.AddTitleParts(T("PageTitle.Vendors.Apply").Text);
 }
 <div class="page apply-vendor-page">
-    <div class="page-title">
-        <h1>@T("PageTitle.Vendors.Apply")</h1>
-    </div>
-    <div class="page-body">
+        <h2 class="text-center generalTitle">@T("PageTitle.Vendors.Apply")</h2>
         @Html.Action("TopicBlock", "Topic", new { systemName = "ApplyVendor" })
         @Html.Widget("applyvendor_top")
         @if (Model.DisableFormInput)
         {
-            <div class="result">
+            <div class="alert alert-success result text-xs-center">
                 @Model.Result
             </div>
         }
@@ -29,19 +26,16 @@
                 {
                     <div class="message-error">@validationSummary</div>
                 }
-                <div class="fieldset">
                     <div class="form-fields">
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.Name)
-                            @Html.TextBoxFor(model => model.Name, new { @class = "name", placeholder = T("Vendors.ApplyAccount.Name.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Name)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "col-form-label" })
+                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control name", placeholder = T("Vendors.ApplyAccount.Name.Hint") })
+                                @Html.ValidationMessageFor(model => model.Name)
                         </div>
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.Email)
-                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("Vendors.ApplyAccount.Email.Hint") })
-                            @Html.RequiredHint()
-                            @Html.ValidationMessageFor(model => model.Email)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Email, new { @class = "col-form-label" })
+                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control email", placeholder = T("Vendors.ApplyAccount.Email.Hint") })
+                                @Html.ValidationMessageFor(model => model.Email)
                         </div>
                         @if (Model.DisplayCaptcha)
                         {
@@ -50,12 +44,10 @@
                             </div>
                         }
                     </div>
-                </div>
-                <div class="buttons">
-                    <input type="submit" name="send-email" class="button-1 apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
+                <div class="col-12 buttons pt-1 pb-1">
+                        <input type="submit" name="send-email" class="btn btn-success apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
                 </div>
             }
         }
         @Html.Widget("applyvendor_bottom")
     </div>
-</div>

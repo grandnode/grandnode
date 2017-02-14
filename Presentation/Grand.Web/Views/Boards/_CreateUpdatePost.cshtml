@@ -3,18 +3,16 @@
 @using Grand.Web.Models.Boards;
 
 @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.ForumTopicId })
+
 <div class="page forum-edit-page">
-    <div class="page-title">
         @if (Model.IsEdit)
         {
-            <h1>@T("Forum.EditPost")</h1>
+            <h1 class="generalTitle">@T("Forum.EditPost")</h1>
         }
         else
         {
-            <h1>@T("Forum.NewPost")</h1>
+            <h1 class="generalTitle">@T("Forum.NewPost")</h1>
         }
-    </div>
-    <div class="page-body">
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
@@ -25,37 +23,48 @@
             }
             @Html.HiddenFor(model => model.Id)
             @Html.HiddenFor(model => model.ForumTopicId)
-            <div class="fieldset">
-                <div class="form-fields">
-                    <div class="inputs">
-                        <label>@T("Forum.ForumName"):</label>
-                        <strong class="forum-subject">@Model.ForumName</strong>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex flex-column flex-md-row">
+                        <label class="col-md-3 col-12">@T("Forum.ForumName"):</label>
+                        <div class="col-md col-12">
+                            <strong class="forum-subject">@Model.ForumName</strong>
+                        </div>
                     </div>
-                    <div class="inputs">
-                        <label>@T("Forum.TopicTitle"):</label>
-                        <strong class="topic-subject">@Model.ForumTopicSubject</strong>
+                    <div class="d-flex flex-column flex-md-row">
+                        <label class="col-md-3 col-12">@T("Forum.TopicTitle"):</label>
+                        <div class="col-md col-12">
+                            <strong class="topic-subject">@Model.ForumTopicSubject</strong>
+                        </div>
                     </div>
-                    <div class="inputs">
+                </div>
+                <div class="card-block">
+                    <div class="form-group">
                         @if (Model.ForumEditor == EditorType.BBCodeEditor)
                         {
-                            @Html.BBCodeEditor("Text")
+                            <div class="col-12 text-sm-right">
+                                @Html.BBCodeEditor("Text")
+                            </div>
                         }
-                        @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
+                        @Html.TextAreaFor(model => model.Text, new { @class = "form-control card-text", TextMode = "MultiLine" })
                         @Html.ValidationMessageFor(model => model.Text)
                     </div>
                     @if (Model.IsCustomerAllowedToSubscribe)
                     {
-                        <div class="inputs reversed">
-                            @Html.EditorFor(model => model.Subscribed)
-                            <label>@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
-                        </div>
+                        <fieldset class="form-group">
+                            <label class="custom-control custom-checkbox text-sm-center">
+                                <input class="custom-control-input" id="Subscribed" type="checkbox" name="Subscribed" value="true" @(Model.Subscribed ? Html.Raw("checked") : Html.Raw("")) />
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</span>
+                            </label>
+                        </fieldset>
                     }
                 </div>
             </div>
-            <div class="buttons">
-                <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-post-button" />
-                <input type="button" class="button-2 cancel-post-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')" />
+            <div class="btn-group mb-1 mt-1">
+                <input type="submit" value="@T("Forum.Submit")" class="btn btn-secondary submit-post-button" />
+                <input type="button" class="btn btn-secondary cancel-post-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')" />
             </div>
         }
-    </div>
 </div>

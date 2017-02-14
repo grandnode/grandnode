@@ -1,7 +1,7 @@
 ﻿@model CustomerBackInStockSubscriptionsModel
 @using Grand.Web.Models.Catalog
 @using Grand.Web.Models.Customer
-@{    
+@{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
     Html.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
@@ -11,42 +11,44 @@
     @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
 }
 <div class="page account-page back-in-stock-subscription-list-page">
-    <div class="page-title">
-        <h1>@T("Account.MyAccount") - @T("Account.BackInStockSubscriptions")</h1>
-    </div>
-    <div class="page-body">
-        @if (Model.Subscriptions.Count > 0)
-        {
-            <div class="description">
-                @T("Account.BackInStockSubscriptions.Description")
-            </div>
-            <script type="text/javascript">
-                $(document).ready(function () {
+    <h1 class="h2 generalTitle">@T("Account.BackInStockSubscriptions")</h1>
+    @if (Model.Subscriptions.Count > 0)
+    {
+        <div class="description">
+            @T("Account.BackInStockSubscriptions.Description")
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
 
-                    $('#selectall').click(function () {
-                        $('.subscription-list .rowcheckbox').prop('checked', $(this).is(':checked')).change();
-                    });
-
-                    $('.subscription-list .rowcheckbox').on('change', function (e) {
-                        var numChkBoxes = $('.subscription-list .rowcheckbox').length;
-                        var numChkBoxesChecked = $('.subscription-list .rowcheckbox:checked').length;
-                        $('#selectall').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                    });
+                $('#selectall').click(function () {
+                    $('.subscription-list .rowcheckbox').prop('checked', $(this).is(':checked')).change();
                 });
-            </script>        
-            using (Html.BeginRouteForm("CustomerBackInStockSubscriptions", FormMethod.Post))
-            {
+
+                $('.subscription-list .rowcheckbox').on('change', function (e) {
+                    var numChkBoxes = $('.subscription-list .rowcheckbox').length;
+                    var numChkBoxesChecked = $('.subscription-list .rowcheckbox:checked').length;
+                    $('#selectall').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                });
+            });
+        </script>
+        using (Html.BeginRouteForm("CustomerBackInStockSubscriptions", FormMethod.Post))
+        {
             <div class="subscription-list">
-                <div class="table-wrapper">
-                    <table class="data-table">
+                <div class="table-responsive">
+                    <table class="table table-hover data-table">
                         <colgroup>
                             <col width="1" />
                             <col />
                         </colgroup>
-                        <thead>
+                        <thead class="table-inverse">
                             <tr>
+
                                 <th class="select-boxes">
-                                    <input type="checkbox" id="selectall" />
+                                    <label class="custom-control custom-checkbox">
+                                        <input id="selectall" type="checkbox" class="custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">&nbsp;</span>
+                                    </label>
                                 </th>
                                 <th class="product">
                                     @T("Account.BackInStockSubscriptions.ProductColumn")
@@ -59,7 +61,11 @@
                                 var item = Model.Subscriptions[i];
                                 <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                                     <td class="select-boxes">
-                                        <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
+                                        <label class="custom-control custom-checkbox">
+                                            <input id="selectall" type="checkbox" name="biss@(item.Id)" class="rowcheckbox custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description">&nbsp;</span>
+                                        </label>
                                     </td>
                                     <td class="product">
                                         @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
@@ -69,26 +75,25 @@
                         </tbody>
                     </table>
                 </div>
-                    @{
-                        var pager = Html.Pager(Model.PagerModel);
-                    }
-                    @if (!MvcHtmlString.IsNullOrEmpty(pager))
-                    {
-                        <div class="pager">
-                            @pager
-                        </div>
-                    }
-                <div class="buttons">
-                    <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="button-1 delete-selected-biss-button" />
+                @{
+                    var pager = Html.Pager(Model.PagerModel);
+                }
+                @if (!MvcHtmlString.IsNullOrEmpty(pager))
+                {
+                    <div class="pager">
+                        @pager
+                    </div>
+                }
+                <div class="buttons mb-2 mt-2">
+                    <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="btn btn-secondary delete-selected-biss-button" />
                 </div>
             </div>
-            }
         }
-        else
-        {
-            <div class="no-data">
-                @T("Account.BackInStockSubscriptions.NoSubscriptions")
-            </div>
-        }
-    </div>
+    }
+    else
+    {
+        <div class="no-data">
+            @T("Account.BackInStockSubscriptions.NoSubscriptions")
+        </div>
+    }
 </div>

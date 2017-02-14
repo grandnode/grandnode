@@ -454,7 +454,7 @@ var ConfirmOrder = {
         if ($('#termsofservice').length > 0) {
             //terms of service element exists
             if (!$('#termsofservice').is(':checked')) {
-                $("#terms-of-service-warning-box").dialog();
+                $("#terms-of-service-warning-box").modal('show');
                 termOfServiceOk = false;
             } else {
                 termOfServiceOk = true;

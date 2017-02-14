@@ -2,24 +2,16 @@
 @using Grand.Web.Models.Catalog;
 @if (Model.Count > 0)
 {
-    <div class="product-tags-box">
+    <div class="col-sm-12 product-tags-box">
         <div class="title">
             <strong>@T("Products.Tags")</strong>
         </div>
         <div class="product-tags-list">
-            <ul>
                 @for (int i = 0; i < Model.Count; i++)
                 {
-                    <li class="tag">
-                        <a href="@Url.RouteUrl("ProductsByTag", new { productTagId = Model[i].Id, SeName = Model[i].SeName })" class="producttag">
-                            @Model[i].Name</a> <span>@T("Products.Tags.Count", Model[i].ProductCount)</span></li>
-                    if (i != Model.Count - 1)
-                    {
-                    <li class="separator">,</li>
-                    }
+                        <a class="btn btn-secondary producttag" href="@Url.RouteUrl("ProductsByTag", new { productTagId = Model[i].Id, SeName = Model[i].SeName })">
+                            @Model[i].Name <span>@T("Products.Tags.Count", Model[i].ProductCount)</span></a> 
                 }
-            </ul>
         </div>
     </div>
-
 }

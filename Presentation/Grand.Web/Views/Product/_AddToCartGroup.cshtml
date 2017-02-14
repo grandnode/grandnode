@@ -1,0 +1,76 @@
+﻿@model ProductDetailsModel.AddToCartModel
+@using Grand.Web.Models.Catalog;
+@using Grand.Core.Domain.Orders;
+@if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId))
+{
+    @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
+}
+@if (!Model.DisableBuyButton || Model.CustomerEntersPrice)
+{
+            
+            if (!String.IsNullOrEmpty(Model.MinimumQuantityNotification))
+            {
+                <div class="min-qty-notification text-danger">@Model.MinimumQuantityNotification</div>
+            }
+            if (!Model.DisableBuyButton)
+            {
+                                if (Model.AllowedQuantities.Count > 0)
+                                {
+                                    @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "col-xs-2 custom-select form-control qty-dropdown" })
+                                }
+                                else
+                                {
+								<div class="col-3 col-lg-2 pl-2">
+                                    <label class="sr-only" for="addtocart_@(Model.ProductId)_EnteredQuantity">@Model.ProductId</label>
+                                    @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "form-control qty-input m-0" })
+								</div>
+									if (!String.IsNullOrEmpty(Model.MeasureUnit))
+									{
+										<div class="col-md-2 col-12">
+											<span class="btn btn-secondary input-group-addon qty-unit">
+												@Model.MeasureUnit
+											</span>
+										</div>
+									}
+								
+								}
+    var addToCartText = "";
+    if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
+    {
+        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
+    }
+    else
+    {
+        addToCartText = T("ShoppingCart.AddToCart").Text;
+        if (Model.IsRental)
+        {
+            addToCartText = T("ShoppingCart.Rent").Text;
+        }
+        if (Model.AvailableForPreOrder)
+        {
+            addToCartText = T("ShoppingCart.PreOrder").Text;
+        }
+    }
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#@Html.FieldIdFor(model => model.EnteredQuantity)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#add-to-cart-button-@Model.ProductId").click();
+                        return false;
+                    }
+                });
+            });
+    </script>
+	<div class="col-6 col-md-3 col-lg-2 px-0">
+        <button type="button" id="add-to-cart-button-@Model.ProductId" class="btn btn btn-success add-to-cart-button" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;">
+            <span class="fa fa-shopping-cart"></span> @T("ShoppingCart.AddToCart").Text
+        </button>
+    </div>
+        
+
+    }
+
+    @Html.Widget("productdetails_add_info", Model.ProductId)
+
+}

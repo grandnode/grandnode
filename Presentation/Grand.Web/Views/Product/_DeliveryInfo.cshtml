@@ -2,10 +2,10 @@
 @using Grand.Web.Models.Catalog;
 @if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
 {
-    <div class="delivery">
+    <div class="delivery generalMarginSupporter">
         @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
         {
-            <div class="free-shipping">@T("Products.FreeShipping")</div>
+            <div class="btn btn-sm btn-secondary free-shipping"><i class="fa fa-truck"></i> @T("Products.FreeShipping")</div>
         }
         @if (!String.IsNullOrWhiteSpace(Model.DeliveryDate))
         {

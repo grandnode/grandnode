@@ -1,8 +1,0 @@
-﻿Group: Widgets
-FriendlyName: Nivo Slider
-SystemName: Widgets.NivoSlider
-Version: 1.09
-SupportedVersions: 3.90
-Author: grandnode team, nopcommerce team
-DisplayOrder: 1
-FileName: Grand.Plugin.Widgets.NivoSlider.dll

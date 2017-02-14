@@ -2,21 +2,32 @@
 @using Grand.Web.Models.Common;
 @if (Model.IsCustomerImpersonated || Model.DisplayAdminLink)
 {
-    <div class="admin-header-links">
-        @if (Model.IsCustomerImpersonated)
-        {
-            <div class="impersonate">
-                <span>@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
-                <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
-            </div>
-        }
-        @if (Model.DisplayAdminLink)
-        {
-            <a href="@Url.Content("~/admin")" class="administration">@T("Account.Administration")</a>
-        }
-        @if (!String.IsNullOrEmpty(Model.EditPageUrl))
-        {
-            <a href="@Model.EditPageUrl" class="manage-page">@T("Common.ManagePage")</a>
-        }
-    </div>
+    if (Model.IsCustomerImpersonated)
+    {
+        <span class="input-group-btn">
+            <span>@string.Format(T("Account.ImpersonatedAs").Text, Model.ImpersonatedCustomerEmailUsername)</span>
+            <a class="btn btn-outline-primary nav-link finish-impersonation" href="@Url.RouteUrl("Logout")" title="@T("Account.ImpersonatedAs.Finish.Hint")">
+                <span class="hidden-sm-down">@T("Account.ImpersonatedAs.Finish")</span>
+                <span class="fa fa-user-o"></span>
+            </a>
+        </span>
+
+    }
+    if (Model.DisplayAdminLink)
+    {
+        <span class="input-group-btn">
+            <a class="btn btn-outline-primary administration" href="@Url.Content("~/admin")">
+                <span class="fa fa-cogs"></span> <span class="hidden-sm-down">Admin</span>
+            </a>
+        </span>
+    }
+    if (!String.IsNullOrEmpty(Model.EditPageUrl))
+    {
+        <span class="input-group-btn">
+            <a target="_blank" class="btn btn-primary" href="@Model.EditPageUrl">
+                <span class="fa fa-pencil-square-o"></span>
+                <span class="sr-only">@Model.EditPageUrl</span>
+            </a>
+        </span>
+    }
 }

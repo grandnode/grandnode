@@ -1,6 +1,6 @@
 ﻿@model CompareProductsModel
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.CompareProducts").Text);
@@ -27,22 +27,21 @@
     }
 }
 <div class="page compare-products-page">
-    <div class="page-title">
-        <h1>@T("Products.Compare.Title")</h1>
-    </div>
-    <div class="page-body">
+        <h2 class="text-xs-center generalTitle">@T("Products.Compare.Title")</h2>
         @if (Model.Products.Count > 0)
         {
-            <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')" class="clear-list">@T("Products.Compare.Clear")</a>
-            <div class="table-wrapper">
-                <table class="compare-products-table">
+            <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')" class="btn btn-sm btn-outline-secondary clear-list">@T("Products.Compare.Clear")</a>
+            <div class="table-responsive">
+                <table class="table table-hover">
                     <tbody>
                         <tr class="remove-product">
                             <td class="empty">&nbsp;</td>
                             @foreach (var product in Model.Products)
                             {
                                 <td style="width: @columnWidth;">
-                                    <input type="button" value="@T("Common.Remove")" title="@T("Common.Remove")" class="button-2 remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" />
+                                    <button type="button" title="@T("Common.Remove")" class="btn btn-sm btn-outline-danger remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" >
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </button>
                                 </td>
                             }
                         </tr>
@@ -51,7 +50,7 @@
                             @foreach (var product in Model.Products)
                             {
                                 <td style="width: @columnWidth;">
-                                    <a class="picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })"><img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" /></a>
+                                    <a class="picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })"><img class="img-wish"  alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" /></a>
                                 </td>
                             }
                         </tr>
@@ -68,12 +67,12 @@
                         </tr>
                         <tr class="product-price">
                             <td>
-                                <label>@T("Products.Compare.Price")</label>
+                                <label><strong>@T("Products.Compare.Price")</strong></label>
                             </td>
                             @foreach (var product in Model.Products)
                             {
                                 <td style="width: @columnWidth;">
-                                    @product.ProductPrice.Price
+                                    <strong>@product.ProductPrice.Price</strong>
                                 </td>
                             }
                         </tr>
@@ -101,7 +100,7 @@
                                 {
                                     var foundProductSpec = product.SpecificationAttributeModels.FirstOrDefault(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId);
                                     var specValue = foundProductSpec != null ? foundProductSpec.ValueRaw : "";
-                                                                
+
                                     <td style="width: @columnWidth;">
                                         @if (foundProductSpec != null)
                                         {
@@ -124,7 +123,7 @@
                                         }
                                     </td>
                                 }
-                            </tr>                    
+                            </tr>
                         }
                         @if (Model.IncludeFullDescriptionInCompareProducts)
                         {
@@ -143,12 +142,11 @@
                     </tbody>
                 </table>
             </div>
-        }
-        else
-        {
+}
+else
+{
             <div class="no-data">
                 @T("Products.Compare.NoItems")
             </div>
         }
-    </div>
 </div>

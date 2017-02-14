@@ -14,24 +14,24 @@
 <head>
     <title>@ILS.GetResource("Title")</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    @if (ILS.GetCurrentLanguage().IsRightToLeft)
-    {
-        <link href="@Url.Content("~/Content/Install/style.rtl.css")" type="text/css" rel="stylesheet" />
-    }
-    else
-    {
-        <link href="@Url.Content("~/Content/Install/style.css")" type="text/css" rel="stylesheet" />
-    }
+    <link href="@Url.Content("~/Content/Install/style.css")" type="text/css" rel="stylesheet" />
     <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/public.common.js")" type="text/javascript"></script>
+
+    <link href="~/Content/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="@Url.Content("~/Content/bootstrap/tether.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/bootstrap/bootstrap.js")" type="text/javascript"></script>
+   
+
 </head>
-<body class="container-main">
-    @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
-    {
-        //Contributor : The orchard project. Thanks a lot!
-        <script type="text/javascript">
+<body>
+    <div class="container">
+        @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
+        {
+            //Contributor : The orchard project. Thanks a lot!
+            <script type="text/javascript">
             $(document).ready(function () {
                 $('#installation-form').submit(function () {
                     if ($('#installation-form').valid()) {
@@ -49,9 +49,7 @@
                 toggleMongoDBConnectionInfo();
 
             });
-
             function toggleMongoDBConnectionInfo() {
-                
                 if ($('#@Html.FieldIdFor(model => model.MongoDBConnectionInfo)').is(':checked')) {
                     $('#MongoDBDatabaseConnectionString').show();
                     $('#MongoDBSimpleData').hide();
@@ -61,225 +59,143 @@
                     $('#MongoDBSimpleData').show();
                 }
             }
-
-        </script>
-    
-        <table border="0" cellpadding="0" cellspacing="0" class="container-installer">
-            <tr class="top">
-                <td class="left">
-                    &nbsp;
-                </td>
-                <td class="center">
-                    &nbsp;
-                </td>
-                <td class="right">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr class="Middle">
-                <td class="left">
-                    &nbsp;
-                </td>
-                <td class="center">
-                    <span class="header-text">@ILS.GetResource("Title")</span><br />
-                    <div class="content">
-                        <table cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;">
-                            <tbody>
-                                <tr style="height: 100%;">
-                                    <td>
-                                        <table class="wizard-step" border="0" cellpadding="0" cellspacing="10">
-                                            <tr>
-                                                <td colspan="2">
-                                                    <p>
-                                                        @ILS.GetResource("Tooltip2")
-                                                        <br />
-                                                        <div style="color: Red;">
-                                                            @Html.ValidationSummary(false)
-                                                        </div>
-                                                    </p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" align="left">
-                                                    <h3>
-                                                        @ILS.GetResource("StoreInformation")</h3>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td nowrap="nowrap" align="left">
-                                                    <label for="AdminEmail">
-                                                        @ILS.GetResource("AdminEmail"):</label>
-                                                </td>
-                                                <td width="100%">
-                                                    @Html.TextBoxFor(x => x.AdminEmail, new { @class = "textbox" })
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td nowrap="nowrap" align="left">
-                                                    <label for="AdminPassword">
-                                                        @ILS.GetResource("AdminPassword"):</label>
-                                                </td>
-                                                <td width="100%">
-                                                    @Html.PasswordFor(x => x.AdminPassword, new { @class = "textbox" })
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td nowrap="nowrap" align="left">
-                                                    <label for="ConfirmPassword">
-                                                        @ILS.GetResource("ConfirmPassword"):</label>
-                                                </td>
-                                                <td width="100%">
-                                                    @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "textbox" })
-                                                </td>
-                                            </tr>
-                                            @if (!Model.DisableSampleDataOption)
-                                            {
-                                                <tr>
-                                                    <td nowrap="nowrap" align="left">
-                                                        <label for="InstallSampleData">
-                                                            @ILS.GetResource("CreateSampleData"):</label>
-                                                    </td>
-                                                    <td width="100%">
-                                                        @Html.CheckBoxFor(x => x.InstallSampleData)
-                                                    </td>
-                                                </tr>
-                                            }
-                                            <tr>
-                                                <td colspan="2" align="left">
-                                                    <h3>
-                                                        @ILS.GetResource("DatabaseInformation")</h3>
-                                                    <hr />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" align="left">
-                                                    <div id="MongoDBConnectionInformation">
-                                                        <div id="MongoDBSimpleData">
-                                                            <table>
-                                                                <tr>
-                                                                    <td nowrap="nowrap" align="left">
-                                                                        <label for="MongoDBServerName">
-                                                                            @ILS.GetResource("MongoDBServerName"):</label>
-                                                                    </td>
-                                                                    <td width="100%">
-                                                                        @Html.TextBoxFor(x => x.MongoDBServerName, new { @class = "textbox" })
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td nowrap="nowrap" align="left">
-                                                                        <label for="MongoDBDatabaseName">
-                                                                            @ILS.GetResource("DatabaseName"):</label>
-                                                                    </td>
-                                                                    <td width="100%">
-                                                                        @Html.TextBoxFor(x => x.MongoDBDatabaseName, new { @class = "textbox" })
-                                                                    </td>
-                                                                </tr>                                                                
-                                                                <tr id="pnlMongoDBUsername">
-                                                                    <td nowrap="nowrap" align="left">
-                                                                        <label for="MongoDBUsername">
-                                                                            @ILS.GetResource("MongoDBUsername"):</label>
-                                                                    </td>
-                                                                    <td width="100%">
-                                                                        @Html.TextBoxFor(x => x.MongoDBUsername, new { @class = "textbox" })
-                                                                    </td>
-                                                                </tr>
-                                                                <tr id="pnlMongoDBPassword">
-                                                                    <td nowrap="nowrap" align="left">
-                                                                        <label for="MongoDBPassword">
-                                                                            @ILS.GetResource("MongoDBPassword"):</label>
-                                                                    </td>
-                                                                    <td width="100%">
-                                                                        @Html.PasswordFor(x => x.MongoDBPassword, new { @class = "textbox" })
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                        </div>
-                                                        <label for="DatabaseConnectionString">
-                                                            @ILS.GetResource("ConnectionString"):
-                                                        </label>
-
-                                                        @Html.CheckBoxFor(x => x.MongoDBConnectionInfo)
-
-                                                        <div id="MongoDBDatabaseConnectionString">
-                                                            <span style="white-space: nowrap;">
-                                                                @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox", style = "width:90%;" })
-                                                            </span>
-                                                            <br />
-                                                            <span class="hint">@ILS.GetResource("Example"):<br />
-                                                                @Html.Raw("mongodb://[username:password@]host1[:port1]/databaseName")
-                                                                <br />
-                                                                Find more info <a href="https://docs.mongodb.org/manual/reference/connection-string/" target="_blank">here</a>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2">
-                                                    &nbsp;
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2">
-                                                    @ILS.GetResource("Documentation1") <a href="http://docs.grandnode.com/" target="_blank">@ILS.GetResource("Documentation2")</a>.
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2">
-                                                    &nbsp;
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="right">
-                                        <div style="float: right; padding: 0px 10px 0px 0px;">
-                                            <input type="submit" value="@ILS.GetResource("Install")" style="width: 100px;" />
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </td>
-                <td class="right">
-                </td>
-            </tr>
-            <tr class="Bottom">
-                <td class="left">
-                    &nbsp;
-                </td>
-                <td class="center">
-                    &nbsp;
-                </td>
-                <td class="right">
-                    &nbsp;
-                </td>
-            </tr>
-        </table>
-        <div class="container-footer">
-            <div style="text-align: left; padding: 0px 0px 0px 0px; color: #606060; float: left;">
-                <a href="@Url.Action("RestartInstall", "Install")" title="@ILS.GetResource("RestartInstallationTooltip")">
-                    @ILS.GetResource("RestartInstallation")</a>
-            </div>
-            <div style="text-align: right; padding: 0px 0px 0px 0px; color: #606060; float: right;">
-                @Html.DropDownList("language", Model.AvailableLanguages, new { onchange = "window.location.href = this.value;" })
-            </div>
-        </div>
-        <div class="throbber">
-            <div class="curtain">
-            </div>
-            <div class="curtain-content">
-                <div>
-                    <h1 class="throbber-header">
-                        @ILS.GetResource("Installing")</h1>
-                    <p>
-                        <img src="@Url.Content("~/content/install/images/install-synchronizing.gif")" alt="" />
-                    </p>
+            </script>
+            <div class="row flex-row">
+                <div class="col-6">
+                    <img class="img-fluid" title="" alt="grandNode" src="~/Themes/DefaultClean/Content/images/logo.png" />
+                </div>
+                <div class="col-6">
+                    <h1 class="text-xs-center generalTitle">@ILS.GetResource("Title")</h1>
                 </div>
             </div>
-        </div>
-    }
+                <div class="content">
+                    <p>
+                        @ILS.GetResource("Tooltip2")
+
+                        <div style="color: Red;">
+                            @Html.ValidationSummary(false)
+                        </div>
+
+                    </p>
+                </div>
+                <div class="card">
+                    <h3 class="card-header">
+                        @ILS.GetResource("StoreInformation")
+                    </h3>
+                    <div class="card-block">
+                        <label for="AdminEmail" class="col-12 col-form-label">
+                            @ILS.GetResource("AdminEmail"):
+                        </label>
+                        <div class="col-12">
+                            @Html.TextBoxFor(x => x.AdminEmail, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="card-block">
+                        <div class="col-xs-6">
+                            <label for="AdminPassword">
+                                @ILS.GetResource("AdminPassword"):
+                            </label>
+                            @Html.PasswordFor(x => x.AdminPassword, new { @class = "form-control" })
+                        </div>
+                        <div class="col-xs-6">
+                            <label for="ConfirmPassword">
+                                @ILS.GetResource("ConfirmPassword"):
+                            </label>
+                            @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                if (!Model.DisableSampleDataOption)
+                {
+                        <div nowrap="nowrap" align="left">
+                            <label class="custom-control custom-checkbox">
+                                @Html.CheckBoxFor(x => x.InstallSampleData, new { @class = "custom-control-input" })
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">@ILS.GetResource("CreateSampleData")</span>
+                            </label>
+                        </div>
+                }
+                        <section id="MongoDBConnectionInformation">
+                            <div id="MongoDBSimpleData">
+                                <div class="card">
+                                    <h3 class="card-header">
+                                        @ILS.GetResource("DatabaseInformation")
+                                    </h3>
+                                    <div class="card-block">
+                                        <label for="MongoDBServerName">
+                                            @ILS.GetResource("MongoDBServerName"):
+                                        </label>
+                                        @Html.TextBoxFor(x => x.MongoDBServerName, new { @class = "form-control" })
+                                        <label for="MongoDBDatabaseName">
+                                            @ILS.GetResource("DatabaseName"):
+                                        </label>
+                                        @Html.TextBoxFor(x => x.MongoDBDatabaseName, new { @class = "form-control" })
+                                        <label for="MongoDBUsername">
+                                            @ILS.GetResource("MongoDBUsername"):
+                                        </label>
+                                        @Html.TextBoxFor(x => x.MongoDBUsername, new { @class = "form-control" })
+                                        <label for="MongoDBPassword">
+                                            @ILS.GetResource("MongoDBPassword"):
+                                        </label>
+                                        @Html.PasswordFor(x => x.MongoDBPassword, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <label class="custom-control custom-checkbox">
+                                @Html.CheckBoxFor(x => x.MongoDBConnectionInfo, new { @class = "custom-control-input" })
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description">@ILS.GetResource("ConnectionString"):</span>
+                            </label>
+                            <div id="MongoDBDatabaseConnectionString">
+                                <span style="white-space: nowrap;">
+                                    @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox", style = "width:90%;" })
+                                </span>
+                                <br />
+                                <span class="hint">
+                                    @ILS.GetResource("Example"):<br />
+                                    @Html.Raw("mongodb://[username:password@]host1[:port1]/databaseName")
+                                    <br />
+                                    Find more info <a href="https://docs.mongodb.org/manual/reference/connection-string/" target="_blank">here</a>
+                                </span>
+                            </div>
+                        </section>
+                <div class="row mx-0">
+                    <div class="py-3">
+                        @ILS.GetResource("Documentation1") <a href="http://docs.grandnode.com/" target="_blank">@ILS.GetResource("Documentation2")</a>.
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <input class="btn btn-success" type="submit" value="@ILS.GetResource("Install")" style="width: 100px;" />
+                    </div>
+                        <div class="col-md-6 col-12 text-right">
+                            <a class="btn btn-secondary" href="@Url.Action("RestartInstall", "Install")" title="@ILS.GetResource("RestartInstallationTooltip")">
+                                @ILS.GetResource("RestartInstallation")
+                            </a>
+
+                            @Html.DropDownList("language", Model.AvailableLanguages, new { @class = "custom-select", onchange = "window.location.href = this.value;" })
+                        </div>
+                </div>
+
+                
+                <div class="throbber">
+                    <div class="curtain">
+                    </div>
+
+                    <div class="curtain-content">
+                        <div>
+                            <h1 class="throbber-header">@ILS.GetResource("Installing")</h1>
+                            <div class="spinner active">
+                                <svg style="width:100px; height:100px" viewBox="0 0 64 64">
+                                    <circle cx="32" cy="32" r="29" fill="none" stroke-width="3" stroke-miterlimit="10"></circle>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+        }
+    </div>
 </body>
 </html>

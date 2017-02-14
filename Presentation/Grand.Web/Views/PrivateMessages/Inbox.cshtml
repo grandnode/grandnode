@@ -20,27 +20,34 @@
         using (Html.BeginRouteForm("PrivateMessagesInbox", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            <div class="table-wrapper">
-                <table class="data-table" id="pm-inbox-table">
+            <div class="table-responsive">
+                <table class="table table-hover data-table" id="pm-inbox-table">
                     <colgroup>
-                        <col width="1" />
                         <col />
-                        <col />
-                        <col width="1" />
                     </colgroup>
-                    <thead>
+                    <thead class="table-inverse">
                         <tr>
-                            <th class="select">
-                                <input type="checkbox" id="select-all-inbox" />
-                            </th>
-                            <th class="from">
-                                @T("PrivateMessages.Inbox.FromColumn")
-                            </th>
-                            <th class="subject">
-                                @T("PrivateMessages.Inbox.SubjectColumn")
-                            </th>
-                            <th class="date">
-                                @T("PrivateMessages.Inbox.DateColumn")
+                            <th>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="select col-1">
+                                            <label class="custom-control custom-checkbox">
+                                                <input type="checkbox" id="select-all-inbox" class="custom-control-input">
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">&nbsp;</span>
+                                            </label>
+                                        </div>
+                                        <div class="from col-2 hidden-sm-down">
+                                            @T("PrivateMessages.Inbox.FromColumn")
+                                        </div>
+                                        <div class="subject col-5 hidden-sm-down">
+                                            @T("PrivateMessages.Inbox.SubjectColumn")
+                                        </div>
+                                        <div class="date col-4 hidden-sm-down">
+                                            @T("PrivateMessages.Inbox.DateColumn")
+                                        </div>
+                                    </div>
+                                </div>
                             </th>
                         </tr>
                     </thead>
@@ -49,25 +56,36 @@
                     {
                         var item = Model.Messages[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                <td class="select">
-                                    <input type="checkbox" name="pm@(item.Id)" class="rowcheckbox" />
+                                <td>
+                                    <div class="col-12">
+                                        <div class="row text-center text-sm-left">
+                                            <div class="select col-sm-1 col-12 text-left">
+                                                <label class="custom-control custom-checkbox">
+                                                    <input name="pm@(item.Id)" id="pm@(item.Id)" type="checkbox" class="custom-control-input rowcheckbox">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description">&nbsp;</span>
+                                                </label>
+                                            </div>
+                                            <div class="from col-sm-2 col-12 pb-1">
+                                                @if (item.AllowViewingFromProfile)
+                                                {
+                                                    @Html.RouteLink(item.CustomerFromName, "CustomerProfile", new { Id = item.FromCustomerId })
+                                                }
+                                                else
+                                                {
+                                                    @item.CustomerFromName
+                                                }
+                                            </div>
+                                            <div class="subject col-sm-5 col-12">
+                                                @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = (item.IsRead) ? "pm-read" : "pm-unread" })
+                                            </div>
+                                            <div class="date col-sm-4 col-12">
+                                                @item.CreatedOn
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td class="from">
-                                    @if (item.AllowViewingFromProfile)
-                                    {
-                                        @Html.RouteLink(item.CustomerFromName, "CustomerProfile", new { Id = item.FromCustomerId })
-                                    }
-                                    else
-                                    {
-                                        @item.CustomerFromName
-                                    }
-                                </td>
-                                <td class="subject">
-                                    @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = (item.IsRead) ? "pm-read" : "pm-unread" })
-                                </td>
-                                <td class="date">
-                                    @item.CreatedOn
-                                </td>
+
                             </tr>
                         }
                     </tbody>
@@ -80,9 +98,9 @@
                     @pager
                 </div>
             }
-            <div class="buttons">
-                <input class="button-1 delete-selected-pm-button" name="delete-inbox" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />
-                <input class="button-2 mark-unread-pm-button" name="mark-unread" type="submit" value="@T("PrivateMessages.Inbox.MarkAsUnread")" />
+            <div class="btn-group btn-group-sm mb-2">
+                <input class="btn btn-secondary delete-selected-pm-button" name="delete-inbox" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />
+                <input class="btn btn-secondary mark-unread-pm-button" name="mark-unread" type="submit" value="@T("PrivateMessages.Inbox.MarkAsUnread")" />
             </div>
         }
     }

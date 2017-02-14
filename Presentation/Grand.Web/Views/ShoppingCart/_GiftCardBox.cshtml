@@ -6,15 +6,31 @@
         <div class="title">
             <strong>@T("ShoppingCart.GiftCardCouponCode")</strong>
         </div>
-        <div class="hint">@T("ShoppingCart.GiftCardCouponCode.Tooltip")</div>
+
         <div class="coupon-code">
-            <input name="giftcardcouponcode" type="text" class="gift-card-coupon-code" />
-            <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" class="button-2 apply-gift-card-coupon-code-button" />
+            <div class="form-group">
+                <span for="inputEmail3" class="col-form-label">@T("ShoppingCart.GiftCardCouponCode.Tooltip")</span>
+                    <div class="input-group">
+                        <input id="giftcardcouponcode" name="giftcardcouponcode" type="text" class="form-control gift-card-coupon-code" />
+                        <label for="giftcardcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
+                        <span class="input-group-btn">
+                            <button type="submit" name="applygiftcardcouponcode" class="btn btn-secondary apply-discount-coupon-code-button">
+                                @T("ShoppingCart.GiftCardCouponCode.Button")
+                            </button>
+                        </span>
+                    </div>
+            </div>
+            @*<input name="giftcardcouponcode" type="text" class="gift-card-coupon-code" />*@
+            @*<input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" class="btn btn-outline-success apply-gift-card-coupon-code-button" />*@
         </div>
         @if (!String.IsNullOrEmpty(Model.Message))
-        {
-            <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
-                @Model.Message
+        { 
+            <div class="card card-inverse @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
+                <div class="card-block">
+                    <blockquote class="card-blockquote">
+                        <span>@Model.Message</span>
+                    </blockquote>
+                </div>
             </div>
         }
     </div>

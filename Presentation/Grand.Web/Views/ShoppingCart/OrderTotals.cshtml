@@ -1,36 +1,36 @@
 ﻿@model OrderTotalsModel
 @using Grand.Web.Models.ShoppingCart;
-<div class="total-info">
-    <table class="cart-total">
+<div class="total-info table-responsive pl-0 pr-0">
+    <table class="table table-hover">
         <tbody>
-            <tr class="order-subtotal">
-                <td class="cart-total-left">
-                    <label>@T("ShoppingCart.Totals.SubTotal"):</label>
+            <tr class="col-12 pr-0 order-subtotal d-flex justify-content-start">
+                <td class="col-6 cart-total-left">
+                    <span>@T("ShoppingCart.Totals.SubTotal"):</span>
                 </td>
-                <td class="cart-total-right">
+                <td class="col-6 cart-total-right  text-right">
                     <span class="value-summary">@Model.SubTotal</span>
                 </td>
             </tr>
             @if (!String.IsNullOrEmpty(Model.SubTotalDiscount))
             {
-                <tr class="order-subtotal-discount">
-                    <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.SubTotalDiscount"):</label>
+                <tr class="col-12 pr-0 order-subtotal-discount d-flex justify-content-start">
+                    <td class="col-6 cart-total-left">
+                        <span>@T("ShoppingCart.Totals.SubTotalDiscount"):</span>
                     </td>
-                    <td class="cart-total-right">
+                    <td class="col-6 cart-total-right  text-right">
                         <span class="value-summary">@Model.SubTotalDiscount</span>
                     </td>
                 </tr>
             }
-            <tr class="shipping-cost">
-                <td class="cart-total-left">
-                    <label>@T("ShoppingCart.Totals.Shipping"):</label>
+            <tr class="col-12 pr-0 shipping-cost d-flex justify-content-start">
+                <td class="col-6 cart-total-left">
+                    <span>@T("ShoppingCart.Totals.Shipping"):</span>
                     @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
                     {
                         <span class="selected-shipping-method">@T("ShoppingCart.Totals.Shipping.Method", Model.SelectedShippingMethod)</span>
                     }
                 </td>
-                <td class="cart-total-right">
+                <td class="col-6 cart-total-right  text-right">
                     @if (Model.RequiresShipping)
                     {
                         if (!String.IsNullOrEmpty(Model.Shipping))
@@ -50,11 +50,11 @@
             </tr>
             @if (!String.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
             {
-                <tr class="additional-fees">
-                    <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.PaymentMethodAdditionalFee"):</label>
+                <tr class="col-12 pr-0 additional-fees">
+                    <td class="col-6 cart-total-left">
+                        <span>@T("ShoppingCart.Totals.PaymentMethodAdditionalFee"):</span>
                     </td>
-                    <td class="cart-total-right">
+                    <td class="col-6 cart-total-right text-right">
                         <span class="value-summary">@Model.PaymentMethodAdditionalFee</span>
                     </td>
                 </tr>
@@ -63,11 +63,11 @@
             {
                 foreach (var taxRate in Model.TaxRates)
                 {
-                <tr class="tax-rate">
-                    <td class="cart-total-left">
-                        <label>@string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate):</label>
+                <tr class="col-12 pr-0 tax-rate d-flex justify-content-start">
+                    <td class="col-6 cart-total-left">
+                        <span>@string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate):</span>
                     </td>
-                    <td class="cart-total-right">
+                    <td class="col-6 cart-total-right text-right">
                         <span>@taxRate.Value</span>
                     </td>
                 </tr>
@@ -75,22 +75,22 @@
             }
             @if (Model.DisplayTax)
             {
-                <tr class="tax-value">
-                    <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.Tax"):</label>
+                <tr class="col-12 pr-0 tax-value d-flex justify-content-start">
+                    <td class="col-6 cart-total-left">
+                        <span>@T("ShoppingCart.Totals.Tax"):</span>
                     </td>
-                    <td class="cart-total-right">
+                    <td class="col-6 cart-total-right  text-right">
                         <span class="value-summary">@Model.Tax</span>
                     </td>
                 </tr>
             }
             @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
             {
-                <tr class="discount-total">
-                    <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.OrderTotalDiscount"):</label>
+                <tr class="col-12 pr-0 discount-total d-flex justify-content-start">
+                    <td class="col-6 cart-total-left">
+                        <span>@T("ShoppingCart.Totals.OrderTotalDiscount"):</span>
                     </td>
-                    <td class="cart-total-right">
+                    <td class="col-6 cart-total-right  text-right">
                         <span class="value-summary">@Model.OrderTotalDiscount</span>
                     </td>
                 </tr>
@@ -99,39 +99,41 @@
             {
                 foreach (var gc in Model.GiftCards)
                 {
-                <tr class="giftcard-summary">
-                    <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.GiftCardInfo"):</label>
+                <tr class="col-12 pr-0 giftcard-summary d-flex justify-content-start">
+                    <td class="col-6 cart-total-left">
+                        <span>@T("ShoppingCart.Totals.GiftCardInfo"):</span>
                         <span>@T("ShoppingCart.Totals.GiftCardInfo.Code", gc.CouponCode)</span>
+                        <span class="giftcard-remaining">@string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)</span>
+                    </td>
+                    <td class="col-6 cart-total-right  text-right">
+                        <span class="value-summary">@gc.Amount</span>
                         @if (Model.IsEditable)
                         {
                             //little hack here with empty "value" element
-                            <input type="submit" name="removegiftcard-@gc.Id" value=" " title="@T("Common.Remove")" class="remove-gift-card-button" />
+                            <button type="submit" name="removegiftcard-@gc.Id" title="@T("Common.Remove")" class="btn btn-sm btn-secondary remove-gift-card-button">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
                         }
-                        <span class="giftcard-remaining">@string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)</span>
-                    </td>
-                    <td class="cart-total-right">
-                        <span class="value-summary">@gc.Amount</span>
                     </td>
                 </tr>
                 }
             }
             @if (Model.RedeemedRewardPoints > 0)
             {
-                <tr class="reward-points">
-                    <td class="cart-total-left">
-                        <label>@string.Format(T("ShoppingCart.Totals.RewardPoints").Text, Model.RedeemedRewardPoints):</label>
+                <tr class="col-12 pr-0 reward-points d-flex justify-content-start">
+                    <td class="col-6 cart-total-left">
+                        <span>@string.Format(T("ShoppingCart.Totals.RewardPoints").Text, Model.RedeemedRewardPoints):</span>
                     </td>
-                    <td class="cart-total-right">
+                    <td class="col-6 cart-total-right  text-right">
                         <span class="value-summary">@Model.RedeemedRewardPointsAmount</span>
                     </td>
                 </tr>
             }
-            <tr class="order-total">
-                <td class="cart-total-left">
-                    <label>@T("ShoppingCart.Totals.OrderTotal"):</label>
+            <tr class="col-12 pr-0 order-total d-flex justify-content-start">
+                <td class="col-6 cart-total-left">
+                    <span>@T("ShoppingCart.Totals.OrderTotal"):</span>
                 </td>
-                <td class="cart-total-right">
+                <td class="col-6 cart-total-right  text-right">
                     @if (!String.IsNullOrEmpty(Model.OrderTotal))
                     {
                         <span class="value-summary"><strong>@Model.OrderTotal</strong></span>
@@ -144,11 +146,12 @@
             </tr>
             @if (Model.WillEarnRewardPoints > 0)
             {
-                <tr class="earn-reward-points">
-                    <td class="cart-total-left">
-                        <label>@T("ShoppingCart.Totals.RewardPoints.WillEarn"):</label>
+                <tr class="col-12 pr-0 earn-reward-points d-flex justify-content-start">
+                    <td class="col-6 cart-total-left">
+                        <span>@T("ShoppingCart.Totals.RewardPoints.WillEarn"):</span>
                     </td>
-                    <td class="cart-total-right">
+                    <td class="col-6 cart-total-right text-right">
+
                         <span class="value-summary">@string.Format(T("ShoppingCart.Totals.RewardPoints.WillEarn.Point").Text, Model.WillEarnRewardPoints)</span>
                     </td>
                 </tr>

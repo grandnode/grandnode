@@ -4,11 +4,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.PageNotFound").Text);
 }
-<div class="page not-found-page">
-    <div class="page-title">
-        <h1>@T("PageTitle.PageNotFound")</h1>
-    </div>
-    <div class="page-body">
+<div class="page text-xs-center not-found-page">
+        <h2 class="text-xs-center generalTitle">@T("PageTitle.PageNotFound")</h2>
         @Html.Action("TopicBlock", "Topic", new { systemName = "PageNotFound" })
-    </div>
 </div>

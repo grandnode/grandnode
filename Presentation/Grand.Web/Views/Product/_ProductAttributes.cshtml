@@ -14,18 +14,14 @@
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                 <dt id="@string.Format("product_attribute_label_{0}", attribute.Id)">
-                    <label class="text-prompt">
+                    <span class="text-prompt">
                         @textPrompt
-                    </label>
-                    @if (attribute.IsRequired)
-                    {
-                        <span class="required">*</span>
-                    }
+                    </span>
                     @if (!string.IsNullOrEmpty(attribute.Description))
                     {
-                        <div class="attribute-description">
+                        <span class="attribute-description">
                             @Html.Raw(attribute.Description)
-                        </div>
+                        </span>
                     }
                 </dt>
                 <dd id="@string.Format("product_attribute_input_{0}", attribute.Id)">
@@ -33,7 +29,8 @@
                     {
                         case AttributeControlType.DropdownList:
                             {
-                                <select name="@(controlId)" id="@(controlId)">
+                                <label for="@(controlId)" class="sr-only"></label>
+                                <select class="custom-select form-control" name="@(controlId)" id="@(controlId)">
                                     @if (!attribute.IsRequired)
                                     {
                                         <option value="0">---</option>
@@ -50,15 +47,18 @@
                             break;
                         case AttributeControlType.RadioList:
                             {
-                                <ul class="option-list">
+                                <ul>
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
                                         <li>
-                                            <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                            <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
+                                            <label class="custom-control custom-radio">
+                                                <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">@attributeName</span>
+                                            </label>
                                         </li>
                                     }
                                 </ul>
@@ -67,15 +67,19 @@
                         case AttributeControlType.Checkboxes:
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
-                                <ul class="option-list">
+                                <ul>
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
                                         <li>
-                                            <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                                            <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
+                                            <label class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="sr-only">@attributeName</span>
+                                                <span class="custom-control-description">@attributeName</span>
+                                            </label>
                                         </li>
                                     }
                                 </ul>
@@ -83,12 +87,12 @@
                             break;
                         case AttributeControlType.TextBox:
                             {
-                                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+                                <input name="@(controlId)" type="text" class="form-control textbox" id="@(controlId)" value="@attribute.DefaultValue" />
                             }
                             break;
                         case AttributeControlType.MultilineTextbox:
                             {
-                                <textarea cols="20" id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+                                <textarea class="form-control" cols="20" id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
                             }
                             break;
                         case AttributeControlType.Datepicker:
@@ -204,14 +208,14 @@
                             break;
                         case AttributeControlType.ColorSquares:
                             {
-                                <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
+                                <ul class="list-inline option-list color-squares pl-0" id="color-squares-@(attribute.Id)">
                                     @foreach (var attributeValue in attribute.Values)
                                     {
                                         var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
-                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
-                                            <label for="@(controlId)_@(attributeValue.Id)">
+                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value list-inline-item\"") : @Html.Raw(" class=\"list-inline-item\""))>
+                                            <label>
                                                 <span class="color-container" title="@attributeName">
                                                     <span class="color" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
                                                 </span>
@@ -234,14 +238,14 @@
 
                             case AttributeControlType.ImageSquares:
                                 {
-                                    <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
+                                    <ul class="option-list color-squares pl-0" id="color-squares-@(attribute.Id)">
                                         @foreach (var attributeValue in attribute.Values)
                                         {
                                             var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                                 attributeValue.Name :
                                                 T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
                                             <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
-                                                <label for="@(controlId)_@(attributeValue.Id)">
+                                                <label>
                                                     <span class="color-container">
                                                         <span class="color" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
                                                     </span>

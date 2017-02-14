@@ -1,40 +1,30 @@
 ﻿@model ProfileIndexModel
 @using Grand.Web.Models.Profile;
-@{    
+@{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     Html.AddTitleParts(T("PageTitle.Profile").Text);
 }
 <div class="page profile-page">
-    <div class="page-title">
-        <h1>@Model.ProfileTitle</h1>
-    </div>
-    <div class="page-body">
-        @{
-            var selectPostsTab = Model.ForumsEnabled && Model.PagingPosts ? ".tabs( 'option', 'active', 1 )" : "";
-        }
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $("#tabs").tabs()@Html.Raw(selectPostsTab);
-            });
-        </script>
-        <div class="tabs inbox-tabs" id="tabs">
-            <ul class="tabs-header">
-                <li><a href="#tabs-1">@T("Profile.PersonalInfo")</a></li>
-                @if (Model.ForumsEnabled)
-                {
-                    <li><a href="#tabs-2">@T("Profile.LatestPosts")</a></li>
-                }
-            </ul>
-            <div id="tabs-1" class="tab-content">
-                @Html.Action("info", new { customerProfileId = Model.CustomerProfileId })
-            </div>
+    <h1 class="h2 text-xs-center generalTitle">@Model.ProfileTitle</h1>
+    <div class="tabs inbox-tabs" id="tabs" role="tablist">
+        <ul class="col-sm-12 nav nav-tabs mb-2" role="tablist">
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab1" role="tab">@T("Profile.PersonalInfo")</a></li>
             @if (Model.ForumsEnabled)
             {
-                <div id="tabs-2" class="tab-content">
-                    @Html.Action("posts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
-                </div>
+                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#tab2" role="tab">@T("Profile.LatestPosts")</a></li>
             }
+        </ul>
+        <div class="tab-content col-sm-12 px-0">
+                <div id="tab1" class="tab-pane" role="tabpanel">
+                    @Html.Action("info", new { customerProfileId = Model.CustomerProfileId })
+                </div>
+                @if (Model.ForumsEnabled)
+                {
+                    <div id="tab2" class="tab-pane active" role="tabpanel">
+                        @Html.Action("posts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
+                    </div>
+                }
         </div>
     </div>
 </div>

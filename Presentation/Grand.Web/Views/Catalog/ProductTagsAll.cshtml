@@ -7,21 +7,15 @@
 }
 @using Grand.Web.Models.Catalog;
 <div class="page product-tags-all-page">
-    <div class="page-title">
-        <h1>@T("Products.Tags.All")</h1>
-    </div>
-    <div class="page-body">
+        <h2 class="generalTitle">@T("Products.Tags.All")</h2>
         @if (Model.Tags.Count > 0)
         {
-            <ul class="product-tags-list">
+            <div class="product-tags-list">
                 @foreach (var item in Model.Tags)
                 {
-                    <li>
-                        <a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" class="producttag" style="font-size:@(Model.GetFontSize(item))%;">
+                        <a class="btn btn-secondary" href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" class="btn btn-sm btn-secondary" style="font-size:@(Model.GetFontSize(item))%;">
                         @item.Name</a>
-                    </li>
                 }
-            </ul>
+            </div>
         }
-    </div>
 </div>

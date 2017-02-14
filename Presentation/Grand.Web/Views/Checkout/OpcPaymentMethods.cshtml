@@ -1,13 +1,17 @@
 ﻿@model CheckoutPaymentMethodModel
 @using Grand.Web.Models.Checkout;
-<div class="checkout-data">
     @Html.Widget("op_checkout_payment_method_top")
-    <div class="section payment-method">
+    <div class="payment-method">
         @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
         {
             <div class="use-reward-points">
-                @Html.CheckBoxFor(x => x.UseRewardPoints, Model.RewardPointsEnoughToPayForOrder ? new { @onclick = "PaymentMethod.toggleUseRewardPoints(this)" } : null)
-                @string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)
+
+                <label class="custom-control custom-checkbox">
+                    @Html.CheckBoxFor(model => model.UseRewardPoints, new { @class = "custom-control-input" })
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</span>
+                </label>
+
                 @if (Model.RewardPointsEnoughToPayForOrder)
                 {
                     <script type = "text/javascript" >
@@ -20,7 +24,7 @@
         }
         @if (Model.PaymentMethods.Count > 0)
         {
-            <ul class="method-list" id="payment-method-block">
+            <div class="list-inline col-12 mt-2 mb-2" id="payment-method-block">
                 @for (int i = 0; i < Model.PaymentMethods.Count; i++)
                 {
                     var paymentMethod = Model.PaymentMethods[i];
@@ -29,28 +33,26 @@
                     {
                         paymentMethodName = T("Checkout.SelectPaymentMethod.MethodAndFee", paymentMethodName, paymentMethod.Fee).Text;
                     }
-                    <li>
-                        <div class="method-name">
+
+                    <div class="col-12 method-name">
+                        <label class="custom-control custom-radio flex-row">
+                            <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+
                             @if (!String.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {
-                                <div class ="payment-logo">
-                                    <label for="paymentmethod_@(i)">
-                                        <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
-                                    </label>
-                                </div>
+                                <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
                             }
-                            <div class="payment-details">
-                                <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" />
-                                <label for="paymentmethod_@(i)">@paymentMethodName</label>
-                                @if (!string.IsNullOrEmpty(paymentMethod.Description))
-                                {
-                                    <div class="payment-description">@paymentMethod.Description</div>
-                                }
-                            </div>
-                        </div>
-                    </li>
+                            @if (!string.IsNullOrEmpty(paymentMethod.Description))
+                            {
+                                <span class="custom-control-description pl-1">
+                                    @paymentMethod.Description
+                                </span>
+                            }
+                        </label>
+                    </div>
                 }
-            </ul>
+            </div>
         }
         else
         {
@@ -60,4 +62,3 @@
         }
     </div>
     @Html.Widget("op_checkout_payment_method_bottom")
-</div>

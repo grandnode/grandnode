@@ -79,7 +79,7 @@
             $('#ph-password #password').select().focus();
         });
     </script>
-    <div class="topic-password" id="ph-password">
+    <div class="page topic-password" id="ph-password">
         @using (Html.BeginRouteForm("TopicAuthenticate"))
         {
             @Html.HiddenFor(model => model.Id)
@@ -87,10 +87,10 @@
                 @T("Topic.EnterPassword")
             </div>
             <div class="enter-password-form">
-                @Html.Password("password")
-                <input type="submit" id="button-password" value="@T("Topic.Button")" class="button-1 topic-password-button" />
+                @Html.Password("password", null, new { @class = "form-control mt-1" })
+                <input type="submit" id="button-password" value="@T("Topic.Button")" class="btn btn-secondary topic-password-button mt-1 mb-1" />
             </div>
-            <div class="password-error">
+            <div class="password-error text-danger h5 mt-1 mb-1">
                 <span id="password-error"></span>
             </div>
         }

@@ -41,29 +41,29 @@
             <div class="title">
                 <strong>@T("ShoppingCart.EstimateShipping")</strong>
             </div>
-            <div class="hint">@T("ShoppingCart.EstimateShipping.Tooltip")</div>
+            <div class="hint generalMarginSupporter">@T("ShoppingCart.EstimateShipping.Tooltip")</div>
+
             <div class="shipping-options">
-                <div class="inputs">
-                    @Html.LabelFor(model => model.CountryId, new { }, ":")
-                    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { @class = "country-input" })
-                    <span class="required">*</span>
+                <div class="form-group">
+                        @Html.LabelFor(model => model.CountryId, new { }, ":")
+                        @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { @class = "custom-select form-control country-input" })
+                    </div>
                 </div>
-                <div class="inputs">
-                    @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
-                    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "state-input" })
-                    <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                <div class="form-group">
+                        @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
+                        @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "custom-select form-control state-input" })
+                        <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                 </div>
-                <div class="inputs">
-                    @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
-                    @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "zip-input" })
+                <div class="form-group">
+                        @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
+                        @Html.TextBoxFor(model => model.ZipPostalCode, new { @class = "form-control zip-input" })
                 </div>
                 <div class="buttons">
-                    <input id="estimate-shipping-button" type="button" value="@T("ShoppingCart.EstimateShipping.Button")" class="button-2 estimate-shipping-button" />
+                    <input id="estimate-shipping-button" type="button" value="@T("ShoppingCart.EstimateShipping.Button")" class="btn btn-secondary float-xs-right estimate-shipping-button" />
                 </div>
             </div>
-            <div class="estimate-shipping-result"></div>
+            <div class="col-12 estimate-shipping-result generalMarginSupporter"></div>
         </div>
-    </div>
 }
 <script type="text/javascript">
     $(document).ready(function () {

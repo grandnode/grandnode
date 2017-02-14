@@ -20,6 +20,20 @@
         Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
     });
 }
-<div class="tax-display-type-selector">
-    @Html.DropDownList("customerTaxType", taxTypes, new { onchange = "setLocation(this.value);" })
+<div class="btn-group btn-group-sm float-xs-right ml-1">
+    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+        <span class="hidden-md-down">@taxTypes.FirstOrDefault(x => x.Selected).Text</span>
+        <span class="fa fa-info hidden-lg-up"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right tax">
+        <ul class="pl-0 mb-0">
+            @foreach (var item in taxTypes)
+            {
+                <li>
+                    <a href="@item.Value">@item.Text</a>
+                </li>
+            }
+        </ul>
+    </div>
 </div>

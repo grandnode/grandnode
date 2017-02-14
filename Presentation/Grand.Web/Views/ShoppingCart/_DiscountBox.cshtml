@@ -3,29 +3,60 @@
 @if (Model.Display)
 {
     <div class="coupon-box">
-        <div class="title">
-            <strong>@T("ShoppingCart.DiscountCouponCode")</strong>
-        </div>
-        <div class="hint">
-            @T("ShoppingCart.DiscountCouponCode.Tooltip")
-        </div>
+        <h2 class="h5">
+            <strong>
+                @T("ShoppingCart.DiscountCouponCode.Tooltip")
+            </strong>
+        </h2>
         <div class="coupon-code">
-            <input name="discountcouponcode" type="text" class="discount-coupon-code" />
-            <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" class="button-2 apply-discount-coupon-code-button" />
+            <div class="form-group">
+                <span for="inputEmail3" class="col-form-label">@T("ShoppingCart.DiscountCouponCode")</span>
+                    <div class="input-group">
+                        <input type="text"  id="discountcouponcode" name="discountcouponcode" class="form-control discount-coupon-code">
+                        <label for="discountcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
+                        <span class="input-group-btn">
+                            <button type="submit" name="applydiscountcouponcode" class="btn btn-secondary apply-discount-coupon-code-button" >
+                                @T("ShoppingCart.DiscountCouponCode.Button")
+                            </button>
+                        </span>
+                </div>
+            </div>
         </div>
         @if (!String.IsNullOrEmpty(Model.Message))
         {
-            <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
-                @Model.Message
+
+            <div id="grandMoment" class="card card-inverse mb-3 @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
+                <div class="card-block p-2">
+                    <blockquote class="card-blockquote">
+                        <span>@Model.Message</span>
+                    </blockquote>
+                </div>
             </div>
+
+
+            <script>
+
+                $(document).ready(function () {
+                    $("#grandMoment").delay(7000).slideUp(300);
+                });
+
+            </script>
         }
         @foreach (var discount in Model.AppliedDiscountsWithCodes)
-        { 
-            <div class="current-code">
-                <span class="applied-discount-code">@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discount.CouponCode)</span>
-                @*empty value (little hack for FormValueExistsAttribute)*@
-                <input type="submit" name="removediscount-@discount.Id" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
+        {
+
+            <div class="card card-inverse card-success text-center current-code mb-3">
+                <div class="card-block p-2">
+                    <blockquote class="card-blockquote">
+                        <span>@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, discount.CouponCode)</span>
+                        <button type="submit" name="removediscount-@discount.Id" title="@T("Common.Remove")" class="ml-auto btn btn-sm btn-secondary remove-discount-button float-sm-right" >
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                    </blockquote>
+                </div>
             </div>
         }
     </div>
+
+
 }

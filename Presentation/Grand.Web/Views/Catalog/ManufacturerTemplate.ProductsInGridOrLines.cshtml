@@ -16,71 +16,86 @@
 @using Grand.Core.Infrastructure;
 @using Grand.Web.Models.Catalog;
 <div class="page manufacturer-page">
-    <div class="page-title">
-        <h1>@Model.Name</h1>
+    <div class="col-12">
+        <h2 class="generalTitle">@Model.Name</h2>
     </div>
-    <div class="page-body">
-        @Html.Widget("manufacturerdetails_top", Model.Id)
-        @*description*@
-        @if (!String.IsNullOrWhiteSpace(Model.Description))
-        {
-            <div class="manufacturer-description">
-                @Html.Raw(Model.Description)
+    @Html.Widget("manufacturerdetails_top", Model.Id)
+    @*description*@
+    @if (!String.IsNullOrWhiteSpace(Model.Description))
+    {
+        <div class="manufacturer-description">
+            @Html.Raw(Model.Description)
+        </div>
+    }
+    @Html.Widget("manufacturerdetails_before_featured_products", Model.Id)
+    @*featured products*@
+    @if (Model.FeaturedProducts.Count > 0)
+    {
+        <div class="col-12 px-0 product-grid featured-product-grid">
+            <h2 class="h5">
+                <strong>@T("Products.FeaturedProducts")</strong>
+            </h2>
+            <div class="row">
+                @foreach (var product in Model.FeaturedProducts)
+                {
+                    <div class="col-12 col-md-6 col-lg-4">
+                        @Html.Partial("_ProductBox", product)
+                    </div>
+                }
             </div>
-        }
-        @Html.Widget("manufacturerdetails_before_featured_products", Model.Id)
-        @*featured products*@
-        @if (Model.FeaturedProducts.Count > 0)
-        {
-            <div class="product-grid featured-product-grid">
-                <div class="title">
-                    <strong>@T("Products.FeaturedProducts")</strong>
-                </div>
-                <div class="item-grid">
-                    @foreach (var product in Model.FeaturedProducts)
-                    {
-                        <div class="item-box">
-                            @Html.Partial("_ProductBox", product)
-                        </div>
-                    }
-                </div>
-            </div>
-        }
-        @Html.Widget("manufacturerdetails_after_featured_products", Model.Id)
-        @if (Model.Products.Count > 0)
-        {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
-        }
-        @Html.Widget("manufacturerdetails_before_filters", Model.Id)
-        @*filtering*@
-        @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
-        {
-            @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
-        }
-        @Html.Widget("manufacturerdetails_before_product_list", Model.Id)
-
-        @if (Model.Products.Count > 0)
-        {
-            <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">
-                <div class="item-grid">
+        </div>
+    }
+    @Html.Widget("manufacturerdetails_after_featured_products", Model.Id)
+    @if (Model.Products.Count > 0)
+    {
+        @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
+    }
+    @Html.Widget("manufacturerdetails_before_filters", Model.Id)
+    @*filtering*@
+    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+    {
+        @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+    }
+    @Html.Widget("manufacturerdetails_before_product_list", Model.Id)
+    @if (Model.Products.Count > 0)
+            {
+                if (Model.PagingFilteringContext.ViewMode == "grid")
+                {
+            <div class="manufactureGrid">
+                <div class="row flex-grid">
                     @foreach (var product in Model.Products)
                     {
-                        <div class="item-box">
+                        <div class="col-lg-4 col-sm-6 col-12">
                             @Html.Partial("_ProductBox", product)
                         </div>
                     }
                 </div>
             </div>
         }
-        @{
-            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
-        }
-        @if (!pager.IsEmpty())
+        else
         {
-            <div class="pager">
-                @pager
+            <div class="col-12">
+                <div class="row">
+                    @foreach (var product in Model.Products)
+                    {
+                        @Html.Partial("_ProductBoxList", product)
+                    }
+                </div>
             </div>
         }
-        @Html.Widget("manufacturerdetails_bottom", Model.Id)
-    </div>
+    }
+
+    @{
+        var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+    }
+    @if (!pager.IsEmpty())
+    {
+        <div class="pager">
+            @pager
+        </div>
+    }
+    @Html.Widget("manufacturerdetails_bottom", Model.Id)
 </div>
+
+
+

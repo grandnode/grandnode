@@ -2,14 +2,12 @@
 @using Grand.Web.Models.Catalog;
 @if (Model.Count > 0)
 {
-    <div class="product-grid cross-sells">
-        <div class="title">
-            <strong>@T("ShoppingCart.CrossSells")</strong>
-        </div>
-        <div class="item-grid">
+    <div class="col-12 product-grid cross-sells pt-1 px-0">
+            <h4 class="generalTitle"><strong>@T("ShoppingCart.CrossSells")</strong></h4>
+        <div class="row flex-grid">
             @foreach (var product in Model)
             {
-                <div class="item-box">
+                <div class="col-lg-4 col-sm-6 col-12 mb-2">
                     @Html.Partial("_ProductBox", product)
                 </div>
             }

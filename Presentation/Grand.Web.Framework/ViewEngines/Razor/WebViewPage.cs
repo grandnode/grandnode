@@ -113,6 +113,12 @@ namespace Grand.Web.Framework.ViewEngines.Razor
             return supportRtl;
         }
 
+        public string WorkingLanguage()
+        {
+            return _workContext.WorkingLanguage.UniqueSeoCode;
+        }
+
+
         /// <summary>
         /// Gets a selected tab index (used in admin area to store selected tab index)
         /// </summary>

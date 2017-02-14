@@ -3,29 +3,30 @@
 @if (Model.NewsItems.Count > 0)
 {
     <div class="news-list-homepage">
-        <div class="title">
-            <strong>@T("News")</strong>
-        </div>
-        <div class="news-items">
-            @foreach (var item in Model.NewsItems)
-            {
-                <div class="news-item">
-                    <div class="news-head">
-                        <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@item.Title</a>
-                        <span class="news-date">-@item.CreatedOn.ToString("D")</span>
+        <h2 class="generalTitle text-center mb-3">
+            @T("News")
+        </h2>
+            <div class="row">
+                @foreach (var item in Model.NewsItems)
+                {
+                    <div class="col-lg-4 col-md-6 col-12 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })"><h3 class="h5">@item.Title</h3></a>
+                                <span class="news-date">-@item.CreatedOn.ToString("D")</span>
+                            </div>
+                            <div class="card-block">
+                                @Html.Raw(item.Short)
+                            </div>
+                            <div class="card-footer">
+                                <a class="btn btn-sm btn-primary read-more" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo") - @item.Title</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="news-body">
-                        @Html.Raw(item.Short)
-                    </div>
-                    <div class="buttons">
-                        <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="read-more">@T("News.MoreInfo")</a>
-                    </div>
-                </div>
-            }
-        </div>
-        <div class="view-all">
-            <a href="@Url.RouteUrl("NewsArchive")">@T("News.ViewAll")</a>
+                }
+            </div>
+        <div class="view-all text-center">
+            <a class="btn btn-secondary" href="@Url.RouteUrl("NewsArchive")">@T("News.ViewAll")</a>
         </div>
     </div>
-
 }

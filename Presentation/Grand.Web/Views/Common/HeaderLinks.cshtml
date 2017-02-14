@@ -1,73 +1,77 @@
 ﻿@model HeaderLinksModel
 @using Grand.Web.Models.Common;
-<div class="header-links">
-    <ul>
-        @Html.Widget("header_links_before")
-        @if (Model.IsAuthenticated)
-        {
-            <li><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account">@Model.CustomerEmailUsername</a></li>
-            <li><a href="@Url.RouteUrl("Logout")" class="ico-logout">@T("Account.Logout")</a></li>
-        }
-        else
-        {
-            <li><a href="@Url.RouteUrl("Register")" class="ico-register">@T("Account.Register")</a></li>
-            <li><a href="@Url.RouteUrl("Login")" class="ico-login">@T("Account.Login")</a></li>
-        }
-        @if (Model.AllowPrivateMessages)
-        {
-            <li>
-                <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">
-                    <span class="inbox-label">@T("PrivateMessages.Inbox")</span>
-                    <span class="inbox-unread">@Model.UnreadPrivateMessages</span>
+@Html.Widget("header_links_before")
+@if (Model.IsAuthenticated)
+{
+    <li class="nav-item">
+        <a class="nav-link ico-account" href="@Url.RouteUrl("CustomerInfo")">
+            <span class=""><span class="fa fa-user-o"></span></span>
+            <span class="hidden-sm-down">@Model.CustomerEmailUsername</span>
+        </a>
+    </li>
+            <li class="nav-item">
+                <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
+                    <span class=""><span class="fa fa-sign-out"></span></span>
+                    <span class="hidden-sm-down">@T("Account.Logout")</span>
                 </a>
             </li>
-        }
-        @if (Model.WishlistEnabled)
-        {
-            <li>
-                <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
-                    <span class="wishlist-label">@T("Wishlist")</span>
-                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
-                </a>
-            </li>
-        }
-        @if (Model.ShoppingCartEnabled)
-        {
-            <li id="topcartlink">
-                <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
-                    <span class="cart-label">@T("ShoppingCart")</span>
-                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
-                </a>
-            </li>
-        }
-        @Html.Widget("header_links_after")
-    </ul>
-    @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
-    {
-        //new private message notification
-        <script type="text/javascript">
-            $(document).ready(function () {
-                displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))', 'success', false);
-            });
-        </script>
-    }
-    @if (Model.ShoppingCartEnabled)
-    {
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('.header').on('mouseenter', '#topcartlink', function () {
-                    $('#flyout-cart').addClass('active');
-                });
-                $('.header').on('mouseleave', '#topcartlink', function () {
-                    $('#flyout-cart').removeClass('active');
-                });
-                $('.header').on('mouseenter', '#flyout-cart', function () {
-                    $('#flyout-cart').addClass('active');
-                });
-                $('.header').on('mouseleave', '#flyout-cart', function () {
-                    $('#flyout-cart').removeClass('active');
-                });
-            });
-        </script>
-    }
-</div>
+}
+else
+{
+    <li class="nav-item"><a class="nav-link ico-register" href="@Url.RouteUrl("Register")"><span class="fa fa-user-plus"></span><span class="hidden-sm-down">@T("Account.Register")</span></a></li>
+            <li class="nav-item"><a class="nav-link ico-login" href="@Url.RouteUrl("Login")"><span class="fa fa-sign-in"></span><span class="hidden-sm-down">@T("Account.Login")</span></a></li>
+}
+@if (Model.AllowPrivateMessages)
+{
+    <li class="nav-item">
+        <a class="nav-link ico-inbox" href="@Url.RouteUrl("PrivateMessages", new { tab = "" })">
+            <span class="fa fa-envelope-o"></span>
+            <span class="inbox-label hidden-sm-down">@T("PrivateMessages.Inbox")</span>
+            <span class="inbox-unread hidden-md-down">@Model.UnreadPrivateMessages</span>
+        </a>
+    </li>
+}
+@if (Model.WishlistEnabled)
+{
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.RouteUrl("Wishlist")">
+            <span class="wishlist-label">
+                <span class="fa fa-heart-o"></span>
+            </span>
+            <span class="hidden-sm-down">
+                @T("Wishlist")
+            </span>
+            <span class="wishlist-qty hidden-sm-down">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+        </a>
+    </li>
+}
+@if (Model.ShoppingCartEnabled)
+{
+    <li class="nav-item" id="topcartlink">
+        <div class="btn-group dropdown">
+            <a class="nav-link dropdown-toggle" href="@Url.RouteUrl("ShoppingCart")">
+                <span class="cart-label">
+                    <span class="fa fa-shopping-cart"></span>
+                </span>
+                <span class="hidden-sm-down">
+                    @T("ShoppingCart")
+                </span>
+                <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+            </div>
+        </div>
+    </li>
+}
+@Html.Widget("header_links_after")
+@if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+{
+    //new private message notification
+    <script type="text/javascript">
+        $(document).ready(function () {
+            displayPopupNotification('@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.AlertMessage))', 'success', false);
+        });
+    </script>
+}
+

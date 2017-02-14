@@ -5011,7 +5011,7 @@ namespace Grand.Services.Installation
                 AllowProductSorting = true,
                 AllowProductViewModeChanging = true,
                 DefaultViewMode = "grid",
-                ShowProductsFromSubcategories = true,
+                ShowProductsFromSubcategories = false,
                 ShowCategoryProductNumber = false,
                 ShowCategoryProductNumberIncludingSubcategories = false,
                 CategoryBreadcrumbEnabled = true,
@@ -5155,7 +5155,7 @@ namespace Grand.Services.Installation
             _settingService.SaveSetting(new StoreInformationSettings
             {
                 StoreClosed = false,
-                DefaultStoreTheme = "GrandNodeTheme",
+                DefaultStoreTheme = "DefaultClean",
                 AllowCustomerToSelectTheme = false,
                 DisplayMiniProfilerInPublicStore = false,
                 DisplayEuCookieLawWarning = false,

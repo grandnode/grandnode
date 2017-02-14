@@ -2,32 +2,37 @@
 @using Grand.Web.Models.Catalog;
 @if (Model.IsGiftCard)
 {
-    <div class="giftcard">
-        <div>
-            @Html.LabelFor(model => model.RecipientName, new { }, ":")
-            @Html.TextBoxFor(model => model.RecipientName, new { @class = "recipient-name" })
-        </div>
+    <div class="giftcard generalMarginSupporter">
+        <fieldset>
+            <legend class="sr-only">@T("admin.giftcards.fields.recipientname")</legend>
+            @Html.LabelFor(model => model.RecipientName, new {@class = "col-form-label" }, ":")
+                @Html.TextBoxFor(model => model.RecipientName, new { @class = "form-control recipient-name" })
+        </fieldset>
         @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
         {
-            <div>
-                @Html.LabelFor(model => model.RecipientEmail, new { }, ":")
-                    @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipient-email" })
-            </div>
+            <fieldset>
+                <legend class="sr-only">@T("admin.giftcards.fields.recipientemail")</legend>
+                @Html.LabelFor(model => model.RecipientEmail, new { @class = "col-form-label" }, ":")
+                    @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "form-control recipient-email" })
+            </fieldset>
         }
-        <div>
-            @Html.LabelFor(model => model.SenderName, new { }, ":") 
-                @Html.TextBoxFor(model => model.SenderName, new { @class = "sender-name" })
-        </div>
+        <fieldset>
+            <legend class="sr-only">@T("admin.giftcards.fields.sendername")</legend>
+            @Html.LabelFor(model => model.SenderName, new { @class = "col-form-label" }, ":")
+                @Html.TextBoxFor(model => model.SenderName, new { @class = "form-control sender-name" })
+        </fieldset>
         @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
         {
-            <div>
-                @Html.LabelFor(model => model.SenderEmail, new { }, ":")
-                    @Html.TextBoxFor(model => model.SenderEmail, new { @class = "sender-email" })
-            </div>
+            <fieldset>
+                <legend class="sr-only">@T("admin.giftcards.fields.senderemail")</legend>
+                @Html.LabelFor(model => model.SenderEmail, new { @class = "col-form-label" }, ":")
+                    @Html.TextBoxFor(model => model.SenderEmail, new { @class = "form-control sender-email" })
+            </fieldset>
         }
-        <div>
-            @Html.LabelFor(model => model.Message, new { }, ":")
-                @Html.TextAreaFor(model => model.Message, new { @class = "message" })
-        </div>
+                <fieldset>
+                    <legend class="sr-only">@T("privatemessages.send.message")</legend>
+                    @Html.LabelFor(model => model.Message, new { @class = "col-form-label" }, ":")
+                        @Html.TextAreaFor(model => model.Message, new { @class = "form-control message" })
+                </fieldset>
     </div>
 }

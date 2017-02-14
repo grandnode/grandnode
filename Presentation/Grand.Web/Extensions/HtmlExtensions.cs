@@ -56,7 +56,7 @@ namespace Grand.Web.Extensions
             var links = new StringBuilder();
             if (model.ShowTotalSummary && (model.TotalPages > 0))
             {
-                links.Append("<li class=\"total-summary\">");
+                links.Append("<li class=\"total-summary page-item\">");
                 links.Append(string.Format(model.CurrentPageText, model.PageIndex + 1, model.TotalPages, model.TotalRecords));
                 links.Append("</li>");
             }
@@ -69,14 +69,14 @@ namespace Grand.Web.Extensions
                     {
                         model.RouteValues.page = 1;
 
-                        links.Append("<li class=\"first-page\">");
+                        links.Append("<li class=\"first-page page-item\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle") }));
+                            links.Append(html.RouteLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle"), @class = "page-link" }));
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle") }));
+                            links.Append(html.ActionLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle"), @class = "page-link" }));
                         }
                         links.Append("</li>");
                     }
@@ -88,14 +88,14 @@ namespace Grand.Web.Extensions
                     {
                         model.RouteValues.page = (model.PageIndex);
 
-                        links.Append("<li class=\"previous-page\">");
+                        links.Append("<li class=\"previous-page page-item\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle") }));
+                            links.Append(html.RouteLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle"), @class = "page-link" }));
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle") }));
+                            links.Append(html.ActionLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle"), @class = "page-link" }));
                         }
                         links.Append("</li>");
                     }
@@ -109,20 +109,20 @@ namespace Grand.Web.Extensions
                     {
                         if (model.PageIndex == i)
                         {
-                            links.AppendFormat("<li class=\"current-page\"><span>{0}</span></li>", (i + 1));
+                            links.AppendFormat("<li class=\"current-page page-item\"><a class=\"page-link\">{0}</a></li>", (i + 1));
                         }
                         else
                         {
                             model.RouteValues.page = (i + 1);
 
-                            links.Append("<li class=\"individual-page\">");
+                            links.Append("<li class=\"individual-page page-item\">");
                             if (model.UseRouteLinks)
                             {
-                                links.Append(html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) }));
+                                links.Append(html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)), @class = "page-link" }));
                             }
                             else
                             {
-                                links.Append(html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)) }));
+                                links.Append(html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)), @class = "page-link" }));
                             }
                             links.Append("</li>");
                         }
@@ -135,14 +135,14 @@ namespace Grand.Web.Extensions
                     {
                         model.RouteValues.page = (model.PageIndex + 2);
 
-                        links.Append("<li class=\"next-page\">");
+                        links.Append("<li class=\"next-page page-item\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle") }));
+                            links.Append(html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle"), @class = "page-link" }));
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle") }));
+                            links.Append(html.ActionLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle"), @class = "page-link" }));
                         }
                         links.Append("</li>");
                     }
@@ -154,14 +154,14 @@ namespace Grand.Web.Extensions
                     {
                         model.RouteValues.page = model.TotalPages;
 
-                        links.Append("<li class=\"last-page\">");
+                        links.Append("<li class=\"last-page page-item\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle") }));
+                            links.Append(html.RouteLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle"), @class = "page-link" }));
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle") }));
+                            links.Append(html.ActionLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle"), @class = "page-link" }));
                         }
                         links.Append("</li>");
                     }
@@ -170,7 +170,7 @@ namespace Grand.Web.Extensions
             var result = links.ToString();
             if (!String.IsNullOrEmpty(result))
             {
-                result = "<ul>" + result + "</ul>";
+                result = "<ul class=\"pagination\">" + result + "</ul>";
             }
             return MvcHtmlString.Create(result);
         }

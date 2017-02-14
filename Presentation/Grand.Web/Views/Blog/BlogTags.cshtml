@@ -2,18 +2,21 @@
 @using Grand.Web.Models.Blogs
 @if (Model.Tags.Count > 0)
 {
-    <div class="block block-popular-blogtags">
-        <div class="title">
+    <div id="block-popular-blogtags" class="block block-popular-blogtags">
+        <h5 class="generalTitle hidden-md-down"><strong>@T("Blog.TagCloud")</strong></h5>
+        <h5 class="bg-faded p-3 hidden-lg-up">
             <strong>@T("Blog.TagCloud")</strong>
-        </div>
-        <div class="listbox">
-            <ul class="tags">
+            <i id="computers" class="fa fa-angle-down fa-1x float-xs-right" aria-hidden="true"></i>
+        </h5>
+        <div class="viewBox">
+            <div class="product-tags-list">
                 @foreach (var item in Model.Tags)
                 {
-                    <li><a href="@Url.RouteUrl("BlogByTag", new { tag = item.Name })" style="font-size:@(Model.GetFontSize(item))%;">@item.Name</a>
-                    </li>
+                    <a class="btn btn-sm btn-secondary" href="@Url.RouteUrl("BlogByTag", new { tag = item.Name })" style="font-size:@(Model.GetFontSize(item))%;">
+                        @item.Name
+                    </a>
                 }
-            </ul>
+            </div>
         </div>
     </div>
 }

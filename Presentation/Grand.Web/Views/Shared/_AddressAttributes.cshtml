@@ -5,14 +5,14 @@
     string controlId = string.Format("address_attribute_{0}", attribute.Id);
     string textPrompt = attribute.Name;
 
-    <div class="inputs custom-attributes">
-        <label>@textPrompt:</label>
+    <div class="inputs custom-attributes col-sm-12">
+        <label for="@(controlId)">@textPrompt:</label>
         
         @switch (attribute.AttributeControlType)
         {
             case AttributeControlType.DropdownList:
             {
-            <select name="@(controlId)" id="@(controlId)">
+            <select class="custom-selec form-control" name="@(controlId)" id="@(controlId)">
                 @if (!attribute.IsRequired)
                     {
                     <option value="0">---</option>
@@ -26,12 +26,17 @@
                 break;
             case AttributeControlType.RadioList:
             {
-            <ul class="option-list">
+            <ul class="option-list pl-0">
                 @foreach (var attributeValue in attribute.Values)
                     {
                     <li>
-                        <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+
+                        <label for="@(controlId)_@(attributeValue.Id)" class="custom-control custom-radio">
+                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">@attributeValue.Name</span>
+                        </label>
+
                     </li>
                     }
             </ul>
@@ -40,12 +45,15 @@
             case AttributeControlType.Checkboxes:
             case AttributeControlType.ReadonlyCheckboxes:
             {
-            <ul class="option-list">
+            <ul class="option-list pl-0">
                 @foreach (var attributeValue in attribute.Values)
                     {
                     <li>
-                        <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
+                        <label class="custom-control custom-checkbox">
+                            <input class="custom-control-input" id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">@attributeValue.Name</span>
+                        </label>
                     </li>
                     }
             </ul>
@@ -53,12 +61,12 @@
             break;
             case AttributeControlType.TextBox:
             {
-                <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.DefaultValue" />
+                <input name="@(controlId)" type="text" class="form-control textbox" id="@(controlId)" value="@attribute.DefaultValue" />
             }
             break;
             case AttributeControlType.MultilineTextbox:
             {
-            <textarea id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
+            <textarea class="form-control" id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
                 }
                 break;
             case AttributeControlType.Datepicker:
@@ -69,10 +77,6 @@
                     //not support attribute type
                 }
                 break;
-        }
-        @if (attribute.IsRequired)
-        {
-            @Html.RequiredHint()
         }
     </div>
 }

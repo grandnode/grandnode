@@ -2,11 +2,9 @@
 @using Grand.Web.Models.Catalog;
 @if (Model.Vendors.Count > 0)
 {
-    <div class="block block-vendor-navigation">
-        <div class="title">
-            <strong>@T("Vendors")</strong>
-        </div>
-        <div class="listbox">
+    <div id="block-vendor-navigation" class="block block-vendor-navigation">
+            <h2 class="h5"><strong>@T("Vendors")</strong></h2>
+        <div class="viewBox">
             <ul class="list">
                 @foreach (var vendor in Model.Vendors)
                 {
@@ -16,8 +14,8 @@
             </ul>            
             @if (Model.TotalVendors > Model.Vendors.Count)
             {
-                <div class="view-all">
-                    <a href="@Url.RouteUrl("VendorList")">@T("Vendors.ViewAll")</a>
+                <div class="view-all btn-group-sm m-1 text-xs-left">
+                    <a class="btn btn-success" href="@Url.RouteUrl("VendorList")">@T("Vendors.ViewAll")</a>
                 </div>
             }
         </div>

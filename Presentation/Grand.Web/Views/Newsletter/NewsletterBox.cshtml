@@ -1,74 +1,85 @@
 ﻿@model NewsletterBoxModel
 @using Grand.Web.Models.Newsletter;
-<div class="newsletter">
-    <div class="title">
-        <strong>@T("Newsletter.Title")</strong>
-    </div>
-    <div class="newsletter-subscribe" id="newsletter-subscribe-block">
-        <div class="newsletter-email">
-            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email", @class = "newsletter-subscribe-text", placeholder = T("Newsletter.Email.Placeholder") })
-            <input type="button" value="@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
+<div class="newsletter d-flex justify-content-center justify-content-lg-start px-0 pt-3">
+        <div class="newsletter-subscribe" id="newsletter-subscribe-block">
+
+            <strong>@T("Newsletter.Title")</strong>
+            <div class="input-group flex-row">
+                @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email", @class = "form-control newsletter-subscribe-text", placeholder = T("Newsletter.Email.Placeholder") })
+
+                <label for="newsletter-email" class="sr-only">newsletter</label>
+                <span id="newsletter-subscribe-button" class="btn btn-secondary input-group-addon">
+                    <span class="fa fa-envelope-open-o"></span>
+                </span>
+            </div>
             @if (Model.AllowToUnsubscribe)
             {
-                <div class="options">
-                    <span class="subscribe">
-                        <input id="newsletter_subscribe" type="radio" value="newsletter_subscribe" name="newsletter_block" checked="checked" />
-                        <label for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</label>
-                    </span>
-                    <span class="unsubscribe">
-                        <input id="newsletter_unsubscribe" type="radio" value="newsletter_unsubscribe" name="newsletter_block" />
-                        <label for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</label>
-                    </span>
+                <div class="custom-controls-stacked col-12 pt-1 px-0">
+                    <div class="d-flex flex-row">
+                        <fieldset>
+                            <legend>
+                                @T("Newsletter.Title")
+                            </legend>
+                        <label for="newsletter_subscribe" class="custom-control custom-radio flex-row">
+                            <input value="newsletter_unsubscribe" id="newsletter_subscribe" name="newsletter_block" type="radio" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">@T("Newsletter.Options.Subscribe")</span>
+                        </label>
+                        <label for="newsletter_unsubscribe" class="custom-control custom-radio flex-row">
+                            <input value="newsletter_unsubscribe" id="newsletter_unsubscribe" name="newsletter_block" type="radio" class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span class="custom-control-description">@T("Newsletter.Options.Unsubscribe")</span>
+                        </label>
+                        </fieldset>
+                    </div>
                 </div>
             }
+            <div class="col-12 newsletter-validation">
+                <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                @Html.ValidationMessageFor(x => x.NewsletterEmail)
+            </div>
         </div>
-        <div class="newsletter-validation">
-            <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-            @Html.ValidationMessageFor(x => x.NewsletterEmail)
-        </div>
-    </div>
-    <div class="newsletter-result" id="newsletter-result-block"></div>
-    <script type="text/javascript">
-        function newsletter_subscribe(subscribe) {
-            var subscribeProgress = $("#subscribe-loading-progress");
-            subscribeProgress.show();
-            var postData = {
-                subscribe: subscribe,
-                email: $("#newsletter-email").val()
-            };
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "@(Url.RouteUrl("SubscribeNewsletter"))",
-                data: postData,
-                success: function(data) {
-                    subscribeProgress.hide();
-                    $("#newsletter-result-block").html(data.Result);
-                    if (data.Success) {
-                        $('#newsletter-subscribe-block').hide();
-                        $('#newsletter-result-block').show();
-                        if (data.Showcategories) {
-                            $('#action_modal_form').html(data.ResultCategory);
-                            window.setTimeout(function () {
-                                $('.popup-action-form').magnificPopup('open');
-                            }, 100);
+        <script type="text/javascript">
+            function newsletter_subscribe(subscribe) {
+                var subscribeProgress = $("#subscribe-loading-progress");
+                subscribeProgress.show();
+                var postData = {
+                    subscribe: subscribe,
+                    email: $("#newsletter-email").val()
+                };
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.RouteUrl("SubscribeNewsletter"))",
+                    data: postData,
+                    success: function (data) {
+                        subscribeProgress.hide();
+                        $("#newsletter-result-block").html(data.Result);
+                        if (data.Success) {
+                            $('#newsletter-subscribe-block').hide();
+                            $('#newsletter-result-block').show();
+                            if (data.Showcategories) {
+                                $('#action_modal_form').html(data.ResultCategory);
+                                window.setTimeout(function () {
+                                    $('.popup-action-form').magnificPopup('open');
+                                }, 100);
 
+                            }
+
+                        } else {
+                            $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
                         }
-
-                    } else {
-                        $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to subscribe.');
+                        subscribeProgress.hide();
                     }
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert('Failed to subscribe.');
-                    subscribeProgress.hide();
-                }
-            });
-        }
+                });
+            }
 
-        $(document).ready(function () {
-            $('#newsletter-subscribe-button').click(function () {
-                @if (Model.AllowToUnsubscribe)
+            $(document).ready(function () {
+                $('#newsletter-subscribe-button').click(function () {
+                    @if (Model.AllowToUnsubscribe)
                 {
                     <text>if ($('#newsletter_subscribe').is(':checked')) {
                         newsletter_subscribe('true');
@@ -80,13 +91,14 @@
                 {
                     <text>newsletter_subscribe('true');</text>
                 }
+                });
+                $("#newsletter-email").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#newsletter-subscribe-button").click();
+                        return false;
+                    }
+                });
             });
-            $("#newsletter-email").keydown(function (event) {
-                if (event.keyCode == 13) {
-                    $("#newsletter-subscribe-button").click();
-                    return false;
-                }
-            });
-        });
-    </script>
-</div>
+        </script>
+    </div>
+<div class="newsletter-result" id="newsletter-result-block"></div>

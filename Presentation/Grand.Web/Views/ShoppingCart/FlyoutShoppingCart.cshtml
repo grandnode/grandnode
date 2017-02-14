@@ -1,56 +1,59 @@
 ﻿@model MiniShoppingCartModel
 @using Grand.Web.Models.ShoppingCart;
-<div id="flyout-cart" class="flyout-cart">
-    <div class="mini-shopping-cart">
-        <div class="count">
-            @if (Model.TotalProducts == 0)
+<div class="flyout-cart">
+
+    <div class="col-12 count text-sm-center pl-1">
+        @if (Model.TotalProducts == 0)
             {
-                @T("ShoppingCart.Mini.NoItems")
-            }
-            else
-            {
-                @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.Items").Text, Model.TotalProducts))))
-            }
-        </div>
-        @if (Model.TotalProducts > 0)
+            @T("ShoppingCart.Mini.NoItems")
+        }
+        else
         {
-            <div class="items">
-                @for (int i = 0; i < Model.Items.Count; i++)
+            @Html.Raw(string.Format(T("ShoppingCart.Mini.ItemsText").Text, string.Format("<a href=\"{0}\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.Items").Text, Model.TotalProducts))))
+        }
+    </div>
+    <div class="mini-shopping-cart text-sm-center">
+            @if (Model.TotalProducts > 0)
+            {
+                <div class="items">
+                    @for (int i = 0; i < Model.Items.Count; i++)
                 {
                     var item = Model.Items[i];
-                    <div class="item @(i == 0 ? "first" : null)">
-                        @if (Model.ShowProductImages)
-                        {
-                            <div class="picture">
-                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.Picture.Title">
-                                    <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
-                                </a>
+                        <div class="col-12 px-0 item @(i == 0 ? "first" : null)">
+                            <div class="d-flex flex-wrap">
+                                @if (Model.ShowProductImages)
+                                {
+                                    <div class="col-3 picture pr-0 pl-2">
+                                            <a class="pl-0" href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.Picture.Title">
+                                                <img class="img-fluid" alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
+                                            </a>
+                                    </div>
+                                }
+                                <div class="col-9 product flex-column pl-2 text-sm-left">
+                                        <div class="name">
+                                            <a class="pl-0" href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                        </div>
+                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                        {
+                                            <div class="attributes">
+                                                @Html.Raw(item.AttributeInfo)
+                                            </div>
+                                        }
+                                        <div class="price"><span>@T("ShoppingCart.Mini.UnitPrice"):</span> <strong>@item.UnitPrice</strong></div>
+                                        <div class="quantity"><span>@T("ShoppingCart.Mini.Quantity"):</span> <strong>@item.Quantity</strong></div>
+                                    </div>
                             </div>
-                        }
-                        <div class="product">
-                            <div class="name">
-                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                            </div>
-                            @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                            {
-                                <div class="attributes">
-                                    @Html.Raw(item.AttributeInfo)
-                                </div>
-                            }
-                            <div class="price">@T("ShoppingCart.Mini.UnitPrice"): <span>@item.UnitPrice</span></div>
-                            <div class="quantity">@T("ShoppingCart.Mini.Quantity"): <span>@item.Quantity</span></div>
                         </div>
-                    </div>
-                }
-            </div>
-            <div class="totals">@T("ShoppingCart.Totals.SubTotal"): <strong>@Model.SubTotal</strong></div>
-            <div class="buttons">
-                @if (Model.DisplayShoppingCartButton)
+                    }
+                </div>
+                <div class="col-12 text-sm-center totals">@T("ShoppingCart.Totals.SubTotal"):<strong>@Model.SubTotal</strong></div>
+                <div class="col-12 text-sm-center buttons">
+                    @if (Model.DisplayShoppingCartButton)
                 {
-                    <input type="button" value="@T("ShoppingCart.Mini.ViewCart")" class="button-1 cart-button" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')" />
-                    
-                }
-                @if (Model.DisplayCheckoutButton)
+                        <input type="button" value="@T("ShoppingCart.Mini.ViewCart")" class="btn btn-success btn-sm cart-button mt-1" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')" />
+
+                    }
+                    @if (Model.DisplayCheckoutButton)
                 {
                     var checkoutUrl = "";
                     if (Model.AnonymousCheckoutAllowed && Model.CurrentCustomerIsGuest)
@@ -61,9 +64,9 @@
                     {
                         checkoutUrl = Url.RouteUrl("Checkout");
                     }
-                    <input type="button" value="@T("Checkout.Button")" class="button-1 checkout-button" onclick="setLocation('@checkoutUrl')" />
-                }
-            </div>
-        }
+                    <input type="button" value="@T("Checkout.Button")" class="btn btn-secondary checkout-button" onclick="setLocation('@checkoutUrl')" />
+                    }
+                </div>
+            }
+        </div>
     </div>
-</div>

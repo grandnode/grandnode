@@ -7,15 +7,12 @@
 }
 @using Grand.Web.Models.Catalog;
 <div class="page vendor-list-page">
-    <div class="page-title">
-        <h1>@T("Vendors.List")</h1>
-    </div>
-    <div class="page-body">
+    <h1 class="generalTitle">@T("Vendors.List")</h1>
         <div class="vendor-grid">
-            <div class="item-grid">
+            <div class="row">
                 @foreach (var item in Model)
                 {
-                    <div class="item-box">
+                    <div class="col-12 col-md-6 col-lg-4">
                         <div class="vendor-item">
                             <h2 class="title">
                                 <a href="@Url.RouteUrl("Vendor", new { SeName = item.SeName })" title="@item.PictureModel.Title">
@@ -33,4 +30,3 @@
             </div>
         </div>
     </div>
-</div>

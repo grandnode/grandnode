@@ -11,33 +11,28 @@
 {
     @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.RewardPoints })
 }
-<div class="page account-page reward-points-page">
-    <div class="page-title">
-        <h1>@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
-    </div>
-    <div class="page-body">
+<section class="page account-page reward-points-page">
+        <h1 class="h2 generalTitle">@T("Account.MyAccount") - @T("Account.RewardPoints")</h1>
         <div class="reward-points-overview">
-            <div class="current-balance">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
+            <div class="current-balance text-success">@T("RewardPoints.CurrentBalance", Model.RewardPointsBalance, Model.RewardPointsAmount)</div>
             @if (Model.MinimumRewardPointsBalance > 0)
             {
-                <div class="min-balance">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
+                <div class="min-balance text-danger">@T("RewardPoints.MinimumBalance", Model.MinimumRewardPointsBalance, Model.MinimumRewardPointsAmount)</div>
             }
         </div>
-        <div class="section reward-points-history">
-            <div class="title">
-                <strong>@T("RewardPoints.History")</strong>
-            </div>
+        <div class="reward-points-history">
+            <h5><strong>@T("RewardPoints.History")</strong></h5>
             @if (Model.RewardPoints.Count > 0)
             {
-                <div class="table-wrapper">
-                    <table class="data-table">
+                <div class="table-responsive">
+                    <table class="table table-hover">
                         <colgroup>
-                            <col width="25%" />
-                            <col width="15%" />
-                            <col width="15%" />
+                            <col  />
+                            <col  />
+                            <col  />
                             <col />
                         </colgroup>
-                        <thead>
+                        <thead class="table-inverse">
                             <tr>
                                 <th class="date">
                                     @T("RewardPoints.Fields.Date")
@@ -78,10 +73,9 @@
             }
             else
             {
-                <div class="no-data">
+                <section class="no-data">
                     @T("RewardPoints.NoHistory")
-                </div>
+                </section>
             }
         </div>
-    </div>
-</div>
+</section>

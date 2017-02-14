@@ -7,10 +7,10 @@
 
         @foreach (var item in Model.Posts)
         {
-            <div class="topic">
+            <div class="topic pt-1">
                 <div class="topic-title">
-                    <label>@T("Profile.Topic"):</label>
-                    @Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
+                    <label><strong>@T("Profile.Topic"):</strong></label>
+                    <strong>@Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })</strong>
                 </div>
                 <div class="topic-body">
                     <p>@Html.Raw(item.ForumPostText)</p>
@@ -34,7 +34,7 @@ else
 }
 @if (!MvcHtmlString.IsNullOrEmpty(pager))
 {
-    <div class="pager">
+    <nav aria-label="Page navigation">
         @pager
-    </div>
+    </nav>
 }

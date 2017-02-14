@@ -7,30 +7,24 @@
     Html.AddTitleParts(T("PageTitle.NewsArchive").Text);
 }
 <div class="page news-list-page">
-    <div class="page-title">
-        <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a>
-        <h1>@T("News")</h1>
-    </div>
-    <div class="page-body">
+        
+        <h1 class="h2 generalTitle"><a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="btn btn-sm btn-outline-success link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a> @T("News")</h1>
         @Html.Widget("newslist_page_before_items")
-        <div class="news-items">
-            @foreach (var item in Model.NewsItems)
-            {
-                <div class="news-item">
-                    <div class="news-head">
-                        <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@item.Title</a>
-                        <span class="news-date">-@item.CreatedOn.ToString("D")</span>
-                    </div>
-                    <div class="news-body">
-                        @Html.Raw(item.Short)
-                    </div>
-                    <div class="buttons">
-                        <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="read-more">@T("News.MoreInfo")</a>
+    <div class="news-items">
+        @foreach (var item in Model.NewsItems)
+        {
+            <div class="card mb-3">
+                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })"><h4 class="card-header">@item.Title</h4></a>
+                <div class="card-block">
+                    <h6 class="card-subtitle text-muted">-@item.CreatedOn.ToString("D")</h6>
+                    @Html.Raw(item.Short)
+                    <div class="buttons pb-1 pt-1">
+                        <a class="btn btn-sm btn-primary read-more" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">@T("News.MoreInfo") - @item.Title</a>
                     </div>
                     @Html.Widget("newslist_page_inside_item", item.Id)
                 </div>
-            }
-        </div>
+            </div>
+        }
         @{
             var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
         }
@@ -42,4 +36,5 @@
         }
         @Html.Widget("newslist_page_after_items")
     </div>
+
 </div>
