@@ -128,7 +128,7 @@ input {
     color: #fff;
 }
 /* external modal */
-#action_modal {
+#action_modal_banner {
     position: relative;
     background: #FFF;
     padding: 20px;
@@ -136,6 +136,15 @@ input {
     max-width: 650px;
     margin: 20px auto;
 }
+#action_modal_form {
+    position: relative;
+    background: #FFF;
+    padding: 20px;
+    width: auto;
+    max-width: 650px; 
+    margin: 20px auto;
+}
+
 .my-mfp-zoom-in .zoom-anim-dialog {
     opacity: 0;
     -webkit-transition: all 0.2s ease-in-out;
@@ -229,7 +238,8 @@ ul.color-squares input {
     display: none;
 }
 .forum-topic-page ul.user-stats {
-    border-right: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
+    border-right: 0;
 }
 .pagination a:not([href]) {
     background-color: #0a5596;
@@ -3313,6 +3323,12 @@ width: 39%;
 text-align: left !important;
 }
 @media (max-width: 575px) {
+    .order-details-page .quantity .td-title {
+    position: absolute;
+    right: 0;
+    text-align: right !important;
+    padding-right: 25%;
+}
     .discount,
     .product-subtotal {
         text-align: center !important;
