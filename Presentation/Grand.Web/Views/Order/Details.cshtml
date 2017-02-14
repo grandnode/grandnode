@@ -449,7 +449,7 @@ Model.BillingAddress.ZipPostalCodeEnabled)
         </div>
         @Html.Widget("orderdetails_page_afterproducts", Model.Id)
 
-        <div class="col-md-12 text-right float-sm-right options generalMarginSupporter">
+        <div class="col-12 text-right options">
             @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
             {
                 var inclTax = Model.PricesIncludeTax;

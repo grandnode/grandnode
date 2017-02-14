@@ -11,6 +11,7 @@ using Grand.Services.Configuration;
 using Grand.Services.Security;
 using Grand.Web.Framework.Kendoui;
 using Grand.Web.Framework.Mvc;
+using Grand.Core.Caching;
 
 namespace Grand.Admin.Controllers
 {
@@ -23,21 +24,24 @@ namespace Grand.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly WidgetSettings _widgetSettings;
 	    private readonly IPluginFinder _pluginFinder;
+        private readonly ICacheManager _cacheManager;
+        #endregion
 
-	    #endregion
-
-		#region Constructors
+        #region Constructors
 
         public WidgetController(IWidgetService widgetService,
             IPermissionService permissionService, ISettingService settingService,
-            WidgetSettings widgetSettings, IPluginFinder pluginFinder)
+            WidgetSettings widgetSettings, IPluginFinder pluginFinder,
+            ICacheManager cacheManager)
 		{
             this._widgetService = widgetService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._widgetSettings = widgetSettings;
             this._pluginFinder = pluginFinder;
-		}
+            this._cacheManager = cacheManager;
+
+        }
 
 		#endregion 
         
@@ -105,6 +109,7 @@ namespace Grand.Admin.Controllers
                     _settingService.SaveSetting(_widgetSettings);
                 }
             }
+            _cacheManager.Clear();
             var pluginDescriptor = widget.PluginDescriptor;
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;

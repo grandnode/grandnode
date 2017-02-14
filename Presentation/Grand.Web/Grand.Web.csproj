@@ -509,6 +509,7 @@
     <Content Include="Content\BBEditor\images\underline.gif" />
     <Content Include="Content\BBEditor\images\unlink.gif" />
     <Content Include="Content\BBEditor\images\unordered.gif" />
+    <Content Include="Content\bootstrap\bootstrap.css" />
     <Content Include="Content\bootstrap\bootstrap.min.css" />
     <Content Include="Content\fancybox\blank.gif" />
     <Content Include="Content\fancybox\fancybox-x.png" />

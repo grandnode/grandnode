@@ -80,7 +80,7 @@ namespace Grand.Web.Framework.UI
 
         protected virtual IItemTransform GetCssTranform()
         {
-            return new CssRewriteUrlTransform();
+            return new CssRewriteUrlTransformFixed();
         }
 
         #endregion

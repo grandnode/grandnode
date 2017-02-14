@@ -933,6 +933,7 @@ span.product-quantity{
     display: inline;
     position: relative;
     top: 1px;
+    margin-right: 5px;
 }
 .enter-price-input {
     display: block;

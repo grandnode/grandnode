@@ -5400,7 +5400,7 @@ namespace Grand.Services.Installation
 
             _settingService.SaveSetting(new WidgetSettings
             {
-                ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" },
+                ActiveWidgetSystemNames = new List<string> { "Widgets.Slider" },
             });
 
             _settingService.SaveSetting(new GoogleAnalyticsSettings()
