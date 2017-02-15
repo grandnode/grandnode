@@ -1,6 +1,7 @@
 using System.Web.Routing;
 using Grand.Core.Plugins;
 using Grand.Services.Shipping.Tracking;
+using System;
 
 namespace Grand.Services.Shipping
 {
@@ -40,5 +41,11 @@ namespace Grand.Services.Shipping
         /// <param name="controllerName">Controller name</param>
         /// <param name="routeValues">Route values</param>
         void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
+
+        /// <summary>
+        /// Gets controller type
+        /// </summary>
+        /// <returns></returns>
+        Type GetControllerType();
     }
 }

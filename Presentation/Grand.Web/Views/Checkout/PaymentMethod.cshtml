@@ -8,7 +8,7 @@
 }
 <div class="page checkout-page payment-method-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
-    <h1 class="generalTitle">@T("Checkout.SelectPaymentMethod")</h1>
+    <h2 class="generalTitle text-sm-center ">@T("Checkout.SelectPaymentMethod")</h2>
     @Html.Widget("checkout_payment_method_top")
     <div class="payment-method">
         @using (Html.BeginRouteForm("CheckoutPaymentMethod", FormMethod.Post))

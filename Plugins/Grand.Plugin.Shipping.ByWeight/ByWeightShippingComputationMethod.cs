@@ -264,14 +264,19 @@ namespace Grand.Plugin.Shipping.ByWeight
             base.Uninstall();
         }
 
-        #endregion
 
-        #region Properties
+        public Type GetControllerType()
+        {
+            return typeof(Controllers.ShippingByWeightController);
+        }
+    #endregion
 
-        /// <summary>
-        /// Gets a shipping rate computation method type
-        /// </summary>
-        public ShippingRateComputationMethodType ShippingRateComputationMethodType
+    #region Properties
+
+    /// <summary>
+    /// Gets a shipping rate computation method type
+    /// </summary>
+    public ShippingRateComputationMethodType ShippingRateComputationMethodType
         {
             get
             {

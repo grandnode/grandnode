@@ -1240,6 +1240,8 @@ namespace Grand.Services.Orders
                         CustomValuesXml = processPaymentRequest.SerializeCustomValues(),
                         VatNumber = details.VatNumber,
                         UrlReferrer = details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.LastUrlReferrer),
+                        ShippingOptionAttributeDescription = details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, processPaymentRequest.StoreId),
+                        ShippingOptionAttributeXml = details.Customer.GetAttribute<string>(SystemCustomerAttributeNames.ShippingOptionAttributeXml, processPaymentRequest.StoreId),
                         CreatedOnUtc = DateTime.UtcNow
                     };
 

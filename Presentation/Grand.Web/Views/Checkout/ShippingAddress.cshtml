@@ -8,7 +8,7 @@
 }
 <div class="page checkout-page shipping-address-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Address })
-    <h1 class="generalTitle">@T("Checkout.ShippingAddress")</h1>
+    <h2 class="generalTitle text-sm-center ">@T("Checkout.ShippingAddress")</h2>
     @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
     {
         if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
@@ -121,7 +121,7 @@
                 @if (Model.ExistingAddresses.Count > 0)
                 {
                     <div class="select-shipping-address">
-                        <h2><strong>@T("Checkout.SelectShippingAddress")</strong></h2>
+                        <h5><strong>@T("Checkout.SelectShippingAddress")</strong></h5>
                         <div class="col-12">
                             <div class="row flex-grid">
                                 @foreach (var item in Model.ExistingAddresses)

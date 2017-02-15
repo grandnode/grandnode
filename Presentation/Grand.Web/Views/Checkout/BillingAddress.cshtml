@@ -8,7 +8,7 @@
 }
 <div class="page checkout-page billing-address-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Address })
-        <h2 class="generalTitle">@T("Checkout.BillingAddress")</h2>
+        <h2 class="generalTitle text-sm-center ">@T("Checkout.BillingAddress")</h2>
     <div class="checkout-data">
         @using (Html.BeginRouteForm("CheckoutBillingAddress", FormMethod.Post))
         {

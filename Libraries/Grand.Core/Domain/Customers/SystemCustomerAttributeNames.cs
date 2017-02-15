@@ -36,8 +36,6 @@ namespace Grand.Core.Domain.Customers
         public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
         public static string AdminAreaStoreScopeConfiguration { get { return "AdminAreaStoreScopeConfiguration"; } }
 
-
-
         //depends on store
         public static string CurrencyId { get { return "CurrencyId"; } }
         public static string LanguageId { get { return "LanguageId"; } }
@@ -49,6 +47,8 @@ namespace Grand.Core.Domain.Customers
         public static string SelectedPickupPoint { get { return "SelectedPickupPoint"; } }
         public static string CheckoutAttributes { get { return "CheckoutAttributes"; } }
         public static string OfferedShippingOptions { get { return "OfferedShippingOptions"; } }
+        public static string ShippingOptionAttributeDescription { get { return "ShippingOptionAttributeDescription"; } }
+        public static string ShippingOptionAttributeXml { get { return "ShippingOptionAttributeXml"; } }
         public static string LastContinueShoppingPage { get { return "LastContinueShoppingPage"; } }
         public static string NotifiedAboutNewPrivateMessages { get { return "NotifiedAboutNewPrivateMessages"; } }
         public static string WorkingThemeName { get { return "WorkingThemeName"; } }

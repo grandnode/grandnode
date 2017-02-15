@@ -141,6 +141,11 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
             base.Uninstall();
         }
 
+        public Type GetControllerType()
+        {
+            return typeof(Controllers.ShippingFixedRateController);
+        }
+
         #endregion
 
         #region Properties

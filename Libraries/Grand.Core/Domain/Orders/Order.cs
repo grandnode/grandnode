@@ -346,6 +346,15 @@ namespace Grand.Core.Domain.Orders
         /// </summary>
         public string UrlReferrer { get; set; }
 
+        /// <summary>
+        /// Gets or sets the Shipping Option description (customer friendly string)
+        /// </summary>
+        public string ShippingOptionAttributeDescription { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Shipping Option in XML format (developer friendly string)
+        /// </summary>
+        public string ShippingOptionAttributeXml { get; set; }
         #endregion
 
         #region Navigation properties
