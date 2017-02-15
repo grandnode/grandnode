@@ -1,7 +1,7 @@
 ﻿@model CheckoutShippingAddressModel
 @using System.Text;
 @using Grand.Web.Models.Checkout;
-<div class="col-12 checkout-data">
+<div class="col-12 checkout-data px-0">
     @if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
     {
         <div class="section pickup-in-store">
@@ -13,7 +13,7 @@
                         @T("Checkout.PickupPoints").Text
                     </span>
                 </label>
-</p>
+            </p>
             <p class="description">
                 <i>@T("Checkout.PickupPoints.Description")</i>
             </p>

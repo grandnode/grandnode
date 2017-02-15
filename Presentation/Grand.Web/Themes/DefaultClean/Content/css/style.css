@@ -907,6 +907,12 @@ select.form-control:not([size]):not([multiple]) option {
 .fa-shopping-cart{
     padding-right: 5px;
 }
+#topcartlink > div > a {
+    background-color: #dfe1e2;
+    margin-left: 10px;
+    padding: 11px;
+    color: #596063;
+}
 span.product-quantity{
     min-width: 60px;
 }
@@ -924,6 +930,8 @@ span.product-quantity{
 }
 .generalNote p{
     margin-bottom: 0;
+    color: #FFF;
+    text-align: center;
 }
 .generalNote a {
     text-decoration: underline;
@@ -1161,6 +1169,11 @@ footer .list-group .list-group-item {
     .generalMiddle {
         display: block;
     }
+    .subrow span.product-subtotal {
+        position: relative;
+        bottom: 8px;
+    }
+
 }
 @media (max-width: 767px) {  
     .navUp {
@@ -1173,7 +1186,7 @@ footer .list-group .list-group-item {
         padding: 15px;
         border: 1px solid #9da6b2;
         border-top: 0;
-        right: 4%;
+        left: 4%;
     }
     .navbar-light .navbar-nav .nav-link {
         padding-right: 33px;
@@ -1283,6 +1296,10 @@ footer .list-group .list-group-item {
     .topic-posts .send-pm {
         border-bottom: 1px solid #dddddd;
     }
+   .wishlist-content th:first-of-type{
+        display: none;
+    }
+
 }
 @media (min-width: 767px) {
     .checkoutAttributes {
@@ -1300,16 +1317,12 @@ footer .list-group .list-group-item {
     header .collapse {
         display: none !important;
     }
-}
-@media (max-width: 767px) {
-    .wishlist-content th:first-of-type{
-        display: none;
-    }
-   .subrow  span.product-subtotal {
-        position: relative;
-        bottom: 1px;
+
+    .wishlist-content .remove-from-cart label{
+        padding-left: 0 !important;
     }
 }
+
 @media (max-width: 575px) {
     .navUp li a span.fa {
         margin-right: 2px;
@@ -1323,6 +1336,9 @@ footer .list-group .list-group-item {
         margin-top: 10px;
         display: block;
     }
+    .subrow span.product-subtotal {
+        bottom: 0px;
+    }
     .navbar-light .navbar-nav .nav-link {
     padding-top: 10px;
     text-transform: uppercase;
@@ -1330,7 +1346,7 @@ footer .list-group .list-group-item {
 }
   .quantity .td-title{
       text-align: right;
-      top: 12px;
+      top: 6px;
   }
   .form-control.qty-input{
     float: left;

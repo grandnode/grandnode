@@ -1438,7 +1438,8 @@ ul.ui-autocomplete {
     margin-top: auto!important
 }
 .mr-auto {
-    margin-left: auto!important
+    margin-left: auto!important;
+    margin-right: 0 !important;
 }
 .mb-auto {
     margin-bottom: auto!important
@@ -3246,8 +3247,8 @@ width: 50% !important;
         padding: 15px;
         border: 1px solid #9da6b2;
         border-top: 0;
-        left: 4%;
-        right: initial;
+        right: 4%;
+        left: initial;
     }
     .language-list {
         margin-bottom: 0;

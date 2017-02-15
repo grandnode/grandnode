@@ -29,7 +29,7 @@
                     {
                         case AttributeControlType.DropdownList:
                             {
-                                <label for="@(controlId)" class="sr-only"></label>
+                                <label for="@(controlId)" class="sr-only">@textPrompt</label>
                                 <select class="custom-select form-control" name="@(controlId)" id="@(controlId)">
                                     @if (!attribute.IsRequired)
                                     {

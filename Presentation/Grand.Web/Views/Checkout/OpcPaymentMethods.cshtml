@@ -1,31 +1,31 @@
 ﻿@model CheckoutPaymentMethodModel
 @using Grand.Web.Models.Checkout;
-    @Html.Widget("op_checkout_payment_method_top")
-    <div class="payment-method">
-        @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
-        {
-            <div class="use-reward-points">
+@Html.Widget("op_checkout_payment_method_top")
+<div class="payment-method">
+    @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
+    {
+        <div class="use-reward-points">
 
-                <label class="custom-control custom-checkbox">
-                    @Html.CheckBoxFor(model => model.UseRewardPoints, new { @class = "custom-control-input" })
-                    <span class="custom-control-indicator"></span>
-                    <span class="custom-control-description">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</span>
-                </label>
+            <label class="custom-control custom-checkbox">
+                @Html.CheckBoxFor(model => model.UseRewardPoints, new { @class = "custom-control-input" })
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</span>
+            </label>
 
-                @if (Model.RewardPointsEnoughToPayForOrder)
+            @if (Model.RewardPointsEnoughToPayForOrder)
                 {
-                    <script type = "text/javascript" >
+                <script type="text/javascript">
                         $(document).ready(function() {
                             PaymentMethod.toggleUseRewardPoints($('#@Html.FieldIdFor(model => model.UseRewardPoints)'));
                         });
-                    </script>
-                }
-            </div>
-        }
-        @if (Model.PaymentMethods.Count > 0)
-        {
-            <div class="list-inline col-12 mt-2 mb-2" id="payment-method-block">
-                @for (int i = 0; i < Model.PaymentMethods.Count; i++)
+                </script>
+            }
+        </div>
+    }
+    @if (Model.PaymentMethods.Count > 0)
+    {
+        <div class="list-inline col-12 mt-2 mb-2 px-0" id="payment-method-block">
+            @for (int i = 0; i < Model.PaymentMethods.Count; i++)
                 {
                     var paymentMethod = Model.PaymentMethods[i];
                     var paymentMethodName = paymentMethod.Name;
@@ -34,7 +34,7 @@
                         paymentMethodName = T("Checkout.SelectPaymentMethod.MethodAndFee", paymentMethodName, paymentMethod.Fee).Text;
                     }
 
-                    <div class="col-12 method-name">
+                    <div class="col-12 method-name px-0">
                         <label class="custom-control custom-radio flex-row">
                             <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" class="custom-control-input">
                             <span class="custom-control-indicator"></span>
@@ -51,14 +51,14 @@
                             }
                         </label>
                     </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="message-error">
-                @T("Checkout.NoPaymentMethods")
-            </div>
-        }
-    </div>
-    @Html.Widget("op_checkout_payment_method_bottom")
+            }
+        </div>
+    }
+    else
+    {
+        <div class="message-error">
+            @T("Checkout.NoPaymentMethods")
+        </div>
+    }
+</div>
+@Html.Widget("op_checkout_payment_method_bottom")
