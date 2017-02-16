@@ -224,7 +224,7 @@ namespace Grand.Web.Controllers
                     }
                 }
                 model.ShippingMethod = order.ShippingMethod;
-   
+                model.ShippingAdditionDescription = order.ShippingOptionAttributeDescription;
                 //shipments (only already shipped)
                 var shipments = _shipmentService.GetShipmentsByOrder(order.Id).Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)

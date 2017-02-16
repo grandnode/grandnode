@@ -97,8 +97,8 @@
                                 </li>
                             }
                             @if (Model.BillingAddress.CityEnabled ||
-Model.BillingAddress.StateProvinceEnabled ||
-Model.BillingAddress.ZipPostalCodeEnabled)
+                                Model.BillingAddress.StateProvinceEnabled ||
+                                Model.BillingAddress.ZipPostalCodeEnabled)
                             {
                                 <li class="city-state-zip">
                                     @if (Model.BillingAddress.CityEnabled)
@@ -317,6 +317,11 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                                     <span class="value">
                                         @Model.ShippingMethod
                                     </span>
+                                    @if (!string.IsNullOrEmpty(Model.ShippingAdditionDescription))
+                                    {
+                                        <div> @Html.Raw(Model.ShippingAdditionDescription)</div>
+                                    }
+
                                 </li>
                                 @if (!Model.PrintMode && !Model.PickUpInStore)
                                 {

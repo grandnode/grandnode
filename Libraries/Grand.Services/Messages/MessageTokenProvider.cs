@@ -751,6 +751,7 @@ namespace Grand.Services.Messages
             tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
+            tokens.Add(new Token("Order.ShippingAdditionDescription", order.ShippingOptionAttributeDescription, true));
             tokens.Add(new Token("Order.ShippingFirstName", order.ShippingAddress != null ? order.ShippingAddress.FirstName : ""));
             tokens.Add(new Token("Order.ShippingLastName", order.ShippingAddress != null ? order.ShippingAddress.LastName : ""));
             tokens.Add(new Token("Order.ShippingPhoneNumber", order.ShippingAddress != null ? order.ShippingAddress.PhoneNumber : ""));
@@ -1194,6 +1195,7 @@ namespace Grand.Services.Messages
                 "%Order.BillingCountry%",
                 "%Order.BillingCustomAttributes%",
                 "%Order.ShippingMethod%",
+                "%Order.ShippingAdditionDescription%",
                 "%Order.ShippingFirstName%",
                 "%Order.ShippingLastName%",
                 "%Order.ShippingPhoneNumber%",
@@ -1324,6 +1326,7 @@ namespace Grand.Services.Messages
                 "%Order.BillingCountry%",
                 "%Order.BillingCustomAttributes%",
                 "%Order.ShippingMethod%",
+                "%Order.ShippingAdditionDescription%",
                 "%Order.ShippingFirstName%",
                 "%Order.ShippingLastName%",
                 "%Order.ShippingPhoneNumber%",

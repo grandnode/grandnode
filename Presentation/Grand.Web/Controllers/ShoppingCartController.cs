@@ -660,7 +660,10 @@ namespace Grand.Web.Controllers
                     //selected shipping method
                     var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.SelectedShippingOption, _storeContext.CurrentStore.Id);
                     if (shippingOption != null)
+                    {
                         model.OrderReviewData.ShippingMethod = shippingOption.Name;
+                        model.OrderReviewData.ShippingAdditionDescription = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.ShippingOptionAttributeDescription, _storeContext.CurrentStore.Id);
+                    }
                 }
                 //payment info
                 var selectedPaymentMethodSystemName = _workContext.CurrentCustomer.GetAttribute<string>(

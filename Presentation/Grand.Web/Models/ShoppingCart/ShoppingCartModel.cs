@@ -182,6 +182,7 @@ namespace Grand.Web.Models.ShoppingCart
             public bool SelectedPickUpInStore { get; set; }
             public AddressModel PickupAddress { get; set; }
             public string ShippingMethod { get; set; }
+            public string ShippingAdditionDescription { get; set; }
 
             public string PaymentMethod { get; set; }
 

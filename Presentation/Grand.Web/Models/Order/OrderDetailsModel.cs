@@ -38,6 +38,7 @@ namespace Grand.Web.Models.Order
         public string ShippingStatus { get; set; }
         public AddressModel ShippingAddress { get; set; }
         public string ShippingMethod { get; set; }
+        public string ShippingAdditionDescription { get; set; }
         public IList<ShipmentBriefModel> Shipments { get; set; }
 
         public AddressModel BillingAddress { get; set; }

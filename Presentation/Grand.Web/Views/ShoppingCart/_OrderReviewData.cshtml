@@ -235,6 +235,10 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                                 <span class="value">
                                     @Model.ShippingMethod
                                 </span>
+                                @if (!string.IsNullOrEmpty(Model.ShippingAdditionDescription))
+                                {
+                                    <div> @Html.Raw(Model.ShippingAdditionDescription)</div>
+                                }
                             </li>
                         </ul>
                     </div>

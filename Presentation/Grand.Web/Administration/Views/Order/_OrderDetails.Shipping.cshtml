@@ -10,7 +10,7 @@
                     <div class="col-md-9 col-sm-9">
                         <table class="table table-bordered table-striped table-hover">
                             @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.FullName"):
@@ -21,7 +21,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.EmailEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.Email"):
@@ -32,7 +32,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.PhoneEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.Phone"):
@@ -43,7 +43,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.FaxEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.Fax"):
@@ -54,7 +54,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.CompanyEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.Company"):
@@ -65,7 +65,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.StreetAddressEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.Address1"):
@@ -76,7 +76,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.StreetAddress2Enabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.Address2"):
@@ -87,7 +87,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.CityEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.City"):
@@ -98,7 +98,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.StateProvinceEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.StateProvince"):
@@ -109,7 +109,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.ZipPostalCodeEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.ZipPostalCode"):
@@ -120,7 +120,7 @@
                                 </tr>
                             }
                             @if (Model.ShippingAddress.CountryEnabled)
-                    {
+                            {
                                 <tr>
                                     <td>
                                         @T("Admin.Orders.Address.Country"):
@@ -131,7 +131,7 @@
                                 </tr>
                             }
                             @if (!String.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
-                    {
+                            {
                                 <tr class="custom-attributes-view">
                                     <td colspan="2">
                                         @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
@@ -139,7 +139,7 @@
                                 </tr>
                             }
                             @if (!Model.IsLoggedInAsVendor)
-                    {
+                            {
                                 <tr>
                                     <td colspan="2">
                                         <a href="@Url.Action("AddressEdit", new { addressId = Model.ShippingAddress.Id, orderId = Model.Id })" class="btn green">@T("Admin.Common.Edit")</a>
@@ -242,6 +242,11 @@
                         <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="btn green" />
                         <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="btn green" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                         <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleEditShippingMethod(false);return false; " id="btnCancelShippingMethod" class="btn default" />
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ShippingAdditionDescription))
+                    {
+                        <br />
+                        <label>@Html.Raw(Model.ShippingAdditionDescription)</label>
                     }
                 </div>
             </div>

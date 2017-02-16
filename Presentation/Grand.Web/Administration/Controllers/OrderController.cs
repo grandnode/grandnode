@@ -567,7 +567,7 @@ namespace Grand.Admin.Controllers
                     }
                 }
                 model.ShippingMethod = order.ShippingMethod;
-
+                model.ShippingAdditionDescription = order.ShippingOptionAttributeDescription;
                 model.CanAddNewShipments = false;
 
                 foreach (var orderItem in order.OrderItems)
