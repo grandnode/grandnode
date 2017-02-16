@@ -154,7 +154,6 @@ $RECYCLE.BIN/
 glob:*.user
 *.patch
 *.hg
-Presentation/Grand.Web/Plugins/*
 Presentation/Grand.Web/Content/Images/Thumbs/*.jpg
 Presentation/Grand.Web/Content/Images/Thumbs/*.jpeg
 Presentation/Grand.Web/Content/Images/Thumbs/*.png
