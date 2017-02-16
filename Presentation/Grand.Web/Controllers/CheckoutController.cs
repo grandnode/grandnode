@@ -483,20 +483,26 @@ namespace Grand.Web.Controllers
             return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
         }
 
+        [NonAction]
+        protected BaseShippingController GetBaseShippingController(string input)
+        {
+            var shippingMethodName = input.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[1];
+            var shippingMethod = _shippingService.LoadShippingRateComputationMethodBySystemName(shippingMethodName);
+            if (shippingMethod == null)
+                throw new Exception("Shipping method is not selected");
+            var shippingControllerType = shippingMethod.GetControllerType();
+
+            var shippingController = DependencyResolver.Current.GetService(shippingControllerType) as BaseShippingController;
+            shippingController.ControllerContext = this.ControllerContext;
+            return shippingController;
+        }
 
         [NonAction]
         protected void ValidateShippingForm(FormCollection form, out List<string> warnings)
         {
-            var shippingMethodName = form["shippingoption"].Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
-            var shippingMethod = _shippingService.LoadShippingRateComputationMethodBySystemName(shippingMethodName[1]);
-            if (shippingMethod == null)
-                throw new Exception("Shipping method is not selected");
-            var shippingControllerType = shippingMethod.GetControllerType();
-            var shippingController = DependencyResolver.Current.GetService(shippingControllerType) as BaseShippingController;
- 
-            warnings = shippingController.ValidateShippingForm(form).ToList();
+            warnings = GetBaseShippingController(form["shippingoption"]).ValidateShippingForm(form).ToList();
             foreach (var warning in warnings)
-               ModelState.AddModelError("", warning);
+                ModelState.AddModelError("", warning);
         }
 
     #endregion
@@ -960,40 +966,45 @@ namespace Grand.Web.Controllers
             string selectedName = splittedOption[0];
             string shippingRateComputationMethodSystemName = splittedOption[1];
 
+            //clear shipping option XML/Description
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ShippingOptionAttributeXml, "", _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, "", _storeContext.CurrentStore.Id);
+
             //validate customer's input
             List<string> warnings;
             ValidateShippingForm(form, out warnings);
 
             //find it
             //performance optimization. try cache first
+            var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
+            if (shippingOptions == null || shippingOptions.Count == 0)
+            {
+                //not found? let's load them using shipping service
+                shippingOptions = _shippingService
+                    .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id)
+                    .ShippingOptions
+                    .ToList();
+            }
+            else
+            {
+                //loaded cached results. let's filter result by a chosen shipping rate computation method
+                shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
+            }
+
+            var shippingOption = shippingOptions
+                .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
+            if (shippingOption == null)
+                return ShippingMethod();
+
+            //save
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
+
             if (ModelState.IsValid)
             {
-                var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
-                if (shippingOptions == null || shippingOptions.Count == 0)
-                {
-                    //not found? let's load them using shipping service
-                    shippingOptions = _shippingService
-                        .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id)
-                        .ShippingOptions
-                        .ToList();
-                }
-                else
-                {
-                    //loaded cached results. let's filter result by a chosen shipping rate computation method
-                    shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
-                        .ToList();
-                }
-
-                var shippingOption = shippingOptions
-                    .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
-                if (shippingOption == null)
-                    return ShippingMethod();
-
-                //save
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
-
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
+
             var model = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
             return View(model);
         }
@@ -1316,15 +1327,7 @@ namespace Grand.Web.Controllers
 
         public virtual ActionResult GetShippingFormPartialView(string shippingoption)
         {
-            var shippingMethodName = shippingoption.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
-            var shippingMethod = _shippingService.LoadShippingRateComputationMethodBySystemName(shippingMethodName[1]);
-            if (shippingMethod == null)
-                throw new Exception("Shipping method is not selected");
-            var shippingControllerType = shippingMethod.GetControllerType();
-            var shippingController = DependencyResolver.Current.GetService(shippingControllerType) as BaseShippingController;
-            shippingController.ControllerContext = this.ControllerContext;
-            return shippingController.GetFormPartialView(shippingoption);
-
+            return GetBaseShippingController(shippingoption).GetFormPartialView(shippingoption);
         }
 
 
@@ -1826,38 +1829,43 @@ namespace Grand.Web.Controllers
                     throw new Exception("Selected shipping method can't be parsed");
                 string selectedName = splittedOption[0];
                 string shippingRateComputationMethodSystemName = splittedOption[1];
+
+                //clear shipping option XML/Description
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ShippingOptionAttributeXml, "", _storeContext.CurrentStore.Id);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.ShippingOptionAttributeDescription, "", _storeContext.CurrentStore.Id);
+
                 //validate customer's input
                 List<string> warnings;
                 ValidateShippingForm(form, out warnings);
 
+                //find it
+                //performance optimization. try cache first
+                var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
+                if (shippingOptions == null || shippingOptions.Count == 0)
+                {
+                    //not found? let's load them using shipping service
+                    shippingOptions = _shippingService
+                        .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id)
+                        .ShippingOptions
+                        .ToList();
+                }
+                else
+                {
+                    //loaded cached results. let's filter result by a chosen shipping rate computation method
+                    shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
+                        .ToList();
+                }
+                
+                var shippingOption = shippingOptions
+                    .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
+                if (shippingOption == null)
+                    throw new Exception("Selected shipping method can't be loaded");
+
+                //save
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
+
                 if (ModelState.IsValid)
                 {
-                    //find it
-                    //performance optimization. try cache first
-                    var shippingOptions = _workContext.CurrentCustomer.GetAttribute<List<ShippingOption>>(SystemCustomerAttributeNames.OfferedShippingOptions, _storeContext.CurrentStore.Id);
-                    if (shippingOptions == null || shippingOptions.Count == 0)
-                    {
-                        //not found? let's load them using shipping service
-                        shippingOptions = _shippingService
-                            .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress, shippingRateComputationMethodSystemName, _storeContext.CurrentStore.Id)
-                            .ShippingOptions
-                            .ToList();
-                    }
-                    else
-                    {
-                        //loaded cached results. let's filter result by a chosen shipping rate computation method
-                        shippingOptions = shippingOptions.Where(so => so.ShippingRateComputationMethodSystemName.Equals(shippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase))
-                            .ToList();
-                    }
-                
-                    var shippingOption = shippingOptions
-                        .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(selectedName, StringComparison.InvariantCultureIgnoreCase));
-                    if (shippingOption == null)
-                        throw new Exception("Selected shipping method can't be loaded");
-
-                    //save
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, shippingOption, _storeContext.CurrentStore.Id);
-                
                     //load next step
                     return OpcLoadStepAfterShippingMethod(cart);
                 }

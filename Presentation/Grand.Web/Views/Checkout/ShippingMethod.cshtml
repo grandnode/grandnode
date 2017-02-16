@@ -61,13 +61,20 @@
                             </li>
                         }
                     </ul>
-                if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
-                {
+                    if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
+                    {
                     <div class="multiple-locations">
                         @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
                     </div>
-                }
+                    }
                 <div id="shipping_form"></div>
+                {
+                    var validationSummary = Html.ValidationSummary(true);
+                    if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                    {
+                        <div class="message-error">@validationSummary</div>
+                    }
+                }
                 <div class="buttons">
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success mt-1 mb-1 shipping-method-next-step-button" />
                 </div>

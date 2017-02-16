@@ -851,7 +851,6 @@ namespace Grand.Services.Media
             }
             else
             {
-                //ValidatePicture() only
                 resizeLayer = new ResizeLayer(new Size(targetSize, targetSize), ResizeMode.Max);
             }
 
