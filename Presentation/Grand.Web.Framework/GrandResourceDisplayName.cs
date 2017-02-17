@@ -37,7 +37,7 @@ namespace Grand.Web.Framework
 
         public string Name
         {
-            get { return "NopResourceDisplayName"; }
+            get { return "GrandResourceDisplayName"; }
         }
     }
 }

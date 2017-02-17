@@ -169,7 +169,7 @@ namespace Grand.Web.Framework
 
             object value;
             var hintResource = string.Empty;
-            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
+            if (metadata.AdditionalValues.TryGetValue("GrandResourceDisplayName", out value))
             {
                 var resourceDisplayName = value as GrandResourceDisplayName;
                 if (resourceDisplayName != null)
