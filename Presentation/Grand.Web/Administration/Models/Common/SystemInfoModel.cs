@@ -13,34 +13,34 @@ namespace Grand.Admin.Models.Common
             this.LoadedAssemblies = new List<LoadedAssembly>();
         }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.ASPNETInfo")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.ASPNETInfo")]
         public string AspNetInfo { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.IsFullTrust")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.IsFullTrust")]
         public string IsFullTrust { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.NopVersion")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.NopVersion")]
         public string GrandVersion { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.OperatingSystem")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.OperatingSystem")]
         public string OperatingSystem { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.ServerLocalTime")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.ServerLocalTime")]
         public DateTime ServerLocalTime { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.ServerTimeZone")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.ServerTimeZone")]
         public string ServerTimeZone { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.UTCTime")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.UTCTime")]
         public DateTime UtcTime { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.HTTPHOST")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.HTTPHOST")]
         public string HttpHost { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.ServerVariables")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.ServerVariables")]
         public IList<ServerVariableModel> ServerVariables { get; set; }
 
-        [NopResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
+        [GrandResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
         public IList<LoadedAssembly> LoadedAssemblies { get; set; }
 
         public partial class ServerVariableModel : BaseNopModel

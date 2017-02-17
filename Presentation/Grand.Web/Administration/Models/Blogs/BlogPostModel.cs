@@ -20,60 +20,60 @@ namespace Grand.Admin.Models.Blogs
             Locales = new List<BlogLocalizedModel>();
         }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
         public string Title { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview")]
         [AllowHtml]
         public string BodyOverview { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AllowComments")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AllowComments")]
         public bool AllowComments { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags")]
         [AllowHtml]
         public string Tags { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]
         public int Comments { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? StartDate { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? EndDate { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
         [AllowHtml]
         public string MetaKeywords { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription")]
         [AllowHtml]
         public string MetaDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
 
         public IList<BlogLocalizedModel> Locales { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
         //Store mapping
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
@@ -84,30 +84,30 @@ namespace Grand.Admin.Models.Blogs
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
         public string Title { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview")]
         [AllowHtml]
         public string BodyOverview { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaKeywords")]
         [AllowHtml]
         public string MetaKeywords { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaDescription")]
         [AllowHtml]
         public string MetaDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
 

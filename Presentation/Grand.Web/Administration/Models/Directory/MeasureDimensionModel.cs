@@ -9,21 +9,21 @@ namespace Grand.Admin.Models.Directory
     [Validator(typeof(MeasureDimensionValidator))]
     public partial class MeasureDimensionModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.SystemKeyword")]
+        [GrandResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.SystemKeyword")]
         [AllowHtml]
         public string SystemKeyword { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.Ratio")]
+        [GrandResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.Ratio")]
         public decimal Ratio { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.IsPrimaryDimension")]
+        [GrandResourceDisplayName("Admin.Configuration.Measures.Dimensions.Fields.IsPrimaryDimension")]
         public bool IsPrimaryDimension { get; set; }
     }
 }

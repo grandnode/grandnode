@@ -71,7 +71,7 @@ namespace Grand.Web
             
             //fluent validation
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
-            ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
+            ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new GrandValidatorFactory()));
 
             //start scheduled tasks
             System.Threading.Tasks.Task.Run(() =>

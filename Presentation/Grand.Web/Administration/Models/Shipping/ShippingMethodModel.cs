@@ -15,15 +15,15 @@ namespace Grand.Admin.Models.Shipping
         {
             Locales = new List<ShippingMethodLocalizedModel>();
         }
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Description")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Description")]
         [AllowHtml]
         public string Description { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
         public IList<ShippingMethodLocalizedModel> Locales { get; set; }
@@ -33,11 +33,11 @@ namespace Grand.Admin.Models.Shipping
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Description")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Methods.Fields.Description")]
         [AllowHtml]
         public string Description { get; set; }
 

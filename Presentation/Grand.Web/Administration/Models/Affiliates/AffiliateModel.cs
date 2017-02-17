@@ -13,22 +13,22 @@ namespace Grand.Admin.Models.Affiliates
             Address = new AddressModel();
         }
 
-        [NopResourceDisplayName("Admin.Affiliates.Fields.ID")]
+        [GrandResourceDisplayName("Admin.Affiliates.Fields.ID")]
         public override string Id { get; set; }
 
-        [NopResourceDisplayName("Admin.Affiliates.Fields.URL")]
+        [GrandResourceDisplayName("Admin.Affiliates.Fields.URL")]
         public string Url { get; set; }
 
 
-        [NopResourceDisplayName("Admin.Affiliates.Fields.AdminComment")]
+        [GrandResourceDisplayName("Admin.Affiliates.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
 
-        [NopResourceDisplayName("Admin.Affiliates.Fields.FriendlyUrlName")]
+        [GrandResourceDisplayName("Admin.Affiliates.Fields.FriendlyUrlName")]
         [AllowHtml]
         public string FriendlyUrlName { get; set; }
         
-        [NopResourceDisplayName("Admin.Affiliates.Fields.Active")]
+        [GrandResourceDisplayName("Admin.Affiliates.Fields.Active")]
         public bool Active { get; set; }
 
         public AddressModel Address { get; set; }
@@ -37,28 +37,28 @@ namespace Grand.Admin.Models.Affiliates
         
         public partial class AffiliatedOrderModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Affiliates.Orders.Order")]
+            [GrandResourceDisplayName("Admin.Affiliates.Orders.Order")]
             public override string Id { get; set; }
 
-            [NopResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
+            [GrandResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
 
-            [NopResourceDisplayName("Admin.Affiliates.Orders.PaymentStatus")]
+            [GrandResourceDisplayName("Admin.Affiliates.Orders.PaymentStatus")]
             public string PaymentStatus { get; set; }
 
-            [NopResourceDisplayName("Admin.Affiliates.Orders.ShippingStatus")]
+            [GrandResourceDisplayName("Admin.Affiliates.Orders.ShippingStatus")]
             public string ShippingStatus { get; set; }
 
-            [NopResourceDisplayName("Admin.Affiliates.Orders.OrderTotal")]
+            [GrandResourceDisplayName("Admin.Affiliates.Orders.OrderTotal")]
             public string OrderTotal { get; set; }
 
-            [NopResourceDisplayName("Admin.Affiliates.Orders.CreatedOn")]
+            [GrandResourceDisplayName("Admin.Affiliates.Orders.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }
 
         public partial class AffiliatedCustomerModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Affiliates.Customers.Name")]
+            [GrandResourceDisplayName("Admin.Affiliates.Customers.Name")]
             public string Name { get; set; }
         }
 

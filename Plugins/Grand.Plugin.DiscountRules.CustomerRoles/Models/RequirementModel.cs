@@ -11,7 +11,7 @@ namespace Grand.Plugin.DiscountRules.CustomerRoles.Models
             AvailableCustomerRoles = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole")]
+        [GrandResourceDisplayName("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole")]
         public string CustomerRoleId { get; set; }
 
         public string DiscountId { get; set; }

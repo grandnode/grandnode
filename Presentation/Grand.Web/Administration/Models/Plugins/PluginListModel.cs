@@ -13,14 +13,14 @@ namespace Grand.Admin.Models.Plugins
             AvailableGroups = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.LoadMode")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.LoadMode")]
         public int SearchLoadModeId { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Group")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Group")]
         public string SearchGroup { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.LoadMode")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.LoadMode")]
         public IList<SelectListItem> AvailableLoadModes { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Group")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Group")]
         public IList<SelectListItem> AvailableGroups { get; set; }
     }
 }

@@ -9,11 +9,11 @@ namespace Grand.Web.Models.Vendors
     [Validator(typeof(ApplyVendorValidator))]
     public partial class ApplyVendorModel : BaseNopModel
     {
-        [NopResourceDisplayName("Vendors.ApplyAccount.Name")]
+        [GrandResourceDisplayName("Vendors.ApplyAccount.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Vendors.ApplyAccount.Email")]
+        [GrandResourceDisplayName("Vendors.ApplyAccount.Email")]
         [AllowHtml]
         public string Email { get; set; }
 

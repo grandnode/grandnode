@@ -17,10 +17,10 @@ namespace Grand.Admin.Models.Messages
             Locales = new List<BannerLocalizedModel>();
         }
 
-        [NopResourceDisplayName("Admin.Promotions.Banners.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.Banners.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Banners.Fields.Body")]
+        [GrandResourceDisplayName("Admin.Promotions.Banners.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
         
@@ -32,10 +32,10 @@ namespace Grand.Admin.Models.Messages
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Banners.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.Banners.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Banners.Fields.Body")]
+        [GrandResourceDisplayName("Admin.Promotions.Banners.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
 

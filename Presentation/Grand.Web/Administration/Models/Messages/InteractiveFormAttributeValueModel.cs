@@ -20,13 +20,13 @@ namespace Grand.Admin.Models.Messages
         public string FormId { get; set; }
         public string AttributeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.IsPreSelected")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.IsPreSelected")]
         public bool IsPreSelected { get; set; }
 
         public IList<InteractiveFormAttributeValueLocalizedModel> Locales { get; set; }
@@ -37,7 +37,7 @@ namespace Grand.Admin.Models.Messages
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name")]
         public string Name { get; set; }
 
     }

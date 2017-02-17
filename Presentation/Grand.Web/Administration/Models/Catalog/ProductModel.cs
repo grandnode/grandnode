@@ -37,340 +37,340 @@ namespace Grand.Admin.Models.Catalog
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
         public override string Id { get; set; }
 
         //picture thumbnail
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
         public string PictureThumbnailUrl { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public int ProductTypeId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductType")]
         public string ProductTypeName { get; set; }
 
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
         public string AssociatedToProductId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AssociatedToProductName")]
         public string AssociatedToProductName { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.VisibleIndividually")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.VisibleIndividually")]
         public bool VisibleIndividually { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
         public string ProductTemplateId { get; set; }
         public IList<SelectListItem> AvailableProductTemplates { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShortDescription")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ShortDescription")]
         [AllowHtml]
         public string ShortDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.FullDescription")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.FullDescription")]
         [AllowHtml]
         public string FullDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Vendor")]
         public string VendorId { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
         [AllowHtml]
         public string MetaKeywords { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaDescription")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaDescription")]
         [AllowHtml]
         public string MetaDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaTitle")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SeName")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowCustomerReviews")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AllowCustomerReviews")]
         public bool AllowCustomerReviews { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductTags")]
         public string ProductTags { get; set; }
 
 
 
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Sku")]
         [AllowHtml]
         public string Sku { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManufacturerPartNumber")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ManufacturerPartNumber")]
         [AllowHtml]
         public string ManufacturerPartNumber { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.GTIN")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.GTIN")]
         [AllowHtml]
         public virtual string Gtin { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsGiftCard")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsGiftCard")]
         public bool IsGiftCard { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.GiftCardType")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OverriddenGiftCardAmount")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.OverriddenGiftCardAmount")]
         [UIHint("DecimalNullable")]
         public decimal? OverriddenGiftCardAmount { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RequireOtherProducts")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RequireOtherProducts")]
         public bool RequireOtherProducts { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RequiredProductIds")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RequiredProductIds")]
         public string RequiredProductIds { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AutomaticallyAddRequiredProducts")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AutomaticallyAddRequiredProducts")]
         public bool AutomaticallyAddRequiredProducts { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsDownload")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsDownload")]
         public bool IsDownload { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Download")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Download")]
         [UIHint("Download")]
         public string DownloadId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UnlimitedDownloads")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.UnlimitedDownloads")]
         public bool UnlimitedDownloads { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MaxNumberOfDownloads")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MaxNumberOfDownloads")]
         public int MaxNumberOfDownloads { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DownloadExpirationDays")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DownloadExpirationDays")]
         [UIHint("Int32Nullable")]
         public int? DownloadExpirationDays { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DownloadActivationType")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DownloadActivationType")]
         public int DownloadActivationTypeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.HasSampleDownload")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.HasSampleDownload")]
         public bool HasSampleDownload { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SampleDownload")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.SampleDownload")]
         [UIHint("Download")]
         public string SampleDownloadId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.HasUserAgreement")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.HasUserAgreement")]
         public bool HasUserAgreement { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UserAgreementText")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.UserAgreementText")]
         [AllowHtml]
         public string UserAgreementText { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsRecurring")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsRecurring")]
         public bool IsRecurring { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RecurringCycleLength")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RecurringCycleLength")]
         public int RecurringCycleLength { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RecurringCyclePeriod")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RecurringCyclePeriod")]
         public int RecurringCyclePeriodId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RecurringTotalCycles")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RecurringTotalCycles")]
         public int RecurringTotalCycles { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsRental")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsRental")]
         public bool IsRental { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RentalPriceLength")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RentalPriceLength")]
         public int RentalPriceLength { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RentalPricePeriod")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.RentalPricePeriod")]
         public int RentalPricePeriodId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsShipEnabled")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsShipEnabled")]
         public bool IsShipEnabled { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsFreeShipping")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsFreeShipping")]
         public bool IsFreeShipping { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShipSeparately")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ShipSeparately")]
         public bool ShipSeparately { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdditionalShippingCharge")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AdditionalShippingCharge")]
         public decimal AdditionalShippingCharge { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DeliveryDate")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DeliveryDate")]
         public string DeliveryDateId { get; set; }
         public IList<SelectListItem> AvailableDeliveryDates { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTaxExempt")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.TaxCategory")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.TaxCategory")]
         public string TaxCategoryId { get; set; }
         public IList<SelectListItem> AvailableTaxCategories { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices")]
         public bool IsTelecommunicationsOrBroadcastingOrElectronicServices { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UseMultipleWarehouses")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.UseMultipleWarehouses")]
         public bool UseMultipleWarehouses { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Warehouse")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Warehouse")]
         public string WarehouseId { get; set; }
         public IList<SelectListItem> AvailableWarehouses { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
         public int StockQuantity { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
         public string StockQuantityStr { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayStockAvailability")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisplayStockAvailability")]
         public bool DisplayStockAvailability { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayStockQuantity")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisplayStockQuantity")]
         public bool DisplayStockQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MinStockQuantity")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MinStockQuantity")]
         public int MinStockQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.LowStockActivity")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.LowStockActivity")]
         public int LowStockActivityId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow")]
         public int NotifyAdminForQuantityBelow { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BackorderMode")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.BackorderMode")]
         public int BackorderModeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowBackInStockSubscriptions")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AllowBackInStockSubscriptions")]
         public bool AllowBackInStockSubscriptions { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OrderMinimumQuantity")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.OrderMinimumQuantity")]
         public int OrderMinimumQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OrderMaximumQuantity")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.OrderMaximumQuantity")]
         public int OrderMaximumQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowedQuantities")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AllowedQuantities")]
         public string AllowedQuantities { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AllowAddingOnlyExistingAttributeCombinations")]
         public bool AllowAddingOnlyExistingAttributeCombinations { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.NotReturnable")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.NotReturnable")]
         public bool NotReturnable { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisableBuyButton")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisableWishlistButton")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisableWishlistButton")]
         public bool DisableWishlistButton { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableForPreOrder")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AvailableForPreOrder")]
         public bool AvailableForPreOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.PreOrderAvailabilityStartDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CallForPrice")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.CallForPrice")]
         public bool CallForPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Price")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Price")]
         public decimal Price { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OldPrice")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.OldPrice")]
         public decimal OldPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductCost")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ProductCost")]
         public decimal ProductCost { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CustomerEntersPrice")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.CustomerEntersPrice")]
         public bool CustomerEntersPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MinimumCustomerEnteredPrice")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MinimumCustomerEnteredPrice")]
         public decimal MinimumCustomerEnteredPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MaximumCustomerEnteredPrice")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MaximumCustomerEnteredPrice")]
         public decimal MaximumCustomerEnteredPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceEnabled")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceEnabled")]
         public bool BasepriceEnabled { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceAmount")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceAmount")]
         public decimal BasepriceAmount { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceUnit")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceUnit")]
         public string BasepriceUnitId { get; set; }
         public IList<SelectListItem> AvailableBasepriceUnits { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseAmount")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseAmount")]
         public decimal BasepriceBaseAmount { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseUnit")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseUnit")]
         public string BasepriceBaseUnitId { get; set; }
         public IList<SelectListItem> AvailableBasepriceBaseUnits { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNew")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNew")]
         public bool MarkAsNew { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? MarkAsNewStartDateTimeUtc { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime? MarkAsNewEndDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Unit")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Unit")]
         public string UnitId { get; set; }
         public IList<SelectListItem> AvailableUnits { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Weight")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Weight")]
         public decimal Weight { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Length")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Length")]
         public decimal Length { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Width")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Width")]
         public decimal Width { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Height")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Height")]
         public decimal Height { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableStartDateTime")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AvailableStartDateTime")]
         [UIHint("DateTimeNullable")]
         public DateTime? AvailableStartDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableEndDateTime")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AvailableEndDateTime")]
         [UIHint("DateTimeNullable")]
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrderCategory")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrderCategory")]
         public int DisplayOrderCategory { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrderManufacturer")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrderManufacturer")]
         public int DisplayOrderManufacturer { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrderOnSale")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrderOnSale")]
         public int OnSale { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.CreatedOn")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.CreatedOn")]
         public DateTime? CreatedOn { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UpdatedOn")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.UpdatedOn")]
         public DateTime? UpdatedOn { get; set; }
 
 
@@ -382,16 +382,16 @@ namespace Grand.Admin.Models.Catalog
 
 
         //ACL (customer roles)
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SubjectToAcl")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.SubjectToAcl")]
         public bool SubjectToAcl { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public string[] SelectedCustomerRoleIds { get; set; }
 
         //Store mapping
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
@@ -426,7 +426,7 @@ namespace Grand.Admin.Models.Catalog
 
 
         //multiple warehouses
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory")]
         public IList<ProductWarehouseInventoryModel> ProductWarehouseInventoryModels { get; set; }
 
         //copy product
@@ -445,18 +445,18 @@ namespace Grand.Admin.Models.Catalog
                 AvailableProductTypes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public string SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
             public string SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public string SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
@@ -477,26 +477,26 @@ namespace Grand.Admin.Models.Catalog
                 AvailableOptions = new List<SelectListItem>();
             }
             
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
             public string SpecificationAttributeId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")]
             public int AttributeTypeId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
             public string SpecificationAttributeOptionId { get; set; }
 
             [AllowHtml]
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
             public string CustomValue { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")]
             public bool AllowFiltering { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")]
             public bool ShowOnProductPage { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
 
             public IList<SelectListItem> AvailableAttributes { get; set; }
@@ -508,53 +508,53 @@ namespace Grand.Admin.Models.Catalog
             public string ProductId { get; set; }
 
             [UIHint("Picture")]
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
             public string PictureId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.Picture")]
             public string PictureUrl { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")]
             [AllowHtml]
             public string OverrideAltAttribute { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")]
             [AllowHtml]
             public string OverrideTitleAttribute { get; set; }
         }
         
         public partial class ProductCategoryModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
             public string Category { get; set; }
 
             public string ProductId { get; set; }
 
             public string CategoryId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Categories.Fields.IsFeaturedProduct")]
             public bool IsFeaturedProduct { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Categories.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
 
         public partial class ProductManufacturerModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
             public string Manufacturer { get; set; }
 
             public string ProductId { get; set; }
 
             public string ManufacturerId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")]
             public bool IsFeaturedProduct { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
 
@@ -563,10 +563,10 @@ namespace Grand.Admin.Models.Catalog
             public string ProductId1 { get; set; }
             public string ProductId2 { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.Product")]
             public string Product2Name { get; set; }
             
-            [NopResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
         public partial class AddRelatedProductModel : BaseNopModel
@@ -580,18 +580,18 @@ namespace Grand.Admin.Models.Catalog
                 AvailableProductTypes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public string SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
             public string SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public string SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
@@ -610,9 +610,9 @@ namespace Grand.Admin.Models.Catalog
 
         public partial class AssociatedProductModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.Product")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.Product")]
             public string ProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
         public partial class AddAssociatedProductModel : BaseNopModel
@@ -626,18 +626,18 @@ namespace Grand.Admin.Models.Catalog
                 AvailableProductTypes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public string SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
             public string SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public string SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
@@ -658,7 +658,7 @@ namespace Grand.Admin.Models.Catalog
         {
             public string ProductId2 { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
             public string Product2Name { get; set; }
         }
         public partial class AddCrossSellProductModel : BaseNopModel
@@ -672,18 +672,18 @@ namespace Grand.Admin.Models.Catalog
                 AvailableProductTypes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public string SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
             public string SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public string SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
@@ -710,27 +710,27 @@ namespace Grand.Admin.Models.Catalog
             }
             public string ProductId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.CustomerRole")]
             public string CustomerRoleId { get; set; }
             public IList<SelectListItem> AvailableCustomerRoles { get; set; }
             public string CustomerRole { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Store")]
             public string StoreId { get; set; }
             public IList<SelectListItem> AvailableStores { get; set; }
             public string Store { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Quantity")]
             public int Quantity { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
             public decimal Price { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.StartDateTimeUtc")]
             [UIHint("DateTimeNullable")]
             public DateTime? StartDateTimeUtc { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.EndDateTimeUtc")]
             [UIHint("DateTimeNullable")]
             public DateTime? EndDateTimeUtc { get; set; }
 
@@ -738,21 +738,21 @@ namespace Grand.Admin.Models.Catalog
 
         public partial class ProductWarehouseInventoryModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
             public string WarehouseId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
             public string WarehouseName { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")]
             public bool WarehouseUsed { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")]
             public int StockQuantity { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")]
             public int ReservedQuantity { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")]
             public int PlannedQuantity { get; set; }
         }
 
@@ -762,53 +762,53 @@ namespace Grand.Admin.Models.Catalog
             public string ProductId { get; set; }
 
             public string ProductAttributeId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")]
             public string ProductAttribute { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")]
             [AllowHtml]
             public string TextPrompt { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")]
             public bool IsRequired { get; set; }
 
             public int AttributeControlTypeId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")]
             public string AttributeControlType { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
 
             public bool ShouldHaveValues { get; set; }
             public int TotalValues { get; set; }
 
             //validation fields
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")]
             public bool ValidationRulesAllowed { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength")]
             [UIHint("Int32Nullable")]
             public int? ValidationMinLength { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength")]
             [UIHint("Int32Nullable")]
             public int? ValidationMaxLength { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions")]
             [AllowHtml]
             public string ValidationFileAllowedExtensions { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize")]
             [UIHint("Int32Nullable")]
             public int? ValidationFileMaximumSize { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue")]
             [AllowHtml]
             public string DefaultValue { get; set; }
             public string ValidationRulesString { get; set; }
 
             //condition
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")]
             public bool ConditionAllowed { get; set; }
             public string ConditionString { get; set; }
         }
@@ -834,57 +834,57 @@ namespace Grand.Admin.Models.Catalog
             public string ProductAttributeMappingId { get; set; }
             public string ProductId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")]
             public int AttributeValueTypeId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")]
             public string AttributeValueTypeName { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")]
             public string AssociatedProductId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")]
             public string AssociatedProductName { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
             [AllowHtml]
             public string Name { get; set; }
             
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ColorSquaresRgb")]
             [AllowHtml]
             public string ColorSquaresRgb { get; set; }
             public bool DisplayColorSquaresRgb { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture")]
             [UIHint("Picture")]
             public string ImageSquaresPictureId { get; set; }
             public bool DisplayImageSquaresPicture { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")]
             public decimal PriceAdjustment { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")]
             //used only on the values list page
             public string PriceAdjustmentStr { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
             public decimal WeightAdjustment { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")]
             //used only on the values list page
             public string WeightAdjustmentStr { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Cost")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Cost")]
             public decimal Cost { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Quantity")]
             public int Quantity { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected")]
             public bool IsPreSelected { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
             public string PictureId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")]
             public string PictureThumbnailUrl { get; set; }
 
             public IList<ProductPictureModel> ProductPictureModels { get; set; }
@@ -903,18 +903,18 @@ namespace Grand.Admin.Models.Catalog
                     AvailableProductTypes = new List<SelectListItem>();
                 }
 
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
                 [AllowHtml]
                 public string SearchProductName { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
                 public string SearchCategoryId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
                 public string SearchManufacturerId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
                 public string SearchStoreId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
                 public string SearchVendorId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
                 public int SearchProductTypeId { get; set; }
 
                 public IList<SelectListItem> AvailableCategories { get; set; }
@@ -936,13 +936,13 @@ namespace Grand.Admin.Models.Catalog
 
         public partial class ActivityLogModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.ActivityLogType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ActivityLog.ActivityLogType")]
             public string ActivityLogTypeName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.Comment")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ActivityLog.Comment")]
             public string Comment { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.CreatedOn")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ActivityLog.CreatedOn")]
             public DateTime CreatedOn { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.ActivityLog.Customer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ActivityLog.Customer")]
             public string CustomerId { get; set; }
             public string CustomerEmail { get; set; }
         }
@@ -951,7 +951,7 @@ namespace Grand.Admin.Models.Catalog
         {
             public string LanguageId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")]
             [AllowHtml]
             public string Name { get; set; }
         }
@@ -959,33 +959,33 @@ namespace Grand.Admin.Models.Catalog
         {
             public string ProductId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")]
             [AllowHtml]
             public string AttributesXml { get; set; }
 
             [AllowHtml]
             public string Warnings { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")]
             public int StockQuantity { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
             public bool AllowOutOfStockOrders { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")]
             public string Sku { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
             public string ManufacturerPartNumber { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")]
             public string Gtin { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")]
             [UIHint("DecimalNullable")]
             public decimal? OverriddenPrice { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
             public int NotifyAdminForQuantityBelow { get; set; }
 
         }
@@ -997,31 +997,31 @@ namespace Grand.Admin.Models.Catalog
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShortDescription")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.ShortDescription")]
         [AllowHtml]
         public string ShortDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.FullDescription")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.FullDescription")]
         [AllowHtml]
         public string FullDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaKeywords")]
         [AllowHtml]
         public string MetaKeywords { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaDescription")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaDescription")]
         [AllowHtml]
         public string MetaDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.MetaTitle")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SeName")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
     }

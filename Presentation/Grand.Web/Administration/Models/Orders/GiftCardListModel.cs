@@ -12,17 +12,17 @@ namespace Grand.Admin.Models.Orders
             ActivatedList = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.GiftCards.List.CouponCode")]
+        [GrandResourceDisplayName("Admin.GiftCards.List.CouponCode")]
         [AllowHtml]
         public string CouponCode { get; set; }
 
-        [NopResourceDisplayName("Admin.GiftCards.List.RecipientName")]
+        [GrandResourceDisplayName("Admin.GiftCards.List.RecipientName")]
         [AllowHtml]
         public string RecipientName { get; set; }
 
-        [NopResourceDisplayName("Admin.GiftCards.List.Activated")]
+        [GrandResourceDisplayName("Admin.GiftCards.List.Activated")]
         public int ActivatedId { get; set; }
-        [NopResourceDisplayName("Admin.GiftCards.List.Activated")]
+        [GrandResourceDisplayName("Admin.GiftCards.List.Activated")]
         public IList<SelectListItem> ActivatedList { get; set; }
     }
 }

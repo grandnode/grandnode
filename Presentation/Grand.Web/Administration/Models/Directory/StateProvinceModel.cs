@@ -17,18 +17,18 @@ namespace Grand.Admin.Models.Directory
         }
         public string CountryId { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Abbreviation")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.Abbreviation")]
         [AllowHtml]
         public string Abbreviation { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Published")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
         public IList<StateProvinceLocalizedModel> Locales { get; set; }
@@ -38,7 +38,7 @@ namespace Grand.Admin.Models.Directory
     {
         public string LanguageId { get; set; }
         
-        [NopResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.States.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

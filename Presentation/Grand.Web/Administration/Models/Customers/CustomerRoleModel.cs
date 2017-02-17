@@ -10,30 +10,30 @@ namespace Grand.Admin.Models.Customers
     [Validator(typeof(CustomerRoleValidator))]
     public partial class CustomerRoleModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.FreeShipping")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.FreeShipping")]
         [AllowHtml]
         public bool FreeShipping { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.TaxExempt")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.TaxExempt")]
         public bool TaxExempt { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Active")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Active")]
         public bool Active { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.IsSystemRole")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.IsSystemRole")]
         public bool IsSystemRole { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.SystemName")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.SystemName")]
         public string SystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public string PurchasedWithProductId { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public string PurchasedWithProductName { get; set; }
 
 
@@ -50,18 +50,18 @@ namespace Grand.Admin.Models.Customers
                 AvailableProductTypes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public string SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
             public string SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public string SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }

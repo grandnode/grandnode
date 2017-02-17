@@ -17,70 +17,70 @@ namespace Grand.Web.Models.Common
             CustomAddressAttributes = new List<AddressAttributeModel>();
         }
 
-        [NopResourceDisplayName("Address.Fields.FirstName")]
+        [GrandResourceDisplayName("Address.Fields.FirstName")]
         [AllowHtml]
         public string FirstName { get; set; }
-        [NopResourceDisplayName("Address.Fields.LastName")]
+        [GrandResourceDisplayName("Address.Fields.LastName")]
         [AllowHtml]
         public string LastName { get; set; }
-        [NopResourceDisplayName("Address.Fields.Email")]
+        [GrandResourceDisplayName("Address.Fields.Email")]
         [AllowHtml]
         public string Email { get; set; }
 
 
         public bool CompanyEnabled { get; set; }
         public bool CompanyRequired { get; set; }
-        [NopResourceDisplayName("Address.Fields.Company")]
+        [GrandResourceDisplayName("Address.Fields.Company")]
         [AllowHtml]
         public string Company { get; set; }
 
         public bool CountryEnabled { get; set; }
-        [NopResourceDisplayName("Address.Fields.Country")]
+        [GrandResourceDisplayName("Address.Fields.Country")]
         public string CountryId { get; set; }
-        [NopResourceDisplayName("Address.Fields.Country")]
+        [GrandResourceDisplayName("Address.Fields.Country")]
         [AllowHtml]
         public string CountryName { get; set; }
 
         public bool StateProvinceEnabled { get; set; }
-        [NopResourceDisplayName("Address.Fields.StateProvince")]
+        [GrandResourceDisplayName("Address.Fields.StateProvince")]
         public string StateProvinceId { get; set; }
-        [NopResourceDisplayName("Address.Fields.StateProvince")]
+        [GrandResourceDisplayName("Address.Fields.StateProvince")]
         [AllowHtml]
         public string StateProvinceName { get; set; }
 
         public bool CityEnabled { get; set; }
         public bool CityRequired { get; set; }
-        [NopResourceDisplayName("Address.Fields.City")]
+        [GrandResourceDisplayName("Address.Fields.City")]
         [AllowHtml]
         public string City { get; set; }
 
         public bool StreetAddressEnabled { get; set; }
         public bool StreetAddressRequired { get; set; }
-        [NopResourceDisplayName("Address.Fields.Address1")]
+        [GrandResourceDisplayName("Address.Fields.Address1")]
         [AllowHtml]
         public string Address1 { get; set; }
 
         public bool StreetAddress2Enabled { get; set; }
         public bool StreetAddress2Required { get; set; }
-        [NopResourceDisplayName("Address.Fields.Address2")]
+        [GrandResourceDisplayName("Address.Fields.Address2")]
         [AllowHtml]
         public string Address2 { get; set; }
 
         public bool ZipPostalCodeEnabled { get; set; }
         public bool ZipPostalCodeRequired { get; set; }
-        [NopResourceDisplayName("Address.Fields.ZipPostalCode")]
+        [GrandResourceDisplayName("Address.Fields.ZipPostalCode")]
         [AllowHtml]
         public string ZipPostalCode { get; set; }
 
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
-        [NopResourceDisplayName("Address.Fields.PhoneNumber")]
+        [GrandResourceDisplayName("Address.Fields.PhoneNumber")]
         [AllowHtml]
         public string PhoneNumber { get; set; }
 
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
-        [NopResourceDisplayName("Address.Fields.FaxNumber")]
+        [GrandResourceDisplayName("Address.Fields.FaxNumber")]
         [AllowHtml]
         public string FaxNumber { get; set; }
 

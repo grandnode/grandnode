@@ -6,10 +6,10 @@ namespace Grand.Plugin.Shipping.FixedRateShipping.Models
     {
         public string ShippingMethodId { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName")]
+        [GrandResourceDisplayName("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName")]
         public string ShippingMethodName { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.FixedRateShipping.Fields.Rate")]
+        [GrandResourceDisplayName("Plugins.Shipping.FixedRateShipping.Fields.Rate")]
         public decimal Rate { get; set; }
     }
 }

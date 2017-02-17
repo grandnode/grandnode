@@ -26,22 +26,22 @@ namespace Grand.Admin.Models.Customers
 
         }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.Active")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.Active")]
         public bool Active { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.ActionTypeId")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.ActionTypeId")]
         public string ActionTypeId { get; set; }
         public IList<SelectListItem> ActionType { get; set; }
 
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.ConditionId")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.ConditionId")]
         public int ConditionId { get; set; }
         public int ConditionCount { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.ReactionType")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.ReactionType")]
         public int ReactionTypeId { get; set; }
         public CustomerReactionTypeEnum ReactionType
         {
@@ -49,31 +49,31 @@ namespace Grand.Admin.Models.Customers
             set { this.ReactionTypeId = (int)value; }
         }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.Banner")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.Banner")]
         public string BannerId { get; set; }
         public IList<SelectListItem> Banners { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.InteractiveForm")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.InteractiveForm")]
         public string InteractiveFormId { get; set; }
         public IList<SelectListItem> InteractiveForms { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.MessageTemplate")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.MessageTemplate")]
         public string MessageTemplateId { get; set; }
         public IList<SelectListItem> MessageTemplates { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.CustomerRole")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.CustomerRole")]
         public string CustomerRoleId { get; set; }
         public IList<SelectListItem> CustomerRoles { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.CustomerTag")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.CustomerTag")]
         public string CustomerTagId { get; set; }
         public IList<SelectListItem> CustomerTags { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.StartDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.StartDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime StartDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAction.Fields.EndDateTimeUtc")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAction.Fields.EndDateTimeUtc")]
         [UIHint("DateTimeNullable")]
         public DateTime EndDateTimeUtc { get; set; }
 

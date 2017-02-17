@@ -27,67 +27,67 @@ namespace Grand.Admin.Models.Catalog
             AvailableCategories = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
         [AllowHtml]
         public string Description { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.CategoryTemplate")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.CategoryTemplate")]
         public string CategoryTemplateId { get; set; }
         public IList<SelectListItem> AvailableCategoryTemplates { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
         [AllowHtml]
         public string MetaKeywords { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaDescription")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaDescription")]
         [AllowHtml]
         public string MetaDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaTitle")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.SeName")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Parent")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Parent")]
         public string ParentCategoryId { get; set; }
 
         [UIHint("Picture")]
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Picture")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Picture")]
         public string PictureId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.PageSize")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.PageSize")]
         public int PageSize { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize")]
         public bool AllowCustomersToSelectPageSize { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.PageSizeOptions")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.PageSizeOptions")]
         public string PageSizeOptions { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.PriceRanges")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.PriceRanges")]
         [AllowHtml]
         public string PriceRanges { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomePage")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.IncludeInTopMenu")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.IncludeInTopMenu")]
         public bool IncludeInTopMenu { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Published")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Deleted")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Deleted")]
         public bool Deleted { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
         
         public IList<CategoryLocalizedModel> Locales { get; set; }
@@ -95,16 +95,16 @@ namespace Grand.Admin.Models.Catalog
         public string Breadcrumb { get; set; }
 
         //ACL
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.SubjectToAcl")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.SubjectToAcl")]
         public bool SubjectToAcl { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AclCustomerRoles")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public string[] SelectedCustomerRoleIds { get; set; }
 
         //Store mapping
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
@@ -125,13 +125,13 @@ namespace Grand.Admin.Models.Catalog
 
             public string ProductId { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Product")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.Products.Fields.Product")]
             public string ProductName { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")]
             public bool IsFeaturedProduct { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Categories.Products.Fields.DisplayOrder")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.Products.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
 
@@ -146,18 +146,18 @@ namespace Grand.Admin.Models.Catalog
                 AvailableProductTypes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public string SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
             public string SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public string SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
@@ -173,13 +173,13 @@ namespace Grand.Admin.Models.Catalog
 
         public partial class ActivityLogModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Categories.ActivityLogType")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.ActivityLogType")]
             public string ActivityLogTypeName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Categories.ActivityLog.Comment")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.ActivityLog.Comment")]
             public string Comment { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Categories.ActivityLog.CreatedOn")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.ActivityLog.CreatedOn")]
             public DateTime CreatedOn { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Categories.ActivityLog.Customer")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.ActivityLog.Customer")]
             public string CustomerId { get; set; }
             public string CustomerEmail { get; set; }
         }
@@ -192,27 +192,27 @@ namespace Grand.Admin.Models.Catalog
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.Description")]
         [AllowHtml]
         public string Description {get;set;}
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaKeywords")]
         [AllowHtml]
         public string MetaKeywords { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaDescription")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaDescription")]
         [AllowHtml]
         public string MetaDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.MetaTitle")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.SeName")]
+        [GrandResourceDisplayName("Admin.Catalog.Categories.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
     }

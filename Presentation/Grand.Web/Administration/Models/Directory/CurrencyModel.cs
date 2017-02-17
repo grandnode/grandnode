@@ -17,46 +17,46 @@ namespace Grand.Admin.Models.Directory
         {
             Locales = new List<CurrencyLocalizedModel>();
         }
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.CurrencyCode")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.CurrencyCode")]
         [AllowHtml]
         public string CurrencyCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.DisplayLocale")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.DisplayLocale")]
         [AllowHtml]
         public string DisplayLocale { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Rate")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Rate")]
         public decimal Rate { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.CustomFormatting")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.CustomFormatting")]
         [AllowHtml]
         public string CustomFormatting { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Published")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.CreatedOn")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency")]
         public bool IsPrimaryExchangeRateCurrency { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")]
         public bool IsPrimaryStoreCurrency { get; set; }
 
         public IList<CurrencyLocalizedModel> Locales { get; set; }
 
         //Store mapping
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
     }
@@ -65,7 +65,7 @@ namespace Grand.Admin.Models.Directory
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

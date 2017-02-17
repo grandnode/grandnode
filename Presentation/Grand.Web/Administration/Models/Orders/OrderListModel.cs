@@ -21,56 +21,56 @@ namespace Grand.Admin.Models.Orders
             AvailableCountries = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Orders.List.StartDate")]
+        [GrandResourceDisplayName("Admin.Orders.List.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? StartDate { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.EndDate")]
+        [GrandResourceDisplayName("Admin.Orders.List.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.BillingEmail")]
+        [GrandResourceDisplayName("Admin.Orders.List.BillingEmail")]
         [AllowHtml]
         public string BillingEmail { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.BillingLastName")]
+        [GrandResourceDisplayName("Admin.Orders.List.BillingLastName")]
         [AllowHtml]
         public string BillingLastName { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.OrderStatus")]
+        [GrandResourceDisplayName("Admin.Orders.List.OrderStatus")]
         public int OrderStatusId { get; set; }
-        [NopResourceDisplayName("Admin.Orders.List.PaymentStatus")]
+        [GrandResourceDisplayName("Admin.Orders.List.PaymentStatus")]
         public int PaymentStatusId { get; set; }
-        [NopResourceDisplayName("Admin.Orders.List.ShippingStatus")]
+        [GrandResourceDisplayName("Admin.Orders.List.ShippingStatus")]
         public int ShippingStatusId { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.PaymentMethod")]
+        [GrandResourceDisplayName("Admin.Orders.List.PaymentMethod")]
         public string PaymentMethodSystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.Store")]
+        [GrandResourceDisplayName("Admin.Orders.List.Store")]
         public string StoreId { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.Vendor")]
+        [GrandResourceDisplayName("Admin.Orders.List.Vendor")]
         public string VendorId { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.Warehouse")]
+        [GrandResourceDisplayName("Admin.Orders.List.Warehouse")]
         public string WarehouseId { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.Product")]
+        [GrandResourceDisplayName("Admin.Orders.List.Product")]
         public string ProductId { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.BillingCountry")]
+        [GrandResourceDisplayName("Admin.Orders.List.BillingCountry")]
         public string BillingCountryId { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.OrderNotes")]
+        [GrandResourceDisplayName("Admin.Orders.List.OrderNotes")]
         [AllowHtml]
         public string OrderNotes { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.OrderGuid")]
+        [GrandResourceDisplayName("Admin.Orders.List.OrderGuid")]
         [AllowHtml]
         public string OrderGuid { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.List.GoDirectlyToNumber")]
+        [GrandResourceDisplayName("Admin.Orders.List.GoDirectlyToNumber")]
         [AllowHtml]
         public int GoDirectlyToNumber { get; set; }
 

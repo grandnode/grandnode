@@ -15,11 +15,11 @@ namespace Grand.Web.Models.ShoppingCart
 
         public bool Enabled { get; set; }
 
-        [NopResourceDisplayName("ShoppingCart.EstimateShipping.Country")]
+        [GrandResourceDisplayName("ShoppingCart.EstimateShipping.Country")]
         public string CountryId { get; set; }
-        [NopResourceDisplayName("ShoppingCart.EstimateShipping.StateProvince")]
+        [GrandResourceDisplayName("ShoppingCart.EstimateShipping.StateProvince")]
         public string StateProvinceId { get; set; }
-        [NopResourceDisplayName("ShoppingCart.EstimateShipping.ZipPostalCode")]
+        [GrandResourceDisplayName("ShoppingCart.EstimateShipping.ZipPostalCode")]
         public string ZipPostalCode { get; set; }
 
         public IList<SelectListItem> AvailableCountries { get; set; }

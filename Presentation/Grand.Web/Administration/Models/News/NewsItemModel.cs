@@ -23,66 +23,66 @@ namespace Grand.Admin.Models.News
         }
 
         //Store mapping
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
         [AllowHtml]
         public string Title { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Short")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Short")]
         [AllowHtml]
         public string Short { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Full")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Full")]
         [AllowHtml]
         public string Full { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AllowComments")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AllowComments")]
         public bool AllowComments { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.StartDate")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? StartDate { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.EndDate")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? EndDate { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaKeywords")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaKeywords")]
         [AllowHtml]
         public string MetaKeywords { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaDescription")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaDescription")]
         [AllowHtml]
         public string MetaDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaTitle")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SeName")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
 
         public IList<NewsLocalizedModel> Locales { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Published")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Comments")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Comments")]
         public int Comments { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
         //ACL
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SubjectToAcl")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SubjectToAcl")]
         public bool SubjectToAcl { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AclCustomerRoles")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public string[] SelectedCustomerRoleIds { get; set; }
 
@@ -92,31 +92,31 @@ namespace Grand.Admin.Models.News
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Title")]
         [AllowHtml]
         public string Title { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Short")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Short")]
         [AllowHtml]
         public string Short { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Full")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Full")]
         [AllowHtml]
         public string Full { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaKeywords")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaKeywords")]
         [AllowHtml]
         public string MetaKeywords { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaDescription")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaDescription")]
         [AllowHtml]
         public string MetaDescription { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaTitle")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.MetaTitle")]
         [AllowHtml]
         public string MetaTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SeName")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
 

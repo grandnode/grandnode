@@ -10,20 +10,20 @@ namespace Grand.Web.Models.Common
     public partial class ContactUsModel : BaseNopModel
     {
         [AllowHtml]
-        [NopResourceDisplayName("ContactUs.Email")]
+        [GrandResourceDisplayName("ContactUs.Email")]
         public string Email { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("ContactUs.Subject")]
+        [GrandResourceDisplayName("ContactUs.Subject")]
         public string Subject { get; set; }
         public bool SubjectEnabled { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("ContactUs.Enquiry")]
+        [GrandResourceDisplayName("ContactUs.Enquiry")]
         public string Enquiry { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("ContactUs.FullName")]
+        [GrandResourceDisplayName("ContactUs.FullName")]
         public string FullName { get; set; }
 
         public bool SuccessfullySent { get; set; }

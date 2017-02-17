@@ -20,25 +20,25 @@ namespace Grand.Admin.Models.Messages
             Locales = new List<NewsletterCategoryLocalizedModel>();
         }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Description")]
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Description")]
         [AllowHtml]
         public string Description { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Selected")]
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Selected")]
         public bool Selected { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
         public IList<NewsletterCategoryLocalizedModel> Locales { get; set; }
     }
@@ -47,11 +47,11 @@ namespace Grand.Admin.Models.Messages
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Description")]
+        [GrandResourceDisplayName("Admin.Promotions.NewsletterCategory.Fields.Description")]
         [AllowHtml]
         public string Description { get; set; }
 

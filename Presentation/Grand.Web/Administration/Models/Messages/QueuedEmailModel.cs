@@ -11,76 +11,76 @@ namespace Grand.Admin.Models.Messages
     [Validator(typeof(QueuedEmailValidator))]
     public partial class QueuedEmailModel: BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Id")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.Id")]
         public override string Id { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Priority")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.Priority")]
         public string PriorityName { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.From")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.From")]
         [AllowHtml]
         public string From { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.FromName")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.FromName")]
         [AllowHtml]
         public string FromName { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.To")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.To")]
         [AllowHtml]
         public string To { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.ToName")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.ToName")]
         [AllowHtml]
         public string ToName { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.ReplyTo")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.ReplyTo")]
         [AllowHtml]
         public string ReplyTo { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.ReplyToName")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.ReplyToName")]
         [AllowHtml]
         public string ReplyToName { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CC")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.CC")]
         [AllowHtml]
         public string CC { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Bcc")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.Bcc")]
         [AllowHtml]
         public string Bcc { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Subject")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.Subject")]
         [AllowHtml]
         public string Subject { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Body")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.AttachmentFilePath")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.AttachmentFilePath")]
         [AllowHtml]
         public string AttachmentFilePath { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.AttachedDownload")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.AttachedDownload")]
         [UIHint("Download")]
         public string AttachedDownloadId { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOn")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SendImmediately")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.SendImmediately")]
         public bool SendImmediately { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.DontSendBeforeDate")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.DontSendBeforeDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? DontSendBeforeDate { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentTries")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.SentTries")]
         public int SentTries { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentOn")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.SentOn")]
         public DateTime? SentOn { get; set; }
 
-        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccountName")]
+        [GrandResourceDisplayName("Admin.System.QueuedEmails.Fields.EmailAccountName")]
         [AllowHtml]
         public string EmailAccountName { get; set; }
     }

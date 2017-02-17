@@ -10,15 +10,15 @@ namespace Grand.Web.Models.ShoppingCart
     public partial class WishlistEmailAFriendModel : BaseNopModel
     {
         [AllowHtml]
-        [NopResourceDisplayName("Wishlist.EmailAFriend.FriendEmail")]
+        [GrandResourceDisplayName("Wishlist.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Wishlist.EmailAFriend.YourEmailAddress")]
+        [GrandResourceDisplayName("Wishlist.EmailAFriend.YourEmailAddress")]
         public string YourEmailAddress { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Wishlist.EmailAFriend.PersonalMessage")]
+        [GrandResourceDisplayName("Wishlist.EmailAFriend.PersonalMessage")]
         public string PersonalMessage { get; set; }
 
         public bool SuccessfullySent { get; set; }

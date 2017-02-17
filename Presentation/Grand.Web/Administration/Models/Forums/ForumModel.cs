@@ -16,21 +16,21 @@ namespace Grand.Admin.Models.Forums
             ForumGroups = new List<ForumGroupModel>();
         }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.ForumGroupId")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.ForumGroupId")]
         public string ForumGroupId { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.Name")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.Description")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.Description")]
         [AllowHtml]
         public string Description { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.CreatedOn")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Forums.Forum.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
         public List<ForumGroupModel> ForumGroups { get; set; }

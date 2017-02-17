@@ -17,48 +17,48 @@ namespace Grand.Admin.Models.Stores
             AvailableLanguages = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Url")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.Url")]
         [AllowHtml]
         public string Url { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.SslEnabled")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.SslEnabled")]
         public virtual bool SslEnabled { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.SecureUrl")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.SecureUrl")]
         [AllowHtml]
         public virtual string SecureUrl { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Hosts")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.Hosts")]
         [AllowHtml]
         public string Hosts { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyName")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyName")]
         [AllowHtml]
         public string CompanyName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyAddress")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyAddress")]
         [AllowHtml]
         public string CompanyAddress { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyPhoneNumber")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyPhoneNumber")]
         [AllowHtml]
         public string CompanyPhoneNumber { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyVat")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyVat")]
         [AllowHtml]
         public string CompanyVat { get; set; }
 
 
         public IList<StoreLocalizedModel> Locales { get; set; }
         //default language
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultLanguage")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultLanguage")]
         [AllowHtml]
         public string DefaultLanguageId { get; set; }
         public IList<SelectListItem> AvailableLanguages { get; set; }
@@ -69,7 +69,7 @@ namespace Grand.Admin.Models.Stores
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

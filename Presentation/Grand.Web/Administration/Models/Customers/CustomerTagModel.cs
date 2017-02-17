@@ -10,7 +10,7 @@ namespace Grand.Admin.Models.Customers
     [Validator(typeof(CustomerTagValidator))]
     public partial class CustomerTagModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.Customers.CustomerTags.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerTags.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

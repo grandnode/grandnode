@@ -171,7 +171,7 @@ namespace Grand.Web.Framework
             var hintResource = string.Empty;
             if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
             {
-                var resourceDisplayName = value as NopResourceDisplayName;
+                var resourceDisplayName = value as GrandResourceDisplayName;
                 if (resourceDisplayName != null)
                 {
                     var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;

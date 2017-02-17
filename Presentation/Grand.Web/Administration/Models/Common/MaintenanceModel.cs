@@ -23,15 +23,15 @@ namespace Grand.Admin.Models.Common
 
         public partial class DeleteGuestsModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.System.Maintenance.DeleteGuests.StartDate")]
+            [GrandResourceDisplayName("Admin.System.Maintenance.DeleteGuests.StartDate")]
             [UIHint("DateNullable")]
             public DateTime? StartDate { get; set; }
 
-            [NopResourceDisplayName("Admin.System.Maintenance.DeleteGuests.EndDate")]
+            [GrandResourceDisplayName("Admin.System.Maintenance.DeleteGuests.EndDate")]
             [UIHint("DateNullable")]
             public DateTime? EndDate { get; set; }
 
-            [NopResourceDisplayName("Admin.System.Maintenance.DeleteGuests.OnlyWithoutShoppingCart")]
+            [GrandResourceDisplayName("Admin.System.Maintenance.DeleteGuests.OnlyWithoutShoppingCart")]
             public bool OnlyWithoutShoppingCart { get; set; }
 
             public int? NumberOfDeletedCustomers { get; set; }
@@ -39,7 +39,7 @@ namespace Grand.Admin.Models.Common
 
         public partial class DeleteAbandonedCartsModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.System.Maintenance.DeleteAbandonedCarts.OlderThan")]
+            [GrandResourceDisplayName("Admin.System.Maintenance.DeleteAbandonedCarts.OlderThan")]
             [UIHint("Date")]
             public DateTime OlderThan { get; set; }
 
@@ -48,11 +48,11 @@ namespace Grand.Admin.Models.Common
 
         public partial class DeleteExportedFilesModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.System.Maintenance.DeleteExportedFiles.StartDate")]
+            [GrandResourceDisplayName("Admin.System.Maintenance.DeleteExportedFiles.StartDate")]
             [UIHint("DateNullable")]
             public DateTime? StartDate { get; set; }
 
-            [NopResourceDisplayName("Admin.System.Maintenance.DeleteExportedFiles.EndDate")]
+            [GrandResourceDisplayName("Admin.System.Maintenance.DeleteExportedFiles.EndDate")]
             [UIHint("DateNullable")]
             public DateTime? EndDate { get; set; }
 

@@ -14,30 +14,30 @@ namespace Grand.Plugin.Payments.PayPalDirect.Models
             ExpireYears = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Payment.SelectCreditCard")]
+        [GrandResourceDisplayName("Payment.SelectCreditCard")]
         [AllowHtml]
         public string CreditCardType { get; set; }
-        [NopResourceDisplayName("Payment.SelectCreditCard")]
+        [GrandResourceDisplayName("Payment.SelectCreditCard")]
         public IList<SelectListItem> CreditCardTypes { get; set; }
 
-        [NopResourceDisplayName("Payment.CardholderName")]
+        [GrandResourceDisplayName("Payment.CardholderName")]
         [AllowHtml]
         public string CardholderName { get; set; }
 
-        [NopResourceDisplayName("Payment.CardNumber")]
+        [GrandResourceDisplayName("Payment.CardNumber")]
         [AllowHtml]
         public string CardNumber { get; set; }
 
-        [NopResourceDisplayName("Payment.ExpirationDate")]
+        [GrandResourceDisplayName("Payment.ExpirationDate")]
         [AllowHtml]
         public string ExpireMonth { get; set; }
-        [NopResourceDisplayName("Payment.ExpirationDate")]
+        [GrandResourceDisplayName("Payment.ExpirationDate")]
         [AllowHtml]
         public string ExpireYear { get; set; }
         public IList<SelectListItem> ExpireMonths { get; set; }
         public IList<SelectListItem> ExpireYears { get; set; }
 
-        [NopResourceDisplayName("Payment.CardCode")]
+        [GrandResourceDisplayName("Payment.CardCode")]
         [AllowHtml]
         public string CardCode { get; set; }
     }

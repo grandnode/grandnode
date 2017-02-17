@@ -18,14 +18,14 @@ namespace Grand.Admin.Models.Customers
 
         public string CustomerAttributeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.IsPreSelected")]
         public bool IsPreSelected { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.DisplayOrder")]
         public int DisplayOrder {get;set;}
 
         public IList<CustomerAttributeValueLocalizedModel> Locales { get; set; }
@@ -36,7 +36,7 @@ namespace Grand.Admin.Models.Customers
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Values.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

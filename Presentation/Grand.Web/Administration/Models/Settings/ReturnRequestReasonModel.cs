@@ -16,11 +16,11 @@ namespace Grand.Admin.Models.Settings
             Locales = new List<ReturnRequestReasonLocalizedModel>();
         }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
         public IList<ReturnRequestReasonLocalizedModel> Locales { get; set; }
@@ -30,7 +30,7 @@ namespace Grand.Admin.Models.Settings
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestReasons.Name")]
         [AllowHtml]
         public string Name { get; set; }
 

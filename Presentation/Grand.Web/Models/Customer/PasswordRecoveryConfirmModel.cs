@@ -13,13 +13,13 @@ namespace Grand.Web.Models.Customer
         [AllowHtml]
         [NoTrim]
         [DataType(DataType.Password)]
-        [NopResourceDisplayName("Account.PasswordRecovery.NewPassword")]
+        [GrandResourceDisplayName("Account.PasswordRecovery.NewPassword")]
         public string NewPassword { get; set; }
 
         [AllowHtml]
         [NoTrim]
         [DataType(DataType.Password)]
-        [NopResourceDisplayName("Account.PasswordRecovery.ConfirmNewPassword")]
+        [GrandResourceDisplayName("Account.PasswordRecovery.ConfirmNewPassword")]
         public string ConfirmNewPassword { get; set; }
 
         public bool DisablePasswordChanging { get; set; }

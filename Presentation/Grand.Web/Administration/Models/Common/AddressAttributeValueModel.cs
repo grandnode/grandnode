@@ -18,14 +18,14 @@ namespace Grand.Admin.Models.Common
 
         public string AddressAttributeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.IsPreSelected")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.IsPreSelected")]
         public bool IsPreSelected { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")]
         public int DisplayOrder {get;set;}
 
         public IList<AddressAttributeValueLocalizedModel> Locales { get; set; }
@@ -36,7 +36,7 @@ namespace Grand.Admin.Models.Common
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Values.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

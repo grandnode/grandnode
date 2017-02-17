@@ -8,24 +8,24 @@ namespace Grand.Admin.Models.Affiliates
 {
     public partial class AffiliateListModel : BaseNopModel
     {
-        [NopResourceDisplayName("Admin.Affiliates.List.SearchFirstName")]
+        [GrandResourceDisplayName("Admin.Affiliates.List.SearchFirstName")]
         [AllowHtml]
         public string SearchFirstName { get; set; }
 
-        [NopResourceDisplayName("Admin.Affiliates.List.SearchLastName")]
+        [GrandResourceDisplayName("Admin.Affiliates.List.SearchLastName")]
         [AllowHtml]
         public string SearchLastName { get; set; }
 
-        [NopResourceDisplayName("Admin.Affiliates.List.SearchFriendlyUrlName")]
+        [GrandResourceDisplayName("Admin.Affiliates.List.SearchFriendlyUrlName")]
         [AllowHtml]
         public string SearchFriendlyUrlName { get; set; }
 
-        [NopResourceDisplayName("Admin.Affiliates.List.LoadOnlyWithOrders")]
+        [GrandResourceDisplayName("Admin.Affiliates.List.LoadOnlyWithOrders")]
         public bool LoadOnlyWithOrders { get; set; }
-        [NopResourceDisplayName("Admin.Affiliates.List.OrdersCreatedFromUtc")]
+        [GrandResourceDisplayName("Admin.Affiliates.List.OrdersCreatedFromUtc")]
         [UIHint("DateNullable")]
         public DateTime? OrdersCreatedFromUtc { get; set; }
-        [NopResourceDisplayName("Admin.Affiliates.List.OrdersCreatedToUtc")]
+        [GrandResourceDisplayName("Admin.Affiliates.List.OrdersCreatedToUtc")]
         [UIHint("DateNullable")]
         public DateTime? OrdersCreatedToUtc { get; set; }
     }

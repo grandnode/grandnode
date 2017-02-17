@@ -19,37 +19,37 @@ namespace Grand.Admin.Models.Messages
         }
         public string FormId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName")]
         public string SystemName { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.RegexValidation")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.RegexValidation")]
         public string RegexValidation { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.IsRequired")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.IsRequired")]
         public bool IsRequired { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.FormControlTypeId")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.FormControlTypeId")]
         public int FormControlTypeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.ValidationMinLength")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.ValidationMinLength")]
         [UIHint("Int32Nullable")]
         public int? ValidationMinLength { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.ValidationMaxLength")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.ValidationMaxLength")]
         [UIHint("Int32Nullable")]
         public int? ValidationMaxLength { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.DefaultValue")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.DefaultValue")]
         public string DefaultValue { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.Style")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.Style")]
         public string Style { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.Class")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.Class")]
         public string Class { get; set; }
 
         public IList<InteractiveFormAttributeLocalizedModel> Locales { get; set; }
@@ -60,7 +60,7 @@ namespace Grand.Admin.Models.Messages
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Attribute.Fields.Name")]
         public string Name { get; set; }
 
     }

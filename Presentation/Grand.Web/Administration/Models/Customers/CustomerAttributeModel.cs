@@ -16,20 +16,20 @@ namespace Grand.Admin.Models.Customers
             Locales = new List<CustomerAttributeLocalizedModel>();
         }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.IsRequired")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.IsRequired")]
         public bool IsRequired { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")]
         public int AttributeControlTypeId { get; set; }
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.AttributeControlType")]
         [AllowHtml]
         public string AttributeControlTypeName { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
 
@@ -41,7 +41,7 @@ namespace Grand.Admin.Models.Customers
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerAttributes.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 

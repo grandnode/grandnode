@@ -19,26 +19,26 @@ namespace Grand.Admin.Models.Orders
 
         }
 
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Store")]
+        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.Store")]
         public string StoreId { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.StartDate")]
+        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? StartDate { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.EndDate")]
+        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
 
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.OrderStatus")]
+        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.OrderStatus")]
         public int OrderStatusId { get; set; }
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
+        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
         public int PaymentStatusId { get; set; }
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
+        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
         public string BillingCountryId { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Vendor")]
+        [GrandResourceDisplayName("Admin.SalesReport.Bestsellers.Vendor")]
         public string VendorId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 

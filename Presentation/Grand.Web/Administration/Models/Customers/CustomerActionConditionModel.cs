@@ -16,14 +16,14 @@ namespace Grand.Admin.Models.Customers
             this.CustomerActionConditionType = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerActionCondition.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerActionCondition.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerActionCondition.Fields.CustomerConditionTypeId")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerActionCondition.Fields.CustomerConditionTypeId")]
         public int CustomerActionConditionTypeId { get; set; }
         public IList<SelectListItem> CustomerActionConditionType { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerActionCondition.Fields.ConditionId")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerActionCondition.Fields.ConditionId")]
         public int ConditionId { get; set; }
 
         public string CustomerActionId { get; set; }
@@ -40,18 +40,18 @@ namespace Grand.Admin.Models.Customers
                 AvailableProductTypes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public string SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
             public string SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public string SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
@@ -68,7 +68,7 @@ namespace Grand.Admin.Models.Customers
 
         public partial class AddCategoryConditionModel 
         {
-            [NopResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
             [AllowHtml]
             public string SearchCategoryName { get; set; }
 
@@ -80,7 +80,7 @@ namespace Grand.Admin.Models.Customers
 
         public partial class AddManufacturerConditionModel 
         {
-            [NopResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
+            [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
             [AllowHtml]
             public string SearchManufacturerName { get; set; }
 

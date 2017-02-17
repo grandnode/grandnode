@@ -18,62 +18,62 @@ namespace Grand.Admin.Models.Common
             CustomAddressAttributes = new List<AddressAttributeModel>();
         }
 
-        [NopResourceDisplayName("Admin.Address.Fields.FirstName")]
+        [GrandResourceDisplayName("Admin.Address.Fields.FirstName")]
         [AllowHtml]
         public string FirstName { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.LastName")]
+        [GrandResourceDisplayName("Admin.Address.Fields.LastName")]
         [AllowHtml]
         public string LastName { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.Email")]
+        [GrandResourceDisplayName("Admin.Address.Fields.Email")]
         [AllowHtml]
         public string Email { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.Company")]
+        [GrandResourceDisplayName("Admin.Address.Fields.Company")]
         [AllowHtml]
         public string Company { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.Country")]
+        [GrandResourceDisplayName("Admin.Address.Fields.Country")]
         public string CountryId { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.Country")]
+        [GrandResourceDisplayName("Admin.Address.Fields.Country")]
         [AllowHtml]
         public string CountryName { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
+        [GrandResourceDisplayName("Admin.Address.Fields.StateProvince")]
         public string StateProvinceId { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.StateProvince")]
+        [GrandResourceDisplayName("Admin.Address.Fields.StateProvince")]
         [AllowHtml]
         public string StateProvinceName { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.City")]
+        [GrandResourceDisplayName("Admin.Address.Fields.City")]
         [AllowHtml]
         public string City { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.Address1")]
+        [GrandResourceDisplayName("Admin.Address.Fields.Address1")]
         [AllowHtml]
         public string Address1 { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.Address2")]
+        [GrandResourceDisplayName("Admin.Address.Fields.Address2")]
         [AllowHtml]
         public string Address2 { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.ZipPostalCode")]
+        [GrandResourceDisplayName("Admin.Address.Fields.ZipPostalCode")]
         [AllowHtml]
         public string ZipPostalCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.PhoneNumber")]
+        [GrandResourceDisplayName("Admin.Address.Fields.PhoneNumber")]
         [AllowHtml]
         public string PhoneNumber { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.Fields.FaxNumber")]
+        [GrandResourceDisplayName("Admin.Address.Fields.FaxNumber")]
         [AllowHtml]
         public string FaxNumber { get; set; }
 
         //address in HTML format (usually used in grids)
-        [NopResourceDisplayName("Admin.Address")]
+        [GrandResourceDisplayName("Admin.Address")]
         public string AddressHtml { get; set; }
 
         //formatted custom address attributes

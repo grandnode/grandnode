@@ -14,22 +14,22 @@ namespace Grand.Admin.Models.Plugins
             AvailablePrices = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Name")]
         [AllowHtml]
         public string SearchName { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Version")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Version")]
         public int SearchVersionId { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Category")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Category")]
         public string SearchCategoryId { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Price")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Price")]
         public int SearchPriceId { get; set; }
 
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Version")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Version")]
         public IList<SelectListItem> AvailableVersions { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Category")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Category")]
         public IList<SelectListItem> AvailableCategories { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Price")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.OfficialFeed.Price")]
         public IList<SelectListItem> AvailablePrices { get; set; }
 
         #region Nested classes

@@ -128,15 +128,15 @@ namespace Grand.Web.Models.Catalog
             public string ProductId { get; set; }
 
             //qty
-            [NopResourceDisplayName("Products.Qty")]
+            [GrandResourceDisplayName("Products.Qty")]
             public int EnteredQuantity { get; set; }
             public string MinimumQuantityNotification { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
 
             //price entered by customers
-            [NopResourceDisplayName("Products.EnterProductPrice")]
+            [GrandResourceDisplayName("Products.EnterProductPrice")]
             public bool CustomerEntersPrice { get; set; }
-            [NopResourceDisplayName("Products.EnterProductPrice")]
+            [GrandResourceDisplayName("Products.EnterProductPrice")]
             public decimal CustomerEnteredPrice { get; set; }
             public String CustomerEnteredPriceRange { get; set; }
 
@@ -194,19 +194,19 @@ namespace Grand.Web.Models.Catalog
         {
             public bool IsGiftCard { get; set; }
 
-            [NopResourceDisplayName("Products.GiftCard.RecipientName")]
+            [GrandResourceDisplayName("Products.GiftCard.RecipientName")]
             [AllowHtml]
             public string RecipientName { get; set; }
-            [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
+            [GrandResourceDisplayName("Products.GiftCard.RecipientEmail")]
             [AllowHtml]
             public string RecipientEmail { get; set; }
-            [NopResourceDisplayName("Products.GiftCard.SenderName")]
+            [GrandResourceDisplayName("Products.GiftCard.SenderName")]
             [AllowHtml]
             public string SenderName { get; set; }
-            [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
+            [GrandResourceDisplayName("Products.GiftCard.SenderEmail")]
             [AllowHtml]
             public string SenderEmail { get; set; }
-            [NopResourceDisplayName("Products.GiftCard.Message")]
+            [GrandResourceDisplayName("Products.GiftCard.Message")]
             [AllowHtml]
             public string Message { get; set; }
 

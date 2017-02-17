@@ -6,10 +6,10 @@ namespace Grand.Plugin.Tax.FixedRate.Models
     {
         public string TaxCategoryId { get; set; }
 
-        [NopResourceDisplayName("Plugins.Tax.FixedRate.Fields.TaxCategoryName")]
+        [GrandResourceDisplayName("Plugins.Tax.FixedRate.Fields.TaxCategoryName")]
         public string TaxCategoryName { get; set; }
 
-        [NopResourceDisplayName("Plugins.Tax.FixedRate.Fields.Rate")]
+        [GrandResourceDisplayName("Plugins.Tax.FixedRate.Fields.Rate")]
         public decimal Rate { get; set; }
     }
 }

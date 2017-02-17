@@ -5,7 +5,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Models
 {
     public class ShippingByWeightListModel : BaseNopModel
     {
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated")]
         public bool LimitMethodsToCreated { get; set; }
     }
 }

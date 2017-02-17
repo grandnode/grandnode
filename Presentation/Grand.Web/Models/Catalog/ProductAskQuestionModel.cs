@@ -20,19 +20,19 @@ namespace Grand.Web.Models.Catalog
         public string ProductSeName { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Products.AskQuestion.Email")]
+        [GrandResourceDisplayName("Products.AskQuestion.Email")]
         public string Email { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Products.AskQuestion.FullName")]
+        [GrandResourceDisplayName("Products.AskQuestion.FullName")]
         public string FullName { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Products.AskQuestion.Phone")]
+        [GrandResourceDisplayName("Products.AskQuestion.Phone")]
         public string Phone { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Products.AskQuestion.Message")]
+        [GrandResourceDisplayName("Products.AskQuestion.Message")]
         public string Message { get; set; }
 
         public bool SuccessfullySent { get; set; }

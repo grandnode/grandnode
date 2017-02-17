@@ -16,17 +16,17 @@ namespace Grand.Plugin.Tax.CountryStateZip.Models
             TaxRates = new List<TaxRateModel>();
         }
 
-        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Store")]
+        [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Store")]
         public string AddStoreId { get; set; }
-        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Country")]
+        [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Country")]
         public string AddCountryId { get; set; }
-        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.StateProvince")]
+        [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.StateProvince")]
         public string AddStateProvinceId { get; set; }
-        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Zip")]
+        [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Zip")]
         public string AddZip { get; set; }
-        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.TaxCategory")]
+        [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.TaxCategory")]
         public string AddTaxCategoryId { get; set; }
-        [NopResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Percentage")]
+        [GrandResourceDisplayName("Plugins.Tax.CountryStateZip.Fields.Percentage")]
         public decimal AddPercentage { get; set; }
 
 

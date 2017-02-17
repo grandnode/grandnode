@@ -14,22 +14,22 @@ namespace Grand.Admin.Models.Catalog
             AvailableStores = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.CreatedOnFrom")]
+        [GrandResourceDisplayName("Admin.Catalog.ProductReviews.List.CreatedOnFrom")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnFrom { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.CreatedOnTo")]
+        [GrandResourceDisplayName("Admin.Catalog.ProductReviews.List.CreatedOnTo")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnTo { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchText")]
+        [GrandResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchText")]
         [AllowHtml]
         public string SearchText { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchStore")]
+        [GrandResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchStore")]
         public string SearchStoreId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchProduct")]
+        [GrandResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchProduct")]
         public string SearchProductId { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }

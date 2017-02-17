@@ -7,47 +7,47 @@ namespace Grand.Plugin.Payments.PayPalStandard.Models
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.UseSandbox")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
         public bool UseSandbox_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.BusinessEmail")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.BusinessEmail")]
         public string BusinessEmail { get; set; }
         public bool BusinessEmail_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PDTToken")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PDTToken")]
         public string PdtToken { get; set; }
         public bool PdtToken_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal")]
         public bool PdtValidateOrderTotal { get; set; }
         public bool PdtValidateOrderTotal_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFee")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
         public bool AdditionalFee_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage")]
         public bool AdditionalFeePercentage { get; set; }
         public bool AdditionalFeePercentage_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals")]
         public bool PassProductNamesAndTotals { get; set; }
         public bool PassProductNamesAndTotals_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.EnableIpn")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.EnableIpn")]
         public bool EnableIpn { get; set; }
         public bool EnableIpn_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.IpnUrl")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.IpnUrl")]
         public string IpnUrl { get; set; }
         public bool IpnUrl_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AddressOverride")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AddressOverride")]
         public bool AddressOverride { get; set; }
         public bool AddressOverride_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage")]
+        [GrandResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage")]
         public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage { get; set; }
         public bool ReturnFromPayPalWithoutPaymentRedirectsToOrderDetailsPage_OverrideForStore { get; set; }
     }

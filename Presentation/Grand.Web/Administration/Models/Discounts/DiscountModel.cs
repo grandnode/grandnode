@@ -18,64 +18,64 @@ namespace Grand.Admin.Models.Discounts
             DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
         }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountType")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountType")]
         public int DiscountTypeId { get; set; }
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountType")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountType")]
         public string DiscountTypeName { get; set; }
 
         //used for the list page
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.TimesUsed")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.TimesUsed")]
         public int TimesUsed { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.UsePercentage")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.UsePercentage")]
         public bool UsePercentage { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountPercentage")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountPercentage")]
         public decimal DiscountPercentage { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountAmount")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountAmount")]
         public decimal DiscountAmount { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.MaximumDiscountAmount")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.MaximumDiscountAmount")]
         [UIHint("DecimalNullable")]
         public decimal? MaximumDiscountAmount { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.StartDate")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? StartDateUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.EndDate")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? EndDateUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.RequiresCouponCode")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.RequiresCouponCode")]
         public bool RequiresCouponCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.CouponCode")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.CouponCode")]
         [AllowHtml]
         public string CouponCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.IsCumulative")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.IsCumulative")]
         public bool IsCumulative { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountLimitation")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountLimitation")]
         public int DiscountLimitationId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.LimitationTimes")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.LimitationTimes")]
         public int LimitationTimes { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity")]
         [UIHint("Int32Nullable")]
         public int? MaximumDiscountedQuantity { get; set; }
 
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
         public string AddDiscountRequirement { get; set; }
 
         public IList<SelectListItem> AvailableDiscountRequirementRules { get; set; }
@@ -96,14 +96,14 @@ namespace Grand.Admin.Models.Discounts
         {
             public string DiscountId { get; set; }
 
-            [NopResourceDisplayName("Admin.Promotions.Discounts.History.Order")]
+            [GrandResourceDisplayName("Admin.Promotions.Discounts.History.Order")]
             public string OrderId { get; set; }
             public int OrderNumber { get; set; }
 
-            [NopResourceDisplayName("Admin.Promotions.Discounts.History.OrderTotal")]
+            [GrandResourceDisplayName("Admin.Promotions.Discounts.History.OrderTotal")]
             public string OrderTotal { get; set; }
 
-            [NopResourceDisplayName("Admin.Promotions.Discounts.History.CreatedOn")]
+            [GrandResourceDisplayName("Admin.Promotions.Discounts.History.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }
 
@@ -115,7 +115,7 @@ namespace Grand.Admin.Models.Discounts
         }
         public partial class AddCategoryToDiscountModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
+            [GrandResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
             [AllowHtml]
             public string SearchCategoryName { get; set; }
 
@@ -133,7 +133,7 @@ namespace Grand.Admin.Models.Discounts
         }
         public partial class AddManufacturerToDiscountModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
+            [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
             [AllowHtml]
             public string SearchManufacturerName { get; set; }
 
@@ -160,18 +160,18 @@ namespace Grand.Admin.Models.Discounts
                 AvailableProductTypes = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
             [AllowHtml]
             public string SearchProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
             public string SearchCategoryId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
             public string SearchManufacturerId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
             public string SearchStoreId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
             public string SearchVendorId { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
             public int SearchProductTypeId { get; set; }
 
             public IList<SelectListItem> AvailableCategories { get; set; }
@@ -193,11 +193,11 @@ namespace Grand.Admin.Models.Discounts
         }
         public partial class AddVendorToDiscountModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorName")]
+            [GrandResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorName")]
             [AllowHtml]
             public string SearchVendorName { get; set; }
 
-            [NopResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorEmail")]
+            [GrandResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorEmail")]
             [AllowHtml]
             public string SearchVendorEmail { get; set; }
 
@@ -215,7 +215,7 @@ namespace Grand.Admin.Models.Discounts
         }
         public partial class AddStoreToDiscountModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Stores.List.SearchStoreName")]
+            [GrandResourceDisplayName("Admin.Catalog.Stores.List.SearchStoreName")]
             [AllowHtml]
             public string SearchStoreName { get; set; }
 

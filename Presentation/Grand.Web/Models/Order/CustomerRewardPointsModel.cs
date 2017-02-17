@@ -22,16 +22,16 @@ namespace Grand.Web.Models.Order
 
         public partial class RewardPointsHistoryModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("RewardPoints.Fields.Points")]
+            [GrandResourceDisplayName("RewardPoints.Fields.Points")]
             public int Points { get; set; }
 
-            [NopResourceDisplayName("RewardPoints.Fields.PointsBalance")]
+            [GrandResourceDisplayName("RewardPoints.Fields.PointsBalance")]
             public int PointsBalance { get; set; }
 
-            [NopResourceDisplayName("RewardPoints.Fields.Message")]
+            [GrandResourceDisplayName("RewardPoints.Fields.Message")]
             public string Message { get; set; }
 
-            [NopResourceDisplayName("RewardPoints.Fields.Date")]
+            [GrandResourceDisplayName("RewardPoints.Fields.Date")]
             public DateTime CreatedOn { get; set; }
         }
 

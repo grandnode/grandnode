@@ -14,16 +14,16 @@ namespace Grand.Admin.Models.Catalog
             AvailableProductTypes = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchProductName")]
+        [GrandResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchProductName")]
         [AllowHtml]
         public string SearchProductName { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchCategory")]
+        [GrandResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchCategory")]
         public string SearchCategoryId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchManufacturer")]
+        [GrandResourceDisplayName("Admin.Catalog.BulkEdit.List.SearchManufacturer")]
         public string SearchManufacturerId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
         public int SearchProductTypeId { get; set; }
         public IList<SelectListItem> AvailableProductTypes { get; set; }
         

@@ -9,13 +9,13 @@ namespace Grand.Admin.Models.Orders
 {
     public partial class OrderPeriodReportLineModel : BaseNopModel
     {
-        [NopResourceDisplayName("Admin.SalesReport.Period.Name")]
+        [GrandResourceDisplayName("Admin.SalesReport.Period.Name")]
         public string Period { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Period.Count")]
+        [GrandResourceDisplayName("Admin.SalesReport.Period.Count")]
         public int Count { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Period.Amount")]
+        [GrandResourceDisplayName("Admin.SalesReport.Period.Amount")]
         public decimal Amount { get; set; }
 
     }

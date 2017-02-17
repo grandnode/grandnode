@@ -7,22 +7,22 @@ namespace Grand.Admin.Models.Blogs
 {
     public partial class BlogCommentModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")]
         public string BlogPostId { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")]
         [AllowHtml]
         public string BlogPostTitle { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
         public string CustomerId { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Customer")]
         public string CustomerInfo { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Comment")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.Comment")]
         public string Comment { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
 
     }

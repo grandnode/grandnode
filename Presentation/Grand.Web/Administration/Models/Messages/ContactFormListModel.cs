@@ -13,19 +13,19 @@ namespace Grand.Admin.Models.Messages
         {
             AvailableStores = new List<SelectListItem>();
         }
-        [NopResourceDisplayName("Admin.System.ContactForm.List.StartDate")]
+        [GrandResourceDisplayName("Admin.System.ContactForm.List.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? SearchStartDate { get; set; }
 
-        [NopResourceDisplayName("Admin.System.ContactForm.List.EndDate")]
+        [GrandResourceDisplayName("Admin.System.ContactForm.List.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? SearchEndDate { get; set; }
 
-        [NopResourceDisplayName("Admin.System.ContactForm.List.Email")]
+        [GrandResourceDisplayName("Admin.System.ContactForm.List.Email")]
         [AllowHtml]
         public string SearchEmail { get; set; }
 
-        [NopResourceDisplayName("Admin.System.ContactForm.List.Store")]
+        [GrandResourceDisplayName("Admin.System.ContactForm.List.Store")]
         public string StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 

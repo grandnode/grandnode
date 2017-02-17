@@ -20,36 +20,36 @@ namespace Grand.Web.Models.Customer
             this.CustomerAttributes = new List<CustomerAttributeModel>();
         }
 
-        [NopResourceDisplayName("Account.Fields.Email")]
+        [GrandResourceDisplayName("Account.Fields.Email")]
         [AllowHtml]
         public string Email { get; set; }
 
         public bool CheckUsernameAvailabilityEnabled { get; set; }
         public bool AllowUsersToChangeUsernames { get; set; }
         public bool UsernamesEnabled { get; set; }
-        [NopResourceDisplayName("Account.Fields.Username")]
+        [GrandResourceDisplayName("Account.Fields.Username")]
         [AllowHtml]
         public string Username { get; set; }
 
         //form fields & properties
         public bool GenderEnabled { get; set; }
-        [NopResourceDisplayName("Account.Fields.Gender")]
+        [GrandResourceDisplayName("Account.Fields.Gender")]
         public string Gender { get; set; }
 
-        [NopResourceDisplayName("Account.Fields.FirstName")]
+        [GrandResourceDisplayName("Account.Fields.FirstName")]
         [AllowHtml]
         public string FirstName { get; set; }
-        [NopResourceDisplayName("Account.Fields.LastName")]
+        [GrandResourceDisplayName("Account.Fields.LastName")]
         [AllowHtml]
         public string LastName { get; set; }
 
 
         public bool DateOfBirthEnabled { get; set; }
-        [NopResourceDisplayName("Account.Fields.DateOfBirth")]
+        [GrandResourceDisplayName("Account.Fields.DateOfBirth")]
         public int? DateOfBirthDay { get; set; }
-        [NopResourceDisplayName("Account.Fields.DateOfBirth")]
+        [GrandResourceDisplayName("Account.Fields.DateOfBirth")]
         public int? DateOfBirthMonth { get; set; }
-        [NopResourceDisplayName("Account.Fields.DateOfBirth")]
+        [GrandResourceDisplayName("Account.Fields.DateOfBirth")]
         public int? DateOfBirthYear { get; set; }
         public bool DateOfBirthRequired { get; set; }
         public DateTime? ParseDateOfBirth()
@@ -68,83 +68,83 @@ namespace Grand.Web.Models.Customer
 
         public bool CompanyEnabled { get; set; }
         public bool CompanyRequired { get; set; }
-        [NopResourceDisplayName("Account.Fields.Company")]
+        [GrandResourceDisplayName("Account.Fields.Company")]
         [AllowHtml]
         public string Company { get; set; }
 
         public bool StreetAddressEnabled { get; set; }
         public bool StreetAddressRequired { get; set; }
-        [NopResourceDisplayName("Account.Fields.StreetAddress")]
+        [GrandResourceDisplayName("Account.Fields.StreetAddress")]
         [AllowHtml]
         public string StreetAddress { get; set; }
 
         public bool StreetAddress2Enabled { get; set; }
         public bool StreetAddress2Required { get; set; }
-        [NopResourceDisplayName("Account.Fields.StreetAddress2")]
+        [GrandResourceDisplayName("Account.Fields.StreetAddress2")]
         [AllowHtml]
         public string StreetAddress2 { get; set; }
 
         public bool ZipPostalCodeEnabled { get; set; }
         public bool ZipPostalCodeRequired { get; set; }
-        [NopResourceDisplayName("Account.Fields.ZipPostalCode")]
+        [GrandResourceDisplayName("Account.Fields.ZipPostalCode")]
         [AllowHtml]
         public string ZipPostalCode { get; set; }
 
         public bool CityEnabled { get; set; }
         public bool CityRequired { get; set; }
-        [NopResourceDisplayName("Account.Fields.City")]
+        [GrandResourceDisplayName("Account.Fields.City")]
         [AllowHtml]
         public string City { get; set; }
 
         public bool CountryEnabled { get; set; }
         public bool CountryRequired { get; set; }
-        [NopResourceDisplayName("Account.Fields.Country")]
+        [GrandResourceDisplayName("Account.Fields.Country")]
         public string CountryId { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
 
         public bool StateProvinceEnabled { get; set; }
         public bool StateProvinceRequired { get; set; }
-        [NopResourceDisplayName("Account.Fields.StateProvince")]
+        [GrandResourceDisplayName("Account.Fields.StateProvince")]
         public string StateProvinceId { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
 
         public bool PhoneEnabled { get; set; }
         public bool PhoneRequired { get; set; }
-        [NopResourceDisplayName("Account.Fields.Phone")]
+        [GrandResourceDisplayName("Account.Fields.Phone")]
         [AllowHtml]
         public string Phone { get; set; }
 
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
-        [NopResourceDisplayName("Account.Fields.Fax")]
+        [GrandResourceDisplayName("Account.Fields.Fax")]
         [AllowHtml]
         public string Fax { get; set; }
 
         public bool NewsletterEnabled { get; set; }
-        [NopResourceDisplayName("Account.Fields.Newsletter")]
+        [GrandResourceDisplayName("Account.Fields.Newsletter")]
         public bool Newsletter { get; set; }
 
         //preferences
         public bool SignatureEnabled { get; set; }
-        [NopResourceDisplayName("Account.Fields.Signature")]
+        [GrandResourceDisplayName("Account.Fields.Signature")]
         [AllowHtml]
         public string Signature { get; set; }
 
         //time zone
-        [NopResourceDisplayName("Account.Fields.TimeZone")]
+        [GrandResourceDisplayName("Account.Fields.TimeZone")]
         public string TimeZoneId { get; set; }
         public bool AllowCustomersToSetTimeZone { get; set; }
         public IList<SelectListItem> AvailableTimeZones { get; set; }
 
         //EU VAT
-        [NopResourceDisplayName("Account.Fields.VatNumber")]
+        [GrandResourceDisplayName("Account.Fields.VatNumber")]
         [AllowHtml]
         public string VatNumber { get; set; }
         public string VatNumberStatusNote { get; set; }
         public bool DisplayVatNumber { get; set; }
 
         //external authentication
-        [NopResourceDisplayName("Account.AssociatedExternalAuth")]
+        [GrandResourceDisplayName("Account.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
         public int NumberOfExternalAuthenticationProviders { get; set; }
 

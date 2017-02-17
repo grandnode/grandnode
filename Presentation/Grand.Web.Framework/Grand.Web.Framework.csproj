@@ -233,8 +233,8 @@
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
     <Compile Include="Mvc\NopMetadataProvider.cs" />
     <Compile Include="Mvc\NopModelBinder.cs" />
-    <Compile Include="NopResourceDisplayName.cs" />
-    <Compile Include="NopValidatorFactory.cs" />
+    <Compile Include="GrandResourceDisplayName.cs" />
+    <Compile Include="GrandValidatorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RssActionResult.cs" />
     <Compile Include="Security\SslRequirement.cs" />

@@ -21,7 +21,7 @@ namespace Grand.Plugin.Misc.FacebookShop.Models
         /// <summary>
         /// Query string
         /// </summary>
-        [NopResourceDisplayName("Search.SearchTerm")]
+        [GrandResourceDisplayName("Search.SearchTerm")]
         [AllowHtml]
         public string Q { get; set; }
 

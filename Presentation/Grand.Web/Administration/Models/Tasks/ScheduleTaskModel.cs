@@ -9,36 +9,36 @@ namespace Grand.Admin.Models.Tasks
     [Validator(typeof(ScheduleTaskValidator))]
     public partial class ScheduleTaskModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.ScheduleTaskName")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.ScheduleTaskName")]
         [AllowHtml]
         public string ScheduleTaskName { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.Type")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.Type")]
         public string Type { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.Enabled")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.Enabled")]
         public bool Enabled { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.StopOnError")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.StopOnError")]
         public bool StopOnError { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.LastStartUtc")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.LastStartUtc")]
         public string LastStartUtc { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.LastEndUtc")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.LastEndUtc")]
         public string LastEndUtc { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.LastSuccessUtc")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.LastSuccessUtc")]
         public string LastSuccessUtc { get; set; }
 
         //Properties below are for FluentScheduler
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.TimeIntervalChoice")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.TimeIntervalChoice")]
         public int TimeIntervalChoice { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.TimeInterval")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.TimeInterval")]
         public int TimeInterval { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.MinuteOfHour")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.MinuteOfHour")]
         public int MinuteOfHour { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.HourOfDay")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.HourOfDay")]
         public int HourOfDay { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.DayOfWeek")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.DayOfWeek")]
         public int DayOfWeek { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.MonthOptionChoice")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.MonthOptionChoice")]
         public int MonthOptionChoice { get; set; }
-        [NopResourceDisplayName("Admin.System.ScheduleTasks.DayOfMonth")]
+        [GrandResourceDisplayName("Admin.System.ScheduleTasks.DayOfMonth")]
         public int DayOfMonth { get; set; }
     }
 }

@@ -9,15 +9,15 @@ namespace Grand.Admin.Models.Templates
     [Validator(typeof(ProductTemplateValidator))]
     public partial class ProductTemplateModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.System.Templates.Product.Name")]
+        [GrandResourceDisplayName("Admin.System.Templates.Product.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.System.Templates.Product.ViewPath")]
+        [GrandResourceDisplayName("Admin.System.Templates.Product.ViewPath")]
         [AllowHtml]
         public string ViewPath { get; set; }
 
-        [NopResourceDisplayName("Admin.System.Templates.Product.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.System.Templates.Product.DisplayOrder")]
         public int DisplayOrder { get; set; }
     }
 }

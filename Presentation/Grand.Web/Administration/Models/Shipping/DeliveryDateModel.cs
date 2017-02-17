@@ -15,14 +15,14 @@ namespace Grand.Admin.Models.Shipping
         {
             Locales = new List<DeliveryDateLocalizedModel>();
         }
-        [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.ColorSquaresRgb")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.ColorSquaresRgb")]
         [AllowHtml]
         public string ColorSquaresRgb { get; set; }
 
@@ -33,7 +33,7 @@ namespace Grand.Admin.Models.Shipping
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.DeliveryDates.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 

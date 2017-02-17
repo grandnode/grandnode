@@ -12,10 +12,10 @@ namespace Grand.Admin.Models.Catalog
             ProductAttributes = new List<ProductAttributeModel>();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.EnableCondition")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.EnableCondition")]
         public bool EnableCondition { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.Attributes")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.Attributes")]
         public string SelectedProductAttributeId { get; set; }
         public IList<ProductAttributeModel> ProductAttributes { get; set; }
 

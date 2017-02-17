@@ -15,11 +15,11 @@ namespace Grand.Admin.Models.Catalog
         {
             Locales = new List<ProductTagLocalizedModel>();
         }
-        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.ProductCount")]
+        [GrandResourceDisplayName("Admin.Catalog.ProductTags.Fields.ProductCount")]
         public int ProductCount { get; set; }
 
         public IList<ProductTagLocalizedModel> Locales { get; set; }
@@ -29,7 +29,7 @@ namespace Grand.Admin.Models.Catalog
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

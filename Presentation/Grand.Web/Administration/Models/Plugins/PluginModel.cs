@@ -16,49 +16,49 @@ namespace Grand.Admin.Models.Plugins
         {
             Locales = new List<PluginLocalizedModel>();
         }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Group")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Group")]
         [AllowHtml]
         public string Group { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.FriendlyName")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.FriendlyName")]
         [AllowHtml]
         public string FriendlyName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.SystemName")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.SystemName")]
         [AllowHtml]
         public string SystemName { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Version")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Version")]
         [AllowHtml]
         public string Version { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Author")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Author")]
         [AllowHtml]
         public string Author { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Configure")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Configure")]
         public string ConfigurationUrl { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Installed")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Installed")]
         public bool Installed { get; set; }
 
         public bool CanChangeEnabled { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.IsEnabled")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.IsEnabled")]
         public bool IsEnabled { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Logo")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.Logo")]
         public string LogoUrl { get; set; }
 
         public IList<PluginLocalizedModel> Locales { get; set; }
 
 
         //Store mapping
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
     }
@@ -66,7 +66,7 @@ namespace Grand.Admin.Models.Plugins
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.FriendlyName")]
+        [GrandResourceDisplayName("Admin.Configuration.Plugins.Fields.FriendlyName")]
         [AllowHtml]
         public string FriendlyName { get; set; }
     }

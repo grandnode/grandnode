@@ -12,30 +12,30 @@ namespace Grand.Admin.Models.Orders
             this.ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
             this.Items = new List<ShipmentItemModel>();
         }
-        [NopResourceDisplayName("Admin.Orders.Shipments.ID")]
+        [GrandResourceDisplayName("Admin.Orders.Shipments.ID")]
         public override string Id { get; set; }
         public int ShipmentNumber { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.Shipments.OrderID")]
+        [GrandResourceDisplayName("Admin.Orders.Shipments.OrderID")]
         public string OrderId { get; set; }
         public int OrderNumber { get; set; }
-        [NopResourceDisplayName("Admin.Orders.Shipments.TotalWeight")]
+        [GrandResourceDisplayName("Admin.Orders.Shipments.TotalWeight")]
         public string TotalWeight { get; set; }
-        [NopResourceDisplayName("Admin.Orders.Shipments.TrackingNumber")]
+        [GrandResourceDisplayName("Admin.Orders.Shipments.TrackingNumber")]
         public string TrackingNumber { get; set; }
         public string TrackingNumberUrl { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.Shipments.ShippedDate")]
+        [GrandResourceDisplayName("Admin.Orders.Shipments.ShippedDate")]
         public string ShippedDate { get; set; }
         public bool CanShip { get; set; }
         public DateTime? ShippedDateUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.Shipments.DeliveryDate")]
+        [GrandResourceDisplayName("Admin.Orders.Shipments.DeliveryDate")]
         public string DeliveryDate { get; set; }
         public bool CanDeliver { get; set; }
         public DateTime? DeliveryDateUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Orders.Shipments.AdminComment")]
+        [GrandResourceDisplayName("Admin.Orders.Shipments.AdminComment")]
         public string AdminComment { get; set; }
 
         public List<ShipmentItemModel> Items { get; set; }
@@ -53,7 +53,7 @@ namespace Grand.Admin.Models.Orders
 
             public string OrderItemId { get; set; }
             public string ProductId { get; set; }
-            [NopResourceDisplayName("Admin.Orders.Shipments.Products.ProductName")]
+            [GrandResourceDisplayName("Admin.Orders.Shipments.Products.ProductName")]
             public string ProductName { get; set; }
             public string Sku { get; set; }
             public string AttributeInfo { get; set; }
@@ -61,14 +61,14 @@ namespace Grand.Admin.Models.Orders
             public bool ShipSeparately { get; set; }
 
             //weight of one item (product)
-            [NopResourceDisplayName("Admin.Orders.Shipments.Products.ItemWeight")]
+            [GrandResourceDisplayName("Admin.Orders.Shipments.Products.ItemWeight")]
             public string ItemWeight { get; set; }
-            [NopResourceDisplayName("Admin.Orders.Shipments.Products.ItemDimensions")]
+            [GrandResourceDisplayName("Admin.Orders.Shipments.Products.ItemDimensions")]
             public string ItemDimensions { get; set; }
 
             public int QuantityToAdd { get; set; }
             public int QuantityOrdered { get; set; }
-            [NopResourceDisplayName("Admin.Orders.Shipments.Products.QtyShipped")]
+            [GrandResourceDisplayName("Admin.Orders.Shipments.Products.QtyShipped")]
             public int QuantityInThisShipment { get; set; }
             public int QuantityInAllShipments { get; set; }
 

@@ -18,19 +18,19 @@ namespace Grand.Admin.Models.Affiliates
 
         public string AffliateId { get; set; }
 
-        [NopResourceDisplayName("Admin.Affiliates.Orders.StartDate")]
+        [GrandResourceDisplayName("Admin.Affiliates.Orders.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? StartDate { get; set; }
 
-        [NopResourceDisplayName("Admin.Affiliates.Orders.EndDate")]
+        [GrandResourceDisplayName("Admin.Affiliates.Orders.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
-        [NopResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
+        [GrandResourceDisplayName("Admin.Affiliates.Orders.OrderStatus")]
         public int OrderStatusId { get; set; }
-        [NopResourceDisplayName("Admin.Affiliates.Orders.PaymentStatus")]
+        [GrandResourceDisplayName("Admin.Affiliates.Orders.PaymentStatus")]
         public int PaymentStatusId { get; set; }
-        [NopResourceDisplayName("Admin.Affiliates.Orders.ShippingStatus")]
+        [GrandResourceDisplayName("Admin.Affiliates.Orders.ShippingStatus")]
         public int ShippingStatusId { get; set; }
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }

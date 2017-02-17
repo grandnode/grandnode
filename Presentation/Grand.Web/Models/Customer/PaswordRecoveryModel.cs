@@ -10,7 +10,7 @@ namespace Grand.Web.Models.Customer
     public partial class PasswordRecoveryModel : BaseNopModel
     {
         [AllowHtml]
-        [NopResourceDisplayName("Account.PasswordRecovery.Email")]
+        [GrandResourceDisplayName("Account.PasswordRecovery.Email")]
         public string Email { get; set; }
 
         public string Result { get; set; }

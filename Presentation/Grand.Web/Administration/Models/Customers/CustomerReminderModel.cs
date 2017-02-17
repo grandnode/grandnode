@@ -19,34 +19,34 @@ namespace Grand.Admin.Models.Customers
         {
         }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.StartDate")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.StartDate")]
         public DateTime StartDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.EndDate")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.EndDate")]
         public DateTime EndDateTimeUtc { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.LastUpdateDate")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.LastUpdateDate")]
         public DateTime LastUpdateDate { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.AllowRenew")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.AllowRenew")]
         public bool AllowRenew { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.RenewedDay")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.RenewedDay")]
         public int RenewedDay { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.Active")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.Active")]
         public bool Active { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.ReminderRule")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.ReminderRule")]
         public int ReminderRuleId { get; set; }
         
-        [NopResourceDisplayName("Admin.Customers.CustomerReminder.Fields.ConditionId")]
+        [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Fields.ConditionId")]
         public int ConditionId { get; set; }
         public int ConditionCount { get; set; }
 
@@ -58,14 +58,14 @@ namespace Grand.Admin.Models.Customers
                 this.ConditionType = new List<SelectListItem>();
             }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Condition.Fields.Name")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Condition.Fields.Name")]
             public string Name { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Condition.Fields.ConditionTypeId")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Condition.Fields.ConditionTypeId")]
             public int ConditionTypeId { get; set; }
             public IList<SelectListItem> ConditionType { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Condition.Fields.ConditionId")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Condition.Fields.ConditionId")]
             public int ConditionId { get; set; }
 
             public string CustomerReminderId { get; set; }
@@ -81,18 +81,18 @@ namespace Grand.Admin.Models.Customers
                     AvailableProductTypes = new List<SelectListItem>();
                 }
 
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
                 [AllowHtml]
                 public string SearchProductName { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
                 public string SearchCategoryId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
                 public string SearchManufacturerId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
                 public string SearchStoreId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
                 public string SearchVendorId { get; set; }
-                [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+                [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
                 public int SearchProductTypeId { get; set; }
 
                 public IList<SelectListItem> AvailableCategories { get; set; }
@@ -108,7 +108,7 @@ namespace Grand.Admin.Models.Customers
             }
             public partial class AddCategoryConditionModel
             {
-                [NopResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
+                [GrandResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
                 [AllowHtml]
                 public string SearchCategoryName { get; set; }
 
@@ -119,7 +119,7 @@ namespace Grand.Admin.Models.Customers
             }
             public partial class AddManufacturerConditionModel
             {
-                [NopResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
+                [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
                 [AllowHtml]
                 public string SearchManufacturerName { get; set; }
 
@@ -173,34 +173,34 @@ namespace Grand.Admin.Models.Customers
 
             public string CustomerReminderId { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.SendDay")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.SendDay")]
             public int Day { get; set; }
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.SendHour")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.SendHour")]
             public int Hour { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.SendMinutes")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.SendMinutes")]
             public int Minutes { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Name")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Name")]
             public string Name { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.AllowedTokens")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.AllowedTokens")]
             public string AllowedTokens { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Level")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Level")]
             public int Level { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.EmailAccountId")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.EmailAccountId")]
             public string EmailAccountId { get; set; }
             public IList<SelectListItem> EmailAccounts { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.BccEmailAddresses")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.BccEmailAddresses")]
             public string BccEmailAddresses { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Subject")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Subject")]
             public string Subject { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Body")]
+            [GrandResourceDisplayName("Admin.Customers.CustomerReminder.Level.Fields.Body")]
             [AllowHtml]
             public string Body { get; set; }
         }

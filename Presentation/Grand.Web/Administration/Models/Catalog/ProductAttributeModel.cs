@@ -16,11 +16,11 @@ namespace Grand.Admin.Models.Catalog
             Locales = new List<ProductAttributeLocalizedModel>();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
         [AllowHtml]
         public string Description {get;set;}
         
@@ -32,9 +32,9 @@ namespace Grand.Admin.Models.Catalog
 
         public partial class UsedByProductModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")]
+            [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")]
             public string ProductName { get; set; }
-            [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")]
+            [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")]
             public bool Published { get; set; }
         }
 
@@ -45,11 +45,11 @@ namespace Grand.Admin.Models.Catalog
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Description")]
         [AllowHtml]
         public string Description {get;set;}
     }
@@ -65,29 +65,29 @@ namespace Grand.Admin.Models.Catalog
 
         public string ProductAttributeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")]
         public decimal PriceAdjustment { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")]
         //used only on the values list page
         public string PriceAdjustmentStr { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment")]
         public decimal WeightAdjustment { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment")]
         //used only on the values list page
         public string WeightAdjustmentStr { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Cost")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Cost")]
         public decimal Cost { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected")]
         public bool IsPreSelected { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
         public IList<PredefinedProductAttributeValueLocalizedModel> Locales { get; set; }
@@ -96,7 +96,7 @@ namespace Grand.Admin.Models.Catalog
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

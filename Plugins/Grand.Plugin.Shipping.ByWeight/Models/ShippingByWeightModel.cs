@@ -16,53 +16,53 @@ namespace Grand.Plugin.Shipping.ByWeight.Models
             AvailableWarehouses = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Store")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Store")]
         public string StoreId { get; set; }
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Store")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Store")]
         public string StoreName { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Warehouse")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Warehouse")]
         public string WarehouseId { get; set; }
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Warehouse")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Warehouse")]
         public string WarehouseName { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
         public string CountryId { get; set; }
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
         public string CountryName { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.StateProvince")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.StateProvince")]
         public string StateProvinceId { get; set; }
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.StateProvince")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.StateProvince")]
         public string StateProvinceName { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Zip")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Zip")]
         public string Zip { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingMethod")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingMethod")]
         public string ShippingMethodId { get; set; }
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingMethod")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingMethod")]
         public string ShippingMethodName { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.From")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.From")]
         public decimal From { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.To")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.To")]
         public decimal To { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost")]
         public decimal AdditionalFixedCost { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal")]
         public decimal PercentageRateOfSubtotal { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit")]
         public decimal RatePerWeightUnit { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit")]
         public decimal LowerWeightLimit { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.DataHtml")]
+        [GrandResourceDisplayName("Plugins.Shipping.ByWeight.Fields.DataHtml")]
         public string DataHtml { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }

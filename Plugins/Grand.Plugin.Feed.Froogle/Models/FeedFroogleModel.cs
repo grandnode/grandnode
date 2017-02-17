@@ -15,31 +15,31 @@ namespace Grand.Plugin.Feed.Froogle.Models
             GeneratedFiles = new List<GeneratedFileModel>();
         }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.ProductPictureSize")]
+        [GrandResourceDisplayName("Plugins.Feed.Froogle.ProductPictureSize")]
         public int ProductPictureSize { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.Store")]
+        [GrandResourceDisplayName("Plugins.Feed.Froogle.Store")]
         public string StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.Currency")]
+        [GrandResourceDisplayName("Plugins.Feed.Froogle.Currency")]
         public string CurrencyId { get; set; }
         public IList<SelectListItem> AvailableCurrencies { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.DefaultGoogleCategory")]
+        [GrandResourceDisplayName("Plugins.Feed.Froogle.DefaultGoogleCategory")]
         public string DefaultGoogleCategory { get; set; }
         public IList<SelectListItem> AvailableGoogleCategories { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfoWeight")]
+        [GrandResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfoWeight")]
         public bool PassShippingInfoWeight { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfoDimensions")]
+        [GrandResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfoDimensions")]
         public bool PassShippingInfoDimensions { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.PricesConsiderPromotions")]
+        [GrandResourceDisplayName("Plugins.Feed.Froogle.PricesConsiderPromotions")]
         public bool PricesConsiderPromotions { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.StaticFilePath")]
+        [GrandResourceDisplayName("Plugins.Feed.Froogle.StaticFilePath")]
         public IList<GeneratedFileModel> GeneratedFiles { get; set; }
         
         public class GeneratedFileModel : BaseNopModel
@@ -52,25 +52,25 @@ namespace Grand.Plugin.Feed.Froogle.Models
         {
             public string ProductId { get; set; }
 
-            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.ProductName")]
+            [GrandResourceDisplayName("Plugins.Feed.Froogle.Products.ProductName")]
             public string ProductName { get; set; }
 
-            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.GoogleCategory")]
+            [GrandResourceDisplayName("Plugins.Feed.Froogle.Products.GoogleCategory")]
             public string GoogleCategory { get; set; }
 
-            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.Gender")]
+            [GrandResourceDisplayName("Plugins.Feed.Froogle.Products.Gender")]
             public string Gender { get; set; }
 
-            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.AgeGroup")]
+            [GrandResourceDisplayName("Plugins.Feed.Froogle.Products.AgeGroup")]
             public string AgeGroup { get; set; }
 
-            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.Color")]
+            [GrandResourceDisplayName("Plugins.Feed.Froogle.Products.Color")]
             public string Color { get; set; }
 
-            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.Size")]
+            [GrandResourceDisplayName("Plugins.Feed.Froogle.Products.Size")]
             public string GoogleSize { get; set; }
 
-            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.CustomGoods")]
+            [GrandResourceDisplayName("Plugins.Feed.Froogle.Products.CustomGoods")]
             public bool CustomGoods { get; set; }
         }
     }

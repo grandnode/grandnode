@@ -12,7 +12,7 @@ namespace Grand.Admin.Models.News
             AvailableStores = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.List.SearchStore")]
+        [GrandResourceDisplayName("Admin.ContentManagement.News.NewsItems.List.SearchStore")]
         public string SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
     }

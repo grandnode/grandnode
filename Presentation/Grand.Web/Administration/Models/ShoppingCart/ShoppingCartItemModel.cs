@@ -6,21 +6,21 @@ namespace Grand.Admin.Models.ShoppingCart
 {
     public partial class ShoppingCartItemModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.CurrentCarts.Store")]
+        [GrandResourceDisplayName("Admin.CurrentCarts.Store")]
         public string Store { get; set; }
-        [NopResourceDisplayName("Admin.CurrentCarts.Product")]
+        [GrandResourceDisplayName("Admin.CurrentCarts.Product")]
         public string ProductId { get; set; }
-        [NopResourceDisplayName("Admin.CurrentCarts.Product")]
+        [GrandResourceDisplayName("Admin.CurrentCarts.Product")]
         public string ProductName { get; set; }
         public string AttributeInfo { get; set; }
 
-        [NopResourceDisplayName("Admin.CurrentCarts.UnitPrice")]
+        [GrandResourceDisplayName("Admin.CurrentCarts.UnitPrice")]
         public string UnitPrice { get; set; }
-        [NopResourceDisplayName("Admin.CurrentCarts.Quantity")]
+        [GrandResourceDisplayName("Admin.CurrentCarts.Quantity")]
         public int Quantity { get; set; }
-        [NopResourceDisplayName("Admin.CurrentCarts.Total")]
+        [GrandResourceDisplayName("Admin.CurrentCarts.Total")]
         public string Total { get; set; }
-        [NopResourceDisplayName("Admin.CurrentCarts.UpdatedOn")]
+        [GrandResourceDisplayName("Admin.CurrentCarts.UpdatedOn")]
         public DateTime UpdatedOn { get; set; }
     }
 }

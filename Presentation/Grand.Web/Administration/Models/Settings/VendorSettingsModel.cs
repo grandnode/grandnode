@@ -8,22 +8,22 @@ namespace Grand.Admin.Models.Settings
         public string ActiveStoreScopeConfiguration { get; set; }
 
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay")]
         public int VendorsBlockItemsToDisplay { get; set; }
         public bool VendorsBlockItemsToDisplay_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage")]
         public bool ShowVendorOnProductDetailsPage { get; set; }
         public bool ShowVendorOnProductDetailsPage_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors")]
         public bool AllowCustomersToContactVendors { get; set; }
         public bool AllowCustomersToContactVendors_OverrideForStore { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount")]
         public bool AllowCustomersToApplyForVendorAccount { get; set; }
         public bool AllowCustomersToApplyForVendorAccount_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowSearchByVendor")]
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowSearchByVendor")]
         public bool AllowSearchByVendor { get; set; }
         public bool AllowSearchByVendor_OverrideForStore { get; set; }
 

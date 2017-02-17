@@ -18,27 +18,27 @@ namespace Grand.Admin.Models.Catalog
             AvailablePublishedOptions = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
         [AllowHtml]
         public string SearchProductName { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
         public string SearchCategoryId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchIncludeSubCategories")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchIncludeSubCategories")]
         public bool SearchIncludeSubCategories { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
         public string SearchManufacturerId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
         public string SearchStoreId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
         public string SearchVendorId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchWarehouse")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchWarehouse")]
         public string SearchWarehouseId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
         public int SearchProductTypeId { get; set; }
-        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchPublished")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.SearchPublished")]
         public int SearchPublishedId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.List.GoDirectlyToSku")]
+        [GrandResourceDisplayName("Admin.Catalog.Products.List.GoDirectlyToSku")]
         [AllowHtml]
         public string GoDirectlyToSku { get; set; }
 

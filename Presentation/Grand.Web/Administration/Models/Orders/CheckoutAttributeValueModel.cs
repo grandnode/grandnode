@@ -18,27 +18,27 @@ namespace Grand.Admin.Models.Orders
 
         public string CheckoutAttributeId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.ColorSquaresRgb")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.ColorSquaresRgb")]
         [AllowHtml]
         public string ColorSquaresRgb { get; set; }
         public bool DisplayColorSquaresRgb { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment")]
         public decimal PriceAdjustment { get; set; }
         public string PrimaryStoreCurrencyCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment")]
         public decimal WeightAdjustment { get; set; }
         public string BaseWeightIn { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected")]
         public bool IsPreSelected { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")]
         public int DisplayOrder {get;set;}
 
         public IList<CheckoutAttributeValueLocalizedModel> Locales { get; set; }
@@ -49,7 +49,7 @@ namespace Grand.Admin.Models.Orders
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

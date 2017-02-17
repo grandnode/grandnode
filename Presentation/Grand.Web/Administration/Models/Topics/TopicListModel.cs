@@ -12,7 +12,7 @@ namespace Grand.Admin.Models.Topics
             AvailableStores = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Topics.List.SearchStore")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Topics.List.SearchStore")]
         public string SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
     }

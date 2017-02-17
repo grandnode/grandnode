@@ -5,7 +5,7 @@ using Grand.Core.Infrastructure;
 
 namespace Grand.Web.Framework
 {
-    public class NopValidatorFactory : AttributedValidatorFactory
+    public class GrandValidatorFactory : AttributedValidatorFactory
     {
         //private readonly InstanceCache _cache = new InstanceCache();
         public override IValidator GetValidator(Type type)

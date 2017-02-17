@@ -6,7 +6,7 @@ namespace Grand.Admin.Models.Common
 {
     public partial class UrlRecordListModel : BaseNopModel
     {
-        [NopResourceDisplayName("Admin.System.SeNames.Name")]
+        [GrandResourceDisplayName("Admin.System.SeNames.Name")]
         [AllowHtml]
         public string SeName { get; set; }
     }

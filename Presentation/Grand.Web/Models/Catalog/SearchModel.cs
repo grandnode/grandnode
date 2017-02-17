@@ -24,45 +24,47 @@ namespace Grand.Web.Models.Catalog
         /// <summary>
         /// Query string
         /// </summary>
-        [NopResourceDisplayName("Search.SearchTerm")]
+        [GrandResourceDisplayName("Search.SearchTerm")]
         [AllowHtml]
         public string q { get; set; }
         /// <summary>
         /// Category ID
         /// </summary>
-        [NopResourceDisplayName("Search.Category")]
+        [GrandResourceDisplayName("Search.Category")]
         public string cid { get; set; }
-        [NopResourceDisplayName("Search.IncludeSubCategories")]
+        [GrandResourceDisplayName("Search.IncludeSubCategories")]
         public bool isc { get; set; }
         /// <summary>
         /// Manufacturer ID
         /// </summary>
-        [NopResourceDisplayName("Search.Manufacturer")]
+        [GrandResourceDisplayName("Search.Manufacturer")]
         public string mid { get; set; }
         /// <summary>
         /// Vendor ID
         /// </summary>
-        [NopResourceDisplayName("Search.Vendor")]
+        [GrandResourceDisplayName("Search.Vendor")]
         public string vid { get; set; }
         /// <summary>
         /// Price - From 
         /// </summary>
         [AllowHtml]
+        [GrandResourceDisplayName("Search.PriceRange.From")]
         public string pf { get; set; }
         /// <summary>
         /// Price - To
         /// </summary>
         [AllowHtml]
+        [GrandResourceDisplayName("Search.PriceRange.To")]
         public string pt { get; set; }
         /// <summary>
         /// A value indicating whether to search in descriptions
         /// </summary>
-        [NopResourceDisplayName("Search.SearchInDescriptions")]
+        [GrandResourceDisplayName("Search.SearchInDescriptions")]
         public bool sid { get; set; }
         /// <summary>
         /// A value indicating whether "advanced search" is enabled
         /// </summary>
-        [NopResourceDisplayName("Search.AdvancedSearch")]
+        [GrandResourceDisplayName("Search.AdvancedSearch")]
         public bool adv { get; set; }
         /// <summary>
         /// A value indicating whether "allow search by vendor" is enabled

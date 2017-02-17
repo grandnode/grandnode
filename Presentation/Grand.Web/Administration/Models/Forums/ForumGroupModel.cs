@@ -10,14 +10,14 @@ namespace Grand.Admin.Models.Forums
     [Validator(typeof(ForumGroupValidator))]
     public partial class ForumGroupModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
     }
 }

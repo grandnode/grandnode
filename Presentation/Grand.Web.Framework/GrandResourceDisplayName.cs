@@ -5,12 +5,12 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Framework
 {
-    public class NopResourceDisplayName : System.ComponentModel.DisplayNameAttribute, IModelAttribute
+    public class GrandResourceDisplayName : System.ComponentModel.DisplayNameAttribute, IModelAttribute
     {
         private string _resourceValue = string.Empty;
         //private bool _resourceValueRetrived;
 
-        public NopResourceDisplayName(string resourceKey)
+        public GrandResourceDisplayName(string resourceKey)
             : base(resourceKey)
         {
             ResourceKey = resourceKey;

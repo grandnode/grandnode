@@ -12,7 +12,7 @@ namespace Grand.Admin.Models.Messages
             AvailableStores = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.SearchStore")]
+        [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.List.SearchStore")]
         public string SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
     }

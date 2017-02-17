@@ -16,20 +16,20 @@ namespace Grand.Admin.Models.Common
             Locales = new List<AddressAttributeLocalizedModel>();
         }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.IsRequired")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Fields.IsRequired")]
         public bool IsRequired { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.AttributeControlType")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Fields.AttributeControlType")]
         public int AttributeControlTypeId { get; set; }
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.AttributeControlType")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Fields.AttributeControlType")]
         [AllowHtml]
         public string AttributeControlTypeName { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
 
@@ -41,7 +41,7 @@ namespace Grand.Admin.Models.Common
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Address.AddressAttributes.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Address.AddressAttributes.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 

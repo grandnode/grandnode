@@ -16,19 +16,19 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Models
         public string ActiveStoreScopeConfiguration { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]
+        [GrandResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]
         public string DescriptionText { get; set; }
         public bool DescriptionText_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.AdditionalFee")]
+        [GrandResourceDisplayName("Plugins.Payment.CheckMoneyOrder.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
         public bool AdditionalFee_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage")]
+        [GrandResourceDisplayName("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage")]
         public bool AdditionalFeePercentage { get; set; }
         public bool AdditionalFeePercentage_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired")]
+        [GrandResourceDisplayName("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired")]
         public bool ShippableProductRequired { get; set; }
         public bool ShippableProductRequired_OverrideForStore { get; set; }
 
@@ -41,7 +41,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Models
             public string LanguageId { get; set; }
 
             [AllowHtml]
-            [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]
+            [GrandResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]
             public string DescriptionText { get; set; }
         }
 

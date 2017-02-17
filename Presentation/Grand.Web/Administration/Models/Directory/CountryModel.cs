@@ -16,49 +16,49 @@ namespace Grand.Admin.Models.Directory
         {
             Locales = new List<CountryLocalizedModel>();
         }
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.AllowsBilling")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.AllowsBilling")]
         public bool AllowsBilling { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.AllowsShipping")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.AllowsShipping")]
         public bool AllowsShipping { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")]
         [AllowHtml]
         public string TwoLetterIsoCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")]
         [AllowHtml]
         public string ThreeLetterIsoCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.NumericIsoCode")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.NumericIsoCode")]
         public int NumericIsoCode { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.SubjectToVat")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.SubjectToVat")]
         public bool SubjectToVat { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Published")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
 
 
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.NumberOfStates")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.NumberOfStates")]
         public int NumberOfStates { get; set; }
 
         public IList<CountryLocalizedModel> Locales { get; set; }
 
 
         //Store mapping
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
     }
@@ -67,7 +67,7 @@ namespace Grand.Admin.Models.Directory
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
     }

@@ -14,19 +14,19 @@ namespace Grand.Admin.Models.Logging
             AvailableLogLevels = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.System.Log.List.CreatedOnFrom")]
+        [GrandResourceDisplayName("Admin.System.Log.List.CreatedOnFrom")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnFrom { get; set; }
 
-        [NopResourceDisplayName("Admin.System.Log.List.CreatedOnTo")]
+        [GrandResourceDisplayName("Admin.System.Log.List.CreatedOnTo")]
         [UIHint("DateNullable")]
         public DateTime? CreatedOnTo { get; set; }
 
-        [NopResourceDisplayName("Admin.System.Log.List.Message")]
+        [GrandResourceDisplayName("Admin.System.Log.List.Message")]
         [AllowHtml]
         public string Message { get; set; }
 
-        [NopResourceDisplayName("Admin.System.Log.List.LogLevel")]
+        [GrandResourceDisplayName("Admin.System.Log.List.LogLevel")]
         public int LogLevelId { get; set; }
 
 

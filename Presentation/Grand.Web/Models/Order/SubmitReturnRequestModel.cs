@@ -20,17 +20,17 @@ namespace Grand.Web.Models.Order
         public IList<OrderItemModel> Items { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("ReturnRequests.ReturnReason")]
+        [GrandResourceDisplayName("ReturnRequests.ReturnReason")]
         public string ReturnRequestReasonId { get; set; }
         public IList<ReturnRequestReasonModel> AvailableReturnReasons { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("ReturnRequests.ReturnAction")]
+        [GrandResourceDisplayName("ReturnRequests.ReturnAction")]
         public string ReturnRequestActionId { get; set; }
         public IList<ReturnRequestActionModel> AvailableReturnActions { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("ReturnRequests.Comments")]
+        [GrandResourceDisplayName("ReturnRequests.Comments")]
         public string Comments { get; set; }
 
         public string Result { get; set; }

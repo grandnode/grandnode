@@ -18,17 +18,17 @@ namespace Grand.Admin.Models.Messages
             AvailableEmailAccounts = new List<EmailAccountModel>();
         }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Body")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.EmailAccount")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.EmailAccount")]
         public string EmailAccountId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.AvailableTokens")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.AvailableTokens")]
         public string AvailableTokens { get; set; }
         public IList<EmailAccountModel> AvailableEmailAccounts { get; set; }
 
@@ -40,10 +40,10 @@ namespace Grand.Admin.Models.Messages
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Name")]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Body")]
+        [GrandResourceDisplayName("Admin.Promotions.InteractiveForms.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
 

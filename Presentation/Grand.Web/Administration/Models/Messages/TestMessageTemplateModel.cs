@@ -16,10 +16,10 @@ namespace Grand.Admin.Models.Messages
 
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Test.Tokens")]
+        [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.Test.Tokens")]
         public List<string> Tokens { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Test.SendTo")]
+        [GrandResourceDisplayName("Admin.ContentManagement.MessageTemplates.Test.SendTo")]
         public string SendTo { get; set; }
     }
 }

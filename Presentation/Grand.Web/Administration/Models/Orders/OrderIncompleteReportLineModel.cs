@@ -5,16 +5,16 @@ namespace Grand.Admin.Models.Orders
 {
     public partial class OrderIncompleteReportLineModel : BaseNopModel
     {
-        [NopResourceDisplayName("Admin.SalesReport.Incomplete.Item")]
+        [GrandResourceDisplayName("Admin.SalesReport.Incomplete.Item")]
         public string Item { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Incomplete.Total")]
+        [GrandResourceDisplayName("Admin.SalesReport.Incomplete.Total")]
         public string Total { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Incomplete.Count")]
+        [GrandResourceDisplayName("Admin.SalesReport.Incomplete.Count")]
         public int Count { get; set; }
 
-        [NopResourceDisplayName("Admin.SalesReport.Incomplete.View")]
+        [GrandResourceDisplayName("Admin.SalesReport.Incomplete.View")]
         public string ViewLink { get; set; }
     }
 }

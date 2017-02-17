@@ -23,47 +23,47 @@ namespace Grand.Admin.Models.Polls
             AvailableCustomerRoles = new List<CustomerRoleModel>();
         }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Name")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.SystemKeyword")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.SystemKeyword")]
         [AllowHtml]
         public string SystemKeyword { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Published")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.AllowGuestsToVote")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.AllowGuestsToVote")]
         public bool AllowGuestsToVote { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.DisplayOrder")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.StartDate")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.StartDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? StartDate { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.EndDate")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.EndDate")]
         [UIHint("DateTimeNullable")]
         public DateTime? EndDate { get; set; }
 
         //Store mapping
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.LimitedToStores")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.LimitedToStores")]
         public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.AvailableStores")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.AvailableStores")]
         public IList<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
         public IList<PollLocalizedModel> Locales { get; set; }
 
 
         //ACL
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.SubjectToAcl")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.SubjectToAcl")]
         public bool SubjectToAcl { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.AclCustomerRoles")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.AclCustomerRoles")]
         public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public string[] SelectedCustomerRoleIds { get; set; }
 
@@ -73,7 +73,7 @@ namespace Grand.Admin.Models.Polls
     {
         public string LanguageId { get; set; }
 
-        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Name")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Polls.Fields.Name")]
         public string Name { get; set; }
 
     }

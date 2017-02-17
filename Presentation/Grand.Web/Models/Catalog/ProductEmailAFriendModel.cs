@@ -16,15 +16,15 @@ namespace Grand.Web.Models.Catalog
         public string ProductSeName { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Products.EmailAFriend.FriendEmail")]
+        [GrandResourceDisplayName("Products.EmailAFriend.FriendEmail")]
         public string FriendEmail { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Products.EmailAFriend.YourEmailAddress")]
+        [GrandResourceDisplayName("Products.EmailAFriend.YourEmailAddress")]
         public string YourEmailAddress { get; set; }
 
         [AllowHtml]
-        [NopResourceDisplayName("Products.EmailAFriend.PersonalMessage")]
+        [GrandResourceDisplayName("Products.EmailAFriend.PersonalMessage")]
         public string PersonalMessage { get; set; }
 
         public bool SuccessfullySent { get; set; }

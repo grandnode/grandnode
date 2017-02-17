@@ -12,11 +12,11 @@ namespace Grand.Admin.Models.Catalog
             AvailableStores = new List<SelectListItem>();
         }
 
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
+        [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
         [AllowHtml]
         public string SearchManufacturerName { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchStore")]
+        [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchStore")]
         public string SearchStoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
     }

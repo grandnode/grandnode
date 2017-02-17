@@ -84,12 +84,12 @@
                                 <label class="col-12 px-0 mt-1">@T("Search.PriceRange"):</label>
                                 <div class="price-range flex-sm-row row">
                                     <div class="col">
-                                        @T("Search.PriceRange.From")
+                                        @Html.LabelFor(model => model.pf)
                                         @Html.TextBoxFor(model => model.pf, new { @class = "form-control price-from" })
                                     </div>
 
                                     <div class="col">
-                                        @T("Search.PriceRange.To")
+                                        @Html.LabelFor(model => model.pt)
                                         @Html.TextBoxFor(model => model.pt, new { @class = "form-control price-to" })
                                     </div>
                                 </div>

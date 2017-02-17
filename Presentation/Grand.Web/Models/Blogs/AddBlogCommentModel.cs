@@ -6,7 +6,7 @@ namespace Grand.Web.Models.Blogs
 {
     public partial class AddBlogCommentModel : BaseNopEntityModel
     {
-        [NopResourceDisplayName("Blog.Comments.CommentText")]
+        [GrandResourceDisplayName("Blog.Comments.CommentText")]
         [AllowHtml]
         public string CommentText { get; set; }
 

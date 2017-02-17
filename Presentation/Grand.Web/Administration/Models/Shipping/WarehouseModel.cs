@@ -15,15 +15,15 @@ namespace Grand.Admin.Models.Shipping
             this.Address = new AddressModel();
         }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.Name")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.AdminComment")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.Address")]
+        [GrandResourceDisplayName("Admin.Configuration.Shipping.Warehouses.Fields.Address")]
         public AddressModel Address { get; set; }
     }
 }
