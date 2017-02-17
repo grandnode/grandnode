@@ -197,7 +197,6 @@
 <script>
     $(".block").click(function () {
         var getId = this.id;
-        console.log(getId);
         $("#" + getId).find(".fa").toggleClass("rotate");
         $("#" + getId).siblings(".block").find(".fa").removeClass("rotate");
     });
