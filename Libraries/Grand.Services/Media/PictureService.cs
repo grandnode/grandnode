@@ -837,7 +837,24 @@ namespace Grand.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            pictureBinary = ApplyResize(pictureBinary, _mediaSettings.MaximumImageSize);
+            using (MemoryStream pictureStream = new MemoryStream(pictureBinary))
+            {
+                Bitmap bitmap = new Bitmap(Image.FromStream(pictureStream));
+                if (bitmap.Size.Width >= bitmap.Size.Height)
+                {
+                    //horizontal rectangle or square
+                    if (bitmap.Size.Width > _mediaSettings.MaximumImageSize && bitmap.Size.Height > _mediaSettings.MaximumImageSize)
+                        pictureBinary = ApplyResize(pictureBinary, _mediaSettings.MaximumImageSize);
+                }
+                else if (bitmap.Size.Width < bitmap.Size.Height)
+                {
+                    //vertical rectangle
+                    if (bitmap.Size.Width > _mediaSettings.MaximumImageSize)
+                        pictureBinary = ApplyResize(pictureBinary, _mediaSettings.MaximumImageSize);
+                }
+                pictureStream.Dispose();
+                bitmap.Dispose();
+            }
             return pictureBinary;
         }
 
