@@ -503,3 +503,6 @@ var ConfirmOrder = {
         Checkout.setStepResponse(response);
     }
 };
+
+  $(".opc li.active").prev("li").removeClass("dontGo");
+  $(".opc li.active").nextAll("li").addClass("dontGo");

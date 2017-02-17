@@ -124,3 +124,43 @@ function addAntiForgeryToken(data) {
     }
     return data;
 };
+
+
+
+$(document).ready(function () {
+    $('.block').on('click', function () {
+        var windowWidth = $(window).width();
+        if (windowWidth <= 992) {
+            var elemId = this.id;
+            $("#" + elemId).toggleClass("active");
+            $("#" + elemId).siblings(".block").removeClass("active");
+            $("#" + elemId).find(".viewBox").slideToggle();
+            $("#" + elemId).siblings(".block").find(".viewBox").slideUp();
+
+            $("#" + elemId).find(".fa").toggleClass("rotate");
+            $("#" + elemId).siblings(".block").find(".fa").removeClass("rotate");
+        };
+    });
+
+    if ($('#back-to-top').length) {
+        var scrollTrigger = 100, // px
+            backToTop = function () {
+                var scrollTop = $(window).scrollTop();
+                if (scrollTop > scrollTrigger) {
+                    $('#back-to-top').addClass('show');
+                } else {
+                    $('#back-to-top').removeClass('show');
+                }
+            };
+        backToTop();
+        $(window).on('scroll', function () {
+            backToTop();
+        });
+        $('#back-to-top').on('click', function (e) {
+            e.preventDefault();
+            $('html,body').animate({
+                scrollTop: 0
+            }, 1000);
+        });
+    }
+});
