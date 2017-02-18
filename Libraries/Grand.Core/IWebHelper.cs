@@ -84,7 +84,14 @@ namespace Grand.Core
         /// .ashx
         /// </remarks>
         bool IsStaticResource(HttpRequest request);
-        
+
+        /// <summary>
+        /// Request has user agent header
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool HasUserAgent(HttpRequest request);
+
         /// <summary>
         /// Modifies query string
         /// </summary>

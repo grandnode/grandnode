@@ -411,6 +411,16 @@ namespace Grand.Core
         }
 
         /// <summary>
+        /// Request has user agent header
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool HasUserAgent(HttpRequest request)
+        {
+            return !String.IsNullOrEmpty(request.UserAgent);
+        }
+
+        /// <summary>
         /// Modifies query string
         /// </summary>
         /// <param name="url">Url to modify</param>

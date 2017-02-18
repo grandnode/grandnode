@@ -202,11 +202,14 @@ namespace Grand.Web
             if (webHelper.IsStaticResource(this.Request))
                 return;
 
+            //ignore request without user agent
+            if (!webHelper.HasUserAgent(this.Request))
+                return;
+
             //keep alive page requested (we ignore it to prevent creation of guest customer records)
             string keepAliveUrl = string.Format("{0}keepalive/index", webHelper.GetStoreLocation());
             if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
                 return;
-
 
             if (webHelper.GetThisPageUrl(false).StartsWith(string.Format("{0}admin", webHelper.GetStoreLocation()),
                 StringComparison.InvariantCultureIgnoreCase))
