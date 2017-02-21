@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Grand.Core.Data;
-using Grand.Plugin.Feed.Froogle.Domain;
+using Grand.Plugin.Feed.GoogleShopping.Domain;
 using MongoDB.Driver.Linq;
 
-namespace Grand.Plugin.Feed.Froogle.Services
+namespace Grand.Plugin.Feed.GoogleShopping.Services
 {
     public partial class GoogleService : IGoogleService
     {
@@ -29,7 +29,7 @@ namespace Grand.Plugin.Feed.Froogle.Services
 
         private string GetEmbeddedFileContent(string resourceName)
         {
-            string fullResourceName = string.Format("Grand.Plugin.Feed.Froogle.Files.{0}", resourceName);
+            string fullResourceName = string.Format("Grand.Plugin.Feed.GoogleShopping.Files.{0}", resourceName);
             var assem = this.GetType().Assembly;
             using (var stream = assem.GetManifestResourceStream(fullResourceName))
             using (var reader = new StreamReader(stream))

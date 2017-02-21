@@ -8,8 +8,8 @@
     <ProjectGuid>{965A02F0-FC84-4AC4-91E4-79EADFC1CA9D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Grand.Plugin.Feed.Froogle</RootNamespace>
-    <AssemblyName>Grand.Plugin.Feed.Froogle</AssemblyName>
+    <RootNamespace>Grand.Plugin.Feed.GoogleShopping</RootNamespace>
+    <AssemblyName>Grand.Plugin.Feed.GoogleShopping</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -22,7 +22,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Presentation\Grand.Web\Plugins\Feed.Froogle\</OutputPath>
+    <OutputPath>..\..\Presentation\Grand.Web\Plugins\Feed.GoogleShopping\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -126,12 +126,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\FeedFroogleController.cs" />
+    <Compile Include="Controllers\FeedGoogleShoppingController.cs" />
     <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Domain\GoogleProductRecord.cs" />
-    <Compile Include="FroogleService.cs" />
-    <Compile Include="FroogleSettings.cs" />
-    <Compile Include="Models\FeedFroogleModel.cs" />
+    <Compile Include="GoogleShoppingService.cs" />
+    <Compile Include="GoogleShoppingSettings.cs" />
+    <Compile Include="Models\GoogleShoppingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IGoogleService.cs" />
     <Compile Include="Services\GoogleService.cs" />
@@ -159,7 +159,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\FeedFroogle\Configure.cshtml">
+    <Content Include="Views\FeedGoogleShopping\Configure.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using Grand.Core;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Plugins;
-using Grand.Plugin.Feed.Froogle.Domain;
-using Grand.Plugin.Feed.Froogle.Models;
-using Grand.Plugin.Feed.Froogle.Services;
+using Grand.Plugin.Feed.GoogleShopping.Domain;
+using Grand.Plugin.Feed.GoogleShopping.Models;
+using Grand.Plugin.Feed.GoogleShopping.Services;
 using Grand.Services.Catalog;
 using Grand.Services.Configuration;
 using Grand.Services.Directory;
@@ -21,10 +21,10 @@ using Grand.Web.Framework.Kendoui;
 using Grand.Web.Framework.Mvc;
 using Grand.Web.Framework.Security;
 
-namespace Grand.Plugin.Feed.Froogle.Controllers
+namespace Grand.Plugin.Feed.GoogleShopping.Controllers
 {
     [AdminAuthorize]
-    public class FeedFroogleController : BasePluginController
+    public class FeedGoogleShoppingController : BasePluginController
     {
         private readonly IGoogleService _googleService;
         private readonly IProductService _productService;
@@ -34,11 +34,11 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly IStoreService _storeService;
-        private readonly FroogleSettings _froogleSettings;
+        private readonly GoogleShoppingSettings _GoogleShoppingSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
 
-        public FeedFroogleController(IGoogleService googleService,
+        public FeedGoogleShoppingController(IGoogleService googleService,
             IProductService productService,
             ICurrencyService currencyService,
             ILocalizationService localizationService,
@@ -46,7 +46,7 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
             ILogger logger,
             IWebHelper webHelper,
             IStoreService storeService,
-            FroogleSettings froogleSettings,
+            GoogleShoppingSettings GoogleShoppingSettings,
             ISettingService settingService,
             IPermissionService permissionService)
         {
@@ -58,7 +58,7 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
             this._logger = logger;
             this._webHelper = webHelper;
             this._storeService = storeService;
-            this._froogleSettings = froogleSettings;
+            this._GoogleShoppingSettings = GoogleShoppingSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
         }
@@ -66,22 +66,22 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
         [ChildActionOnly]
         public ActionResult Configure()
         {
-            var model = new FeedFroogleModel();
-            model.ProductPictureSize = _froogleSettings.ProductPictureSize;
-            model.PassShippingInfoWeight = _froogleSettings.PassShippingInfoWeight;
-            model.PassShippingInfoDimensions = _froogleSettings.PassShippingInfoDimensions;
-            model.PricesConsiderPromotions = _froogleSettings.PricesConsiderPromotions;
+            var model = new FeedGoogleShoppingModel();
+            model.ProductPictureSize = _GoogleShoppingSettings.ProductPictureSize;
+            model.PassShippingInfoWeight = _GoogleShoppingSettings.PassShippingInfoWeight;
+            model.PassShippingInfoDimensions = _GoogleShoppingSettings.PassShippingInfoDimensions;
+            model.PricesConsiderPromotions = _GoogleShoppingSettings.PricesConsiderPromotions;
             //stores
-            model.StoreId = _froogleSettings.StoreId;
+            model.StoreId = _GoogleShoppingSettings.StoreId;
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             //currencies
-            model.CurrencyId = _froogleSettings.CurrencyId;
+            model.CurrencyId = _GoogleShoppingSettings.CurrencyId;
             foreach (var c in _currencyService.GetAllCurrencies())
                 model.AvailableCurrencies.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //Google categories
-            model.DefaultGoogleCategory = _froogleSettings.DefaultGoogleCategory;
+            model.DefaultGoogleCategory = _GoogleShoppingSettings.DefaultGoogleCategory;
             model.AvailableGoogleCategories.Add(new SelectListItem {Text = "Select a category", Value = ""});
             foreach (var gc in _googleService.GetTaxonomyList())
                 model.AvailableGoogleCategories.Add(new SelectListItem { Text = gc, Value = gc });
@@ -89,22 +89,22 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
             //file paths
             foreach (var store in _storeService.GetAllStores())
             {
-                var localFilePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
+                var localFilePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _GoogleShoppingSettings.StaticFileName);
                 if (System.IO.File.Exists(localFilePath))
-                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel
+                    model.GeneratedFiles.Add(new FeedGoogleShoppingModel.GeneratedFileModel
                     {
                         StoreName = store.Name,
-                        FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _froogleSettings.StaticFileName)
+                        FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _GoogleShoppingSettings.StaticFileName)
                     });
             }
 
-            return View("~/Plugins/Feed.Froogle/Views/FeedFroogle/Configure.cshtml", model);
+            return View("~/Plugins/Feed.GoogleShopping/Views/FeedGoogleShopping/Configure.cshtml", model);
         }
 
         [HttpPost]
         [ChildActionOnly]
         [FormValueRequired("save")]
-        public ActionResult Configure(FeedFroogleModel model)
+        public ActionResult Configure(FeedGoogleShoppingModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -112,14 +112,14 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
             }
 
             //save settings
-            _froogleSettings.ProductPictureSize = model.ProductPictureSize;
-            _froogleSettings.PassShippingInfoWeight = model.PassShippingInfoWeight;
-            _froogleSettings.PassShippingInfoDimensions = model.PassShippingInfoDimensions;
-            _froogleSettings.PricesConsiderPromotions = model.PricesConsiderPromotions;
-            _froogleSettings.CurrencyId = model.CurrencyId;
-            _froogleSettings.StoreId = model.StoreId;
-            _froogleSettings.DefaultGoogleCategory = model.DefaultGoogleCategory;
-            _settingService.SaveSetting(_froogleSettings);
+            _GoogleShoppingSettings.ProductPictureSize = model.ProductPictureSize;
+            _GoogleShoppingSettings.PassShippingInfoWeight = model.PassShippingInfoWeight;
+            _GoogleShoppingSettings.PassShippingInfoDimensions = model.PassShippingInfoDimensions;
+            _GoogleShoppingSettings.PricesConsiderPromotions = model.PricesConsiderPromotions;
+            _GoogleShoppingSettings.CurrencyId = model.CurrencyId;
+            _GoogleShoppingSettings.StoreId = model.StoreId;
+            _GoogleShoppingSettings.DefaultGoogleCategory = model.DefaultGoogleCategory;
+            _settingService.SaveSetting(_GoogleShoppingSettings);
 
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
@@ -130,21 +130,21 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
         [HttpPost, ActionName("Configure")]
         [ChildActionOnly]
         [FormValueRequired("generate")]
-        public ActionResult GenerateFeed(FeedFroogleModel model)
+        public ActionResult GenerateFeed(FeedGoogleShoppingModel model)
         {
             try
             {
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
+                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.GoogleShopping");
                 if (pluginDescriptor == null)
                     throw new Exception("Cannot load the plugin");
 
                 //plugin
-                var plugin = pluginDescriptor.Instance() as FroogleService;
+                var plugin = pluginDescriptor.Instance() as GoogleShoppingService;
                 if (plugin == null)
                     throw new Exception("Cannot load the plugin");
 
                 var stores = new List<Store>();
-                var storeById = _storeService.GetStoreById(_froogleSettings.StoreId);
+                var storeById = _storeService.GetStoreById(_GoogleShoppingSettings.StoreId);
                 if (storeById != null)
                     stores.Add(storeById);
                 else
@@ -153,7 +153,7 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
                 foreach (var store in stores)
                     plugin.GenerateStaticFile(store);
 
-                SuccessNotification(_localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult"));
+                SuccessNotification(_localizationService.GetResource("Plugins.Feed.GoogleShopping.SuccessResult"));
             }
             catch (Exception exc)
             {
@@ -176,7 +176,7 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
             var productsModel = products
                 .Select(x =>
                             {
-                                var gModel = new FeedFroogleModel.GoogleProductModel
+                                var gModel = new FeedGoogleShoppingModel.GoogleProductModel
                                 {
                                     ProductId = x.Id,
                                     ProductName = x.Name
@@ -208,7 +208,7 @@ namespace Grand.Plugin.Feed.Froogle.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult GoogleProductUpdate(FeedFroogleModel.GoogleProductModel model)
+        public ActionResult GoogleProductUpdate(FeedGoogleShoppingModel.GoogleProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return Content("Access denied");

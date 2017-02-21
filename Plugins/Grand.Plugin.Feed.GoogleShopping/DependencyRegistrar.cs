@@ -5,11 +5,11 @@ using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Data;
-using Grand.Plugin.Feed.Froogle.Domain;
-using Grand.Plugin.Feed.Froogle.Services;
+using Grand.Plugin.Feed.GoogleShopping.Domain;
+using Grand.Plugin.Feed.GoogleShopping.Services;
 using Grand.Web.Framework.Mvc;
 
-namespace Grand.Plugin.Feed.Froogle
+namespace Grand.Plugin.Feed.GoogleShopping
 {
     public class DependencyRegistrar : IDependencyRegistrar
     {

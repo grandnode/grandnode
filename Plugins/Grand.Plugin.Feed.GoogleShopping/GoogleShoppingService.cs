@@ -12,7 +12,7 @@ using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Stores;
 using Grand.Core.Plugins;
-using Grand.Plugin.Feed.Froogle.Services;
+using Grand.Plugin.Feed.GoogleShopping.Services;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
@@ -23,9 +23,9 @@ using Grand.Services.Seo;
 using Grand.Services.Tax;
 using Grand.Core.Domain.Media;
 
-namespace Grand.Plugin.Feed.Froogle
+namespace Grand.Plugin.Feed.GoogleShopping
 {
-    public class FroogleService : BasePlugin, IMiscPlugin
+    public class GoogleShoppingService : BasePlugin, IMiscPlugin
     {
         #region Fields
 
@@ -42,14 +42,14 @@ namespace Grand.Plugin.Feed.Froogle
         private readonly IWorkContext _workContext;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
-        private readonly FroogleSettings _froogleSettings;
+        private readonly GoogleShoppingSettings _GoogleShoppingSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly MediaSettings _mediaSettings;
 
         #endregion
 
         #region Ctor
-        public FroogleService(IGoogleService googleService,
+        public GoogleShoppingService(IGoogleService googleService,
             IPriceCalculationService priceCalculationService,
             ITaxService taxService, 
             IProductService productService,
@@ -62,7 +62,7 @@ namespace Grand.Plugin.Feed.Froogle
             IWorkContext workContext,
             IMeasureService measureService,
             MeasureSettings measureSettings,
-            FroogleSettings froogleSettings,
+            GoogleShoppingSettings GoogleShoppingSettings,
             CurrencySettings currencySettings,
             MediaSettings mediaSettings)
         {
@@ -79,7 +79,7 @@ namespace Grand.Plugin.Feed.Froogle
             this._workContext = workContext;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
-            this._froogleSettings = froogleSettings;
+            this._GoogleShoppingSettings = GoogleShoppingSettings;
             this._currencySettings = currencySettings;
             this._mediaSettings = mediaSettings;
         }
@@ -127,7 +127,7 @@ namespace Grand.Plugin.Feed.Froogle
         }
         private Currency GetUsedCurrency()
         {
-            var currency = _currencyService.GetCurrencyById(_froogleSettings.CurrencyId);
+            var currency = _currencyService.GetCurrencyById(_GoogleShoppingSettings.CurrencyId);
             if (currency == null || !currency.Published)
                 currency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             return currency;
@@ -146,8 +146,8 @@ namespace Grand.Plugin.Feed.Froogle
         public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
             actionName = "Configure";
-            controllerName = "FeedFroogle";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Feed.Froogle.Controllers" }, { "area", null } };
+            controllerName = "FeedGoogleShopping";
+            routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Feed.GoogleShopping.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Grand.Plugin.Feed.Froogle
                         if (googleProduct != null)
                             googleProductCategory = googleProduct.Taxonomy;
                         if (String.IsNullOrEmpty(googleProductCategory))
-                            googleProductCategory = _froogleSettings.DefaultGoogleCategory;
+                            googleProductCategory = _GoogleShoppingSettings.DefaultGoogleCategory;
                         if (String.IsNullOrEmpty(googleProductCategory))
                             throw new GrandException("Default Google category is not set");
                         writer.WriteStartElement("g", "google_product_category", googleBaseNamespace);
@@ -302,7 +302,7 @@ namespace Grand.Plugin.Feed.Froogle
                             var picture = pictures[i];
                             var imageUrl = _pictureService.GetPictureUrl(picture.PictureId,
                                 _mediaSettings.ApplyWatermarkForProduct,
-                                _froogleSettings.ProductPictureSize,
+                                _GoogleShoppingSettings.ProductPictureSize,
                                 storeLocation: store.Url);
 
                             if (i == 0)
@@ -319,14 +319,14 @@ namespace Grand.Plugin.Feed.Froogle
                         if (pictures.Count == 0)
                         {
                             //no picture? submit a default one
-                            var imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, storeLocation: store.Url);
+                            var imageUrl = _pictureService.GetDefaultPictureUrl(_GoogleShoppingSettings.ProductPictureSize, storeLocation: store.Url);
                             writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
                         }
 
                         //condition [condition] - Condition or state of the item
                         writer.WriteElementString("g", "condition", googleBaseNamespace, "new");
 
-                        writer.WriteElementString("g", "expiration_date", googleBaseNamespace, DateTime.Now.AddDays(_froogleSettings.ExpirationNumberOfDays).ToString("yyyy-MM-dd"));
+                        writer.WriteElementString("g", "expiration_date", googleBaseNamespace, DateTime.Now.AddDays(_GoogleShoppingSettings.ExpirationNumberOfDays).ToString("yyyy-MM-dd"));
 
                         #endregion
 
@@ -352,7 +352,7 @@ namespace Grand.Plugin.Feed.Froogle
                         //price [price] - Price of the item
                         var currency = GetUsedCurrency();
                         decimal finalPriceBase;
-                        if (_froogleSettings.PricesConsiderPromotions)
+                        if (_GoogleShoppingSettings.PricesConsiderPromotions)
                         {
                             //calculate for the maximum quantity (in case if we have tier prices)
                             decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
@@ -470,7 +470,7 @@ namespace Grand.Plugin.Feed.Froogle
 
                         //shipping weight [shipping_weight] - Weight of the item for shipping
                         //We accept only the following units of weight: lb, oz, g, kg.
-                        if (_froogleSettings.PassShippingInfoWeight)
+                        if (_GoogleShoppingSettings.PassShippingInfoWeight)
                         {
                             string weightName;
                             var shippingWeight = product.Weight;
@@ -500,7 +500,7 @@ namespace Grand.Plugin.Feed.Froogle
                         //shipping width [shipping_width] - Width of the item for shipping
                         //shipping height [shipping_height] - Height of the item for shipping
                         //We accept only the following units of length: in, cm
-                        if (_froogleSettings.PassShippingInfoDimensions)
+                        if (_GoogleShoppingSettings.PassShippingInfoDimensions)
                         {
                             string dimensionName;
                             var length = product.Length;
@@ -540,13 +540,13 @@ namespace Grand.Plugin.Feed.Froogle
         public override void Install()
         {
             //settings
-            var settings = new FroogleSettings
+            var settings = new GoogleShoppingSettings
             {
                 PricesConsiderPromotions = false,
                 ProductPictureSize = 125,
                 PassShippingInfoWeight = false,
                 PassShippingInfoDimensions = false,
-                StaticFileName = string.Format("froogle_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
+                StaticFileName = string.Format("GoogleShopping_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
                 ExpirationNumberOfDays = 28
             };
             _settingService.SaveSetting(settings);
@@ -554,33 +554,33 @@ namespace Grand.Plugin.Feed.Froogle
             
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Store", "Store");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Store.Hint", "Select the store that will be used to generate the feed.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency", "Currency");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint", "Select the default currency that will be used to generate the feed.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory", "Default Google category");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory.Hint", "The default Google category to use if one is not specified.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.General", "General");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Generate", "Generate feed");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Override", "Override product settings");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight", "Pass shipping info (weight)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoDimensions", "Pass shipping info (dimensions)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoDimensions.Hint", "Check if you want to include shipping information (dimensions) in generated XML file.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions", "Prices consider promotions");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions.Hint", "Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize", "Product thumbnail image size");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint", "The default size (pixels) for product thumbnail images.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName", "Product");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.GoogleCategory", "Google Category");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Gender", "Gender");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.AgeGroup", "Age group");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Color", "Color");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Size", "Size");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.CustomGoods", "Custom goods (no identifier exists)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult", "Froogle feed has been successfully generated.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath", "Generated file path (static)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint", "A file path of the generated Froogle file. It's static for your store and can be shared with the Froogle service.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Store", "Store");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Store.Hint", "Select the store that will be used to generate the feed.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Currency", "Currency");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Currency.Hint", "Select the default currency that will be used to generate the feed.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory", "Default Google category");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint", "The default Google category to use if one is not specified.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.General", "General");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Generate", "Generate feed");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Override", "Override product settings");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoWeight", "Pass shipping info (weight)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoWeight.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoDimensions", "Pass shipping info (dimensions)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoDimensions.Hint", "Check if you want to include shipping information (dimensions) in generated XML file.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PricesConsiderPromotions", "Prices consider promotions");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.PricesConsiderPromotions.Hint", "Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.ProductPictureSize", "Product thumbnail image size");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.ProductPictureSize.Hint", "The default size (pixels) for product thumbnail images.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.ProductName", "Product");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.GoogleCategory", "Google Category");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.Gender", "Gender");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.AgeGroup", "Age group");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.Color", "Color");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.Size", "Size");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.CustomGoods", "Custom goods (no identifier exists)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.SuccessResult", "GoogleShopping feed has been successfully generated.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.StaticFilePath", "Generated file path (static)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.GoogleShopping.StaticFilePath.Hint", "A file path of the generated GoogleShopping file. It's static for your store and can be shared with the GoogleShopping service.");
 
             base.Install();
         }
@@ -591,50 +591,50 @@ namespace Grand.Plugin.Feed.Froogle
         public override void Uninstall()
         {
             //settings
-            _settingService.DeleteSetting<FroogleSettings>();
+            _settingService.DeleteSetting<GoogleShoppingSettings>();
 
             
             //locales
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Store");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Store.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.General");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Generate");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Override");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoDimensions");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoDimensions.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.GoogleCategory");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Gender");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.AgeGroup");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Color");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Size");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.CustomGoods");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Store");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Store.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Currency");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Currency.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.DefaultGoogleCategory.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.General");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Generate");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Override");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoWeight");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoWeight.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoDimensions");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PassShippingInfoDimensions.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PricesConsiderPromotions");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.PricesConsiderPromotions.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.ProductPictureSize");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.ProductPictureSize.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.ProductName");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.GoogleCategory");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.Gender");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.AgeGroup");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.Color");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.Size");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.Products.CustomGoods");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.SuccessResult");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.StaticFilePath");
+            this.DeletePluginLocaleResource("Plugins.Feed.GoogleShopping.StaticFilePath.Hint");
 
             base.Uninstall();
         }
         
         /// <summary>
-        /// Generate a static file for froogle
+        /// Generate a static file for GoogleShopping
         /// </summary>
         /// <param name="store">Store</param>
         public virtual void GenerateStaticFile(Store store)
         {
             if (store == null)
                 throw new ArgumentNullException("store");
-            string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
+            string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _GoogleShoppingSettings.StaticFileName);
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {
                 GenerateFeed(fs, store);

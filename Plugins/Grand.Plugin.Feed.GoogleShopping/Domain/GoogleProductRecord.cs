@@ -1,6 +1,6 @@
 using Grand.Core;
 
-namespace Grand.Plugin.Feed.Froogle.Domain
+namespace Grand.Plugin.Feed.GoogleShopping.Domain
 {
     /// <summary>
     /// Represents a Google product record

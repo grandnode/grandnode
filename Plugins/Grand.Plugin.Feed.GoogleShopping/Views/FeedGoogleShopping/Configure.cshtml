@@ -1,11 +1,11 @@
 ﻿@{
     Layout = "";
 
-    Html.AddCssFileParts("~/Plugins/Feed.Froogle/Content/styles.css");
+    Html.AddCssFileParts("~/Plugins/Feed.GoogleShopping/Content/styles.css");
 }
-@model FeedFroogleModel
+@model FeedGoogleShoppingModel
 @using Grand.Core.Infrastructure
-@using Grand.Plugin.Feed.Froogle.Models;
+@using Grand.Plugin.Feed.GoogleShopping.Models;
 @using Grand.Web.Framework;
 @using Grand.Web.Framework.UI;
 @using (Html.BeginForm())
@@ -14,10 +14,10 @@
     <div id="googlebase-configure">
         <ul>
             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                @T("Plugins.Feed.Froogle.General")
+                @T("Plugins.Feed.GoogleShopping.General")
             </li>
             <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                @T("Plugins.Feed.Froogle.Override")
+                @T("Plugins.Feed.GoogleShopping.Override")
             </li>
         </ul>
         <div>
@@ -144,11 +144,9 @@
             }
         </div>
         <div class="form-actions">
-            <div class="row">
-                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
-                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
-                    <input type="submit" name="generate" class="btn default" value="@T("Plugins.Feed.Froogle.Generate")" />
-                </div>
+            <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                <input type="submit" name="generate" class="btn default" value="@T("Plugins.Feed.GoogleShopping.Generate")" />
             </div>
         </div>
     </div>
@@ -159,29 +157,29 @@ var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common
 var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
 
-    <div class="panel panel-default froogle">
+    <div class="panel panel-default GoogleShopping">
         <div class="panel-body">
-            <div id="froogleproducts-grid"></div>
+            <div id="GoogleShoppingproducts-grid"></div>
         </div>
     </div>
 
     <script id="google-popup-editor" type="text/x-kendo-template">
-        <div class="editor-label"><label for="GoogleCategory">@T("Plugins.Feed.Froogle.Products.GoogleCategory")</label></div>
+        <div class="editor-label"><label for="GoogleCategory">@T("Plugins.Feed.GoogleShopping.Products.GoogleCategory")</label></div>
         <div class="editor-field"><input name="GoogleCategory" /></div>
 
-        <div class="editor-label"><label for="Gender">@T("Plugins.Feed.Froogle.Products.Gender")</label></div>
+        <div class="editor-label"><label for="Gender">@T("Plugins.Feed.GoogleShopping.Products.Gender")</label></div>
         <div class="editor-field"><input name="Gender" /></div>
 
-        <div class="editor-label"><label for="AgeGroup">@T("Plugins.Feed.Froogle.Products.AgeGroup")</label></div>
+        <div class="editor-label"><label for="AgeGroup">@T("Plugins.Feed.GoogleShopping.Products.AgeGroup")</label></div>
         <div class="editor-field"><input name="AgeGroup" /></div>
 
-        <div class="editor-label"><label for="Color">@T("Plugins.Feed.Froogle.Products.Color")</label></div>
+        <div class="editor-label"><label for="Color">@T("Plugins.Feed.GoogleShopping.Products.Color")</label></div>
         <div class="editor-field"><input name="Color" /></div>
 
-        <div class="editor-label"><label for="GoogleSize">@T("Plugins.Feed.Froogle.Products.Size")</label></div>
+        <div class="editor-label"><label for="GoogleSize">@T("Plugins.Feed.GoogleShopping.Products.Size")</label></div>
         <div class="editor-field"><input name="GoogleSize" /></div>
 
-        <div class="editor-label"><label for="CustomGoods">@T("Plugins.Feed.Froogle.Products.CustomGoods")</label></div>
+        <div class="editor-label"><label for="CustomGoods">@T("Plugins.Feed.GoogleShopping.Products.CustomGoods")</label></div>
         <div class="editor-field"><input name="CustomGoods" type="checkbox" /></div>
     </script>
 
@@ -189,18 +187,18 @@ var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.Admin
 
                 <script>
                     $(document).ready(function() {
-                        $("#froogleproducts-grid").kendoGrid({
+                        $("#GoogleShoppingproducts-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("GoogleProductList", "FeedFroogle", new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Feed.Froogle.Controllers" }, { "area", "" } }))",
+                                        url: "@Html.Raw(Url.Action("GoogleProductList", "FeedGoogleShopping", new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Feed.GoogleShopping.Controllers" }, { "area", "" } }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
                                     },
                                     update: {
-                                        url: "@Html.Raw(Url.Action("GoogleProductUpdate", "FeedFroogle", new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Feed.Froogle.Controllers" }, { "area", "" } }))",
+                                        url: "@Html.Raw(Url.Action("GoogleProductUpdate", "FeedGoogleShopping", new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Feed.GoogleShopping.Controllers" }, { "area", "" } }))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -252,7 +250,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.Admin
                             scrollable: false,
                             columns: [{
                                 field: "ProductName",
-                                title: "@T("Plugins.Feed.Froogle.Products.ProductName")",
+                                title: "@T("Plugins.Feed.GoogleShopping.Products.ProductName")",
                                 width: 300
                             }, {
                                 field: "Id",
@@ -260,12 +258,12 @@ var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.Admin
                                 width: 300,
                                 template: '<div class="google-info">' +
                                     '<dl>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.GoogleCategory", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(GoogleCategory !== null) {# #:GoogleCategory# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.Gender", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(Gender !== null) {# #:Gender# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.AgeGroup", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(AgeGroup !== null) {# #:AgeGroup# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.Color", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(Color !== null) {# #:Color# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.Size", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(GoogleSize !== null) {# #:GoogleSize# #}  #</dd>' +
-                                    '<dt>@T("Plugins.Feed.Froogle.Products.CustomGoods", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd>#:CustomGoods#</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.GoogleCategory", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(GoogleCategory !== null) {# #:GoogleCategory# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Gender", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(Gender !== null) {# #:Gender# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.AgeGroup", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(AgeGroup !== null) {# #:AgeGroup# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Color", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(Color !== null) {# #:Color# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Size", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(GoogleSize !== null) {# #:GoogleSize# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.CustomGoods", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd>#:CustomGoods#</dd>' +
                                     '</dl>' +
                                     '</div>'
                             }, {

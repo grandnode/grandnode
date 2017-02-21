@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Grand.Plugin.Feed.Froogle.Domain;
+using Grand.Plugin.Feed.GoogleShopping.Domain;
 
-namespace Grand.Plugin.Feed.Froogle.Services
+namespace Grand.Plugin.Feed.GoogleShopping.Services
 {
     public partial interface IGoogleService
     {

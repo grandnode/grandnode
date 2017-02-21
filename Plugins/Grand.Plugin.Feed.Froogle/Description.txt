@@ -1,8 +1,0 @@
-﻿Group: Promotion feeds
-FriendlyName: Google Shopping (formely Google Product Search)
-SystemName: PromotionFeed.Froogle
-Version: 1.76
-SupportedVersions: 3.90
-Author: grandnode team, nopcommerce team
-DisplayOrder: 1
-FileName: Grand.Plugin.Feed.Froogle.dll

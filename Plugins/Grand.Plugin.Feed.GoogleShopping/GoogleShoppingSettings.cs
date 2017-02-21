@@ -1,8 +1,8 @@
 ﻿using Grand.Core.Configuration;
 
-namespace Grand.Plugin.Feed.Froogle
+namespace Grand.Plugin.Feed.GoogleShopping
 {
-    public class FroogleSettings : ISettings
+    public class GoogleShoppingSettings : ISettings
     {
         /// <summary>
         /// Product picture size
@@ -39,7 +39,7 @@ namespace Grand.Plugin.Feed.Froogle
         public string DefaultGoogleCategory { get; set; }
        
         /// <summary>
-        /// Static Froogle file name
+        /// Static GoogleShopping file name
         /// </summary>
         public string StaticFileName { get; set; }
 

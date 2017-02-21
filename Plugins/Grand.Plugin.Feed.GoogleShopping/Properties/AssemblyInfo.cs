@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Grand.Plugin.Feed.Froogle")]
+[assembly: AssemblyTitle("Grand.Plugin.Feed.GoogleShopping")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("UNIT-SOFT Sp. z o.o.")]
-[assembly: AssemblyProduct("Grand.Plugin.Feed.Froogle")]
+[assembly: AssemblyProduct("Grand.Plugin.Feed.GoogleShopping")]
 [assembly: AssemblyCopyright("Copyright © UNIT-SOFT Sp. z o.o., 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
