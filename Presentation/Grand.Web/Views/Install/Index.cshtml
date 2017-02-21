@@ -62,7 +62,7 @@
             </script>
             <div class="row flex-row">
                 <div class="col-6">
-                    <img class="img-fluid" title="" alt="grandNode" src="~/Themes/DefaultClean/Content/images/logo.png" />
+                    <img class="img-fluid mt-3" title="" alt="grandNode" src="~/Themes/DefaultClean/Content/images/logo.png" />
                 </div>
                 <div class="col-6">
                     <h1 class="text-xs-center generalTitle">@ILS.GetResource("Title")</h1>
@@ -83,32 +83,32 @@
                         @ILS.GetResource("StoreInformation")
                     </h3>
                     <div class="card-block">
-                        <label for="AdminEmail" class="col-12 col-form-label">
+                        <label for="AdminEmail" class="col-12 col-form-label px-0">
                             @ILS.GetResource("AdminEmail"):
                         </label>
-                        <div class="col-12">
+                        <div class="col-12 px-0">
                             @Html.TextBoxFor(x => x.AdminEmail, new { @class = "form-control" })
                         </div>
-                    </div>
-                    <div class="card-block">
-                        <div class="col-xs-6">
-                            <label for="AdminPassword">
-                                @ILS.GetResource("AdminPassword"):
-                            </label>
-                            @Html.PasswordFor(x => x.AdminPassword, new { @class = "form-control" })
-                        </div>
-                        <div class="col-xs-6">
-                            <label for="ConfirmPassword">
-                                @ILS.GetResource("ConfirmPassword"):
-                            </label>
-                            @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
+                        <div class="row mt-3">
+                            <div class="col-md-6 col-12">
+                                <label for="AdminPassword">
+                                    @ILS.GetResource("AdminPassword"):
+                                </label>
+                                @Html.PasswordFor(x => x.AdminPassword, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-6">
+                                <label for="ConfirmPassword">
+                                    @ILS.GetResource("ConfirmPassword"):
+                                </label>
+                                @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control" })
+                            </div>
                         </div>
                     </div>
                 </div>
                 if (!Model.DisableSampleDataOption)
                 {
                         <div nowrap="nowrap" align="left">
-                            <label class="custom-control custom-checkbox">
+                            <label class="custom-control custom-checkbox my-3">
                                 @Html.CheckBoxFor(x => x.InstallSampleData, new { @class = "custom-control-input" })
                                 <span class="custom-control-indicator"></span>
                                 <span class="custom-control-description">@ILS.GetResource("CreateSampleData")</span>
@@ -126,31 +126,37 @@
                                             @ILS.GetResource("MongoDBServerName"):
                                         </label>
                                         @Html.TextBoxFor(x => x.MongoDBServerName, new { @class = "form-control" })
-                                        <label for="MongoDBDatabaseName">
+                                        <label class="mt-3" for="MongoDBDatabaseName">
                                             @ILS.GetResource("DatabaseName"):
                                         </label>
                                         @Html.TextBoxFor(x => x.MongoDBDatabaseName, new { @class = "form-control" })
-                                        <label for="MongoDBUsername">
-                                            @ILS.GetResource("MongoDBUsername"):
-                                        </label>
-                                        @Html.TextBoxFor(x => x.MongoDBUsername, new { @class = "form-control" })
-                                        <label for="MongoDBPassword">
-                                            @ILS.GetResource("MongoDBPassword"):
-                                        </label>
-                                        @Html.PasswordFor(x => x.MongoDBPassword, new { @class = "form-control" })
+                                        <div class="row mt-3">
+                                            <div class="col-6">
+                                                <label for="MongoDBUsername">
+                                                    @ILS.GetResource("MongoDBUsername"):
+                                                </label>
+                                                @Html.TextBoxFor(x => x.MongoDBUsername, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="MongoDBPassword">
+                                                    @ILS.GetResource("MongoDBPassword"):
+                                                </label>
+                                                @Html.PasswordFor(x => x.MongoDBPassword, new { @class = "form-control" })
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
 
-                            <label class="custom-control custom-checkbox">
+                            <label class="custom-control custom-checkbox my-3">
                                 @Html.CheckBoxFor(x => x.MongoDBConnectionInfo, new { @class = "custom-control-input" })
                                 <span class="custom-control-indicator"></span>
                                 <span class="custom-control-description">@ILS.GetResource("ConnectionString"):</span>
                             </label>
                             <div id="MongoDBDatabaseConnectionString">
                                 <span style="white-space: nowrap;">
-                                    @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox", style = "width:90%;" })
+                                    @Html.TextBoxFor(x => x.DatabaseConnectionString, new { @class = "textbox form-control", style = "" })
                                 </span>
                                 <br />
                                 <span class="hint">
@@ -165,7 +171,7 @@
                     <div class="py-3">
                         @ILS.GetResource("Documentation1") <a href="http://docs.grandnode.com/" target="_blank">@ILS.GetResource("Documentation2")</a>.
                     </div>
-                    <div class="col-md-6 col-12">
+                    <div class="col-md-6 col-12 mb-3 px-0">
                         <input class="btn btn-success" type="submit" value="@ILS.GetResource("Install")" style="width: 100px;" />
                     </div>
                         <div class="col-md-6 col-12 text-right">

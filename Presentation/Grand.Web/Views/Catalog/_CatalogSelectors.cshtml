@@ -6,7 +6,7 @@
             @*sorting*@
             @if (Model.AllowProductSorting)
             {
-                <div class="col-4">
+                <div class="col">
                     <label class="mb-0" for="custom-select">@T("Catalog.OrderBy")</label>
                     @Html.DropDownList("custom-select", Model.AvailableSortOptions, new { @class = "form-control custom-select", onchange = "setLocation(this.value);" })
                 </div>
@@ -14,7 +14,7 @@
             @*page size*@
             @if (Model.AllowCustomersToSelectPageSize)
             {
-                <div class="col-4">
+                <div class="col">
                     <div class="col-12 px-0">
                             <span class="mb-1">@T("Catalog.PageSize")</span>
                     </div>
@@ -34,7 +34,7 @@
             @*view mode*@
             @if (Model.AllowProductViewModeChanging)
             {
-                <div class="ml-auto col-4 text-sm-right rightHead hidden-sm-down pr-0">
+                <div class="ml-auto col text-sm-right rightHead hidden-sm-down pr-0">
                         <div class="col hidden-sm-down text-right">
                                 <span>@T("Catalog.ViewMode")</span>
                         </div>
