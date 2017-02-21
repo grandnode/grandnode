@@ -278,7 +278,7 @@ ul.ui-autocomplete {
     margin-left: 0;
 }
 .navUp li a {
-    font-size: 11px;
+    font-size: 14px;
     line-height: 20px;
 }
 nav .nav-item.list-inline {
@@ -290,7 +290,6 @@ nav .nav-item.list-inline {
 }
 .navbar-light .navbar-nav .nav-link {
     padding-top: 10px;
-    text-transform: uppercase;
     padding-right: 4px;
     letter-spacing: 0.2px;
 }
@@ -890,7 +889,7 @@ select.form-control:not([size]):not([multiple]) option {
 }
 .flyout-cart {
     min-width: 325px;
-    font-size: 11px;
+    font-size: 14px;
 }
 .flyout-cart .item {
     border-bottom: 1px solid #dddddd;
@@ -1150,6 +1149,9 @@ footer .list-group .list-group-item {
         position: absolute;
         width: 100%;
     }
+    .navUp li a {
+        font-size: 12px;
+    }
     .dropdown-menu {
         margin: 0;
     }
@@ -1195,6 +1197,7 @@ footer .list-group .list-group-item {
         font-size: 24px;
         color: #777878;
     }
+   
     .headBottom {
         margin: 35px 0;
         min-height: 85px;
