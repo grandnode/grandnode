@@ -657,42 +657,48 @@ namespace Grand.Services.Customers
             body += "<input type=\"hidden\" name=\"Id\" value=\"" + form.Id + "\">";
             foreach (var item in form.FormAttributes)
             {
-                string style = "";
-                if (!string.IsNullOrEmpty(item.Style))
-                    style += string.Format(" style=\"{0}\"", item.Style);
-
-                if (!string.IsNullOrEmpty(item.Class))
-                    style += string.Format(" class=\"{0}\"", item.Class);
-
                 if (item.AttributeControlType == FormControlType.TextBox)
                 {
-                    if (!string.IsNullOrEmpty(item.DefaultValue))
-                        style += string.Format(" value=\"{0}\" ", item.DefaultValue);
-                    var textbox = string.Format("<input type=\"text\"  name=\"{0}\" {1} {2}>", item.SystemName, style, item.IsRequired ? "required" : "");
+                    string _style = string.Format("{0}", item.Style);
+                    string _class = string.Format("{0} {1}", "form-control", item.Class);
+                    string _value = item.DefaultValue;
+                    var textbox = string.Format("<input type=\"text\"  name=\"{0}\" class=\"{1}\" style=\"{2}\" value=\"{3}\" {4}>", item.SystemName, _class, _style ,_value, item.IsRequired ? "required" : "");
                     body = body.Replace(string.Format("%{0}%", item.SystemName), textbox);
                 }
                 if (item.AttributeControlType == FormControlType.MultilineTextbox)
                 {
-                    body = body.Replace(string.Format("%{0}%", item.SystemName),
-                        string.Format("<textarea name=\"{0}\" {1}>{2}</textarea>", item.SystemName, style, item.DefaultValue));
+                    string _style = string.Format("{0}", item.Style);
+                    string _class = string.Format("{0} {1}", "form-control", item.Class);
+                    string _value = item.DefaultValue;
+                    var textarea = string.Format("<textarea name=\"{0}\" class=\"{1}\" style=\"{2}\" value=\"{3}\" {4}>", item.SystemName, _class, _style, _value, item.IsRequired ? "required" : "");
+                    body = body.Replace(string.Format("%{0}%", item.SystemName), textarea);
                 }
                 if (item.AttributeControlType == FormControlType.Checkboxes)
                 {
-                    var checkbox = string.Empty;
+                    var checkbox = "<div class=\"custom-controls-stacked\">";
                     foreach (var itemcheck in item.FormAttributeValues.OrderBy(x => x.DisplayOrder))
                     {
-                        checkbox += string.Format("<div {0}>", style);
-                        checkbox += string.Format("<input type=\"checkbox\" id=\"{0}\" name=\"{1}\" value=\"{2}\" {3}> <label for=\"{4}\">{5}</label>",
-                            itemcheck.Id, item.SystemName, itemcheck.GetLocalized(x => x.Name), itemcheck.IsPreSelected ? "checked" : "", itemcheck.Id, itemcheck.GetLocalized(x => x.Name));
-                        checkbox += "</div>";
+                        string _style = string.Format("{0}", item.Style);
+                        string _class = string.Format("{0} {1}", "custom-control-input", item.Class);
+
+                        checkbox += "<label class=\"custom-control custom-checkbox\">";
+                        checkbox += string.Format("<input type=\"checkbox\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\" >", _class, _style, 
+                            itemcheck.IsPreSelected ? "checked" : "", itemcheck.Id, item.SystemName, itemcheck.GetLocalized(x => x.Name));
+                        checkbox += "<span class=\"custom-control-indicator\"></span>";
+                        checkbox += string.Format("<span class=\"custom-control-description\">{0}</span>", itemcheck.GetLocalized(x => x.Name));
+                        checkbox += "</label>";
                     }
+                    checkbox += "</div>";
                     body = body.Replace(string.Format("%{0}%", item.SystemName), checkbox);
                 }
 
                 if (item.AttributeControlType == FormControlType.DropdownList)
                 {
                     var dropdown = string.Empty;
-                    dropdown = string.Format("<select name=\"{0}\" {1} >", item.SystemName, style);
+                    string _style = string.Format("{0}", item.Style);
+                    string _class = string.Format("{0} {1}", "form-control custom-select", item.Class);
+
+                    dropdown = string.Format("<select name=\"{0}\" class=\"{1}\" style=\"{2}\" >", item.SystemName, _class, _style);
                     foreach (var itemdropdown in item.FormAttributeValues.OrderBy(x => x.DisplayOrder))
                     {
                         dropdown += string.Format("<option value=\"{0}\" {1}>{2}</option>", itemdropdown.GetLocalized(x => x.Name), itemdropdown.IsPreSelected ? "selected" : "", itemdropdown.GetLocalized(x => x.Name));
@@ -702,14 +708,20 @@ namespace Grand.Services.Customers
                 }
                 if (item.AttributeControlType == FormControlType.RadioList)
                 {
-                    var radio = string.Empty;
+                    var radio = "<div class=\"custom-controls-stacked\">";
                     foreach (var itemradio in item.FormAttributeValues.OrderBy(x => x.DisplayOrder))
                     {
-                        radio += string.Format("<div {0}>", style);
-                        radio += string.Format("<input type=\"radio\" id=\"{0}\" name=\"{1}\" value=\"{2}\" {3} {4}><label for=\"{5}\">{6}</label>",
-                            itemradio.Id, item.SystemName, itemradio.GetLocalized(x => x.Name), itemradio.IsPreSelected ? "checked" : "", style, itemradio.Id, itemradio.GetLocalized(x => x.Name));
-                        radio += "</div>";
+                        string _style = string.Format("{0}", item.Style);
+                        string _class = string.Format("{0} {1}", "custom-control-input", item.Class);
+
+                        radio += "<label class=\"custom-control custom-radio\">";
+                        radio += string.Format("<input type=\"radio\" class=\"{0}\" style=\"{1}\" {2} id=\"{3}\" name=\"{4}\" value=\"{5}\">", _class, _style,
+                            itemradio.IsPreSelected ? "checked" : "", itemradio.Id, item.SystemName, itemradio.GetLocalized(x => x.Name));
+                        radio += "<span class=\"custom-control-indicator\"></span>";
+                        radio += string.Format("<span class=\"custom-control-description\">{0}</span>", itemradio.GetLocalized(x => x.Name));
+                        radio += "</label>";
                     }
+                    radio += "</div>";
                     body = body.Replace(string.Format("%{0}%", item.SystemName), radio);
                 }
             }
