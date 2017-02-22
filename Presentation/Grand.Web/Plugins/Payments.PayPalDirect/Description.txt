@@ -1,7 +1,7 @@
 ﻿Group: Payment methods
 FriendlyName: Credit Card
 SystemName: Payments.PayPalDirect
-Version: 1.39
+Version: 2.14
 SupportedVersions: 3.90
 Author: grandnode team, nopcommerce team
 DisplayOrder: 1

@@ -8,12 +8,10 @@ namespace Grand.Plugin.Payments.PayPalDirect
     {
         public void RegisterRoutes(RouteCollection routes)
         {
-            //IPN
-            routes.MapRoute("Plugin.Payments.PayPalDirect.IPNHandler",
-                 "Plugins/PaymentPayPalDirect/IPNHandler",
-                 new { controller = "PaymentPayPalDirect", action = "IPNHandler" },
-                 new[] { "Grand.Plugin.Payments.PayPalDirect.Controllers" }
-            );
+            routes.MapRoute("Plugin.Payments.PayPalDirect.Webhook",
+                "Plugins/PaymentPayPalDirect/Webhook",
+                new { controller = "PaymentPayPalDirect", action = "WebhookEventsHandler" },
+                new[] { "Grand.Plugin.Payments.PayPalDirect.Controllers" });
         }
         public int Priority
         {
