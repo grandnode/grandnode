@@ -761,4 +761,10 @@
   <LocaleResource Name="products.description">
     <Value>Description</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Providers">
+    <Value>Shipping providers</Value>
+  </LocaleResource>
 </Language>

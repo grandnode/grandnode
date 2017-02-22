@@ -4306,7 +4306,7 @@
     <Value>The email account has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
-    <Value>External authentication methods</Value>
+    <Value>External authentication</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
     <Value>back to authentication method list</Value>
@@ -7380,7 +7380,7 @@
     <Value>The shipping method has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers">
-    <Value>Shipping rate computation methods</Value>
+    <Value>Shipping providers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Providers.BackToList">
     <Value>back to shipping rate computation method list</Value>
