@@ -7,6 +7,7 @@ using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Shipping;
 using Grand.Services.Shipping.Tracking;
+using Grand.Core.Domain.Orders;
 
 namespace Grand.Plugin.Shipping.FixedRateShipping
 {
@@ -139,6 +140,19 @@ namespace Grand.Plugin.Shipping.FixedRateShipping
             this.DeletePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.Rate");
 
             base.Uninstall();
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether shipping methods should be hidden during checkout
+        /// </summary>
+        /// <param name="cart">Shoping cart</param>
+        /// <returns>true - hide; false - display.</returns>
+        public bool HideShipmentMethods(IList<ShoppingCartItem> cart)
+        {
+            //you can put any logic here
+            //for example, hide this shipping methods if all products in the cart are downloadable
+            //or hide this shipping methods if current customer is from certain country
+            return false;
         }
 
         public Type GetControllerType()

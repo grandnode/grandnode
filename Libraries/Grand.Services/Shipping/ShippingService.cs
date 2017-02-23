@@ -155,10 +155,11 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        public virtual IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(string storeId = "")
+        public virtual IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(string storeId = "", IList<ShoppingCartItem> cart = null)
         {
             return LoadAllShippingRateComputationMethods(storeId)
                    .Where(provider => _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Contains(provider.PluginDescriptor.SystemName, StringComparer.InvariantCultureIgnoreCase))
+                   .Where(provider => !provider.HideShipmentMethods(cart))
                    .ToList();
         }
 
@@ -958,7 +959,7 @@ namespace Grand.Services.Shipping
             var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out shippingFromMultipleLocations);
             result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
 
-            var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId);
+            var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId, cart);
             //filter by system name
             if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName))
             {

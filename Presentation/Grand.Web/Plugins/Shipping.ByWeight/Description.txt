@@ -1,4 +1,4 @@
-Group: Shipping rate computation
+﻿Group: Shipping rate computation
 FriendlyName: Shipping by weight
 SystemName: Shipping.ByWeight
 Version: 1.45

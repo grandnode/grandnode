@@ -16,7 +16,7 @@ namespace Grand.Services.Shipping
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipping rate computation methods</returns>
-        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(string storeId = "");
+        IList<IShippingRateComputationMethod> LoadActiveShippingRateComputationMethods(string storeId = "", IList<ShoppingCartItem> cart = null);
 
         /// <summary>
         /// Load shipping rate computation method by system name

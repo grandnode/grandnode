@@ -9,6 +9,8 @@ using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Shipping;
 using Grand.Services.Shipping.Tracking;
+using Grand.Core.Domain.Orders;
+using System.Collections.Generic;
 
 namespace Grand.Plugin.Shipping.ByWeight
 {
@@ -264,19 +266,32 @@ namespace Grand.Plugin.Shipping.ByWeight
             base.Uninstall();
         }
 
+        /// <summary>
+        /// Returns a value indicating whether shipping methods should be hidden during checkout
+        /// </summary>
+        /// <param name="cart">Shoping cart</param>
+        /// <returns>true - hide; false - display.</returns>
+        public bool HideShipmentMethods(IList<ShoppingCartItem> cart)
+        {
+            //you can put any logic here
+            //for example, hide this shipping methods if all products in the cart are downloadable
+            //or hide this shipping methods if current customer is from certain country
+            return false;
+        }
+
 
         public Type GetControllerType()
         {
             return typeof(Controllers.ShippingByWeightController);
         }
-    #endregion
+        #endregion
 
-    #region Properties
+        #region Properties
 
-    /// <summary>
-    /// Gets a shipping rate computation method type
-    /// </summary>
-    public ShippingRateComputationMethodType ShippingRateComputationMethodType
+        /// <summary>
+        /// Gets a shipping rate computation method type
+        /// </summary>
+        public ShippingRateComputationMethodType ShippingRateComputationMethodType
         {
             get
             {

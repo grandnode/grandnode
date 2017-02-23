@@ -4,6 +4,9 @@ using Grand.Core.Domain.Shipping;
 using Grand.Core.Plugins;
 using Grand.Services.Shipping;
 using Grand.Services.Shipping.Tracking;
+using System.Collections.Generic;
+using Grand.Core.Domain.Orders;
+using System.Web.Mvc;
 
 namespace Grand.Services.Tests.Shipping {
     public class FixedRateTestShippingRateComputationMethod : BasePlugin, IShippingRateComputationMethod {
@@ -46,6 +49,23 @@ namespace Grand.Services.Tests.Shipping {
                 throw new ArgumentNullException("getShippingOptionRequest");
 
             return GetRate();
+        }
+
+        /// <summary>
+        /// Returns a value indicating whether shipping methods should be hidden during checkout
+        /// </summary>
+        /// <param name="cart">Shoping cart</param>
+        /// <returns>true - hide; false - display.</returns>
+        public bool HideShipmentMethods(IList<ShoppingCartItem> cart)
+        {
+            //you can put any logic here
+            //for example, hide this shipping methods if all products in the cart are downloadable
+            //or hide this shipping methods if current customer is from certain country
+            return false;
+        }
+        public Type GetControllerType()
+        {
+            return typeof(Controller);
         }
 
         #region Properties
