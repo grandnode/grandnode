@@ -291,12 +291,11 @@ footer {
     margin-left: 0;
 }
 .navUp li a {
-    font-size: 11px;
+    font-size: 14px;
     line-height: 20px;
 }
 .navbar-light .navbar-nav .nav-link {
     padding-top: 10px;
-    text-transform: uppercase;
     padding-right: 4px;
     letter-spacing: 0.2px;
 }
@@ -1016,7 +1015,7 @@ header section {
 }
 .flyout-cart {
     min-width: 325px;
-    font-size: 11px;
+    font-size: 14px;
 }
 .flyout-cart .item {
     border-bottom: 1px solid #dddddd;
@@ -3085,10 +3084,8 @@ ul.pagination {
         transition-timing-function: linear;
     }
     .subrow span:nth-child(2){
-        
-text-align: right !important;
-        
-width: 50% !important;
+        text-align: right !important;
+        width: 50% !important;
     }
     .product-unit-price, .quantity .td-title {
         position: relative;
@@ -3111,6 +3108,9 @@ width: 50% !important;
         background-color: rgb(97, 103, 108);
         position: absolute;
         width: 100%;
+    }
+    .navUp li a {
+        font-size: 12px;
     }
     .dropdown-menu {
         margin: 0;
