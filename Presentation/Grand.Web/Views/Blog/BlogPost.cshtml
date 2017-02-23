@@ -104,9 +104,9 @@
 
 
                                         <div class="card-block row">
+                                            @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                            {
                                             <div class="col-12 col-xl-2 col-lg-3 col-sm-4 col-md-3 user-info">
-                                                @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
-                                                {
                                                     <div class="avatar">
                                                         @if (comment.AllowViewingProfiles)
                                                         {
@@ -119,8 +119,8 @@
                                                             <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
                                                         }
                                                     </div>
-                                                }
                                             </div>
+                                            }
                                             <div class="col-12 col-sm-9 comment-content">
                                                 <div class="comment-time">
                                                     <label>@T("Blog.Comments.CreatedOn"):</label>

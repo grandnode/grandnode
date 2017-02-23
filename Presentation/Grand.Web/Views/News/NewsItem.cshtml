@@ -85,26 +85,28 @@
                                                 </h5>
                                             }
                                             <div class="card-block flex-row row">
-                                                <div class="col-sm-3 col-12 comment-info">
-                                                    <div class="user-info">
+                                                @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                                {
+                                                    <div class="col-sm-3 col-12 comment-info">
+                                                        <div class="user-info">
 
-                                                        @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
-                                                        {
-                                                            <div class="avatar">
-                                                                @if (comment.AllowViewingProfiles)
-                                                                {
-                                                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="avatar-img-link">
+                                                       
+                                                                <div class="avatar">
+                                                                    @if (comment.AllowViewingProfiles)
+                                                                    {
+                                                                        <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="avatar-img-link">
+                                                                            <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
+                                                                        </a>
+                                                                    }
+                                                                    else
+                                                                    {
                                                                         <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
-                                                                    </a>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
-                                                                }
-                                                            </div>
-                                                        }
+                                                                    }
+                                                                </div>
+                                                        
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                }
                                                 <div class="col-sm-9 col-12 comment-content">
                                                     <div class="comment-time">
                                                         <label>@T("News.Comments.CreatedOn"):</label>
