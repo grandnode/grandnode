@@ -82,13 +82,22 @@ namespace Grand.Plugin.Payments.PayPalStandard
         }
 
         /// <summary>
-        /// Gets PDT details
+        /// Gets IPN Paypal URL
         /// </summary>
-        /// <param name="tx">TX</param>
-        /// <param name="values">Values</param>
-        /// <param name="response">Response</param>
-        /// <returns>Result</returns>
-        public bool GetPdtDetails(string tx, out Dictionary<string, string> values, out string response)
+        /// <returns></returns>
+        private string GetIpnPaypalUrl()
+        {
+            return _paypalStandardPaymentSettings.UseSandbox? "https://ipnpb.sandbox.paypal.com/cgi-bin/webscr" :
+                "https://ipnpb.paypal.com/cgi-bin/webscr";
+        }
+    /// <summary>
+    /// Gets PDT details
+    /// </summary>
+    /// <param name="tx">TX</param>
+    /// <param name="values">Values</param>
+    /// <param name="response">Response</param>
+    /// <returns>Result</returns>
+    public bool GetPdtDetails(string tx, out Dictionary<string, string> values, out string response)
         {
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
             req.Method = "POST";
@@ -134,13 +143,13 @@ namespace Grand.Plugin.Payments.PayPalStandard
         /// <returns>Result</returns>
         public bool VerifyIpn(string formString, out Dictionary<string, string> values)
         {
-            var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
+            var req = (HttpWebRequest)WebRequest.Create(GetIpnPaypalUrl());
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = HttpContext.Current.Request.UserAgent;
 
-            string formContent = string.Format("{0}&cmd=_notify-validate", formString);
+            var formContent = string.Format("cmd=_notify-validate&{0}", formString);
             req.ContentLength = formContent.Length;
 
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
