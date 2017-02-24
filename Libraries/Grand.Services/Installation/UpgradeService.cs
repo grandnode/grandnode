@@ -324,7 +324,7 @@ namespace Grand.Services.Installation
             if (emailAccount == null)
                 throw new Exception("Default email account cannot be loaded");
             var messageTemplates = new List<MessageTemplate>
-                            {
+                             {
                                 new MessageTemplate
                                 {
                                     Name = "NewReturnRequest.CustomerNotification",
@@ -332,9 +332,27 @@ namespace Grand.Services.Installation
                                     Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%!<br /> You have just submitted a new return request. Details are below:<br />Request ID: %ReturnRequest.CustomNumber%<br />Product: %ReturnRequest.Product.Quantity% x Product: %ReturnRequest.Product.Name%<br />Reason for return: %ReturnRequest.Reason%<br />Requested action: %ReturnRequest.RequestedAction%<br />Customer comments:<br />%ReturnRequest.CustomerComment%</p>",
                                     IsActive = true,
                                     EmailAccountId = emailAccount.Id,
-                                }
+                                },
+                                new MessageTemplate
+                                {
+                                    Name = "Service.ContactUs",
+                                    Subject = "%Store.Name%. Contact us",
+                                    Body = string.Format("<p>From %ContactUs.SenderName% - %ContactUs.SenderEmail% {0} %ContactUs.Body%{0}</p>{0}", Environment.NewLine),
+                                    IsActive = true,
+                                    EmailAccountId = emailAccount.Id,
+                                },
+                                new MessageTemplate
+                                {
+                                    Name = "Service.ContactVendor",
+                                    Subject = "%Store.Name%. Contact us",
+                                    Body = string.Format("<p>From %ContactUs.SenderName% - %ContactUs.SenderEmail% {0} %ContactUs.Body%{0}</p>{0}", Environment.NewLine),
+                                    IsActive = true,
+                                    EmailAccountId = emailAccount.Id,
+                                },
                             };
+
             EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
+
 
             #endregion
 

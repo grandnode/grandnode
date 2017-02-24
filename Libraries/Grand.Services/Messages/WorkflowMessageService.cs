@@ -21,6 +21,7 @@ using Grand.Services.Orders;
 using Grand.Services.Catalog;
 using Grand.Services.Forums;
 using Grand.Core.Domain.Common;
+using System.Web;
 
 namespace Grand.Services.Messages
 {
@@ -39,6 +40,7 @@ namespace Grand.Services.Messages
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly CommonSettings _commonSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly HttpContextBase _httpContext;
 
         #endregion
 
@@ -54,7 +56,8 @@ namespace Grand.Services.Messages
             IStoreContext storeContext,
             EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            HttpContextBase httpContext)
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
@@ -67,56 +70,12 @@ namespace Grand.Services.Messages
             this._emailAccountSettings = emailAccountSettings;
             this._commonSettings = commonSettings;
             this._eventPublisher = eventPublisher;
+            this._httpContext = httpContext;
         }
 
         #endregion
 
         #region Utilities
-        
-        protected virtual int SendNotification(MessageTemplate messageTemplate, 
-            EmailAccount emailAccount, string languageId, IEnumerable<Token> tokens,
-            string toEmailAddress, string toName,
-            string attachmentFilePath = null, string attachmentFileName = null,
-            string replyToEmailAddress = null, string replyToName = null)
-        {
-            if (String.IsNullOrEmpty(toEmailAddress))
-                return 0;
-
-            //retrieve localized message template data
-            var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
-            var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
-            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
-
-            //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
-            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
-            //limit name length
-            toName = CommonHelper.EnsureMaximumLength(toName, 300);
-            var email = new QueuedEmail
-            {
-                Priority = QueuedEmailPriority.High,
-                From = emailAccount.Email,
-                FromName = emailAccount.DisplayName,
-                To = toEmailAddress,
-                ToName = toName,
-                ReplyTo = replyToEmailAddress,
-                ReplyToName = replyToName,
-                CC = string.Empty,
-                Bcc = bcc,
-                Subject = subjectReplaced,
-                Body = bodyReplaced,
-                AttachmentFilePath = attachmentFilePath,
-                AttachmentFileName = attachmentFileName,
-                AttachedDownloadId = messageTemplate.AttachedDownloadId,
-                CreatedOnUtc = DateTime.UtcNow,
-                EmailAccountId = emailAccount.Id,
-                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
-                     : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
-            };
-
-            _queuedEmailService.InsertQueuedEmail(email);
-            return 1;
-        }
 
         protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName, string storeId)
         {
@@ -1753,6 +1712,222 @@ namespace Grand.Services.Messages
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
                 toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends "contact us" message
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="senderEmail">Sender email</param>
+        /// <param name="senderName">Sender name</param>
+        /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
+        /// <param name="body">Email body</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendContactUsMessage(Customer customer, string languageId, string senderEmail,
+            string senderName, string subject, string body)
+        {
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("Service.ContactUs", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            string fromEmail;
+            string fromName;
+            senderName = _httpContext.Server.HtmlEncode(senderName);
+            senderEmail = _httpContext.Server.HtmlEncode(senderEmail);
+            //required for some SMTP servers
+            if (_commonSettings.UseSystemEmailForContactUsForm)
+            {
+                fromEmail = emailAccount.Email;
+                fromName = emailAccount.DisplayName;
+            }
+            else
+            {
+                fromEmail = senderEmail;
+                fromName = senderName;
+            }
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            tokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
+            tokens.Add(new Token("ContactUs.SenderName", senderName));
+            tokens.Add(new Token("ContactUs.Body", body, true));
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+
+            //store in database
+            if (_commonSettings.StoreInDatabaseContactUsForm)
+            {
+                var contactus = new ContactUs()
+                {
+                    CreatedOnUtc = DateTime.UtcNow,
+                    CustomerId = customer.Id,
+                    StoreId = _storeContext.CurrentStore.Id,
+                    VendorId = "",
+                    Email = senderEmail,
+                    FullName = senderName,
+                    Subject = String.IsNullOrEmpty(subject) ? "Contact Us (form)" : subject,
+                    Enquiry = body,
+                    EmailAccountId = emailAccount.Id,
+                    IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress()
+                };
+                EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
+            }
+
+
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                fromEmail: fromEmail,
+                fromName: fromName,
+                subject: subject,
+                replyToEmailAddress: senderEmail,
+                replyToName: senderName);
+        }
+
+        /// <summary>
+        /// Sends "contact vendor" message
+        /// </summary>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="senderEmail">Sender email</param>
+        /// <param name="senderName">Sender name</param>
+        /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
+        /// <param name="body">Email body</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendContactVendorMessage(Customer customer, Vendor vendor, string languageId, string senderEmail,
+            string senderName, string subject, string body)
+        {
+            if (vendor == null)
+                throw new ArgumentNullException("vendor");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("Service.ContactVendor", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            string fromEmail;
+            string fromName;
+            senderName = _httpContext.Server.HtmlEncode(senderName);
+            senderEmail = _httpContext.Server.HtmlEncode(senderEmail);
+
+            //required for some SMTP servers
+            if (_commonSettings.UseSystemEmailForContactUsForm)
+            {
+                fromEmail = emailAccount.Email;
+                fromName = emailAccount.DisplayName;
+                
+            }
+            else
+            {
+                fromEmail = senderEmail;
+                fromName = senderName;
+            }
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
+            tokens.Add(new Token("ContactUs.SenderEmail", senderEmail));
+            tokens.Add(new Token("ContactUs.SenderName", senderName));
+            tokens.Add(new Token("ContactUs.Body", body, true));
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = vendor.Email;
+            var toName = vendor.Name;
+
+            //store in database
+            if (_commonSettings.StoreInDatabaseContactUsForm)
+            {
+                var contactus = new ContactUs()
+                {
+                    CreatedOnUtc = DateTime.UtcNow,
+                    CustomerId = customer.Id,
+                    StoreId = _storeContext.CurrentStore.Id,
+                    VendorId = vendor.Id,
+                    Email = senderEmail,
+                    FullName = senderName,
+                    Subject = String.IsNullOrEmpty(subject) ? "Contact Us (form)" : subject,
+                    Enquiry = body,
+                    EmailAccountId = emailAccount.Id,
+                    IpAddress = EngineContext.Current.Resolve<IWebHelper>().GetCurrentIpAddress()
+                };
+                EngineContext.Current.Resolve<IContactUsService>().InsertContactUs(contactus);
+            }
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
+                fromEmail: fromEmail,
+                fromName: fromName,
+                subject: subject,
+                replyToEmailAddress: senderEmail,
+                replyToName: senderName);
+        }
+
+        public virtual int SendNotification(MessageTemplate messageTemplate,
+            EmailAccount emailAccount, string languageId, IEnumerable<Token> tokens,
+            string toEmailAddress, string toName,
+            string attachmentFilePath = null, string attachmentFileName = null,
+            string replyToEmailAddress = null, string replyToName = null,
+            string fromEmail = null, string fromName = null, string subject = null)
+        {
+            if (String.IsNullOrEmpty(toEmailAddress))
+                return 0;
+
+            //retrieve localized message template data
+            var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
+
+            if (String.IsNullOrEmpty(subject))
+                subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
+
+            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
+
+            //Replace subject and body tokens 
+            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
+            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+            //limit name length
+            toName = CommonHelper.EnsureMaximumLength(toName, 300);
+            var email = new QueuedEmail
+            {
+                Priority = QueuedEmailPriority.High,
+                From = !string.IsNullOrEmpty(fromEmail) ? fromEmail : emailAccount.Email,
+                FromName = !string.IsNullOrEmpty(fromName) ? fromName : emailAccount.DisplayName,
+                To = toEmailAddress,
+                ToName = toName,
+                ReplyTo = replyToEmailAddress,
+                ReplyToName = replyToName,
+                CC = string.Empty,
+                Bcc = bcc,
+                Subject = subjectReplaced,
+                Body = bodyReplaced,
+                AttachmentFilePath = attachmentFilePath,
+                AttachmentFileName = attachmentFileName,
+                AttachedDownloadId = messageTemplate.AttachedDownloadId,
+                CreatedOnUtc = DateTime.UtcNow,
+                EmailAccountId = emailAccount.Id,
+                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
+                     : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
+            };
+
+            _queuedEmailService.InsertQueuedEmail(email);
+            return 1;
         }
 
         /// <summary>

@@ -4653,6 +4653,23 @@ namespace Grand.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "Service.ContactUs",
+                                           Subject = "%Store.Name%. Contact us",
+                                           Body = string.Format("<p>From %ContactUs.SenderName% - %ContactUs.SenderEmail% {0} %ContactUs.Body%{0}</p>{0}", Environment.NewLine),
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
+                                           Name = "Service.ContactVendor",
+                                           Subject = "%Store.Name%. Contact us",
+                                           Body = string.Format("<p>From %ContactUs.SenderName% - %ContactUs.SenderEmail% {0} %ContactUs.Body%{0}</p>{0}", Environment.NewLine),
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+
+                                   new MessageTemplate
+                                       {
                                            Name = "Wishlist.EmailAFriend",
                                            Subject = "%Store.Name%. Wishlist",
                                            Body = "<p><a href=\"%Store.URL%\"> %Store.Name%</a> <br /><br />%Wishlist.Email% was shopping on %Store.Name% and wanted to share a wishlist with you. <br /><br /><br />For more info click <a target=\"_blank\" href=\"%Wishlist.URLForCustomer%\">here</a> <br /><br /><br />%Wishlist.PersonalMessage%<br /><br />%Store.Name%</p>",

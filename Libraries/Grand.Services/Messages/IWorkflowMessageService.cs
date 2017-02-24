@@ -329,8 +329,7 @@ namespace Grand.Services.Messages
         /// <param name="productReview">Product review</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendProductReviewNotificationMessage(ProductReview productReview,
-            string languageId);
+        int SendProductReviewNotificationMessage(ProductReview productReview, string languageId);
 
         /// <summary>
         /// Sends a gift card notification
@@ -365,8 +364,7 @@ namespace Grand.Services.Messages
         /// <param name="vatAddress">Received VAT address</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendNewVatSubmittedStoreOwnerNotification(Customer customer,
-            string vatName, string vatAddress, string languageId);
+        int SendNewVatSubmittedStoreOwnerNotification(Customer customer, string vatName, string vatAddress, string languageId);
 
         /// <summary>
         /// Sends a blog comment notification message to a store owner
@@ -392,17 +390,29 @@ namespace Grand.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendBackInStockNotification(BackInStockSubscription subscription, string languageId);
 
-        /// <summary>
-        /// Sends a test email
-        /// </summary>
-        /// <param name="messageTemplateId">Message template identifier</param>
-        /// <param name="sendToEmail">Send to email</param>
-        /// <param name="tokens">Tokens</param>
-        /// <param name="languageId">Message language identifier</param>
-        /// <returns>Queued email identifier</returns>
-        int SendTestEmail(string messageTemplateId, string sendToEmail,
-            List<Token> tokens, string languageId);
 
+        /// <summary>
+        /// Sends "contact us" message
+        /// </summary>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="senderEmail">Sender email</param>
+        /// <param name="senderName">Sender name</param>
+        /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
+        /// <param name="body">Email body</param>
+        /// <returns>Queued email identifier</returns>
+        int SendContactUsMessage(Customer customer, string languageId, string senderEmail, string senderName, string subject, string body);
+
+        /// <summary>
+        /// Sends "contact vendor" message
+        /// </summary>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <param name="senderEmail">Sender email</param>
+        /// <param name="senderName">Sender name</param>
+        /// <param name="subject">Email subject. Pass null if you want a message template subject to be used.</param>
+        /// <param name="body">Email body</param>
+        /// <returns>Queued email identifier</returns>
+        int SendContactVendorMessage(Customer customer, Vendor vendor, string languageId, string senderEmail, string senderName, string subject, string body);
 
         /// <summary>
         /// Sends a customer action event - Add to cart notification to a customer
@@ -412,8 +422,7 @@ namespace Grand.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, 
-            string languageId, Customer customer);
+        int SendCustomerActionEvent_AddToCart_Notification(CustomerAction action, ShoppingCartItem cartItem, string languageId, Customer customer);
 
 
         /// <summary>
@@ -434,6 +443,41 @@ namespace Grand.Services.Messages
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendCustomerActionEvent_Notification(CustomerAction action, string languageId, Customer customer);
+
+        /// <summary>
+        /// Send notification
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        /// <param name="emailAccount">Email account</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="tokens">Tokens</param>
+        /// <param name="toEmailAddress">Recipient email address</param>
+        /// <param name="toName">Recipient name</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name</param>
+        /// <param name="replyToEmailAddress">"Reply to" email</param>
+        /// <param name="replyToName">"Reply to" name</param>
+        /// <param name="fromEmail">Sender email. If specified, then it overrides passed "emailAccount" details</param>
+        /// <param name="fromName">Sender name. If specified, then it overrides passed "emailAccount" details</param>
+        /// <param name="subject">Subject. If specified, then it overrides subject of a message template</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNotification(MessageTemplate messageTemplate,
+            EmailAccount emailAccount, string languageId, IEnumerable<Token> tokens,
+            string toEmailAddress, string toName,
+            string attachmentFilePath = null, string attachmentFileName = null,
+            string replyToEmailAddress = null, string replyToName = null,
+            string fromEmail = null, string fromName = null, string subject = null);
+
+        /// <summary>
+        /// Sends a test email
+        /// </summary>
+        /// <param name="messageTemplateId">Message template identifier</param>
+        /// <param name="sendToEmail">Send to email</param>
+        /// <param name="tokens">Tokens</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendTestEmail(string messageTemplateId, string sendToEmail, List<Token> tokens, string languageId);
+
 
         #endregion
     }

@@ -782,8 +782,6 @@ namespace Grand.Services.Messages
             }
             tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
             
-
-
             tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId, vendorId), true));
 
             var language = _languageService.GetLanguageById(languageId);
@@ -1249,6 +1247,9 @@ namespace Grand.Services.Messages
                 "%Customer.CustomAttributes%",
                 "%Customer.PasswordRecoveryURL%", 
                 "%Customer.AccountActivationURL%",
+                "%ContactUs.SenderEmail%",
+                "%ContactUs.SenderName%",
+                "%ContactUs.Body%",
                 "%Vendor.Name%",
                 "%Vendor.Email%",
                 "%Wishlist.URLForCustomer%", 
