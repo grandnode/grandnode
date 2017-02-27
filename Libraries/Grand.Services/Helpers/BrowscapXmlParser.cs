@@ -20,8 +20,8 @@ namespace Grand.Services.Helpers
 
         public BrowscapXmlHelper(string filePath)
         {
-            _crawlerUserAgents = new List<string>();
             _crawlerUserAgentsRegexp = new List<string>();
+            _crawlerUserAgents = new List<string>();
             _notCrawlerUserAgents = new List<string>();
 
             Initialize(filePath);
@@ -32,11 +32,14 @@ namespace Grand.Services.Helpers
             using (var sr = new StreamReader(filePath))
             {
                 var browsercapItems = XDocument.Load(sr).Root.Return(x => x.Element("browsercapitems"), null);
+
                 if (browsercapItems == null)
                     throw new Exception("Incorrect file format");
 
                 _crawlerUserAgentsRegexp.AddRange(browsercapItems.Elements("browscapitem")
+                    //only crawlers
                     .Where(IsBrowscapItemIsCrawler)
+                    //get only user agent names
                     .Select(e => e.Attribute("name"))
                     .Where(e => e != null && !string.IsNullOrEmpty(e.Value))
                     .Select(e => e.Value)
@@ -47,6 +50,7 @@ namespace Grand.Services.Helpers
         private static bool IsBrowscapItemIsCrawler(XElement browscapItem)
         {
             var el = browscapItem.Elements("item").FirstOrDefault(e => e.Attribute("name").Return(a => a.Value, "") == "Crawler");
+
             return el != null && el.Attribute("value").Return(a => a.Value.ToLower() == "true", false);
         }
 
@@ -61,7 +65,7 @@ namespace Grand.Services.Helpers
         /// Determines whether a user agent is a crawler
         /// </summary>
         /// <param name="userAgent">User agent string</param>
-        /// <returns>True if user agent is a crawler, otherwise false</returns>
+        /// <returns>True if user agent is a crawler, otherwise - false</returns>
         public bool IsCrawler(string userAgent)
         {
             if (_crawlerUserAgents.Any(p => p == userAgent))

@@ -39,6 +39,7 @@ namespace Grand.Services.Helpers
             if (String.IsNullOrEmpty(_config.UserAgentStringsPath))
                 return null;
 
+            //prevent multi loading data
             lock (_locker)
             {
                 //data can be loaded while we waited
@@ -63,6 +64,7 @@ namespace Grand.Services.Helpers
                 return false;
 
             //we put required logic in try-catch block
+            //more info: http://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
             try
             {
                 var bowscapXmlHelper = GetBrowscapXmlHelper();

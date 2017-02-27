@@ -20,79 +20,32 @@ namespace Grand.Core.Configuration
         public object Create(object parent, object configContext, XmlNode section)
         {
             var config = new GrandConfig();
-            
+
             var startupNode = section.SelectSingleNode("Startup");
-            if (startupNode != null && startupNode.Attributes != null)
-            {
-                var attribute = startupNode.Attributes["IgnoreStartupTasks"];
-                if (attribute != null)
-                    config.IgnoreStartupTasks = Convert.ToBoolean(attribute.Value);
-            }
+            config.IgnoreStartupTasks = GetBool(startupNode, "IgnoreStartupTasks");
 
             var redisCachingNode = section.SelectSingleNode("RedisCaching");
-            if (redisCachingNode != null && redisCachingNode.Attributes != null)
-            {
-                var enabledAttribute = redisCachingNode.Attributes["Enabled"];
-                if (enabledAttribute != null)
-                    config.RedisCachingEnabled = Convert.ToBoolean(enabledAttribute.Value);
-
-                var connectionStringAttribute = redisCachingNode.Attributes["ConnectionString"];
-                if (connectionStringAttribute != null)
-                    config.RedisCachingConnectionString = connectionStringAttribute.Value;
-            }
+            config.RedisCachingEnabled = GetBool(redisCachingNode, "Enabled");
+            config.RedisCachingConnectionString = GetString(redisCachingNode, "ConnectionString");
 
             var userAgentStringsNode = section.SelectSingleNode("UserAgentStrings");
-            if (userAgentStringsNode != null && userAgentStringsNode.Attributes != null)
-            {
-                var attribute = userAgentStringsNode.Attributes["databasePath"];
-                if (attribute != null)
-                    config.UserAgentStringsPath = attribute.Value;
-            }
+            config.UserAgentStringsPath = GetString(userAgentStringsNode, "databasePath");
+            config.CrawlerOnlyUserAgentStringsPath = GetString(userAgentStringsNode, "crawlersOnlyDatabasePath");
 
             var webFarmsNode = section.SelectSingleNode("WebFarms");
-            if (webFarmsNode != null && webFarmsNode.Attributes != null)
-            {
-                var multipleInstancesEnabledAttribute = webFarmsNode.Attributes["MultipleInstancesEnabled"];
-                if (multipleInstancesEnabledAttribute != null)
-                    config.MultipleInstancesEnabled = Convert.ToBoolean(multipleInstancesEnabledAttribute.Value);
-
-                var runOnAzureWebApps = webFarmsNode.Attributes["RunOnAzureWebApps"];
-                if (runOnAzureWebApps != null)
-                    config.RunOnAzureWebApps = Convert.ToBoolean(runOnAzureWebApps.Value);
-            }
+            config.MultipleInstancesEnabled = GetBool(webFarmsNode, "MultipleInstancesEnabled");
+            config.RunOnAzureWebApps = GetBool(webFarmsNode, "RunOnAzureWebApps");
 
             var azureBlobStorageNode = section.SelectSingleNode("AzureBlobStorage");
-            if (azureBlobStorageNode != null && azureBlobStorageNode.Attributes != null)
-            {
-                var azureConnectionStringAttribute = azureBlobStorageNode.Attributes["ConnectionString"];
-                if (azureConnectionStringAttribute != null)
-                    config.AzureBlobStorageConnectionString = azureConnectionStringAttribute.Value;
-
-                var azureContainerNameAttribute = azureBlobStorageNode.Attributes["ContainerName"];
-                if (azureContainerNameAttribute != null)
-                    config.AzureBlobStorageContainerName = azureContainerNameAttribute.Value;
-
-                var azureEndPointAttribute = azureBlobStorageNode.Attributes["EndPoint"];
-                if (azureEndPointAttribute != null)
-                    config.AzureBlobStorageEndPoint = azureEndPointAttribute.Value;
-
-            }
+            config.AzureBlobStorageConnectionString = GetString(azureBlobStorageNode, "ConnectionString");
+            config.AzureBlobStorageContainerName = GetString(azureBlobStorageNode, "ContainerName");
+            config.AzureBlobStorageEndPoint = GetString(azureBlobStorageNode, "EndPoint");
 
             var installationNode = section.SelectSingleNode("Installation");
-            if (installationNode != null && installationNode.Attributes != null)
-            {
-                var disableSampleDataDuringInstallationAttribute = installationNode.Attributes["DisableSampleDataDuringInstallation"];
-                if (disableSampleDataDuringInstallationAttribute != null)
-                    config.DisableSampleDataDuringInstallation = Convert.ToBoolean(disableSampleDataDuringInstallationAttribute.Value);
+            config.DisableSampleDataDuringInstallation = GetBool(installationNode, "DisableSampleDataDuringInstallation");
+            config.UseFastInstallationService = GetBool(installationNode, "UseFastInstallationService");
+            config.PluginsIgnoredDuringInstallation = GetString(installationNode, "PluginsIgnoredDuringInstallation");
 
-                var useFastInstallationServiceAttribute = installationNode.Attributes["UseFastInstallationService"];
-                if (useFastInstallationServiceAttribute != null)
-                    config.UseFastInstallationService = Convert.ToBoolean(useFastInstallationServiceAttribute.Value);
-
-                var pluginsIgnoredDuringInstallationAttribute = installationNode.Attributes["PluginsIgnoredDuringInstallation"];
-                if (pluginsIgnoredDuringInstallationAttribute != null)
-                    config.PluginsIgnoredDuringInstallation = pluginsIgnoredDuringInstallationAttribute.Value;
-            }
             return config;
         }
 
@@ -106,6 +59,7 @@ namespace Grand.Core.Configuration
         /// </summary>
         public string UserAgentStringsPath { get; private set; }
 
+        public string CrawlerOnlyUserAgentStringsPath { get; private set; }
         /// <summary>
         /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
         /// </summary>
@@ -153,5 +107,23 @@ namespace Grand.Core.Configuration
         /// A list of plugins ignored during installation
         /// </summary>
         public string PluginsIgnoredDuringInstallation { get; private set; }
+
+        private string GetString(XmlNode node, string attrName)
+        {
+            return SetByXElement<string>(node, attrName, Convert.ToString);
+        }
+        private bool GetBool(XmlNode node, string attrName)
+        {
+            return SetByXElement<bool>(node, attrName, Convert.ToBoolean);
+        }
+
+        private T SetByXElement<T>(XmlNode node, string attrName, Func<string, T> converter)
+        {
+            if (node == null || node.Attributes == null) return default(T);
+            var attr = node.Attributes[attrName];
+            if (attr == null) return default(T);
+            var attrVal = attr.Value;
+            return converter(attrVal);
+        }
     }
 }
