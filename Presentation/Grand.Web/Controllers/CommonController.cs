@@ -709,16 +709,16 @@ namespace Grand.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
         [StoreClosed(true)]
-        public virtual ActionResult SitemapXml()
+        public virtual ActionResult SitemapXml(int? id)
         {
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY,
+            string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, id,
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(this.Url));
+            var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(this.Url, id));
             return Content(siteMap, "text/xml");
         }
 

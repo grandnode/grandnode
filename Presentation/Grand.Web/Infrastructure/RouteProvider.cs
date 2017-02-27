@@ -83,6 +83,11 @@ namespace Grand.Web.Infrastructure
                             "sitemap",
                             new { controller = "Common", action = "Sitemap" },
                             new[] { "Grand.Web.Controllers" });
+            routes.MapLocalizedRoute("sitemap-indexed.xml",
+                            "sitemap-{Id}.xml",
+                            new { controller = "Common", action = "SitemapXml" },
+                            new { Id = @"\d+" },
+                            new[] { "Grand.Web.Controllers" });
             //interactive form
             routes.MapLocalizedRoute("PopupInteractiveForm",
                             "popupinteractiveform",
