@@ -329,6 +329,16 @@ namespace Grand.Web.Controllers
             });
         }
 
+
+        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels()
+        {
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_ALL_MODEL_KEY,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            return _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(""));
+        }
+
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
@@ -337,8 +347,8 @@ namespace Grand.Web.Controllers
         /// <param name="allCategories">All available categories; pass null to load them internally</param>
         /// <returns>Category models</returns>
         [NonAction]
-        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(string rootCategoryId,
-            bool loadSubCategories = true,IList<Category> allCategories = null)
+        protected virtual List<CategorySimpleModel> PrepareCategorySimpleModels(string rootCategoryId,
+            bool loadSubCategories = true, IList<Category> allCategories = null)
         {
             var result = new List<CategorySimpleModel>();
 
@@ -633,13 +643,7 @@ namespace Grand.Web.Controllers
                 if (productCategories.Any())
                     activeCategoryId = productCategories.FirstOrDefault().CategoryId;
             }
-
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels("").ToList());
-
+            var cachedModel = PrepareCategorySimpleModels("");
             var model = new CategoryNavigationModel
             {
                 CurrentCategoryId = activeCategoryId,
@@ -653,12 +657,7 @@ namespace Grand.Web.Controllers
         public virtual ActionResult TopMenu()
         {
             //categories
-            string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY,
-                _workContext.WorkingLanguage.Id,
-                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id);
-            var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () => PrepareCategorySimpleModels(""));
-
+            var cachedCategoriesModel = PrepareCategorySimpleModels("");
             //top menu topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id, 
