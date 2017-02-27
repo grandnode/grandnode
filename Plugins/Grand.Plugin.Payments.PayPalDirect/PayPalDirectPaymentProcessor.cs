@@ -1031,7 +1031,7 @@ namespace Grand.Plugin.Payments.PayPalDirect
         {
             actionName = "Configure";
             controllerName = "PaymentPayPalDirect";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -1044,7 +1044,7 @@ namespace Grand.Plugin.Payments.PayPalDirect
         {
             actionName = "PaymentInfo";
             controllerName = "PaymentPayPalDirect";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
         }
 
         /// <summary>
