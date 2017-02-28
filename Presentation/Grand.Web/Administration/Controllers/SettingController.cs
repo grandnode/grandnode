@@ -269,7 +269,7 @@ namespace Grand.Admin.Controllers
                 _settingService.SaveSetting(blogSettings, x => x.ShowHeaderRssUrl, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(blogSettings, x => x.ShowHeaderRssUrl, storeScope);
-            
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -3252,6 +3252,9 @@ namespace Grand.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("EditSettings", "", _localizationService.GetResource("ActivityLog.EditSettings"));
 
+            //now clear settings cache
+            _settingService.ClearCache();
+
             return new NullJsonResult();
         }
         [HttpPost]
@@ -3280,6 +3283,9 @@ namespace Grand.Admin.Controllers
             //activity log
             _customerActivityService.InsertActivity("AddNewSetting", "", _localizationService.GetResource("ActivityLog.AddNewSetting"), model.Name);
 
+            //now clear settings cache
+            _settingService.ClearCache();
+
             return new NullJsonResult();
         }
         [HttpPost]
@@ -3295,6 +3301,9 @@ namespace Grand.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("DeleteSetting", "", _localizationService.GetResource("ActivityLog.DeleteSetting"), setting.Name);
+
+            //now clear settings cache
+            _settingService.ClearCache();
 
             return new NullJsonResult();
         }

@@ -483,7 +483,7 @@ namespace Grand.Services.Installation
 
             #region Settings
 
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "CatalogSettings.LimitOfFeaturedProducts", Value = "30" });
+            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "catalogsettings.LimitOfFeaturedProducts", Value = "30" });
 
             #endregion
 
