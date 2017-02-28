@@ -767,4 +767,10 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Providers">
     <Value>Shipping providers</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsletterCategory">
+    <Value>Newsletter categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsletterCategory.hint">
+    <Value>Newsletter categories</Value>
+  </LocaleResource>
 </Language>

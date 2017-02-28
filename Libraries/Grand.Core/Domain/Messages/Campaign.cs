@@ -12,6 +12,7 @@ namespace Grand.Core.Domain.Messages
     {
         private ICollection<string> _customerTags;
         private ICollection<string> _customerRoles;
+        private ICollection<string> _newsletterCategories;
 
         /// <summary>
         /// Gets or sets the name
@@ -72,12 +73,20 @@ namespace Grand.Core.Domain.Messages
             protected set { _customerTags = value; }
         }
         /// <summary>
-        /// Gets or sets the customer tags
+        /// Gets or sets the customer roles
         /// </summary>
         public virtual ICollection<string> CustomerRoles
         {
             get { return _customerRoles ?? (_customerRoles = new List<string>()); }
             protected set { _customerRoles = value; }
+        }
+        /// <summary>
+        /// Gets or sets the newsletter categories
+        /// </summary>
+        public virtual ICollection<string> NewsletterCategories
+        {
+            get { return _newsletterCategories ?? (_newsletterCategories = new List<string>()); }
+            protected set { _newsletterCategories = value; }
         }
 
     }

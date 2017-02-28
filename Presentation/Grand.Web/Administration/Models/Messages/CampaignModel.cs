@@ -17,6 +17,7 @@ namespace Grand.Admin.Models.Messages
             this.AvailableStores = new List<SelectListItem>();
             this.AvailableCustomerTags = new List<SelectListItem>();
             this.CustomerTags = new List<string>();
+            this.NewsletterCategories = new List<string>();
             this.AvailableCustomerRoles = new List<SelectListItem>();
             this.CustomerRoles = new List<string>();
             this.AvailableEmailAccounts = new List<EmailAccountModel>();
@@ -77,6 +78,11 @@ namespace Grand.Admin.Models.Messages
         [UIHint("MultiSelect")]
         public IList<string> CustomerTags { get; set; }
 
+        [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.NewsletterCategory")]
+        [UIHint("MultiSelect")]
+        public IList<string> NewsletterCategories { get; set; }
+        [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.NewsletterCategory")]
+        public IList<SelectListItem> AvailableNewsletterCategories { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.Campaigns.Fields.CustomerRoles")]
         public IList<SelectListItem> AvailableCustomerRoles { get; set; }

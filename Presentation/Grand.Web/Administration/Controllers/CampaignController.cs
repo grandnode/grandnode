@@ -34,6 +34,7 @@ namespace Grand.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerTagService _customerTagService;
         private readonly IExportManager _exportManager;
+        private readonly INewsletterCategoryService _newsletterCategoryService;
 
         public CampaignController(ICampaignService campaignService,
             ICustomerService customerService,
@@ -47,7 +48,8 @@ namespace Grand.Admin.Controllers
             IStoreService storeService,
             IPermissionService permissionService,
             ICustomerTagService customerTagService,
-            IExportManager exportManager)
+            IExportManager exportManager,
+            INewsletterCategoryService newsletterCategoryService)
 		{
             this._campaignService = campaignService;
             this._customerService = customerService;
@@ -62,7 +64,7 @@ namespace Grand.Admin.Controllers
             this._permissionService = permissionService;
             this._customerTagService = customerTagService;
             this._exportManager = exportManager;
-
+            this._newsletterCategoryService = newsletterCategoryService;
         }
 
         [NonAction]
@@ -118,7 +120,14 @@ namespace Grand.Admin.Controllers
             model.AvailableCustomerRoles = _customerService.GetAllCustomerRoles().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.CustomerRoles.Contains(ct.Id) }).ToList();
             model.CustomerRoles = new List<string>();
         }
-
+        [NonAction]
+        protected virtual void PrepareNewsletterCategoriesModel(CampaignModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+            model.AvailableNewsletterCategories = _newsletterCategoryService.GetAllNewsletterCategory().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id, Selected = model.NewsletterCategories.Contains(ct.Id) }).ToList();
+            model.NewsletterCategories = new List<string>();
+        }
         [NonAction]
         protected virtual void PrepareEmailAccounts(CampaignModel model)
         {
@@ -233,6 +242,8 @@ namespace Grand.Admin.Controllers
             PrepareCustomerTagsModel(model);
             //Roles
             PrepareCustomerRolesModel(model);
+            //Newsletter categories
+            PrepareNewsletterCategoriesModel(model);
             //email
             PrepareEmailAccounts(model);
             return View(model);
@@ -260,6 +271,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Newsletter categories
+            PrepareNewsletterCategoriesModel(model);
             //Roles
             PrepareCustomerRolesModel(model);
             //email
@@ -284,6 +297,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Newsletter categories
+            PrepareNewsletterCategoriesModel(model);
             //Roles
             PrepareCustomerRolesModel(model);
             //email
@@ -317,6 +332,12 @@ namespace Grand.Admin.Controllers
                 {
                     campaign.CustomerTags.Add(item);
                 }
+                campaign.NewsletterCategories.Clear();
+                foreach (var item in model.NewsletterCategories)
+                {
+                    campaign.NewsletterCategories.Add(item);
+                }
+
                 _campaignService.UpdateCampaign(campaign);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
@@ -332,6 +353,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Newsletter categories
+            PrepareNewsletterCategoriesModel(model);
             //Roles
             PrepareCustomerRolesModel(model);
             //email
@@ -357,6 +380,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Newsletter categories
+            PrepareNewsletterCategoriesModel(model);
             //email
             PrepareEmailAccounts(model);
             //Roles
@@ -412,6 +437,8 @@ namespace Grand.Admin.Controllers
             PrepareStoresModel(model);
             //Tags
             PrepareCustomerTagsModel(model);
+            //Newsletter categories
+            PrepareNewsletterCategoriesModel(model);
             //email
             PrepareEmailAccounts(model);
             //Roles

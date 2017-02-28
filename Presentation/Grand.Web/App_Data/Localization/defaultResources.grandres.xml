@@ -11566,6 +11566,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Name.Required">
     <Value>Campaign name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsletterCategory">
+    <Value>Newsletter categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsletterCategory.hint">
+    <Value>Newsletter categories</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Store">
     <Value>Limited to store</Value>
   </LocaleResource>

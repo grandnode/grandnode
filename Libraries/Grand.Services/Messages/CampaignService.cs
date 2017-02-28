@@ -160,7 +160,7 @@ namespace Grand.Services.Messages
                 campaign.CustomerHasShoppingCartCondition != CampaignCondition.All || campaign.CustomerHasShoppingCartCondition != CampaignCondition.All ||
                 campaign.CustomerLastActivityDateFrom.HasValue || campaign.CustomerLastActivityDateTo.HasValue ||
                 campaign.CustomerLastPurchaseDateFrom.HasValue || campaign.CustomerLastPurchaseDateTo.HasValue ||
-                campaign.CustomerTags.Count > 0 || campaign.CustomerRoles.Count > 0)
+                campaign.CustomerTags.Count > 0 || campaign.CustomerRoles.Count > 0 || campaign.NewsletterCategories.Count > 0 )
             {
 
                 var query = from o in _newsLetterSubscriptionRepository.Table
@@ -174,6 +174,7 @@ namespace Grand.Services.Messages
                                 CreatedOnUtc = customers.CreatedOnUtc,
                                 CustomerTags = customers.CustomerTags,
                                 CustomerRoles = customers.CustomerRoles,
+                                NewsletterCategories = o.Categories,
                                 HasShoppingCartItems = customers.HasShoppingCartItems,
                                 IsHasOrders = customers.IsHasOrders,
                                 LastActivityDateUtc = customers.LastActivityDateUtc,
@@ -227,6 +228,15 @@ namespace Grand.Services.Messages
                         query = query.Where(x => x.CustomerRoles.Any(z=>z.Id == item));
                     }
                 }
+                //categories news
+                if (campaign.NewsletterCategories.Count > 0)
+                {
+                    foreach (var item in campaign.NewsletterCategories)
+                    {
+                        query = query.Where(x => x.NewsletterCategories.Contains(item));
+                    }
+                }
+
                 model = new PagedList<NewsLetterSubscription>(query.Select(x => new NewsLetterSubscription() { CustomerId = x.CustomerId, Email = x.Email, NewsLetterSubscriptionGuid = x.NewsLetterSubscriptionGuid }), pageIndex, pageSize);
             }
             else
@@ -256,6 +266,7 @@ namespace Grand.Services.Messages
             public bool HasShoppingCartItems { get; set; }
             public bool IsHasOrders { get; set; }
             public ICollection<string> CustomerTags { get; set; }
+            public ICollection<string> NewsletterCategories { get; set; }
             public ICollection<CustomerRole> CustomerRoles { get; set; }
             public Guid NewsLetterSubscriptionGuid { get; set; }
         }
