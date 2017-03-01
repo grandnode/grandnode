@@ -1120,6 +1120,8 @@ namespace Grand.Admin.Controllers
                     model.ShowOnHomePage = product.ShowOnHomePage;
                 }
                 var prevStockQuantity = product.GetTotalStockQuantity();
+                var prevMultiWarehouseStock = product.ProductWarehouseInventory.Select(i => new ProductWarehouseInventory() { WarehouseId = i.WarehouseId, StockQuantity = i.StockQuantity, ReservedQuantity = i.ReservedQuantity }).ToList();
+
                 string prevDownloadId = product.DownloadId;
                 string prevSampleDownloadId = product.SampleDownloadId;
 
@@ -1170,11 +1172,38 @@ namespace Grand.Admin.Controllers
                     product.BackorderMode == BackorderMode.NoBackorders &&
                     product.AllowBackInStockSubscriptions &&
                     product.GetTotalStockQuantity() > 0 &&
-                    prevStockQuantity <= 0 &&
+                    prevStockQuantity <= 0 && !product.UseMultipleWarehouses &&
                     product.Published)
                 {
-                    _backInStockSubscriptionService.SendNotificationsToSubscribers(product);
+                    _backInStockSubscriptionService.SendNotificationsToSubscribers(product, "");
                 }
+                if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    product.BackorderMode == BackorderMode.NoBackorders &&
+                    product.AllowBackInStockSubscriptions &&
+                    product.UseMultipleWarehouses &&
+                    product.Published)
+                {
+                    foreach(var prevstock in prevMultiWarehouseStock)
+                    {
+                        if(prevstock.StockQuantity - prevstock.ReservedQuantity <= 0)
+                        {
+                            var actualStock = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == prevstock.WarehouseId);
+                            if(actualStock!=null)
+                            {
+                                if(actualStock.StockQuantity - actualStock.ReservedQuantity > 0)
+                                    _backInStockSubscriptionService.SendNotificationsToSubscribers(product, prevstock.WarehouseId);
+                            }
+                        }
+                    }
+                    if(product.ProductWarehouseInventory.Sum(x=>x.StockQuantity - x.ReservedQuantity) > 0)
+                    {
+                        if(prevMultiWarehouseStock.Sum(x => x.StockQuantity - x.ReservedQuantity) <=0)
+                        {
+                            _backInStockSubscriptionService.SendNotificationsToSubscribers(product, "");
+                        }
+                    }
+                }
+
                 //delete an old "download" file (if deleted or updated)
                 if (!String.IsNullOrEmpty(prevDownloadId) && prevDownloadId != product.DownloadId)
                 {
@@ -3259,10 +3288,10 @@ namespace Grand.Admin.Controllers
                             product.BackorderMode == BackorderMode.NoBackorders &&
                             product.AllowBackInStockSubscriptions &&
                             product.GetTotalStockQuantity() > 0 &&
-                            prevStockQuantity <= 0 &&
+                            prevStockQuantity <= 0 && !product.UseMultipleWarehouses &&
                             product.Published)
                         {
-                            _backInStockSubscriptionService.SendNotificationsToSubscribers(product);
+                            _backInStockSubscriptionService.SendNotificationsToSubscribers(product, "");
                         }
                     }
                 }

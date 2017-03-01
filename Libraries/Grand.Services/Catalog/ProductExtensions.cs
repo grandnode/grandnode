@@ -80,7 +80,7 @@ namespace Grand.Services.Catalog
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <returns>The stock message</returns>
         public static string FormatStockMessage(this Product product, string attributesXml,
-            ILocalizationService localizationService, IProductAttributeParser productAttributeParser)
+            ILocalizationService localizationService, IProductAttributeParser productAttributeParser, IStoreContext storeContext)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -102,7 +102,7 @@ namespace Grand.Services.Catalog
                         if (!product.DisplayStockAvailability)
                             return stockMessage;
 
-                        var stockQuantity = product.GetTotalStockQuantity();
+                        var stockQuantity = product.GetTotalStockQuantity(warehouseId: storeContext.CurrentStore.DefaultWarehouseId);
                         if (stockQuantity > 0)
                         {
                             stockMessage = product.DisplayStockQuantity ?

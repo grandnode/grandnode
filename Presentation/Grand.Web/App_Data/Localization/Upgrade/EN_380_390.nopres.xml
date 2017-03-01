@@ -773,4 +773,10 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.NewsletterCategory.hint">
     <Value>Newsletter categories</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultWarehouse">
+    <Value>Default warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultWarehouse.Hint">
+    <Value>This property allows a store owner to specify a default warehouse for a store.</Value>
+  </LocaleResource>
 </Language>

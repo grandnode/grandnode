@@ -76,6 +76,7 @@ namespace Grand.Admin.Models.Orders
             public bool AllowToChooseWarehouse { get; set; }
             //used before a shipment is created
             public List<WarehouseInfo> AvailableWarehouses { get; set; }
+            public string WarehouseId { get; set; }
 
             #region Nested Classes
             public class WarehouseInfo : BaseNopModel

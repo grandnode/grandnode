@@ -33,7 +33,7 @@ namespace Grand.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(string productId,
+        IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(string productId, string warehouseId,
             string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
@@ -42,8 +42,9 @@ namespace Grand.Services.Catalog
         /// <param name="customerId">Customer id</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
         /// <returns>Subscriptions</returns>
-        BackInStockSubscription FindSubscription(string customerId, string productId, string storeId);
+        BackInStockSubscription FindSubscription(string customerId, string productId, string storeId, string warehouseId);
 
         /// <summary>
         /// Gets a subscription
@@ -69,6 +70,6 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Number of sent email</returns>
-        int SendNotificationsToSubscribers(Product product);
+        int SendNotificationsToSubscribers(Product product, string warehouse);
     }
 }

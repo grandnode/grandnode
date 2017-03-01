@@ -762,6 +762,7 @@ namespace Grand.Admin.Infrastructure.Mapper
                 //stores
                 cfg.CreateMap<Store, StoreModel>()
                     .ForMember(dest => dest.AvailableLanguages, mo => mo.Ignore())
+                    .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<StoreModel, Store>()

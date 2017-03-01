@@ -21,6 +21,11 @@ namespace Grand.Core.Domain.Catalog
         public string ProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the warehouse identifier
+        /// </summary>
+        public string WarehouseId { get; set; }
+
+        /// <summary>
         /// Gets or sets the customer identifier
         /// </summary>
         public string CustomerId { get; set; }

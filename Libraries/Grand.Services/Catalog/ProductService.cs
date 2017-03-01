@@ -1254,7 +1254,7 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="quantityToChange">Quantity to increase or descrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "")
+        public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string warehouseId = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1265,16 +1265,16 @@ namespace Grand.Services.Catalog
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
-                var prevStockQuantity = product.GetTotalStockQuantity();
+                var prevStockQuantity = product.GetTotalStockQuantity(warehouseId: warehouseId);
 
                 //update stock quantity
                 if (product.UseMultipleWarehouses)
                 {
                     //use multiple warehouses
                     if (quantityToChange < 0)
-                        ReserveInventory(product, quantityToChange);
+                        ReserveInventory(product, quantityToChange, warehouseId);
                     else
-                        UnblockReservedInventory(product, quantityToChange);
+                        UnblockReservedInventory(product, quantityToChange, warehouseId);
                 }
                 else
                 {
@@ -1285,7 +1285,7 @@ namespace Grand.Services.Catalog
                 }
 
                 //check if minimum quantity is reached
-                if (quantityToChange < 0 && product.MinStockQuantity >= product.GetTotalStockQuantity())
+                if (quantityToChange < 0 && product.MinStockQuantity >= product.GetTotalStockQuantity(warehouseId: warehouseId))
                 {
                     switch (product.LowStockActivity)
                     {
@@ -1332,7 +1332,7 @@ namespace Grand.Services.Catalog
                 //qty is increased. product is back in stock (minimum stock quantity is reached again)?
                 if (_catalogSettings.PublishBackProductWhenCancellingOrders)
                 {
-                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < product.GetTotalStockQuantity())
+                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < product.GetTotalStockQuantity(warehouseId: warehouseId))
                     {
                         switch (product.LowStockActivity)
                         {
@@ -1372,7 +1372,7 @@ namespace Grand.Services.Catalog
                 }
 
                 //send email notification
-                if (quantityToChange < 0 && product.GetTotalStockQuantity() < product.NotifyAdminForQuantityBelow)
+                if (quantityToChange < 0 && product.GetTotalStockQuantity(warehouseId: warehouseId) < product.NotifyAdminForQuantityBelow)
                 {
                     _workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
                 }
@@ -1406,7 +1406,7 @@ namespace Grand.Services.Catalog
                     var associatedProduct = GetProductById(attributeValue.AssociatedProductId);
                     if (associatedProduct != null)
                     {
-                        AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity);
+                        AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity, warehouseId);
                     }
                 }
             }
@@ -1418,7 +1418,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        public virtual void ReserveInventory(Product product, int quantity)
+        public virtual void ReserveInventory(Product product, int quantity, string warehouseId)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1437,7 +1437,7 @@ namespace Grand.Services.Catalog
 
             Action pass = () =>
             {
-                foreach (var item in productInventory)
+                foreach (var item in productInventory.Where(x=>x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
                 {
                     var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
                     item.ReservedQuantity += selectQty;
@@ -1477,7 +1477,7 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be positive</param>
-        public virtual void UnblockReservedInventory(Product product, int quantity)
+        public virtual void UnblockReservedInventory(Product product, int quantity, string warehouseId)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -1495,7 +1495,7 @@ namespace Grand.Services.Catalog
 
             var qty = quantity;
 
-            foreach (var item in productInventory)
+            foreach (var item in productInventory.Where(x => x.WarehouseId == warehouseId || string.IsNullOrEmpty(warehouseId)))
             {
                 var selectQty = Math.Min(item.ReservedQuantity, qty);
                 item.ReservedQuantity -= selectQty;

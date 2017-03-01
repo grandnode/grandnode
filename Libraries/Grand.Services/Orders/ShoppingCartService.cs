@@ -390,7 +390,7 @@ namespace Grand.Services.Orders
                         {
                             if (product.BackorderMode == BackorderMode.NoBackorders)
                             {
-                                int maximumQuantityCanBeAdded = product.GetTotalStockQuantity();
+                                int maximumQuantityCanBeAdded = product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId);
                                 if (maximumQuantityCanBeAdded < quantity)
                                 {
                                     if (maximumQuantityCanBeAdded <= 0)

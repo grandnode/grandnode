@@ -7574,6 +7574,12 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.Url.Required">
     <Value>Please provide a store URL.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultWarehouse">
+    <Value>Default warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultWarehouse.Hint">
+    <Value>This property allows a store owner to specify a default warehouse for a store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Updated">
     <Value>The store has been updated successfully.</Value>
   </LocaleResource>

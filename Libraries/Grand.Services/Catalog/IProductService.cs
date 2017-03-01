@@ -292,21 +292,21 @@ namespace Grand.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="quantityToChange">Quantity to increase or descrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        void AdjustInventory(Product product, int quantityToChange, string attributesXml = "");
+        void AdjustInventory(Product product, int quantityToChange, string attributesXml = "", string warehouseId = "");
 
         /// <summary>
         /// Reserve the given quantity in the warehouses.
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be negative</param>
-        void ReserveInventory(Product product, int quantity);
+        void ReserveInventory(Product product, int quantity, string warehouseId);
 
         /// <summary>
         /// Unblocks the given quantity reserved items in the warehouses
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity, must be positive</param>
-        void UnblockReservedInventory(Product product, int quantity);
+        void UnblockReservedInventory(Product product, int quantity, string warehouseId);
 
         /// <summary>
         /// Book the reserved quantity

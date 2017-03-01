@@ -1852,7 +1852,7 @@ namespace Grand.Web.Controllers
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
             //stock
-            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser);
+            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser, _storeContext);
 
             //conditional attributes
             var enabledAttributeMappingIds = new List<string>();

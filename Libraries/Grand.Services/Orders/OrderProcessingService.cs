@@ -76,6 +76,7 @@ namespace Grand.Services.Orders
         private readonly IPdfService _pdfService;
         private readonly IRewardPointsService _rewardPointsService;
         private readonly IReturnRequestService _returnRequestService;
+        private readonly IStoreContext _storeContext;
         private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -120,6 +121,7 @@ namespace Grand.Services.Orders
         /// <param name="affiliateService">Affiliate service</param>
         /// <param name="eventPublisher">Event published</param>
         /// <param name="pdfService">PDF service</param>
+        /// <param name="storeContext"></param>
         /// <param name="rewardPointsService">Reward points service</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
@@ -160,6 +162,7 @@ namespace Grand.Services.Orders
             IPdfService pdfService,
             IRewardPointsService rewardPointsService,
             IReturnRequestService returnRequestService,
+            IStoreContext storeContext,
             ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -200,6 +203,7 @@ namespace Grand.Services.Orders
             this._pdfService = pdfService;
             this._rewardPointsService = rewardPointsService;
             this._returnRequestService = returnRequestService;
+            this._storeContext = storeContext;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -1089,7 +1093,7 @@ namespace Grand.Services.Orders
 
                 //prepare order details
                 var details = PreparePlaceOrderDetails(processPaymentRequest);
-                    
+                var store = _storeContext.CurrentStore;   
                 #region Payment workflow
 
 
@@ -1274,13 +1278,29 @@ namespace Grand.Services.Orders
                             string attributeDescription = _productAttributeFormatter.FormatAttributes(product, sc.AttributesXml, details.Customer);
 
                             var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
-
+                            var warehouseId = store.DefaultWarehouseId;
+                            if(!product.UseMultipleWarehouses)
+                            {
+                                if(!string.IsNullOrEmpty(product.WarehouseId))
+                                {
+                                    warehouseId = product.WarehouseId;
+                                }
+                            }
+                            else
+                            {
+                                if (string.IsNullOrEmpty(warehouseId))
+                                {
+                                    if (product.ProductWarehouseInventory.Any())
+                                        warehouseId = product.ProductWarehouseInventory.FirstOrDefault().WarehouseId;
+                                }
+                            }
                             //save order item
                             var orderItem = new OrderItem
                             {
                                 OrderItemGuid = Guid.NewGuid(),
                                 ProductId = sc.ProductId,
                                 VendorId = product.VendorId,
+                                WarehouseId = warehouseId,
                                 UnitPriceInclTax = scUnitPriceInclTax,
                                 UnitPriceExclTax = scUnitPriceExclTax,
                                 PriceInclTax = scSubTotalInclTax,
@@ -1334,7 +1354,7 @@ namespace Grand.Services.Orders
                             }
 
                             //inventory
-                            _productService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml);
+                            _productService.AdjustInventory(product, -sc.Quantity, sc.AttributesXml, warehouseId);
                         }
 
                         //insert order
@@ -1359,6 +1379,7 @@ namespace Grand.Services.Orders
                         var initialOrderItems = details.InitialOrder.OrderItems;
                         foreach (var orderItem in initialOrderItems)
                         {
+
                             //save item
                             var newOrderItem = new OrderItem
                             {
@@ -1366,6 +1387,7 @@ namespace Grand.Services.Orders
                                 OrderItemGuid = Guid.NewGuid(),
                                 ProductId = orderItem.ProductId,
                                 VendorId = orderItem.VendorId,
+                                WarehouseId = orderItem.WarehouseId,
                                 UnitPriceInclTax = orderItem.UnitPriceInclTax,
                                 UnitPriceExclTax = orderItem.UnitPriceExclTax,
                                 PriceInclTax = orderItem.PriceInclTax,
@@ -1418,7 +1440,7 @@ namespace Grand.Services.Orders
                             }
 
                             //inventory
-                            _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml);
+                            _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
                         }
 
                         //insert order
@@ -1713,7 +1735,7 @@ namespace Grand.Services.Orders
                 {
                     var product = _productService.GetProductById(orderItem.ProductId);
                     if(product!=null)
-                        _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
+                        _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
                 }
 
             }
@@ -2113,7 +2135,7 @@ namespace Grand.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 var product = _productService.GetProductById(orderItem.ProductId);
-                _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
             }
 
             _eventPublisher.Publish(new OrderCancelledEvent(order));

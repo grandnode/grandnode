@@ -43,9 +43,14 @@ namespace Grand.Core.Domain.Stores
         public string Hosts { get; set; }
 
         /// <summary>
-        /// Gets or sets the identifier of the default language for this store; 0 is set when we use the default language display order
+        /// Gets or sets the identifier of the default language for this store; "" is set when we use the default language display order
         /// </summary>
         public string DefaultLanguageId { get; set; }
+
+        /// <summary>
+        /// ets or sets the identifier of the default waregouse for this store
+        /// </summary>
+        public string DefaultWarehouseId { get; set; }
 
         /// <summary>
         /// Gets or sets the display order

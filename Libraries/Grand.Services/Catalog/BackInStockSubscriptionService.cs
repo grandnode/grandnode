@@ -95,7 +95,7 @@ namespace Grand.Services.Catalog
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
-        public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(string productId,
+        public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(string productId, string warehouseId,
             string storeId = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _backInStockSubscriptionRepository.Table;
@@ -104,6 +104,9 @@ namespace Grand.Services.Catalog
             //store
             if (!String.IsNullOrEmpty(storeId))
                 query = query.Where(biss => biss.StoreId == storeId);
+            //warehouse
+            if (!String.IsNullOrEmpty(warehouseId))
+                query = query.Where(biss => biss.WarehouseId == warehouseId);
 
             query = query.OrderByDescending(biss => biss.CreatedOnUtc);
             return new PagedList<BackInStockSubscription>(query, pageIndex, pageSize);
@@ -116,13 +119,14 @@ namespace Grand.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <param name="storeId">Store identifier</param>
         /// <returns>Subscriptions</returns>
-        public virtual BackInStockSubscription FindSubscription(string customerId, string productId, string storeId)
+        public virtual BackInStockSubscription FindSubscription(string customerId, string productId, string storeId, string warehouseId)
         {
             var query = from biss in _backInStockSubscriptionRepository.Table
                         orderby biss.CreatedOnUtc descending
                         where biss.CustomerId == customerId &&
                               biss.ProductId == productId &&
-                              biss.StoreId == storeId
+                              biss.StoreId == storeId &&
+                              biss.WarehouseId == warehouseId
                         select biss;
 
             var subscription = query.FirstOrDefault();
@@ -175,13 +179,13 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Number of sent email</returns>
-        public virtual int SendNotificationsToSubscribers(Product product)
+        public virtual int SendNotificationsToSubscribers(Product product, string warehouse)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             int result = 0;
-            var subscriptions = GetAllSubscriptionsByProductId(product.Id);
+            var subscriptions = GetAllSubscriptionsByProductId(product.Id, warehouse);
             foreach (var subscription in subscriptions)
             {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(subscription.CustomerId);

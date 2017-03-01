@@ -1994,13 +1994,13 @@ namespace Grand.Admin.Controllers
                 orderItem.PriceExclTax = priceExclTax;
                 _orderService.UpdateOrder(order);
                 //adjust inventory
-                _productService.AdjustInventory(product, qtyDifference, orderItem.AttributesXml);
+                _productService.AdjustInventory(product, qtyDifference, orderItem.AttributesXml, orderItem.WarehouseId);
 
             }
             else
             {
                 //adjust inventory
-                _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
                 _orderService.DeleteOrderItem(orderItem);
             }
 
@@ -2080,7 +2080,7 @@ namespace Grand.Admin.Controllers
 
                 //adjust inventory
                 if(product!=null)
-                    _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml);
+                    _productService.AdjustInventory(product, orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
 
                 _orderService.DeleteOrderItem(orderItem);
                 order = _orderService.GetOrderById(id);
@@ -2624,7 +2624,7 @@ namespace Grand.Admin.Controllers
                 _orderService.UpdateOrder(order);
                 LogEditOrder(order.Id);
                 //adjust inventory
-                _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(product, -orderItem.Quantity, orderItem.AttributesXml, orderItem.WarehouseId);
 
                 //add a note
                 _orderService.InsertOrderNote(new OrderNote
@@ -3031,6 +3031,7 @@ namespace Grand.Admin.Controllers
                     OrderItemId = orderItem.Id,
                     ProductId = orderItem.ProductId,
                     ProductName = product.Name,
+                    WarehouseId = orderItem.WarehouseId,
                     Sku = product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     AttributeInfo = orderItem.AttributeDescription,
                     ShipSeparately = product.ShipSeparately,

@@ -12,6 +12,7 @@ using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Kendoui;
 using System.Collections.Generic;
 using Grand.Core.Domain.Localization;
+using Grand.Services.Shipping;
 
 namespace Grand.Admin.Controllers
 {
@@ -22,18 +23,21 @@ namespace Grand.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IShippingService _shippingService;
 
         public StoreController(IStoreService storeService,
             ISettingService settingService,
             ILanguageService languageService,
             ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IShippingService shippingService)
         {
             this._storeService = storeService;
             this._settingService = settingService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._shippingService = shippingService;
         }
 
         [NonAction]
@@ -58,7 +62,28 @@ namespace Grand.Admin.Controllers
                 });
             }
         }
+        [NonAction]
+        protected virtual void PrepareWarehouseModel(StoreModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
 
+            //templates
+            model.AvailableWarehouses.Add(new SelectListItem
+            {
+                Text = "---",
+                Value = ""
+            });
+            var warehouses = _shippingService.GetAllWarehouses();
+            foreach (var warehouse in warehouses)
+            {
+                model.AvailableWarehouses.Add(new SelectListItem
+                {
+                    Text = warehouse.Name,
+                    Value = warehouse.Id.ToString()
+                });
+            }
+        }
 
         [NonAction]
         protected virtual List<LocalizedProperty> UpdateAttributeLocales(Store store, StoreModel model)
@@ -113,6 +138,9 @@ namespace Grand.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             //languages
             PrepareLanguagesModel(model);
+            //warehouses
+            PrepareWarehouseModel(model);
+
             return View(model);
         }
 
@@ -136,6 +164,8 @@ namespace Grand.Admin.Controllers
             }
             //languages
             PrepareLanguagesModel(model);
+            //warehouses
+            PrepareWarehouseModel(model);
 
             //If we got this far, something failed, redisplay form
             return View(model);
@@ -154,6 +184,8 @@ namespace Grand.Admin.Controllers
             var model = store.ToModel();
             //languages
             PrepareLanguagesModel(model);
+            //warehouses
+            PrepareWarehouseModel(model);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -192,6 +224,9 @@ namespace Grand.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //languages
             PrepareLanguagesModel(model);
+            //warehouses
+            PrepareWarehouseModel(model);
+
             return View(model);
         }
 

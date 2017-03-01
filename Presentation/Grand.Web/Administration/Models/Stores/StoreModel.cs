@@ -15,6 +15,7 @@ namespace Grand.Admin.Models.Stores
         {
             Locales = new List<StoreLocalizedModel>();
             AvailableLanguages = new List<SelectListItem>();
+            AvailableWarehouses = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
@@ -62,6 +63,12 @@ namespace Grand.Admin.Models.Stores
         [AllowHtml]
         public string DefaultLanguageId { get; set; }
         public IList<SelectListItem> AvailableLanguages { get; set; }
+
+        //default warehouse
+        [GrandResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultWarehouse")]
+        [AllowHtml]
+        public string DefaultWarehouseId { get; set; }
+        public IList<SelectListItem> AvailableWarehouses { get; set; }
 
     }
 
