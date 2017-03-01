@@ -63,6 +63,7 @@
                             $('#ph-topic .page-body').html(data.Body);
                             $('#ph-password').hide();
                             $('#ph-topic').show();
+                            $.validator.unobtrusive.parse('#ph-topic');
                         }
                         else {
                             $('#password-error').text(data.Error);

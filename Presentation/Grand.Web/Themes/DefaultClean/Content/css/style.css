@@ -624,18 +624,23 @@ ul.opc .order-summary-content h5 {
     margin-right: 13px;
 }
 /* rating */
+.product-review-list .rating{
+    margin: 0;
+}
+
 .rating {
-    background: url(../images/rating1.png) repeat-x;
     width: 95px;
     height: 14px;
     margin: 10px 0px;
 }
 .rating div {
-    background: url(../images/rating2.png) repeat-x;
     height: 14px;
 }
 .rating-options {
     padding-top: 7px;
+}
+.rating .fa{
+    color: #f0ad4e;
 }
 .vote.up {
     margin-top: 24px;

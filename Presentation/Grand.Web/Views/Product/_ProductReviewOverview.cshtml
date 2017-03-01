@@ -13,11 +13,13 @@
     <div class="product-reviews-overview" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text> }>
         <div class="product-review-box pb-1">
             <div class="rating">
-                <div style="width: @(ratingPercent)%">
-                </div>
             </div>
         </div>
-
+        <script type="text/javascript">
+            $(document).ready(function () {
+                productStarProgress10('@(ratingPercent)', 'rating');
+            });
+        </script>
         @if (Model.TotalReviews > 0)
         {
             <div class="product-review-links">

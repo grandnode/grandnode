@@ -2971,8 +2971,6 @@
     <Content Include="Themes\DefaultClean\Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Themes\DefaultClean\Content\images\ie_warning.jpg" />
     <Content Include="Themes\DefaultClean\Content\images\logo.png" />
-    <Content Include="Themes\DefaultClean\Content\images\rating1.png" />
-    <Content Include="Themes\DefaultClean\Content\images\rating2.png" />
     <Content Include="Themes\DefaultClean\preview.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

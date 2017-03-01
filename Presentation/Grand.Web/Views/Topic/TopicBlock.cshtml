@@ -26,6 +26,7 @@
                             $('#ph-topic-@Model.Id .topic-block-body').html(data.Body);
                             $('#ph-password-@Model.Id').hide();
                             $('#ph-topic-@Model.Id').show();
+                            $.validator.unobtrusive.parse('#ph-topic-@Model.Id');
                         } else {
                             $('#password-error-@Model.Id').text(data.Error);
                             $('#ph-password-@Model.Id #password-@Model.Id').select().focus();

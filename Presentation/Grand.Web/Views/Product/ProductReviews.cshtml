@@ -12,9 +12,9 @@
         @Html.Widget("productreviews_page_top", Model.ProductId)
         @if (Model.AddProductReview.SuccessfullyAdded)
         {
-            <div class="result">
+            <h4 class="text-center p-3">
                 @Model.AddProductReview.Result
-            </div>
+            </h4>
         }
         else
         {
@@ -91,14 +91,16 @@
                     <h5><strong>@T("Reviews.ExistingReviews")</strong></h5>
                 @foreach (var review in Model.Items)
                 {
-                int ratingPercent = review.Rating * 20;
-
+                    int ratingPercent = review.Rating * 20;
                     <div class="card comment product-review-item pb-3">
                         <div class="card-header review-item-head">
-                            <div class="rating float-right">
-                                <div style="width: @(ratingPercent)%">
-                                </div>
+                            <div class="rating rating_@review.Id float-right">
                             </div>
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    productStarProgress5('@(ratingPercent)', 'rating_@review.Id');
+                                });
+                            </script>
                             <div class="review-info">
                                 <span class="user">
                                     <span>@T("Reviews.From"):</span>
