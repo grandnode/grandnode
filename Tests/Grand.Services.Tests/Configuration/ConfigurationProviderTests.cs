@@ -1,14 +1,18 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Grand.Core.Configuration;
 using Grand.Services.Configuration;
+using Grand.Core.Caching;
+
 namespace Grand.Services.Tests.Configuration {
     [TestClass()]
     public class ConfigurationProviderTests : ServiceTest {
         ISettingService _settingService;
+        private ICacheManager _cacheManager;
 
         [TestInitialize()]
         public void SetUp() {
-            _settingService = new ConfigFileSettingService(null, null, null);
+            _cacheManager = new NopNullCache();
+            _settingService = new ConfigFileSettingService(_cacheManager, null, null);
         }
 
         [TestMethod()]
