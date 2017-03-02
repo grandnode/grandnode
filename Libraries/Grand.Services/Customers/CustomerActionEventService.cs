@@ -670,7 +670,7 @@ namespace Grand.Services.Customers
                     string _style = string.Format("{0}", item.Style);
                     string _class = string.Format("{0} {1}", "form-control", item.Class);
                     string _value = item.DefaultValue;
-                    var textarea = string.Format("<textarea name=\"{0}\" class=\"{1}\" style=\"{2}\" value=\"{3}\" {4}>", item.SystemName, _class, _style, _value, item.IsRequired ? "required" : "");
+                    var textarea = string.Format("<textarea name=\"{0}\" class=\"{1}\" style=\"{2}\" {3}> {4} </textarea>", item.SystemName, _class, _style, item.IsRequired ? "required" : "", _value);
                     body = body.Replace(string.Format("%{0}%", item.SystemName), textarea);
                 }
                 if (item.AttributeControlType == FormControlType.Checkboxes)
