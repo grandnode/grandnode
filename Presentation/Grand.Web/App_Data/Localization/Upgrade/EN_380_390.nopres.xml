@@ -779,4 +779,7 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultWarehouse.Hint">
     <Value>This property allows a store owner to specify a default warehouse for a store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.GiftCard.View">
+    <Value>View</Value>
+  </LocaleResource>
 </Language>

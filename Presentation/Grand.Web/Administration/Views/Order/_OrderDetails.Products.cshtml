@@ -150,7 +150,7 @@
                                             @T("Admin.Orders.Products.GiftCards")<text>:</text>
                                             @for (int i = 0; i < item.PurchasedGiftCardIds.Count; i++)
                                             {
-                                                <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })">@item.PurchasedGiftCardIds[i]</a>
+                                                <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })">@T("Admin.Orders.Products.GiftCard.View")</a>
                                                 if (i != item.PurchasedGiftCardIds.Count - 1)
                                                 {
                                                     <text>,</text>

@@ -570,9 +570,6 @@
   <LocaleResource Name="Account.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>
-  <LocaleResource Name="Account.ShoppingCart">
-    <Value>Shopping Cart</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.YourAddress">
     <Value>Your Address</Value>
   </LocaleResource>
@@ -11122,6 +11119,9 @@
   <LocaleResource Name="Admin.Orders.Products.GiftCards">
     <Value>Gift card(s)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.GiftCard.View">
+    <Value>View</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Products.License">
     <Value>License file (optional):</Value>
   </LocaleResource>
@@ -16589,7 +16589,7 @@
     <Value>Vendor</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
-    <Value>Shopping Cart</Value>
+    <Value>Cart</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.AddToCart">
     <Value>Add to cart</Value>

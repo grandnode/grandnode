@@ -6,6 +6,7 @@
 
 <script>
     $(document).ready(function () {
+        $('#interactiveform-edit').show();
         $("#interactiveform-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -17,7 +18,7 @@
     });
 </script>
 
-<div id="interactiveform-edit">
+<div id="interactiveform-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Promotions.InteractiveForms.Info")

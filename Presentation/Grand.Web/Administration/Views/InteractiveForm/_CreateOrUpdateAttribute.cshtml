@@ -5,6 +5,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#attribute-edit').show();
         $("#attribute-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -16,7 +17,7 @@
     });
 </script>
 
-<div id="attribute-edit">
+<div id="attribute-edit" style="display:none">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
             @T("Admin.Promotions.InteractiveForms.Attribute.Info")
