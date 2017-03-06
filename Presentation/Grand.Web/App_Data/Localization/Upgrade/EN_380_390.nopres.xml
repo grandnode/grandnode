@@ -782,4 +782,7 @@
   <LocaleResource Name="Admin.Orders.Products.GiftCard.View">
     <Value>View</Value>
   </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.PleaseWait">
+    <Value>Please wait...</Value>
+  </LocaleResource>
 </Language>

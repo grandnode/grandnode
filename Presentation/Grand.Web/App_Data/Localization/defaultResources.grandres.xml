@@ -13636,6 +13636,9 @@
   <LocaleResource Name="BackInStockSubscriptions.PopupTitle">
     <Value>Receive an email when this arrives in stock</Value>
   </LocaleResource>
+  <LocaleResource Name="BackInStockSubscriptions.PleaseWait">
+    <Value>Please wait...</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.Tooltip">
     <Value>You'll receive a onetime e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter; you will only be e-mailed about this product!</Value>
   </LocaleResource>
