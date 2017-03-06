@@ -6,6 +6,10 @@ namespace Grand.Core.Domain.Catalog
     public enum DownloadActivationType
     {
         /// <summary>
+        /// Empty
+        /// </summary>
+        Unknown = 0,
+        /// <summary>
         /// When order is paid
         /// </summary>
         WhenOrderIsPaid = 1,
