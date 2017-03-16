@@ -72,8 +72,8 @@
       <HintPath>..\..\..\packages\FluentScheduler.5.1.3\lib\net40\FluentScheduler.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
+    <Reference Include="FluentValidation, Version=6.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\FluentValidation.6.4.1\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentValidation.Mvc, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
