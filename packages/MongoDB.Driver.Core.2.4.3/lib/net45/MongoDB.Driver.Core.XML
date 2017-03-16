@@ -11238,7 +11238,7 @@
     </member>
     <member name="P:MongoDB.Driver.Core.Operations.ReIndexOperation.WriteConcern">
       <summary>
-            Gets or sets the write concern.
+            Gets or sets the write concern (ignored and will eventually be deprecated and later removed).
             </summary>
     </member>
     <member name="T:MongoDB.Driver.Core.Operations.RenameCollectionOperation">
