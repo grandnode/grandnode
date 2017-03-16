@@ -15,7 +15,6 @@
                         <span itemprop="title">@T("Products.Breadcrumb.Top")</span>
                     </a>
                 </span>
-                @*<span class="delimiter">@breadcrumbDelimiter</span>*@
             </li>
             @foreach (var category in Model.CategoryBreadcrumb)
             {
@@ -25,7 +24,6 @@
                             <span itemprop="title">@category.Name</span>
                         </a>
                     </span>
-                    @*<span class="delimiter">@breadcrumbDelimiter</span>*@
                 </li>
             }
             <li class="breadcrumb-item active">
