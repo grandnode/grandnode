@@ -1,0 +1,713 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebMarkupMin.AspNet.Common</name>
+    </assembly>
+    <members>
+        <member name="T:WebMarkupMin.AspNet.Common.CommonHtmlMinificationManagerBase`1">
+            <summary>
+            Base class of common HTML minification manager
+            </summary>
+            <typeparam name="TSettings">The type of generic HTML settings</typeparam>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.CommonHtmlMinificationManagerBase`1.CssMinifierFactory">
+            <summary>
+            Gets or sets a CSS minifier factory
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.CommonHtmlMinificationManagerBase`1.JsMinifierFactory">
+            <summary>
+            Gets or sets a JS minifier factory
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.EncodingTokenConstants">
+            <summary>
+            Encoding token constants
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.HtmlMinificationManagerBase">
+            <summary>
+            Base class of HTML minification manager
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.HtmlMinificationManagerBase.#ctor">
+            <summary>
+            Constructs a instance of HTML minification manager
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.HtmlMinificationManagerBase.CreateMinifier">
+            <summary>
+            Creates a instance of HTML minifier
+            </summary>
+            <returns>Instance of HTML minifier</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.HttpCompressionManagerBase">
+            <summary>
+            Base class of HTTP compression manager
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.HttpCompressionManagerBase.CompressorFactories">
+            <summary>
+            Gets or sets a list of HTTP compressor factories
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.HttpCompressionManagerBase.SupportedMediaTypePredicate">
+            <summary>
+            Gets or sets a delegate that determines whether the media-type is supported
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.HttpCompressionManagerBase.CreateCompressor(System.String)">
+            <summary>
+            Creates a instance of compressor
+            </summary>
+            <param name="acceptEncoding">Value of the Accept-Encoding HTTP header</param>
+            <returns>Instance of compressor</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.HttpCompressionManagerExtensions">
+            <summary>
+            HTTP compression manager extensions
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.HttpCompressionManagerExtensions.IsSupportedMediaType(WebMarkupMin.AspNet.Common.IHttpCompressionManager,System.String)">
+            <summary>
+            Checks whether the media-type is supported
+            </summary>
+            <param name="compressionManager">HTTP compression manager</param>
+            <param name="mediaType">Media-type</param>
+            <returns>Result of check (true - supported; false - not supported)</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.ICommonHtmlMinificationManager`1">
+            <summary>
+            Defines a interface of common HTML minification manager
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.ICommonHtmlMinificationManager`1.CssMinifierFactory">
+            <summary>
+            Gets or sets a CSS minifier factory
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.ICommonHtmlMinificationManager`1.JsMinifierFactory">
+            <summary>
+            Gets or sets a JS minifier factory
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.IHtmlMinificationManager">
+            <summary>
+            Defines a interface of HTML minification manager
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.IHttpCompressionManager">
+            <summary>
+            Defines a interface of HTTP compression manager
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.IHttpCompressionManager.CompressorFactories">
+            <summary>
+            Gets or sets a list of HTTP compressor factories
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.IHttpCompressionManager.SupportedMediaTypePredicate">
+            <summary>
+            Gets or sets a delegate that determines whether the media-type is supported
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.IHttpCompressionManager.CreateCompressor(System.String)">
+            <summary>
+            Creates a instance of compressor
+            </summary>
+            <param name="acceptEncoding">Value of the Accept-Encoding HTTP header</param>
+            <returns>Instance of compressor</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.IMarkupMinificationManager">
+            <summary>
+            Defines a interface of markup minification manager
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.IMarkupMinificationManager.SupportedMediaTypes">
+            <summary>
+            Gets or sets a list of supported media-types
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.IMarkupMinificationManager.IncludedPages">
+            <summary>
+            Gets or sets a list of URL matchers, which is used to include pages to processing
+            by markup minifier
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.IMarkupMinificationManager.ExcludedPages">
+            <summary>
+            Gets or sets a list of URL matchers, which is used to exclude pages from processing
+            by markup minifier
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.IMarkupMinificationManager.PoweredByHttpHeader">
+            <summary>
+            Gets a <code>*-Minification-Powered-By</code> HTTP-header
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.IMarkupMinificationManager.GenerateStatistics">
+            <summary>
+            Gets or sets a flag for whether to allow generate minification statistics
+            (available through the logger)
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.IMarkupMinificationManager.CreateMinifier">
+            <summary>
+            Creates a instance of markup minifier
+            </summary>
+            <returns>Instance of markup minifier</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.IMarkupMinificationManager`1">
+            <summary>
+            Defines a interface of generic markup minification manager
+            </summary>
+            <typeparam name="TSettings">The type of markup minification settings</typeparam>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.IMarkupMinificationManager`1.MinificationSettings">
+            <summary>
+            Gets or sets a markup minification settings used to configure the HTML minifier
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.IXhtmlMinificationManager">
+            <summary>
+            Defines a interface of XHTML minification manager
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.IXmlMinificationManager">
+            <summary>
+            Defines a interface of XML minification manager
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1">
+            <summary>
+            Base class of markup minification manager
+            </summary>
+            <typeparam name="TSettings">The type of markup minification settings</typeparam>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1.Logger">
+            <summary>
+            Gets or sets a logger
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1.MinificationSettings">
+            <summary>
+            Gets or sets a markup minification settings used to configure the HTML minifier
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1.SupportedMediaTypes">
+            <summary>
+            Gets or sets a list of supported media-types
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1.IncludedPages">
+            <summary>
+            Gets or sets a list of URL matchers, which is used to include pages to processing
+            by markup minifier
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1.ExcludedPages">
+            <summary>
+            Gets or sets a list of URL matchers, which is used to exclude pages from processing
+            by markup minifier
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1.PoweredByHttpHeader">
+            <summary>
+            Gets a <code>*-Minification-Powered-By</code> HTTP-header
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1.GenerateStatistics">
+            <summary>
+            Gets or sets a flag for whether to allow generate minification statistics
+            (available through the logger)
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.MarkupMinificationManagerBase`1.CreateMinifier">
+            <summary>
+            Creates a instance of markup minifier
+            </summary>
+            <returns>Instance of markup minifier</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.MarkupMinificationManagerExtensions">
+            <summary>
+            Markup minification manager extensions
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.MarkupMinificationManagerExtensions.IsSupportedMediaType(WebMarkupMin.AspNet.Common.IMarkupMinificationManager,System.String)">
+            <summary>
+            Checks whether the media-type is supported
+            </summary>
+            <param name="minificationManager">Markup minification manager</param>
+            <param name="mediaType">Media-type</param>
+            <returns>Result of check (true - supported; false - not supported)</returns>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.MarkupMinificationManagerExtensions.IsProcessablePage(WebMarkupMin.AspNet.Common.IMarkupMinificationManager,System.String)">
+            <summary>
+            Сheck whether to allow processing of page
+            </summary>
+            <param name="minificationManager">Markup minification manager</param>
+            <param name="pageUrl">URL of page</param>
+            <returns>Result of check (true - allowed; false - disallowed)</returns>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.MarkupMinificationManagerExtensions.AppendPoweredByHttpHeader(WebMarkupMin.AspNet.Common.IMarkupMinificationManager,System.Action{System.String,System.String})">
+            <summary>
+            Appends a <code>*-Minification-Powered-By</code> HTTP-header
+            </summary>
+            <param name="minificationManager">Markup minification manager</param>
+            <param name="append">HTTP header appending delegate</param>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.MediaTypeConstants">
+            <summary>
+            Media-types constants
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.MediaTypeGroupConstants">
+            <summary>
+            Media-type groups constants
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBase">
+            <summary>
+            Base class of WebMarkupMin configuration
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBase.DisableMinification">
+            <summary>
+            Gets or sets a flag for whether to disable markup minification
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBase.DisableCompression">
+            <summary>
+            Gets or sets a flag for whether to disable HTTP compression of content
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBase.MaxResponseSize">
+            <summary>
+            Gets or sets a maximum size of the response (in bytes), in excess of which
+            disables the minification of markup
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBase.DisablePoweredByHttpHeaders">
+            <summary>
+            Gets or sets a flag for whether to disable the <code>*-Minification-Powered-By</code> HTTP headers
+            (e.g. <code>"X-HTML-Minification-Powered-By: WebMarkupMin"</code>)
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBase.#ctor">
+            <summary>
+            Constructs a instance of WebMarkupMin configuration
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBaseExtensions">
+            <summary>
+            WebMarkupMin configuration extensions
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBaseExtensions.IsAllowableResponseSize(WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBase,System.Int64)">
+            <summary>
+            Checks whether the response size is not exceeded the limit
+            </summary>
+            <param name="configuration">WebMarkupMin configuration</param>
+            <param name="responseSize">Response size in bytes</param>
+            <returns>Result of check (true - size is allowable; false - size is not allowable)</returns>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBaseExtensions.IsPoweredByHttpHeadersEnabled(WebMarkupMin.AspNet.Common.WebMarkupMinConfigurationBase)">
+            <summary>
+            Checks whether the adding of <code>*-Minification-Powered-By</code> HTTP headers in the response is enabled
+            </summary>
+            <param name="configuration">WebMarkupMin configuration</param>
+            <returns>Result of check (true - is enabled; false - is disabled)</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.XhtmlMinificationManagerBase">
+            <summary>
+            Base class of XHTML minification manager
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.XhtmlMinificationManagerBase.#ctor">
+            <summary>
+            Constructs a instance of XHTML minification manager
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.XhtmlMinificationManagerBase.CreateMinifier">
+            <summary>
+            Creates a instance of XHTML minifier
+            </summary>
+            <returns>Instance of XHTML minifier</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.XmlMinificationManagerBase">
+            <summary>
+            Base class of XML minification manager
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.XmlMinificationManagerBase.#ctor">
+            <summary>
+            Constructs a instance of XML minification manager
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.XmlMinificationManagerBase.CreateMinifier">
+            <summary>
+            Creates a instance of XML minifier
+            </summary>
+            <returns>Instance of XML minifier</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.CompressorExtensions">
+            <summary>
+            HTTP compressor extensions
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.CompressorExtensions.AppendHttpHeaders(WebMarkupMin.AspNet.Common.Compressors.ICompressor,System.Action{System.String,System.String})">
+            <summary>
+            Appends a HTTP headers
+            </summary>
+            <param name="compressor">HTTP compressor</param>
+            <param name="append">HTTP header appending delegate</param>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressionSettings">
+            <summary>
+            Deflate compression settings
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressionSettings.Level">
+            <summary>
+            Gets or sets a compression level
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressionSettings.#ctor">
+            <summary>
+            Constructs an instance of the deflate compression settings
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressor">
+            <summary>
+            Deflate compressor
+            </summary>
+        </member>
+        <member name="F:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressor._settings">
+            <summary>
+            Deflate compression settings
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressor.EncodingToken">
+            <summary>
+            Gets a encoding token
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressor.#ctor">
+            <summary>
+            Constructs an instance of the deflate compressor
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressor.#ctor(WebMarkupMin.AspNet.Common.Compressors.DeflateCompressionSettings)">
+            <summary>
+            Constructs an instance of the deflate compressor
+            </summary>
+            <param name="settings">Deflate compression settings</param>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressor.Compress(System.IO.Stream)">
+            <summary>
+            Compress a stream by deflate algorithm
+            </summary>
+            <param name="stream">The stream</param>
+            <returns>The compressed stream</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressorFactory">
+            <summary>
+            Deflate compressor factory
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressorFactory.CompressionSettings">
+            <summary>
+            Gets or sets a compression settings used to configure the deflate compressor
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressorFactory.EncodingToken">
+            <summary>
+            Gets a encoding token
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressorFactory.#ctor">
+            <summary>
+            Constructs an instance of the deflate compressor factory
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressorFactory.#ctor(WebMarkupMin.AspNet.Common.Compressors.DeflateCompressionSettings)">
+            <summary>
+            Constructs an instance of the deflate compressor factory
+            </summary>
+            <param name="settings">Compression settings used to configure the deflate compressor</param>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.DeflateCompressorFactory.CreateCompressor">
+            <summary>
+            Creates a instance of deflate compressor
+            </summary>
+            <returns>Instance of deflate compressor</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.GZipCompressionSettings">
+            <summary>
+            GZip compression settings
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.GZipCompressionSettings.Level">
+            <summary>
+            Gets or sets a compression level
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.GZipCompressionSettings.#ctor">
+            <summary>
+            Constructs an instance of the GZip compression settings
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.GZipCompressor">
+            <summary>
+            GZip compressor
+            </summary>
+        </member>
+        <member name="F:WebMarkupMin.AspNet.Common.Compressors.GZipCompressor._settings">
+            <summary>
+            GZip compression settings
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.GZipCompressor.EncodingToken">
+            <summary>
+            Gets a encoding token
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.GZipCompressor.#ctor">
+            <summary>
+            Constructs an instance of the GZip compressor
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.GZipCompressor.#ctor(WebMarkupMin.AspNet.Common.Compressors.GZipCompressionSettings)">
+            <summary>
+            Constructs an instance of the GZip compressor
+            </summary>
+            <param name="settings">GZip compression settings</param>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.GZipCompressor.Compress(System.IO.Stream)">
+            <summary>
+            Compress a stream by GZip algorithm
+            </summary>
+            <param name="stream">The stream</param>
+            <returns>The compressed stream</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.GZipCompressorFactory">
+            <summary>
+            GZip compressor factory
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.GZipCompressorFactory.CompressionSettings">
+            <summary>
+            Gets or sets a compression settings used to configure the GZip compressor
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.GZipCompressorFactory.EncodingToken">
+            <summary>
+            Gets a encoding token
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.GZipCompressorFactory.#ctor">
+            <summary>
+            Constructs an instance of the GZip compressor factory
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.GZipCompressorFactory.#ctor(WebMarkupMin.AspNet.Common.Compressors.GZipCompressionSettings)">
+            <summary>
+            Constructs an instance of the GZip compressor factory
+            </summary>
+            <param name="settings">Compression settings used to configure the GZip compressor</param>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.GZipCompressorFactory.CreateCompressor">
+            <summary>
+            Creates a instance of GZip compressor
+            </summary>
+            <returns>Instance of GZip compressor</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.ICompressor">
+            <summary>
+            Defines a interface of HTTP compressor
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.ICompressor.EncodingToken">
+            <summary>
+            Gets a encoding token
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.ICompressor.Compress(System.IO.Stream)">
+            <summary>
+            Compress a stream
+            </summary>
+            <param name="stream">The stream</param>
+            <returns>The compressed stream</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.ICompressorFactory">
+            <summary>
+            Defines a interface of HTTP compressor factory
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.ICompressorFactory.EncodingToken">
+            <summary>
+            Gets a encoding token
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.ICompressorFactory.CreateCompressor">
+            <summary>
+            Creates a instance of HTTP compressor
+            </summary>
+            <returns>Instance of HTTP compressor</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Compressors.NullCompressor">
+            <summary>
+            Null compressor
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Compressors.NullCompressor.EncodingToken">
+            <summary>
+            Gets a encoding token
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Compressors.NullCompressor.Compress(System.IO.Stream)">
+            <summary>
+            Do not performs operations with the stream
+            </summary>
+            <param name="stream">The stream</param>
+            <returns>The stream</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Helpers.MediaTypeHelpers">
+            <summary>
+            Media-type helpers
+            </summary>
+        </member>
+        <member name="F:WebMarkupMin.AspNet.Common.Helpers.MediaTypeHelpers._remainingTextBasedMediaTypes">
+            <summary>
+            Set of remaining text-based media-types
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.Helpers.MediaTypeHelpers.IsTextBasedMediaType(System.String)">
+            <summary>
+            Checks whether the media-type is text-based
+            </summary>
+            <param name="mediaType">Media-type</param>
+            <returns>Result of check (true - is text-based; false - is not text-based)</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.Resources.Strings">
+            <summary>
+            A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Resources.Strings.ResourceManager">
+            <summary>
+            Returns a cached ResourceManager instance used by this class
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Resources.Strings.Culture">
+            <summary>
+            Overrides a current thread's CurrentUICulture property for all
+            resource lookups using this strongly typed resource class
+            </summary>
+        </member>
+        <member name="P:WebMarkupMin.AspNet.Common.Resources.Strings.MarkupMinificationIsNotApplicableToEncodedContent">
+            <summary>
+            Looks up a localized string similar to "Can not apply markup minification to text content, that was encoded in the '{0}' format."
+            </summary>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.UrlMatchers.ExactUrlMatcher">
+            <summary>
+            Exact URL matcher
+            </summary>
+        </member>
+        <member name="F:WebMarkupMin.AspNet.Common.UrlMatchers.ExactUrlMatcher._exemplaryUrl">
+            <summary>
+            Exemplary URL
+            </summary>
+        </member>
+        <member name="F:WebMarkupMin.AspNet.Common.UrlMatchers.ExactUrlMatcher._comparisonType">
+            <summary>
+            String comparison type
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.UrlMatchers.ExactUrlMatcher.#ctor(System.String,System.Boolean)">
+            <summary>
+            Constructs a instance of exact URL matcher
+            </summary>
+            <param name="pattern">Exemplary URL</param>
+            <param name="caseSensitive">Flag for whether pattern matching for the condition
+            should be case-sensitive</param>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.UrlMatchers.ExactUrlMatcher.IsMatch(System.String)">
+            <summary>
+            Indicates whether the matching rule finds a match in the specified URL
+            </summary>
+            <param name="url">URL</param>
+            <returns>true if the matching rule finds a match; otherwise, false.</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.UrlMatchers.IUrlMatcher">
+            <summary>
+            Defines a interface of URL matcher
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.UrlMatchers.IUrlMatcher.IsMatch(System.String)">
+            <summary>
+            Indicates whether the matching rule finds a match in the specified URL
+            </summary>
+            <param name="url">URL</param>
+            <returns>true if the matching rule finds a match; otherwise, false.</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.UrlMatchers.RegexUrlMatcher">
+            <summary>
+            Regular expression URL matcher
+            </summary>
+        </member>
+        <member name="F:WebMarkupMin.AspNet.Common.UrlMatchers.RegexUrlMatcher._regex">
+            <summary>
+            Regular expression
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.UrlMatchers.RegexUrlMatcher.#ctor(System.String,System.Boolean)">
+            <summary>
+            Constructs a instance of regular expression URL matcher
+            </summary>
+            <param name="pattern">Regular expression pattern (ECMAScript standard compliant)</param>
+            <param name="caseSensitive">Flag for whether pattern matching for the condition
+            should be case-sensitive</param>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.UrlMatchers.RegexUrlMatcher.IsMatch(System.String)">
+            <summary>
+            Indicates whether the matching rule finds a match in the specified URL
+            </summary>
+            <param name="url">URL</param>
+            <returns>true if the matching rule finds a match; otherwise, false.</returns>
+        </member>
+        <member name="T:WebMarkupMin.AspNet.Common.UrlMatchers.WildcardUrlMatcher">
+            <summary>
+            Wildcard URL matcher
+            </summary>
+        </member>
+        <member name="F:WebMarkupMin.AspNet.Common.UrlMatchers.WildcardUrlMatcher._regex">
+            <summary>
+            Regular expression
+            </summary>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.UrlMatchers.WildcardUrlMatcher.#ctor(System.String,System.Boolean)">
+            <summary>
+            Constructs a instance of wildcard URL matcher
+            </summary>
+            <param name="pattern">Pattern with wildcards</param>
+            <param name="caseSensitive">Flag for whether pattern matching for the condition
+            should be case-sensitive</param>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.UrlMatchers.WildcardUrlMatcher.WildcardPatternToRegexPattern(System.String)">
+            <summary>
+            Converts a pattern with wildcards to regular expression pattern
+            </summary>
+            <param name="pattern">Pattern with wildcards</param>
+            <returns>Regular expression pattern</returns>
+        </member>
+        <member name="M:WebMarkupMin.AspNet.Common.UrlMatchers.WildcardUrlMatcher.IsMatch(System.String)">
+            <summary>
+            Indicates whether the matching rule finds a match in the specified URL
+            </summary>
+            <param name="url">URL</param>
+            <returns>true if the matching rule finds a match; otherwise, false.</returns>
+        </member>
+    </members>
+</doc>
