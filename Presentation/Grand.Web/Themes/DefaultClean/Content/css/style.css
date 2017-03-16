@@ -913,7 +913,6 @@ select.form-control:not([size]):not([multiple]) option {
 }
 #topcartlink > div > a {
     background-color: #dfe1e2;
-    margin-left: 10px;
     padding: 11px;
     color: #596063;
 }
@@ -1350,7 +1349,7 @@ footer .list-group .list-group-item {
     .navbar-light .navbar-nav .nav-link {
     padding-top: 10px;
     text-transform: uppercase;
-    padding-right: 22px;
+    padding-right: 20px;
 }
   .quantity .td-title{
       text-align: right;

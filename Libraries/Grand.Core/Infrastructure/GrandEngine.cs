@@ -44,7 +44,7 @@ namespace Grand.Core.Infrastructure
         /// Register dependencies
         /// </summary>
         /// <param name="config">Config</param>
-        protected virtual void RegisterDependencies(GrandConfig config)
+        public virtual void RegisterDependencies(GrandConfig config)
         {
             var builder = new ContainerBuilder();
             //we create new instance of ContainerBuilder

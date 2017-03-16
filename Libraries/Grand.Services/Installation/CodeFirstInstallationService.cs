@@ -137,18 +137,10 @@ namespace Grand.Services.Installation
         private readonly IRepository<CustomerReminder> _customerReminder;
         private readonly IRepository<CustomerReminderHistory> _customerReminderHistoryRepository;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProductRepository;
+
         private readonly ICustomerActionService _customerActionService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
-        private readonly IEncryptionService _encryptionService;
-        private readonly ISettingService _settingService;
-
-        private ProductAttributeService _productAttributeService;
-        private LocalizationService _localizationService;
-        private PictureService _pictureService;
-        private DownloadService _downloadService;
-        private SecuritySettings _securitySettings;
-        private MediaSettings _mediaSettings;
 
         #endregion
 
@@ -240,11 +232,7 @@ namespace Grand.Services.Installation
             IRepository<RecentlyViewedProduct> recentlyViewedProductRepository,
             IGenericAttributeService genericAttributeService,
             ICustomerActionService customerActionService,
-            IWebHelper webHelper,
-            ISettingService settingService,
-            ICacheManager _cacheManager,
-            IEventPublisher _eventPublisher
-            )
+            IWebHelper webHelper)
         {
             this._versionRepository = versionRepository;
             this._addressRepository = addressRepository;
@@ -307,7 +295,6 @@ namespace Grand.Services.Installation
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
             this._topicTemplateRepository = topicTemplateRepository;
             this._scheduleTaskRepository = scheduleTaskRepository;
-            this._genericAttributeService = genericAttributeService;
             this._queuedemailRepository = queuedemailRepository;
             this._returnrequestRepository = returnrequestRepository;
             this._rewardpointshistoryRepository = rewardpointshistoryRepository;
@@ -316,7 +303,6 @@ namespace Grand.Services.Installation
             this._shipmentRepository = shipmentRepository;
             this._warehouseRepository = warehouseRepository;
             this._pickupPointsRepository = pickupPointsRepository;
-            this._webHelper = webHelper;
             this._permissionRepository = permissionRepository;
             this._vendorRepository = vendorRepository;
             this._externalAuthenticationRepository = externalAuthenticationRepository;
@@ -329,46 +315,11 @@ namespace Grand.Services.Installation
             this._customerActionHistory = customerActionHistory;
             this._customerReminder = customerReminder;
             this._customerReminderHistoryRepository = customerReminderHistoryRepository; ;
-            this._customerActionService = customerActionService;
             this._banner = banner;
             this._popupArchive = popupArchive;
-            this._settingService = settingService;
-
-            _securitySettings = new SecuritySettings
-            {
-                ForceSslForAllPages = false,
-                EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
-                AdminAreaAllowedIpAddresses = null,
-                EnableXsrfProtectionForAdminArea = true,
-                EnableXsrfProtectionForPublicStore = true,
-                HoneypotEnabled = false,
-                HoneypotInputName = "hpinput"
-            };
-            _mediaSettings = new MediaSettings
-            {
-                AvatarPictureSize = 120,
-                ProductThumbPictureSize = 415,
-                ProductDetailsPictureSize = 550,
-                ProductThumbPictureSizeOnProductDetailsPage = 100,
-                AssociatedProductPictureSize = 220,
-                CategoryThumbPictureSize = 450,
-                ManufacturerThumbPictureSize = 420,
-                VendorThumbPictureSize = 450,
-                CartThumbPictureSize = 80,
-                MiniCartThumbPictureSize = 70,
-                AutoCompleteSearchThumbPictureSize = 20,
-                ImageSquarePictureSize = 32,
-                MaximumImageSize = 1980,
-                DefaultPictureZoomEnabled = false,
-                DefaultImageQuality = 80,
-                MultipleThumbDirectories = false
-            };
-
-            this._downloadService = new DownloadService(_downloadRepository, _eventPublisher);
-            this._encryptionService = new EncryptionService(_securitySettings);
-            this._localizationService = new LocalizationService(_cacheManager, null, null, _lsrRepository, null, null, null);
-            this._pictureService = new PictureService(_pictureRepository, _settingService, null, null, _eventPublisher, _mediaSettings);
-            this._productAttributeService = new ProductAttributeService(_cacheManager, _productAttributeRepository, _productRepository, _eventPublisher);
+            this._genericAttributeService = genericAttributeService;
+            this._customerActionService = customerActionService;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -558,7 +509,8 @@ namespace Grand.Services.Installation
             foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/"), "*.grandres.xml", SearchOption.TopDirectoryOnly))
             {
                 var localesXml = File.ReadAllText(filePath);
-                _localizationService.ImportResourcesFromXmlInstall(language, localesXml);
+                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                localizationService.ImportResourcesFromXmlInstall(language, localesXml);
             }
 
         }
@@ -4261,17 +4213,15 @@ namespace Grand.Services.Installation
             };
             _customerRoleRepository.Insert(crVendors);
 
-
             //admin user
-            string saltKey = _encryptionService.CreateSaltKey(5);
             var adminUser = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
                 Username = defaultUserEmail,
-                Password = _encryptionService.CreatePasswordHash(defaultUserPassword, saltKey, "SHA1"),
-                PasswordFormat = PasswordFormat.Hashed,
-                PasswordSalt = saltKey,
+                Password = defaultUserPassword,
+                PasswordFormat = PasswordFormat.Clear,
+                PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
@@ -4355,6 +4305,13 @@ namespace Grand.Services.Installation
             webApiUser.CustomerRoles.Add(crGuests);
             _customerRepository.Insert(webApiUser);
 
+        }
+
+        protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
+        {
+            var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
+            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
+            PasswordFormat.Hashed, defaultUserPassword));
         }
 
         protected virtual void InstallCustomerAction()
@@ -4889,7 +4846,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var topic in ltopics)
             {
-                var seName = SeoExtensions.GetSeName((!String.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName), false, true);
+                var seName = topic.ValidateSeName("", !String.IsNullOrEmpty(topic.Title) ? topic.Title : topic.SystemName, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = topic.Id,
@@ -4906,6 +4863,7 @@ namespace Grand.Services.Installation
 
         protected virtual void InstallSettings()
         {
+            var _settingService = EngineContext.Current.Resolve<ISettingService>();
             _settingService.SaveSetting(new PdfSettings
             {
                 LogoPictureId = "",
@@ -4933,6 +4891,35 @@ namespace Grand.Services.Installation
                 RenderXuaCompatible = false,
                 XuaCompatibleValue = "IE=edge",
                 DeleteGuestTaskOlderThanMinutes = 1440,
+            });
+            _settingService.SaveSetting(new SecuritySettings
+            {
+                ForceSslForAllPages = false,
+                EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
+                AdminAreaAllowedIpAddresses = null,
+                EnableXsrfProtectionForAdminArea = true,
+                EnableXsrfProtectionForPublicStore = true,
+                HoneypotEnabled = false,
+                HoneypotInputName = "hpinput"
+            });
+            _settingService.SaveSetting(new MediaSettings
+            {
+                AvatarPictureSize = 120,
+                ProductThumbPictureSize = 415,
+                ProductDetailsPictureSize = 550,
+                ProductThumbPictureSizeOnProductDetailsPage = 100,
+                AssociatedProductPictureSize = 220,
+                CategoryThumbPictureSize = 450,
+                ManufacturerThumbPictureSize = 420,
+                VendorThumbPictureSize = 450,
+                CartThumbPictureSize = 80,
+                MiniCartThumbPictureSize = 70,
+                AutoCompleteSearchThumbPictureSize = 20,
+                ImageSquarePictureSize = 32,
+                MaximumImageSize = 1980,
+                DefaultPictureZoomEnabled = false,
+                DefaultImageQuality = 80,
+                MultipleThumbDirectories = false
             });
 
             _settingService.SaveSetting(new SeoSettings
@@ -5029,7 +5016,7 @@ namespace Grand.Services.Installation
                 AllowProductSorting = true,
                 AllowProductViewModeChanging = true,
                 DefaultViewMode = "grid",
-                ShowProductsFromSubcategories = false,
+                ShowProductsFromSubcategories = true,
                 ShowCategoryProductNumber = false,
                 ShowCategoryProductNumberIncludingSubcategories = false,
                 CategoryBreadcrumbEnabled = true,
@@ -5168,8 +5155,6 @@ namespace Grand.Services.Installation
                 FaxEnabled = true,
             });
 
-            _settingService.SaveSetting(_mediaSettings);
-
             _settingService.SaveSetting(new StoreInformationSettings
             {
                 StoreClosed = false,
@@ -5274,12 +5259,10 @@ namespace Grand.Services.Installation
                 CompleteOrderWhenDelivered = true
             });
 
-            _settingService.SaveSetting(_securitySettings);
-
             _settingService.SaveSetting(new ShippingSettings
             {
                 ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
-                ShipToSameAddress = false, 
+                ShipToSameAddress = false,
                 AllowPickUpInStore = true,
                 UseWarehouseLocation = false,
                 NotifyCustomerAboutShippingFromMultipleLocations = false,
@@ -5621,6 +5604,8 @@ namespace Grand.Services.Installation
 
         protected virtual void InstallCategories()
         {
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+
             //sample pictures
             var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
@@ -5640,7 +5625,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = "",
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Computers")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 1,
@@ -5657,7 +5642,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Desktops")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Desktops")).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5675,7 +5660,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Notebooks")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Notebooks")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5692,7 +5677,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Software")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Software")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 3,
@@ -5709,7 +5694,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Electronics")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5727,7 +5712,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Camera, photo")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Camera, photo")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5745,7 +5730,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Cell phones")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Cell phones")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5762,7 +5747,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Accessories")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Accessories")).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -5780,7 +5765,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Apparel")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5798,7 +5783,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Shoes")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Shoes")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5816,7 +5801,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Clothing")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Clothing")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 2,
@@ -5833,7 +5818,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Apparel Accessories")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apparel Accessories")).Id,
                 IncludeInTopMenu = true,
                 PriceRanges = "-100;100-;",
                 Published = true,
@@ -5851,7 +5836,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Digital downloads")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 ShowOnHomePage = true,
@@ -5871,7 +5856,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Book")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book")).Id,
                 PriceRanges = "-25;25-50;50-;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5889,7 +5874,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Jewelry")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry")).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
                 Published = true,
@@ -5907,7 +5892,7 @@ namespace Grand.Services.Installation
                 ParentCategoryId = "",
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Gift Cards")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Gift Cards")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
                 DisplayOrder = 7,
@@ -5920,7 +5905,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var category in allCategories)
             {
-                category.SeName = SeoExtensions.GetSeName(category.Name, false, true);
+                category.SeName = category.ValidateSeName("", category.Name, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = category.Id,
@@ -5935,6 +5920,9 @@ namespace Grand.Services.Installation
 
         protected virtual void InstallManufacturers()
         {
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+            var downloadService = EngineContext.Current.Resolve<IDownloadService>();
+
             var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
             var manufacturerTemplateInGridAndLines =
@@ -5951,7 +5939,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Apple")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apple")).Id,
                 DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5968,7 +5956,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Hp")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Hp")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5985,7 +5973,7 @@ namespace Grand.Services.Installation
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), "image/pjpeg", _pictureService.GetPictureSeName("Nike")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Nike")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -6011,6 +5999,9 @@ namespace Grand.Services.Installation
 
         protected virtual void InstallProducts(string defaultUserEmail)
         {
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+            var downloadService = EngineContext.Current.Resolve<IDownloadService>();
+
             var productTemplateSimple = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
             if (productTemplateSimple == null)
                 throw new Exception("Simple product template could not be loaded");
@@ -6217,8 +6208,8 @@ namespace Grand.Services.Installation
             };
             allProducts.Add(productBuildComputer);
 
-            var Picture1 = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBuildComputer.Name));
-            var Picture2 = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture1 = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
+            var Picture2 = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name));
 
             _productRepository.Insert(productBuildComputer);
 
@@ -6278,7 +6269,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productDigitalStorm);
             productDigitalStorm.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productDigitalStorm.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productDigitalStorm);
@@ -6323,7 +6314,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productLenovoIdeaCentre);
             productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLenovoIdeaCentre);
@@ -6410,12 +6401,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productAppleMacBookPro);
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
                 DisplayOrder = 1,
             });
             productAppleMacBookPro.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productAppleMacBookPro);
@@ -6496,7 +6487,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productAsusN551JK);
             productAsusN551JK.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAsusN551JK.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAsusN551JK);
@@ -6577,7 +6568,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productSamsungSeries);
             productSamsungSeries.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productSamsungSeries.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSamsungSeries);
@@ -6665,12 +6656,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productHpSpectre);
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
                 DisplayOrder = 1,
             });
             productHpSpectre.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHpSpectre);
@@ -6759,7 +6750,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productHpEnvy);
             productHpEnvy.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHpEnvy.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHpEnvy);
@@ -6824,7 +6815,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productLenovoThinkpad);
             productLenovoThinkpad.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productLenovoThinkpad.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLenovoThinkpad);
@@ -6874,7 +6865,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productAdobePhotoshop);
             productAdobePhotoshop.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAdobePhotoshop.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAdobePhotoshop);
@@ -6920,7 +6911,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productWindows8Pro);
             productWindows8Pro.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productWindows8Pro.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productWindows8Pro);
@@ -6966,7 +6957,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productSoundForge);
             productSoundForge.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productSoundForge.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSoundForge);
@@ -7018,12 +7009,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikonD5500DSLR);
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
                 DisplayOrder = 1,
             });
             productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productNikonD5500DSLR);
@@ -7058,14 +7049,14 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikonD5500DSLR_associated_1);
             productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_1);
             var productNikonD5500DSLR_associated_2 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = false, 
+                VisibleIndividually = false,
                 ParentGroupedProductId = productNikonD5500DSLR.Id,
                 Name = "Nikon D5500 DSLR - Red",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7093,7 +7084,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikonD5500DSLR_associated_2);
             productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", _pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikonD5500DSLR_associated_2);
@@ -7138,7 +7129,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productLeica);
             productLeica.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productLeica.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productLeica);
@@ -7192,7 +7183,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productAppleICam);
             productAppleICam.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productAppleICam.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAppleICam);
@@ -7243,7 +7234,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productHtcOne);
             productHtcOne.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHtcOne.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHtcOne);
@@ -7289,12 +7280,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productHtcOneMini);
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
                 DisplayOrder = 1,
             });
             productHtcOneMini.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHtcOneMini);
@@ -7340,7 +7331,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNokiaLumia);
             productNokiaLumia.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productNokiaLumia.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNokiaLumia);
@@ -7415,12 +7406,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productBeatsPill);
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
                 DisplayOrder = 1,
             });
             productBeatsPill.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productBeatsPill);
@@ -7466,7 +7457,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productUniversalTabletCover);
             productUniversalTabletCover.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productUniversalTabletCover.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productUniversalTabletCover);
@@ -7512,7 +7503,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productPortableSoundSpeakers);
             productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPortableSoundSpeakers);
@@ -7628,12 +7619,12 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikeFloral);
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
                 DisplayOrder = 1,
             });
             productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productNikeFloral);
@@ -7746,24 +7737,24 @@ namespace Grand.Services.Installation
             allProducts.Add(productAdidas);
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productAdidas.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 1,
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productAdidas.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 2,
             });
             productAdidas.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productAdidas.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)).Id,
                 DisplayOrder = 3,
             });
 
 
             _productRepository.Insert(productAdidas);
 
-            var productAttribute = _productAttributeService.GetAllProductAttributes().Where(x => x.Name == "Color").FirstOrDefault();
+            var productAttribute = EngineContext.Current.Resolve<IProductAttributeService>().GetAllProductAttributes().Where(x => x.Name == "Color").FirstOrDefault();
 
             productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Red").First().PictureId = productAdidas.ProductPictures.ElementAt(0).PictureId;
             productAdidas.ProductAttributeMappings.Where(x => x.ProductAttributeId == productAttribute.Id).First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
@@ -7819,7 +7810,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikeZoom);
             productNikeZoom.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productNikeZoom.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikeZoom);
@@ -7926,7 +7917,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNikeTailwind);
             productNikeTailwind.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productNikeTailwind.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNikeTailwind);
@@ -7990,7 +7981,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productOversizedWomenTShirt);
             productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productOversizedWomenTShirt);
@@ -8046,7 +8037,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productCustomTShirt);
             productCustomTShirt.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productCustomTShirt.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCustomTShirt);
@@ -8113,12 +8104,12 @@ namespace Grand.Services.Installation
 
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
                 DisplayOrder = 1,
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)).Id,
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productLeviJeans);
@@ -8205,7 +8196,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productObeyHat);
             productObeyHat.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productObeyHat.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productObeyHat);
@@ -8252,7 +8243,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productBelt);
             productBelt.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productBelt.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBelt);
@@ -8299,7 +8290,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productSunglasses);
             productSunglasses.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productSunglasses.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSunglasses);
@@ -8318,7 +8309,7 @@ namespace Grand.Services.Installation
                 Filename = "Night_Vision_1",
                 IsNew = true,
             };
-            _downloadService.InsertDownload(downloadNightVision1);
+            downloadService.InsertDownload(downloadNightVision1);
             var downloadNightVision2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8328,7 +8319,7 @@ namespace Grand.Services.Installation
                 Filename = "Night_Vision_1",
                 IsNew = true,
             };
-            _downloadService.InsertDownload(downloadNightVision2);
+            downloadService.InsertDownload(downloadNightVision2);
             var productNightVision = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -8371,7 +8362,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productNightVision);
             productNightVision.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productNightVision.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productNightVision);
@@ -8387,7 +8378,7 @@ namespace Grand.Services.Installation
                 Filename = "If_You_Wait_1",
                 IsNew = true,
             };
-            _downloadService.InsertDownload(downloadIfYouWait1);
+            downloadService.InsertDownload(downloadIfYouWait1);
             var downloadIfYouWait2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8397,7 +8388,7 @@ namespace Grand.Services.Installation
                 Filename = "If_You_Wait_1",
                 IsNew = true,
             };
-            _downloadService.InsertDownload(downloadIfYouWait2);
+            downloadService.InsertDownload(downloadIfYouWait2);
             var productIfYouWait = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -8441,7 +8432,7 @@ namespace Grand.Services.Installation
 
             productIfYouWait.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productIfYouWait.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productIfYouWait);
@@ -8456,7 +8447,7 @@ namespace Grand.Services.Installation
                 Filename = "Science_And_Faith",
                 IsNew = true,
             };
-            _downloadService.InsertDownload(downloadScienceAndFaith);
+            downloadService.InsertDownload(downloadScienceAndFaith);
             var productScienceAndFaith = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -8497,7 +8488,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productScienceAndFaith);
             productScienceAndFaith.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productScienceAndFaith.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productScienceAndFaith);
@@ -8550,7 +8541,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productFahrenheit);
             productFahrenheit.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productFahrenheit.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFahrenheit);
@@ -8598,7 +8589,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productFirstPrizePies);
             productFirstPrizePies.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productFirstPrizePies.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFirstPrizePies);
@@ -8644,7 +8635,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productPrideAndPrejudice);
             productPrideAndPrejudice.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(productPrideAndPrejudice.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPrideAndPrejudice);
@@ -8696,7 +8687,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productElegantGemstoneNecklace);
             productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productElegantGemstoneNecklace);
@@ -8743,7 +8734,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productFlowerGirlBracelet);
             productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productFlowerGirlBracelet);
@@ -8789,7 +8780,7 @@ namespace Grand.Services.Installation
             allProducts.Add(productEngagementRing);
             productEngagementRing.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", _pictureService.GetPictureSeName(productEngagementRing.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productEngagementRing);
@@ -8835,7 +8826,7 @@ namespace Grand.Services.Installation
             allProducts.Add(product25GiftCard);
             product25GiftCard.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(product25GiftCard.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product25GiftCard);
@@ -8882,7 +8873,7 @@ namespace Grand.Services.Installation
             allProducts.Add(product50GiftCard);
             product50GiftCard.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(product50GiftCard.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product50GiftCard);
@@ -8927,17 +8918,17 @@ namespace Grand.Services.Installation
             allProducts.Add(product100GiftCard);
             product100GiftCard.ProductPictures.Add(new ProductPicture
             {
-                PictureId = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", _pictureService.GetPictureSeName(product100GiftCard.Name)).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name)).Id,
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product100GiftCard);
 
             #endregion
-            
+
             //search engine names
             foreach (var product in allProducts)
             {
-                product.SeName = SeoExtensions.GetSeName(product.Name, false, true);
+                product.SeName = product.ValidateSeName("", product.Name, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = product.Id,
@@ -9719,7 +9710,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var blogPost in blogPosts)
             {
-                var seName = SeoExtensions.GetSeName(blogPost.Title, false, true);
+                var seName = blogPost.ValidateSeName("", blogPost.Title, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = blogPost.Id,
@@ -9763,7 +9754,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var blogPost in blogPosts)
             {
-                blogPost.SeName = SeoExtensions.GetSeName(blogPost.Title, false, true);
+                blogPost.SeName = blogPost.ValidateSeName("", blogPost.Title, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = blogPost.Id,
@@ -9815,7 +9806,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var newsItem in news)
             {
-                newsItem.SeName = SeoExtensions.GetSeName(newsItem.Title, false, true);
+                newsItem.SeName = newsItem.ValidateSeName("", newsItem.Title, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = newsItem.Id,
@@ -10742,7 +10733,7 @@ namespace Grand.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
             };
             _addressRepository.Insert(addresspoint);
-           
+
             var point = new PickupPoint()
             {
                 Address = addresspoint,
@@ -10788,7 +10779,7 @@ namespace Grand.Services.Installation
             //search engine names
             foreach (var vendor in vendors)
             {
-                var seName = SeoExtensions.GetSeName(vendor.Name, false, true);
+                var seName = vendor.ValidateSeName(vendor.SeName, vendor.Name, true);
                 _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = vendor.Id,
@@ -10873,7 +10864,7 @@ namespace Grand.Services.Installation
 
             //customer
             _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Descending(x => x.CreatedOnUtc).Ascending(x=>x.Deleted).Ascending("CustomerRoles._id"), new CreateIndexOptions() { Name = "CreatedOnUtc_1_CustomerRoles._id_1", Unique = false });
+            _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Descending(x => x.CreatedOnUtc).Ascending(x => x.Deleted).Ascending("CustomerRoles._id"), new CreateIndexOptions() { Name = "CreatedOnUtc_1_CustomerRoles._id_1", Unique = false });
             _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.LastActivityDateUtc), new CreateIndexOptions() { Name = "LastActivityDateUtc_1", Unique = false });
             _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.CustomerGuid), new CreateIndexOptions() { Name = "CustomerGuid_1", Unique = false });
             _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email_1", Unique = false });
@@ -10881,7 +10872,7 @@ namespace Grand.Services.Installation
             //customer role
             _customerRoleRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x=>x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
+            _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
 
             //address
             _addressRepository.Collection.Indexes.CreateOneAsync(Builders<Address>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10917,7 +10908,7 @@ namespace Grand.Services.Installation
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name_1", Unique = false });
 
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending("ProductCategories.DisplayOrder"), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_DisplayOrder_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x=>x.Published).Ascending(x=>x.VisibleIndividually).Ascending(x=>x.DisplayOrderCategory), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_OrderCategory_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.DisplayOrderCategory), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_OrderCategory_1", Unique = false });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Name_1", Unique = false });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Sold), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Sold_1", Unique = false });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending("ProductCategories.CategoryId").Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Price), new CreateIndexOptions() { Name = "ProductCategories.CategoryId_1_Price_1", Unique = false });
@@ -10934,8 +10925,8 @@ namespace Grand.Services.Installation
 
             //ProductReview
             _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.ProductId).Ascending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "ProductId", Unique = false });
-            
+            _productReviewRepository.Collection.Indexes.CreateOneAsync(Builders<ProductReview>.IndexKeys.Ascending(x => x.ProductId).Ascending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "ProductId", Unique = false });
+
             //Picture
             _pictureRepository.Collection.Indexes.CreateOneAsync(Builders<Picture>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
@@ -10947,7 +10938,7 @@ namespace Grand.Services.Installation
 
             //Recently Viewed Products
             _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId.ProductId" });
+            _recentlyViewedProductRepository.Collection.Indexes.CreateOneAsync(Builders<RecentlyViewedProduct>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId.ProductId" });
 
             //Product also purchased
             _productalsopurchasedRepository.Collection.Indexes.CreateOneAsync(Builders<ProductAlsoPurchased>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10955,8 +10946,8 @@ namespace Grand.Services.Installation
 
             //url record
             _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Slug).Ascending(x=>x.IsActive), new CreateIndexOptions() { Name = "Slug" });
-            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.EntityId).Ascending(x=>x.EntityName).Ascending(x=>x.LanguageId).Ascending(x=>x.IsActive), new CreateIndexOptions() { Name = "UrlRecord" });
+            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.Slug).Ascending(x => x.IsActive), new CreateIndexOptions() { Name = "Slug" });
+            _urlRecordRepository.Collection.Indexes.CreateOneAsync(Builders<UrlRecord>.IndexKeys.Ascending(x => x.EntityId).Ascending(x => x.EntityName).Ascending(x => x.LanguageId).Ascending(x => x.IsActive), new CreateIndexOptions() { Name = "UrlRecord" });
 
             //email
             _emailAccountRepository.Collection.Indexes.CreateOneAsync(Builders<EmailAccount>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10972,7 +10963,7 @@ namespace Grand.Services.Installation
             _forumtopicRepository.Collection.Indexes.CreateOneAsync(Builders<ForumTopic>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _forumsubscriptionRepository.Collection.Indexes.CreateOneAsync(Builders<ForumSubscription>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x=>x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
+            _forumPostVote.Collection.Indexes.CreateOneAsync(Builders<ForumPostVote>.IndexKeys.Ascending(x => x.ForumPostId).Ascending(x => x.CustomerId), new CreateIndexOptions() { Name = "Vote", Unique = true });
 
             // Country and Stateprovince
             _countryRepository.Collection.Indexes.CreateOneAsync(Builders<Country>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11033,7 +11024,7 @@ namespace Grand.Services.Installation
 
             //Campaign history
             _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.CampaignId).Descending(x=>x.CreatedDateUtc), new CreateIndexOptions() { Name = "CampaignId", Unique = false });
+            _campaignHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CampaignHistory>.IndexKeys.Ascending(x => x.CampaignId).Descending(x => x.CreatedDateUtc), new CreateIndexOptions() { Name = "CampaignId", Unique = false });
 
             //download
             _downloadRepository.Collection.Indexes.CreateOneAsync(Builders<Download>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11077,7 +11068,7 @@ namespace Grand.Services.Installation
             _pickupPointsRepository.Collection.Indexes.CreateOneAsync(Builders<PickupPoint>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
 
             //order
-            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.Id),new CreateIndexOptions() { Name = "Id", Unique = true });
+            _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId_1_CreatedOnUtc_-1", Unique = false });
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CreatedOnUtc_-1", Unique = false });
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Descending(x => x.OrderNumber), new CreateIndexOptions() { Name = "OrderNumber", Unique = true });
@@ -11085,7 +11076,7 @@ namespace Grand.Services.Installation
             _orderRepository.Collection.Indexes.CreateOneAsync(Builders<Order>.IndexKeys.Ascending("OrderItems._id"), new CreateIndexOptions() { Name = "OrderItemId" });
 
             _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.OrderId).Descending(x=>x.CreatedOnUtc), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true });
+            _orderNoteRepository.Collection.Indexes.CreateOneAsync(Builders<OrderNote>.IndexKeys.Ascending(x => x.OrderId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "Id", Unique = false, Background = true });
 
             //permision
             _permissionRepository.Collection.Indexes.CreateOneAsync(Builders<PermissionRecord>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11114,8 +11105,8 @@ namespace Grand.Services.Installation
             _customerAction.Collection.Indexes.CreateOneAsync(Builders<CustomerAction>.IndexKeys.Ascending(x => x.ActionTypeId), new CreateIndexOptions() { Name = "ActionTypeId", Unique = false });
 
             _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
-            
+            _customerActionHistory.Collection.Indexes.CreateOneAsync(Builders<CustomerActionHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerActionId), new CreateIndexOptions() { Name = "Customer_Action", Unique = false });
+
 
             //banner
             _banner.Collection.Indexes.CreateOneAsync(Builders<Banner>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -11125,7 +11116,7 @@ namespace Grand.Services.Installation
             //customer reminder
             _customerReminder.Collection.Indexes.CreateOneAsync(Builders<CustomerReminder>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
+            _customerReminderHistoryRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerReminderHistory>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.CustomerReminderId), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
 
         }
 
@@ -11159,6 +11150,7 @@ namespace Grand.Services.Installation
             InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();
+            HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
             InstallProductTemplates();
             InstallCategoryTemplates();
             InstallManufacturerTemplates();

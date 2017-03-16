@@ -204,18 +204,12 @@ namespace Grand.Web.Controllers
                     var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
                     var dataProviderInstall = mongoDBDataProviderManager.LoadDataProvider();
 
-                    using (var scope = EngineContext.Current.ContainerManager.Container.BeginLifetimeScope(builder =>
-                    {
-                        builder.Register<IMongoClient>(c => new MongoClient(dataProviderSettings.DataConnectionString)).SingleInstance();
-                        builder.Register<IMongoDBContext>(c => new MongoDBContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
-                        builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
-                        builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
-                        
-                    }))
-                    {
-                        var installationService = scope.Resolve<IInstallationService>();
-                        installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
-                    }
+                    var config = ConfigurationManager.GetSection("GrandConfig") as GrandConfig;
+                    GrandEngine grand = new GrandEngine();
+                    grand.RegisterDependencies(config);
+
+                    var installationService = EngineContext.Current.Resolve<IInstallationService>();
+                    installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
                     //reset cache
                     DataSettingsHelper.ResetCache();
