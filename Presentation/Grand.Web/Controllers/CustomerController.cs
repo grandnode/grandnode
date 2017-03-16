@@ -1273,7 +1273,8 @@ namespace Grand.Web.Controllers
                             //change username
                             _customerRegistrationService.SetUsername(customer, model.Username.Trim());
                             //re-authenticate
-                            _authenticationService.SignIn(customer, true);
+                            if (_workContext.OriginalCustomerIfImpersonated == null)
+                                _authenticationService.SignIn(customer, true);
                         }
                     }
                     //email
@@ -1282,9 +1283,12 @@ namespace Grand.Web.Controllers
                         //change email
                         _customerRegistrationService.SetEmail(customer, model.Email.Trim());
                         //re-authenticate (if usernames are disabled)
-                        if (!_customerSettings.UsernamesEnabled)
+                        //do not authenticate users in impersonation mode
+                        if (_workContext.OriginalCustomerIfImpersonated == null)
                         {
-                            _authenticationService.SignIn(customer, true);
+                            //re-authenticate (if usernames are disabled)
+                            if (!_customerSettings.UsernamesEnabled)
+                                _authenticationService.SignIn(customer, true);
                         }
                     }
 

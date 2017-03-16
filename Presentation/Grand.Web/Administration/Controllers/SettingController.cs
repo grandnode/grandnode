@@ -1058,7 +1058,8 @@ namespace Grand.Admin.Controllers
             {
                 model.AllowViewUnpublishedProductPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowViewUnpublishedProductPage, storeScope);
                 model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayDiscontinuedMessageForUnpublishedProducts, storeScope);
-                model.ShowProductSku_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductSku, storeScope);
+                model.ShowSkuOnProductDetailsPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowSkuOnProductDetailsPage, storeScope);
+                model.ShowSkuOnCatalogPages_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowSkuOnCatalogPages, storeScope);
                 model.ShowManufacturerPartNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowManufacturerPartNumber, storeScope);
                 model.ShowGtin_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowGtin, storeScope);
                 model.ShowFreeShippingNotification_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowFreeShippingNotification, storeScope);
@@ -1143,11 +1144,16 @@ namespace Grand.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.DisplayDiscontinuedMessageForUnpublishedProducts, storeScope);
 
-            if (model.ShowProductSku_OverrideForStore || storeScope == "")
-                _settingService.SaveSetting(catalogSettings, x => x.ShowProductSku, storeScope, false);
+            if (model.ShowSkuOnProductDetailsPage_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.ShowSkuOnProductDetailsPage, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
-                _settingService.DeleteSetting(catalogSettings, x => x.ShowProductSku, storeScope);
-            
+                _settingService.DeleteSetting(catalogSettings, x => x.ShowSkuOnProductDetailsPage, storeScope);
+
+            if (model.ShowSkuOnCatalogPages_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.ShowSkuOnCatalogPages, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.ShowSkuOnCatalogPages, storeScope);
+
             if (model.ShowManufacturerPartNumber_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.ShowManufacturerPartNumber, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))

@@ -402,7 +402,7 @@ namespace Grand.Web.Controllers
 
 
             //purchased products
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             foreach (var orderItem in order.OrderItems)
             {
                 var product = _productService.GetProductByIdIncludeArch(orderItem.ProductId);
@@ -512,7 +512,7 @@ namespace Grand.Web.Controllers
             }
 
             //products in this shipment
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             foreach (var shipmentItem in shipment.ShipmentItems)
             {
                 var orderItem = order.OrderItems.Where(x => x.Id == shipmentItem.OrderItemId).FirstOrDefault(); 

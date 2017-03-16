@@ -246,7 +246,7 @@ namespace Grand.Web.Controllers
 
             model.IsEditable = isEditable;
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             var checkoutAttributesXml = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.CheckoutAttributes, _storeContext.CurrentStore.Id);
             model.CheckoutAttributeInfo = _checkoutAttributeFormatter.FormatAttributes(checkoutAttributesXml, _workContext.CurrentCustomer);
             bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
@@ -705,7 +705,7 @@ namespace Grand.Web.Controllers
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnWishList;
-            model.ShowSku = _catalogSettings.ShowProductSku;
+            model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
             
             //cart warnings
             var cartWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, "", false);

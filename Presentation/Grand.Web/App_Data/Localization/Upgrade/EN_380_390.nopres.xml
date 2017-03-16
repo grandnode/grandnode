@@ -785,4 +785,16 @@
   <LocaleResource Name="BackInStockSubscriptions.PleaseWait">
     <Value>Please wait...</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSkuOnProductDetailsPage">
+    <Value>Show SKU on product details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSkuOnProductDetailsPage.Hint">
+    <Value>Check to show product SKU in public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSkuOnCatalogPages">
+    <Value>Show SKU on catalog pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSkuOnCatalogPages.Hint">
+    <Value>Check to show product SKU in public store on catalog pages.</Value>
+  </LocaleResource>
 </Language>

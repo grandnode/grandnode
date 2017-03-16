@@ -18,9 +18,14 @@ namespace Grand.Admin.Models.Settings
         public bool DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore { get; set; }
 
 
-        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductSku")]
-        public bool ShowProductSku { get; set; }
-        public bool ShowProductSku_OverrideForStore { get; set; }
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowSkuOnProductDetailsPage")]
+        public bool ShowSkuOnProductDetailsPage { get; set; }
+        public bool ShowSkuOnProductDetailsPage_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowSkuOnCatalogPages")]
+        public bool ShowSkuOnCatalogPages { get; set; }
+        public bool ShowSkuOnCatalogPages_OverrideForStore { get; set; }
+
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowManufacturerPartNumber")]
         public bool ShowManufacturerPartNumber { get; set; }

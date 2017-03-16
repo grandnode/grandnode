@@ -123,6 +123,7 @@ namespace Grand.Web.Extensions
                     FullDescription = product.GetLocalized(x => x.FullDescription, currentLanguageId.Id),
                     SeName = product.GetSeName(),
                     ProductType = product.ProductType,
+                    Sku = product.Sku,
                     MarkAsNew = product.MarkAsNew &&
                         (!product.MarkAsNewStartDateTimeUtc.HasValue || product.MarkAsNewStartDateTimeUtc.Value < DateTime.UtcNow) &&
                         (!product.MarkAsNewEndDateTimeUtc.HasValue || product.MarkAsNewEndDateTimeUtc.Value > DateTime.UtcNow)

@@ -221,7 +221,7 @@ namespace Grand.Web.Controllers
                 MetaDescription = product.GetLocalized(x => x.MetaDescription),
                 MetaTitle = product.GetLocalized(x => x.MetaTitle),
                 SeName = product.GetSeName(),
-                ShowSku = _catalogSettings.ShowProductSku,
+                ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
                 Sku = product.Sku,
                 ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber,
                 FreeShippingNotificationEnabled = _catalogSettings.ShowFreeShippingNotification,

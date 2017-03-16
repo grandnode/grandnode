@@ -4,6 +4,8 @@
 @using Grand.Core.Domain.Tax
 @using Grand.Core.Infrastructure
 @using Grand.Web.Models.Catalog;
+@using Grand.Core.Domain.Catalog
+
 @{
     //prepare "Add to cart" AJAX link
     string addtocartlink = "";
@@ -34,6 +36,10 @@
                 <div class="card-block text-left">
                     <h2 class="h6 card-title">
                         <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
+                        @if (EngineContext.Current.Resolve<CatalogSettings>().ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+                        {
+                            <span class="d-block py-1">@Model.Sku</span>
+                        }
                     </h2>
                     <p class="card-text hidden-xl-down">
                         @Html.Raw(Model.ShortDescription)

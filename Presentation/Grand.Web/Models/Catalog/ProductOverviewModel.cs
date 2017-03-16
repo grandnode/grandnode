@@ -23,6 +23,7 @@ namespace Grand.Web.Models.Catalog
         public ProductType ProductType { get; set; }
         public bool MarkAsNew { get; set; }
 
+        public string Sku { get; set; }
         //price
         public ProductPriceModel ProductPrice { get; set; }
         //picture
