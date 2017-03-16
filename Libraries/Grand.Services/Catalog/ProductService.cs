@@ -694,7 +694,7 @@ namespace Grand.Services.Catalog
             bool? overridePublished = null)
         {
             filterableSpecificationAttributeOptionIds = new List<string>();
-            featuredProducts = featuredProducts.HasValue ? featuredProducts : false;
+            
             //search by keyword
             bool searchLocalizedValue = false;
             if (!String.IsNullOrEmpty(languageId))
@@ -729,9 +729,9 @@ namespace Grand.Services.Catalog
             if (categoryIds != null && categoryIds.Any())
             {
 
-                if (featuredProducts.Value)
+                if (featuredProducts.HasValue)
                 {
-                    filter = filter & builder.Where(x => x.ProductCategories.Any(y => categoryIds.Contains(y.CategoryId) && y.IsFeaturedProduct));
+                    filter = filter & builder.Where(x => x.ProductCategories.Any(y => categoryIds.Contains(y.CategoryId) && y.IsFeaturedProduct == featuredProducts));
                 }
                 else
                 {
@@ -741,9 +741,9 @@ namespace Grand.Services.Catalog
             //manufacturer filtering
             if (!String.IsNullOrEmpty(manufacturerId))
             {
-                if (featuredProducts.Value)
+                if (featuredProducts.HasValue)
                 {
-                    filter = filter & builder.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == manufacturerId && y.IsFeaturedProduct));
+                    filter = filter & builder.Where(x => x.ProductManufacturers.Any(y => y.ManufacturerId == manufacturerId && y.IsFeaturedProduct == featuredProducts));
                 }
                 else
                 {
