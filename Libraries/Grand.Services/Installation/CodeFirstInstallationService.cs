@@ -9666,7 +9666,7 @@ namespace Grand.Services.Installation
                                     new Discount
                                         {
                                             Name = "Sample discount with coupon code",
-                                            DiscountType = DiscountType.AssignedToSkus,
+                                            DiscountType = DiscountType.AssignedToOrderTotal,
                                             DiscountLimitation = DiscountLimitationType.Unlimited,
                                             UsePercentage = false,
                                             DiscountAmount = 10,
