@@ -157,7 +157,7 @@ namespace Grand.Web.Controllers
                 }
                 if (String.IsNullOrEmpty(model.MongoDBServerName))
                 {
-                    ModelState.AddModelError("", _locService.GetResource("MongoDBNameRequired"));
+                    ModelState.AddModelError("", _locService.GetResource("MongoDBServerNameRequired"));
                 }
                 string userNameandPassword = "";
                 if (!(String.IsNullOrEmpty(model.MongoDBUsername)))
