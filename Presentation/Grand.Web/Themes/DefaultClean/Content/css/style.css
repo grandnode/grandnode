@@ -822,7 +822,7 @@ font-weight: 700;
     cursor: pointer;
 }
 .opc .active .card-grey {
-    background-color: rgb(132, 199, 132);
+    background-color: #5cb85c;
     color: #fff;
     cursor: pointer;
 }
