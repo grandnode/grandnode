@@ -226,16 +226,12 @@ namespace Grand.Services.Catalog
         /// <returns>Products</returns>
         public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
         {
-            return _cacheManager.Get(PRODUCTS_SHOWONHOMEPAGE, () =>
-                {
-                    var query = from p in _productRepository.Table
-                                where p.Published && p.ShowOnHomePage
-                                orderby p.DisplayOrder, p.Name
-                                select p;
-                    var products = query.ToList();
-                    return products;
-                }
-            );
+            var query = from p in _productRepository.Table
+                        where p.Published && p.ShowOnHomePage
+                        orderby p.DisplayOrder, p.Name
+                        select p;
+            var products = query.ToList();
+            return products;
         }
 
         /// <summary>

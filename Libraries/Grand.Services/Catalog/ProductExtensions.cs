@@ -22,7 +22,7 @@ namespace Grand.Services.Catalog
         /// <param name="storeId">Store identifier</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Price</returns>
-        public static decimal? GetAppropriateTierPrice(this Product product, Customer customer, string storeId, int quantity)
+        public static TierPrice GetPreferredTierPrice(this Product product, Customer customer, string storeId, int quantity)
         {
             if (!product.HasTierPrices)
                 return null;
@@ -37,7 +37,7 @@ namespace Grand.Services.Catalog
             //get the most suitable tier price based on the passed quantity
             var tierPrice = actualTierPrices.LastOrDefault(price => quantity >= price.Quantity);
 
-            return tierPrice != null ? (decimal?)tierPrice.Price : null;
+            return tierPrice;
         }
         /// <summary>
         /// Finds a related product item by specified identifiers

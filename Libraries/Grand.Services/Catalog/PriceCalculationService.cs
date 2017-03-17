@@ -432,7 +432,9 @@ namespace Grand.Services.Catalog
                 decimal price = product.Price;
 
                 //tier prices
-                price = product.GetAppropriateTierPrice(customer, _storeContext.CurrentStore.Id, quantity) ?? price;
+                var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
+                if (tierPrice != null)
+                    price = tierPrice.Price;
 
                 //additional charge
                 price = price + additionalCharge;
