@@ -107,5 +107,7 @@ db.ActivityLog.update({}, { $unset: { ActivityLogType: 1 } }, { multi: true });
 db.BannerActive.renameCollection("PopupActive")
 db.BannerArchive.renameCollection("PopupArchive")
 
+//Update DownloadActivationTypeId on the product
+db.Product.update({ DownloadActivationTypeId: 1 }, { $set: { DownloadActivationTypeId: 0 } }, false, true)
 
 print("Update executed");
