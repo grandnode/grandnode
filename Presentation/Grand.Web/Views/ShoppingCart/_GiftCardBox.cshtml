@@ -14,13 +14,23 @@
                         <input id="giftcardcouponcode" name="giftcardcouponcode" type="text" class="form-control gift-card-coupon-code" />
                         <label for="giftcardcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
                         <span class="input-group-btn">
-                            <button type="submit" name="applygiftcardcouponcode" class="btn btn-secondary apply-discount-coupon-code-button">
+                            <button type="submit" name="applygiftcardcouponcode" id="applygiftcardcouponcode" class="btn btn-secondary apply-discount-coupon-code-button">
                                 @T("ShoppingCart.GiftCardCouponCode.Button")
                             </button>
                         </span>
                     </div>
             </div>
         </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#giftcardcouponcode').keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $('#applygiftcardcouponcode').click();
+                        return false;
+                    }
+                });
+            });
+        </script>
         @if (!String.IsNullOrEmpty(Model.Message))
         { 
             <div class="card card-inverse @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">

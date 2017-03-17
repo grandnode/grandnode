@@ -15,32 +15,33 @@
                         <input type="text"  id="discountcouponcode" name="discountcouponcode" class="form-control discount-coupon-code">
                         <label for="discountcouponcode" class="sr-only">@T("ShoppingCart.GiftCardCouponCode.Button")</label>
                         <span class="input-group-btn">
-                            <button type="submit" name="applydiscountcouponcode" class="btn btn-secondary apply-discount-coupon-code-button" >
+                            <button type="submit" name="applydiscountcouponcode" id="applydiscountcouponcode" class="btn btn-secondary apply-discount-coupon-code-button" >
                                 @T("ShoppingCart.DiscountCouponCode.Button")
                             </button>
                         </span>
                 </div>
             </div>
         </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#discountcouponcode').keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $('#applydiscountcouponcode').click();
+                        return false;
+                    }
+                });
+            });
+        </script>
+
         @if (!String.IsNullOrEmpty(Model.Message))
         {
-
-            <div id="grandMoment" class="card card-inverse mb-3 @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
+            <div class="card card-inverse mb-3 @(Model.IsApplied ? "card-success message-success" : "card-danger message-failure") text-center">
                 <div class="card-block p-2">
                     <blockquote class="card-blockquote">
                         <span>@Model.Message</span>
                     </blockquote>
                 </div>
             </div>
-
-
-            <script>
-
-                $(document).ready(function () {
-                    $("#grandMoment").delay(7000).slideUp(300);
-                });
-
-            </script>
         }
         @foreach (var discount in Model.AppliedDiscountsWithCodes)
         {
