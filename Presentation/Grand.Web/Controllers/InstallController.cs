@@ -22,6 +22,7 @@ using Autofac;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Services.Stores;
 using Grand.Services.Configuration;
+using MongoDB.Bson;
 
 namespace Grand.Web.Controllers
 {
@@ -166,6 +167,23 @@ namespace Grand.Web.Controllers
                 connectionString = "mongodb://" + userNameandPassword + model.MongoDBServerName + "/" + model.MongoDBDatabaseName;
 
             }
+
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                try
+                {
+                    var client = new MongoClient(connectionString);
+                    var databaseName = new MongoUrl(connectionString).DatabaseName;
+                    var database = client.GetDatabase(databaseName);
+                    database.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+                }
+            }
+            else
+                ModelState.AddModelError("", _locService.GetResource("ConnectionStringRequired"));
 
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
