@@ -286,7 +286,7 @@ namespace Grand.Core
                     result += " " + c.ToString();
                 else
                     result += c.ToString();
-            return result;
+            return result.TrimStart();
         }
 
         /// <summary>
