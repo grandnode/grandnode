@@ -70,6 +70,7 @@ namespace Grand.Web.Controllers
         private readonly VendorSettings _vendorSettings;
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
+        private readonly MenuItemSettings _menuItemSettings;
         private readonly ICacheManager _cacheManager;
         
         #endregion
@@ -108,6 +109,7 @@ namespace Grand.Web.Controllers
             VendorSettings vendorSettings,
             BlogSettings blogSettings,
             ForumSettings  forumSettings,
+            MenuItemSettings menuItemSettings,
             ICacheManager cacheManager)
         {
             this._categoryService = categoryService;
@@ -142,6 +144,7 @@ namespace Grand.Web.Controllers
             this._vendorSettings = vendorSettings;
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
+            this._menuItemSettings = menuItemSettings;
             this._cacheManager = cacheManager;
         }
 
@@ -680,7 +683,14 @@ namespace Grand.Web.Controllers
                 Topics = cachedTopicModel,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
-                ForumEnabled = _forumSettings.ForumsEnabled
+                ForumEnabled = _forumSettings.ForumsEnabled,
+                DisplayHomePageMenu = _menuItemSettings.DisplayHomePageMenu,
+                DisplayNewProductsMenu = _menuItemSettings.DisplayNewProductsMenu,
+                DisplaySearchMenu = _menuItemSettings.DisplaySearchMenu,
+                DisplayCustomerMenu = _menuItemSettings.DisplayCustomerMenu,
+                DisplayBlogMenu = _menuItemSettings.DisplayBlogMenu,
+                DisplayForumsMenu = _menuItemSettings.DisplayForumsMenu,
+                DisplayContactUsMenu = _menuItemSettings.DisplayContactUsMenu
             };
             return PartialView(model);
         }

@@ -18,6 +18,7 @@ namespace Grand.Admin.Models.Settings
             LocalizationSettings = new LocalizationSettingsModel();
             FullTextSettings = new FullTextSettingsModel();
             GoogleAnalyticsSettings = new GoogleAnalyticsSettingsModel();
+            DisplayMenuSettings = new DisplayMenuSettingsModel();
         }
 
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
@@ -27,6 +28,8 @@ namespace Grand.Admin.Models.Settings
         public LocalizationSettingsModel LocalizationSettings { get; set; }
         public FullTextSettingsModel FullTextSettings { get; set; }
         public GoogleAnalyticsSettingsModel GoogleAnalyticsSettings { get; set; }
+
+        public DisplayMenuSettingsModel DisplayMenuSettings { get; set; }
 
         public string ActiveStoreScopeConfiguration { get; set; }
 
@@ -317,6 +320,32 @@ namespace Grand.Admin.Models.Settings
             public bool gaviewID_OverrideForStore { get; set; }
 
         }
+
+        public partial class DisplayMenuSettingsModel : BaseNopModel
+        {
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayHomePageMenu")]
+            public bool DisplayHomePageMenu { get; set; }
+            public bool DisplayHomePageMenu_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayNewProductsMenu")]
+            public bool DisplayNewProductsMenu { get; set; }
+            public bool DisplayNewProductsMenu_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplaySearchMenu")]
+            public bool DisplaySearchMenu { get; set; }
+            public bool DisplaySearchMenu_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayCustomerMenu")]
+            public bool DisplayCustomerMenu { get; set; }
+            public bool DisplayCustomerMenu_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayBlogMenu")]
+            public bool DisplayBlogMenu { get; set; }
+            public bool DisplayBlogMenu_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayForumsMenu")]
+            public bool DisplayForumsMenu { get; set; }
+            public bool DisplayForumsMenu_OverrideForStore { get; set; }
+            [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayContactUsMenu")]
+            public bool DisplayContactUsMenu { get; set; }
+            public bool DisplayContactUsMenu_OverrideForStore { get; set; }
+        }
+
         #endregion
     }
 }

@@ -4861,9 +4861,21 @@ namespace Grand.Services.Installation
 
         }
 
-        protected virtual void InstallSettings()
+        protected virtual void InstallSettings(bool installSampleData)
         {
             var _settingService = EngineContext.Current.Resolve<ISettingService>();
+
+            _settingService.SaveSetting(new MenuItemSettings
+            {
+                DisplayHomePageMenu = !installSampleData,
+                DisplayNewProductsMenu = !installSampleData,
+                DisplaySearchMenu = !installSampleData,
+                DisplayCustomerMenu = !installSampleData,
+                DisplayBlogMenu = !installSampleData,
+                DisplayForumsMenu = !installSampleData,
+                DisplayContactUsMenu = !installSampleData
+            });
+
             _settingService.SaveSetting(new PdfSettings
             {
                 LogoPictureId = "",
@@ -11146,7 +11158,7 @@ namespace Grand.Services.Installation
             InstallEmailAccounts();
             InstallMessageTemplates();
             InstallCustomerAction();
-            InstallSettings();
+            InstallSettings(installSampleData);
             InstallTopicTemplates();
             InstallTopics();
             InstallLocaleResources();

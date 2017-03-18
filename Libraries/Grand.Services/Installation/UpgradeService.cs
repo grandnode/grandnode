@@ -482,6 +482,7 @@ namespace Grand.Services.Installation
             #endregion
 
             #region Settings
+
             var settingService = EngineContext.Current.Resolve<ISettingService>();
 
             var catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
@@ -491,6 +492,18 @@ namespace Grand.Services.Installation
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
             adminAreaSettings.UseIsoDateTimeConverterInJson = true;
             settingService.SaveSetting(adminAreaSettings, x => x.UseIsoDateTimeConverterInJson, "", false);
+
+            settingService.SaveSetting(new MenuItemSettings
+            {
+                DisplayHomePageMenu = false,
+                DisplayNewProductsMenu = false,
+                DisplaySearchMenu = false,
+                DisplayCustomerMenu = false,
+                DisplayBlogMenu = false,
+                DisplayForumsMenu = false,
+                DisplayContactUsMenu = false
+            });
+
 
             #endregion
 

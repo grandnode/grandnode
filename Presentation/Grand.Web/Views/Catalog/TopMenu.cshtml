@@ -43,8 +43,11 @@
                </li>
 }
 
-
     @Html.Widget("header_menu_before")
+    @if (Model.DisplayHomePageMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+    }
     @{
         var rootCategories = Model.Categories.ToList();
     }
@@ -57,26 +60,30 @@
     {
         <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Topic", new { SeName=topic.SeName })">@topic.Name</a></li>
     }
-    @if (rootCategories.Count == 0 && Model.Topics.Count == 0)
+    @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenu)
     {
-        //no categories or topis to display? in this case let's diplay some default menu items (should we?)
-        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
-        if (Model.NewProductsEnabled)
-        {
-            <li class="nav-item">
-                <a class="nav-link" href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
-            </li>
-        }
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
+        </li>
+    }
+    @if (Model.DisplaySearchMenu)
+    {
         <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+    }
+    @if (Model.DisplayCustomerMenu)
+    {
         <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
-        if (Model.BlogEnabled)
-        {
-            <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
-        }
-        if (Model.ForumEnabled)
-        {
-            <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
-        }
+    }
+    @if (Model.BlogEnabled && Model.DisplayBlogMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+    }
+    @if (Model.ForumEnabled && Model.DisplayForumsMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+    }
+    @if (Model.DisplayContactUsMenu)
+    {
         <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
     }
     @Html.Widget("header_menu_after")

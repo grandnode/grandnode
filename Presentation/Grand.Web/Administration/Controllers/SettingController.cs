@@ -2729,6 +2729,35 @@ namespace Grand.Admin.Controllers
             model.GoogleAnalyticsSettings.gaserviceAccountEmail = googleAnalyticsSettings.gaserviceAccountEmail;
             model.GoogleAnalyticsSettings.gaviewID = googleAnalyticsSettings.gaviewID;
 
+            if (!String.IsNullOrEmpty(storeScope))
+            {
+                model.GoogleAnalyticsSettings.gaprivateKey_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.gaprivateKey, storeScope);
+                model.GoogleAnalyticsSettings.gaserviceAccountEmail_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.gaserviceAccountEmail, storeScope);
+                model.GoogleAnalyticsSettings.gaviewID_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.gaviewID, storeScope);
+            }
+
+            //display menu settings
+            var displayMenuItemSettings = _settingService.LoadSetting<MenuItemSettings>(storeScope);
+            model.DisplayMenuSettings.DisplayHomePageMenu = displayMenuItemSettings.DisplayHomePageMenu;
+            model.DisplayMenuSettings.DisplayNewProductsMenu = displayMenuItemSettings.DisplayNewProductsMenu;
+            model.DisplayMenuSettings.DisplaySearchMenu = displayMenuItemSettings.DisplaySearchMenu;
+            model.DisplayMenuSettings.DisplayCustomerMenu = displayMenuItemSettings.DisplayCustomerMenu;
+            model.DisplayMenuSettings.DisplayBlogMenu = displayMenuItemSettings.DisplayBlogMenu;
+            model.DisplayMenuSettings.DisplayForumsMenu = displayMenuItemSettings.DisplayForumsMenu;
+            model.DisplayMenuSettings.DisplayContactUsMenu = displayMenuItemSettings.DisplayContactUsMenu;
+            //override settings
+            if (!String.IsNullOrEmpty(storeScope))
+            {
+                model.DisplayMenuSettings.DisplayHomePageMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayHomePageMenu, storeScope);
+                model.DisplayMenuSettings.DisplayNewProductsMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayNewProductsMenu, storeScope);
+                model.DisplayMenuSettings.DisplaySearchMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplaySearchMenu, storeScope);
+                model.DisplayMenuSettings.DisplayCustomerMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayCustomerMenu, storeScope);
+                model.DisplayMenuSettings.DisplayBlogMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayBlogMenu, storeScope);
+                model.DisplayMenuSettings.DisplayForumsMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayForumsMenu, storeScope);
+                model.DisplayMenuSettings.DisplayContactUsMenu_OverrideForStore = _settingService.SettingExists(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope);
+            }
+
+
             return View(model);
         }
         [HttpPost]
@@ -3025,7 +3054,51 @@ namespace Grand.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.gaviewID, storeScope);
 
-            _settingService.SaveSetting(googleAnalyticsSettings);
+
+            //Menu item settings
+            var displayMenuItemSettings = _settingService.LoadSetting<MenuItemSettings>(storeScope);
+            displayMenuItemSettings.DisplayHomePageMenu = model.DisplayMenuSettings.DisplayHomePageMenu;
+            displayMenuItemSettings.DisplayNewProductsMenu = model.DisplayMenuSettings.DisplayNewProductsMenu;
+            displayMenuItemSettings.DisplaySearchMenu = model.DisplayMenuSettings.DisplaySearchMenu;
+            displayMenuItemSettings.DisplayCustomerMenu = model.DisplayMenuSettings.DisplayCustomerMenu;
+            displayMenuItemSettings.DisplayBlogMenu = model.DisplayMenuSettings.DisplayBlogMenu;
+            displayMenuItemSettings.DisplayForumsMenu = model.DisplayMenuSettings.DisplayForumsMenu;
+            displayMenuItemSettings.DisplayContactUsMenu = model.DisplayMenuSettings.DisplayContactUsMenu;
+
+            if (model.DisplayMenuSettings.DisplayHomePageMenu_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplayHomePageMenu, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplayHomePageMenu, storeScope);
+
+            if (model.DisplayMenuSettings.DisplayNewProductsMenu_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplayNewProductsMenu, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplayNewProductsMenu, storeScope);
+
+            if (model.DisplayMenuSettings.DisplaySearchMenu_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplaySearchMenu, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplaySearchMenu, storeScope);
+
+            if (model.DisplayMenuSettings.DisplayCustomerMenu_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplayCustomerMenu, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplayCustomerMenu, storeScope);
+
+            if (model.DisplayMenuSettings.DisplayBlogMenu_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplayBlogMenu, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplayBlogMenu, storeScope);
+
+            if (model.DisplayMenuSettings.DisplayForumsMenu_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplayForumsMenu, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplayForumsMenu, storeScope);
+
+            if (model.DisplayMenuSettings.DisplayContactUsMenu_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(displayMenuItemSettings, x => x.DisplayContactUsMenu, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

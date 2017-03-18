@@ -797,4 +797,49 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowSkuOnCatalogPages.Hint">
     <Value>Check to show product SKU in public store on catalog pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayTopMenu">
+    <Value>Top menu items</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayBlogMenu">
+    <Value>Display "Blog"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayBlogMenu.Hint">
+    <Value>Check if "Blog" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayForumsMenu">
+    <Value>Display "Forums"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayForumsMenu.Hint">
+    <Value>Check if "Forums" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayContactUsMenu">
+    <Value>Display "Contact us"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayContactUsMenu.Hint">
+    <Value>Check if "Contact us" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayCustomerMenu">
+    <Value>Display "My account"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayCustomerMenu.Hint">
+    <Value>Check if "My account" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayHomePageMenu">
+    <Value>Display "Home page"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayHomePageMenu.Hint">
+    <Value>Check if "Home page" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayNewProductsMenu">
+    <Value>Display "New products"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayNewProductsMenu.Hint">
+    <Value>Check if "New products" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplaySearchMenu">
+    <Value>Display "Search"</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplaySearchMenu.Hint">
+    <Value>Check if "Search" menu item should be displayed in the top menu.</Value>
+  </LocaleResource>
 </Language>
