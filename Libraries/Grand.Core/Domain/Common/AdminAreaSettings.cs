@@ -21,5 +21,10 @@ namespace Grand.Core.Domain.Common
         ///A value indicating whether to javascript is supported in rcih editor
         /// </summary>
         public bool RichEditorAllowJavaScript { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use IsoDateTimeConverter in Json results (used for avoiding issue with dates in KendoUI grids)
+        /// </summary>
+        public bool UseIsoDateTimeConverterInJson { get; set; }
     }
 }

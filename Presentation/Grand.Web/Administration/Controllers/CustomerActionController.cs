@@ -223,10 +223,7 @@ namespace Grand.Admin.Controllers
                 Data = customeractions.Select(x => new { Id = x.Id, Name = x.Name, Active = x.Active, ActionType = _customerActionService.GetCustomerActionTypeById(x.ActionTypeId).Name }),
                 Total = customeractions.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult Create()
@@ -378,10 +375,7 @@ namespace Grand.Admin.Controllers
                 Data = conditions.Conditions.Select(x => new { Id = x.Id, Name = x.Name, Condition = x.CustomerActionConditionType.ToString() }),
                 Total = conditions.Conditions.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         #endregion
@@ -610,10 +604,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z) != null ? _productService.GetProductById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
 
@@ -729,10 +720,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z) != null ? _categoryService.GetCategoryById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult CategoryAddPopup(string customerActionId, string conditionId)
@@ -818,10 +806,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.Manufacturers.Select(z => new { Id = z, ManufacturerName = _manufacturerService.GetManufacturerById(z) != null ? _manufacturerService.GetManufacturerById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult ManufacturerAddPopup(string customerActionId, string conditionId)
@@ -902,10 +887,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.Vendors.Select(z => new { Id = z, VendorName = _vendorService.GetVendorById(z).Name }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -961,10 +943,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.CustomerRoles.Select(z => new { Id = z, CustomerRole = _customerService.GetCustomerRoleById(z) != null ? _customerService.GetCustomerRoleById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1021,10 +1000,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.CustomerTags.Select(z => new { Id = z, CustomerTag = _customerTagService.GetCustomerTagById(z) != null ? _customerTagService.GetCustomerTagById(z).Name : "" }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
 
@@ -1083,10 +1059,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.ProductAttribute.Select(z => new { Id = z.Id, ProductAttributeId = z.ProductAttributeId, ProductAttributeName = _productAttributeService.GetProductAttributeById(z.ProductAttributeId).Name, Name = z.Name }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1171,10 +1144,7 @@ namespace Grand.Admin.Controllers
                         }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
 
@@ -1261,10 +1231,7 @@ namespace Grand.Admin.Controllers
                     : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1380,10 +1347,7 @@ namespace Grand.Admin.Controllers
                     : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1474,10 +1438,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.UrlReferrer.Select(z => new { Id = z.Id, Name = z.Name }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1540,10 +1501,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.UrlCurrent.Select(z => new { Id = z.Id, Name = z.Name }) : null,
                 Total = customerActions.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]

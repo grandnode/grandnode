@@ -90,11 +90,8 @@ namespace Grand.Admin.Controllers
                 }),
                 Total = queuedEmails.TotalCount
             };
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-email-by-number")]

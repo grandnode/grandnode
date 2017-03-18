@@ -5000,7 +5000,8 @@ namespace Grand.Services.Installation
                 DefaultGridPageSize = 15,
                 GridPageSizes = "10, 15, 20, 50, 100",
                 RichEditorAdditionalSettings = null,
-                RichEditorAllowJavaScript = false
+                RichEditorAllowJavaScript = false,
+                UseIsoDateTimeConverterInJson = true,
             });
 
             _settingService.SaveSetting(new CatalogSettings

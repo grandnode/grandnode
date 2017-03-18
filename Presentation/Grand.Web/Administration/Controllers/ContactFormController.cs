@@ -102,11 +102,8 @@ namespace Grand.Admin.Controllers
                 }),
                 Total = contactform.TotalCount
             };
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
 
 		public ActionResult Details(string id)
         {

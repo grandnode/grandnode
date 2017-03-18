@@ -64,11 +64,8 @@ namespace Grand.Admin.Controllers
                 Total = emailAccountModels.Count()
             };
 
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
 
         public ActionResult MarkAsDefaultEmail(string id)
         {

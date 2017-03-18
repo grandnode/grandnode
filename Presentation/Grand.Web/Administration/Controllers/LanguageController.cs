@@ -140,11 +140,8 @@ namespace Grand.Admin.Controllers
 				Data = languages.Select(x => x.ToModel()),
 				Total = languages.Count()
 			};
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
         
         public ActionResult Create()
         {

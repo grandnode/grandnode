@@ -1061,11 +1061,8 @@ namespace Grand.Admin.Controllers
                 aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
                 aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
             };
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
         
         [HttpPost, ActionName("List")]
         [FormValueRequired("go-to-order-by-number")]
@@ -2903,11 +2900,8 @@ namespace Grand.Admin.Controllers
                 Data = shipments.Select(shipment => PrepareShipmentModel(shipment, false)),
                 Total = shipments.TotalCount
             };
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
 
         [HttpPost]
         public ActionResult ShipmentsByOrder(string orderId, DataSourceRequest command)
@@ -3957,10 +3951,7 @@ namespace Grand.Admin.Controllers
             {
                 Data = model
             };
-            return new JsonResult
-            {
-                Data = gridModel.Data
-            };
+            return Json(gridModel);
         }
 
 

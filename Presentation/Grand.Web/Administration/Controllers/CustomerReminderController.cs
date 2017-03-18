@@ -164,10 +164,7 @@ namespace Grand.Admin.Controllers
                 Data = customeractions.Select(x => new { Id = x.Id, Name = x.Name, Active = x.Active, Rule = x.ReminderRule.ToString() }),
                 Total = customeractions.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult Create()
@@ -338,10 +335,7 @@ namespace Grand.Admin.Controllers
                     { Id = x.Id, Name = x.Name, Condition = x.Condition.ToString() }),
                 Total = customerReminder.Conditions.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult AddCondition(string customerReminderId)
@@ -553,10 +547,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.Categories.Select(z => new { Id = z, CategoryName = _categoryService.GetCategoryById(z)!=null ? _categoryService.GetCategoryById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult CategoryAddPopup(string customerReminderId, string conditionId)
@@ -642,10 +633,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.Manufacturers.Select(z => new { Id = z, ManufacturerName = _manufacturerService.GetManufacturerById(z)!=null ? _manufacturerService.GetManufacturerById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult ManufacturerAddPopup(string customerReminderId, string conditionId)
@@ -725,10 +713,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.Products.Select(z => new { Id = z, ProductName = _productService.GetProductById(z) !=null ? _productService.GetProductById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult ProductAddPopup(string customerReminderId, string conditionId)
@@ -845,10 +830,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.CustomerTags.Select(z => new { Id = z, CustomerTag = _customerTagService.GetCustomerTagById(z) != null ? _customerTagService.GetCustomerTagById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
 
@@ -906,10 +888,7 @@ namespace Grand.Admin.Controllers
                 Data = condition != null ? condition.CustomerRoles.Select(z => new { Id = z, CustomerRole = _customerService.GetCustomerRoleById(z) != null ? _customerService.GetCustomerRoleById(z).Name : "" }) : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -972,10 +951,7 @@ namespace Grand.Admin.Controllers
                     : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1091,10 +1067,7 @@ namespace Grand.Admin.Controllers
                     : null,
                 Total = customerReminder.Conditions.Where(x => x.Id == conditionId).Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         [HttpPost]
@@ -1186,10 +1159,7 @@ namespace Grand.Admin.Controllers
                 { Id = x.Id, Name = x.Name, Level = x.Level }).OrderBy(x=>x.Level),
                 Total = customerReminder.Levels.Count()
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult AddLevel(string customerReminderId)

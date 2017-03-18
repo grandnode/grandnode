@@ -5,6 +5,9 @@ using Grand.Core;
 using Grand.Core.Infrastructure;
 using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Security;
+using Grand.Core.Domain.Common;
+using Grand.Web.Framework.Mvc;
+using Newtonsoft.Json.Converters;
 
 namespace Grand.Admin.Controllers
 {
@@ -93,19 +96,17 @@ namespace Grand.Admin.Controllers
         /// <param name="behavior">The JSON request behavior</param>
         protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
         {
-            //Json fix for admin area
-            //sometime our entities have big text values returned (e.g. product desriptions)
-            //of course, we can set and return them as "empty" (we already do it so). Furthermore, it's a perfoemance optimization
-            //but it's better to avoid exceptions for other entities and allow maximum JSON length
-            return new JsonResult()
-            {
-                Data = data,
-                ContentType = contentType,
-                ContentEncoding = contentEncoding,
-                JsonRequestBehavior = behavior,
-                MaxJsonLength = int.MaxValue
-            };
-            //return base.Json(data, contentType, contentEncoding, behavior);
+            //Json fix issue with dates in KendoUI grid
+            //use json with IsoDateTimeConverter
+            var result = EngineContext.Current.Resolve<AdminAreaSettings>().UseIsoDateTimeConverterInJson
+                ? new ConverterJsonResult(new IsoDateTimeConverter()) : new JsonResult();
+            
+            result.Data = data;
+            result.ContentType = contentType;
+            result.ContentEncoding = contentEncoding;
+            result.JsonRequestBehavior = behavior;
+            result.MaxJsonLength = int.MaxValue;
+            return result;
         }
     }
 }

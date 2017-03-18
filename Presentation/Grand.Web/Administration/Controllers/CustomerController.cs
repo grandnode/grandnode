@@ -2046,10 +2046,7 @@ namespace Grand.Admin.Controllers
             {
                 Data = model
             };
-            return new JsonResult
-            {
-                Data = gridModel.Data
-            };
+            return Json(gridModel);
         }
 
         #endregion
@@ -2157,10 +2154,7 @@ namespace Grand.Admin.Controllers
                 }),
                 Total = contactform.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
 

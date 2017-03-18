@@ -106,11 +106,8 @@ namespace Grand.Admin.Controllers
                 Data = customertags.Select(x=> new { Id = x.Id, Name = x.Name, Count = _customerTagService.GetCustomerCount(x.Id)}),
                 Total = customertags.Count()
 			};
-			return new JsonResult
-			{
-				Data = gridModel
-			};
-		}
+            return Json(gridModel);
+        }
 
         [HttpGet]
         public ActionResult Search(string term)
@@ -139,10 +136,7 @@ namespace Grand.Admin.Controllers
                 Data = customers.Select(PrepareCustomerModelForList),
                 Total = customers.TotalCount
             };
-            return new JsonResult
-            {
-                Data = gridModel
-            };
+            return Json(gridModel);
         }
 
         public ActionResult Create()

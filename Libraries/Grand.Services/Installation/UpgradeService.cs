@@ -482,8 +482,15 @@ namespace Grand.Services.Installation
             #endregion
 
             #region Settings
+            var settingService = EngineContext.Current.Resolve<ISettingService>();
 
-            EngineContext.Current.Resolve<IRepository<Setting>>().Insert(new Setting() { Name = "catalogsettings.LimitOfFeaturedProducts", Value = "30", StoreId = "" });
+            var catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
+            catalogSettings.LimitOfFeaturedProducts = 30;
+            settingService.SaveSetting(catalogSettings, x => x.IgnoreStoreLimitations, "", false);
+
+            var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
+            adminAreaSettings.UseIsoDateTimeConverterInJson = true;
+            settingService.SaveSetting(adminAreaSettings, x => x.UseIsoDateTimeConverterInJson, "", false);
 
             #endregion
 
