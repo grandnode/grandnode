@@ -691,6 +691,9 @@ namespace Grand.Web.Controllers
                     case CustomerLoginResults.NotRegistered:
                         ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.NotRegistered"));
                         break;
+                    case CustomerLoginResults.LockedOut:
+                        ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.LockedOut"));
+                        break;
                     case CustomerLoginResults.WrongPassword:
                     default:
                         ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials"));

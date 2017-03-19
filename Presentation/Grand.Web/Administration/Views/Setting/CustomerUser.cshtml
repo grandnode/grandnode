@@ -274,6 +274,46 @@
                     @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
                 </div>
             </div>
+
+
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
+                    @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)
+
+                    <script type="text/javascript">
+	                    $(document).ready(function () {
+	                        $("#@Html.FieldIdFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)").blur(toggleFailedPasswordAllowedAttempts);
+			                    toggleFailedPasswordAllowedAttempts();
+		                    });
+
+		                    function toggleFailedPasswordAllowedAttempts() {
+		                        var failedPasswordAllowedAttempts = $("#@Html.FieldIdFor(model => model.CustomerSettings.FailedPasswordAllowedAttempts)").data("kendoNumericTextBox");
+			                    if (failedPasswordAllowedAttempts.value($("#value").val()) > 0) {
+				                    $('#pnlFailedPasswordLockoutMinutes').show();
+			                    } else {
+				                    $('#pnlFailedPasswordLockoutMinutes').hide();
+			                    }
+		                    }
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="form-group" id="pnlFailedPasswordLockoutMinutes">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
+                    @Html.ValidationMessageFor(model => model.CustomerSettings.FailedPasswordLockoutMinutes)
+                </div>
+            </div>
+
+
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.GrandLabelFor(model => model.CustomerSettings.HideNewsletterBlock, new Dictionary<string, object> { { "class", "control-label" } }, false)

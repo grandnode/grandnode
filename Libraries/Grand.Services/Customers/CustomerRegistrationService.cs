@@ -85,6 +85,9 @@ namespace Grand.Services.Customers
             if (!customer.IsRegistered())
                 return CustomerLoginResults.NotRegistered;
 
+            if (customer.CannotLoginUntilDateUtc.HasValue && customer.CannotLoginUntilDateUtc.Value > DateTime.UtcNow)
+                return CustomerLoginResults.LockedOut;
+
             string pwd = "";
             switch (customer.PasswordFormat)
             {
@@ -101,9 +104,24 @@ namespace Grand.Services.Customers
 
             bool isValid = pwd == customer.Password;
             if (!isValid)
+            {
+                //wrong password
+                customer.FailedLoginAttempts++;
+                if (_customerSettings.FailedPasswordAllowedAttempts > 0 &&
+                    customer.FailedLoginAttempts >= _customerSettings.FailedPasswordAllowedAttempts)
+                {
+                    //lock out
+                    customer.CannotLoginUntilDateUtc = DateTime.UtcNow.AddMinutes(_customerSettings.FailedPasswordLockoutMinutes);
+                    //reset the counter
+                    customer.FailedLoginAttempts = 0;
+                }
+                _customerService.UpdateCustomerLastLoginDate(customer);
                 return CustomerLoginResults.WrongPassword;
+            }
 
             //save last login date
+            customer.FailedLoginAttempts = 0;
+            customer.CannotLoginUntilDateUtc = null;
             customer.LastLoginDateUtc = DateTime.UtcNow;
             _customerService.UpdateCustomerLastLoginDate(customer);
             return CustomerLoginResults.Successful;

@@ -857,4 +857,19 @@
   <LocaleResource Name="Manufacturers.Menu">
     <Value>Manufacturers</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.WrongCredentials.LockedOut">
+    <Value>Customer is locked out</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts">
+    <Value>Maximum login failures</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts.Hint">
+    <Value>Maximum login failures to lockout account. Set 0 to disable this feature.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes">
+    <Value>Lockout time (login failures)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes.Hint">
+    <Value>Enter number of minutes to lockout users (for login failures).</Value>
+  </LocaleResource>
 </Language>

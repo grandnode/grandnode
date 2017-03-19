@@ -492,7 +492,10 @@ namespace Grand.Services.Customers
             var builder = Builders<Customer>.Filter;
             var filter = builder.Eq(x => x.Id, customer.Id);
             var update = Builders<Customer>.Update
-                .Set(x => x.LastLoginDateUtc, customer.LastLoginDateUtc);
+                .Set(x => x.LastLoginDateUtc, customer.LastLoginDateUtc)
+                .Set(x => x.FailedLoginAttempts, customer.FailedLoginAttempts)
+                .Set(x => x.CannotLoginUntilDateUtc, customer.CannotLoginUntilDateUtc);
+
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }

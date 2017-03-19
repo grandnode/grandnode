@@ -150,7 +150,15 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public bool SuffixDeletedCustomers { get; set; }
 
+        /// <summary>
+        /// Gets or sets maximum login failures to lockout account. Set 0 to disable this feature
+        /// </summary>
+        public int FailedPasswordAllowedAttempts { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int FailedPasswordLockoutMinutes { get; set; }
         #region Form fields
 
         /// <summary>

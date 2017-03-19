@@ -29,5 +29,9 @@ namespace Grand.Core.Domain.Customers
         /// Customer not registered 
         /// </summary>
         NotRegistered = 6,
+        /// <summary>
+        /// Locked out
+        /// </summary>
+        LockedOut = 7
     }
 }

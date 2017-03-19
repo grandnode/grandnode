@@ -72,6 +72,12 @@ namespace Grand.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultPasswordFormat")]
             public int DefaultPasswordFormat { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FailedPasswordAllowedAttempts")]
+            public int FailedPasswordAllowedAttempts { get; set; }
+  
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.FailedPasswordLockoutMinutes")]
+            public int FailedPasswordLockoutMinutes { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NewsletterEnabled")]
             public bool NewsletterEnabled { get; set; }
 
