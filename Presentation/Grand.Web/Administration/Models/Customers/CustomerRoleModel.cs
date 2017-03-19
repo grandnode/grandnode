@@ -30,6 +30,9 @@ namespace Grand.Admin.Models.Customers
         [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.SystemName")]
         public string SystemName { get; set; }
 
+        [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime")]
+        public bool EnablePasswordLifetime { get; set; }
+
         [GrandResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public string PurchasedWithProductId { get; set; }
 

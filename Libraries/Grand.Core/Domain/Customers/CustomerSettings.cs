@@ -164,6 +164,12 @@ namespace Grand.Core.Domain.Customers
         /// 
         /// </summary>
         public int FailedPasswordLockoutMinutes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of days for password expiration
+        /// </summary>
+        public int PasswordLifetime { get; set; }
+
         #region Form fields
 
         /// <summary>

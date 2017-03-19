@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Grand.Core;
+using Grand.Core.Caching;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure;
 using Grand.Services.Common;
 using Grand.Services.Localization;
-
 namespace Grand.Services.Customers
 {
     public static class CustomerExtensions
@@ -405,6 +405,38 @@ namespace Grand.Services.Customers
                .ToArray();
 
             return customerRolesIds;
+        }
+
+        /// <summary>
+        /// Check whether customer password is expired 
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>True if password is expired; otherwise false</returns>
+        public static bool PasswordIsExpired(this Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            //the guests don't have a password
+            if (customer.IsGuest())
+                return false;
+
+            //password lifetime is disabled for user
+            if (!customer.CustomerRoles.Any(role => role.Active && role.EnablePasswordLifetime))
+                return false;
+
+            //setting disabled for all
+            var customerSettings = EngineContext.Current.Resolve<CustomerSettings>();
+            if (customerSettings.PasswordLifetime == 0)
+                return false;
+
+            var currentLifetime = 0;
+            if (!customer.PasswordChangeDateUtc.HasValue)
+                currentLifetime = int.MaxValue;
+            else
+                currentLifetime = (DateTime.UtcNow - customer.PasswordChangeDateUtc.Value).Days;
+
+            return currentLifetime >= customerSettings.PasswordLifetime;
         }
     }
 }

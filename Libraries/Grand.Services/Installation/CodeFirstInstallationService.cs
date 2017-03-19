@@ -4228,6 +4228,7 @@ namespace Grand.Services.Installation
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
+                PasswordChangeDateUtc = DateTime.UtcNow,
             };
             var defaultAdminUserAddress = new Address
             {
@@ -5114,6 +5115,7 @@ namespace Grand.Services.Installation
                 HashedPasswordFormat = "SHA1",
                 PasswordMinLength = 6,
                 PasswordRecoveryLinkDaysValid = 7,
+                PasswordLifetime = 90,
                 FailedPasswordAllowedAttempts = 0,
                 FailedPasswordLockoutMinutes = 30,
                 UserRegistrationType = UserRegistrationType.Standard,

@@ -1711,6 +1711,11 @@ namespace Grand.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var model = new ChangePasswordModel();
+
+            //display the cause of the change password 
+            if (_workContext.CurrentCustomer.PasswordIsExpired())
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("Account.ChangePassword.PasswordIsExpired"));
+
             return View(model);
         }
 

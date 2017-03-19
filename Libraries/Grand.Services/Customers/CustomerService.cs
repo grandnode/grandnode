@@ -496,6 +496,7 @@ namespace Grand.Services.Customers
                 .Set(x => x.PasswordSalt, customer.PasswordSalt)
                 .Set(x => x.Active, customer.Active)
                 .Set(x => x.Password, customer.Password)
+                .Set(x => x.PasswordChangeDateUtc, customer.PasswordChangeDateUtc)
                 .Set(x => x.Username, string.IsNullOrEmpty(customer.Username) ? "" : customer.Username.ToLower())
                 .Set(x => x.Deleted, customer.Deleted);
 

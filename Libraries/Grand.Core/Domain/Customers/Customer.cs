@@ -199,6 +199,11 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public DateTime? LastUpdateWishListDateUtc { get; set; }
 
+        /// <summary>
+        /// Last date to change password
+        /// </summary>
+        public DateTime? PasswordChangeDateUtc { get; set; }
+
         #region Navigation properties
 
         /// <summary>

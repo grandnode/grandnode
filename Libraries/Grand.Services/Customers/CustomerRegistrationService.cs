@@ -7,6 +7,7 @@ using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Orders;
+using Grand.Services.Events;
 
 namespace Grand.Services.Customers
 {
@@ -25,6 +26,7 @@ namespace Grand.Services.Customers
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly IRewardPointsService _rewardPointsService;
+
         #endregion
 
         #region Ctor
@@ -270,8 +272,9 @@ namespace Grand.Services.Customers
                     request.StoreId,
                     _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"), "", 0);
             }
-
+            request.Customer.PasswordChangeDateUtc = DateTime.UtcNow;
             _customerService.UpdateCustomer(request.Customer);
+
             return result;
         }
         
@@ -363,6 +366,7 @@ namespace Grand.Services.Customers
                 default:
                     break;
             }
+            customer.PasswordChangeDateUtc = DateTime.UtcNow;
             customer.PasswordFormat = request.NewPasswordFormat;
             _customerService.UpdateCustomer(customer);
             _customerService.InsertCustomerPassword(customer);

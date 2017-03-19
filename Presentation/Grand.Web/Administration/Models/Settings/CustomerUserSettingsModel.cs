@@ -72,6 +72,9 @@ namespace Grand.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid")]
             public int PasswordRecoveryLinkDaysValid { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordLifetime")]
+            public int PasswordLifetime { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultPasswordFormat")]
             public int DefaultPasswordFormat { get; set; }
 

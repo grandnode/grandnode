@@ -98,6 +98,13 @@
             </div>
         </div>
         <div class="form-group">
+            @Html.GrandLabelFor(model => model.EnablePasswordLifetime)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.EnablePasswordLifetime)
+                @Html.ValidationMessageFor(model => model.EnablePasswordLifetime)
+            </div>
+        </div>
+        <div class="form-group">
             @Html.GrandLabelFor(model => model.IsSystemRole)
             <div class="col-md-9 col-sm-9">
                 <label class="control-label"> @Model.IsSystemRole.ToString()</label>
