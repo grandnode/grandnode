@@ -267,6 +267,15 @@
             </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
+                    @Html.GrandLabelFor(model => model.CustomerSettings.UnduplicatedPasswordsNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CustomerSettings.UnduplicatedPasswordsNumber)
+                    @Html.ValidationMessageFor(model => model.CustomerSettings.UnduplicatedPasswordsNumber)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
                     @Html.GrandLabelFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">

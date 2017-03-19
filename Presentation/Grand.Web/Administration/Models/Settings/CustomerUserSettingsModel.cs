@@ -66,6 +66,9 @@ namespace Grand.Admin.Models.Settings
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordMinLength")]
             public int PasswordMinLength { get; set; }
 
+            [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UnduplicatedPasswordsNumber")]
+            public int UnduplicatedPasswordsNumber { get; set; }
+
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid")]
             public int PasswordRecoveryLinkDaysValid { get; set; }
 

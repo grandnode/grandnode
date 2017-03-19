@@ -63,6 +63,26 @@ namespace Grand.Services.Customers
 
         #region Methods
 
+        protected bool PasswordMatch(CustomerHistoryPassword customerPassword, ChangePasswordRequest request)
+        {
+            string newPwd = "";
+            switch (request.NewPasswordFormat)
+            {
+                case PasswordFormat.Encrypted:
+                    newPwd = _encryptionService.EncryptText(request.NewPassword);
+                    break;
+                case PasswordFormat.Hashed:
+                    newPwd = _encryptionService.CreatePasswordHash(request.NewPassword, customerPassword.PasswordSalt, _customerSettings.HashedPasswordFormat);
+                    break;
+                default:
+                    newPwd = request.NewPassword;
+                    break;
+            }
+
+            return customerPassword.Password.Equals(newPwd);
+        }
+
+
         /// <summary>
         /// Validate customer
         /// </summary>
@@ -223,6 +243,8 @@ namespace Grand.Services.Customers
                     break;
             }
 
+            _customerService.InsertCustomerPassword(request.Customer);
+
             request.Customer.Active = request.IsApproved;
             _customerService.UpdateActive(request.Customer);
             //add to 'Registered' role
@@ -282,11 +304,8 @@ namespace Grand.Services.Customers
                 return result;
             }
 
-
-            var requestIsValid = false;
             if (request.ValidateRequest)
             {
-                //password
                 string oldPwd = "";
                 switch (customer.PasswordFormat)
                 {
@@ -301,45 +320,52 @@ namespace Grand.Services.Customers
                         break;
                 }
 
-                bool oldPasswordIsValid = oldPwd == customer.Password;
-                if (!oldPasswordIsValid)
-                    result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.OldPasswordDoesntMatch"));
-
-                if (oldPasswordIsValid)
-                    requestIsValid = true;
-            }
-            else
-                requestIsValid = true;
-
-
-            //at this point request is valid
-            if (requestIsValid)
-            {
-                switch (request.NewPasswordFormat)
+                if (oldPwd != customer.Password)
                 {
-                    case PasswordFormat.Clear:
-                        {
-                            customer.Password = request.NewPassword;
-                        }
-                        break;
-                    case PasswordFormat.Encrypted:
-                        {
-                            customer.Password = _encryptionService.EncryptText(request.NewPassword);
-                        }
-                        break;
-                    case PasswordFormat.Hashed:
-                        {
-                            string saltKey = _encryptionService.CreateSaltKey(5);
-                            customer.PasswordSalt = saltKey;
-                            customer.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
-                        }
-                        break;
-                    default:
-                        break;
+                    result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.OldPasswordDoesntMatch"));
+                    return result;
                 }
-                customer.PasswordFormat = request.NewPasswordFormat;
-                _customerService.UpdateCustomer(customer);
             }
+
+            //check for duplicates
+            if (_customerSettings.UnduplicatedPasswordsNumber > 0)
+            {
+                //get some of previous passwords
+                var previousPasswords = _customerService.GetPasswords(customer.Id, passwordsToReturn: _customerSettings.UnduplicatedPasswordsNumber);
+
+                var newPasswordMatchesWithPrevious = previousPasswords.Any(password => PasswordMatch(password, request));
+                if (newPasswordMatchesWithPrevious)
+                {
+                    result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.PasswordMatchesWithPrevious"));
+                    return result;
+                }
+            }
+
+            switch (request.NewPasswordFormat)
+            {
+                case PasswordFormat.Clear:
+                    {
+                        customer.Password = request.NewPassword;
+                    }
+                    break;
+                case PasswordFormat.Encrypted:
+                    {
+                        customer.Password = _encryptionService.EncryptText(request.NewPassword);
+                    }
+                    break;
+                case PasswordFormat.Hashed:
+                    {
+                        string saltKey = _encryptionService.CreateSaltKey(5);
+                        customer.PasswordSalt = saltKey;
+                        customer.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            customer.PasswordFormat = request.NewPasswordFormat;
+            _customerService.UpdateCustomer(customer);
+            _customerService.InsertCustomerPassword(customer);
 
             return result;
         }

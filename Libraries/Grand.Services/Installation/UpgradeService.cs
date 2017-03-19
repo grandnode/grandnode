@@ -376,6 +376,10 @@ namespace Grand.Services.Installation
             _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.CustomerGuid), new CreateIndexOptions() { Name = "CustomerGuid_1", Unique = false });
             _customerRepository.Collection.Indexes.CreateOneAsync(Builders<Customer>.IndexKeys.Ascending(x => x.Email), new CreateIndexOptions() { Name = "Email_1", Unique = false });
 
+            //customer history password
+            var _customerHistoryPasswordRepository = EngineContext.Current.Resolve<IRepository<CustomerHistoryPassword>>();
+            _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.CustomerId).Descending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "CustomerId", Unique = false });
 
             //category
             var _categoryRepository = EngineContext.Current.Resolve<IRepository<Category>>();

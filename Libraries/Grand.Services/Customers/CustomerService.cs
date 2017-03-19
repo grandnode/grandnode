@@ -67,6 +67,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
+        private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
         private readonly IRepository<ForumTopic> _forumTopicRepository;
@@ -86,6 +87,7 @@ namespace Grand.Services.Customers
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
+            IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<Order> orderRepository,
             IRepository<ForumPost> forumPostRepository,
@@ -101,6 +103,7 @@ namespace Grand.Services.Customers
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
             this._orderRepository = orderRepository;
             this._forumPostRepository = forumPostRepository;
@@ -437,7 +440,45 @@ namespace Grand.Services.Customers
             //event notification
             _eventPublisher.EntityInserted(customer);
         }
-        
+
+        /// <summary>
+        /// Insert a customer history password
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        public virtual void InsertCustomerPassword(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var chp = new CustomerHistoryPassword();
+            chp.Password = customer.Password;
+            chp.PasswordFormatId = customer.PasswordFormatId;
+            chp.PasswordSalt = customer.PasswordSalt;
+            chp.CustomerId = customer.Id;
+            chp.CreatedOnUtc = DateTime.UtcNow;
+
+            _customerHistoryPasswordProductRepository.Insert(chp);
+
+            //event notification
+            _eventPublisher.EntityInserted(chp);
+        }
+
+        /// <summary>
+        /// Gets customer passwords
+        /// </summary>
+        /// <param name="customerId">Customer identifier; pass null to load all records</param>
+        /// <param name="passwordsToReturn">Number of returning passwords; pass null to load all records</param>
+        /// <returns>List of customer passwords</returns>
+        public virtual IList<CustomerHistoryPassword> GetPasswords(string customerId, int passwordsToReturn)
+        {
+            var query = from c in _customerHistoryPasswordProductRepository.Table
+                        where c.CustomerId == customerId
+                        select c;
+            query = query.OrderByDescending(password => password.CreatedOnUtc).Take(passwordsToReturn);
+            return query.ToList();
+        }
+
+
         /// <summary>
         /// Updates the customer
         /// </summary>
