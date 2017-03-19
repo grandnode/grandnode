@@ -2028,6 +2028,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.DisplayOrder.Hint">
     <Value>Set the manufacturer's display order. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.IncludeInTopMenu">
+    <Value>Include in top menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.IncludeInTopMenu.Hint">
+    <Value>Display in the top menu bar.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.LimitedToStores">
     <Value>Limited to stores</Value>
   </LocaleResource>
@@ -2105,6 +2111,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-manufacturer' to make your page URL 'http://www.yourStore.com/the-best-manufacturer'. Leave empty to generate it automatically based on the name of the manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ShowOnHomePage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ShowOnHomePage.Hint">
+    <Value>Check if you want to show a manufacturer on home page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl">
     <Value>Subject to ACL</Value>
@@ -15039,6 +15051,9 @@
   </LocaleResource>
   <LocaleResource Name="Manufacturers.List">
     <Value>Manufacturer List</Value>
+  </LocaleResource>
+  <LocaleResource Name="Manufacturers.Menu">
+    <Value>Manufacturers</Value>
   </LocaleResource>
   <LocaleResource Name="Manufacturers.ViewAll">
     <Value>View all</Value>

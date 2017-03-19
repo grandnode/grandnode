@@ -71,6 +71,12 @@ namespace Grand.Admin.Models.Catalog
         [AllowHtml]
         public string PriceRanges { get; set; }
 
+        [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ShowOnHomePage")]
+        public bool ShowOnHomePage { get; set; }
+
+        [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.IncludeInTopMenu")]
+        public bool IncludeInTopMenu { get; set; }
+
         [GrandResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Published")]
         public bool Published { get; set; }
 

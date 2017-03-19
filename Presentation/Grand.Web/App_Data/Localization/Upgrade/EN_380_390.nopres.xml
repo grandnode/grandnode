@@ -842,4 +842,19 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplaySearchMenu.Hint">
     <Value>Check if "Search" menu item should be displayed in the top menu.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ShowOnHomePage">
+    <Value>Show on home page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ShowOnHomePage.Hint">
+    <Value>Check if you want to show a manufacturer on home page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.IncludeInTopMenu">
+    <Value>Include in top menu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.IncludeInTopMenu.Hint">
+    <Value>Display in the top menu bar.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Manufacturers.Menu">
+    <Value>Manufacturers</Value>
+  </LocaleResource>
 </Language>

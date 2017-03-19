@@ -646,7 +646,7 @@ namespace Grand.Web.Controllers
                 if (productCategories.Any())
                     activeCategoryId = productCategories.FirstOrDefault().CategoryId;
             }
-            var cachedModel = PrepareCategorySimpleModels("");
+            var cachedModel = PrepareCategorySimpleModels();
             var model = new CategoryNavigationModel
             {
                 CurrentCategoryId = activeCategoryId,
@@ -660,7 +660,7 @@ namespace Grand.Web.Controllers
         public virtual ActionResult TopMenu()
         {
             //categories
-            var cachedCategoriesModel = PrepareCategorySimpleModels("");
+            var cachedCategoriesModel = PrepareCategorySimpleModels();
             //top menu topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id, 
@@ -677,10 +677,28 @@ namespace Grand.Web.Controllers
                 })
                 .ToList()
             );
+
+            string manufacturerCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MENU,
+                _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+
+            var cachedManufacturerModel = _cacheManager.Get(manufacturerCacheKey, () =>
+                _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id)
+                    .Where(x=>x.IncludeInTopMenu)
+                    .Select(t => new TopMenuModel.TopMenuManufacturerModel
+                    {
+                        Id = t.Id,
+                        Name = t.GetLocalized(x => x.Name),
+                        SeName = t.GetSeName()
+                    })
+                    .ToList()
+                );
+
+
             var model = new TopMenuModel
             {
                 Categories = cachedCategoriesModel,
                 Topics = cachedTopicModel,
+                Manufacturers = cachedManufacturerModel,
                 NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
                 ForumEnabled = _forumSettings.ForumsEnabled,
@@ -768,9 +786,6 @@ namespace Grand.Web.Controllers
                 _storeContext.CurrentStore.Id);
             
             var model = manufacturer.ToModel();
-
-
-
 
             //sorting
             PrepareSortingOptions(model.PagingFilteringContext, command);
@@ -908,6 +923,46 @@ namespace Grand.Web.Controllers
 
             return View(model);
         }
+
+        [ChildActionOnly]
+        public virtual ActionResult HomepageManufacturers()
+        {
+            string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HOMEPAGE_KEY,
+                _storeContext.CurrentStore.Id,
+                _workContext.WorkingLanguage.Id);
+
+            List<ManufacturerModel> model = _cacheManager.Get(manufacturersCacheKey, () =>
+                _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id)
+                .Where(x => x.ShowOnHomePage)
+                .Select(x =>
+                {
+                    var manModel = x.ToModel();
+                    //prepare picture model
+                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
+                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                    manModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                    {
+                        var picture = _pictureService.GetPictureById(x.PictureId);
+                        var pictureModel = new PictureModel
+                        {
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForCategory),
+                            ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForCategory, pictureSize),
+                            Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), manModel.Name),
+                            AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), manModel.Name)
+                        };
+                        return pictureModel;
+                    });
+                    return manModel;
+                })
+                .ToList()
+            );
+
+            if (!model.Any())
+                return Content("");
+
+            return PartialView(model);
+        }
+
 
         [ChildActionOnly]
         public virtual ActionResult ManufacturerNavigation(string currentManufacturerId)

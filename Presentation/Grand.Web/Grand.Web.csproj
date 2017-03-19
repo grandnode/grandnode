@@ -3042,6 +3042,7 @@
     <Content Include="Views\Product\_AddToCartGroup.cshtml" />
     <Content Include="Views\Product\_AddToWishlistGroup.cshtml" />
     <Content Include="Views\Shared\_ProductBoxList.cshtml" />
+    <Content Include="Views\Catalog\HomepageManufacturers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

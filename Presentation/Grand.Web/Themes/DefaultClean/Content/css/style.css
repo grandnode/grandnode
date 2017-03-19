@@ -736,7 +736,7 @@ table {
     margin-bottom: 0px;
     width: 100%;
 }
-.categoryGrid a {
+.categoryGrid a, .manufacturerGrid a {
     color: #626970;
 }
 .card-grey {

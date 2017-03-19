@@ -9,10 +9,12 @@ namespace Grand.Web.Models.Catalog
         {
             Categories = new List<CategorySimpleModel>();
             Topics = new List<TopMenuTopicModel>();
+            Manufacturers = new List<TopMenuManufacturerModel> ();
         }
 
         public IList<CategorySimpleModel> Categories { get; set; }
         public IList<TopMenuTopicModel> Topics { get; set; }
+        public IList<TopMenuManufacturerModel> Manufacturers { get; set; }
 
         public bool BlogEnabled { get; set; }
         public bool NewProductsEnabled { get; set; }
@@ -29,6 +31,12 @@ namespace Grand.Web.Models.Catalog
         #region Nested classes
 
         public class TopMenuTopicModel : BaseNopEntityModel
+        {
+            public string Name { get; set; }
+            public string SeName { get; set; }
+        }
+
+        public class TopMenuManufacturerModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }

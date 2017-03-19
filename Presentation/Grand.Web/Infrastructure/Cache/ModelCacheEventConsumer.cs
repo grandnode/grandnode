@@ -164,6 +164,25 @@ namespace Grand.Web.Infrastructure.Cache
         public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "Grand.pres.manufacturer.navigation";
 
         /// <summary>
+        /// Key for ManufacturerNavigationModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : current store ID
+        /// </remarks>
+        public const string MANUFACTURER_NAVIGATION_MENU = "Grand.pres.manufacturer.navigation.menu-{0}-{1}";
+
+        /// <summary>
+        /// Key for caching of categories displayed on home page
+        /// </summary>
+        /// <remarks>
+        /// {0} : current store ID
+        /// {1} : language ID
+        /// </remarks>
+        public const string MANUFACTURER_HOMEPAGE_KEY = "Grand.pres.manufacturer.navigation.homepage-{0}-{1}";
+
+
+        /// <summary>
         /// Key for VendorNavigationModel caching
         /// </summary>
         public const string VENDOR_NAVIGATION_MODEL_KEY = "Grand.pres.vendor.navigation";
