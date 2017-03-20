@@ -14,11 +14,13 @@ using Grand.Services.Stores;
 using MongoDB.Driver;
 using Rhino.Mocks;
 using Grand.Data;
+using Grand.Core.Domain.Common;
 
 namespace Grand.Services.Customers.Tests {
     [TestClass()]
     public class CustomerRegistrationServiceTests {
         private IRepository<Customer> _customerRepo;
+        private IRepository<CustomerHistoryPassword> _customerHistoryRepo;
         private IRepository<CustomerRole> _customerRoleRepo;
         private IRepository<CustomerRoleProduct> _customerRoleProductRepo; 
         private IRepository<Order> _orderRepo;
@@ -35,6 +37,7 @@ namespace Grand.Services.Customers.Tests {
         private IStoreService _storeService;
         private RewardPointsSettings _rewardPointsSettings;
         private SecuritySettings _securitySettings;
+        private CommonSettings _commonSettings;
 
         //this method just help to get rid of repetitive code below
         private void AddCustomerToRegisteredRole(Customer customer) {
@@ -120,16 +123,19 @@ namespace Grand.Services.Customers.Tests {
             _forumPostRepo = MockRepository.GenerateMock<IRepository<ForumPost>>();
             _forumTopicRepo = MockRepository.GenerateMock<IRepository<ForumTopic>>();
 
+            _customerHistoryRepo = MockRepository.GenerateMock<IRepository<CustomerHistoryPassword>>();
+
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _customerRoleProductRepo = MockRepository.GenerateMock<IRepository<CustomerRoleProduct>>();
             _customerSettings = new CustomerSettings();
-
+            _commonSettings = new CommonSettings();
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
+                _customerHistoryRepo,
                 _customerRoleProductRepo, _orderRepo, _forumPostRepo, _forumTopicRepo,
                 null, null, _genericAttributeService, null, 
-                _eventPublisher, _customerSettings, null);
+                _eventPublisher, _customerSettings, _commonSettings);
 
             _customerRegistrationService = new CustomerRegistrationService(
                 _customerService,
