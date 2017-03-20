@@ -64,7 +64,7 @@
     {
         <li class="nav-item dropdown">
             <span class="fa fa-angle-down hidden-lg-up text-white" aria-hidden="true"></span>
-            <a class="pr-3 pl-3 nav-link dropdown-toggle" href="#">@T("Manufacturers.Menu")</a>
+            <a class="pr-3 pl-3 nav-link dropdown-toggle" href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.Menu")</a>
             <ul class="dropdown-menu first-level">
                 @foreach (var manuf in Model.Manufacturers)
                 {
