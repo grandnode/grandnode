@@ -1,5 +1,3 @@
-
-
 using Grand.Core.Domain.Common;
 
 namespace Grand.Services.Common

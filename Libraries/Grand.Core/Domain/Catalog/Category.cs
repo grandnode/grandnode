@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;

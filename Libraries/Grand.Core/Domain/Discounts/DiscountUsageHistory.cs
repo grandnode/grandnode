@@ -1,5 +1,4 @@
 using System;
-using Grand.Core.Domain.Orders;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Discounts

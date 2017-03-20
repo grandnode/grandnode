@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Grand.Core.Domain.Messages;
 using Grand.Core;
 using Grand.Core.Data;

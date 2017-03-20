@@ -7,7 +7,6 @@ using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Services.Orders;
-using Grand.Services.Events;
 
 namespace Grand.Services.Customers
 {

@@ -30,7 +30,8 @@ namespace Grand.Core
             var range = source.Skip(pageIndex * pageSize).Limit(pageSize+1).ToList();
             int total = range.Count > pageSize ? range.Count : pageSize;
             this.TotalCount = total;
-            this.TotalPages = total / pageSize;
+            if(pageSize > 0)
+                this.TotalPages = total / pageSize;
 
             if (total % pageSize > 0)
                 TotalPages++;
@@ -45,7 +46,8 @@ namespace Grand.Core
             AddRange(source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync().Result);
             taskCount.Wait();
             TotalCount = (int)taskCount.Result;
-            TotalPages = TotalCount / pageSize;
+            if(pageSize > 0)
+                TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
                 TotalPages++;
@@ -69,8 +71,9 @@ namespace Grand.Core
             source = totalCount == null ? source.Skip(pageIndex * pageSize).Take(pageSize) : source;
             AddRange(source);
             taskCount.Wait();
-            TotalCount = totalCount ?? (int)taskCount.Result; //source.Count();
-            TotalPages = TotalCount / pageSize;
+            TotalCount = totalCount ?? (int)taskCount.Result;
+            if(pageSize > 0 )
+                TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
                 TotalPages++;
@@ -86,7 +89,9 @@ namespace Grand.Core
                 throw new ArgumentException("pageSize must be greater than zero");
 
             TotalCount = totalCount ?? source.Count();
-            TotalPages = TotalCount / pageSize;
+
+            if(pageSize > 0)
+                TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
                 TotalPages++;

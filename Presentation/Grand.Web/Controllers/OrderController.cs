@@ -25,7 +25,6 @@ using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Security;
 using Grand.Web.Models.Order;
 using Grand.Core.Infrastructure;
-using Grand.Services.Customers;
 using Grand.Web.Models.Common;
 
 namespace Grand.Web.Controllers

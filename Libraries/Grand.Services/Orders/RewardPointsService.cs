@@ -4,12 +4,9 @@ using System.Linq;
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Orders;
 using Grand.Services.Events;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Services.Orders
 {

@@ -1,6 +1,3 @@
-
-
-
 using Grand.Core.Domain.Orders;
 
 namespace Grand.Services.Orders

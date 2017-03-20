@@ -1,5 +1,4 @@
 using MongoDB.Bson.Serialization.Attributes;
-using Grand.Core.Domain.Customers;
 using System;
 
 namespace Grand.Core.Domain.Catalog

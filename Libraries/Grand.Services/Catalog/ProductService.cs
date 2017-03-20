@@ -19,7 +19,6 @@ using Grand.Services.Security;
 using Grand.Services.Stores;
 using Grand.Core.Infrastructure;
 using Grand.Services.Shipping;
-using Grand.Core.Domain.Discounts;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Seo;
 using MongoDB.Driver;

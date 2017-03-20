@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Grand.Core.Domain.Security;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Customers

@@ -1,7 +1,6 @@
 using System;
 using System.Configuration;
 using System.Xml;
-using Grand.Core.Infrastructure;
 
 namespace Grand.Core.Configuration
 {

@@ -8,9 +8,7 @@ using System.Xml;
 using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
-using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Localization;
-using Grand.Data;
 using Grand.Services.Events;
 using Grand.Services.Logging;
 

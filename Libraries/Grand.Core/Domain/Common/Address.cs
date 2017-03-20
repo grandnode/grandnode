@@ -1,5 +1,4 @@
 ﻿using System;
-using Grand.Core.Domain.Directory;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Common

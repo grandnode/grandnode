@@ -1,6 +1,4 @@
-﻿using System;
-using Grand.Core.Domain.Customers;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Customers

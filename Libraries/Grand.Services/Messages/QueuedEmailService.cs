@@ -5,7 +5,6 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Messages;
-using Grand.Data;
 using Grand.Services.Events;
 using MongoDB.Driver.Linq;
 

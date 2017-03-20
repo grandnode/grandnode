@@ -1,6 +1,5 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Discounts;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Stores

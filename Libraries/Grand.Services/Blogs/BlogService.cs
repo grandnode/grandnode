@@ -5,7 +5,6 @@ using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Blogs;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Stores;
 using Grand.Services.Events;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;

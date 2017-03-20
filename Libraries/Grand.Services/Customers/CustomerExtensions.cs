@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Infrastructure;
 using Grand.Services.Common;

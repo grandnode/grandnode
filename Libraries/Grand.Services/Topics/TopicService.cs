@@ -4,7 +4,6 @@ using System.Linq;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
-using Grand.Core.Domain.Stores;
 using Grand.Core.Domain.Topics;
 using Grand.Services.Events;
 using Grand.Services.Stores;

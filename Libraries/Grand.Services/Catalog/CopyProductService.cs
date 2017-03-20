@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
@@ -7,7 +6,6 @@ using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using MongoDB.Bson;
 
 namespace Grand.Services.Catalog
 {

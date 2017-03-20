@@ -1,5 +1,3 @@
-
-
 using Grand.Core.Domain.Customers;
 
 namespace Grand.Services.Orders

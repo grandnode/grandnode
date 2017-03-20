@@ -6,7 +6,6 @@ using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
-using Grand.Data;
 using Grand.Services.Events;
 using MongoDB.Driver;
 using MongoDB.Bson;

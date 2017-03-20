@@ -6,7 +6,6 @@ using Grand.Core.Data;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Logging;
-using Grand.Data;
 using MongoDB.Driver;
 
 namespace Grand.Services.Logging

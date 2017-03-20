@@ -16,7 +16,6 @@ using Grand.Services.Payments;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
 using Grand.Core.Infrastructure;
-using Grand.Services.Customers;
 
 namespace Grand.Services.Orders
 {

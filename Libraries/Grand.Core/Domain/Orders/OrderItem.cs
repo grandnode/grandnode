@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Grand.Core.Domain.Catalog;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 

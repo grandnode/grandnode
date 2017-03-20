@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading;
 using System.Web;
 using System.Web.Compilation;
-using System.Web.Hosting;
 using Grand.Core.ComponentModel;
 using Grand.Core.Plugins;
 

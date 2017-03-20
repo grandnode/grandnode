@@ -1,10 +1,7 @@
 using Autofac;
-using Autofac.Core;
-using Grand.Core.Caching;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
-using Grand.Web.Controllers;
 using Grand.Web.Infrastructure.Installation;
 
 namespace Grand.Web.Infrastructure

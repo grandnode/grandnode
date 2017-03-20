@@ -5,7 +5,6 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Media;
 using Grand.Services.Configuration;
 using Grand.Services.Events;

@@ -2,10 +2,7 @@
 using System.Text;
 using Newtonsoft.Json;
 using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using StackExchange.Redis;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 
 namespace Grand.Core.Caching
 {

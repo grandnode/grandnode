@@ -19,7 +19,6 @@ using Grand.Services.Stores;
 using Grand.Core.Infrastructure;
 using Grand.Services.Orders;
 using Grand.Services.Catalog;
-using Grand.Services.Forums;
 using Grand.Core.Domain.Common;
 using System.Web;
 
