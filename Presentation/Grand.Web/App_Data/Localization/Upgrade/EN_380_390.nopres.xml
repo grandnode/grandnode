@@ -896,4 +896,7 @@
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.EnablePasswordLifetime.Hint">
     <Value>Check to force customers to change their passwords after a specified time.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Manage">
+    <Value>Products</Value>
+  </LocaleResource>
 </Language>

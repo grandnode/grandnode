@@ -3127,7 +3127,7 @@
     <Value>Search by a specific warehouse.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Manage">
-    <Value>Manage products</Value>
+    <Value>Products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Mappings">
     <Value>Mappings</Value>

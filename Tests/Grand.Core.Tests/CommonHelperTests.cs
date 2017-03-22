@@ -195,7 +195,7 @@ namespace Grand.Core.Tests {
         [TestMethod()]
         public void ConvertEnumTest() {
             string actualWithUpper = "SoMeTeStStRiNg";
-            string expectedWithUpper = " So Me Te St St Ri Ng";
+            string expectedWithUpper = "So Me Te St St Ri Ng";
             string stringWithoutUppers = "someteststring";
 
             Assert.AreEqual(expectedWithUpper, CommonHelper.ConvertEnum(actualWithUpper));
