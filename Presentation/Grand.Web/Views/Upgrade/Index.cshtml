@@ -3,7 +3,7 @@
 @using Grand.Web.Models.Upgrade;
 @using Grand.Web.Infrastructure.Installation;
 @{
-    Layout = "";//"~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "";
 }
 <link href="@Url.Content("~/Content/Install/style.css")" type="text/css" rel="stylesheet" />
 <script src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")" type="text/javascript"></script>
@@ -13,7 +13,6 @@
 <link href="@Url.Content("~/Content/bootstrap/bootstrap.css")" rel="stylesheet">
 <script src="@Url.Content("~/Content/bootstrap/tether.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Content/bootstrap/bootstrap.js")" type="text/javascript"></script>
-
 <div class="container">
     <div class="page upgrade-page">
         @if (Model.ApplicationVersion != Model.DatabaseVersion)
@@ -28,19 +27,51 @@
                     </div>
                 </div>
             </div>
-            using (Html.BeginForm())
+            
+            using (Html.BeginForm("Index", "Upgrade", FormMethod.Post, new { id = "upgrade-form" }))
             {
                 <div class="btn-group my-3">
                     <input type="submit" name="run-upgrade" class="btn btn-success upgrade-page" value="@T("UpgradeSystem.RunUpgrade")">
                 </div>
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#upgrade-form').submit(function () {
+                            $('html,body').animate({
+                                scrollTop: 0
+                            }, 100);
+                            window.setTimeout(function () {
+                                $(".throbber").show();
+                            }, 1000);
+                            $('input[type=submit]', this).attr('disabled', 'disabled');
+                        });
+                    });
+                </script>
+
             }
         }
         else
         {
             <div class="page-title">
                 <h1 class="generalTitle">@T("UpgradeSystem.Actual")</h1>
-                <h2 class="generalTitle">@T("UpgradeSystem.Message2")</h2>
             </div>
         }
+        <div class="throbber">
+            <div class="curtain">
+            </div>
+
+            <div class="curtain-content">
+                <div>
+                    <h1 class="throbber-header">Upgrade process, please wait ...</h1>
+                    <div class="spinner active">
+                        <svg style="width:100px; height:100px" viewBox="0 0 64 64">
+                            <circle cx="32" cy="32" r="29" fill="none" stroke-width="3" stroke-miterlimit="10"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>

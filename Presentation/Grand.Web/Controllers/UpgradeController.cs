@@ -1,5 +1,6 @@
 ﻿using Grand.Core;
 using Grand.Core.Data;
+using Grand.Core.Infrastructure;
 using Grand.Services.Installation;
 using Grand.Web.Models.Upgrade;
 using System.Web.Mvc;
@@ -44,9 +45,14 @@ namespace Grand.Web.Controllers
             {
                 _upgradeService.UpgradeData(model.DatabaseVersion, model.ApplicationVersion);
             }
-            model.ApplicationVersion = GrandVersion.CurrentVersion;
-            model.DatabaseVersion = _upgradeService.DatabaseVersion();
-            return View(model);
+
+            //restart application
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            webHelper.RestartAppDomain();
+
+            //Redirect to home page
+            return RedirectToRoute("HomePage");
+
         }
     }
 }

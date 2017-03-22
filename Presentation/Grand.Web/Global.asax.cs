@@ -83,12 +83,19 @@ namespace Grand.Web
                 }
             });
 
-            //miniprofiler
+            //miniprofiler / upgrade
             if (databaseInstalled)
             {
                 if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
                 {
                     GlobalFilters.Filters.Add(new ProfilingActionFilter());
+                }
+
+                //upgrade database
+                var upgradeService = EngineContext.Current.Resolve<Services.Installation.IUpgradeService>();
+                if (GrandVersion.CurrentVersion != upgradeService.DatabaseVersion())
+                {
+                    GlobalFilters.Filters.Add(new ValidateVersionAttribute());
                 }
             }
 

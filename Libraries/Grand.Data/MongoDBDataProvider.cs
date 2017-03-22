@@ -23,7 +23,6 @@ namespace Grand.Data
         /// </summary>
         public virtual void SetDatabaseInitializer()
         {
-            //BsonSerializer.RegisterSerializer<decimal>(new DecimalSerializer().WithRepresentation(BsonType.Double));
             BsonSerializer.RegisterSerializer(typeof(DateTime),
              new DateTimeSerializer(DateTimeKind.Utc));
         }

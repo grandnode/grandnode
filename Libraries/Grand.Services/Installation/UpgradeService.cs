@@ -30,6 +30,10 @@ using Grand.Core.Domain.News;
 using Grand.Core.Domain.Logging;
 using Grand.Core.Domain.Security;
 using Grand.Services.Security;
+using MongoDB.Bson;
+using MongoDB.Driver.Core.Operations;
+using MongoDB.Driver.Core.Bindings;
+using System.Threading;
 
 namespace Grand.Services.Installation
 {
@@ -264,6 +268,18 @@ namespace Grand.Services.Installation
         private void From380To390()
         {
 
+            #region Run scripts
+
+
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory+"App_Data\\Upgrade\\", "UpgradeScript_380_390.js");
+            string upgrade_script = File.ReadAllText(filePath);
+            var function = new BsonJavaScript(upgrade_script);
+            var op = new EvalOperation(_versionRepository.Database.DatabaseNamespace, function, null);
+            var writeBinding = new WritableServerBinding(_versionRepository.Database.Client.Cluster);
+            op.Execute(writeBinding, CancellationToken.None);
+
+            #endregion
+
             #region Install String resources
             InstallStringResources("380_390.nopres.xml");
             #endregion
@@ -491,7 +507,7 @@ namespace Grand.Services.Installation
 
             var catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
             catalogSettings.LimitOfFeaturedProducts = 30;
-            settingService.SaveSetting(catalogSettings, x => x.IgnoreStoreLimitations, "", false);
+            settingService.SaveSetting(catalogSettings, x => x.LimitOfFeaturedProducts, "", false);
 
             var adminAreaSettings = EngineContext.Current.Resolve<AdminAreaSettings>();
             adminAreaSettings.UseIsoDateTimeConverterInJson = true;

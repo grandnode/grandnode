@@ -194,6 +194,7 @@
     <Compile Include="Seo\WwwRequirementAttribute.cs" />
     <Compile Include="Security\AdminAntiForgeryAttribute.cs" />
     <Compile Include="UI\CssRewriteUrlTransformFixed.cs" />
+    <Compile Include="ValidateVersionAttribute.cs" />
     <Compile Include="ValidatePasswordAttribute.cs" />
     <Compile Include="Validators\BaseNopValidator.cs" />
     <Compile Include="WebStoreContext.cs" />

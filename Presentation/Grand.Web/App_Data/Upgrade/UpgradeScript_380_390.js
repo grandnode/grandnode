@@ -1,19 +1,4 @@
 ﻿
-//Update fields AppliedDiscounts in the Store Collection 
-db.Store.find({ AppliedDiscounts: { $exists: true }, $where: 'this.AppliedDiscounts.length > 0' }).forEach(function (store) {
-	if (store.AppliedDiscounts[0]["_id"] != null) {
-		var discounts = store.AppliedDiscounts;
-		store.AppliedDiscounts = [];
-		for (var i = 0; i < discounts.length; ++i) {
-			var discount = discounts[i];
-			var discountId = discount["_id"];
-			store.AppliedDiscounts.push(discountId);
-		}
-		db.Store.save(store);
-	}
-});
-
-
 //Update fields AppliedDiscounts in the Category Collection 
 db.Category.find({AppliedDiscounts:{$exists:true}, $where:'this.AppliedDiscounts.length > 0'}).forEach( function(category) {
 	if (category.AppliedDiscounts[0]["_id"] != null) {
@@ -41,21 +26,6 @@ db.Manufacturer.find({ AppliedDiscounts: { $exists: true }, $where: 'this.Applie
 		db.Manufacturer.save(manufacturer);
 	}
 });
-
-//Update fields AppliedDiscounts in the Vendor Collection 
-db.Vendor.find({ AppliedDiscounts: { $exists: true }, $where: 'this.AppliedDiscounts.length > 0' }).forEach(function (vendor) {
-	if (vendor.AppliedDiscounts[0]["_id"] != null) {
-		var discounts = vendor.AppliedDiscounts;
-		vendor.AppliedDiscounts = [];
-		for (var i = 0; i < discounts.length; ++i) {
-			var discount = discounts[i];
-			var discountId = discount["_id"];
-			vendor.AppliedDiscounts.push(discountId);
-		}
-		db.Vendor.save(vendor);
-	}
-});
-
 
 //Update fields AppliedDiscounts in the Product Collection 
 db.Product.find({ AppliedDiscounts: { $exists: true }, $where: 'this.AppliedDiscounts.length > 0' }).forEach(function (product) {

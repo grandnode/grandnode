@@ -46,12 +46,12 @@ namespace Grand.Core
             AddRange(source.Find(filterdefinition).Sort(sortdefinition).Skip(pageIndex * pageSize).Limit(pageSize).ToListAsync().Result);
             taskCount.Wait();
             TotalCount = (int)taskCount.Result;
-            if(pageSize > 0)
+            if (pageSize > 0)
+            {
                 TotalPages = TotalCount / pageSize;
-
-            if (TotalCount % pageSize > 0)
-                TotalPages++;
-
+                if (TotalCount % pageSize > 0)
+                    TotalPages++;
+            }
             this.PageSize = pageSize;
             this.PageIndex = pageIndex;
         }
@@ -72,11 +72,12 @@ namespace Grand.Core
             AddRange(source);
             taskCount.Wait();
             TotalCount = totalCount ?? (int)taskCount.Result;
-            if(pageSize > 0 )
+            if (pageSize > 0)
+            {
                 TotalPages = TotalCount / pageSize;
-
-            if (TotalCount % pageSize > 0)
-                TotalPages++;
+                if (TotalCount % pageSize > 0)
+                    TotalPages++;
+            }
 
             PageSize = pageSize;
             PageIndex = pageIndex;
@@ -90,11 +91,12 @@ namespace Grand.Core
 
             TotalCount = totalCount ?? source.Count();
 
-            if(pageSize > 0)
+            if (pageSize > 0)
+            {
                 TotalPages = TotalCount / pageSize;
-
-            if (TotalCount % pageSize > 0)
-                TotalPages++;
+                if (TotalCount % pageSize > 0)
+                    TotalPages++;
+            }
 
             PageSize = pageSize;
             PageIndex = pageIndex;
