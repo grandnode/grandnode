@@ -32,10 +32,6 @@ namespace Grand.Web.Framework
             if (string.IsNullOrEmpty(controllerName) || controllerName.Equals("Grand.Web.Controllers.UpgradeController", StringComparison.InvariantCultureIgnoreCase))
                 return;
 
-            //var actionName = filterContext.ActionDescriptor.ActionName;
-            //if (string.IsNullOrEmpty(actionName) || actionName.Equals("Index", StringComparison.InvariantCultureIgnoreCase))
-            //    return;
-
             var upgradeUrl = new UrlHelper(filterContext.RequestContext).RouteUrl("Upgrade");
             filterContext.Result = new RedirectResult(upgradeUrl);
         }

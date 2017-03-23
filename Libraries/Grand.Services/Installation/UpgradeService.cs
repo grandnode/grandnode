@@ -270,13 +270,12 @@ namespace Grand.Services.Installation
 
             #region Run scripts
 
-
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory+"App_Data\\Upgrade\\", "UpgradeScript_380_390.js");
             string upgrade_script = File.ReadAllText(filePath);
-            var function = new BsonJavaScript(upgrade_script);
-            var op = new EvalOperation(_versionRepository.Database.DatabaseNamespace, function, null);
+            var bscript = new BsonJavaScript(upgrade_script);
+            var operation = new EvalOperation(_versionRepository.Database.DatabaseNamespace, bscript, null);
             var writeBinding = new WritableServerBinding(_versionRepository.Database.Client.Cluster);
-            op.Execute(writeBinding, CancellationToken.None);
+            operation.Execute(writeBinding, CancellationToken.None);
 
             #endregion
 
