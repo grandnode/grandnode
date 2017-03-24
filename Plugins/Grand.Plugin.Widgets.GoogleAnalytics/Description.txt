@@ -2,7 +2,7 @@
 FriendlyName: Google Analytics or Universal Analytics
 SystemName: Widgets.GoogleAnalytics
 Version: 1.21
-SupportedVersions: 3.90
+SupportedVersions: 4.00
 Author: grandnode team, nopcommerce team, Nicolas Muniere
 DisplayOrder: 1
 FileName: Grand.Plugin.Widgets.GoogleAnalytics.dll

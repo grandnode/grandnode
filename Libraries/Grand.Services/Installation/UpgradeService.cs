@@ -48,6 +48,7 @@ namespace Grand.Services.Installation
         private const string version_370 = "3.70";
         private const string version_380 = "3.80";
         private const string version_390 = "3.90";
+        private const string version_400 = "4.00";
 
         #endregion
 
@@ -79,6 +80,12 @@ namespace Grand.Services.Installation
             {
                 From380To390();
                 fromversion = version_390;
+            }
+
+            if (fromversion == version_390)
+            {
+                From390To400();
+                fromversion = version_400;
             }
 
             if (fromversion == toversion)
@@ -565,6 +572,10 @@ namespace Grand.Services.Installation
             #endregion
         }
 
+        private void From390To400()
+        {
+
+        }
         private void InstallStringResources(string filenames)
         {
             //'English' language            
