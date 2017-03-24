@@ -204,7 +204,10 @@
                     @Html.GrandLabelFor(model => model.AllowViewUnpublishedProductPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AllowViewUnpublishedProductPage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.AllowViewUnpublishedProductPage)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AllowViewUnpublishedProductPage)
                 </div>
             </div>
@@ -214,7 +217,10 @@
                     @Html.GrandLabelFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
                 </div>
             </div>
@@ -224,7 +230,10 @@
                     @Html.GrandLabelFor(model => model.ShowSkuOnProductDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowSkuOnProductDetailsPage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowSkuOnProductDetailsPage)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowSkuOnProductDetailsPage)
                 </div>
             </div>
@@ -234,7 +243,10 @@
                     @Html.GrandLabelFor(model => model.ShowSkuOnCatalogPages, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowSkuOnCatalogPages)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowSkuOnCatalogPages)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowSkuOnCatalogPages)
                 </div>
             </div>
@@ -244,7 +256,10 @@
                     @Html.GrandLabelFor(model => model.ShowManufacturerPartNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowManufacturerPartNumber)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowManufacturerPartNumber)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowManufacturerPartNumber)
                 </div>
             </div>
@@ -254,7 +269,10 @@
                     @Html.GrandLabelFor(model => model.ShowGtin, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowGtin)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowGtin)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowGtin)
                 </div>
             </div>
@@ -264,7 +282,10 @@
                     @Html.GrandLabelFor(model => model.ShowFreeShippingNotification, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowFreeShippingNotification)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowFreeShippingNotification)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowFreeShippingNotification)
                 </div>
             </div>
@@ -274,7 +295,10 @@
                     @Html.GrandLabelFor(model => model.AllowProductSorting, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AllowProductSorting)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.AllowProductSorting)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AllowProductSorting)
                 </div>
             </div>
@@ -284,7 +308,10 @@
                     @Html.GrandLabelFor(model => model.AllowProductViewModeChanging, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AllowProductViewModeChanging)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.AllowProductViewModeChanging)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AllowProductViewModeChanging)
                 </div>
             </div>
@@ -294,7 +321,10 @@
                     @Html.GrandLabelFor(model => model.ShowProductsFromSubcategories, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowProductsFromSubcategories)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowProductsFromSubcategories)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowProductsFromSubcategories)
                 </div>
             </div>
@@ -304,7 +334,10 @@
                     @Html.GrandLabelFor(model => model.ShowCategoryProductNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowCategoryProductNumber)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowCategoryProductNumber)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowCategoryProductNumber)
                 </div>
             </div>
@@ -314,7 +347,10 @@
                     @Html.GrandLabelFor(model => model.ShowCategoryProductNumberIncludingSubcategories, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
                 </div>
             </div>
@@ -324,7 +360,10 @@
                     @Html.GrandLabelFor(model => model.CategoryBreadcrumbEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CategoryBreadcrumbEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.CategoryBreadcrumbEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.CategoryBreadcrumbEnabled)
                 </div>
             </div>
@@ -334,7 +373,10 @@
                     @Html.GrandLabelFor(model => model.AskQuestionEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AskQuestionEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.AskQuestionEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AskQuestionEnabled)
                 </div>
             </div>
@@ -344,7 +386,10 @@
                     @Html.GrandLabelFor(model => model.EmailAFriendEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.EmailAFriendEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.EmailAFriendEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.EmailAFriendEnabled)
                 </div>
             </div>
@@ -354,7 +399,10 @@
                     @Html.GrandLabelFor(model => model.AllowAnonymousUsersToEmailAFriend, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AllowAnonymousUsersToEmailAFriend)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.AllowAnonymousUsersToEmailAFriend)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailAFriend)
                 </div>
             </div>
@@ -364,7 +412,10 @@
                     @Html.GrandLabelFor(model => model.RecentlyViewedProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.RecentlyViewedProductsEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.RecentlyViewedProductsEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.RecentlyViewedProductsEnabled)
                 </div>
             </div>
@@ -384,16 +435,23 @@
                     @Html.GrandLabelFor(model => model.RecommendedProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.RecommendedProductsEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.RecommendedProductsEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.RecommendedProductsEnabled)
                 </div>
-            </div>        <div class="form-group">
+            </div>        
+            <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.NewProductsEnabled_OverrideForStore, model => model.NewProductsEnabled, Model.ActiveStoreScopeConfiguration)
                     @Html.GrandLabelFor(model => model.NewProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.NewProductsEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.NewProductsEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.NewProductsEnabled)
                 </div>
             </div>
@@ -412,7 +470,10 @@
                     @Html.GrandLabelFor(model => model.ShowBestsellersOnHomepage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowBestsellersOnHomepage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowBestsellersOnHomepage)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowBestsellersOnHomepage)
                 </div>
             </div>
@@ -432,7 +493,10 @@
                     @Html.GrandLabelFor(model => model.ProductsAlsoPurchasedEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ProductsAlsoPurchasedEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ProductsAlsoPurchasedEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedEnabled)
                 </div>
             </div>
@@ -462,7 +526,10 @@
                     @Html.GrandLabelFor(model => model.ProductsByTagAllowCustomersToSelectPageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
                 </div>
             </div>
@@ -502,7 +569,10 @@
                     @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoFooter, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoFooter)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoFooter)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoFooter)
                 </div>
             </div>
@@ -512,7 +582,10 @@
                     @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoProductDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
                 </div>
             </div>
@@ -522,7 +595,10 @@
                     @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoProductBoxes, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoProductBoxes)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoProductBoxes)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductBoxes)
                 </div>
             </div>
@@ -532,7 +608,10 @@
                     @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoShoppingCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoShoppingCart)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoShoppingCart)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoShoppingCart)
                 </div>
             </div>
@@ -542,7 +621,10 @@
                     @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoWishlist, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoWishlist)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoWishlist)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoWishlist)
                 </div>
             </div>
@@ -552,7 +634,10 @@
                     @Html.GrandLabelFor(model => model.DisplayTaxShippingInfoOrderDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
                 </div>
             </div>
@@ -569,7 +654,10 @@
                     @Html.GrandLabelFor(model => model.IgnoreAcl, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IgnoreAcl)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.IgnoreAcl)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.IgnoreAcl)
                 </div>
             </div>
@@ -579,7 +667,10 @@
                     @Html.GrandLabelFor(model => model.IgnoreStoreLimitations, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IgnoreStoreLimitations)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.IgnoreStoreLimitations)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
                 </div>
             </div>
@@ -589,7 +680,10 @@
                     @Html.GrandLabelFor(model => model.IgnoreDiscounts, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IgnoreDiscounts)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.IgnoreDiscounts)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
                 </div>
             </div>
@@ -599,7 +693,10 @@
                     @Html.GrandLabelFor(model => model.IgnoreFeaturedProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IgnoreFeaturedProducts)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.IgnoreFeaturedProducts)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
                 </div>
             </div>
@@ -609,7 +706,10 @@
                     @Html.GrandLabelFor(model => model.IgnoreFilterableSpecAttributeOption, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IgnoreFilterableSpecAttributeOption)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.IgnoreFilterableSpecAttributeOption)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.IgnoreFilterableSpecAttributeOption)
                 </div>
             </div>
@@ -619,7 +719,10 @@
                     @Html.GrandLabelFor(model => model.IgnoreFilterableAvailableStartEndDateTime, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
                 </div>
             </div>
@@ -629,7 +732,10 @@
                     @Html.GrandLabelFor(model => model.CacheProductPrices, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CacheProductPrices)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.CacheProductPrices)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.CacheProductPrices)
                 </div>
             </div>
@@ -646,7 +752,10 @@
                     @Html.GrandLabelFor(model => model.ProductReviewsMustBeApproved, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ProductReviewsMustBeApproved)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ProductReviewsMustBeApproved)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ProductReviewsMustBeApproved)
                 </div>
             </div>
@@ -656,7 +765,10 @@
                     @Html.GrandLabelFor(model => model.AllowAnonymousUsersToReviewProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.AllowAnonymousUsersToReviewProduct)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.AllowAnonymousUsersToReviewProduct)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToReviewProduct)
                 </div>
             </div>
@@ -666,7 +778,10 @@
                     @Html.GrandLabelFor(model => model.NotifyStoreOwnerAboutNewProductReviews, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
                 </div>
             </div>
@@ -677,7 +792,10 @@
                     @Html.GrandLabelFor(model => model.ShowProductReviewsPerStore, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowProductReviewsPerStore)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowProductReviewsPerStore)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowProductReviewsPerStore)
                 </div>
             </div>
@@ -687,7 +805,10 @@
                     @Html.GrandLabelFor(model => model.ProductReviewPossibleOnlyAfterPurchasing, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
                 </div>
             </div>
@@ -736,7 +857,10 @@
                     @Html.GrandLabelFor(model => model.SearchPageAllowCustomersToSelectPageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.SearchPageAllowCustomersToSelectPageSize)
                 </div>
             </div>
@@ -766,7 +890,10 @@
                     @Html.GrandLabelFor(model => model.ProductSearchAutoCompleteEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ProductSearchAutoCompleteEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ProductSearchAutoCompleteEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteEnabled)
                 </div>
             </div>
@@ -786,7 +913,10 @@
                     @Html.GrandLabelFor(model => model.ShowProductImagesInSearchAutoComplete, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowProductImagesInSearchAutoComplete)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowProductImagesInSearchAutoComplete)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowProductImagesInSearchAutoComplete)
                 </div>
             </div>
@@ -813,7 +943,10 @@
                     @Html.GrandLabelFor(model => model.CompareProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.CompareProductsEnabled)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.CompareProductsEnabled)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
                 </div>
             </div>
@@ -823,7 +956,10 @@
                     @Html.GrandLabelFor(model => model.IncludeShortDescriptionInCompareProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IncludeShortDescriptionInCompareProducts)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.IncludeShortDescriptionInCompareProducts)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.IncludeShortDescriptionInCompareProducts)
                 </div>
             </div>
@@ -833,7 +969,10 @@
                     @Html.GrandLabelFor(model => model.IncludeFullDescriptionInCompareProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.IncludeFullDescriptionInCompareProducts)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.IncludeFullDescriptionInCompareProducts)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.IncludeFullDescriptionInCompareProducts)
                 </div>
             </div>
@@ -867,7 +1006,10 @@
                     @Html.GrandLabelFor(model => model.ShowShareButton, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.GrandEditorFor(model => model.ShowShareButton)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.ShowShareButton)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.ShowShareButton)
                 </div>
             </div>
