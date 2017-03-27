@@ -1,15 +1,7 @@
 [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
 ﻿GrandNode
 ===========
-GrandNode is open source e-commerce software based on ASP.NET and MongoDB. 
-We want to meet customers' requirements for stability and speed of the online store. According to the needs of the most demanding customers 
-we decided to change engine of nopCommerce to achieve maximum performance, usability and safety. 
-The availability of source code guarantees the safety which does not provide any paid software. 
-People who choose to take advantage of GrandNode receive easy to use, flexible, free, fit and ready to use software. 
-GrandNode fully adjusts to the latest e-commerce trends like responsive design, full support for mobile devices. 
-It is optimized for search engines, because it has friendly URLs, structured content and products, meta-tags and clean code.  
-Our mission is to introduce breath of fresh air in an e-commerce market 
-that has been dominated by brands who want to increase sales pistils, but not engaging in to sellers problems.
+GrandNode is a free, open source e-commerce solution based on ASP.NET MVC 5nopco and NoSQL database - MongoDB. 
 
 
 ## GrandNode resources: ##
@@ -26,14 +18,30 @@ Documentation: [http://www.docs.grandnode.com](http://www.docs.grandnode.com)
 
 Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
+## Development status ## 
+
+The latest stable version is 3.90
+Active development version: 4.00 (branch [https://github.com/grandnode/grandnode/tree/develop](develop))
+[https://github.com/grandnode/grandnode/milestone/1](Roadmap for 4.0)
+[https://github.com/grandnode/grandnode/issues](Tickets linked to 4.0)
+
+## How to contribute code ##
+
+[http://docs.grandnode.com/display/grandnode/Developer+Guide](Coding standards and guides)
+
+## How to report issues ##
+
+[Reporting a security issue](https://github.com/grandnode/grandnode/issues)
+[https://grandnode.com/boards/topic/4/how-to-report-a-bug](What makes a perfect issue ticket?)
+
 ## Store demo: ##
 
-Browse our shopping cart demo store to get a feel for grandnode shopping cart. Browse through the store from the customer's perspective and place an order. You won't be billed for or receive any products – the demo store examples are there only to show the extensive functionality of the shopping cart. Get a better feel for it by going through the admin panel and make changes.
-
 ##### Frontend:
+[http://demo.grandnode.com/](http://demo.grandnode.com/)
 [![ScreenShot](http://grandnode.com/Content/Images/uploaded/grandbootstrap.png)](http://demo.grandnode.com/)
 
 ##### Backend:
+[http://demo.grandnode.com/login?ReturnUrl=%2fadmin](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
 [![ScreenShot](http://grandnode.com/Content/Images/uploaded/adminpanel.jpg)](http://demo.grandnode.com/login?ReturnUrl=%2fadmin)
 
 Demo is restoring every hour to the original state.
