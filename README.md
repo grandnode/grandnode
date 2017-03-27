@@ -22,7 +22,9 @@ Forums: [http://www.grandnode.com/boards/](http://www.grandnode.com/boards/)
 
 The latest stable version is 3.90
 Active development version: 4.00 (branch [develop](https://github.com/grandnode/grandnode/tree/develop))
+
 [Roadmap for 4.00](https://github.com/grandnode/grandnode/milestone/1)
+
 [Tickets linked to 4.00](https://github.com/grandnode/grandnode/issues)
 
 ## How to contribute code ##
@@ -32,6 +34,7 @@ Active development version: 4.00 (branch [develop](https://github.com/grandnode/
 ## How to report issues ##
 
 [Reporting a security issue](https://github.com/grandnode/grandnode/issues)
+
 [What makes a perfect issue ticket?](https://grandnode.com/boards/topic/4/how-to-report-a-bug)
 
 ## Store demo: ##
