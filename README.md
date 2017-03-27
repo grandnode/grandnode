@@ -1,7 +1,7 @@
 [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/)
 ﻿GrandNode
 ===========
-GrandNode is a free, open source e-commerce solution based on ASP.NET MVC 5nopco and NoSQL database - MongoDB. 
+GrandNode is a free, open source e-commerce solution based on ASP.NET MVC 5 and NoSQL database - MongoDB. 
 
 
 ## GrandNode resources: ##
