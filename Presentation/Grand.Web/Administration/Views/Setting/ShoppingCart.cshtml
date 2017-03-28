@@ -38,7 +38,10 @@
                                     @Html.GrandLabelFor(model => model.DisplayCartAfterAddingProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.DisplayCartAfterAddingProduct)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayCartAfterAddingProduct)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.DisplayCartAfterAddingProduct)
                                 </div>
                             </div>
@@ -48,7 +51,10 @@
                                     @Html.GrandLabelFor(model => model.DisplayWishlistAfterAddingProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.DisplayWishlistAfterAddingProduct)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayWishlistAfterAddingProduct)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.DisplayWishlistAfterAddingProduct)
                                 </div>
                             </div>
@@ -58,7 +64,10 @@
                                     @Html.GrandLabelFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
                                 </div>
                             </div>
@@ -88,7 +97,10 @@
                                     @Html.GrandLabelFor(model => model.MoveItemsFromWishlistToCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.MoveItemsFromWishlistToCart)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.MoveItemsFromWishlistToCart)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.MoveItemsFromWishlistToCart)
                                 </div>
                             </div>
@@ -98,7 +110,10 @@
                                     @Html.GrandLabelFor(model => model.ShowProductImagesOnShoppingCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.ShowProductImagesOnShoppingCart)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowProductImagesOnShoppingCart)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowProductImagesOnShoppingCart)
                                 </div>
                             </div>
@@ -108,7 +123,10 @@
                                     @Html.GrandLabelFor(model => model.ShowProductImagesOnWishList, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.ShowProductImagesOnWishList)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowProductImagesOnWishList)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowProductImagesOnWishList)
                                 </div>
                             </div>
@@ -118,7 +136,10 @@
                                     @Html.GrandLabelFor(model => model.ShowDiscountBox, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.ShowDiscountBox)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowDiscountBox)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowDiscountBox)
                                 </div>
                             </div>
@@ -128,7 +149,10 @@
                                     @Html.GrandLabelFor(model => model.ShowGiftCardBox, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.ShowGiftCardBox)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowGiftCardBox)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowGiftCardBox)
                                 </div>
                             </div>
@@ -148,7 +172,10 @@
                                     @Html.GrandLabelFor(model => model.EmailWishlistEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.EmailWishlistEnabled)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.EmailWishlistEnabled)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.EmailWishlistEnabled)
                                 </div>
                             </div>
@@ -158,7 +185,10 @@
                                     @Html.GrandLabelFor(model => model.AllowAnonymousUsersToEmailWishlist, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailWishlist)
                                 </div>
                             </div>
@@ -168,7 +198,10 @@
                                     @Html.GrandLabelFor(model => model.MiniShoppingCartEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.MiniShoppingCartEnabled)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.MiniShoppingCartEnabled)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.MiniShoppingCartEnabled)
                                 </div>
                             </div>
@@ -188,7 +221,10 @@
                                     @Html.GrandLabelFor(model => model.ShowProductImagesInMiniShoppingCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.ShowProductImagesInMiniShoppingCart)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowProductImagesInMiniShoppingCart)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowProductImagesInMiniShoppingCart)
                                 </div>
                             </div>
@@ -198,7 +234,10 @@
                                     @Html.GrandLabelFor(model => model.AllowCartItemEditing, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.AllowCartItemEditing)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowCartItemEditing)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowCartItemEditing)
                                 </div>
                             </div>
@@ -210,7 +249,7 @@
     </div>
 
 
-    
+
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -240,9 +279,9 @@
                 $('#pnlAllowAnonymousUsersToEmailWishlist').hide();
             }
         }
-        
-    </script>
-   
 
-   
+    </script>
+
+
+
 }
