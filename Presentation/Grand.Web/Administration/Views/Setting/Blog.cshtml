@@ -38,7 +38,10 @@
                                     @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.Enabled)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.Enabled)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.Enabled)
                                 </div>
                             </div>
@@ -58,7 +61,10 @@
                                     @Html.GrandLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
                                 </div>
                             </div>
@@ -68,7 +74,10 @@
                                     @Html.GrandLabelFor(model => model.NotifyAboutNewBlogComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.NotifyAboutNewBlogComments)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.NotifyAboutNewBlogComments)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
                                 </div>
                             </div>
@@ -88,7 +97,10 @@
                                     @Html.GrandLabelFor(model => model.ShowHeaderRssUrl, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.ShowHeaderRssUrl)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowHeaderRssUrl)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
                                 </div>
                             </div>
@@ -98,7 +110,4 @@
             </div>
         </div>
     </div>
-
-
-    
 }
