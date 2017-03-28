@@ -52,11 +52,11 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShipToSameAddress_OverrideForStore, model => model.ShipToSameAddress, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.ShipToSameAddress, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.ShipToSameAddress)
                                         <span></span>
@@ -65,11 +65,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowPickUpInStore_OverrideForStore, model => model.AllowPickUpInStore, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.AllowPickUpInStore, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.AllowPickUpInStore)
                                         <span></span>
@@ -78,11 +78,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.UseWarehouseLocation, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.UseWarehouseLocation)
                                         <span></span>
@@ -91,11 +91,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, model => model.NotifyCustomerAboutShippingFromMultipleLocations, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
                                         <span></span>
@@ -104,11 +104,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXEnabled_OverrideForStore, model => model.FreeShippingOverXEnabled, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.FreeShippingOverXEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.FreeShippingOverXEnabled)
                                         <span></span>
@@ -117,21 +117,21 @@
                                 </div>
                             </div>
                             <div class="form-group" id="pnlValueOfX">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXValue_OverrideForStore, model => model.FreeShippingOverXValue, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.FreeShippingOverXValue, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @Html.GrandEditorFor(model => model.FreeShippingOverXValue)
                                     @Html.ValidationMessageFor(model => model.FreeShippingOverXValue)
                                 </div>
                             </div>
                             <div class="form-group" id="pnlValueOfXincltax">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXIncludingTax_OverrideForStore, model => model.FreeShippingOverXIncludingTax, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.FreeShippingOverXIncludingTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.FreeShippingOverXIncludingTax)
                                         <span></span>
@@ -140,11 +140,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.EstimateShippingEnabled_OverrideForStore, model => model.EstimateShippingEnabled, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.EstimateShippingEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.EstimateShippingEnabled)
                                         <span></span>
@@ -153,11 +153,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, model => model.DisplayShipmentEventsToCustomers, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.DisplayShipmentEventsToCustomers, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.DisplayShipmentEventsToCustomers)
                                         <span></span>
@@ -166,11 +166,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToStoreOwner_OverrideForStore, model => model.DisplayShipmentEventsToStoreOwner, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.DisplayShipmentEventsToStoreOwner, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.DisplayShipmentEventsToStoreOwner)
                                         <span></span>
@@ -179,11 +179,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, model => model.BypassShippingMethodSelectionIfOnlyOne, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.BypassShippingMethodSelectionIfOnlyOne, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
                                         <span></span>

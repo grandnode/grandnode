@@ -309,12 +309,15 @@ namespace Grand.Web.Framework
                     dataInputSelector = "#" + String.Join(", #", datainputIds);
                 }
                 var onClick = string.Format("checkOverriddenStoreValue(this, '{0}')", dataInputSelector);
+                result.Append("<label class=\"mt-checkbox\">");
                 result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
                 {
                     { "class", cssClass },
                     { "onclick", onClick },
                     { "data-for-input-selector", dataInputSelector },
                 }));
+                result.Append("<span></span>");
+                result.Append("</label>");
             }
             return MvcHtmlString.Create(result.ToString());
         }

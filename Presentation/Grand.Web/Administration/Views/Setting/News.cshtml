@@ -34,11 +34,11 @@
                     <div class="form-horizontal">
                         <div class="form-body">
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.EditorFor(model => model.Enabled)
                                         <span></span>
@@ -47,11 +47,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.EditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
                                         <span></span>
@@ -60,11 +60,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewNewsComments_OverrideForStore, model => model.NotifyAboutNewNewsComments, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.NotifyAboutNewNewsComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.EditorFor(model => model.NotifyAboutNewNewsComments)
                                         <span></span>
@@ -73,11 +73,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowNewsOnMainPage_OverrideForStore, model => model.ShowNewsOnMainPage, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.ShowNewsOnMainPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.EditorFor(model => model.ShowNewsOnMainPage)
                                         <span></span>
@@ -86,31 +86,31 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MainPageNewsCount_OverrideForStore, model => model.MainPageNewsCount, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.MainPageNewsCount, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @Html.EditorFor(model => model.MainPageNewsCount)
                                     @Html.ValidationMessageFor(model => model.MainPageNewsCount)
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.NewsArchivePageSize_OverrideForStore, model => model.NewsArchivePageSize, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.NewsArchivePageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @Html.EditorFor(model => model.NewsArchivePageSize)
                                     @Html.ValidationMessageFor(model => model.NewsArchivePageSize)
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.ShowHeaderRssUrl, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.EditorFor(model => model.ShowHeaderRssUrl)
                                         <span></span>

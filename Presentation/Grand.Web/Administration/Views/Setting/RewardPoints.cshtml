@@ -41,11 +41,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.Enabled)
                                         <span></span>
@@ -54,11 +54,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.ExchangeRate_OverrideForStore, model => model.ExchangeRate, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.ExchangeRate, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")
                                     @Html.GrandEditorFor(model => model.ExchangeRate)
                                     @Model.PrimaryStoreCurrencyCode
@@ -66,11 +66,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.MinimumRewardPointsToUse_OverrideForStore, model => model.MinimumRewardPointsToUse, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.MinimumRewardPointsToUse, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @Html.GrandEditorFor(model => model.MinimumRewardPointsToUse)
                                     @Html.ValidationMessageFor(model => model.MinimumRewardPointsToUse)
                                 </div>
@@ -81,21 +81,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.PointsForRegistration, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @Html.GrandEditorFor(model => model.PointsForRegistration)
                                     @Html.ValidationMessageFor(model => model.PointsForRegistration)
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_OverrideForStore, model => model.PointsForPurchases_Amount, model => model.PointsForPurchases_Points, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.PointsForPurchases_Amount, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")
                                     @Html.GrandEditorFor(model => model.PointsForPurchases_Amount)
                                     @Model.PrimaryStoreCurrencyCode
@@ -108,31 +108,31 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Awarded_OverrideForStore, model => model.PointsForPurchases_Awarded, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.PointsForPurchases_Awarded, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @Html.GrandDropDownListFor(model => model.PointsForPurchases_Awarded, ((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList())
                                     @Html.ValidationMessageFor(model => model.PointsForPurchases_Awarded)
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Canceled_OverrideForStore, model => model.PointsForPurchases_Canceled, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.PointsForPurchases_Canceled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     @Html.GrandDropDownListFor(model => model.PointsForPurchases_Canceled, ((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList())
                                     @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.OverrideStoreCheckboxFor(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, model => model.DisplayHowMuchWillBeEarned, Model.ActiveStoreScopeConfiguration)
                                     @Html.GrandLabelFor(model => model.DisplayHowMuchWillBeEarned, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.DisplayHowMuchWillBeEarned)
                                         <span></span>
@@ -141,10 +141,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-3 col-sm-3 text-right">
+                                <div class="col-md-4 col-sm-4 text-right">
                                     @Html.GrandLabelFor(model => model.PointsAccumulatedForAllStores, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
-                                <div class="col-md-9 col-sm-9">
+                                <div class="col-md-8 col-sm-8">
                                     <label class="mt-checkbox mt-checkbox-outline">
                                         @Html.GrandEditorFor(model => model.PointsAccumulatedForAllStores)
                                         <span></span>
