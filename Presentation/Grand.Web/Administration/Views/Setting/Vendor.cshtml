@@ -49,7 +49,10 @@
                                     @Html.GrandLabelFor(model => model.ShowVendorOnProductDetailsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.ShowVendorOnProductDetailsPage)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.ShowVendorOnProductDetailsPage)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowVendorOnProductDetailsPage)
                                 </div>
                             </div>
@@ -59,7 +62,10 @@
                                     @Html.GrandLabelFor(model => model.AllowCustomersToContactVendors, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.AllowCustomersToContactVendors)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.AllowCustomersToContactVendors)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowCustomersToContactVendors)
                                 </div>
                             </div>
@@ -69,7 +75,10 @@
                                     @Html.GrandLabelFor(model => model.AllowCustomersToApplyForVendorAccount, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.AllowCustomersToApplyForVendorAccount)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.AllowCustomersToApplyForVendorAccount)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowCustomersToApplyForVendorAccount)
                                 </div>
                             </div>
@@ -79,7 +88,10 @@
                                     @Html.GrandLabelFor(model => model.AllowSearchByVendor, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.AllowSearchByVendor)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.AllowSearchByVendor)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowSearchByVendor)
                                 </div>
                             </div>
