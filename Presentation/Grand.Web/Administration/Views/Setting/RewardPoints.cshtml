@@ -46,7 +46,10 @@
                                     @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.Enabled)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.Enabled)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.Enabled)
                                 </div>
                             </div>
@@ -130,7 +133,10 @@
                                     @Html.GrandLabelFor(model => model.DisplayHowMuchWillBeEarned, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.DisplayHowMuchWillBeEarned)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayHowMuchWillBeEarned)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.DisplayHowMuchWillBeEarned)
                                 </div>
                             </div>
@@ -139,7 +145,10 @@
                                     @Html.GrandLabelFor(model => model.PointsAccumulatedForAllStores, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.PointsAccumulatedForAllStores)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.PointsAccumulatedForAllStores)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.PointsAccumulatedForAllStores)
                                 </div>
                             </div>
