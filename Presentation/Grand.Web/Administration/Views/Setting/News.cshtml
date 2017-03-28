@@ -39,7 +39,10 @@
                                     @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.Enabled)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.Enabled)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.Enabled)
                                 </div>
                             </div>
@@ -49,7 +52,10 @@
                                     @Html.GrandLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
                                 </div>
                             </div>
@@ -59,7 +65,10 @@
                                     @Html.GrandLabelFor(model => model.NotifyAboutNewNewsComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.NotifyAboutNewNewsComments)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.NotifyAboutNewNewsComments)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.NotifyAboutNewNewsComments)
                                 </div>
                             </div>
@@ -69,7 +78,10 @@
                                     @Html.GrandLabelFor(model => model.ShowNewsOnMainPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.ShowNewsOnMainPage)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.ShowNewsOnMainPage)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowNewsOnMainPage)
                                 </div>
                             </div>
@@ -99,7 +111,10 @@
                                     @Html.GrandLabelFor(model => model.ShowHeaderRssUrl, new Dictionary<string, object> { { "class", "control-label" } }, false)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.EditorFor(model => model.ShowHeaderRssUrl)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.ShowHeaderRssUrl)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
                                 </div>
                             </div>
