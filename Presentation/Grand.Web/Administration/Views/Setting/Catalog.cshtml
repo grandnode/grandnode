@@ -441,7 +441,7 @@
                     </label>
                     @Html.ValidationMessageFor(model => model.RecommendedProductsEnabled)
                 </div>
-            </div>        
+            </div>
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.NewProductsEnabled_OverrideForStore, model => model.NewProductsEnabled, Model.ActiveStoreScopeConfiguration)
@@ -785,7 +785,6 @@
                     @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
                 </div>
             </div>
-
             <div class="form-group">
                 <div class="col-md-3 col-sm-3 text-right">
                     @Html.OverrideStoreCheckboxFor(model => model.ShowProductReviewsPerStore_OverrideForStore, model => model.ShowProductReviewsPerStore, Model.ActiveStoreScopeConfiguration)
@@ -836,18 +835,18 @@
                 $('#pnlSearchPagePageSizeOptions').hide();
             }
         }
-        
+
         function toggleProductSearchAutoComplete() {
             if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
                 $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
-                $('#pnlShowProductImagesInSearchAutoComplete').show();                
+                $('#pnlShowProductImagesInSearchAutoComplete').show();
             }
             else {
                 $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
                 $('#pnlShowProductImagesInSearchAutoComplete').hide();
             }
         }
-        
+
     </script>
     <div class="form-horizontal">
         <div class="form-body">
@@ -1034,7 +1033,7 @@
             <div id="sortoptions-grid"></div>
         </div>
     </div>
-                
+
 
     <script>
     $(document).ready(function () {
@@ -1124,5 +1123,4 @@
         });
     });
     </script>
-           
 }
