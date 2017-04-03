@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Operations;
 using MongoDB.Driver.Core.Bindings;
+using Grand.Core.Data;
 
 namespace Grand.Data
 {
@@ -21,6 +22,20 @@ namespace Grand.Data
             _client = new MongoClient(connectionString);
             var databaseName = new MongoUrl(connectionString).DatabaseName;
             _database = _client.GetDatabase(databaseName);
+        }
+
+        public MongoDBContext(IMongoClient client)
+        {
+            string connectionString = DataSettingsHelper.ConnectionString();
+            var databaseName = new MongoUrl(connectionString).DatabaseName;
+            _database = client.GetDatabase(databaseName);
+            _client = client;
+        }
+
+        public MongoDBContext(IMongoClient client, IMongoDatabase mongodatabase)
+        {
+            _database = mongodatabase;
+            _client = client;
         }
 
         public IMongoClient Client()
@@ -49,7 +64,6 @@ namespace Grand.Data
             var operation = new EvalOperation(_database.DatabaseNamespace, script, null);
             var writeBinding = new WritableServerBinding(_client.Cluster);
             return operation.Execute(writeBinding, CancellationToken.None);
-
         }
 
         public Task<BsonValue> RunScriptAsync(string command, CancellationToken cancellationToken)

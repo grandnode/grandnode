@@ -103,7 +103,9 @@ namespace Grand.Web.Framework
             {
                 var mongoDBDataProviderManager = new MongoDBDataProviderManager(dataSettingsManager.LoadSettings());
                 var dataProvider = mongoDBDataProviderManager.LoadDataProvider();
-                builder.Register<IMongoClient>(c => new MongoClient(dataProviderSettings.DataConnectionString)).SingleInstance();
+                var databaseName = new MongoUrl(dataProviderSettings.DataConnectionString).DatabaseName;
+                builder.Register<IMongoClient>(c => new MongoClient(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
+                builder.Register(c => new MongoClient(dataProviderSettings.DataConnectionString).GetDatabase(databaseName)).InstancePerLifetimeScope();
                 builder.Register<IMongoDBContext>(c => new MongoDBContext(dataProviderSettings.DataConnectionString)).InstancePerLifetimeScope();
             }
             else
@@ -112,6 +114,7 @@ namespace Grand.Web.Framework
                 builder.RegisterType<MongoDBContext>().As<IMongoDBContext>().InstancePerLifetimeScope();
             }
 
+            //MongoDbRepository
             builder.RegisterGeneric(typeof(MongoDBRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //plugins
