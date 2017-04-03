@@ -1,4 +1,9 @@
-﻿using MongoDB.Driver;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Operations;
+using MongoDB.Driver.Core.Bindings;
 
 namespace Grand.Data
 {
@@ -36,6 +41,24 @@ namespace Grand.Data
         public TResult RunCommand<TResult>(string command, ReadPreference readpreference)
         {
             return _database.RunCommand<TResult>(command, readpreference);
+        }
+
+        public BsonValue RunScript(string command, CancellationToken cancellationToken)
+        {
+            var script = new BsonJavaScript(command);
+            var operation = new EvalOperation(_database.DatabaseNamespace, script, null);
+            var writeBinding = new WritableServerBinding(_client.Cluster);
+            return operation.Execute(writeBinding, CancellationToken.None);
+
+        }
+
+        public Task<BsonValue> RunScriptAsync(string command, CancellationToken cancellationToken)
+        {
+            var script = new BsonJavaScript(command);
+            var operation = new EvalOperation(_database.DatabaseNamespace, script, null);
+            var writeBinding = new WritableServerBinding(_client.Cluster);
+            return operation.ExecuteAsync(writeBinding, CancellationToken.None);
+
         }
     }
 }

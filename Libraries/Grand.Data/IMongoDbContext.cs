@@ -1,4 +1,7 @@
 ﻿using MongoDB.Driver;
+using MongoDB.Bson;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Grand.Data
 {
@@ -8,5 +11,7 @@ namespace Grand.Data
         IMongoClient Client();
         TResult RunCommand<TResult>(string command);
         TResult RunCommand<TResult>(string command, ReadPreference readpreference);
+        BsonValue RunScript(string command, CancellationToken cancellationToken);
+        Task<BsonValue> RunScriptAsync(string command, CancellationToken cancellationToken);
     }
 }
