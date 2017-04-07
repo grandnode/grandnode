@@ -40,6 +40,12 @@ namespace Grand.Core.Configuration
             config.AzureBlobStorageContainerName = GetString(azureBlobStorageNode, "ContainerName");
             config.AzureBlobStorageEndPoint = GetString(azureBlobStorageNode, "EndPoint");
 
+            var amazonS3 = section.SelectSingleNode("AmazonS3");
+            config.AmazonAwsAccessKeyId = GetString(amazonS3, "AwsAccessKeyId");
+            config.AmazonAwsSecretAccessKey = GetString(amazonS3, "AwsSecretAccessKey");
+            config.AmazonBucketName = GetString(amazonS3, "BucketName");
+            config.AmazonRegion = GetString(amazonS3, "Region");
+
             var installationNode = section.SelectSingleNode("Installation");
             config.DisableSampleDataDuringInstallation = GetBool(installationNode, "DisableSampleDataDuringInstallation");
             config.UseFastInstallationService = GetBool(installationNode, "UseFastInstallationService");
@@ -84,6 +90,7 @@ namespace Grand.Core.Configuration
         /// Connection string for Azure BLOB storage
         /// </summary>
         public string AzureBlobStorageConnectionString { get; private set; }
+
         /// <summary>
         /// Container name for Azure BLOB storage
         /// </summary>
@@ -93,15 +100,37 @@ namespace Grand.Core.Configuration
         /// </summary>
         public string AzureBlobStorageEndPoint { get; private set; }
 
+        /// <summary>
+        /// Amazon Access Key
+        /// </summary>
+        public string AmazonAwsAccessKeyId { get; private set; }
+
+        /// <summary>
+        /// Amazon Secret Access Key
+        /// </summary>
+        public string AmazonAwsSecretAccessKey { get; private set; }
+
+        /// <summary>
+        /// Amazon Bucket Name using for identifying resources
+        /// </summary>
+        public string AmazonBucketName { get; private set; }
+
+        /// <summary>
+        /// Amazon Region 
+        /// http://docs.amazonwebservices.com/AmazonS3/latest/BucketConfiguration.html#LocationSelection
+        /// </summary>
+        public string AmazonRegion { get; private set; }
 
         /// <summary>
         /// A value indicating whether a store owner can install sample data during installation
         /// </summary>
         public bool DisableSampleDataDuringInstallation { get; private set; }
+
         /// <summary>
         /// By default this setting should always be set to "False" (only for advanced users)
         /// </summary>
         public bool UseFastInstallationService { get; private set; }
+
         /// <summary>
         /// A list of plugins ignored during installation
         /// </summary>

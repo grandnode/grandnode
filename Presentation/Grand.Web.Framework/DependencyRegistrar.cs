@@ -226,10 +226,17 @@ namespace Grand.Web.Framework
 
             //picture service
             var useAzureBlobStorage = !String.IsNullOrEmpty(config.AzureBlobStorageConnectionString);
+            var useAmazonBlobStorage = (!String.IsNullOrEmpty(config.AmazonAwsAccessKeyId) && !String.IsNullOrEmpty(config.AmazonAwsSecretAccessKey) && !String.IsNullOrEmpty(config.AmazonBucketName) && !String.IsNullOrEmpty(config.AmazonRegion));
+
             if (useAzureBlobStorage)
             {
                 //Windows Azure BLOB
                 builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
+            }
+            else if (useAmazonBlobStorage)
+            {
+                //Amazon S3 Simple Storage Service
+                builder.RegisterType<AmazonPictureService>().As<IPictureService>().InstancePerLifetimeScope();
             }
             else
             {

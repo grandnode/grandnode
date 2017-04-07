@@ -670,7 +670,7 @@ namespace Grand.Services.Media
         /// <summary>
         /// Clears only physical Picture files located at ~/Content/Images/Thumbs/, it won't affect Pictures stored in database
         /// </summary>
-        public void ClearThumbs()
+        public virtual void ClearThumbs()
         {
             const string searchPattern = "*.*";
             string path = CommonHelper.MapPath("~/Content/Images/Thumbs/");
