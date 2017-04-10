@@ -84,7 +84,8 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        void CancelOrder(Order order, bool notifyCustomer);
+        /// <param name="notifyStoreOwner">True to notify store owner</param>
+        void CancelOrder(Order order, bool notifyCustomer, bool notifyStoreOwner = false);
 
 
 

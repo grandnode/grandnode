@@ -104,5 +104,9 @@ namespace Grand.Admin.Models.Settings
 
         [GrandResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]
         public int? OrderIdent { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Order.UserCanCancelUnpaidOrder")]
+        public bool UserCanCancelUnpaidOrder { get; set; }
+        public bool UserCanCancelUnpaidOrder_OverrideForStore { get; set; }
     }
 }

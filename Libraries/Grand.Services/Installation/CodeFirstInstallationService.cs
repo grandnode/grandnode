@@ -4455,7 +4455,15 @@ namespace Grand.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
-                                   new MessageTemplate
+                                  new MessageTemplate
+                                       {
+                                           Name = "OrderCancelled.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. Customer cancelled an order",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br /><br />Customer cancelled an order. Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Order Details: <a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                    new MessageTemplate
                                        {
                                            Name = "OrderCancelled.CustomerNotification",
                                            Subject = "%Store.Name%. Your order cancelled",
@@ -5215,7 +5223,8 @@ namespace Grand.Services.Installation
                 NumberOfDaysReturnRequestAvailable = 365,
                 MinimumOrderPlacementInterval = 30,
                 DeactivateGiftCardsAfterDeletingOrder = false,
-                CompleteOrderWhenDelivered = true
+                CompleteOrderWhenDelivered = true,
+                UserCanCancelUnpaidOrder = false,   
             });
 
             _settingService.SaveSetting(new ShippingSettings

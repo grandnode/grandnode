@@ -143,6 +143,14 @@ namespace Grand.Services.Messages
         int SendOrderCancelledCustomerNotification(Order order, string languageId);
 
         /// <summary>
+        /// Sends an order cancelled notification to a store owner
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendOrderCancelledStoreOwnerNotification(Order order, string languageId);
+
+        /// <summary>
         /// Sends an order refunded notification to a store owner
         /// </summary>
         /// <param name="order">Order instance</param>

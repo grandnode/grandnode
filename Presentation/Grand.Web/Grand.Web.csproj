@@ -491,6 +491,9 @@
     <Content Include="App_Data\Localization\defaultResources.grandres.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Localization\Upgrade\EN_390_400.nopres.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Localization\Upgrade\EN_380_390.nopres.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -24,6 +24,8 @@ namespace Grand.Web.Models.Order
         public bool PrintMode { get; set; }
         public bool PdfInvoiceDisabled { get; set; }
 
+        public bool UserCanCancelUnpaidOrder { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public string OrderStatus { get; set; }

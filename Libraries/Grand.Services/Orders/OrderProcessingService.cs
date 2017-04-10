@@ -783,7 +783,7 @@ namespace Grand.Services.Orders
         /// <param name="order">Order</param>
         /// <param name="os">New order status</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        protected virtual void SetOrderStatus(Order order, OrderStatus os, bool notifyCustomer)
+        protected virtual void SetOrderStatus(Order order, OrderStatus os, bool notifyCustomer, bool notifyStoreOwner)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -833,7 +833,7 @@ namespace Grand.Services.Orders
                 os == OrderStatus.Cancelled
                 && notifyCustomer)
             {
-                //notification
+                //notification customer
                 int orderCancelledCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
                 if (orderCancelledCustomerNotificationQueuedEmailId > 0)
                 {
@@ -841,6 +841,24 @@ namespace Grand.Services.Orders
                     {
                         Note = "\"Order cancelled\" email (to customer) has been queued.",
                         DisplayToCustomer = false,
+                        CreatedOnUtc = DateTime.UtcNow,
+                        OrderId = order.Id,
+                    });
+                }
+            }
+
+            if (prevOrderStatus != OrderStatus.Cancelled &&
+                os == OrderStatus.Cancelled
+                && notifyStoreOwner)
+            {
+                //notification store owner
+                int orderCancelledStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderCancelledStoreOwnerNotification(order, order.CustomerLanguageId);
+                if (orderCancelledStoreOwnerNotificationQueuedEmailId > 0)
+                {
+                    _orderService.InsertOrderNote(new OrderNote
+                    {
+                        Note = "\"Order cancelled\" by customer.",
+                        DisplayToCustomer = true,
                         CreatedOnUtc = DateTime.UtcNow,
                         OrderId = order.Id,
                     });
@@ -1028,7 +1046,7 @@ namespace Grand.Services.Orders
                 if (order.PaymentStatus == PaymentStatus.Authorized ||
                     order.PaymentStatus == PaymentStatus.Paid)
                 {
-                    SetOrderStatus(order, OrderStatus.Processing, false);
+                    SetOrderStatus(order, OrderStatus.Processing, false, false);
                 }
             }
 
@@ -1038,7 +1056,7 @@ namespace Grand.Services.Orders
                     order.ShippingStatus == ShippingStatus.Shipped ||
                     order.ShippingStatus == ShippingStatus.Delivered)
                 {
-                    SetOrderStatus(order, OrderStatus.Processing, false);
+                    SetOrderStatus(order, OrderStatus.Processing, false, false);
                 }
             }
 
@@ -1066,7 +1084,7 @@ namespace Grand.Services.Orders
                     }
                     if (completed)
                     {
-                        SetOrderStatus(order, OrderStatus.Complete, true);
+                        SetOrderStatus(order, OrderStatus.Complete, true, false);
                     }
                 }
             }
@@ -2085,7 +2103,7 @@ namespace Grand.Services.Orders
         /// </summary>
         /// <param name="order">Order</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        public virtual void CancelOrder(Order order, bool notifyCustomer)
+        public virtual void CancelOrder(Order order, bool notifyCustomer, bool notifyStoreOwner = false)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -2094,7 +2112,7 @@ namespace Grand.Services.Orders
                 throw new GrandException("Cannot do cancel for order.");
 
             //Cancel order
-            SetOrderStatus(order, OrderStatus.Cancelled, notifyCustomer);
+            SetOrderStatus(order, OrderStatus.Cancelled, notifyCustomer, notifyStoreOwner);
 
             //add a note
             _orderService.InsertOrderNote(new OrderNote

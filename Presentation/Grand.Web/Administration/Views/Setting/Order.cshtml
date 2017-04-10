@@ -323,6 +323,19 @@
             </div>
             <div class="form-group">
                 <div class="col-md-4 col-sm-4 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.UserCanCancelUnpaidOrder_OverrideForStore, model => model.UserCanCancelUnpaidOrder, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.UserCanCancelUnpaidOrder, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-8 col-sm-8">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.GrandEditorFor(model => model.UserCanCancelUnpaidOrder)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.UserCanCancelUnpaidOrder)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4 col-sm-4 text-right">
                     @Html.GrandLabelFor(model => model.OrderIdent, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-8 col-sm-8">

@@ -1759,6 +1759,11 @@ namespace Grand.Admin.Controllers
                 else if (!String.IsNullOrEmpty(storeScope))
                     _settingService.DeleteSetting(orderSettings, x => x.NumberOfDaysReturnRequestAvailable, storeScope);
 
+                if (model.UserCanCancelUnpaidOrder_OverrideForStore || storeScope == "")
+                    _settingService.SaveSetting(orderSettings, x => x.UserCanCancelUnpaidOrder, storeScope, false);
+                else if (!String.IsNullOrEmpty(storeScope))
+                    _settingService.DeleteSetting(orderSettings, x => x.UserCanCancelUnpaidOrder, storeScope);
+
                 _settingService.SaveSetting(orderSettings, x => x.DeactivateGiftCardsAfterDeletingOrder, "", false);
                 _settingService.SaveSetting(orderSettings, x => x.CompleteOrderWhenDelivered, "", false);
                 _settingService.SaveSetting(orderSettings, x => x.GiftCards_Activated_OrderStatusId, "", false);

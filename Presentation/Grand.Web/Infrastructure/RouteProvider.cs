@@ -451,6 +451,11 @@ namespace Grand.Web.Infrastructure
                             "orderdetails/print/{orderId}",
                             new { controller = "Order", action = "PrintOrderDetails" },
                             new[] { "Grand.Web.Controllers" });
+            routes.MapLocalizedRoute("CancelOrder",
+                            "orderdetails/cancel/{orderId}",
+                            new { controller = "Order", action = "CancelOrder" },
+                            new[] { "Grand.Web.Controllers" });
+
             //order downloads
             routes.MapRoute("GetDownload",
                             "download/getdownload/{orderItemId}/{agree}",

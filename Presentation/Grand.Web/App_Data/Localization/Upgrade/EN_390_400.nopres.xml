@@ -1,0 +1,11 @@
+﻿<Language>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.UserCanCancelUnpaidOrder">
+    <Value>User Can Cancel Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.UserCanCancelUnpaidOrder.Hint">
+    <Value>Show or Hide Button That Allows User to Cancel Unpaid and Unshipped Orders (Available in the Order Details)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.CancelOrder">
+    <Value>Cancel Order</Value>
+  </LocaleResource>
+</Language>

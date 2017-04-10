@@ -6744,6 +6744,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.OrderSettings">
     <Value>Order settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.UserCanCancelUnpaidOrder">
+    <Value>User Can Cancel Orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.UserCanCancelUnpaidOrder.Hint">
+    <Value>Show or Hide Button That Allows User to Cancel Unpaid and Unshipped Orders (Available in the Order Details)</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions">
     <Value>Return request actions</Value>
   </LocaleResource>
@@ -15171,6 +15177,9 @@
   </LocaleResource>
   <LocaleResource Name="Messages.Order.OrderTotal">
     <Value>Order Total:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.CancelOrder">
+    <Value>Cancel Order</Value>
   </LocaleResource>
   <LocaleResource Name="Order.PickupAddress">
     <Value>Pickup point address</Value>

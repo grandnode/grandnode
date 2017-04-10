@@ -33,13 +33,17 @@
             }
         </div>
     }
+    @if (Model.UserCanCancelUnpaidOrder)
+    {
+        <a href="@Url.RouteUrl("CancelOrder", new { orderId = Model.Id })" class="btn btn-danger btn-sm cancel-unpaid-order-button float-right" onclick="return confirm('@T("Admin.Common.AreYouSure")');">@T("Order.CancelOrder")</a>
+    }
     @Html.Widget("orderdetails_page_top", Model.Id)
 
     <div class="order-overview generalMarginSupporter">
-        <div class="order-number">
+        <h5 class="order-number">
             <strong>@T("Order.Order#")@Model.OrderNumber</strong>
-        </div>
-        <div class="order-date small">
+        </h5>
+        <div class="order-date">
             @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
         </div>
         <div class="order-status">
@@ -697,9 +701,9 @@
         if (Model.OrderNotes.Count > 0)
         {
             <div class="order-notes">
-                <h2>
-                    <strong>@T("Order.Notes")</strong>
-                </h2>
+                <h5>
+                    @T("Order.Notes")
+                </h5>
                 <div class="table-responsive">
                     <table class="table table-hover data-table">
                         <colgroup>

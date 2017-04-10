@@ -399,6 +399,13 @@ namespace Grand.Web.Controllers
                 });
             }
 
+            //allow cancel order
+            if(_orderSettings.UserCanCancelUnpaidOrder)
+            {
+                if (order.OrderStatus == OrderStatus.Pending && order.PaymentStatus == Core.Domain.Payments.PaymentStatus.Pending
+                    && (order.ShippingStatus == ShippingStatus.ShippingNotRequired || order.ShippingStatus == ShippingStatus.NotYetShipped) )
+                    model.UserCanCancelUnpaidOrder = true;
+            }
 
             //purchased products
             model.ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage;
@@ -660,6 +667,24 @@ namespace Grand.Web.Controllers
             model.PrintMode = true;
 
             return View("Details", model);
+        }
+
+        //My account / Order details page / Cancel Unpaid Order
+        [NopHttpsRequirement(SslRequirement.Yes)]
+        public ActionResult CancelOrder(string orderId)
+        {
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null || order.PaymentStatus != Core.Domain.Payments.PaymentStatus.Pending
+                || (order.ShippingStatus != ShippingStatus.ShippingNotRequired && order.ShippingStatus != ShippingStatus.NotYetShipped)
+                || order.OrderStatus != OrderStatus.Pending
+                || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId
+                || !_orderSettings.UserCanCancelUnpaidOrder)
+
+                return new HttpUnauthorizedResult();
+
+            _orderProcessingService.CancelOrder(order, true, true);
+
+            return RedirectToRoute("OrderDetails", new { orderId = orderId });
         }
 
         //My account / Order details page / PDF invoice
