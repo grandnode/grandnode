@@ -478,6 +478,8 @@ namespace Grand.Services.ExportImport
                     if (isNew && properties.All(p => p.PropertyName.ToLower() != "producttypeid"))
                         product.ProductType = ProductType.SimpleProduct;
 
+                    product.LowStock = product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity;
+
                     var categoryIds = manager.GetProperty("categoryids") !=null ? manager.GetProperty("categoryids").StringValue : string.Empty;
                     var manufacturerIds = manager.GetProperty("manufacturerids") !=null ? manager.GetProperty("manufacturerids").StringValue : string.Empty;
 

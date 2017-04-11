@@ -19,6 +19,7 @@ using Grand.Core.Domain.Orders;
 using System.Threading.Tasks;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Seo;
+using System.Collections.Generic;
 
 namespace Grand.Admin.Controllers
 {
@@ -70,10 +71,19 @@ namespace Grand.Admin.Controllers
         private DashboardActivityModel PrepareActivityModel()
         {
             var model = new DashboardActivityModel();
+            string vendorId = "";
+            if (_workContext.CurrentVendor != null)
+                vendorId = _workContext.CurrentVendor.Id;
+
             model.OrdersPending = _orderReportService.GetOrderAverageReportLine(os: Core.Domain.Orders.OrderStatus.Pending).CountOrders;
             model.AbandonedCarts = _customerService.GetAllCustomers(loadOnlyWithShoppingCart: true, pageSize: 1).TotalCount;
-            var doc = "{$where: \" this.MinStockQuantity > this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0  \" }";
-            model.LowStockProducts = _productRepository.Collection.Find(doc).ToListAsync().Result.Count;
+
+            IList<Product> products;
+            IList<ProductAttributeCombination> combinations;
+            Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Catalog.IProductService>()
+                .GetLowStockProducts(vendorId, out products, out combinations);
+
+            model.LowStockProducts = products.Count + combinations.Count;
 
             model.ReturnRequests = (int)_returnRequestRepository.Collection.Count(new BsonDocument());
             model.TodayRegisteredCustomers = _customerService.GetAllCustomers(customerRoleIds: new string[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id }, createdFromUtc: DateTime.UtcNow.Date, pageSize: 1).TotalCount;

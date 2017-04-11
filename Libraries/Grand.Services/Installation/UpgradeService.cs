@@ -34,6 +34,7 @@ using MongoDB.Bson;
 using MongoDB.Driver.Core.Operations;
 using MongoDB.Driver.Core.Bindings;
 using System.Threading;
+using Grand.Data;
 
 namespace Grand.Services.Installation
 {
@@ -573,7 +574,7 @@ namespace Grand.Services.Installation
         }
 
         private void From390To400()
-        {
+        {            
             #region Install String resources
             InstallStringResources("390_400.nopres.xml");
             #endregion
@@ -600,7 +601,29 @@ namespace Grand.Services.Installation
 
             #endregion
 
+            #region Upgrade products
+
+            var builder = Builders<Product>.Filter;
+            var filter = FilterDefinition<Product>.Empty;
+            filter = filter & builder.Where(x => x.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock);
+            filter = filter & builder.Where(x => x.StockQuantity < 0 || x.MinStockQuantity > 0);
+            var productRepository = EngineContext.Current.Resolve<IRepository<Product>>();
+            var products = productRepository.Collection.Find(filter).ToList();
+            foreach (var product in products)
+            {
+                if(product.MinStockQuantity >= product.StockQuantity)
+                {
+                    product.LowStock = true;
+                    var _filter = Builders<Product>.Filter.Eq("Id", product.Id);
+                    var _update = Builders<Product>.Update
+                            .Set(x => x.LowStock, true);
+                    productRepository.Collection.UpdateOneAsync(_filter, _update);
+                }
+            }
+
+            #endregion
         }
+
         private void InstallStringResources(string filenames)
         {
             //'English' language            

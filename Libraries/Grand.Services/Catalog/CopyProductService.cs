@@ -183,6 +183,7 @@ namespace Grand.Services.Catalog
                 DisplayStockAvailability = product.DisplayStockAvailability,
                 DisplayStockQuantity = product.DisplayStockQuantity,
                 MinStockQuantity = product.MinStockQuantity,
+                LowStock = product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity,
                 LowStockActivityId = product.LowStockActivityId,
                 NotifyAdminForQuantityBelow = product.NotifyAdminForQuantityBelow,
                 BackorderMode = product.BackorderMode,

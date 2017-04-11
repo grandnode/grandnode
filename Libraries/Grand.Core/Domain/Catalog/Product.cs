@@ -306,6 +306,11 @@ namespace Grand.Core.Domain.Catalog
         /// </summary>
         public int MinStockQuantity { get; set; }
         /// <summary>
+        /// Gets or sets the low stock 
+        /// </summary>
+        public bool LowStock { get; set; }
+
+        /// <summary>
         /// Gets or sets the low stock activity identifier
         /// </summary>
         public int LowStockActivityId { get; set; }

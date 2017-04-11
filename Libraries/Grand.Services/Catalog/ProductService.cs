@@ -400,6 +400,7 @@ namespace Grand.Services.Catalog
                 .Set(x => x.MetaTitle, product.MetaTitle)
                 .Set(x => x.MinimumCustomerEnteredPrice, product.MinimumCustomerEnteredPrice)
                 .Set(x => x.MinStockQuantity, product.MinStockQuantity)
+                .Set(x => x.LowStock, ((product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity) || product.StockQuantity < 0))
                 .Set(x => x.Name, product.Name)
                 .Set(x => x.NotApprovedRatingSum, product.NotApprovedRatingSum)
                 .Set(x => x.NotApprovedTotalReviews, product.NotApprovedTotalReviews)
@@ -494,7 +495,8 @@ namespace Grand.Services.Catalog
             //update
             var filter = Builders<Product>.Filter.Eq("Id", product.Id);
             var update = Builders<Product>.Update
-                    .Set(x=>x.StockQuantity, product.StockQuantity)
+                    .Set(x => x.StockQuantity, product.StockQuantity)
+                    .Set(x => x.LowStock, ((product.MinStockQuantity > 0 && product.MinStockQuantity >= product.StockQuantity) || product.StockQuantity < 0))
                     .CurrentDate("UpdateDate");
             _productRepository.Collection.UpdateOneAsync(filter, update);
 
@@ -1078,14 +1080,15 @@ namespace Grand.Services.Catalog
             out IList<ProductAttributeCombination> combinations)
         {
             //Track inventory for product
-            string vendors = "";
-            if (!String.IsNullOrEmpty(vendorId))
-                vendors = " && this.VendorId=='" + vendorId.ToString()+"' ";
-            if (String.IsNullOrEmpty(vendorId))
-                vendorId = "";
 
-            var doc = "{$where: \" this.MinStockQuantity >= this.StockQuantity && this.ProductTypeId == 5 && this.ManageInventoryMethodId != 0 " + vendors + " \" }";
-            products = _productRepository.Collection.Find(doc).ToListAsync().Result;
+            var query_products = from p in _productRepository.Table
+                                 where p.LowStock && p.ProductTypeId == 5 && p.ManageInventoryMethodId != 0
+                                 select p;
+
+            if (!String.IsNullOrEmpty(vendorId))
+                query_products.Where(x => x.VendorId == vendorId);
+
+            products = query_products.ToList();
 
             //Track inventory for product by product attributes
             var query2_1 = from p in _productRepository.Table
@@ -1093,7 +1096,8 @@ namespace Grand.Services.Catalog
                            p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
                            (vendorId == "" || p.VendorId == vendorId)
                            from c in p.ProductAttributeCombinations
-                           select c;
+                           select new ProductAttributeCombination() { ProductId = p.Id, StockQuantity = c.StockQuantity, AttributesXml = c.AttributesXml, AllowOutOfStockOrders = c.AllowOutOfStockOrders,
+                            Id = c.Id, Gtin = c.Gtin, ManufacturerPartNumber = c.ManufacturerPartNumber, NotifyAdminForQuantityBelow = c.NotifyAdminForQuantityBelow, OverriddenPrice = c.OverriddenPrice, Sku = c.Sku};
 
             var query2_2 = from c in query2_1
                            where c.StockQuantity <= 0
@@ -1292,6 +1296,7 @@ namespace Grand.Services.Catalog
                             var update = Builders<Product>.Update
                                     .Set(x => x.DisableBuyButton, product.DisableBuyButton)
                                     .Set(x => x.DisableWishlistButton, product.DisableWishlistButton)
+                                    .Set(x => x.LowStock, true)
                                     .CurrentDate("UpdateDate");
                             _productRepository.Collection.UpdateOneAsync(filter, update);
                             //cache
@@ -1339,6 +1344,7 @@ namespace Grand.Services.Catalog
                                 var update = Builders<Product>.Update
                                         .Set(x => x.DisableBuyButton, product.DisableBuyButton)
                                         .Set(x => x.DisableWishlistButton, product.DisableWishlistButton)
+                                        .Set(x => x.LowStock, true)
                                         .CurrentDate("UpdateDate");
                                 _productRepository.Collection.UpdateOneAsync(filter, update);
                                 //cache
