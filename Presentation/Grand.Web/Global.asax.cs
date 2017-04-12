@@ -92,7 +92,7 @@ namespace Grand.Web
                 }
 
                 //upgrade database
-                var upgradeService = EngineContext.Current.Resolve<Services.Installation.IUpgradeService>();
+                var upgradeService = EngineContext.Current.Resolve<Grand.Services.Installation.IUpgradeService>();
                 if (GrandVersion.CurrentVersion != upgradeService.DatabaseVersion())
                 {
                     GlobalFilters.Filters.Add(new ValidateVersionAttribute());

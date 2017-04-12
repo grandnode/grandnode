@@ -119,7 +119,7 @@ namespace Grand.Web.Controllers
                     return actions;
                 });
 
-            var shipments = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Services.Shipping.IShipmentService>().GetShipmentsByOrder(order.Id);
+            var shipments = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Services.Shipping.IShipmentService>().GetShipmentsByOrder(order.Id);
 
             //products
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);

@@ -3,6 +3,7 @@ using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Web.Infrastructure.Installation;
+using Grand.Web.Services;
 
 namespace Grand.Web.Infrastructure
 {
@@ -12,6 +13,9 @@ namespace Grand.Web.Infrastructure
         {
             //installation localization service
             builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
+
+            //blob web service
+            builder.RegisterType<BlogWebService>().As<IBlogWebService>().InstancePerLifetimeScope();
         }
 
         public int Order

@@ -430,6 +430,8 @@
     <Compile Include="Models\Upgrade\UpgradeModel.cs" />
     <Compile Include="Models\Vendors\ApplyVendorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BlogWebService.cs" />
+    <Compile Include="Services\IBlogWebService.cs" />
     <Compile Include="Validators\Blogs\BlogPostValidator.cs" />
     <Compile Include="Validators\Boards\EditForumPostValidator.cs" />
     <Compile Include="Validators\Boards\EditForumTopicValidator.cs" />
