@@ -20,12 +20,12 @@ using Grand.Services.Orders;
 using Grand.Services.Payments;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
-using Grand.Web.Extensions;
 using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Security;
 using Grand.Web.Models.Order;
 using Grand.Core.Infrastructure;
 using Grand.Web.Models.Common;
+using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
@@ -49,7 +49,7 @@ namespace Grand.Web.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWebHelper _webHelper;
         private readonly IDownloadService _downloadService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IAddressWebService _addressWebService;
         private readonly IStoreContext _storeContext;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IRewardPointsService _rewardPointsService;
@@ -82,7 +82,7 @@ namespace Grand.Web.Controllers
             IProductAttributeParser productAttributeParser,
             IWebHelper webHelper,
             IDownloadService downloadService,
-            IAddressAttributeFormatter addressAttributeFormatter,
+            IAddressWebService addressWebService,
             IStoreContext storeContext,
             IOrderTotalCalculationService orderTotalCalculationService,
             IRewardPointsService rewardPointsService,
@@ -111,7 +111,7 @@ namespace Grand.Web.Controllers
             this._productAttributeParser = productAttributeParser;
             this._webHelper = webHelper;
             this._downloadService = downloadService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
+            this._addressWebService = addressWebService;
             this._storeContext = storeContext;
             this._rewardPointsService = rewardPointsService;
             this._giftCardService = giftCardService;
@@ -199,11 +199,9 @@ namespace Grand.Web.Controllers
                 model.PickUpInStore = order.PickUpInStore;
                 if (!order.PickUpInStore)
                 {
-                    model.ShippingAddress.PrepareModel(
+                    _addressWebService.PrepareModel(model: model.ShippingAddress,
                         address: order.ShippingAddress,
-                        excludeProperties: false,
-                        addressSettings: _addressSettings,
-                        addressAttributeFormatter: _addressAttributeFormatter);
+                        excludeProperties: false);
                 }
                 else
                 {
@@ -244,11 +242,9 @@ namespace Grand.Web.Controllers
 
 
             //billing info
-            model.BillingAddress.PrepareModel(
+            _addressWebService.PrepareModel(model: model.BillingAddress,
                 address: order.BillingAddress,
-                excludeProperties: false,
-                addressSettings: _addressSettings,
-                addressAttributeFormatter: _addressAttributeFormatter);
+                excludeProperties: false);
 
             //VAT number
             model.VatNumber = order.VatNumber;

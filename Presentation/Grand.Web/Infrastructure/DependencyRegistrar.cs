@@ -14,8 +14,11 @@ namespace Grand.Web.Infrastructure
             //installation localization service
             builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerLifetimeScope();
 
-            //blob web service
+            //blog service
             builder.RegisterType<BlogWebService>().As<IBlogWebService>().InstancePerLifetimeScope();
+
+            //address service
+            builder.RegisterType<AddressWebService>().As<IAddressWebService>().InstancePerLifetimeScope();
         }
 
         public int Order

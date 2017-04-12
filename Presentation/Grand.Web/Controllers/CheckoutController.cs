@@ -30,6 +30,7 @@ using Grand.Web.Models.Checkout;
 using Grand.Web.Models.Common;
 using Grand.Core.Infrastructure;
 using MongoDB.Bson;
+using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
@@ -58,17 +59,14 @@ namespace Grand.Web.Controllers
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
-        private readonly HttpContextBase _httpContext; 
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly HttpContextBase _httpContext;
+        private readonly IAddressWebService _addressWebService;
         private readonly IRewardPointsService _rewardPointsService;
 
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
-        private readonly AddressSettings _addressSettings;
 
         #endregion
 
@@ -95,15 +93,12 @@ namespace Grand.Web.Controllers
             IOrderService orderService,
             IWebHelper webHelper,
             HttpContextBase httpContext,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
+            IAddressWebService addressWebService,
             IRewardPointsService rewardPointsService,
             OrderSettings orderSettings, 
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
-            ShippingSettings shippingSettings,
-            AddressSettings addressSettings)
+            ShippingSettings shippingSettings)
         {
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -126,15 +121,12 @@ namespace Grand.Web.Controllers
             this._orderService = orderService;
             this._webHelper = webHelper;
             this._httpContext = httpContext;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
+            this._addressWebService = addressWebService;
             this._rewardPointsService = rewardPointsService;
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
-            this._addressSettings = addressSettings;
         }
 
         #endregion
@@ -175,28 +167,18 @@ namespace Grand.Web.Controllers
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(
-                    address: address, 
-                    excludeProperties: false, 
-                    addressSettings: _addressSettings,
-                    addressAttributeFormatter: _addressAttributeFormatter);
+                _addressWebService.PrepareModel(model: addressModel, address: address, excludeProperties: false);
                 model.ExistingAddresses.Add(addressModel);
             }
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(address: 
-                null,
-                excludeProperties: false,
-                addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
+            _addressWebService.PrepareModel(model: model.NewAddress, address: null, excludeProperties: false,
                 loadCountries: () => _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: _workContext.CurrentCustomer,
-                overrideAttributesXml: overrideAttributesXml);
+                overrideAttributesXml: overrideAttributesXml
+                );
             return model;
         }
 
@@ -260,24 +242,18 @@ namespace Grand.Web.Controllers
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(
+                _addressWebService.PrepareModel(model: addressModel,
                     address: address,
-                    excludeProperties: false,
-                    addressSettings: _addressSettings,
-                    addressAttributeFormatter: _addressAttributeFormatter);
+                    excludeProperties: false);
+
                 model.ExistingAddresses.Add(addressModel);
             }
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(
+            _addressWebService.PrepareModel(model: model.NewAddress,
                 address: null,
                 excludeProperties: false,
-                addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountriesForShipping(),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: _workContext.CurrentCustomer,
@@ -687,8 +663,8 @@ namespace Grand.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -864,8 +840,8 @@ namespace Grand.Web.Controllers
             }
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -1051,7 +1027,7 @@ namespace Grand.Web.Controllers
 
             //filter by country
             string filterByCountryId = "";
-            if (_addressSettings.CountryEnabled &&
+            if (_addressWebService.AddressSettings().CountryEnabled &&
                 _workContext.CurrentCustomer.BillingAddress != null &&
                 !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
             {
@@ -1388,7 +1364,7 @@ namespace Grand.Web.Controllers
             {
                 //filter by country
                 string filterByCountryId = "";
-                if (_addressSettings.CountryEnabled &&
+                if (_addressWebService.AddressSettings().CountryEnabled &&
                     _workContext.CurrentCustomer.BillingAddress != null &&
                     !String.IsNullOrEmpty(_workContext.CurrentCustomer.BillingAddress.CountryId))
                 {
@@ -1559,8 +1535,8 @@ namespace Grand.Web.Controllers
                     TryUpdateModel(model.NewAddress, "BillingNewAddress");
 
                     //custom address attributes
-                    var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-                    var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+                    var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
+                    var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);
@@ -1752,8 +1728,8 @@ namespace Grand.Web.Controllers
                     TryUpdateModel(model.NewAddress, "ShippingNewAddress");
 
                     //custom address attributes
-                    var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-                    var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+                    var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
+                    var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
                     foreach (var error in customAttributeWarnings)
                     {
                         ModelState.AddModelError("", error);

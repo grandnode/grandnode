@@ -288,7 +288,6 @@
     <Compile Include="Controllers\CountryController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Extensions\AttributeParserHelper.cs" />
     <Compile Include="Extensions\FilterConfig.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ControllerExtensions.cs" />
@@ -431,6 +430,8 @@
     <Compile Include="Models\Vendors\ApplyVendorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BlogWebService.cs" />
+    <Compile Include="Services\AddressWebService.cs" />
+    <Compile Include="Services\IAddressWebService.cs" />
     <Compile Include="Services\IBlogWebService.cs" />
     <Compile Include="Validators\Blogs\BlogPostValidator.cs" />
     <Compile Include="Validators\Boards\EditForumPostValidator.cs" />

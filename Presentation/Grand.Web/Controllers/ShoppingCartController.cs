@@ -32,7 +32,6 @@ using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
 using Grand.Services.Tax;
-using Grand.Web.Extensions;
 using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Mvc;
 using Grand.Web.Framework.Security;
@@ -41,6 +40,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Media;
 using Grand.Web.Models.ShoppingCart;
 using Grand.Web.Models.Common;
+using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
@@ -80,7 +80,7 @@ namespace Grand.Web.Controllers
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IAddressWebService _addressWebService;
         private readonly HttpContextBase _httpContext;
 
         private readonly MediaSettings _mediaSettings;
@@ -128,7 +128,7 @@ namespace Grand.Web.Controllers
             IWebHelper webHelper, 
             ICustomerActivityService customerActivityService,
             IGenericAttributeService genericAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
+            IAddressWebService addressWebService,
             HttpContextBase httpContext,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
@@ -172,7 +172,7 @@ namespace Grand.Web.Controllers
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
             this._genericAttributeService = genericAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
+            this._addressWebService = addressWebService;
             this._httpContext = httpContext;
 
             this._mediaSettings = mediaSettings;
@@ -614,11 +614,9 @@ namespace Grand.Web.Controllers
                 //billing info
                 var billingAddress = _workContext.CurrentCustomer.BillingAddress;
                 if (billingAddress != null)
-                    model.OrderReviewData.BillingAddress.PrepareModel(
+                    _addressWebService.PrepareModel(model: model.OrderReviewData.BillingAddress,
                         address: billingAddress, 
-                        excludeProperties: false,
-                        addressSettings: _addressSettings,
-                        addressAttributeFormatter: _addressAttributeFormatter);
+                        excludeProperties: false);
                
                 //shipping info
                 if (cart.RequiresShipping())
@@ -634,13 +632,9 @@ namespace Grand.Web.Controllers
                     {
                         var shippingAddress = _workContext.CurrentCustomer.ShippingAddress;
                         if (shippingAddress != null)
-                        {
-                            model.OrderReviewData.ShippingAddress.PrepareModel(
+                            _addressWebService.PrepareModel(model: model.OrderReviewData.ShippingAddress,
                                 address: shippingAddress, 
-                                excludeProperties: false,
-                                addressSettings: _addressSettings,
-                                addressAttributeFormatter: _addressAttributeFormatter);
-                        }
+                                excludeProperties: false);
                     }
                     else
                     {

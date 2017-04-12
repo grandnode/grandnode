@@ -40,6 +40,7 @@ using WebGrease.Css.Extensions;
 using Grand.Services.Events;
 using Grand.Core.Domain;
 using Grand.Services.Catalog;
+using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
@@ -62,7 +63,6 @@ namespace Grand.Web.Controllers
         private readonly ITaxService _taxService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
-        private readonly AddressSettings _addressSettings;
         private readonly ForumSettings _forumSettings;
         private readonly OrderSettings _orderSettings;
         private readonly IAddressService _addressService;
@@ -76,9 +76,7 @@ namespace Grand.Web.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly IAddressAttributeParser _addressAttributeParser;
-        private readonly IAddressAttributeService _addressAttributeService;
-        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly IAddressWebService _addressWebService;
         private readonly IEventPublisher _eventPublisher;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly IReturnRequestService _returnRequestService;
@@ -110,7 +108,6 @@ namespace Grand.Web.Controllers
             ITaxService taxService, 
             RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings,
-            AddressSettings addressSettings, 
             ForumSettings forumSettings,
             OrderSettings orderSettings, 
             IAddressService addressService,
@@ -124,9 +121,7 @@ namespace Grand.Web.Controllers
             IDownloadService downloadService,
             IWebHelper webHelper,
             ICustomerActivityService customerActivityService,
-            IAddressAttributeParser addressAttributeParser,
-            IAddressAttributeService addressAttributeService,
-            IAddressAttributeFormatter addressAttributeFormatter,
+            IAddressWebService addressWebService,
             IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService,
@@ -154,7 +149,6 @@ namespace Grand.Web.Controllers
             this._taxService = taxService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
-            this._addressSettings = addressSettings;
             this._forumSettings = forumSettings;
             this._orderSettings = orderSettings;
             this._addressService = addressService;
@@ -168,9 +162,7 @@ namespace Grand.Web.Controllers
             this._downloadService = downloadService;
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
-            this._addressAttributeParser = addressAttributeParser;
-            this._addressAttributeService = addressAttributeService;
-            this._addressAttributeFormatter = addressAttributeFormatter;
+            this._addressWebService = addressWebService;
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
             this._customerActionEventService = customerActionEventService;
@@ -1458,13 +1450,9 @@ namespace Grand.Web.Controllers
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(
+                _addressWebService.PrepareModel(model: addressModel,
                     address: address,
                     excludeProperties: false,
-                    addressSettings: _addressSettings,
-                    localizationService: _localizationService,
-                    stateProvinceService: _stateProvinceService,
-                    addressAttributeFormatter: _addressAttributeFormatter,
                     loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
                 model.Addresses.Add(addressModel);
             }
@@ -1504,14 +1492,9 @@ namespace Grand.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var model = new CustomerAddressEditModel();
-            model.Address.PrepareModel(
+            _addressWebService.PrepareModel(model: model.Address,
                 address: null,
                 excludeProperties: false,
-                addressSettings:_addressSettings,
-                localizationService:_localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
 
             return View(model);
@@ -1528,8 +1511,8 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -1549,14 +1532,9 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.Address.PrepareModel(
+            _addressWebService.PrepareModel(model: model.Address,
                 address: null,
                 excludeProperties: true,
-                addressSettings:_addressSettings,
-                localizationService:_localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
 
             return View(model);
@@ -1576,13 +1554,9 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             var model = new CustomerAddressEditModel();
-            model.Address.PrepareModel(address: address,
+            _addressWebService.PrepareModel(model: model.Address, 
+                address: address,
                 excludeProperties: false,
-                addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
 
             return View(model);
@@ -1604,8 +1578,8 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
-            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressWebService.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
                 ModelState.AddModelError("", error);
@@ -1624,14 +1598,9 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.Address.PrepareModel(
+            _addressWebService.PrepareModel(model: model.Address,
                 address: address,
                 excludeProperties: true,
-                addressSettings: _addressSettings,
-                localizationService: _localizationService,
-                stateProvinceService: _stateProvinceService,
-                addressAttributeService: _addressAttributeService,
-                addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
             return View(model);
         }
