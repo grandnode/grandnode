@@ -25,6 +25,10 @@ namespace Grand.Web.Infrastructure
 
             //product service
             builder.RegisterType<ProductWebService>().As<IProductWebService>().InstancePerLifetimeScope();
+
+            //news service
+            builder.RegisterType<NewsWebService>().As<INewsWebService>().InstancePerLifetimeScope();
+
         }
 
         public int Order

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using Grand.Core;
@@ -9,8 +8,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.News;
-using Grand.Services.Common;
-using Grand.Services.Customers;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
@@ -23,70 +20,53 @@ using Grand.Web.Framework;
 using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Security;
 using Grand.Web.Framework.Security.Captcha;
-using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.News;
-using Grand.Core.Infrastructure;
-using MongoDB.Bson;
 using Grand.Services.Security;
+using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
     [NopHttpsRequirement(SslRequirement.No)]
     public partial class NewsController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
+        private readonly INewsWebService _newsWebService;
         private readonly INewsService _newsService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
-        private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWebHelper _webHelper;
-        private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
 
-        private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
-        private readonly LocalizationSettings _localizationSettings;
-        private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
         
         #endregion
 
 		#region Constructors
 
-        public NewsController(INewsService newsService, 
+        public NewsController(INewsWebService newsWebService, INewsService newsService, 
             IWorkContext workContext, IStoreContext storeContext, 
-            IPictureService pictureService, ILocalizationService localizationService,
-            IDateTimeHelper dateTimeHelper,
-            IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
-            ICacheManager cacheManager, ICustomerActivityService customerActivityService,
+            ILocalizationService localizationService,
+            IWebHelper webHelper, ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService,
-            MediaSettings mediaSettings, NewsSettings newsSettings,
-            LocalizationSettings localizationSettings, CustomerSettings customerSettings,
+            NewsSettings newsSettings,
             CaptchaSettings captchaSettings)
         {
+            this._newsWebService = newsWebService;
             this._newsService = newsService;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._pictureService = pictureService;
             this._localizationService = localizationService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._workflowMessageService = workflowMessageService;
             this._webHelper = webHelper;
-            this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
-            this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
-            this._localizationSettings = localizationSettings;
-            this._customerSettings = customerSettings;
             this._captchaSettings = captchaSettings;
         }
 
@@ -94,57 +74,6 @@ namespace Grand.Web.Controllers
 
         #region Utilities
 
-        [NonAction]
-        protected virtual void PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
-        {
-            if (newsItem == null)
-                throw new ArgumentNullException("newsItem");
-
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.Id = newsItem.Id;
-            model.MetaTitle = newsItem.GetLocalized(x=>x.MetaTitle);
-            model.MetaDescription = newsItem.GetLocalized(x=>x.MetaDescription);
-            model.MetaKeywords = newsItem.GetLocalized(x=>x.MetaKeywords);
-            model.SeName = newsItem.GetSeName();
-            model.Title = newsItem.GetLocalized(x=>x.Title);
-            model.Short = newsItem.GetLocalized(x=>x.Short);
-            model.Full = newsItem.GetLocalized(x=>x.Full);
-            model.AllowComments = newsItem.AllowComments;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.StartDateUtc ?? newsItem.CreatedOnUtc, DateTimeKind.Utc);
-            model.NumberOfComments = newsItem.CommentCount;
-            model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
-            if (prepareComments)
-            {
-                var newsComments = newsItem.NewsComments.OrderBy(pr => pr.CreatedOnUtc);
-                foreach (var nc in newsComments)
-                {
-                    var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(nc.CustomerId);
-                    var commentModel = new NewsCommentModel
-                    {
-                        Id = nc.Id,
-                        CustomerId = nc.CustomerId,
-                        CustomerName = customer.FormatUserName(),
-                        CommentTitle = nc.CommentTitle,
-                        CommentText = nc.CommentText,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(nc.CreatedOnUtc, DateTimeKind.Utc),
-                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
-                    };
-                    if (_customerSettings.AllowCustomersToUploadAvatars)
-                    {
-                        commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                            false,
-                            _mediaSettings.AvatarPictureSize, 
-                            _customerSettings.DefaultAvatarEnabled,
-                            defaultPictureType:PictureType.Avatar);
-                    }
-                    model.Comments.Add(commentModel);
-                }
-            }
-        }
-        
         #endregion
 
         #region Methods
@@ -154,30 +83,7 @@ namespace Grand.Web.Controllers
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
-            {
-                var newsItems = _newsService.GetAllNews(_storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
-                return new HomePageNewsItemsModel
-                {
-                    WorkingLanguageId = _workContext.WorkingLanguage.Id,
-                    NewsItems = newsItems
-                        .Select(x =>
-                                    {
-                                        var newsModel = new NewsItemModel();
-                                        PrepareNewsItemModel(newsModel, x, false);
-                                        return newsModel;
-                                    })
-                        .ToList()
-                };
-            });
-
-            //"Comments" property of "NewsItemModel" object depends on the current customer.
-            //Furthermore, we just don't need it for home page news. So let's reset it.
-            //But first we need to clone the cached model (the updated one should not be cached)
-            var model = (HomePageNewsItemsModel)cachedModel.Clone();
-            foreach (var newsItemModel in model.NewsItems)
-                newsItemModel.Comments.Clear();
+            var model = _newsWebService.PrepareHomePageNewsItems();
             return PartialView(model);
         }
 
@@ -186,24 +92,7 @@ namespace Grand.Web.Controllers
             if (!_newsSettings.Enabled)
                 return RedirectToRoute("HomePage");
 
-            var model = new NewsItemListModel();
-            model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
-
-            if (command.PageSize <= 0) command.PageSize = _newsSettings.NewsArchivePageSize;
-            if (command.PageNumber <= 0) command.PageNumber = 1;
-
-            var newsItems = _newsService.GetAllNews(_storeContext.CurrentStore.Id,
-                command.PageNumber - 1, command.PageSize);
-            model.PagingFilteringContext.LoadPagedList(newsItems);
-
-            model.NewsItems = newsItems
-                .Select(x =>
-                {
-                    var newsModel = new NewsItemModel();
-                    PrepareNewsItemModel(newsModel, x, false);
-                    return newsModel;
-                })
-                .ToList();
+            var model = _newsWebService.PrepareNewsItemList(command);
 
             return View(model);
         }
@@ -246,7 +135,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             var model = new NewsItemModel();
-            PrepareNewsItemModel(model, newsItem, true);
+            _newsWebService.PrepareNewsItemModel(model, newsItem, true);
 
             //display "edit" (manage) link
             if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageNews))
@@ -281,24 +170,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var comment = new NewsComment
-                {
-                    NewsItemId = newsItem.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
-                    CommentTitle = model.AddNewComment.CommentTitle,
-                    CommentText = model.AddNewComment.CommentText,
-                    CreatedOnUtc = DateTime.UtcNow,
-                };
-                newsItem.NewsComments.Add(comment);
-                //update totals
-                newsItem.CommentCount = newsItem.NewsComments.Count;
-                _newsService.UpdateNews(newsItem);
-                EngineContext.Current.Resolve<ICustomerService>().UpdateNewsItem(_workContext.CurrentCustomer);
-
-                //notify a store owner;
-                if (_newsSettings.NotifyAboutNewNewsComments)
-                    _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
-
+                _newsWebService.InsertNewsComment(newsItem, model);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AddNewsComment", newsItem.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
 
@@ -308,9 +180,8 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("NewsItem", new {SeName = newsItem.GetSeName() });
             }
 
-
             //If we got this far, something failed, redisplay form
-            PrepareNewsItemModel(model, newsItem, true);
+            _newsWebService.PrepareNewsItemModel(model, newsItem, true);
             return View(model);
         }
 
