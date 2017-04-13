@@ -1,22 +1,36 @@
 ﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Media;
+using Grand.Core.Domain.Orders;
+using Grand.Core.Domain.Seo;
+using Grand.Core.Domain.Vendors;
+using Grand.Core.Infrastructure;
 using Grand.Services.Catalog;
+using Grand.Services.Customers;
 using Grand.Services.Directory;
+using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Security;
 using Grand.Services.Seo;
+using Grand.Services.Shipping;
+using Grand.Services.Stores;
 using Grand.Services.Tax;
+using Grand.Services.Vendors;
+using Grand.Web.Extensions;
+using Grand.Web.Framework.Security.Captcha;
 using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Grand.Web.Services
 {
@@ -36,15 +50,36 @@ namespace Grand.Web.Services
         private readonly IPictureService _pictureService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IWebHelper _webHelper;
+        private readonly IProductTemplateService _productTemplateService;
+        private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IShippingService _shippingService;
+        private readonly IVendorService _vendorService;
+        private readonly ICategoryService _categoryService;
+        private readonly IAclService _aclService;
+        private readonly IStoreMappingService _storeMappingService;
+        private readonly IProductTagService _productTagService;
+        private readonly IProductAttributeService _productAttributeService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IDateTimeHelper _dateTimeHelper;
+        private readonly IDownloadService _downloadService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
+        private readonly SeoSettings _seoSettings;
+        private readonly VendorSettings _vendorSettings;
+        private readonly CustomerSettings _customerSettings;
+        private readonly CaptchaSettings _captchaSettings;
 
         public ProductWebService(IPermissionService permissionService, IWorkContext workContext, IStoreContext storeContext,
             ILocalizationService localizationService, IProductService productService, IPriceCalculationService priceCalculationService,
             ITaxService taxService, ICurrencyService currencyService, IPriceFormatter priceFormatter, IMeasureService measureService,
             ICacheManager cacheManager, IPictureService pictureService, ISpecificationAttributeService specificationAttributeService, IWebHelper webHelper,
-            MediaSettings mediaSettings, CatalogSettings catalogSettings)
+            IProductTemplateService productTemplateService, IProductAttributeParser productAttributeParser, IShippingService shippingService,
+            IVendorService vendorService, ICategoryService categoryService, IAclService aclService, IStoreMappingService storeMappingService,
+            IProductTagService productTagService, IProductAttributeService productAttributeService, IManufacturerService manufacturerService,
+            IDateTimeHelper dateTimeHelper, IDownloadService downloadService,
+            MediaSettings mediaSettings, CatalogSettings catalogSettings, SeoSettings seoSettings, VendorSettings vendorSettings, CustomerSettings customerSettings,
+            CaptchaSettings captchaSettings)
         {
             this._permissionService = permissionService;
             this._workContext = workContext;
@@ -60,9 +95,25 @@ namespace Grand.Web.Services
             this._pictureService = pictureService;
             this._specificationAttributeService = specificationAttributeService;
             this._webHelper = webHelper;
+            this._productTemplateService = productTemplateService;
+            this._productAttributeParser = productAttributeParser;
+            this._shippingService = shippingService;
+            this._vendorService = vendorService;
+            this._categoryService = categoryService;
+            this._aclService = aclService;
+            this._storeMappingService = storeMappingService;
+            this._productTagService = productTagService;
+            this._productAttributeService = productAttributeService;
+            this._manufacturerService = manufacturerService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._downloadService = downloadService;
 
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
+            this._seoSettings = seoSettings;
+            this._vendorSettings = vendorSettings;
+            this._customerSettings = customerSettings;
+            this._captchaSettings = captchaSettings;
         }
 
         public virtual IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(
@@ -448,6 +499,752 @@ namespace Grand.Web.Services
                 productReview.AllowCustomerReviews = product.AllowCustomerReviews;
             }
             return productReview;
+        }
+
+        public virtual string PrepareProductTemplateViewPath(string productTemplateId)
+        {
+            if (String.IsNullOrEmpty(productTemplateId))
+                throw new ArgumentNullException("product");
+
+            var templateCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_TEMPLATE_MODEL_KEY, productTemplateId);
+            var productTemplateViewPath = _cacheManager.Get(templateCacheKey, () =>
+            {
+                var template = _productTemplateService.GetProductTemplateById(productTemplateId);
+                if (template == null)
+                    template = _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+                if (template == null)
+                    throw new Exception("No default template could be loaded");
+                return template.ViewPath;
+            });
+
+            return productTemplateViewPath;
+        }
+
+        
+        public virtual ProductDetailsModel PrepareProductDetailsPage(Product product,
+            ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            #region Standard properties
+
+            var model = new ProductDetailsModel
+            {
+                Id = product.Id,
+                Name = product.GetLocalized(x => x.Name),
+                ShortDescription = product.GetLocalized(x => x.ShortDescription),
+                FullDescription = product.GetLocalized(x => x.FullDescription),
+                MetaKeywords = product.GetLocalized(x => x.MetaKeywords),
+                MetaDescription = product.GetLocalized(x => x.MetaDescription),
+                MetaTitle = product.GetLocalized(x => x.MetaTitle),
+                SeName = product.GetSeName(),
+                ShowSku = _catalogSettings.ShowSkuOnProductDetailsPage,
+                Sku = product.Sku,
+                ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber,
+                FreeShippingNotificationEnabled = _catalogSettings.ShowFreeShippingNotification,
+                ManufacturerPartNumber = product.ManufacturerPartNumber,
+                ShowGtin = _catalogSettings.ShowGtin,
+                Gtin = product.Gtin,
+                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser, _storeContext),
+                HasSampleDownload = product.IsDownload && product.HasSampleDownload,
+                DisplayDiscontinuedMessage = !product.Published && _catalogSettings.DisplayDiscontinuedMessageForUnpublishedProducts
+            };
+
+            //automatically generate product description?
+            if (_seoSettings.GenerateProductMetaDescription && String.IsNullOrEmpty(model.MetaDescription))
+            {
+                //based on short description
+                model.MetaDescription = model.ShortDescription;
+            }
+
+            //shipping info
+            model.IsShipEnabled = product.IsShipEnabled;
+            if (product.IsShipEnabled)
+            {
+                model.IsFreeShipping = product.IsFreeShipping;
+                //delivery date
+                var deliveryDate = _shippingService.GetDeliveryDateById(product.DeliveryDateId);
+                if (deliveryDate != null)
+                {
+                    model.DeliveryDate = deliveryDate.GetLocalized(dd => dd.Name);
+                    model.DeliveryColorSquaresRgb = deliveryDate.ColorSquaresRgb;
+                }
+            }
+
+            //email a friend
+            model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
+            //ask question product
+            model.AskQuestionEnabled = _catalogSettings.AskQuestionEnabled;
+            //compare products
+            model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
+            //store name
+            model.CurrentStoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name);
+
+            #endregion
+
+            #region Vendor details
+
+            //vendor
+            if (_vendorSettings.ShowVendorOnProductDetailsPage)
+            {
+                var vendor = _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null && !vendor.Deleted && vendor.Active)
+                {
+                    model.ShowVendor = true;
+
+                    model.VendorModel = new VendorBriefInfoModel
+                    {
+                        Id = vendor.Id,
+                        Name = vendor.GetLocalized(x => x.Name),
+                        SeName = vendor.GetSeName(),
+                    };
+                }
+            }
+
+            #endregion
+
+            #region Page sharing
+
+            if (_catalogSettings.ShowShareButton && !String.IsNullOrEmpty(_catalogSettings.PageShareCode))
+            {
+                var shareCode = _catalogSettings.PageShareCode;
+                if (_webHelper.IsCurrentConnectionSecured())
+                {
+                    //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
+                    shareCode = shareCode.Replace("http://", "https://");
+                }
+                model.PageShareCode = shareCode;
+            }
+
+            #endregion
+
+            #region Back in stock subscriptions
+
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                product.BackorderMode == BackorderMode.NoBackorders &&
+                product.AllowBackInStockSubscriptions &&
+                product.GetTotalStockQuantity(warehouseId: _storeContext.CurrentStore.DefaultWarehouseId) <= 0)
+            {
+                //out of stock
+                model.DisplayBackInStockSubscription = true;
+            }
+
+            #endregion
+
+            #region Breadcrumb
+
+            //do not prepare this model for the associated products. anyway it's not used
+            if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct)
+            {
+                var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY,
+                    product.Id,
+                    _workContext.WorkingLanguage.Id,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
+                model.Breadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
+                {
+                    var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
+                    {
+                        Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
+                        ProductId = product.Id,
+                        ProductName = product.GetLocalized(x => x.Name),
+                        ProductSeName = product.GetSeName()
+                    };
+                    var productCategories = product.ProductCategories; 
+                    if (productCategories.Any())
+                    {
+                        var category = _categoryService.GetCategoryById(productCategories.FirstOrDefault().CategoryId);
+                        if (category != null)
+                        {
+                            foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
+                            {
+                                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
+                                {
+                                    Id = catBr.Id,
+                                    Name = catBr.GetLocalized(x => x.Name),
+                                    SeName = catBr.GetSeName(),
+                                    IncludeInTopMenu = catBr.IncludeInTopMenu
+                                });
+                            }
+                        }
+                    }
+                    return breadcrumbModel;
+                });
+            }
+
+            #endregion
+
+            #region Product tags
+
+            //do not prepare this model for the associated products. anyway it's not used
+            if (!isAssociatedProduct)
+            {
+                var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+                model.ProductTags = _cacheManager.Get(productTagsCacheKey, () =>
+                {
+                    List<ProductTagModel> tags = new List<ProductTagModel>();
+                    foreach (var item in product.ProductTags)
+                    {
+                        var tag = _productTagService.GetProductTagById(item);
+                        if (tag != null)
+                        {
+                            tags.Add(new ProductTagModel()
+                            {
+                                Id = tag.Id,
+                                Name = tag.GetLocalized(y => y.Name),
+                                SeName = tag.GetSeName(),
+                                ProductCount = _productTagService.GetProductCount(tag.Id, _storeContext.CurrentStore.Id)
+                            });
+                        }
+                    }
+                    return tags;
+                });
+
+            }
+
+            #endregion
+
+            #region Pictures
+
+            model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
+            //default picture
+            var defaultPictureSize = isAssociatedProduct ?
+                _mediaSettings.AssociatedProductPictureSize :
+                _mediaSettings.ProductDetailsPictureSize;
+            //prepare picture models
+            var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+            var cachedPictures = _cacheManager.Get(productPicturesCacheKey, () =>
+            {
+                //_pictureService.GetPicturesByProductId(product.Id);
+                var defaultPicture = product.ProductPictures.FirstOrDefault();
+                if (defaultPicture == null)
+                    defaultPicture = new ProductPicture();
+
+                var defaultPictureModel = new PictureModel
+                {
+                    ImageUrl = _pictureService.GetPictureUrl(defaultPicture.PictureId, _mediaSettings.ApplyWatermarkForProduct, defaultPictureSize, !isAssociatedProduct),
+                    FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture.PictureId, _mediaSettings.ApplyWatermarkForProduct, 0, !isAssociatedProduct),
+                };
+                //"title" attribute
+                defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
+                    defaultPicture.TitleAttribute :
+                    string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name);
+                //"alt" attribute
+                defaultPictureModel.AlternateText = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.AltAttribute)) ?
+                    defaultPicture.AltAttribute :
+                    string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name);
+
+                //all pictures
+                var pictureModels = new List<PictureModel>();
+                foreach (var picture in product.ProductPictures)
+                {
+                    var pictureModel = new PictureModel
+                    {
+                        ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ApplyWatermarkForProduct, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ApplyWatermarkForProduct),
+                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),
+                    };
+                    //"title" attribute
+                    pictureModel.Title = !string.IsNullOrEmpty(picture.TitleAttribute) ?
+                        picture.TitleAttribute :
+                        string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name);
+                    //"alt" attribute
+                    pictureModel.AlternateText = !string.IsNullOrEmpty(picture.AltAttribute) ?
+                        picture.AltAttribute :
+                        string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name);
+
+                    pictureModels.Add(pictureModel);
+                }
+
+                return new { DefaultPictureModel = defaultPictureModel, PictureModels = pictureModels };
+            });
+            model.DefaultPictureModel = cachedPictures.DefaultPictureModel;
+            model.PictureModels = cachedPictures.PictureModels;
+
+            #endregion
+
+            #region Product price
+
+            model.ProductPrice.ProductId = product.Id;
+            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            {
+                model.ProductPrice.HidePrices = false;
+                if (product.CustomerEntersPrice)
+                {
+                    model.ProductPrice.CustomerEntersPrice = true;
+                }
+                else
+                {
+                    if (product.CallForPrice)
+                    {
+                        model.ProductPrice.CallForPrice = true;
+                    }
+                    else
+                    {
+                        decimal taxRate;
+                        decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
+                        decimal finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false), out taxRate);
+                        decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true), out taxRate);
+
+                        decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
+                        decimal finalPriceWithoutDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithoutDiscountBase, _workContext.WorkingCurrency);
+                        decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
+
+                        if (finalPriceWithoutDiscountBase != oldPriceBase && oldPriceBase > decimal.Zero)
+                            model.ProductPrice.OldPrice = _priceFormatter.FormatPrice(oldPrice);
+
+                        model.ProductPrice.Price = _priceFormatter.FormatPrice(finalPriceWithoutDiscount);
+
+                        if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
+                            model.ProductPrice.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+
+                        model.ProductPrice.PriceValue = finalPriceWithDiscount;
+
+                        //property for German market
+                        //we display tax/shipping info only with "shipping enabled" for this product
+                        //we also ensure this it's not free shipping
+                        model.ProductPrice.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductDetailsPage
+                            && product.IsShipEnabled &&
+                            !product.IsFreeShipping;
+
+                        //PAngV baseprice (used in Germany)
+                        model.ProductPrice.BasePricePAngV = product.FormatBasePrice(finalPriceWithDiscountBase,
+                            _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
+
+                        //currency code
+                        model.ProductPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
+
+                        //rental
+                        if (product.IsRental)
+                        {
+                            model.ProductPrice.IsRental = true;
+                            var priceStr = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                            model.ProductPrice.RentalPrice = _priceFormatter.FormatRentalProductPeriod(product, priceStr);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                model.ProductPrice.HidePrices = true;
+                model.ProductPrice.OldPrice = null;
+                model.ProductPrice.Price = null;
+            }
+            #endregion
+
+            #region 'Add to cart' model
+
+            model.AddToCart.ProductId = product.Id;
+            if (updatecartitem != null)
+            {
+                model.AddToCart.UpdatedShoppingCartItemId = updatecartitem.Id;
+                model.AddToCart.UpdateShoppingCartItemType = updatecartitem.ShoppingCartType;
+            }
+
+            //quantity
+            model.AddToCart.EnteredQuantity = updatecartitem != null ? updatecartitem.Quantity : product.OrderMinimumQuantity;
+            model.AddToCart.MeasureUnit = !String.IsNullOrEmpty(product.UnitId) ? _measureService.GetMeasureUnitById(product.UnitId).Name : string.Empty;
+
+            //allowed quantities
+            var allowedQuantities = product.ParseAllowedQuantities();
+            foreach (var qty in allowedQuantities)
+            {
+                model.AddToCart.AllowedQuantities.Add(new SelectListItem
+                {
+                    Text = qty.ToString(),
+                    Value = qty.ToString(),
+                    Selected = updatecartitem != null && updatecartitem.Quantity == qty
+                });
+            }
+            //minimum quantity notification
+            if (product.OrderMinimumQuantity > 1)
+            {
+                model.AddToCart.MinimumQuantityNotification = string.Format(_localizationService.GetResource("Products.MinimumQuantityNotification"), product.OrderMinimumQuantity);
+            }
+            //'add to cart', 'add to wishlist' buttons
+            model.AddToCart.DisableBuyButton = product.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
+            model.AddToCart.DisableWishlistButton = product.DisableWishlistButton || !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
+            if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            {
+                model.AddToCart.DisableBuyButton = true;
+                model.AddToCart.DisableWishlistButton = true;
+            }
+            //pre-order
+            if (product.AvailableForPreOrder)
+            {
+                model.AddToCart.AvailableForPreOrder = !product.PreOrderAvailabilityStartDateTimeUtc.HasValue ||
+                    product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
+                model.AddToCart.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
+            }
+            //rental
+            model.AddToCart.IsRental = product.IsRental;
+
+            //customer entered price
+            model.AddToCart.CustomerEntersPrice = product.CustomerEntersPrice;
+            if (model.AddToCart.CustomerEntersPrice)
+            {
+                decimal minimumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MinimumCustomerEnteredPrice, _workContext.WorkingCurrency);
+                decimal maximumCustomerEnteredPrice = _currencyService.ConvertFromPrimaryStoreCurrency(product.MaximumCustomerEnteredPrice, _workContext.WorkingCurrency);
+
+                model.AddToCart.CustomerEnteredPrice = updatecartitem != null ? updatecartitem.CustomerEnteredPrice : minimumCustomerEnteredPrice;
+                model.AddToCart.CustomerEnteredPriceRange = string.Format(_localizationService.GetResource("Products.EnterProductPrice.Range"),
+                    _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
+                    _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
+            }
+
+
+            #endregion
+
+            #region Gift card
+
+            model.GiftCard.IsGiftCard = product.IsGiftCard;
+            if (model.GiftCard.IsGiftCard)
+            {
+                model.GiftCard.GiftCardType = product.GiftCardType;
+
+                if (updatecartitem == null)
+                {
+                    model.GiftCard.SenderName = _workContext.CurrentCustomer.GetFullName();
+                    model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
+                }
+                else
+                {
+                    string giftCardRecipientName, giftCardRecipientEmail, giftCardSenderName, giftCardSenderEmail, giftCardMessage;
+                    _productAttributeParser.GetGiftCardAttribute(updatecartitem.AttributesXml,
+                        out giftCardRecipientName, out giftCardRecipientEmail,
+                        out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
+
+                    model.GiftCard.RecipientName = giftCardRecipientName;
+                    model.GiftCard.RecipientEmail = giftCardRecipientEmail;
+                    model.GiftCard.SenderName = giftCardSenderName;
+                    model.GiftCard.SenderEmail = giftCardSenderEmail;
+                    model.GiftCard.Message = giftCardMessage;
+                }
+            }
+
+            #endregion
+
+            #region Product attributes
+
+            //performance optimization
+            //We cache a value indicating whether a product has attributes
+            IList<ProductAttributeMapping> productAttributeMapping = product.ProductAttributeMappings.ToList();
+
+            foreach (var attribute in productAttributeMapping)
+            {
+                var productAttribute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
+                var attributeModel = new ProductDetailsModel.ProductAttributeModel
+                {
+                    Id = attribute.Id,
+                    ProductId = product.Id,
+                    ProductAttributeId = attribute.ProductAttributeId,
+                    Name = productAttribute.GetLocalized(x => x.Name),
+                    Description = productAttribute.GetLocalized(x => x.Description),
+                    TextPrompt = attribute.TextPrompt,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                    DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
+                    HasCondition = !String.IsNullOrEmpty(attribute.ConditionAttributeXml)
+                };
+                if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
+                {
+                    attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                }
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = attribute.ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var valueModel = new ProductDetailsModel.ProductAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = attributeValue.GetLocalized(x => x.Name),
+                            ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
+                            IsPreSelected = attributeValue.IsPreSelected
+                        };
+                        attributeModel.Values.Add(valueModel);
+
+                        //display price if allowed
+                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                        {
+                            decimal taxRate;
+                            decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                            decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out taxRate);
+                            decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
+                            if (priceAdjustmentBase > decimal.Zero)
+                                valueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
+                            else if (priceAdjustmentBase < decimal.Zero)
+                                valueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+
+                            valueModel.PriceAdjustmentValue = priceAdjustment;
+                        }
+
+                        //"image square" picture (with with "image squares" attribute type only)
+                        if (!String.IsNullOrEmpty(attributeValue.ImageSquaresPictureId))
+                        {
+                            var productAttributeImageSquarePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_MODEL_KEY,
+                            attributeValue.ImageSquaresPictureId,
+                            _webHelper.IsCurrentConnectionSecured(),
+                            _storeContext.CurrentStore.Id);
+                            valueModel.ImageSquaresPictureModel = _cacheManager.Get(productAttributeImageSquarePictureCacheKey, () =>
+                            {
+                                var imageSquaresPicture = _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
+                                if (imageSquaresPicture != null)
+                                {
+                                    return new PictureModel
+                                    {
+                                        FullSizeImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ApplyWatermarkForProduct),
+                                        ImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ApplyWatermarkForProduct, _mediaSettings.ImageSquarePictureSize)
+                                    };
+                                }
+                                return new PictureModel();
+                            });
+                        }
+
+                        //picture of a product attribute value
+                        if (!String.IsNullOrEmpty(attributeValue.PictureId))
+                        {
+                            var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
+                                attributeValue.PictureId,
+                                _webHelper.IsCurrentConnectionSecured(),
+                                _storeContext.CurrentStore.Id);
+                            valueModel.PictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
+                            {
+                                var valuePicture = _pictureService.GetPictureById(attributeValue.PictureId);
+                                if (valuePicture != null)
+                                {
+                                    return new PictureModel
+                                    {
+                                        FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ApplyWatermarkForProduct),
+                                        ImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ApplyWatermarkForProduct, defaultPictureSize)
+                                    };
+                                }
+                                return new PictureModel();
+                            });
+                        }
+                    }
+                }
+
+                //set already selected attributes (if we're going to update the existing shopping cart item)
+                if (updatecartitem != null)
+                {
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.Checkboxes:
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.ImageSquares:
+                            {
+                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                {
+                                    //clear default selection
+                                    foreach (var item in attributeModel.Values)
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedValues = _productAttributeParser.ParseProductAttributeValues(product, updatecartitem.AttributesXml);
+                                    foreach (var attributeValue in selectedValues)
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+
+                                }
+                            }
+                            break;
+                        case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                //do nothing
+                                //values are already pre-set
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                {
+                                    var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
+                                    if (enteredText.Any())
+                                        attributeModel.DefaultValue = enteredText[0];
+                                }
+                            }
+                            break;
+                        case AttributeControlType.Datepicker:
+                            {
+                                //keep in mind my that the code below works only in the current culture
+                                var selectedDateStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
+                                if (selectedDateStr.Any())
+                                {
+                                    DateTime selectedDate;
+                                    if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
+                                                           DateTimeStyles.None, out selectedDate))
+                                    {
+                                        //successfully parsed
+                                        attributeModel.SelectedDay = selectedDate.Day;
+                                        attributeModel.SelectedMonth = selectedDate.Month;
+                                        attributeModel.SelectedYear = selectedDate.Year;
+                                    }
+                                }
+
+                            }
+                            break;
+                        case AttributeControlType.FileUpload:
+                            {
+                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                {
+                                    var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
+                                    Guid downloadGuid;
+                                    Guid.TryParse(downloadGuidStr, out downloadGuid);
+                                    var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                                    if (download != null)
+                                        attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                                }
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                model.ProductAttributes.Add(attributeModel);
+            }
+
+            #endregion 
+
+            #region Product specifications
+
+            //do not prepare this model for the associated products. any it's not used
+            if (!isAssociatedProduct)
+            {
+                model.ProductSpecifications = PrepareProductSpecificationModel(product);
+            }
+
+            #endregion
+
+            #region Product review overview
+
+            model.ProductReviewOverview = PrepareProductReviewOverviewModel(product);
+
+            #endregion
+
+            #region Tier prices
+
+            if (product.HasTierPrices && _permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+            {
+                model.TierPrices = product.TierPrices.OrderBy(x => x.Quantity)
+                                    .FilterByStore(_storeContext.CurrentStore.Id)
+                                    .FilterForCustomer(_workContext.CurrentCustomer)
+                                    .FilterByDate()
+                                    .RemoveDuplicatedQuantities().Select(tierPrice =>
+                                    {
+                                        decimal taxRate;
+                                        var priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product,
+                                            _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
+                                        var price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
+
+                                        return new ProductDetailsModel.TierPriceModel
+                                        {
+                                            Quantity = tierPrice.Quantity,
+                                            Price = _priceFormatter.FormatPrice(price, false, false)
+                                        };
+                                    }).ToList();
+            }
+
+            #endregion
+
+            #region Manufacturers
+
+            //do not prepare this model for the associated products. any it's not used
+            if (!isAssociatedProduct)
+            {
+                string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY,
+                    product.Id,
+                    _workContext.WorkingLanguage.Id,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
+                model.ProductManufacturers = _cacheManager.Get(manufacturersCacheKey, () =>
+                    product.ProductManufacturers.Select(x => _manufacturerService.GetManufacturerById(x.ManufacturerId).ToModel()).ToList()
+                    );
+            }
+            #endregion
+
+            #region Rental products
+
+            if (product.IsRental)
+            {
+                model.IsRental = true;
+                //set already entered dates attributes (if we're going to update the existing shopping cart item)
+                if (updatecartitem != null)
+                {
+                    model.RentalStartDate = updatecartitem.RentalStartDateUtc;
+                    model.RentalEndDate = updatecartitem.RentalEndDateUtc;
+                }
+            }
+
+            #endregion
+
+            #region Associated products
+
+            if (product.ProductType == ProductType.GroupedProduct)
+            {
+                //ensure no circular references
+                if (!isAssociatedProduct)
+                {
+                    var associatedProducts = _productService.GetAssociatedProducts(product.Id, _storeContext.CurrentStore.Id);
+                    foreach (var associatedProduct in associatedProducts)
+                        model.AssociatedProducts.Add(PrepareProductDetailsPage(associatedProduct, null, true));
+                }
+            }
+
+            #endregion
+
+            return model;
+        }
+
+        public virtual void PrepareProductReviewsModel(ProductReviewsModel model, Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.ProductId = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+
+            var productReviews = _productService.GetAllProductReviews("", true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : "", product.Id).OrderBy(pr => pr.CreatedOnUtc);
+            foreach (var pr in productReviews)
+            {
+                var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(pr.CustomerId);
+                model.Items.Add(new ProductReviewModel
+                {
+                    Id = pr.Id,
+                    CustomerId = pr.CustomerId,
+                    CustomerName = customer.FormatUserName(),
+                    AllowViewingProfiles = _customerSettings.AllowViewingProfiles && customer != null && !customer.IsGuest(),
+                    Title = pr.Title,
+                    ReviewText = pr.ReviewText,
+                    Rating = pr.Rating,
+                    Helpfulness = new ProductReviewHelpfulnessModel
+                    {
+                        ProductId = product.Id,
+                        ProductReviewId = pr.Id,
+                        HelpfulYesTotal = pr.HelpfulYesTotal,
+                        HelpfulNoTotal = pr.HelpfulNoTotal,
+                    },
+                    WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
+                });
+            }
+
+            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
+            model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
         }
     }
 }

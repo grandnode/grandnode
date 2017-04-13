@@ -1,4 +1,5 @@
 ﻿using Grand.Core.Domain.Catalog;
+using Grand.Core.Domain.Orders;
 using Grand.Web.Models.Catalog;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,12 @@ namespace Grand.Web.Services
 
         ProductReviewOverviewModel PrepareProductReviewOverviewModel(
            Product product);
+
+        string PrepareProductTemplateViewPath(string productTemplateId);
+
+        ProductDetailsModel PrepareProductDetailsPage(Product product,
+            ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false);
+
+        void PrepareProductReviewsModel(ProductReviewsModel model, Product product);
     }
 }
