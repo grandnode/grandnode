@@ -39,6 +39,7 @@ using Grand.Web.Models.Catalog;
 using Grand.Web.Models.Media;
 using Grand.Core.Infrastructure;
 using Grand.Services.Common;
+using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
@@ -49,6 +50,7 @@ namespace Grand.Web.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
+        private readonly IProductWebService _productWebService;
         private readonly IVendorService _vendorService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IProductAttributeService _productAttributeService;
@@ -94,7 +96,8 @@ namespace Grand.Web.Controllers
 
         public ProductController(ICategoryService categoryService, 
             IManufacturerService manufacturerService,
-            IProductService productService, 
+            IProductService productService,
+            IProductWebService productWebService,
             IVendorService vendorService,
             IProductTemplateService productTemplateService,
             IProductAttributeService productAttributeService,
@@ -138,6 +141,7 @@ namespace Grand.Web.Controllers
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._productWebService = productWebService;
             this._vendorService = vendorService;
             this._productTemplateService = productTemplateService;
             this._productAttributeService = productAttributeService;
@@ -183,18 +187,14 @@ namespace Grand.Web.Controllers
 
         #region Utilities
 
+
         [NonAction]
         protected virtual IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products,
             bool preparePriceModel = true, bool preparePictureModel = true,
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
             bool forceRedirectionAfterAddingToCart = false)
         {
-            return this.PrepareProductOverviewModels(_workContext,
-                _storeContext, _categoryService, _productService, _specificationAttributeService,
-                _priceCalculationService, _priceFormatter, _permissionService,
-                _localizationService, _taxService, _currencyService,
-                _pictureService, _measureService, _webHelper, _cacheManager,
-                _catalogSettings, _mediaSettings, products,
+            return _productWebService.PrepareProductOverviewModels(products,
                 preparePriceModel, preparePictureModel,
                 productThumbPictureSize, prepareSpecificationAttributes,
                 forceRedirectionAfterAddingToCart);
@@ -816,17 +816,14 @@ namespace Grand.Web.Controllers
             //do not prepare this model for the associated products. any it's not used
             if (!isAssociatedProduct)
             {
-                model.ProductSpecifications = this.PrepareProductSpecificationModel(_workContext,
-                    _specificationAttributeService,
-                    _cacheManager,
-                    product);
+                model.ProductSpecifications = _productWebService.PrepareProductSpecificationModel(product);
             }
             
             #endregion
 
             #region Product review overview
 
-            model.ProductReviewOverview = this.PrepareProductReviewOverviewModel(_productService, _storeContext, _catalogSettings, _cacheManager, product);
+            model.ProductReviewOverview = _productWebService.PrepareProductReviewOverviewModel(product);
 
             #endregion
 

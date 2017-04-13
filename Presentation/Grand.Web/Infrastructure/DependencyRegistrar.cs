@@ -19,6 +19,12 @@ namespace Grand.Web.Infrastructure
 
             //address service
             builder.RegisterType<AddressWebService>().As<IAddressWebService>().InstancePerLifetimeScope();
+
+            //catalog service
+            builder.RegisterType<CatalogWebService>().As<ICatalogWebService>().InstancePerLifetimeScope();
+
+            //product service
+            builder.RegisterType<ProductWebService>().As<IProductWebService>().InstancePerLifetimeScope();
         }
 
         public int Order

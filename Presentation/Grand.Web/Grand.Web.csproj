@@ -433,6 +433,10 @@
     <Compile Include="Services\AddressWebService.cs" />
     <Compile Include="Services\IAddressWebService.cs" />
     <Compile Include="Services\IBlogWebService.cs" />
+    <Compile Include="Services\CatalogWebService.cs" />
+    <Compile Include="Services\ICatalogWebService.cs" />
+    <Compile Include="Services\ProductWebService.cs" />
+    <Compile Include="Services\IProductWebService.cs" />
     <Compile Include="Validators\Blogs\BlogPostValidator.cs" />
     <Compile Include="Validators\Boards\EditForumPostValidator.cs" />
     <Compile Include="Validators\Boards\EditForumTopicValidator.cs" />
