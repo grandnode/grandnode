@@ -2,6 +2,7 @@
 using Grand.Core.Caching;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Customers;
+using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
@@ -13,6 +14,7 @@ using Grand.Services.Directory;
 using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Grand.Services.Messages;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Shipping;
@@ -62,6 +64,7 @@ namespace Grand.Web.Services
         private readonly IManufacturerService _manufacturerService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDownloadService _downloadService;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -69,6 +72,7 @@ namespace Grand.Web.Services
         private readonly VendorSettings _vendorSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly LocalizationSettings _localizationSettings;
 
         public ProductWebService(IPermissionService permissionService, IWorkContext workContext, IStoreContext storeContext,
             ILocalizationService localizationService, IProductService productService, IPriceCalculationService priceCalculationService,
@@ -77,9 +81,9 @@ namespace Grand.Web.Services
             IProductTemplateService productTemplateService, IProductAttributeParser productAttributeParser, IShippingService shippingService,
             IVendorService vendorService, ICategoryService categoryService, IAclService aclService, IStoreMappingService storeMappingService,
             IProductTagService productTagService, IProductAttributeService productAttributeService, IManufacturerService manufacturerService,
-            IDateTimeHelper dateTimeHelper, IDownloadService downloadService,
+            IDateTimeHelper dateTimeHelper, IDownloadService downloadService, IWorkflowMessageService workflowMessageService,
             MediaSettings mediaSettings, CatalogSettings catalogSettings, SeoSettings seoSettings, VendorSettings vendorSettings, CustomerSettings customerSettings,
-            CaptchaSettings captchaSettings)
+            CaptchaSettings captchaSettings, LocalizationSettings localizationSettings)
         {
             this._permissionService = permissionService;
             this._workContext = workContext;
@@ -107,6 +111,7 @@ namespace Grand.Web.Services
             this._manufacturerService = manufacturerService;
             this._dateTimeHelper = dateTimeHelper;
             this._downloadService = downloadService;
+            this._workflowMessageService = workflowMessageService;
 
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
@@ -114,6 +119,7 @@ namespace Grand.Web.Services
             this._vendorSettings = vendorSettings;
             this._customerSettings = customerSettings;
             this._captchaSettings = captchaSettings;
+            this._localizationSettings = localizationSettings;
         }
 
         public virtual IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(
@@ -1245,6 +1251,62 @@ namespace Grand.Web.Services
 
             model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
             model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
+        }
+
+        public virtual ProductReview InsertProductReview(Product product, ProductReviewsModel model)
+        {
+            //save review
+            int rating = model.AddProductReview.Rating;
+            if (rating < 1 || rating > 5)
+                rating = _catalogSettings.DefaultProductRatingValue;
+            bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+
+            var productReview = new ProductReview
+            {
+                ProductId = product.Id,
+                StoreId = _storeContext.CurrentStore.Id,
+                CustomerId = _workContext.CurrentCustomer.Id,
+                Title = model.AddProductReview.Title,
+                ReviewText = model.AddProductReview.ReviewText,
+                Rating = rating,
+                HelpfulYesTotal = 0,
+                HelpfulNoTotal = 0,
+                IsApproved = isApproved,
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            _productService.InsertProductReview(productReview);
+
+            if (!_workContext.CurrentCustomer.IsHasProductReview)
+            {
+                _workContext.CurrentCustomer.IsHasProductReview = true;
+                EngineContext.Current.Resolve<ICustomerService>().UpdateHasProductReview(_workContext.CurrentCustomer.Id);
+            }
+
+            //update product totals
+            _productService.UpdateProductReviewTotals(product);
+
+            //notify store owner
+            if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
+                _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
+
+
+            return productReview;
+        }
+
+        public virtual void SendProductEmailAFriendMessage(Product product, ProductEmailAFriendModel model)
+        {
+            _workflowMessageService.SendProductEmailAFriendMessage(_workContext.CurrentCustomer,
+                    _workContext.WorkingLanguage.Id, product,
+                    model.YourEmailAddress, model.FriendEmail,
+                    Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+        }
+
+        public virtual void SendProductAskQuestionMessage(Product product, ProductAskQuestionModel model)
+        {
+            _workflowMessageService.SendProductQuestionMessage( _workContext.CurrentCustomer,
+                    _workContext.WorkingLanguage.Id, product, model.Email, model.FullName, model.Phone,
+                    Core.Html.HtmlHelper.FormatText(model.Message, false, true, false, false, false, false));
+
         }
     }
 }

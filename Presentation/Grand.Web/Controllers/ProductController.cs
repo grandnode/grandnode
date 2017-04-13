@@ -43,7 +43,6 @@ namespace Grand.Web.Controllers
         private readonly IWebHelper _webHelper;
         private readonly IRecentlyViewedProductsService _recentlyViewedProductsService;
         private readonly ICompareProductsService _compareProductsService;
-        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IOrderReportService _orderReportService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
@@ -70,7 +69,6 @@ namespace Grand.Web.Controllers
             IWebHelper webHelper,
             IRecentlyViewedProductsService recentlyViewedProductsService,
             ICompareProductsService compareProductsService,
-            IWorkflowMessageService workflowMessageService,
             IOrderReportService orderReportService,
             IAclService aclService,
             IStoreMappingService storeMappingService,
@@ -94,7 +92,6 @@ namespace Grand.Web.Controllers
             this._webHelper = webHelper;
             this._recentlyViewedProductsService = recentlyViewedProductsService;
             this._compareProductsService = compareProductsService;
-            this._workflowMessageService = workflowMessageService;
             this._orderReportService = orderReportService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
@@ -502,40 +499,7 @@ namespace Grand.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                //save review
-                int rating = model.AddProductReview.Rating;
-                if (rating < 1 || rating > 5)
-                    rating = _catalogSettings.DefaultProductRatingValue;
-                bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
-
-                var productReview = new ProductReview
-                {
-                    ProductId = product.Id,
-                    StoreId = _storeContext.CurrentStore.Id,
-                    CustomerId = _workContext.CurrentCustomer.Id,
-                    Title = model.AddProductReview.Title,
-                    ReviewText = model.AddProductReview.ReviewText,
-                    Rating = rating,
-                    HelpfulYesTotal = 0,
-                    HelpfulNoTotal = 0,
-                    IsApproved = isApproved,
-                    CreatedOnUtc = DateTime.UtcNow,
-                };
-                _productService.InsertProductReview(productReview);
-
-                if(!_workContext.CurrentCustomer.IsHasProductReview)
-                {
-                    _workContext.CurrentCustomer.IsHasProductReview = true;
-                    EngineContext.Current.Resolve<ICustomerService>().UpdateHasProductReview(_workContext.CurrentCustomer.Id);
-                }
-
-                //update product totals
-                _productService.UpdateProductReviewTotals(product);
-
-                //notify store owner
-                if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                    _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
-
+                var productReview = _productWebService.InsertProductReview(product, model);
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AddProductReview", product.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name);
 
@@ -548,7 +512,7 @@ namespace Grand.Web.Controllers
                 model.AddProductReview.ReviewText = null;
 
                 model.AddProductReview.SuccessfullyAdded = true;
-                if (!isApproved)
+                if (!productReview.IsApproved)
                     model.AddProductReview.Result = _localizationService.GetResource("Reviews.SeeAfterApproving");
                 else
                     model.AddProductReview.Result = _localizationService.GetResource("Reviews.SuccessfullyAdded");
@@ -674,10 +638,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 //email
-                _workflowMessageService.SendProductEmailAFriendMessage(_workContext.CurrentCustomer,
-                        _workContext.WorkingLanguage.Id, product,
-                        model.YourEmailAddress, model.FriendEmail, 
-                        Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                _productWebService.SendProductEmailAFriendMessage(product, model);
 
                 model.ProductId = product.Id;
                 model.ProductName = product.GetLocalized(x => x.Name);
@@ -742,14 +703,7 @@ namespace Grand.Web.Controllers
             if (ModelState.IsValid)
             {
                 // email
-                var result = _workflowMessageService.SendProductQuestionMessage(
-                    _workContext.CurrentCustomer,
-                    _workContext.WorkingLanguage.Id,
-                    product,
-                    model.Email,
-                    model.FullName,
-                    model.Phone,
-                    Core.Html.HtmlHelper.FormatText(model.Message, false, true, false, false, false, false));
+                _productWebService.SendProductAskQuestionMessage(product, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AskQuestion", _workContext.CurrentCustomer.Id, _localizationService.GetResource("ActivityLog.PublicStore.AskQuestion"));

@@ -28,5 +28,9 @@ namespace Grand.Web.Services
             ShoppingCartItem updatecartitem = null, bool isAssociatedProduct = false);
 
         void PrepareProductReviewsModel(ProductReviewsModel model, Product product);
+        ProductReview InsertProductReview(Product product, ProductReviewsModel model);
+
+        void SendProductEmailAFriendMessage(Product product, ProductEmailAFriendModel model);
+        void SendProductAskQuestionMessage(Product product, ProductAskQuestionModel model);
     }
 }
