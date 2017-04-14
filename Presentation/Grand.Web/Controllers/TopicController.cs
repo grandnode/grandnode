@@ -41,7 +41,7 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult TopicDetails(string topicId)
         {
             var model = _topicWebService.TopicDetails(topicId);

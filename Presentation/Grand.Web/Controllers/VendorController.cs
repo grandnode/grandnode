@@ -60,7 +60,7 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ApplyVendor()
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)

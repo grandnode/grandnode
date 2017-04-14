@@ -2084,7 +2084,7 @@ namespace Grand.Web.Controllers
         }
 
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
@@ -2512,7 +2512,7 @@ namespace Grand.Web.Controllers
 
         #region Wishlist
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Wishlist(Guid? customerGuid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
@@ -2684,7 +2684,7 @@ namespace Grand.Web.Controllers
             }
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)

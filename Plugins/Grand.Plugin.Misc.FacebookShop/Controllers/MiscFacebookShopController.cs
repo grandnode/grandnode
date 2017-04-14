@@ -24,7 +24,7 @@ using Grand.Core.Domain.Media;
 
 namespace Grand.Plugin.Misc.FacebookShop.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.NoMatter)]
+    [GrandHttpsRequirement(SslRequirement.NoMatter)]
     public class MiscFacebookShopController : BasePluginController
     {
         #region Fields

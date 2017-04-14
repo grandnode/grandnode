@@ -8,9 +8,9 @@ using Grand.Core.Infrastructure;
 namespace Grand.Web.Framework.Security
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-    public class NopHttpsRequirementAttribute : FilterAttribute, IAuthorizationFilter
+    public class GrandHttpsRequirementAttribute : FilterAttribute, IAuthorizationFilter
     {
-        public NopHttpsRequirementAttribute(SslRequirement sslRequirement)
+        public GrandHttpsRequirementAttribute(SslRequirement sslRequirement)
         {
             this.SslRequirement = sslRequirement;
         }

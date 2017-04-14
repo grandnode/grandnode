@@ -20,7 +20,7 @@ using Grand.Services.Security;
 
 namespace Grand.Web.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.No)]
+    [GrandHttpsRequirement(SslRequirement.No)]
     public partial class ProfileController : BasePublicController
     {
         private readonly IForumService _forumService;

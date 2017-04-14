@@ -11,7 +11,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Grand.Admin.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.Yes)]
+    [GrandHttpsRequirement(SslRequirement.Yes)]
     [AdminValidateIpAddress]
     [AdminAuthorize]
     [AdminAntiForgery]

@@ -25,7 +25,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.No)]
+    [GrandHttpsRequirement(SslRequirement.No)]
     public partial class BoardsController : BasePublicController
     {
         #region Fields
@@ -679,7 +679,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult TopicDelete(string id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -1072,7 +1072,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult PostDelete(string id)
         {
             if (!_forumSettings.ForumsEnabled)

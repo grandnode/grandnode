@@ -12,7 +12,7 @@ namespace Grand.Web.Controllers
     [StoreClosed]
     [PublicStoreAllowNavigation]
     [LanguageSeoCode]
-    [NopHttpsRequirement(SslRequirement.NoMatter)]
+    [GrandHttpsRequirement(SslRequirement.NoMatter)]
     [WwwRequirement]
     public abstract partial class BasePublicController : BaseController
     {

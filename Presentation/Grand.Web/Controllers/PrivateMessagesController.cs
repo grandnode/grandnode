@@ -16,7 +16,7 @@ using Grand.Web.Models.PrivateMessages;
 
 namespace Grand.Web.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.Yes)]
+    [GrandHttpsRequirement(SslRequirement.Yes)]
     public partial class PrivateMessagesController : BasePublicController
     {
         #region Fields

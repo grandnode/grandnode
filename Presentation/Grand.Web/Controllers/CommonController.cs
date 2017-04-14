@@ -530,7 +530,7 @@ namespace Grand.Web.Controllers
 
 
         //contact us page
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [StoreClosed(true)]
         public virtual ActionResult ContactUs()
@@ -580,7 +580,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
         //contact vendor page
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ContactVendor(string vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)
@@ -639,7 +639,7 @@ namespace Grand.Web.Controllers
         }
 
         //sitemap page
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult Sitemap()
         {
             if (!_commonSettings.SitemapEnabled)
@@ -706,7 +706,7 @@ namespace Grand.Web.Controllers
         }
 
         //SEO sitemap page
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         //available even when a store is closed
         [StoreClosed(true)]
         public virtual ActionResult SitemapXml(int? id)

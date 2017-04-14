@@ -164,7 +164,7 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult CustomerReturnRequests()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -203,7 +203,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ReturnRequest(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);

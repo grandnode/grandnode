@@ -554,7 +554,7 @@ namespace Grand.Web.Controllers
         #region Methods
 
         //My account / Orders
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult CustomerOrders()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -601,7 +601,7 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Reward points
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult CustomerRewardPoints()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -639,7 +639,7 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Details(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -652,7 +652,7 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page / Print
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult PrintOrderDetails(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -666,7 +666,7 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page / Cancel Unpaid Order
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public ActionResult CancelOrder(string orderId)
         {
             var order = _orderService.GetOrderById(orderId);
@@ -743,7 +743,7 @@ namespace Grand.Web.Controllers
         }
 
         //My account / Order details page / Shipment details page
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ShipmentDetails(string shipmentId)
         {
             var shipment = _shipmentService.GetShipmentById(shipmentId);

@@ -111,7 +111,7 @@ namespace Grand.Web.Controllers
 
         #region Product details page
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductDetails(string productId, string updatecartitemid = "")
         {
             var product = _productService.GetProductById(productId);
@@ -282,7 +282,7 @@ namespace Grand.Web.Controllers
 
         #region Recently viewed products
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult RecentlyViewedProducts()
         {
             if (!_catalogSettings.RecentlyViewedProductsEnabled)
@@ -327,7 +327,7 @@ namespace Grand.Web.Controllers
 
         #region Recently added products
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult NewProducts()
         {
             if (!_catalogSettings.NewProductsEnabled)
@@ -455,7 +455,7 @@ namespace Grand.Web.Controllers
 
         #region Product reviews
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductReviews(string productId)
         {
             var product = _productService.GetProductById(productId);
@@ -597,7 +597,7 @@ namespace Grand.Web.Controllers
 
         #region Email a friend
         
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult ProductEmailAFriend(string productId)
         {
             var product = _productService.GetProductById(productId);
@@ -662,7 +662,7 @@ namespace Grand.Web.Controllers
 
         #region Ask question
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult AskQuestion(string productId)
         {
             var product = _productService.GetProductById(productId);
@@ -774,7 +774,7 @@ namespace Grand.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-        [NopHttpsRequirement(SslRequirement.No)]
+        [GrandHttpsRequirement(SslRequirement.No)]
         public virtual ActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)

@@ -142,7 +142,7 @@ namespace Grand.Web.Controllers
 
         #region Login / logout
         
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
         [StoreClosed(true)]
         //available even when navigation is not allowed
@@ -268,7 +268,7 @@ namespace Grand.Web.Controllers
 
         #region Password recovery
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
         public virtual ActionResult PasswordRecovery()
@@ -305,7 +305,7 @@ namespace Grand.Web.Controllers
         }
 
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
         public virtual ActionResult PasswordRecoveryConfirm(string token, string email)
@@ -372,7 +372,7 @@ namespace Grand.Web.Controllers
 
         #region Register
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
         public virtual ActionResult Register()
@@ -678,7 +678,7 @@ namespace Grand.Web.Controllers
             return Json(new { Available = usernameAvailable, Text = statusText });
         }
         
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
         public virtual ActionResult AccountActivation(string token, string email)
@@ -718,7 +718,7 @@ namespace Grand.Web.Controllers
             return PartialView(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -896,7 +896,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult RemoveExternalAssociation(string id)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -926,7 +926,7 @@ namespace Grand.Web.Controllers
 
         #region My account / Addresses
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Addresses()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -938,7 +938,7 @@ namespace Grand.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult AddressDelete(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -962,7 +962,7 @@ namespace Grand.Web.Controllers
 
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult AddressAdd()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1017,7 +1017,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult AddressEdit(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1084,7 +1084,7 @@ namespace Grand.Web.Controllers
 
         #region My account / Downloadable products
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult DownloadableProducts()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1110,7 +1110,7 @@ namespace Grand.Web.Controllers
 
         #region My account / Change password
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult ChangePassword()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
@@ -1159,7 +1159,7 @@ namespace Grand.Web.Controllers
 
         #region My account / Avatar
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
+        [GrandHttpsRequirement(SslRequirement.Yes)]
         public virtual ActionResult Avatar()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())

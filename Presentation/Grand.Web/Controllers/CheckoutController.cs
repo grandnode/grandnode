@@ -34,7 +34,7 @@ using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
-    [NopHttpsRequirement(SslRequirement.Yes)]
+    [GrandHttpsRequirement(SslRequirement.Yes)]
     public partial class CheckoutController : BasePublicController
     {
 		#region Fields
