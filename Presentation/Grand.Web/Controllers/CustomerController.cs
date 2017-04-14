@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Grand.Core;
-using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Messages;
-using Grand.Core.Domain.Orders;
-using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Tax;
 using Grand.Services.Authentication;
 using Grand.Services.Authentication.External;
@@ -25,8 +21,6 @@ using Grand.Services.Logging;
 using Grand.Services.Media;
 using Grand.Services.Messages;
 using Grand.Services.Orders;
-using Grand.Services.Seo;
-using Grand.Services.Stores;
 using Grand.Services.Tax;
 using Grand.Web.Extensions;
 using Grand.Web.Framework;
@@ -34,163 +28,107 @@ using Grand.Web.Framework.Controllers;
 using Grand.Web.Framework.Security;
 using Grand.Web.Framework.Security.Captcha;
 using Grand.Web.Framework.Security.Honeypot;
-using Grand.Web.Models.Common;
 using Grand.Web.Models.Customer;
-using WebGrease.Css.Extensions;
 using Grand.Services.Events;
 using Grand.Core.Domain;
-using Grand.Services.Catalog;
 using Grand.Web.Services;
+using Grand.Core.Infrastructure;
 
 namespace Grand.Web.Controllers
 {
     public partial class CustomerController : BasePublicController
     {
         #region Fields
+        private readonly ICustomerWebService _customerWebService;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly TaxSettings _taxSettings;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerService _customerService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
-        private readonly ICustomerAttributeService _customerAttributeService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ITaxService _taxService;
-        private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly ForumSettings _forumSettings;
-        private readonly OrderSettings _orderSettings;
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
-        private readonly IStateProvinceService _stateProvinceService;
-        private readonly IOrderService _orderService;
-        private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly IOpenAuthenticationService _openAuthenticationService;
-        private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IAddressWebService _addressWebService;
         private readonly IEventPublisher _eventPublisher;
-        private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly IReturnRequestService _returnRequestService;
-        private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly ICustomerActionEventService _customerActionEventService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
-        private readonly SecuritySettings _securitySettings;
-        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
 
         #endregion
 
         #region Ctor
 
-        public CustomerController(IAuthenticationService authenticationService,
-            IDateTimeHelper dateTimeHelper,
+        public CustomerController(
+            ICustomerWebService customerWebService,
+            IAuthenticationService authenticationService,
             DateTimeSettings dateTimeSettings, 
             TaxSettings taxSettings,
             ILocalizationService localizationService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IStoreMappingService storeMappingService,
             ICustomerService customerService,
             ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
             ITaxService taxService, 
-            RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings,
             ForumSettings forumSettings,
-            OrderSettings orderSettings, 
             IAddressService addressService,
             ICountryService countryService,
-            IStateProvinceService stateProvinceService,
-            IOrderService orderService,
-            IPictureService pictureService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IShoppingCartService shoppingCartService,
-            IOpenAuthenticationService openAuthenticationService,
-            IDownloadService downloadService,
             IWebHelper webHelper,
             ICustomerActivityService customerActivityService,
             IAddressWebService addressWebService,
             IEventPublisher eventPublisher,
-            MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService,
-            ICustomerActionEventService customerActionEventService,
             LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings,
-            SecuritySettings securitySettings,
-            ExternalAuthenticationSettings externalAuthenticationSettings,
-            StoreInformationSettings storeInformationSettings,
-            IReturnRequestService returnRequestService)
+            CaptchaSettings captchaSettings
+            )
         {
+
+            this._customerWebService = customerWebService;
             this._authenticationService = authenticationService;
-            this._dateTimeHelper = dateTimeHelper;
             this._dateTimeSettings = dateTimeSettings;
             this._taxSettings = taxSettings;
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._storeContext = storeContext;
-            this._storeMappingService = storeMappingService;
             this._customerService = customerService;
             this._customerAttributeParser = customerAttributeParser;
-            this._customerAttributeService = customerAttributeService;
             this._genericAttributeService = genericAttributeService;
             this._customerRegistrationService = customerRegistrationService;
             this._taxService = taxService;
-            this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
             this._forumSettings = forumSettings;
-            this._orderSettings = orderSettings;
             this._addressService = addressService;
             this._countryService = countryService;
-            this._stateProvinceService = stateProvinceService;
-            this._orderService = orderService;
-            this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._shoppingCartService = shoppingCartService;
-            this._openAuthenticationService = openAuthenticationService;
-            this._downloadService = downloadService;
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
             this._addressWebService = addressWebService;
-            this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
-            this._customerActionEventService = customerActionEventService;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
-            this._securitySettings = securitySettings;
-            this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._eventPublisher = eventPublisher;
-            this._storeInformationSettings = storeInformationSettings;
-            this._returnRequestService = returnRequestService;
         }
 
         #endregion
 
         #region Utilities
         
-        [NonAction]
-        protected virtual void TryAssociateAccountWithExternalAccount(Customer customer)
-        {
-            var parameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(true);
-            if (parameters == null)
-                return;
-
-            if (_openAuthenticationService.AccountExists(parameters))
-                return;
-
-            _openAuthenticationService.AssociateExternalAccountWithUser(customer, parameters);
-        }
 
         /// <summary>
         /// Prepare custom customer attribute models
@@ -198,415 +136,7 @@ namespace Grand.Web.Controllers
         /// <param name="customer">Customer</param>
         /// <param name="overrideAttributesXml">When specified we do not use attributes of a customer</param>
         /// <returns>A list of customer attribute models</returns>
-        [NonAction]
-        protected virtual IList<CustomerAttributeModel> PrepareCustomCustomerAttributes(Customer customer,
-            string overrideAttributesXml = "")
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
 
-            var result = new List<CustomerAttributeModel>();
-
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
-            foreach (var attribute in customerAttributes)
-            {
-                var attributeModel = new CustomerAttributeModel
-                {
-                    Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
-                    IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType,
-                };
-
-                if (attribute.ShouldHaveValues())
-                {
-                    //values
-                    var attributeValues = attribute.CustomerAttributeValues;
-                    foreach (var attributeValue in attributeValues)
-                    {
-                        var valueModel = new CustomerAttributeValueModel
-                        {
-                            Id = attributeValue.Id,
-                            Name = attributeValue.GetLocalized(x => x.Name),
-                            IsPreSelected = attributeValue.IsPreSelected
-                        };
-                        attributeModel.Values.Add(valueModel);
-                    }
-                }
-
-                //set already selected attributes
-                var selectedAttributesXml = !String.IsNullOrEmpty(overrideAttributesXml) ?
-                    overrideAttributesXml : 
-                    customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.Checkboxes:
-                        {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
-                            {
-                                //clear default selection
-                                foreach (var item in attributeModel.Values)
-                                    item.IsPreSelected = false;
-
-                                //select new values
-                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedAttributesXml);
-                                foreach (var attributeValue in selectedValues)
-                                    if (attributeModel.Id == attributeValue.CustomerAttributeId)
-                                        foreach (var item in attributeModel.Values)
-                                        if (attributeValue.Id == item.Id)
-                                            item.IsPreSelected = true;
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //do nothing
-                            //values are already pre-set
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            if (!String.IsNullOrEmpty(selectedAttributesXml))
-                            {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
-                                if (enteredText.Any())
-                                    attributeModel.DefaultValue = enteredText[0];
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                    case AttributeControlType.Datepicker:
-                    case AttributeControlType.FileUpload:
-                    default:
-                        //not supported attribute control types
-                        break;
-                }
-
-                result.Add(attributeModel);
-            }
-
-
-            return result;
-        }
-
-        [NonAction]
-        protected virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
-            bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
-
-            if (!excludeProperties)
-            {
-                model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
-                model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-                var dateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
-                if (dateOfBirth.HasValue)
-                {
-                    model.DateOfBirthDay = dateOfBirth.Value.Day;
-                    model.DateOfBirthMonth = dateOfBirth.Value.Month;
-                    model.DateOfBirthYear = dateOfBirth.Value.Year;
-                }
-                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                model.CountryId = customer.GetAttribute<string>(SystemCustomerAttributeNames.CountryId);
-                model.StateProvinceId = customer.GetAttribute<string>(SystemCustomerAttributeNames.StateProvinceId);
-                model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
-
-                //newsletter
-                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, _storeContext.CurrentStore.Id);
-                if (newsletter == null)
-                    newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByCustomerId(customer.Id);
-
-                model.Newsletter = newsletter != null && newsletter.Active;
-
-                model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
-
-                model.Email = customer.Email;
-                model.Username = customer.Username;
-            }
-            else
-            {
-                if (_customerSettings.UsernamesEnabled && !_customerSettings.AllowUsersToChangeUsernames)
-                    model.Username = customer.Username;
-            }
-
-            //countries and states
-            if (_customerSettings.CountryEnabled)
-            {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
-                foreach (var c in _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
-                {
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
-                        Text = c.GetLocalized(x => x.Name),
-                        Value = c.Id.ToString(),
-                        Selected = c.Id == model.CountryId
-                    });
-                }
-
-                if (_customerSettings.StateProvinceEnabled)
-                {
-                    //states
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, _workContext.WorkingLanguage.Id).ToList();
-                    if (states.Any())
-                    {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "" });
-
-                        foreach (var s in states)
-                        {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                        }
-                    }
-                    else
-                    {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
-
-                        model.AvailableStates.Add(new SelectListItem
-                        {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
-                            Value = ""
-                        });
-                    }
-
-                }
-            }
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
-                .GetLocalizedEnum(_localizationService, _workContext);
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.CompanyRequired = _customerSettings.CompanyRequired;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _customerSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _customerSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CityRequired = _customerSettings.CityRequired;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.CountryRequired = _customerSettings.CountryRequired;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.PhoneRequired = _customerSettings.PhoneRequired;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-            model.FaxRequired = _customerSettings.FaxRequired;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
-            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-            model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
-
-            //external authentication
-            model.NumberOfExternalAuthenticationProviders = _openAuthenticationService
-                .LoadActiveExternalAuthenticationMethods(_storeContext.CurrentStore.Id)
-                .Count;
-            foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))
-            {
-                var authMethod = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
-                if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
-                    continue;
-
-                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
-                {
-                    Id = ear.Id,
-                    Email = ear.Email,
-                    ExternalIdentifier = ear.ExternalIdentifier,
-                    AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
-                });
-            }
-
-            //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
-            customAttributes.ForEach(model.CustomerAttributes.Add);
-        }
-
-        [NonAction]
-        protected virtual void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties,
-            string overrideCustomCustomerAttributesXml = "")
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            if(model.AllowCustomersToSetTimeZone)
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
-            
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            //form fields
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.CompanyRequired = _customerSettings.CompanyRequired;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _customerSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _customerSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CityRequired = _customerSettings.CityRequired;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.CountryRequired = _customerSettings.CountryRequired;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.StateProvinceRequired = _customerSettings.StateProvinceRequired;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.PhoneRequired = _customerSettings.PhoneRequired;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-            model.FaxRequired = _customerSettings.FaxRequired;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
-            model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-            model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
-            
-            //countries and states
-            if (_customerSettings.CountryEnabled)
-            {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "" });
-                
-                foreach (var c in _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
-                {
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
-                        Text = c.GetLocalized(x => x.Name),
-                        Value = c.Id.ToString(),
-                        Selected = c.Id == model.CountryId
-                    });
-                }
-
-                if (_customerSettings.StateProvinceEnabled)
-                {
-                    //states
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId, _workContext.WorkingLanguage.Id).ToList();
-                    if (states.Any())
-                    {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "" });
-
-                        foreach (var s in states)
-                        {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                        }
-                    }
-                    else
-                    {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
-
-                        model.AvailableStates.Add(new SelectListItem
-                        {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"), 
-                            Value = ""
-                        });
-                    }
-
-                }
-            }
-
-            //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
-            customAttributes.ForEach(model.CustomerAttributes.Add);
-        }
-
-        [NonAction]
-        protected virtual string ParseCustomCustomerAttributes(FormCollection form)
-        {
-            if (form == null)
-                throw new ArgumentNullException("form");
-
-            string attributesXml = "";
-            var attributes = _customerAttributeService.GetAllCustomerAttributes();
-            foreach (var attribute in attributes)
-            {
-                string controlId = string.Format("customer_attribute_{0}", attribute.Id);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, ctrlAttributes);
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
-                            {
-                                foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                        if (!String.IsNullOrEmpty(item))
-                                            attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                                attribute, item);
-                                }
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //load read-only (already server-side selected) values
-                            var attributeValues = attribute.CustomerAttributeValues;
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
-                            {
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                            attribute, selectedAttributeId);
-                            }
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                string enteredText = ctrlAttributes.Trim();
-                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
-                                    attribute, enteredText);
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                    case AttributeControlType.FileUpload:
-                        //not supported customer attributes
-                    default:
-                        break;
-                }
-            }
-
-            return attributesXml;
-        }
 
         #endregion
 
@@ -619,10 +149,7 @@ namespace Grand.Web.Controllers
         [PublicStoreAllowNavigation(true)]
         public virtual ActionResult Login(bool? checkoutAsGuest)
         {
-            var model = new LoginModel();
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault();
-            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage;
+            var model = _customerWebService.PrepareLogin(checkoutAsGuest);
             return View(model);
         }
 
@@ -724,7 +251,7 @@ namespace Grand.Web.Controllers
             _authenticationService.SignOut();
 
             //EU Cookie
-            if (_storeInformationSettings.DisplayEuCookieLawWarning)
+            if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayEuCookieLawWarning)
             {
                 //the cookie law message should not pop up immediately after logout.
                 //otherwise, the user will have to click it again...
@@ -746,7 +273,7 @@ namespace Grand.Web.Controllers
         [PublicStoreAllowNavigation(true)]
         public virtual ActionResult PasswordRecovery()
         {
-            var model = new PasswordRecoveryModel();
+            var model = _customerWebService.PreparePasswordRecovery();
             return View(model);
         }
 
@@ -762,15 +289,7 @@ namespace Grand.Web.Controllers
                 var customer = _customerService.GetCustomerByEmail(model.Email);
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
-                    //save token and current date
-                    var passwordRecoveryToken = Guid.NewGuid();
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
-                    DateTime? generatedDateTime = DateTime.UtcNow;
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryTokenDateGenerated, generatedDateTime);
-                    
-                    //send email
-                    _workflowMessageService.SendCustomerPasswordRecoveryMessage(customer, _workContext.WorkingLanguage.Id);
-
+                    _customerWebService.PasswordRecoverySend(model, customer);
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
                 }
                 else
@@ -795,21 +314,7 @@ namespace Grand.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var model = new PasswordRecoveryConfirmModel();
-
-            //validate token
-            if (!customer.IsPasswordRecoveryTokenValid(token))
-            {
-                model.DisablePasswordChanging = true;
-                model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
-            }
-
-            //validate token expiration date
-            if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))
-            {
-                model.DisablePasswordChanging = true;
-                model.Result = _localizationService.GetResource("Account.PasswordRecovery.LinkExpired");
-            }
+            var model = _customerWebService.PreparePasswordRecovery();
 
             return View(model);
         }
@@ -877,7 +382,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
             var model = new RegisterModel();
-            PrepareCustomerRegisterModel(model, false);
+            model = _customerWebService.PrepareRegisterModel(model, false);
             //enable newsletter by default
             model.Newsletter = _customerSettings.NewsletterTickedByDefault;
 
@@ -908,7 +413,7 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(form);
+            var customerAttributesXml = _customerWebService.ParseCustomAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -1025,7 +530,7 @@ namespace Grand.Web.Controllers
                         _authenticationService.SignIn(customer, true);
 
                     //associated with external account (if possible)
-                    TryAssociateAccountWithExternalAccount(customer);
+                    _customerWebService.TryAssociateAccountWithExternalAccount(customer);
                     
                     //insert default address (if possible)
                     var defaultAddress = new Address
@@ -1066,7 +571,7 @@ namespace Grand.Web.Controllers
                     if (_customerSettings.RegistrationFreeShipping)
                         _customerService.UpdateFreeShipping(customer.Id, true);
 
-                    _customerActionEventService.Registration(customer);
+                    EngineContext.Current.Resolve<ICustomerActionEventService>().Registration(customer);
 
                     //raise event       
                     _eventPublisher.Publish(new CustomerRegisteredEvent(customer));
@@ -1109,7 +614,7 @@ namespace Grand.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareCustomerRegisterModel(model, true, customerAttributesXml);
+            model = _customerWebService.PrepareRegisterModel(model, true, customerAttributesXml);
             return View(model);
         }
         //available even when navigation is not allowed
@@ -1209,17 +714,7 @@ namespace Grand.Web.Controllers
         [ChildActionOnly]
         public virtual ActionResult CustomerNavigation(int selectedTabId = 0)
         {
-            var model = new CustomerNavigationModel();
-            model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
-            model.HideRewardPoints = !_rewardPointsSettings.Enabled;
-            model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
-            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
-                _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, "", null, 0, 1).Count == 0;
-            model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
-            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
-            
-            model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
-
+            var model = _customerWebService.PrepareNavigation(selectedTabId);
             return PartialView(model);
         }
 
@@ -1232,7 +727,7 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerInfoModel();
-            PrepareCustomerInfoModel(model, customer, false);
+            model = _customerWebService.PrepareInfoModel(model, customer, false);
 
             return View(model);
         }
@@ -1248,7 +743,7 @@ namespace Grand.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom customer attributes
-            var customerAttributesXml = ParseCustomCustomerAttributes(form);
+            var customerAttributesXml = _customerWebService.ParseCustomAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
             foreach (var error in customerAttributeWarnings)
             {
@@ -1394,9 +889,8 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", exc.Message);
             }
 
-
             //If we got this far, something failed, redisplay form
-            PrepareCustomerInfoModel(model, customer, true, customerAttributesXml);
+            model = _customerWebService.PrepareInfoModel(model, customer, true, customerAttributesXml);
             return View(model);
         }
 
@@ -1408,8 +902,9 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
+            var openAuthenticationService = EngineContext.Current.Resolve<IOpenAuthenticationService>();
             //ensure it's our record
-            var ear = _openAuthenticationService.GetExternalIdentifiersFor(_workContext.CurrentCustomer)
+            var ear = openAuthenticationService.GetExternalIdentifiersFor(_workContext.CurrentCustomer)
                 .FirstOrDefault(x => x.Id == id);
 
             if (ear == null)
@@ -1419,9 +914,7 @@ namespace Grand.Web.Controllers
                     redirect = Url.Action("Info"),
                 });
             }
-            
-
-            _openAuthenticationService.DeletExternalAuthenticationRecord(ear);
+            openAuthenticationService.DeletExternalAuthenticationRecord(ear);
 
             return Json(new
             {
@@ -1439,23 +932,7 @@ namespace Grand.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
-            var customer = _workContext.CurrentCustomer;
-
-            var model = new CustomerAddressListModel();
-            var addresses = customer.Addresses
-                .Where(a => a.CountryId == "" || 
-                _storeMappingService.Authorize(_countryService.GetCountryById(a.CountryId))
-                )
-                .ToList();
-            foreach (var address in addresses)
-            {
-                var addressModel = new AddressModel();
-                _addressWebService.PrepareModel(model: addressModel,
-                    address: address,
-                    excludeProperties: false,
-                    loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
-                model.Addresses.Add(addressModel);
-            }
+            var model = _customerWebService.PrepareAddressList(_workContext.CurrentCustomer);
             return View(model);
         }
 
@@ -1591,8 +1068,6 @@ namespace Grand.Web.Controllers
                 address.CustomAttributes = customAttributes;
                 address.CustomerId = customer.Id;
                 _customerService.UpdateAddress(address);
-                //_customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                //_addressService.UpdateAddress(address);
 
                 return RedirectToRoute("CustomerAddresses");
             }
@@ -1618,52 +1093,15 @@ namespace Grand.Web.Controllers
             if (_customerSettings.HideDownloadableProductsTab)
                 return RedirectToRoute("CustomerInfo");
 
-            var customer = _workContext.CurrentCustomer;
-
-            var model = new CustomerDownloadableProductsModel();
-            var items = _orderService.GetAllOrderItems(null, customer.Id, null, null,
-                null, null, null, true);
-            var productService = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>();
-            foreach (var item in items)
-            {
-                var order = _orderService.GetOrderByOrderItemId(item.Id);
-                var product = productService.GetProductByIdIncludeArch(item.ProductId);
-                var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
-                {
-                    OrderItemGuid = item.OrderItemGuid,
-                    OrderId = order.Id,
-                    OrderNumber = order.OrderNumber,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(item.CreatedOnUtc, DateTimeKind.Utc),
-                    ProductName = product.GetLocalized(x => x.Name),
-                    ProductSeName = product.GetSeName(),
-                    ProductAttributes = item.AttributeDescription,
-                    ProductId = item.ProductId
-                };
-                model.Items.Add(itemModel);
-
-                if (_downloadService.IsDownloadAllowed(item))
-                    itemModel.DownloadId = product.DownloadId;
-
-                if (_downloadService.IsLicenseDownloadAllowed(item))
-                    itemModel.LicenseId = !String.IsNullOrEmpty(item.LicenseDownloadId) ? item.LicenseDownloadId : "";
-            }
-
+            var model = _customerWebService.PrepareDownloadableProducts(_workContext.CurrentCustomer.Id);
             return View(model);
         }
 
         public virtual ActionResult UserAgreement(Guid orderItemId)
         {
-            var orderItem = _orderService.GetOrderItemByGuid(orderItemId);
-            if (orderItem == null)
+            var model = _customerWebService.PrepareUserAgreement(orderItemId);
+            if(model == null)
                 return RedirectToRoute("HomePage");
-
-            var product = Grand.Core.Infrastructure.EngineContext.Current.Resolve<IProductService>().GetProductById(orderItem.ProductId);
-            if (product == null || !product.HasUserAgreement)
-                return RedirectToRoute("HomePage");
-
-            var model = new UserAgreementModel();
-            model.UserAgreementText = product.UserAgreementText;
-            model.OrderItemGuid = orderItemId;
 
             return View(model);
         }
@@ -1730,14 +1168,8 @@ namespace Grand.Web.Controllers
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
 
-            var customer = _workContext.CurrentCustomer;
+            var model = _customerWebService.PrepareAvatar(_workContext.CurrentCustomer);
 
-            var model = new CustomerAvatarModel();
-            model.AvatarUrl = _pictureService.GetPictureUrl(
-                customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                false,
-                _mediaSettings.AvatarPictureSize,
-                false);
             return View(model);
         }
 
@@ -1753,12 +1185,15 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
-            
+
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+            var mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId));
+                    var customerAvatar = pictureService.GetPictureById(customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId));
                     if ((uploadedFile != null) && (!String.IsNullOrEmpty(uploadedFile.FileName)))
                     {
                         int avatarMaxSize = _customerSettings.AvatarMaximumSizeBytes;
@@ -1767,9 +1202,9 @@ namespace Grand.Web.Controllers
 
                         byte[] customerPictureBinary = uploadedFile.GetPictureBits();
                         if (customerAvatar != null)
-                            customerAvatar = _pictureService.UpdatePicture(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, null);
+                            customerAvatar = pictureService.UpdatePicture(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, null);
                         else
-                            customerAvatar = _pictureService.InsertPicture(customerPictureBinary, uploadedFile.ContentType, null);
+                            customerAvatar = pictureService.InsertPicture(customerPictureBinary, uploadedFile.ContentType, null);
                     }
 
                     string customerAvatarId = "";
@@ -1778,10 +1213,10 @@ namespace Grand.Web.Controllers
 
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AvatarPictureId, customerAvatarId);
                     
-                    model.AvatarUrl = _pictureService.GetPictureUrl(
+                    model.AvatarUrl = pictureService.GetPictureUrl(
                         customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
                         false,
-                        _mediaSettings.AvatarPictureSize,
+                        mediaSettings.AvatarPictureSize,
                         false);
                     return View(model);
                 }
@@ -1793,10 +1228,10 @@ namespace Grand.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model.AvatarUrl = _pictureService.GetPictureUrl(
+            model.AvatarUrl = pictureService.GetPictureUrl(
                 customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
                 false,
-                _mediaSettings.AvatarPictureSize,
+                mediaSettings.AvatarPictureSize,
                 false);
             return View(model);
         }
@@ -1813,10 +1248,11 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
 
-            var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId));
+            var customerAvatar = pictureService.GetPictureById(customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId));
             if (customerAvatar != null)
-                _pictureService.DeletePicture(customerAvatar);
+                pictureService.DeletePicture(customerAvatar);
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AvatarPictureId, 0);
             
             return RedirectToRoute("CustomerAvatar");

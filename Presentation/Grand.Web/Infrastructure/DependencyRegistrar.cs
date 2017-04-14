@@ -32,6 +32,8 @@ namespace Grand.Web.Infrastructure
             //topic service
             builder.RegisterType<TopicWebService>().As<ITopicWebService>().InstancePerLifetimeScope();
 
+            //customer service
+            builder.RegisterType<CustomerWebService>().As<ICustomerWebService>().InstancePerLifetimeScope();
         }
 
         public int Order
