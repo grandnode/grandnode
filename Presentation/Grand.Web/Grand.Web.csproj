@@ -436,6 +436,8 @@
     <Compile Include="Services\CatalogWebService.cs" />
     <Compile Include="Services\ICatalogWebService.cs" />
     <Compile Include="Services\CustomerWebService.cs" />
+    <Compile Include="Services\CommonWebService.cs" />
+    <Compile Include="Services\ICommonWebService.cs" />
     <Compile Include="Services\ICustomerWebService.cs" />
     <Compile Include="Services\TopicWebService.cs" />
     <Compile Include="Services\ITopicWebService.cs" />
