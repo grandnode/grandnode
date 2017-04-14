@@ -14,7 +14,6 @@ using Grand.Services.Customers;
 using Grand.Services.Events;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Messages;
 using Grand.Services.Orders;
 using Grand.Services.Security;
 using Grand.Services.Seo;
