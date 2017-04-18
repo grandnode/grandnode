@@ -46,6 +46,9 @@ namespace Grand.Web.Infrastructure
 
             //widgetZone servie
             builder.RegisterType<WidgetWebService>().As<IWidgetWebService>().InstancePerLifetimeScope();
+
+            //order service
+            builder.RegisterType<OrderWebService>().As<IOrderWebService>().InstancePerLifetimeScope();
         }
 
         public int Order
