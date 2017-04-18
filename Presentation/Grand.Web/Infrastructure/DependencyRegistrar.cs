@@ -44,6 +44,8 @@ namespace Grand.Web.Infrastructure
             //externalAuth service
             builder.RegisterType<ExternalAuthenticationWebService>().As<IExternalAuthenticationWebService>().InstancePerLifetimeScope();
 
+            //widgetZone servie
+            builder.RegisterType<WidgetWebService>().As<IWidgetWebService>().InstancePerLifetimeScope();
         }
 
         public int Order
