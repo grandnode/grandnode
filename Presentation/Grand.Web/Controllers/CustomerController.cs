@@ -52,8 +52,6 @@ namespace Grand.Web.Controllers
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ITaxService _taxService;
         private readonly CustomerSettings _customerSettings;
-        private readonly ForumSettings _forumSettings;
-        private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IShoppingCartService _shoppingCartService;
@@ -83,8 +81,6 @@ namespace Grand.Web.Controllers
             ICustomerRegistrationService customerRegistrationService,
             ITaxService taxService, 
             CustomerSettings customerSettings,
-            ForumSettings forumSettings,
-            IAddressService addressService,
             ICountryService countryService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             IShoppingCartService shoppingCartService,
@@ -111,8 +107,6 @@ namespace Grand.Web.Controllers
             this._customerRegistrationService = customerRegistrationService;
             this._taxService = taxService;
             this._customerSettings = customerSettings;
-            this._forumSettings = forumSettings;
-            this._addressService = addressService;
             this._countryService = countryService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._shoppingCartService = shoppingCartService;
@@ -551,7 +545,8 @@ namespace Grand.Web.Controllers
                         FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax),
                         CreatedOnUtc = customer.CreatedOnUtc,                                                
                     };
-                    if (this._addressService.IsAddressValid(defaultAddress))
+                    var addressService = EngineContext.Current.Resolve<IAddressService>();
+                    if (addressService.IsAddressValid(defaultAddress))
                     {
                         //set default address
                         defaultAddress.CustomerId = customer.Id;
@@ -874,8 +869,8 @@ namespace Grand.Web.Controllers
                             }
                         }
                     }
-
-                    if (_forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled)
+                    var forumSettings = EngineContext.Current.Resolve<ForumSettings>();
+                    if (forumSettings.ForumsEnabled && forumSettings.SignaturesEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Signature, model.Signature);
 
                     //save customer attributes

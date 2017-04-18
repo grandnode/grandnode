@@ -356,7 +356,7 @@ namespace Grand.Web.Services
             return attributesXml;
         }
 
-        public IList<string> GetAttributeWarnings(string attributesXml)
+        public virtual IList<string> GetAttributeWarnings(string attributesXml)
         {
             return _addressAttributeParser.GetAttributeWarnings(attributesXml);
         }
