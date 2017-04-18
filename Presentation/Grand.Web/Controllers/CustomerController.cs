@@ -93,7 +93,6 @@ namespace Grand.Web.Controllers
             CaptchaSettings captchaSettings
             )
         {
-
             this._customerWebService = customerWebService;
             this._authenticationService = authenticationService;
             this._dateTimeSettings = dateTimeSettings;
@@ -116,7 +115,7 @@ namespace Grand.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
-            this._eventPublisher = eventPublisher;
+            this._eventPublisher = eventPublisher; 
         }
 
         #endregion

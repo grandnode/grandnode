@@ -29,14 +29,11 @@
                     {
                         var validationSummary = Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text);
                         <h5 class="card-header"><strong>@T("Account.Login.ReturningCustomer")</strong></h5>
-
-
                             <div class="card-block">
                                 <div class="col-12">
-
                                     @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
                                     {
-                                    <div class="message-error text-danger">@validationSummary</div>
+                                        <div class="message-error text-danger">@validationSummary</div>
                                     }
                                     <div class="form-group">
                                         @if (Model.UsernamesEnabled)
@@ -72,7 +69,6 @@
                                                 @Html.ValidationMessageFor(m => m.Password)
                                             </div>
                                         </div>
-
                                         <div class="inputs d-flex flex-row">
                                             <label class="custom-control custom-checkbox">
                                                 <input class="custom-control-input" data-val="true" data-val-required="'Remember Me' must not be empty." id="RememberMe" name="RememberMe" type="checkbox" value="true">
@@ -91,8 +87,6 @@
                                             </div>
                                         }
                                     </div>
-
-
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -101,14 +95,10 @@
                                     <input class="btn btn-success login-button" type="submit" value="@T("Account.Login.LoginButton")" />
                                 </div>
                             </div>
-
                     }
                 </div>
-
             </div>
-            
             @* want some register? *@
-
             @if (Model.CheckoutAsGuest)
             {
                 <div class="col-lg-6 col-12 new-wrapper checkout-as-guest-or-register-block mt-2">
@@ -138,16 +128,13 @@
                         </div>
                 </div>
             }
-
         </div>
     </div>
-
     <div class="external-authentication">
         @Html.Action("ExternalMethods", "ExternalAuthentication")
     </div>
-
     <div class="col-12 mb-2">
-            @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
+        @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
     </div>
 
 </div>

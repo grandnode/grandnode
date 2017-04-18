@@ -38,6 +38,8 @@ namespace Grand.Web.Infrastructure
             //common service
             builder.RegisterType<CommonWebService>().As<ICommonWebService>().InstancePerLifetimeScope();
 
+            //shipping service 
+            builder.RegisterType<ShoppingCartWebService>().As<IShoppingCartWebService>().InstancePerLifetimeScope();
         }
 
         public int Order
