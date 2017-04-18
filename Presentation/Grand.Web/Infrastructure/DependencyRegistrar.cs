@@ -40,6 +40,10 @@ namespace Grand.Web.Infrastructure
 
             //shipping service 
             builder.RegisterType<ShoppingCartWebService>().As<IShoppingCartWebService>().InstancePerLifetimeScope();
+
+            //externalAuth service
+            builder.RegisterType<ExternalAuthenticationWebService>().As<IExternalAuthenticationWebService>().InstancePerLifetimeScope();
+
         }
 
         public int Order

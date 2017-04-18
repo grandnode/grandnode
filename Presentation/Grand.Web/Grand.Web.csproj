@@ -439,6 +439,8 @@
     <Compile Include="Services\CommonWebService.cs" />
     <Compile Include="Services\ICommonWebService.cs" />
     <Compile Include="Services\ICustomerWebService.cs" />
+    <Compile Include="Services\ExternalAuthenticationWebService.cs" />
+    <Compile Include="Services\IExternalAuthenticationWebService.cs" />
     <Compile Include="Services\ShoppingCartWebService.cs" />
     <Compile Include="Services\IShoppingCartWebService.cs" />
     <Compile Include="Services\TopicWebService.cs" />

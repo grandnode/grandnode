@@ -4,25 +4,23 @@ using System.Web.Routing;
 using Grand.Core;
 using Grand.Services.Authentication.External;
 using Grand.Web.Models.Customer;
+using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
     public partial class ExternalAuthenticationController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
-        private readonly IOpenAuthenticationService _openAuthenticationService;
-        private readonly IStoreContext _storeContext;
+        private readonly IExternalAuthenticationWebService _externalAuthenticationWebService;
 
         #endregion
 
 		#region Constructors
 
-        public ExternalAuthenticationController(IOpenAuthenticationService openAuthenticationService,
-            IStoreContext storeContext)
+        public ExternalAuthenticationController(IExternalAuthenticationWebService externalAuthenticationWebService)
         {
-            this._openAuthenticationService = openAuthenticationService;
-            this._storeContext = storeContext;
+            this._externalAuthenticationWebService = externalAuthenticationWebService;
         }
 
         #endregion
@@ -42,25 +40,7 @@ namespace Grand.Web.Controllers
         [ChildActionOnly]
         public virtual ActionResult ExternalMethods()
         {
-            //model
-            var model = new List<ExternalAuthenticationMethodModel>();
-
-            foreach (var eam in _openAuthenticationService
-                .LoadActiveExternalAuthenticationMethods(_storeContext.CurrentStore.Id))
-            {
-                var eamModel = new ExternalAuthenticationMethodModel();
-
-                string actionName;
-                string controllerName;
-                RouteValueDictionary routeValues;
-                eam.GetPublicInfoRoute(out actionName, out controllerName, out routeValues);
-                eamModel.ActionName = actionName;
-                eamModel.ControllerName = controllerName;
-                eamModel.RouteValues = routeValues;
-
-                model.Add(eamModel);
-            }
-
+            var model = _externalAuthenticationWebService.PrepereExternalAuthenticationMethodModel();
             return PartialView(model);
         }
 
