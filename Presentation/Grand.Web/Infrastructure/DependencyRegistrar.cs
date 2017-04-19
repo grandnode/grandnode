@@ -56,6 +56,8 @@ namespace Grand.Web.Infrastructure
             //checkout service
             builder.RegisterType<CheckoutWebService>().As<ICheckoutWebService>().InstancePerLifetimeScope();
 
+            //poll service
+            builder.RegisterType<PollWebService>().As<IPollWebService>().InstancePerLifetimeScope();
         }
 
         public int Order
