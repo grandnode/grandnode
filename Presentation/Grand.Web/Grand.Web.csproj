@@ -437,6 +437,8 @@
     <Compile Include="Services\ICatalogWebService.cs" />
     <Compile Include="Services\CustomerWebService.cs" />
     <Compile Include="Services\CommonWebService.cs" />
+    <Compile Include="Services\CheckoutWebService.cs" />
+    <Compile Include="Services\ICheckoutWebService.cs" />
     <Compile Include="Services\ICommonWebService.cs" />
     <Compile Include="Services\CountryWebService.cs" />
     <Compile Include="Services\ICountryWebService.cs" />

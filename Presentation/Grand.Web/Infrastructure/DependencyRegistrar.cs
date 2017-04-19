@@ -52,6 +52,10 @@ namespace Grand.Web.Infrastructure
 
             //country service
             builder.RegisterType<CountryWebService>().As<ICountryWebService>().InstancePerLifetimeScope();
+
+            //checkout service
+            builder.RegisterType<CheckoutWebService>().As<ICheckoutWebService>().InstancePerLifetimeScope();
+
         }
 
         public int Order
