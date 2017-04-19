@@ -210,16 +210,37 @@
 {
 
     <div class="panel panel-default">
-        <div class="note note-info">
-           @if (!String.IsNullOrEmpty(Model.Id))
+       @if (String.IsNullOrEmpty(Model.Id))
            {
-            @T("Admin.Configuration.Languages.Resources.Description")
+            <div class="note note-info">
+                @T("Admin.Configuration.Languages.Resources.SaveBeforeEdit")
+            </div>
            }
-           else
-           {
-            @T("Admin.Configuration.Languages.Resources.SaveBeforeEdit")
-           }
+        <div class="form-horizontal">
+            <div class="form-body">
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Search.ResourceName)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.Search.ResourceName)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Search.ResourceValue)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.Search.ResourceValue)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="search-resources" class="btn btn-primary btn-search">
+                            <i class="fa fa-search"></i>
+                            @T("Admin.Common.Search")
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <div class="panel-body">
             <div id="resources-grid"></div>
         </div>
@@ -240,9 +261,8 @@
                                 url: "@Html.Raw(Url.Action("Resources", "Language", new {languageId = Model.Id }))",
                                 type: "POST",
                                 dataType: "json",
-                                contentType: "application/json"
-                                //any-forgery does not work with this contentType for some reasons
-                                //data: addAntiForgeryToken
+                                contentType: "application/json",
+                                data: additionalData
                             },
                             create: {
                                 url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new {languageId = Model.Id }))",
@@ -296,28 +316,17 @@
                         },
                         pageSize: @(defaultGridPageSize),
                         serverPaging: true,
-                        serverFiltering: true,
-                        serverSorting: true
+                        serverFiltering: false,
+                        serverSorting: false
                     },
                     pageable: {
                         refresh: true,
                         pageSizes: [@(gridPageSizes)]
                     },
-                    sortable: true,
                     toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                     editable: {
                         confirmation: false,
                         mode: "inline"
-                    },
-                    filterable: {
-                        extra: false,
-                        operators: {
-                            string: {
-                                contains: "Contains",
-                                eq: "Is equal to",
-                                startswith: "Starts with"
-                            }
-                        }
                     },
                     scrollable: false,
                     columns: [
@@ -356,6 +365,33 @@
             });
 
         </script>
-    }
-           
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#search-resources').click(function() {
+                    var grid = $('#resources-grid').data('kendoGrid');
+                    grid.dataSource.page(1);
+                    return false;
+                });
+            });
+
+            function additionalData() {
+                var data = {
+                    ResourceName: $('#@Html.FieldIdFor(model => model.Search.ResourceName)').val(),
+                    ResourceValue: $('#@Html.FieldIdFor(model => model.Search.ResourceValue)').val()
+                };
+                addAntiForgeryToken(data);
+                return data;
+            }
+
+            $("".concat("#@Html.FieldIdFor(model => model.Search.ResourceName),",
+                "#@Html.FieldIdFor(model => model.Search.ResourceValue)")).keydown(function(event) {
+                if (event.keyCode === 13) {
+                    $("#search-resources").click();
+                    return false;
+                }
+            });
+        </script>
+
+}
+
 }

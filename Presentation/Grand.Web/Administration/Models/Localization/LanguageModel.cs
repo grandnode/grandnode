@@ -15,6 +15,7 @@ namespace Grand.Admin.Models.Localization
         {
             FlagFileNames = new List<string>();
             AvailableCurrencies = new List<SelectListItem>();
+            Search = new LanguageResourceFilterModel();
         }
         [GrandResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
         [AllowHtml]
@@ -57,5 +58,6 @@ namespace Grand.Admin.Models.Localization
         public List<StoreModel> AvailableStores { get; set; }
         public string[] SelectedStoreIds { get; set; }
 
+        public LanguageResourceFilterModel Search { get; set; }
     }
 }

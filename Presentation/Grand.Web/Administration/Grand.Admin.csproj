@@ -318,6 +318,7 @@
     <Compile Include="Models\Directory\MeasureUnitModel.cs" />
     <Compile Include="Models\Discounts\DiscountListModel.cs" />
     <Compile Include="Models\Home\DashboardModel.cs" />
+    <Compile Include="Models\Localization\LanguageResourceFilterModel.cs" />
     <Compile Include="Models\Messages\BannerModel.cs" />
     <Compile Include="Models\Messages\ContactFormListModel.cs" />
     <Compile Include="Models\Messages\ContactFormModel.cs" />
@@ -332,6 +333,7 @@
     <Compile Include="Models\Payments\PaymentMethodRestrictionModel.cs" />
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />
     <Compile Include="Models\Plugins\PluginListModel.cs" />
+    <Compile Include="Models\Settings\SettingFilterModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestActionModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
     <Compile Include="Models\Settings\SortOptionModel.cs" />

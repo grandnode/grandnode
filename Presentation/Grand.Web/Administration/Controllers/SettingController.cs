@@ -3248,15 +3248,12 @@ namespace Grand.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-            
             return View();
         }
+
         [HttpPost]
-        //do not validate request token (XSRF)
-        //for some reasons it does not work with "filtering" support
-        [AdminAntiForgery(true)] 
-        public ActionResult AllSettings(DataSourceRequest command,
-            Grand.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+        [AdminAntiForgery(true)]
+        public ActionResult AllSettings(SettingFilterModel model, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -3264,30 +3261,35 @@ namespace Grand.Admin.Controllers
             var settings = _settingService
                 .GetAllSettings()
                 .Select(x =>
-                            {
-                                string storeName;
-                                if (String.IsNullOrEmpty(x.StoreId))
-                                {
-                                    storeName = _localizationService.GetResource("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
-                                }
-                                else
-                                {
-                                    var store = _storeService.GetStoreById(x.StoreId);
-                                    storeName = store != null ? store.Name : "Unknown";
-                                }
-                                var settingModel = new SettingModel
-                                {
-                                    Id = x.Id,
-                                    Name = x.Name,
-                                    Value = x.Value,
-                                    Store = storeName,
-                                    StoreId = x.StoreId
-                                };
-                                return settingModel;
-                            })
-                .AsQueryable()
-                .Filter(filter)
-                .Sort(sort);
+                {
+                    string storeName;
+                    if (String.IsNullOrEmpty(x.StoreId))
+                    {
+                        storeName = _localizationService.GetResource("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");
+                    }
+                    else
+                    {
+                        var store = _storeService.GetStoreById(x.StoreId);
+                        storeName = store != null ? store.Name : "Unknown";
+                    }
+                    var settingModel = new SettingModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Value = x.Value,
+                        Store = storeName,
+                        StoreId = string.IsNullOrEmpty(x.StoreId)? " ": x.StoreId
+                    };
+                    return settingModel;
+                });
+            if (model != null)
+            {
+                if (!string.IsNullOrEmpty(model.SettingFilterName))
+                    settings = settings.Where(x => x.Name.ToLowerInvariant().Contains(model.SettingFilterName.ToLowerInvariant()));
+                if (!string.IsNullOrEmpty(model.SettingFilterValue))
+                    settings = settings.Where(x => x.Value.ToLowerInvariant().Contains(model.SettingFilterValue.ToLowerInvariant()));
+            }
+            settings = settings.AsQueryable();
 
             var gridModel = new DataSourceResult
             {

@@ -300,7 +300,7 @@ namespace Grand.Admin.Controllers
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
 		public ActionResult Resources(string languageId, DataSourceRequest command,
-            Grand.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+            LanguageResourceFilterModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
@@ -311,16 +311,22 @@ namespace Grand.Admin.Controllers
                 .GetAllResourceValues(languageId)
                 .OrderBy(x => x.Key)
                 .Select(x => new LanguageResourceModel
-                    {
-                        LanguageId = languageId,
-                        Id = x.Value.Key,
-                        Name = x.Key,
-                        Value = x.Value.Value,
-                    })
-                    .AsQueryable()
-                    .Filter(filter)
-                    .Sort(sort);
-            
+                {
+                    LanguageId = languageId,
+                    Id = x.Value.Key,
+                    Name = x.Key,
+                    Value = x.Value.Value,
+                });
+
+            if(model!=null)
+            {
+                if (!string.IsNullOrEmpty(model.ResourceName))
+                    resources = resources.Where(x => x.Name.ToLowerInvariant().Contains(model.ResourceName.ToLowerInvariant()));
+                if (!string.IsNullOrEmpty(model.ResourceValue))
+                    resources = resources.Where(x => x.Value.ToLowerInvariant().Contains(model.ResourceValue.ToLowerInvariant()));
+            }
+            resources = resources.AsQueryable();
+
             var gridModel = new DataSourceResult
             {
                 Data = resources.PagedForCommand(command),

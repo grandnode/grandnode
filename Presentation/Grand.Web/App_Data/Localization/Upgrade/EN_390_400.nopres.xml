@@ -8,4 +8,29 @@
   <LocaleResource Name="Order.CancelOrder">
     <Value>Cancel Order</Value>
   </LocaleResource>
+
+  <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceName">
+    <Value>Resource Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceName.hint">
+    <Value>Resource Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceValue">
+    <Value>Resource Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceValue.hint">
+    <Value>Resource Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Filter.Name">
+    <Value>Setting Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Filter.Name.hint">
+    <Value>Setting Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Filter.Value">
+    <Value>Setting Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Filter.Value.hint">
+    <Value>Setting Value</Value>
+  </LocaleResource>
 </Language>

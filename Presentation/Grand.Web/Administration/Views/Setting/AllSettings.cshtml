@@ -1,4 +1,5 @@
-﻿@using Grand.Services.Stores
+﻿@model SettingFilterModel
+@using Grand.Services.Stores
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
@@ -6,8 +7,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 
 <div class="row">
     <div class="col-md-12">
@@ -21,10 +22,33 @@
             </div>
 
             <div class="portlet-body form">
-                <div class="note note-info">
-                    @T("Admin.Configuration.Settings.AllSettings.Description")
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SettingFilterName)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.SettingFilterName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SettingFilterValue)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.SettingFilterValue)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="button" id="search-settings" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="settings-grid"></div>
+                <div class="panel-body">
+                    <div id="settings-grid"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -39,9 +63,8 @@
                         url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
                         type: "POST",
                         dataType: "json",
-                        contentType: "application/json"
-                        //any-forgery does not work with this contentType for some reasons
-                        //data: addAntiForgeryToken
+                        contentType: "application/json",
+                        data: additionalData
                     },
                     create: {
                         url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
@@ -97,28 +120,17 @@
                 },
                 pageSize: @(defaultGridPageSize),
                 serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
+                serverFiltering: false,
+                serverSorting: false
             },
             pageable: {
                 refresh: true,
                 pageSizes: [@(gridPageSizes)]
             },
-            sortable: true,
             toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
             editable: {
                 confirmation: false,
                 mode: "inline"
-            },
-            filterable: {
-                extra: false,
-                operators: {
-                    string: {
-                        contains: "Contains",
-                        eq: "Is equal to",
-                        startswith: "Starts with"
-                    }
-                }
             },
             scrollable: false,
             columns: [{
@@ -185,7 +197,35 @@
             .appendTo(container)
             .kendoDropDownList({
                 dataSource: allStores,                            
-                autoBind: false,                            
+                autoBind: true,                            
             });
     }
+
+
+    $(document).ready(function() {
+        $('#search-settings').click(function() {
+            var grid = $('#settings-grid').data('kendoGrid');
+            grid.dataSource.page(1);
+            return false;
+        });
+    });
+
+    function additionalData() {
+        var data = {
+            SettingFilterName: $('#@Html.FieldIdFor(model => model.SettingFilterName)').val(),
+            SettingFilterValue: $('#@Html.FieldIdFor(model => model.SettingFilterValue)').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+
+    $("".concat("#@Html.FieldIdFor(model => model.SettingFilterName),",
+        "#@Html.FieldIdFor(model => model.SettingFilterValue)")).keydown(function(event) {
+            if (event.keyCode === 13) {
+                $("#search-settings").click();
+                return false;
+            }
+        });
+
+
 </script>

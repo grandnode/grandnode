@@ -4473,6 +4473,18 @@
   <LocaleResource Name="Admin.Configuration.Languages.Resources.SaveBeforeEdit">
     <Value>You need to save the language before you can make or change resources for this language</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceName">
+    <Value>Resource Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceName.hint">
+    <Value>Resource Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceValue">
+    <Value>Resource Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceValue.hint">
+    <Value>Resource Value</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Languages.Stores">
     <Value>Stores</Value>
   </LocaleResource>
@@ -5693,6 +5705,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeRequired.Hint">
     <Value>Check if 'Zip / postal code' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Filter.Name">
+    <Value>Setting Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Filter.Name.hint">
+    <Value>Setting Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Filter.Value">
+    <Value>Setting Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Filter.Value.hint">
+    <Value>Setting Value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums">
     <Value>Forum settings</Value>
