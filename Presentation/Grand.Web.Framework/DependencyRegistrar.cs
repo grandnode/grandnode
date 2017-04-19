@@ -54,7 +54,6 @@ using Grand.Web.Framework.Themes;
 using Grand.Web.Framework.UI;
 using Grand.Services.Infrastructure;
 using MongoDB.Driver;
-using System.ComponentModel;
 
 namespace Grand.Web.Framework
 {
