@@ -438,6 +438,8 @@
     <Compile Include="Services\CustomerWebService.cs" />
     <Compile Include="Services\CommonWebService.cs" />
     <Compile Include="Services\ICommonWebService.cs" />
+    <Compile Include="Services\CountryWebService.cs" />
+    <Compile Include="Services\ICountryWebService.cs" />
     <Compile Include="Services\ICustomerWebService.cs" />
     <Compile Include="Services\ExternalAuthenticationWebService.cs" />
     <Compile Include="Services\IExternalAuthenticationWebService.cs" />

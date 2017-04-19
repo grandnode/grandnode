@@ -49,6 +49,9 @@ namespace Grand.Web.Infrastructure
 
             //order service
             builder.RegisterType<OrderWebService>().As<IOrderWebService>().InstancePerLifetimeScope();
+
+            //country service
+            builder.RegisterType<CountryWebService>().As<ICountryWebService>().InstancePerLifetimeScope();
         }
 
         public int Order
