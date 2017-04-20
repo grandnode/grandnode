@@ -58,6 +58,9 @@ namespace Grand.Web.Infrastructure
 
             //poll service
             builder.RegisterType<PollWebService>().As<IPollWebService>().InstancePerLifetimeScope();
+
+            //poll service
+            builder.RegisterType<BoardsWebService>().As<IBoardsWebService>().InstancePerLifetimeScope();
         }
 
         public int Order
