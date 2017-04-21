@@ -54,10 +54,6 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-        #region Utilities
-
-        #endregion
-
         #region Methods
 
         public virtual ActionResult Index(int? page, string tab)

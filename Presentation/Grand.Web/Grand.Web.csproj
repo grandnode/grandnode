@@ -447,6 +447,8 @@
     <Compile Include="Services\ICustomerWebService.cs" />
     <Compile Include="Services\ExternalAuthenticationWebService.cs" />
     <Compile Include="Services\IExternalAuthenticationWebService.cs" />
+    <Compile Include="Services\ReturnRequestWebService.cs" />
+    <Compile Include="Services\IReturnRequestWebService.cs" />
     <Compile Include="Services\PollWebService.cs" />
     <Compile Include="Services\IPollWebService.cs" />
     <Compile Include="Services\OrderWebService.cs" />
