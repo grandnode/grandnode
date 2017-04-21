@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Common
 {
-    public partial class MaintenanceModel : BaseNopModel
+    public partial class MaintenanceModel : BaseGrandModel
     {
         public MaintenanceModel()
         {
@@ -21,7 +21,7 @@ namespace Grand.Admin.Models.Common
 
         #region Nested classes
 
-        public partial class DeleteGuestsModel : BaseNopModel
+        public partial class DeleteGuestsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.System.Maintenance.DeleteGuests.StartDate")]
             [UIHint("DateNullable")]
@@ -37,7 +37,7 @@ namespace Grand.Admin.Models.Common
             public int? NumberOfDeletedCustomers { get; set; }
         }
 
-        public partial class DeleteAbandonedCartsModel : BaseNopModel
+        public partial class DeleteAbandonedCartsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.System.Maintenance.DeleteAbandonedCarts.OlderThan")]
             [UIHint("Date")]
@@ -46,7 +46,7 @@ namespace Grand.Admin.Models.Common
             public int? NumberOfDeletedItems { get; set; }
         }
 
-        public partial class DeleteExportedFilesModel : BaseNopModel
+        public partial class DeleteExportedFilesModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.System.Maintenance.DeleteExportedFiles.StartDate")]
             [UIHint("DateNullable")]

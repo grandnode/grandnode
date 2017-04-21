@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Common
 {
-    public partial class SystemInfoModel : BaseNopModel
+    public partial class SystemInfoModel : BaseGrandModel
     {
         public SystemInfoModel()
         {
@@ -43,13 +43,13 @@ namespace Grand.Admin.Models.Common
         [GrandResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
         public IList<LoadedAssembly> LoadedAssemblies { get; set; }
 
-        public partial class ServerVariableModel : BaseNopModel
+        public partial class ServerVariableModel : BaseGrandModel
         {
             public string Name { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class LoadedAssembly : BaseNopModel
+        public partial class LoadedAssembly : BaseGrandModel
         {
             public string FullName { get; set; }
             public string Location { get; set; }

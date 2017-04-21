@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class EstimateShippingModel : BaseNopModel
+    public partial class EstimateShippingModel : BaseGrandModel
     {
         public EstimateShippingModel()
         {
@@ -26,7 +26,7 @@ namespace Grand.Web.Models.ShoppingCart
         public IList<SelectListItem> AvailableStates { get; set; }
     }
 
-    public partial class EstimateShippingResultModel : BaseNopModel
+    public partial class EstimateShippingResultModel : BaseGrandModel
     {
         public EstimateShippingResultModel()
         {
@@ -40,7 +40,7 @@ namespace Grand.Web.Models.ShoppingCart
 
         #region Nested Classes
 
-        public partial class ShippingOptionModel : BaseNopModel
+        public partial class ShippingOptionModel : BaseGrandModel
         {
             public string Name { get; set; }
 

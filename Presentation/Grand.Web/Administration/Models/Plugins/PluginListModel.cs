@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Plugins
 {
-    public partial class PluginListModel : BaseNopModel
+    public partial class PluginListModel : BaseGrandModel
     {
         public PluginListModel()
         {

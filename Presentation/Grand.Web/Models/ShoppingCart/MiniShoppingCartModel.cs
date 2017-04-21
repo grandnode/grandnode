@@ -4,7 +4,7 @@ using Grand.Web.Models.Media;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class MiniShoppingCartModel : BaseNopModel
+    public partial class MiniShoppingCartModel : BaseGrandModel
     {
         public MiniShoppingCartModel()
         {

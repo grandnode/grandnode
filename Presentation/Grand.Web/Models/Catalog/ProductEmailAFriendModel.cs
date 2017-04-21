@@ -7,7 +7,7 @@ using Grand.Web.Validators.Catalog;
 namespace Grand.Web.Models.Catalog
 {
     [Validator(typeof(ProductEmailAFriendValidator))]
-    public partial class ProductEmailAFriendModel : BaseNopModel
+    public partial class ProductEmailAFriendModel : BaseGrandModel
     {
         public string ProductId { get; set; }
 

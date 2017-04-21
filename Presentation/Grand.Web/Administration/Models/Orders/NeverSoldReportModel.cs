@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Orders
 {
-    public partial class NeverSoldReportModel : BaseNopModel
+    public partial class NeverSoldReportModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.SalesReport.NeverSold.StartDate")]
         [UIHint("DateNullable")]

@@ -6,7 +6,7 @@ using Grand.Web.Framework.Mvc;
 namespace Grand.Plugin.Misc.FacebookShop.Models
 {
     //just a simplified copy of \Grand.Web\Models\Catalog\SearchModel.cs
-    public partial class SearchModel : BaseNopModel
+    public partial class SearchModel : BaseGrandModel
     {
         public SearchModel()
         {

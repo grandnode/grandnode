@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Blogs
 {
-    public partial class BlogPostYearModel : BaseNopModel
+    public partial class BlogPostYearModel : BaseGrandModel
     {
         public BlogPostYearModel()
         {
@@ -12,7 +12,7 @@ namespace Grand.Web.Models.Blogs
         public int Year { get; set; }
         public IList<BlogPostMonthModel> Months { get; set; }
     }
-    public partial class BlogPostMonthModel : BaseNopModel
+    public partial class BlogPostMonthModel : BaseGrandModel
     {
         public int Month { get; set; }
 

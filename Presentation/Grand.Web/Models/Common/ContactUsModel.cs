@@ -7,7 +7,7 @@ using Grand.Web.Validators.Common;
 namespace Grand.Web.Models.Common
 {
     [Validator(typeof(ContactUsValidator))]
-    public partial class ContactUsModel : BaseNopModel
+    public partial class ContactUsModel : BaseGrandModel
     {
         [AllowHtml]
         [GrandResourceDisplayName("ContactUs.Email")]

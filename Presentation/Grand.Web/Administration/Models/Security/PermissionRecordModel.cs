@@ -2,7 +2,7 @@
 
 namespace Grand.Admin.Models.Security
 {
-    public partial class PermissionRecordModel : BaseNopModel
+    public partial class PermissionRecordModel : BaseGrandModel
     {
         public string Name { get; set; }
         public string SystemName { get; set; }

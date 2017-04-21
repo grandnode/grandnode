@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.News
 {
-    public partial class NewsItemListModel : BaseNopModel
+    public partial class NewsItemListModel : BaseGrandModel
     {
         public NewsItemListModel()
         {

@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.News
 {
-    public partial class HomePageNewsItemsModel : BaseNopModel, ICloneable
+    public partial class HomePageNewsItemsModel : BaseGrandModel, ICloneable
     {
         public HomePageNewsItemsModel()
         {

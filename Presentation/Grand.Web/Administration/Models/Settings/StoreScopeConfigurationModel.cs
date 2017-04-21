@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Settings
 {
-    public partial class StoreScopeConfigurationModel : BaseNopModel
+    public partial class StoreScopeConfigurationModel : BaseGrandModel
     {
         public StoreScopeConfigurationModel()
         {

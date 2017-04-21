@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class BackInStockSubscribeModel : BaseNopModel
+    public partial class BackInStockSubscribeModel : BaseGrandModel
     {
         public string ProductId { get; set; }
         public string ProductName { get; set; }

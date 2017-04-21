@@ -5,7 +5,7 @@ using Grand.Web.Models.Topics;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class SitemapModel : BaseNopModel
+    public partial class SitemapModel : BaseGrandModel
     {
         public SitemapModel()
         {

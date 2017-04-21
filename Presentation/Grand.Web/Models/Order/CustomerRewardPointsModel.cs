@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Order
 {
-    public partial class CustomerRewardPointsModel : BaseNopModel
+    public partial class CustomerRewardPointsModel : BaseGrandModel
     {
         public CustomerRewardPointsModel()
         {

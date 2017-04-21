@@ -6,7 +6,7 @@ using Grand.Web.Models.Media;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class WishlistModel : BaseNopModel
+    public partial class WishlistModel : BaseGrandModel
     {
         public WishlistModel()
         {

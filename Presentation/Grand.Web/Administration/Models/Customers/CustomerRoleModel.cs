@@ -42,7 +42,7 @@ namespace Grand.Admin.Models.Customers
 
         #region Nested classes
 
-        public partial class AssociateProductToCustomerRoleModel : BaseNopModel
+        public partial class AssociateProductToCustomerRoleModel : BaseGrandModel
         {
             public AssociateProductToCustomerRoleModel()
             {

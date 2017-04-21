@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Common
 {
-    public partial class HeaderLinksModel : BaseNopModel
+    public partial class HeaderLinksModel : BaseGrandModel
     {
         public bool IsAuthenticated { get; set; }
         public string CustomerEmailUsername { get; set; }

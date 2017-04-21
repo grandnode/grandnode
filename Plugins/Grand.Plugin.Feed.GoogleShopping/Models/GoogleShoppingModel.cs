@@ -42,13 +42,13 @@ namespace Grand.Plugin.Feed.GoogleShopping.Models
         [GrandResourceDisplayName("Plugins.Feed.GoogleShopping.StaticFilePath")]
         public IList<GeneratedFileModel> GeneratedFiles { get; set; }
         
-        public class GeneratedFileModel : BaseNopModel
+        public class GeneratedFileModel : BaseGrandModel
         {
             public string StoreName { get; set; }
             public string FileUrl { get; set; }
         }
 
-        public class GoogleProductModel : BaseNopModel
+        public class GoogleProductModel : BaseGrandModel
         {
             public string ProductId { get; set; }
 

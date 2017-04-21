@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Grand.Admin.Models.Orders
 {
-    public partial class OrderPeriodReportLineModel : BaseNopModel
+    public partial class OrderPeriodReportLineModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.SalesReport.Period.Name")]
         public string Period { get; set; }

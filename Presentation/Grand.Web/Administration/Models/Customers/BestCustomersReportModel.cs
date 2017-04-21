@@ -7,7 +7,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Customers
 {
-    public partial class BestCustomersReportModel : BaseNopModel
+    public partial class BestCustomersReportModel : BaseGrandModel
     {
         public BestCustomersReportModel()
         {

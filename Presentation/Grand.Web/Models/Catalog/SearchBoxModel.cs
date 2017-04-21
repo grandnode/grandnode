@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class SearchBoxModel : BaseNopModel
+    public partial class SearchBoxModel : BaseGrandModel
     {
         public bool AutoCompleteEnabled { get; set; }
         public bool ShowProductImagesInSearchAutoComplete { get; set; }

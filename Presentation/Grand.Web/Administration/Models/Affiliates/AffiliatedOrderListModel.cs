@@ -7,7 +7,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Affiliates
 {
-    public partial class AffiliatedOrderListModel : BaseNopModel
+    public partial class AffiliatedOrderListModel : BaseGrandModel
     {
         public AffiliatedOrderListModel()
         {

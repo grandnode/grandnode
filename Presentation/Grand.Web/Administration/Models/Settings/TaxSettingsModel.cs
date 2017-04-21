@@ -6,7 +6,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Settings
 {
-    public partial class TaxSettingsModel : BaseNopModel
+    public partial class TaxSettingsModel : BaseGrandModel
     {
         public TaxSettingsModel()
         {

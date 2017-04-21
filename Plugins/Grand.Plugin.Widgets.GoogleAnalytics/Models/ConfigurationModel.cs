@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Plugin.Widgets.GoogleAnalytics.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public class ConfigurationModel : BaseGrandModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
         

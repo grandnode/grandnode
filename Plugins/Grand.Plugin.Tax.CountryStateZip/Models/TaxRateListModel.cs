@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Plugin.Tax.CountryStateZip.Models
 {
-    public class TaxRateListModel : BaseNopModel
+    public class TaxRateListModel : BaseGrandModel
     {
         public TaxRateListModel()
         {

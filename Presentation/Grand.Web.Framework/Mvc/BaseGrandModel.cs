@@ -8,10 +8,10 @@ namespace Grand.Web.Framework.Mvc
     /// <summary>
     /// Base GrandNode model
     /// </summary>
-    [ModelBinder(typeof(NopModelBinder))]
-    public partial class BaseNopModel
+    [ModelBinder(typeof(GrandModelBinder))]
+    public partial class BaseGrandModel
     {
-        public BaseNopModel()
+        public BaseGrandModel()
         {
             this.CustomProperties = new Dictionary<string, object>();
             PostInitialize();
@@ -39,7 +39,7 @@ namespace Grand.Web.Framework.Mvc
     /// <summary>
     /// Base GrandNode entity model
     /// </summary>
-    public partial class BaseNopEntityModel : BaseNopModel
+    public partial class BaseNopEntityModel : BaseGrandModel
     {
         public virtual string Id { get; set; }
     }

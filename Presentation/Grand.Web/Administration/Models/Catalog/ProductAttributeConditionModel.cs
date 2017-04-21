@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Catalog
 {
-    public partial class ProductAttributeConditionModel : BaseNopModel
+    public partial class ProductAttributeConditionModel : BaseGrandModel
     {
         public ProductAttributeConditionModel()
         {

@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Plugins
 {
-    public partial class OfficialFeedListModel : BaseNopModel
+    public partial class OfficialFeedListModel : BaseGrandModel
     {
         public OfficialFeedListModel()
         {

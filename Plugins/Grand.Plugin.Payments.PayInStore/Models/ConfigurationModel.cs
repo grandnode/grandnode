@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Plugin.Payments.PayInStore.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public class ConfigurationModel : BaseGrandModel
     {
         [AllowHtml]
         [GrandResourceDisplayName("Plugins.Payment.PayInStore.DescriptionText")]

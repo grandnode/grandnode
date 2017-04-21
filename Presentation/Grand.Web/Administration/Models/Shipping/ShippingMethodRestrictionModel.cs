@@ -5,7 +5,7 @@ using Grand.Admin.Models.Customers;
 
 namespace Grand.Admin.Models.Shipping
 {
-    public partial class ShippingMethodRestrictionModel : BaseNopModel
+    public partial class ShippingMethodRestrictionModel : BaseGrandModel
     {
         public ShippingMethodRestrictionModel()
         {

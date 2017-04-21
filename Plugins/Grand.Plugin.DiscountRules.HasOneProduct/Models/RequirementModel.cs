@@ -16,7 +16,7 @@ namespace Grand.Plugin.DiscountRules.HasOneProduct.Models
 
         #region Nested classes
 
-        public partial class AddProductModel : BaseNopModel
+        public partial class AddProductModel : BaseGrandModel
         {
             public AddProductModel()
             {

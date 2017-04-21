@@ -10,7 +10,7 @@ using Grand.Web.Framework.Mvc;
 namespace Grand.Admin.Models.Plugins
 {
     [Validator(typeof(PluginValidator))]
-    public partial class PluginModel : BaseNopModel, ILocalizedModel<PluginLocalizedModel>
+    public partial class PluginModel : BaseGrandModel, ILocalizedModel<PluginLocalizedModel>
     {
         public PluginModel()
         {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Grand.Admin.Models.Catalog
 {
-    public partial class ManufacturerListModel : BaseNopModel
+    public partial class ManufacturerListModel : BaseGrandModel
     {
         public ManufacturerListModel()
         {

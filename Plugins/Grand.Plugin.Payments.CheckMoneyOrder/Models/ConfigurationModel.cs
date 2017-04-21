@@ -6,7 +6,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Plugin.Payments.CheckMoneyOrder.Models
 {
-    public class ConfigurationModel : BaseNopModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
+    public class ConfigurationModel : BaseGrandModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
     {
         public ConfigurationModel()
         {

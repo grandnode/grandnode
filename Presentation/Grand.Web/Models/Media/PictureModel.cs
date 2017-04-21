@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Media
 {
-    public partial class PictureModel : BaseNopModel
+    public partial class PictureModel : BaseGrandModel
     {
         public string ImageUrl { get; set; }
 

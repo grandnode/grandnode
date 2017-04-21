@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Plugins
 {
-    public partial class MiscPluginModel : BaseNopModel
+    public partial class MiscPluginModel : BaseGrandModel
     {
         public string FriendlyName { get; set; }
 

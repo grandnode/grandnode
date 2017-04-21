@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutPaymentMethodModel : BaseNopModel
+    public partial class CheckoutPaymentMethodModel : BaseGrandModel
     {
         public CheckoutPaymentMethodModel()
         {
@@ -20,7 +20,7 @@ namespace Grand.Web.Models.Checkout
 
         #region Nested classes
 
-        public partial class PaymentMethodModel : BaseNopModel
+        public partial class PaymentMethodModel : BaseGrandModel
         {
             public string PaymentMethodSystemName { get; set; }
             public string Name { get; set; }

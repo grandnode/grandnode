@@ -6,7 +6,7 @@ using Grand.Admin.Models.Shipping;
 
 namespace Grand.Admin.Models.Payments
 {
-    public partial class PaymentMethodRestrictionModel : BaseNopModel
+    public partial class PaymentMethodRestrictionModel : BaseGrandModel
     {
         public PaymentMethodRestrictionModel()
         {

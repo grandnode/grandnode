@@ -7,7 +7,7 @@ using Grand.Web.Validators.Catalog;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class ProductReviewOverviewModel : BaseNopModel
+    public partial class ProductReviewOverviewModel : BaseGrandModel
     {
         public string ProductId { get; set; }
 
@@ -19,7 +19,7 @@ namespace Grand.Web.Models.Catalog
     }
 
     [Validator(typeof(ProductReviewsValidator))]
-    public partial class ProductReviewsModel : BaseNopModel
+    public partial class ProductReviewsModel : BaseGrandModel
     {
         public ProductReviewsModel()
         {
@@ -56,7 +56,7 @@ namespace Grand.Web.Models.Catalog
     }
 
 
-    public partial class ProductReviewHelpfulnessModel : BaseNopModel
+    public partial class ProductReviewHelpfulnessModel : BaseGrandModel
     {
         public string ProductReviewId { get; set; }
         public string ProductId { get; set; }
@@ -66,7 +66,7 @@ namespace Grand.Web.Models.Catalog
         public int HelpfulNoTotal { get; set; }
     }
 
-    public partial class AddProductReviewModel : BaseNopModel
+    public partial class AddProductReviewModel : BaseGrandModel
     {
         [AllowHtml]
         [GrandResourceDisplayName("Reviews.Fields.Title")]

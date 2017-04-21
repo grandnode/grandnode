@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Orders
 {
-    public partial class CountryReportLineModel : BaseNopModel
+    public partial class CountryReportLineModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.SalesReport.Country.Fields.CountryName")]
         public string CountryName { get; set; }

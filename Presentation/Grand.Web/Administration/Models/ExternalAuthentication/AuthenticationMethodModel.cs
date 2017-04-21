@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.ExternalAuthentication
 {
-    public partial class AuthenticationMethodModel : BaseNopModel
+    public partial class AuthenticationMethodModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName")]
         [AllowHtml]

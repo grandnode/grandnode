@@ -282,13 +282,13 @@ namespace Grand.Admin.Models.Orders
             public Guid LicenseDownloadGuid { get; set; }
         }
 
-        public partial class TaxRate : BaseNopModel
+        public partial class TaxRate : BaseGrandModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class GiftCard : BaseNopModel
+        public partial class GiftCard : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Orders.Fields.GiftCardInfo")]
             public string CouponCode { get; set; }
@@ -310,7 +310,7 @@ namespace Grand.Admin.Models.Orders
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class UploadLicenseModel : BaseNopModel
+        public partial class UploadLicenseModel : BaseGrandModel
         {
             public string OrderId { get; set; }
 
@@ -321,7 +321,7 @@ namespace Grand.Admin.Models.Orders
 
         }
 
-        public partial class AddOrderProductModel : BaseNopModel
+        public partial class AddOrderProductModel : BaseGrandModel
         {
             public AddOrderProductModel()
             {
@@ -359,7 +359,7 @@ namespace Grand.Admin.Models.Orders
                 public string Sku { get; set; }
             }
 
-            public partial class ProductDetailsModel : BaseNopModel
+            public partial class ProductDetailsModel : BaseGrandModel
             {
                 public ProductDetailsModel()
                 {
@@ -428,7 +428,7 @@ namespace Grand.Admin.Models.Orders
             }
 
 
-            public partial class GiftCardModel : BaseNopModel
+            public partial class GiftCardModel : BaseGrandModel
             {
                 public bool IsGiftCard { get; set; }
 
@@ -453,7 +453,7 @@ namespace Grand.Admin.Models.Orders
             #endregion
         }
 
-        public partial class UsedDiscountModel:BaseNopModel
+        public partial class UsedDiscountModel:BaseGrandModel
         {
             public string DiscountId { get; set; }
             public string DiscountName { get; set; }
@@ -463,7 +463,7 @@ namespace Grand.Admin.Models.Orders
     }
 
 
-    public partial class OrderAggreratorModel : BaseNopModel
+    public partial class OrderAggreratorModel : BaseGrandModel
     {
         //aggergator properties
         public string aggregatorprofit { get; set; }

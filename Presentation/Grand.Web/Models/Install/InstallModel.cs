@@ -8,7 +8,7 @@ using Grand.Web.Validators.Install;
 namespace Grand.Web.Models.Install
 {
     [Validator(typeof(InstallValidator))]
-    public partial class InstallModel : BaseNopModel
+    public partial class InstallModel : BaseGrandModel
     {
         public InstallModel()
         {

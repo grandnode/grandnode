@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Customers
 {
-    public partial class CustomerAddressModel : BaseNopModel
+    public partial class CustomerAddressModel : BaseGrandModel
     {
         public string CustomerId { get; set; }
 

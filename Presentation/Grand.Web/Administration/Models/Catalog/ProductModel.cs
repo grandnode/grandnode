@@ -434,7 +434,7 @@ namespace Grand.Admin.Models.Catalog
         
         #region Nested classes
 
-        public partial class AddRequiredProductModel : BaseNopModel
+        public partial class AddRequiredProductModel : BaseGrandModel
         {
             public AddRequiredProductModel()
             {
@@ -469,7 +469,7 @@ namespace Grand.Admin.Models.Catalog
             public bool IsLoggedInAsVendor { get; set; }
         }
 
-        public partial class AddProductSpecificationAttributeModel : BaseNopModel
+        public partial class AddProductSpecificationAttributeModel : BaseGrandModel
         {
             public AddProductSpecificationAttributeModel()
             {
@@ -569,7 +569,7 @@ namespace Grand.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.RelatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-        public partial class AddRelatedProductModel : BaseNopModel
+        public partial class AddRelatedProductModel : BaseGrandModel
         {
             public AddRelatedProductModel()
             {
@@ -615,7 +615,7 @@ namespace Grand.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
         }
-        public partial class AddAssociatedProductModel : BaseNopModel
+        public partial class AddAssociatedProductModel : BaseGrandModel
         {
             public AddAssociatedProductModel()
             {
@@ -661,7 +661,7 @@ namespace Grand.Admin.Models.Catalog
             [GrandResourceDisplayName("Admin.Catalog.Products.CrossSells.Fields.Product")]
             public string Product2Name { get; set; }
         }
-        public partial class AddCrossSellProductModel : BaseNopModel
+        public partial class AddCrossSellProductModel : BaseGrandModel
         {
             public AddCrossSellProductModel()
             {
@@ -736,7 +736,7 @@ namespace Grand.Admin.Models.Catalog
 
         }
 
-        public partial class ProductWarehouseInventoryModel : BaseNopModel
+        public partial class ProductWarehouseInventoryModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
             public string WarehouseId { get; set; }
@@ -812,7 +812,7 @@ namespace Grand.Admin.Models.Catalog
             public bool ConditionAllowed { get; set; }
             public string ConditionString { get; set; }
         }
-        public partial class ProductAttributeValueListModel : BaseNopModel
+        public partial class ProductAttributeValueListModel : BaseGrandModel
         {
             public string ProductId { get; set; }
 
@@ -892,7 +892,7 @@ namespace Grand.Admin.Models.Catalog
 
             #region Nested classes
 
-            public partial class AssociateProductToAttributeValueModel : BaseNopModel
+            public partial class AssociateProductToAttributeValueModel : BaseGrandModel
             {
                 public AssociateProductToAttributeValueModel()
                 {

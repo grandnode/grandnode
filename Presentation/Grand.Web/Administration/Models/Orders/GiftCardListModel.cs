@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Orders
 {
-    public partial class GiftCardListModel : BaseNopModel
+    public partial class GiftCardListModel : BaseGrandModel
     {
         public GiftCardListModel()
         {

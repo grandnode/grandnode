@@ -62,9 +62,6 @@ namespace Grand.Web
                 ViewEngines.Engines.Add(new ThemeableRazorViewEngine());
             }
 
-            //Add some functionality on top of the default ModelMetadataProvider
-            ModelMetadataProviders.Current = new NopMetadataProvider();
-
             //Registering some regular mvc stuff
             AreaRegistration.RegisterAllAreas();
             RegisterRoutes(RouteTable.Routes);

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutPickupPointModel : BaseNopModel
+    public partial class CheckoutPickupPointModel : BaseGrandModel
     {
         public string Id { get; set; }
 

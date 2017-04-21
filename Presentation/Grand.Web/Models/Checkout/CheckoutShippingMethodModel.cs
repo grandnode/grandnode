@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutShippingMethodModel : BaseNopModel
+    public partial class CheckoutShippingMethodModel : BaseGrandModel
     {
         public CheckoutShippingMethodModel()
         {
@@ -20,7 +20,7 @@ namespace Grand.Web.Models.Checkout
 
         #region Nested classes
 
-        public partial class ShippingMethodModel : BaseNopModel
+        public partial class ShippingMethodModel : BaseGrandModel
         {
             public string ShippingRateComputationMethodSystemName { get; set; }
             public string Name { get; set; }

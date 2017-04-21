@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Common
 {
-    public partial class LogoModel : BaseNopModel
+    public partial class LogoModel : BaseGrandModel
     {
         public string StoreName { get; set; }
 

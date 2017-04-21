@@ -2,7 +2,7 @@
 
 namespace Grand.Plugin.Widgets.Slider.Models
 {
-    public class PublicInfoModel : BaseNopModel
+    public class PublicInfoModel : BaseGrandModel
     {
         public string Picture1Url { get; set; }
         public string Text1 { get; set; }

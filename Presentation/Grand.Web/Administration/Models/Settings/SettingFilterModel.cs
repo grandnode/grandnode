@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Settings
 {
-    public partial class SettingFilterModel : BaseNopModel
+    public partial class SettingFilterModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.Configuration.Settings.Filter.Name")]
         public string SettingFilterName { get; set; }

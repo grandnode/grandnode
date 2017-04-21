@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Cms
 {
-    public partial class WidgetModel : BaseNopModel
+    public partial class WidgetModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.ContentManagement.Widgets.Fields.FriendlyName")]
         [AllowHtml]

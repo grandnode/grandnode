@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Shipping
 {
-    public partial class ShippingRateComputationMethodModel : BaseNopModel
+    public partial class ShippingRateComputationMethodModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.FriendlyName")]
         [AllowHtml]

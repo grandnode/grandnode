@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.News
 {
-    public partial class AddNewsCommentModel : BaseNopModel
+    public partial class AddNewsCommentModel : BaseGrandModel
     {
         [GrandResourceDisplayName("News.Comments.CommentTitle")]
         [AllowHtml]

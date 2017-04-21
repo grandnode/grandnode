@@ -8,7 +8,7 @@ using Grand.Web.Validators.Customer;
 namespace Grand.Web.Models.Customer
 {
     [Validator(typeof(ChangePasswordValidator))]
-    public partial class ChangePasswordModel : BaseNopModel
+    public partial class ChangePasswordModel : BaseGrandModel
     {
         [AllowHtml]
         [NoTrim]

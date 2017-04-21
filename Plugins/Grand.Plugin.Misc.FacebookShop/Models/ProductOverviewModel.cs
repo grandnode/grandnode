@@ -24,7 +24,7 @@ namespace Grand.Plugin.Misc.FacebookShop.Models
 
         #region Nested Classes
 
-        public partial class ProductPriceModel : BaseNopModel
+        public partial class ProductPriceModel : BaseGrandModel
         {
             public string OldPrice { get; set; }
             public string Price { get; set; }

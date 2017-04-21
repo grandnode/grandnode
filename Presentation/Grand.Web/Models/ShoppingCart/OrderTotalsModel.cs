@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class OrderTotalsModel : BaseNopModel
+    public partial class OrderTotalsModel : BaseGrandModel
     {
         public OrderTotalsModel()
         {
@@ -40,7 +40,7 @@ namespace Grand.Web.Models.ShoppingCart
 
         #region Nested classes
 
-        public partial class TaxRate: BaseNopModel
+        public partial class TaxRate: BaseGrandModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }

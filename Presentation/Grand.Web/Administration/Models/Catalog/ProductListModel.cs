@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Catalog
 {
-    public partial class ProductListModel : BaseNopModel
+    public partial class ProductListModel : BaseGrandModel
     {
         public ProductListModel()
         {

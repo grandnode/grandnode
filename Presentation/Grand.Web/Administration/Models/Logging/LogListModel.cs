@@ -7,7 +7,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Logging
 {
-    public partial class LogListModel : BaseNopModel
+    public partial class LogListModel : BaseGrandModel
     {
         public LogListModel()
         {

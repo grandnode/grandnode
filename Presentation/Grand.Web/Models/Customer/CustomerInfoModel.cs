@@ -9,7 +9,7 @@ using Grand.Web.Validators.Customer;
 namespace Grand.Web.Models.Customer
 {
     [Validator(typeof(CustomerInfoValidator))]
-    public partial class CustomerInfoModel : BaseNopModel
+    public partial class CustomerInfoModel : BaseGrandModel
     {
         public CustomerInfoModel()
         {

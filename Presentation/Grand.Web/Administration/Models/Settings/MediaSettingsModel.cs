@@ -9,7 +9,7 @@ using Grand.Admin.Validators.Settings;
 namespace Grand.Admin.Models.Settings
 {
     [Validator(typeof(MediaSettingsValidator))]
-    public partial class MediaSettingsModel : BaseNopModel
+    public partial class MediaSettingsModel : BaseGrandModel
     {
         public MediaSettingsModel() { }
 

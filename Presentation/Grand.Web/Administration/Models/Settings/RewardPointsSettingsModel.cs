@@ -6,7 +6,7 @@ using Grand.Web.Framework.Mvc;
 namespace Grand.Admin.Models.Settings
 {
     [Validator(typeof(RewardPointsSettingsValidator))]
-    public partial class RewardPointsSettingsModel : BaseNopModel
+    public partial class RewardPointsSettingsModel : BaseGrandModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

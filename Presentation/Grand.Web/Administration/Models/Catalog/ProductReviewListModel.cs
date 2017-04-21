@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Grand.Admin.Models.Catalog
 {
-    public partial class ProductReviewListModel : BaseNopModel
+    public partial class ProductReviewListModel : BaseGrandModel
     {
         public ProductReviewListModel()
         {

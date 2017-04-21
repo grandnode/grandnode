@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Plugin.Payments.PayPalStandard.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public class ConfigurationModel : BaseGrandModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

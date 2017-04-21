@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.ShoppingCart
 {
-    public partial class ShoppingCartModel : BaseNopModel
+    public partial class ShoppingCartModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.CurrentCarts.Customer")]
         public string CustomerId { get; set; }

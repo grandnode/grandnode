@@ -6,7 +6,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Messages
 {
-    public partial class QueuedEmailListModel : BaseNopModel
+    public partial class QueuedEmailListModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.System.QueuedEmails.List.StartDate")]
         [UIHint("DateNullable")]

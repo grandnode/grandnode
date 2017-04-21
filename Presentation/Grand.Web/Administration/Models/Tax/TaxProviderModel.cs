@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Tax
 {
-    public partial class TaxProviderModel : BaseNopModel
+    public partial class TaxProviderModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.FriendlyName")]
         [AllowHtml]

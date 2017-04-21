@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Plugin.ExternalAuth.Facebook.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public class ConfigurationModel : BaseGrandModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

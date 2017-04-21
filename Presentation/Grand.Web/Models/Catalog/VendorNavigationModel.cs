@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class VendorNavigationModel : BaseNopModel
+    public partial class VendorNavigationModel : BaseGrandModel
     {
         public VendorNavigationModel()
         {

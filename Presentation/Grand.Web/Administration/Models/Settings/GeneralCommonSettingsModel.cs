@@ -7,7 +7,7 @@ using Grand.Web.Framework.Security.Captcha;
 
 namespace Grand.Admin.Models.Settings
 {
-    public partial class GeneralCommonSettingsModel : BaseNopModel
+    public partial class GeneralCommonSettingsModel : BaseGrandModel
     {
         public GeneralCommonSettingsModel()
         {
@@ -36,7 +36,7 @@ namespace Grand.Admin.Models.Settings
 
         #region Nested classes
 
-        public partial class StoreInformationSettingsModel : BaseNopModel
+        public partial class StoreInformationSettingsModel : BaseGrandModel
         {
             public StoreInformationSettingsModel()
             {
@@ -109,7 +109,7 @@ namespace Grand.Admin.Models.Settings
             #endregion
         }
 
-        public partial class SeoSettingsModel : BaseNopModel
+        public partial class SeoSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
             [AllowHtml]
@@ -172,7 +172,7 @@ namespace Grand.Admin.Models.Settings
             public bool OpenGraphMetaTags_OverrideForStore { get; set; }
         }
 
-        public partial class SecuritySettingsModel : BaseNopModel
+        public partial class SecuritySettingsModel : BaseGrandModel
         {
             public SecuritySettingsModel()
             {
@@ -246,7 +246,7 @@ namespace Grand.Admin.Models.Settings
             public IList<SelectListItem> AvailableReCaptchaVersions { get; set; }
         }
 
-        public partial class PdfSettingsModel : BaseNopModel
+        public partial class PdfSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled")]
             public bool LetterPageSizeEnabled { get; set; }
@@ -273,7 +273,7 @@ namespace Grand.Admin.Models.Settings
 
         }
 
-        public partial class LocalizationSettingsModel : BaseNopModel
+        public partial class LocalizationSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseImagesForLanguageSelection")]
             public bool UseImagesForLanguageSelection { get; set; }
@@ -294,7 +294,7 @@ namespace Grand.Admin.Models.Settings
             public bool LoadAllUrlRecordsOnStartup { get; set; }
         }
 
-        public partial class FullTextSettingsModel : BaseNopModel
+        public partial class FullTextSettingsModel : BaseGrandModel
         {
             public bool Supported { get; set; }
 
@@ -305,7 +305,7 @@ namespace Grand.Admin.Models.Settings
             public SelectList SearchModeValues { get; set; }
         }
         
-        public partial class GoogleAnalyticsSettingsModel: BaseNopModel
+        public partial class GoogleAnalyticsSettingsModel: BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPrivateKey")]            
             public string gaprivateKey { get; set; }
@@ -321,7 +321,7 @@ namespace Grand.Admin.Models.Settings
 
         }
 
-        public partial class DisplayMenuSettingsModel : BaseNopModel
+        public partial class DisplayMenuSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayMenuSettings.DisplayHomePageMenu")]
             public bool DisplayHomePageMenu { get; set; }

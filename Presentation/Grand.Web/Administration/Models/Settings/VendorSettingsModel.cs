@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Settings
 {
-    public partial class VendorSettingsModel : BaseNopModel
+    public partial class VendorSettingsModel : BaseGrandModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

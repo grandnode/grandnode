@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class TopMenuModel : BaseNopModel
+    public partial class TopMenuModel : BaseGrandModel
     {
         public TopMenuModel()
         {

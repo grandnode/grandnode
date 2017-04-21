@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Payments
 {
-    public partial class PaymentMethodModel : BaseNopModel
+    public partial class PaymentMethodModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.FriendlyName")]
         [AllowHtml]

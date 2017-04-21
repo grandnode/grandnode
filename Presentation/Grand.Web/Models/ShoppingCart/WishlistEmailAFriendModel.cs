@@ -7,7 +7,7 @@ using Grand.Web.Validators.ShoppingCart;
 namespace Grand.Web.Models.ShoppingCart
 {
     [Validator(typeof(WishlistEmailAFriendValidator))]
-    public partial class WishlistEmailAFriendModel : BaseNopModel
+    public partial class WishlistEmailAFriendModel : BaseGrandModel
     {
         [AllowHtml]
         [GrandResourceDisplayName("Wishlist.EmailAFriend.FriendEmail")]

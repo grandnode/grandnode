@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Common
 {
-    public partial class AdminHeaderLinksModel : BaseNopModel
+    public partial class AdminHeaderLinksModel : BaseGrandModel
     {
         public string ImpersonatedCustomerEmailUsername { get; set; }
         public bool IsCustomerImpersonated { get; set; }

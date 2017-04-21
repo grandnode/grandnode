@@ -7,7 +7,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Orders
 {
-    public partial class CountryReportModel : BaseNopModel
+    public partial class CountryReportModel : BaseGrandModel
     {
         public CountryReportModel()
         {

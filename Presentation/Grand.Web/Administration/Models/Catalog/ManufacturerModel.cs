@@ -126,7 +126,7 @@ namespace Grand.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        public partial class AddManufacturerProductModel : BaseNopModel
+        public partial class AddManufacturerProductModel : BaseGrandModel
         {
             public AddManufacturerProductModel()
             {

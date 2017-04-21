@@ -67,7 +67,7 @@ namespace Grand.Web.Models.Catalog
 
         #region Nested classes
 
-        public partial class PriceRangeFilterModel : BaseNopModel
+        public partial class PriceRangeFilterModel : BaseGrandModel
         {
             #region Const
 
@@ -213,7 +213,7 @@ namespace Grand.Web.Models.Catalog
             #endregion
         }
 
-        public partial class PriceRangeFilterItem : BaseNopModel
+        public partial class PriceRangeFilterItem : BaseGrandModel
         {
             public string From { get; set; }
             public string To { get; set; }
@@ -221,7 +221,7 @@ namespace Grand.Web.Models.Catalog
             public bool Selected { get; set; }
         }
 
-        public partial class SpecificationFilterModel : BaseNopModel
+        public partial class SpecificationFilterModel : BaseGrandModel
         {
             #region Const
 
@@ -367,7 +367,7 @@ namespace Grand.Web.Models.Catalog
             #endregion
         }
 
-        public partial class SpecificationFilterItem : BaseNopModel
+        public partial class SpecificationFilterItem : BaseGrandModel
         {
             public string SpecificationAttributeName { get; set; }
             public string SpecificationAttributeOptionName { get; set; }

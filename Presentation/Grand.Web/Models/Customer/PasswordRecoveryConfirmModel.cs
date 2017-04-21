@@ -8,7 +8,7 @@ using Grand.Web.Validators.Customer;
 namespace Grand.Web.Models.Customer
 {
     [Validator(typeof(PasswordRecoveryConfirmValidator))]
-    public partial class PasswordRecoveryConfirmModel : BaseNopModel
+    public partial class PasswordRecoveryConfirmModel : BaseGrandModel
     {
         [AllowHtml]
         [NoTrim]

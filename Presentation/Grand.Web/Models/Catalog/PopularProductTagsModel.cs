@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class PopularProductTagsModel : BaseNopModel
+    public partial class PopularProductTagsModel : BaseGrandModel
     {
         public PopularProductTagsModel()
         {

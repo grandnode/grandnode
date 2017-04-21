@@ -214,7 +214,7 @@
     <Compile Include="Localization\LocalizedRoute.cs" />
     <Compile Include="Localization\LocalizedRouteExtensions.cs" />
     <Compile Include="Localization\LocalizedUrlExtenstions.cs" />
-    <Compile Include="Mvc\BaseNopModel.cs" />
+    <Compile Include="Mvc\BaseGrandModel.cs" />
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
     <Compile Include="Controllers\ParameterBasedOnFormNameAttribute.cs" />
     <Compile Include="DependencyRegistrar.cs" />
@@ -230,8 +230,7 @@
     <Compile Include="Mvc\Routes\IRouteProvider.cs" />
     <Compile Include="Mvc\Routes\IRoutePublisher.cs" />
     <Compile Include="Mvc\Routes\RoutePublisher.cs" />
-    <Compile Include="Mvc\NopMetadataProvider.cs" />
-    <Compile Include="Mvc\NopModelBinder.cs" />
+    <Compile Include="Mvc\GrandModelBinder.cs" />
     <Compile Include="GrandResourceDisplayName.cs" />
     <Compile Include="GrandValidatorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

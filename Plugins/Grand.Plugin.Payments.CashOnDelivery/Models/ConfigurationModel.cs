@@ -6,7 +6,7 @@ using Grand.Web.Framework.Localization;
 
 namespace Grand.Plugin.Payments.CashOnDelivery.Models
 {
-    public class ConfigurationModel : BaseNopModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
+    public class ConfigurationModel : BaseGrandModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
     {
         public ConfigurationModel()
         {

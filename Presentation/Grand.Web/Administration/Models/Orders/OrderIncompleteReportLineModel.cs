@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Orders
 {
-    public partial class OrderIncompleteReportLineModel : BaseNopModel
+    public partial class OrderIncompleteReportLineModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.SalesReport.Incomplete.Item")]
         public string Item { get; set; }

@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class LanguageSelectorModel : BaseNopModel
+    public partial class LanguageSelectorModel : BaseGrandModel
     {
         public LanguageSelectorModel()
         {

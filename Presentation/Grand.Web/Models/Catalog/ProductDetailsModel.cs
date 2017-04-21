@@ -104,7 +104,7 @@ namespace Grand.Web.Models.Catalog
 
         #region Nested Classes
 
-        public partial class ProductBreadcrumbModel : BaseNopModel
+        public partial class ProductBreadcrumbModel : BaseGrandModel
         {
             public ProductBreadcrumbModel()
             {
@@ -118,7 +118,7 @@ namespace Grand.Web.Models.Catalog
             public IList<CategorySimpleModel> CategoryBreadcrumb { get; set; }
         }
 
-        public partial class AddToCartModel : BaseNopModel
+        public partial class AddToCartModel : BaseGrandModel
         {
             public AddToCartModel()
             {
@@ -154,7 +154,7 @@ namespace Grand.Web.Models.Catalog
             public ShoppingCartType? UpdateShoppingCartItemType { get; set; }
         }
 
-        public partial class ProductPriceModel : BaseNopModel
+        public partial class ProductPriceModel : BaseGrandModel
         {
             /// <summary>
             /// The currency (in 3-letter ISO 4217 format) of the offer price 
@@ -189,7 +189,7 @@ namespace Grand.Web.Models.Catalog
             public string BasePricePAngV { get; set; }
         }
 
-        public partial class GiftCardModel : BaseNopModel
+        public partial class GiftCardModel : BaseGrandModel
         {
             public bool IsGiftCard { get; set; }
 
@@ -212,7 +212,7 @@ namespace Grand.Web.Models.Catalog
             public GiftCardType GiftCardType { get; set; }
         }
 
-        public partial class TierPriceModel : BaseNopModel
+        public partial class TierPriceModel : BaseGrandModel
         {
             public string Price { get; set; }
 

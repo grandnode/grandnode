@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Models.Newsletter
 {
-    public partial class NewsletterCategoryModel : BaseNopModel
+    public partial class NewsletterCategoryModel : BaseGrandModel
     {
         public NewsletterCategoryModel()
         {

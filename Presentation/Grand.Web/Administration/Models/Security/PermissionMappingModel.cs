@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Security
 {
-    public partial class PermissionMappingModel : BaseNopModel
+    public partial class PermissionMappingModel : BaseGrandModel
     {
         public PermissionMappingModel()
         {

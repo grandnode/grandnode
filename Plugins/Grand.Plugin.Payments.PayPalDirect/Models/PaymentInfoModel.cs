@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Plugin.Payments.PayPalDirect.Models
 {
-    public class PaymentInfoModel : BaseNopModel
+    public class PaymentInfoModel : BaseGrandModel
     {
         public PaymentInfoModel()
         {

@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Common
 {
-    public partial class LanguageSelectorModel : BaseNopModel
+    public partial class LanguageSelectorModel : BaseGrandModel
     {
         public LanguageSelectorModel()
         {

@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class CurrencySelectorModel : BaseNopModel
+    public partial class CurrencySelectorModel : BaseGrandModel
     {
         public CurrencySelectorModel()
         {

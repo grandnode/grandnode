@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.News
 {
-    public partial class NewsItemListModel : BaseNopModel
+    public partial class NewsItemListModel : BaseGrandModel
     {
         public NewsItemListModel()
         {

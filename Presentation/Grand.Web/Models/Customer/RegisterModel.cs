@@ -10,7 +10,7 @@ using Grand.Web.Validators.Customer;
 namespace Grand.Web.Models.Customer
 {
     [Validator(typeof(RegisterValidator))]
-    public partial class RegisterModel : BaseNopModel
+    public partial class RegisterModel : BaseGrandModel
     {
         public RegisterModel()
         {

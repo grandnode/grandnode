@@ -2,14 +2,14 @@
 
 namespace Grand.Web.Framework.Mvc
 {
-    public class NopModelBinder : DefaultModelBinder
+    public class GrandModelBinder : DefaultModelBinder
     {
         public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
             var model = base.BindModel(controllerContext, bindingContext);
-            if (model is BaseNopModel)
+            if (model is BaseGrandModel)
             {
-                ((BaseNopModel)model).BindModel(controllerContext, bindingContext);
+                ((BaseGrandModel)model).BindModel(controllerContext, bindingContext);
             }
             return model;
         }

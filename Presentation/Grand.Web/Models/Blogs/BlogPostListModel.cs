@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Blogs
 {
-    public partial class BlogPostListModel : BaseNopModel
+    public partial class BlogPostListModel : BaseGrandModel
     {
         public BlogPostListModel()
         {

@@ -4,7 +4,7 @@ using Grand.Web.Models.Common;
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutShippingAddressModel : BaseNopModel
+    public partial class CheckoutShippingAddressModel : BaseGrandModel
     {
         public CheckoutShippingAddressModel()
         {

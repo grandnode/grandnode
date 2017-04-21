@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Common
 {
-    public partial class FooterModel : BaseNopModel
+    public partial class FooterModel : BaseGrandModel
     {
         public FooterModel()
         {

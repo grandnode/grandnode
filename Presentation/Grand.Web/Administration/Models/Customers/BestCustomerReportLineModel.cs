@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Customers
 {
-    public partial class BestCustomerReportLineModel : BaseNopModel
+    public partial class BestCustomerReportLineModel : BaseGrandModel
     {
         public string CustomerId { get; set; }
         [GrandResourceDisplayName("Admin.Customers.Reports.BestBy.Fields.Customer")]

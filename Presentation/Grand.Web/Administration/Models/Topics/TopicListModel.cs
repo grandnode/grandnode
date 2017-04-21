@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Topics
 {
-    public partial class TopicListModel : BaseNopModel
+    public partial class TopicListModel : BaseGrandModel
     {
         public TopicListModel()
         {

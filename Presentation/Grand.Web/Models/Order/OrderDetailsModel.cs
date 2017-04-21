@@ -97,13 +97,13 @@ namespace Grand.Web.Models.Order
             public string LicenseId { get; set; }
         }
 
-        public partial class TaxRate : BaseNopModel
+        public partial class TaxRate : BaseGrandModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public partial class GiftCard : BaseNopModel
+        public partial class GiftCard : BaseGrandModel
         {
             public string CouponCode { get; set; }
             public string Amount { get; set; }

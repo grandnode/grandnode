@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Order
 {
-    public partial class CustomerOrderListModel : BaseNopModel
+    public partial class CustomerOrderListModel : BaseGrandModel
     {
         public CustomerOrderListModel()
         {

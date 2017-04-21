@@ -37,7 +37,7 @@ namespace Grand.Web.Models.Order
             public int QuantityShipped { get; set; }
         }
 
-        public partial class ShipmentStatusEventModel : BaseNopModel
+        public partial class ShipmentStatusEventModel : BaseGrandModel
         {
             public string EventName { get; set; }
             public string Location { get; set; }

@@ -7,7 +7,7 @@ using Grand.Web.Validators.Common;
 namespace Grand.Web.Models.Common
 {
     [Validator(typeof(ContactVendorValidator))]
-    public partial class ContactVendorModel : BaseNopModel
+    public partial class ContactVendorModel : BaseGrandModel
     {
         public string VendorId { get; set; }
         public string VendorName { get; set; }

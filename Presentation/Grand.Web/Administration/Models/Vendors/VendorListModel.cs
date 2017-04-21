@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Vendors
 {
-    public partial class VendorListModel : BaseNopModel
+    public partial class VendorListModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.Vendors.List.SearchName")]
         [AllowHtml]

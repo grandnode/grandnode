@@ -2,7 +2,7 @@
 
 namespace Grand.Admin.Models.Common
 {
-    public partial class SystemWarningModel : BaseNopModel
+    public partial class SystemWarningModel : BaseGrandModel
     {
         public SystemWarningLevel Level { get; set; }
 

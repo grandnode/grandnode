@@ -19,7 +19,7 @@ namespace Grand.Admin.Models.Customers
 
 
 
-        public partial class AddProductModel : BaseNopModel
+        public partial class AddProductModel : BaseGrandModel
         {
             public AddProductModel()
             {

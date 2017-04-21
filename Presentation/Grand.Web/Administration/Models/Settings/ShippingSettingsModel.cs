@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Settings
 {
-    public partial class ShippingSettingsModel : BaseNopModel
+    public partial class ShippingSettingsModel : BaseGrandModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Common
 {
-    public partial class SearchTermReportLineModel : BaseNopModel
+    public partial class SearchTermReportLineModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.SearchTermReport.Keyword")]
         public string Keyword { get; set; }

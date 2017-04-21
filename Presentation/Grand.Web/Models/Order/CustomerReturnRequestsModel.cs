@@ -4,7 +4,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Order
 {
-    public partial class CustomerReturnRequestsModel : BaseNopModel
+    public partial class CustomerReturnRequestsModel : BaseGrandModel
     {
         public CustomerReturnRequestsModel()
         {

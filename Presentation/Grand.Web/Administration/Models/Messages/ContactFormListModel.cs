@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Grand.Admin.Models.Messages
 {
-    public partial class ContactFormListModel : BaseNopModel
+    public partial class ContactFormListModel : BaseGrandModel
     {
         public ContactFormListModel()
         {

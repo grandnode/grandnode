@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Admin.Models.Customers
 {
-    public partial class CustomerListModel : BaseNopModel
+    public partial class CustomerListModel : BaseGrandModel
     {
         public CustomerListModel()
         {

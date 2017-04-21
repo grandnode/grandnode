@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Messages
 {
-    public partial class MessageTemplateListModel : BaseNopModel
+    public partial class MessageTemplateListModel : BaseGrandModel
     {
         public MessageTemplateListModel()
         {

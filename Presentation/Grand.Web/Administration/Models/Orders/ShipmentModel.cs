@@ -79,7 +79,7 @@ namespace Grand.Admin.Models.Orders
             public string WarehouseId { get; set; }
 
             #region Nested Classes
-            public class WarehouseInfo : BaseNopModel
+            public class WarehouseInfo : BaseGrandModel
             {
                 public string WarehouseId { get; set; }
                 public string WarehouseName { get; set; }
@@ -90,7 +90,7 @@ namespace Grand.Admin.Models.Orders
             #endregion
         }
 
-        public partial class ShipmentStatusEventModel : BaseNopModel
+        public partial class ShipmentStatusEventModel : BaseGrandModel
         {
             public string EventName { get; set; }
             public string Location { get; set; }

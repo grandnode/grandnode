@@ -8,7 +8,7 @@ using Grand.Web.Validators.Customer;
 namespace Grand.Web.Models.Customer
 {
     [Validator(typeof(LoginValidator))]
-    public partial class LoginModel : BaseNopModel
+    public partial class LoginModel : BaseGrandModel
     {
         public bool CheckoutAsGuest { get; set; }
 

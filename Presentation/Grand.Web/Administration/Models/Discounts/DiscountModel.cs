@@ -85,7 +85,7 @@ namespace Grand.Admin.Models.Discounts
 
         #region Nested classes
 
-        public partial class DiscountRequirementMetaInfo : BaseNopModel
+        public partial class DiscountRequirementMetaInfo : BaseGrandModel
         {
             public string DiscountRequirementId { get; set; }
             public string RuleName { get; set; }
@@ -107,13 +107,13 @@ namespace Grand.Admin.Models.Discounts
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class AppliedToCategoryModel : BaseNopModel
+        public partial class AppliedToCategoryModel : BaseGrandModel
         {
             public string CategoryId { get; set; }
 
             public string CategoryName { get; set; }
         }
-        public partial class AddCategoryToDiscountModel : BaseNopModel
+        public partial class AddCategoryToDiscountModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
             [AllowHtml]
@@ -125,13 +125,13 @@ namespace Grand.Admin.Models.Discounts
         }
 
 
-        public partial class AppliedToManufacturerModel : BaseNopModel
+        public partial class AppliedToManufacturerModel : BaseGrandModel
         {
             public string ManufacturerId { get; set; }
 
             public string ManufacturerName { get; set; }
         }
-        public partial class AddManufacturerToDiscountModel : BaseNopModel
+        public partial class AddManufacturerToDiscountModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
             [AllowHtml]
@@ -143,13 +143,13 @@ namespace Grand.Admin.Models.Discounts
         }
 
 
-        public partial class AppliedToProductModel : BaseNopModel
+        public partial class AppliedToProductModel : BaseGrandModel
         {
             public string ProductId { get; set; }
 
             public string ProductName { get; set; }
         }
-        public partial class AddProductToDiscountModel : BaseNopModel
+        public partial class AddProductToDiscountModel : BaseGrandModel
         {
             public AddProductToDiscountModel()
             {
@@ -185,13 +185,13 @@ namespace Grand.Admin.Models.Discounts
             public string[] SelectedProductIds { get; set; }
         }
 
-        public partial class AppliedToVendorModel : BaseNopModel
+        public partial class AppliedToVendorModel : BaseGrandModel
         {
             public string VendorId { get; set; }
 
             public string VendorName { get; set; }
         }
-        public partial class AddVendorToDiscountModel : BaseNopModel
+        public partial class AddVendorToDiscountModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Vendors.List.SearchVendorName")]
             [AllowHtml]
@@ -207,13 +207,13 @@ namespace Grand.Admin.Models.Discounts
         }
 
 
-        public partial class AppliedToStoreModel : BaseNopModel
+        public partial class AppliedToStoreModel : BaseGrandModel
         {
             public string StoreId { get; set; }
 
             public string StoreName { get; set; }
         }
-        public partial class AddStoreToDiscountModel : BaseNopModel
+        public partial class AddStoreToDiscountModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Catalog.Stores.List.SearchStoreName")]
             [AllowHtml]

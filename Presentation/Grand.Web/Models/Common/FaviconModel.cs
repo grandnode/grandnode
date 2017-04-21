@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Common
 {
-    public partial class FaviconModel : BaseNopModel
+    public partial class FaviconModel : BaseGrandModel
     {
         public string FaviconUrl { get; set; }
     }

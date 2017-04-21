@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Admin.Models.Settings
 {
-    public partial class CustomerUserSettingsModel : BaseNopModel
+    public partial class CustomerUserSettingsModel : BaseGrandModel
     {
         public CustomerUserSettingsModel()
         {
@@ -22,7 +22,7 @@ namespace Grand.Admin.Models.Settings
 
         #region Nested classes
 
-        public partial class CustomerSettingsModel : BaseNopModel
+        public partial class CustomerSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernamesEnabled")]
             public bool UsernamesEnabled { get; set; }
@@ -163,7 +163,7 @@ namespace Grand.Admin.Models.Settings
             public bool AcceptPrivacyPolicyEnabled { get; set; }
         }
 
-        public partial class AddressSettingsModel : BaseNopModel
+        public partial class AddressSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CompanyEnabled")]
             public bool CompanyEnabled { get; set; }
@@ -207,7 +207,7 @@ namespace Grand.Admin.Models.Settings
             public bool FaxRequired { get; set; }
         }
 
-        public partial class DateTimeSettingsModel : BaseNopModel
+        public partial class DateTimeSettingsModel : BaseGrandModel
         {
             public DateTimeSettingsModel()
             {
@@ -224,7 +224,7 @@ namespace Grand.Admin.Models.Settings
             public IList<SelectListItem> AvailableTimeZones { get; set; }
         }
 
-        public partial class ExternalAuthenticationSettingsModel : BaseNopModel
+        public partial class ExternalAuthenticationSettingsModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled")]
             public bool AutoRegisterEnabled { get; set; }

@@ -7,7 +7,7 @@ using Grand.Web.Validators.Vendors;
 namespace Grand.Web.Models.Vendors
 {
     [Validator(typeof(ApplyVendorValidator))]
-    public partial class ApplyVendorModel : BaseNopModel
+    public partial class ApplyVendorModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Vendors.ApplyAccount.Name")]
         [AllowHtml]

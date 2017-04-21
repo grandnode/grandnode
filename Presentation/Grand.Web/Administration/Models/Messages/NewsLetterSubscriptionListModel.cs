@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Grand.Admin.Models.Messages
 {
-    public partial class NewsLetterSubscriptionListModel : BaseNopModel
+    public partial class NewsLetterSubscriptionListModel : BaseGrandModel
     {
         public NewsLetterSubscriptionListModel()
         {

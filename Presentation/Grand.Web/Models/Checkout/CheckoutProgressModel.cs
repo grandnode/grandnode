@@ -2,7 +2,7 @@
 
 namespace Grand.Web.Models.Checkout
 {
-    public partial class CheckoutProgressModel : BaseNopModel
+    public partial class CheckoutProgressModel : BaseGrandModel
     {
         public CheckoutProgressStep CheckoutProgressStep { get; set; }
     }

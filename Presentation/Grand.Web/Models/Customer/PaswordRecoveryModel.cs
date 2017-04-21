@@ -7,7 +7,7 @@ using Grand.Web.Validators.Customer;
 namespace Grand.Web.Models.Customer
 {
     [Validator(typeof(PasswordRecoveryValidator))]
-    public partial class PasswordRecoveryModel : BaseNopModel
+    public partial class PasswordRecoveryModel : BaseGrandModel
     {
         [AllowHtml]
         [GrandResourceDisplayName("Account.PasswordRecovery.Email")]

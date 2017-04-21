@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Settings
 {
-    public partial class BlogSettingsModel : BaseNopModel
+    public partial class BlogSettingsModel : BaseGrandModel
     {
         public string ActiveStoreScopeConfiguration { get; set; }
 

@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Web.Models.Catalog
 {
-    public partial class SearchModel : BaseNopModel
+    public partial class SearchModel : BaseGrandModel
     {
         public SearchModel()
         {

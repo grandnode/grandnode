@@ -3,7 +3,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Customers
 {
-    public partial class RegisteredCustomerReportLineModel : BaseNopModel
+    public partial class RegisteredCustomerReportLineModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.Customers.Reports.RegisteredCustomers.Fields.Period")]
         public string Period { get; set; }

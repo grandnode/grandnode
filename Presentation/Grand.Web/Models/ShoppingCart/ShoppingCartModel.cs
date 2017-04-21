@@ -8,7 +8,7 @@ using Grand.Web.Models.Media;
 
 namespace Grand.Web.Models.ShoppingCart
 {
-    public partial class ShoppingCartModel : BaseNopModel
+    public partial class ShoppingCartModel : BaseGrandModel
     {
         public ShoppingCartModel()
         {
@@ -141,7 +141,7 @@ namespace Grand.Web.Models.ShoppingCart
             public bool IsPreSelected { get; set; }
         }
 
-        public partial class DiscountBoxModel: BaseNopModel
+        public partial class DiscountBoxModel: BaseGrandModel
         {
             public DiscountBoxModel()
             {
@@ -157,14 +157,14 @@ namespace Grand.Web.Models.ShoppingCart
             }
         }
 
-        public partial class GiftCardBoxModel : BaseNopModel
+        public partial class GiftCardBoxModel : BaseGrandModel
         {
             public bool Display { get; set; }
             public string Message { get; set; }
             public bool IsApplied { get; set; }
         }
 
-        public partial class OrderReviewDataModel : BaseNopModel
+        public partial class OrderReviewDataModel : BaseGrandModel
         {
             public OrderReviewDataModel()
             {

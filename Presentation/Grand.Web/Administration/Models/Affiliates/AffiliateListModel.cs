@@ -6,7 +6,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Affiliates
 {
-    public partial class AffiliateListModel : BaseNopModel
+    public partial class AffiliateListModel : BaseGrandModel
     {
         [GrandResourceDisplayName("Admin.Affiliates.List.SearchFirstName")]
         [AllowHtml]

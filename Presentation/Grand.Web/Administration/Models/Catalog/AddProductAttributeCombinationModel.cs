@@ -6,7 +6,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Catalog
 {
-    public partial class AddProductAttributeCombinationModel : BaseNopModel
+    public partial class AddProductAttributeCombinationModel : BaseGrandModel
     {
         public AddProductAttributeCombinationModel()
         {

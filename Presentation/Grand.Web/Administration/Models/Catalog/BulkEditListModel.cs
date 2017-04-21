@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Catalog
 {
-    public partial class BulkEditListModel : BaseNopModel
+    public partial class BulkEditListModel : BaseGrandModel
     {
         public BulkEditListModel()
         {

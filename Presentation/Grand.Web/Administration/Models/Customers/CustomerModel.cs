@@ -252,7 +252,7 @@ namespace Grand.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
-        public partial class SendEmailModel : BaseNopModel
+        public partial class SendEmailModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.SendEmail.Subject")]
             [AllowHtml]
@@ -269,7 +269,7 @@ namespace Grand.Admin.Models.Customers
             public DateTime? DontSendBeforeDate { get; set; }
         }
 
-        public partial class SendPmModel : BaseNopModel
+        public partial class SendPmModel : BaseGrandModel
         {
             [GrandResourceDisplayName("Admin.Customers.Customers.SendPM.Subject")]
             public string Subject { get; set; }

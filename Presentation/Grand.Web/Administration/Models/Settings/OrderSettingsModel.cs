@@ -8,7 +8,7 @@ using Grand.Web.Framework.Mvc;
 namespace Grand.Admin.Models.Settings
 {
     [Validator(typeof(OrderSettingsValidator))]
-    public partial class OrderSettingsModel : BaseNopModel
+    public partial class OrderSettingsModel : BaseGrandModel
     {
         public OrderSettingsModel()
         {

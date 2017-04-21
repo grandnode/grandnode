@@ -7,7 +7,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Orders
 {
-    public partial class ShipmentListModel : BaseNopModel
+    public partial class ShipmentListModel : BaseGrandModel
     {
         public ShipmentListModel()
         {

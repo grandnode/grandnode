@@ -5,7 +5,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Discounts
 {
-    public partial class DiscountListModel : BaseNopModel
+    public partial class DiscountListModel : BaseGrandModel
     {
         public DiscountListModel()
         {

@@ -7,7 +7,7 @@ using Grand.Web.Framework.Mvc;
 
 namespace Grand.Admin.Models.Orders
 {
-    public partial class BestsellersReportModel : BaseNopModel
+    public partial class BestsellersReportModel : BaseGrandModel
     {
         public BestsellersReportModel()
         {
