@@ -207,7 +207,7 @@ namespace Grand.Web.Controllers
             var model = _catalogWebService.PrepareManufacturer(manufacturer, command);
 
             //template
-            var templateViewPath = _catalogWebService.PrepareCategoryTemplateViewPath(manufacturer.ManufacturerTemplateId);
+            var templateViewPath = _catalogWebService.PrepareManufacturerTemplateViewPath(manufacturer.ManufacturerTemplateId);
 
             return View(templateViewPath, model);
         }

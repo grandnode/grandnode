@@ -64,6 +64,10 @@ namespace Grand.Web.Infrastructure
 
             //ReturnRequest service
             builder.RegisterType<ReturnRequestWebService>().As<IReturnRequestWebService>().InstancePerLifetimeScope();
+
+            //Newsletter service
+            builder.RegisterType<NewsletterWebService>().As<INewsletterWebService>().InstancePerLifetimeScope();
+
         }
 
         public int Order

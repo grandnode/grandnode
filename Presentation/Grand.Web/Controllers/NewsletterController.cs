@@ -6,64 +6,31 @@ using Grand.Core.Domain.Messages;
 using Grand.Services.Localization;
 using Grand.Services.Messages;
 using Grand.Web.Models.Newsletter;
+using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
 {
     public partial class NewsletterController : BasePublicController
     {
-        private readonly ILocalizationService _localizationService;
-        private readonly IWorkContext _workContext;
+        private readonly INewsletterWebService _newsletterWebService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly IStoreContext _storeContext;
-        private readonly INewsletterCategoryService _newsletterCategoryService;
-        private readonly CustomerSettings _customerSettings;
 
-        public NewsletterController(ILocalizationService localizationService,
-            IWorkContext workContext,
+        public NewsletterController(INewsletterWebService newsletterWebService,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IWorkflowMessageService workflowMessageService,
-            IStoreContext storeContext,
-            INewsletterCategoryService newsletterCategoryService,
-            CustomerSettings customerSettings)
+            INewsletterCategoryService newsletterCategoryService)
         {
-            this._localizationService = localizationService;
-            this._workContext = workContext;
+            this._newsletterWebService = newsletterWebService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._workflowMessageService = workflowMessageService;
-            this._storeContext = storeContext;
-            this._newsletterCategoryService = newsletterCategoryService;
-            this._customerSettings = customerSettings;
         }
-
-        protected virtual NewsletterCategoryModel PrepareNewsletterCategoryModel(string id)
-        {
-            var model = new NewsletterCategoryModel();
-            model.NewsletterEmailId = id;
-            var categories = _newsletterCategoryService.GetNewsletterCategoriesByStore(_storeContext.CurrentStore.Id);
-            foreach (var item in categories)
-            {
-                model.NewsletterCategories.Add(new NewsletterSimpleCategory()
-                {
-                    Id = item.Id,
-                    Name = item.GetLocalized(x=>x.Name),
-                    Description = item.GetLocalized(x=>x.Description),
-                    Selected = item.Selected
-                });
-            }
-            return model;
-        }
+       
 
         [ChildActionOnly]
         public virtual ActionResult NewsletterBox()
         {
-            if (_customerSettings.HideNewsletterBlock)
+            var model = _newsletterWebService.PrepareNewsletterBox();
+            if (model == null)
                 return Content("");
 
-            var model = new NewsletterBoxModel()
-            {
-                AllowToUnsubscribe = _customerSettings.NewsletterBlockAllowToUnsubscribe
-            };
             return PartialView(model);
         }
 
@@ -71,75 +38,18 @@ namespace Grand.Web.Controllers
         [ValidateInput(false)]
         public virtual ActionResult SubscribeNewsletter(string email, bool subscribe)
         {
-            string result;
-            string resultCategory = string.Empty;
-            bool success = false;
-            bool showcategories = false;
-
-            if (!CommonHelper.IsValidEmail(email))
+            var model = _newsletterWebService.SubscribeNewsletter(email, subscribe);
+            if(model.NewsletterCategory!=null)
             {
-                result = _localizationService.GetResource("Newsletter.Email.Wrong");
+                model.ShowCategories = true;
+                model.ResultCategory = this.RenderPartialViewToString("NewsletterCategory", model.NewsletterCategory);
             }
-            else
-            {
-                email = email.Trim();
-
-                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, _storeContext.CurrentStore.Id);
-                if (subscription != null)
-                {
-                    if (subscribe)
-                    {
-                        if (!subscription.Active)
-                        {
-                            _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
-                        }
-                        result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
-                    }
-                    else
-                    {
-                        if (subscription.Active)
-                        {
-                            _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessage(subscription, _workContext.WorkingLanguage.Id);
-                        }
-                        result = _localizationService.GetResource("Newsletter.UnsubscribeEmailSent");
-                    }
-                }
-                else if (subscribe)
-                {
-                    subscription = new NewsLetterSubscription
-                    {
-                        NewsLetterSubscriptionGuid = Guid.NewGuid(),
-                        Email = email,
-                        CustomerId = _workContext.CurrentCustomer.Id,
-                        Active = false,
-                        StoreId = _storeContext.CurrentStore.Id,
-                        CreatedOnUtc = DateTime.UtcNow
-                    };
-                    _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
-                    _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
-
-                    result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
-                    var model = PrepareNewsletterCategoryModel(subscription.Id);
-                    if (model.NewsletterCategories.Count > 0)
-                    {
-                        showcategories = true;
-                        resultCategory = this.RenderPartialViewToString("NewsletterCategory", model);
-                    }
-
-                }
-                else
-                {
-                    result = _localizationService.GetResource("Newsletter.UnsubscribeEmailSent");
-                }
-                success = true;
-            }
-
             return Json(new
             {
-                Success = success,
-                Result = result,
-                Showcategories = showcategories,
-                ResultCategory = resultCategory,
+                Success = model.Success,
+                Result = model.Result,
+                Showcategories = model.ShowCategories,
+                ResultCategory = model.ResultCategory,
             });
         }
 
@@ -197,19 +107,7 @@ namespace Grand.Web.Controllers
             if (subscription == null)
                 return RedirectToRoute("HomePage");
 
-            var model = new SubscriptionActivationModel();
-
-            if (active)
-            {
-                subscription.Active = true;
-                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
-            }
-            else
-                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
-
-            model.Result = active 
-                ?  _localizationService.GetResource("Newsletter.ResultActivated")
-                : _localizationService.GetResource("Newsletter.ResultDeactivated");
+            var model = _newsletterWebService.PrepareSubscriptionActivation(subscription, active);
 
             return View(model);
         }
