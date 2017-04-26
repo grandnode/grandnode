@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a reward point history entry
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class RewardPointsHistory : BaseEntity
     {
         /// <summary>

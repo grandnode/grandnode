@@ -10,7 +10,6 @@ namespace Grand.Core.Domain.Polls
     /// <summary>
     /// Represents a poll
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Poll : BaseEntity, IStoreMappingSupported, ILocalizedEntity, IAclSupported
     {
         private ICollection<PollAnswer> _pollAnswers;

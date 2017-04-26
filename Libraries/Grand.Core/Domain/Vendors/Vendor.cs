@@ -9,7 +9,6 @@ namespace Grand.Core.Domain.Vendors
     /// <summary>
     /// Represents a vendor
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported
     {
         private ICollection<VendorNote> _vendorNotes;

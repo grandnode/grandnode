@@ -8,7 +8,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product also purchased
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductAlsoPurchased : BaseEntity
     {
         public string ProductId { get; set; }

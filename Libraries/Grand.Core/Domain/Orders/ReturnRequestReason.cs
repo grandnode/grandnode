@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents a return request reason
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ReturnRequestReason : BaseEntity, ILocalizedEntity
     {
         public ReturnRequestReason()

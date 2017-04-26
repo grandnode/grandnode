@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Represents a campaign history
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CampaignHistory : BaseEntity
     {
         

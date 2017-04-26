@@ -8,7 +8,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer attribute
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerAttribute : BaseEntity, ILocalizedEntity
     {
         private ICollection<CustomerAttributeValue> _customerAttributeValues;
@@ -46,7 +45,6 @@ namespace Grand.Core.Domain.Customers
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
-        [BsonIgnoreAttribute]
         public AttributeControlType AttributeControlType
         {
             get

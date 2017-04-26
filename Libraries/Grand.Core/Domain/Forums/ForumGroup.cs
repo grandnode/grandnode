@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Forums
     /// <summary>
     /// Represents a forum group
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ForumGroup : BaseEntity
     {
         /// <summary>

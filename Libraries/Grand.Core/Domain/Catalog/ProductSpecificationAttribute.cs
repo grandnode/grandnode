@@ -5,13 +5,11 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product specification attribute
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductSpecificationAttribute : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        [BsonIgnore]
         public string ProductId { get; set; }
 
         /// <summary>
@@ -53,7 +51,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
-        [BsonIgnoreAttribute]
         public SpecificationAttributeType AttributeType
         {
             get

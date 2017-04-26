@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a category template
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CategoryTemplate : BaseEntity
     {
         /// <summary>

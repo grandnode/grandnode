@@ -3,7 +3,6 @@ using System;
 
 namespace Grand.Core.Domain.Messages
 {
-    [BsonIgnoreExtraElements]
     public partial class PopupArchive : BaseEntity
     {
         public string PopupActiveId { get; set; }

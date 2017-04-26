@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product attribute
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductAttribute : BaseEntity, ILocalizedEntity
     {
         public ProductAttribute()

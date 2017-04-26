@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.News
     /// <summary>
     /// Represents a news comment
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class NewsComment : SubBaseEntity
     {
         /// <summary>

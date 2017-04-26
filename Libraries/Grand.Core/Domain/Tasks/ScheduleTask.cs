@@ -3,7 +3,6 @@ using System;
 
 namespace Grand.Core.Domain.Tasks
 {
-    [BsonIgnoreExtraElements]
     public partial class ScheduleTask : BaseEntity
     {
         public string ScheduleTaskName { get; set; }

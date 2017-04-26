@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Represents an email item
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class QueuedEmail : BaseEntity
     {
         /// <summary>
@@ -108,7 +107,6 @@ namespace Grand.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
-        [BsonIgnoreAttribute]
         public QueuedEmailPriority Priority
         {
             get

@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Affiliates
     /// <summary>
     /// Represents an affiliate
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Affiliate : BaseEntity
     {
         /// <summary>

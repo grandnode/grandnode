@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer action
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerActionHistory : BaseEntity
     {
         public string CustomerActionId { get; set; }

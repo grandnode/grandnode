@@ -7,13 +7,11 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product picture mapping
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductPicture : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        [BsonIgnoreAttribute]
         public string ProductId { get; set; }
 
         /// <summary>

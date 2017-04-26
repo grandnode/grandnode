@@ -8,7 +8,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents a checkout attribute value
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CheckoutAttributeValue : SubBaseEntity, ILocalizedEntity
     {
         public CheckoutAttributeValue()

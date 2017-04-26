@@ -8,7 +8,6 @@ namespace Grand.Core.Domain.Common
     /// <summary>
     /// Represents an address attribute
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class AddressAttribute : BaseEntity, ILocalizedEntity
     {
         private ICollection<AddressAttributeValue> _addressAttributeValues;

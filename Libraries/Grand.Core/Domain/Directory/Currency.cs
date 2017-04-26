@@ -9,7 +9,6 @@ namespace Grand.Core.Domain.Directory
     /// <summary>
     /// Represents a currency
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Currency : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         public Currency()

@@ -5,13 +5,11 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a related product
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class RelatedProduct : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the first product identifier
-        /// </summary>
-        [BsonIgnore]
+        /// </summary>        
         public string ProductId1 { get; set; }
 
         /// <summary>

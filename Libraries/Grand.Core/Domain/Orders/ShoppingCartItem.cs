@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents a shopping cart item
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ShoppingCartItem : SubBaseEntity
     {
         /// <summary>

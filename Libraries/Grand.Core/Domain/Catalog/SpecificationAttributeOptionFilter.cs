@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a specification attribute option filter
     /// </summary>
-    [BsonIgnoreExtraElements]
     public class SpecificationAttributeOptionFilter
     {
         /// <summary>

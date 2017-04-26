@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Customers
 {
-
-    [BsonIgnoreExtraElements]
+    /// <summary>
+    /// Represents a Customer ActionType
+    /// </summary>
     public partial class CustomerActionType : BaseEntity
     {
         private ICollection<int> _conditionType;

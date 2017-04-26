@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Configuration
     /// <summary>
     /// Represents a setting
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Setting : BaseEntity, ILocalizedEntity
     {
         public Setting() {

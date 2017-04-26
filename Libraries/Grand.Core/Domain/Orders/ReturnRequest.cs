@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents a return request
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ReturnRequest : BaseEntity
     {
         public int ReturnNumber { get; set; }

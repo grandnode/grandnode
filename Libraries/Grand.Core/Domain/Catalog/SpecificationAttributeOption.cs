@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a specification attribute option
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class SpecificationAttributeOption : SubBaseEntity, ILocalizedEntity
     {
         public SpecificationAttributeOption()

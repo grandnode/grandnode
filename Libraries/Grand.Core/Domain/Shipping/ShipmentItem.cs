@@ -7,13 +7,11 @@ namespace Grand.Core.Domain.Shipping
     /// <summary>
     /// Represents a shipment item
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ShipmentItem : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the shipment identifier
         /// </summary>
-        [BsonIgnore]
         public string ShipmentId { get; set; }
 
         /// <summary>

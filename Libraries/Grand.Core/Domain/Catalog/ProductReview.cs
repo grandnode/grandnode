@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product review
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductReview : BaseEntity
     {
         private ICollection<ProductReviewHelpfulness> _productReviewHelpfulnessEntries;

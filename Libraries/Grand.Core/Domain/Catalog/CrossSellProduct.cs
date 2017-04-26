@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a cross-sell product
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CrossSellProduct : BaseEntity
     {
         /// <summary>

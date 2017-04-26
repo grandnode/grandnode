@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Media
     /// <summary>
     /// Represents a picture
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Picture : BaseEntity
     {
         /// <summary>

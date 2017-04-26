@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents a return request action
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ReturnRequestAction : BaseEntity, ILocalizedEntity
     {
         public ReturnRequestAction()

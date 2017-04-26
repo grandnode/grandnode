@@ -9,7 +9,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents a gift card
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class GiftCard : BaseEntity
     {
         private ICollection<GiftCardUsageHistory> _giftCardUsageHistory;
@@ -22,7 +21,6 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the amount
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal Amount { get; set; }
 
         /// <summary>
@@ -73,7 +71,6 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the gift card type
         /// </summary>
-        [BsonIgnoreAttribute]
         public GiftCardType GiftCardType
         {
             get

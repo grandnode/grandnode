@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a back in stock subscription
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class BackInStockSubscription : BaseEntity
     {
         /// <summary>

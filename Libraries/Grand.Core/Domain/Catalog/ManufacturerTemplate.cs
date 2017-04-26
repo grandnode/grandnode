@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a manufacturer template
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ManufacturerTemplate : BaseEntity
     {
         /// <summary>

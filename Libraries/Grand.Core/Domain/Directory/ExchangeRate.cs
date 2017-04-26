@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Directory
     /// <summary>
     /// Represents an exchange rate
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ExchangeRate
     {
         /// <summary>

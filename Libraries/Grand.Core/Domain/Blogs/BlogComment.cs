@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Blogs
     /// <summary>
     /// Represents a blog comment
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class BlogComment : BaseEntity
     {
 

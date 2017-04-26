@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Logging
     /// <summary>
     /// Represents an activity log record
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ActivityLog : BaseEntity
     {
         /// <summary>

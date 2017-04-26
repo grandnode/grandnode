@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a predefined (default) product attribute value
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class PredefinedProductAttributeValue : SubBaseEntity, ILocalizedEntity
     {
         public PredefinedProductAttributeValue()

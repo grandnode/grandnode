@@ -12,7 +12,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Product : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
     {
         private ICollection<ProductCategory> _productCategories;
@@ -372,7 +371,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the price
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal Price { get; set; }
         /// <summary>
         /// Gets or sets the old price
@@ -525,7 +523,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product type
         /// </summary>
-        [BsonIgnoreAttribute]
         public ProductType ProductType
         {
             get
@@ -541,7 +538,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the backorder mode
         /// </summary>
-        [BsonIgnoreAttribute]
         public BackorderMode BackorderMode
         {
             get
@@ -557,7 +553,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the download activation type
         /// </summary>
-        [BsonIgnoreAttribute]
         public DownloadActivationType DownloadActivationType
         {
             get
@@ -573,7 +568,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the gift card type
         /// </summary>
-        [BsonIgnoreAttribute]
         public GiftCardType GiftCardType
         {
             get
@@ -589,7 +583,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the low stock activity
         /// </summary>
-        [BsonIgnoreAttribute]
         public LowStockActivity LowStockActivity
         {
             get
@@ -605,7 +598,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the value indicating how to manage inventory
         /// </summary>
-        [BsonIgnoreAttribute]
         public ManageInventoryMethod ManageInventoryMethod
         {
             get
@@ -621,7 +613,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the cycle period for recurring products
         /// </summary>
-        [BsonIgnoreAttribute]
         public RecurringProductCyclePeriod RecurringCyclePeriod
         {
             get
@@ -637,7 +628,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the period for rental products
         /// </summary>
-        [BsonIgnoreAttribute]
         public RentalPricePeriod RentalPricePeriod
         {
             get

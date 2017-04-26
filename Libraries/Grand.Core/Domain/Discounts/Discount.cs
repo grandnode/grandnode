@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Discounts
     /// <summary>
     /// Represents a discount
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Discount : BaseEntity
     {
         private ICollection<DiscountRequirement> _discountRequirements;
@@ -86,7 +85,6 @@ namespace Grand.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount type
         /// </summary>
-        [BsonIgnoreAttribute]
         public DiscountType DiscountType
         {
             get
@@ -102,7 +100,6 @@ namespace Grand.Core.Domain.Discounts
         /// <summary>
         /// Gets or sets the discount limitation
         /// </summary>
-        [BsonIgnoreAttribute]
         public DiscountLimitationType DiscountLimitation
         {
             get

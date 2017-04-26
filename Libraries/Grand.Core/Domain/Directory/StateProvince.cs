@@ -8,7 +8,6 @@ namespace Grand.Core.Domain.Directory
     /// <summary>
     /// Represents a state/province
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class StateProvince : BaseEntity, ILocalizedEntity
     {
         public StateProvince()

@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Localization
     /// <summary>
     /// Represents a language
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Language : BaseEntity, IStoreMappingSupported
     {
         public Language()

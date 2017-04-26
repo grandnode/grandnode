@@ -10,7 +10,6 @@ namespace Grand.Core.Domain.Topics
     /// <summary>
     /// Represents a topic
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStoreMappingSupported, IAclSupported
     {
         public Topic()

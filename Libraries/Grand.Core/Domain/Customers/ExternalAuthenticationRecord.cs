@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents an external authentication record
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ExternalAuthenticationRecord : BaseEntity
     {
         /// <summary>

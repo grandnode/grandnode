@@ -5,13 +5,11 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product manufacturer mapping
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductManufacturer : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        [BsonIgnore]
         public string ProductId { get; set; }
 
         /// <summary>

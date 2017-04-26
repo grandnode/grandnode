@@ -9,7 +9,6 @@ namespace Grand.Core.Domain.Directory
     /// <summary>
     /// Represents a country
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Country : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         private ICollection<StateProvince> _stateProvinces;

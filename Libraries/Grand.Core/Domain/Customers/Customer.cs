@@ -9,7 +9,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Customer : BaseEntity
     {
         private ICollection<CustomerRole> _customerRoles;
@@ -51,7 +50,6 @@ namespace Grand.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the password format
         /// </summary>
-        [BsonIgnoreAttribute]
         public PasswordFormat PasswordFormat
         {
             get { return (PasswordFormat)PasswordFormatId; }

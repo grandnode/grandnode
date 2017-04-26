@@ -10,7 +10,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents a checkout attribute
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CheckoutAttribute : BaseEntity, ILocalizedEntity, IStoreMappingSupported, IAclSupported
     {
         private ICollection<CheckoutAttributeValue> _checkoutAttributeValues;
@@ -116,7 +115,6 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
-        [BsonIgnoreAttribute]
         public AttributeControlType AttributeControlType
         {
             get

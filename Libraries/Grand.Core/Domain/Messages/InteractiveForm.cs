@@ -8,7 +8,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Represents a interactive forms
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class InteractiveForm : BaseEntity, ILocalizedEntity
     {
         private ICollection<FormAttribute> _formAttributes;
@@ -46,7 +45,6 @@ namespace Grand.Core.Domain.Messages
             protected set { _formAttributes = value; }
         }
 
-        [BsonIgnoreExtraElements]
         public class FormAttribute : SubBaseEntity, ILocalizedEntity
         {
             private ICollection<FormAttributeValue> _formAttributeValues;
@@ -92,7 +90,6 @@ namespace Grand.Core.Domain.Messages
             /// <summary>
             /// Gets the attribute control type
             /// </summary>
-            [BsonIgnoreAttribute]
             public FormControlType AttributeControlType
             {
                 get

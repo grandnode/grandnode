@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Stores
     /// <summary>
     /// Represents a store
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Store : BaseEntity, ILocalizedEntity
     {
         private ICollection<string> _appliedDiscounts;

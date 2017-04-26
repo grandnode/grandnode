@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Localization
     /// <summary>
     /// Represents a locale string resource
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class LocaleStringResource : BaseEntity
     {
         /// <summary>

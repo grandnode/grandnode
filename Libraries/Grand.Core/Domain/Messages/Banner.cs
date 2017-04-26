@@ -8,7 +8,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Represents a banner
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Banner : BaseEntity, ILocalizedEntity
     {
         public Banner()

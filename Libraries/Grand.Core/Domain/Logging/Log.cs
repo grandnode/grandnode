@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Logging
     /// <summary>
     /// Represents a log record
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Log : BaseEntity
     {
         /// <summary>
@@ -52,7 +51,6 @@ namespace Grand.Core.Domain.Logging
         /// <summary>
         /// Gets or sets the log level
         /// </summary>
-        [BsonIgnoreAttribute]
         public LogLevel LogLevel
         {
             get

@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product attribute mapping
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductAttributeMapping : SubBaseEntity, ILocalizedEntity
     {
         private ICollection<ProductAttributeValue> _productAttributeValues;
@@ -19,7 +18,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        [BsonIgnore]
         public string ProductId { get; set; }
 
         /// <summary>
@@ -89,7 +87,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets the attribute control type
         /// </summary>
-        [BsonIgnoreAttribute]
         public AttributeControlType AttributeControlType
         {
             get

@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Represents NewsLetterSubscription entity
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class NewsLetterSubscription : BaseEntity
     {
         private ICollection<string> _categories;

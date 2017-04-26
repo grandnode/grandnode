@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer role
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerRoleProduct : BaseEntity
     {
 

@@ -8,6 +8,7 @@ using AutoMapper;
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Infrastructure.MongoDB;
 
 namespace Grand.Core.Infrastructure
 {
@@ -109,6 +110,9 @@ namespace Grand.Core.Infrastructure
         /// <param name="config">Config</param>
         public void Initialize(GrandConfig config)
         {
+            //register mongo mappings
+            MongoDBMapperConfiguration.RegisterMongoDBMappings(config);
+
             //register dependencies
             RegisterDependencies(config);
 

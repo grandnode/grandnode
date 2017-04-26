@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer reminder history
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerReminderHistory : BaseEntity
     {
         private ICollection<HistoryLevel> _level;
@@ -16,7 +15,6 @@ namespace Grand.Core.Domain.Customers
         public string CustomerId { get; set; }
         public int ReminderRuleId { get; set; }
 
-        [BsonIgnoreAttribute]
         public CustomerReminderRuleEnum ReminderRule
         {
             get { return (CustomerReminderRuleEnum)ReminderRuleId; }
@@ -25,7 +23,6 @@ namespace Grand.Core.Domain.Customers
 
         public int Status { get; set; }
 
-        [BsonIgnoreAttribute]
         public CustomerReminderHistoryStatusEnum HistoryStatus
         {
             get { return (CustomerReminderHistoryStatusEnum)Status; }
@@ -46,7 +43,6 @@ namespace Grand.Core.Domain.Customers
         }
 
 
-        [BsonIgnoreExtraElements]
         public partial class HistoryLevel : SubBaseEntity
         {
             public string ReminderLevelId { get; set; }

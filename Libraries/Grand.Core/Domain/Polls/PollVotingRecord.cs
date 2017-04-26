@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Polls
     /// <summary>
     /// Represents a poll voting record
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class PollVotingRecord : SubBaseEntity
     {
         /// <summary>

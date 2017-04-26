@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a best customer report line
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class BestCustomerReportLine
     {
         /// <summary>

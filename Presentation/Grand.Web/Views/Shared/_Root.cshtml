@@ -7,30 +7,30 @@
 @Html.Partial("OldInternetExplorerWarning")
 
 <div class="container">
-        @Html.Partial("Header")
-        <nav class="navbar navbar-toggleable-md bg-inverse container mainNav mb-1 pl-0 pr-0">
-                <button class="navbar-toggler hidden-lg-up text-white" type="button" data-toggle="collapse" data-target="#collapsing-navbar-2">
-                    <span>&#9776;</span>
-                    <span class="text-white hidden-lg-up pl-2">
-                        @T("Categories")
-                    </span>
-                </button>
-                <div class="collapse navbar-collapse" id="collapsing-navbar-2">
-                    <ul class="nav navbar-nav">
-                        @Html.Action("TopMenu", "Catalog")
-                    </ul>
-                </div>
-        </nav>
-
-                @Html.Widget("content_before")
-                @if (IsSectionDefined("Breadcrumb"))
-            {
-                    @RenderSection("Breadcrumb")
-                }
-                    @RenderBody()
-                @Html.Widget("content_after")
+@Html.Partial("Header")
+<nav class="navbar navbar-toggleable-md bg-inverse container mainNav mb-1 pl-0 pr-0">
+        <button class="navbar-toggler hidden-lg-up text-white" type="button" data-toggle="collapse" data-target="#collapsing-navbar-2">
+            <span>&#9776;</span>
+            <span class="text-white hidden-lg-up pl-2">
+                @T("Categories")
+            </span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsing-navbar-2">
+            <ul class="nav navbar-nav">
+                @Html.Action("TopMenu", "Catalog")
+            </ul>
         </div>
-        @Html.Action("Footer", "Common")
+</nav>
+
+        @Html.Widget("content_before")
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+            @RenderBody()
+        @Html.Widget("content_after")
+</div>
+@Html.Action("Footer", "Common")
 
 
 <script>

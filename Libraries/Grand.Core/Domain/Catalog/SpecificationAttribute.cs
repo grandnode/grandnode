@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a specification attribute
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class SpecificationAttribute : BaseEntity, ILocalizedEntity
     {
         private ICollection<SpecificationAttributeOption> _specificationAttributeOptions;

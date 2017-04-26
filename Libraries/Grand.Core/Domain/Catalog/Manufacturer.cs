@@ -11,7 +11,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a manufacturer
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
     {
         private ICollection<string> _appliedDiscounts;

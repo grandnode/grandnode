@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer action
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerAction : BaseEntity
     {
         private ICollection<ActionCondition> _condition;
@@ -32,7 +31,6 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public int ConditionId { get; set; }
 
-        [BsonIgnoreAttribute]
         public CustomerActionConditionEnum Condition
         {
             get { return (CustomerActionConditionEnum)ConditionId; }
@@ -45,7 +43,6 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public int ReactionTypeId { get; set; }
 
-        [BsonIgnoreAttribute]
         public CustomerReactionTypeEnum ReactionType
         {
             get { return (CustomerReactionTypeEnum)ReactionTypeId; }
@@ -79,7 +76,6 @@ namespace Grand.Core.Domain.Customers
             protected set { _condition = value; }
         }
 
-        [BsonIgnoreExtraElements]
         public partial class ActionCondition: SubBaseEntity
         {
             private ICollection<string> _products;
@@ -99,7 +95,6 @@ namespace Grand.Core.Domain.Customers
 
             public int CustomerActionConditionTypeId { get; set; }
 
-            [BsonIgnoreAttribute]
             public CustomerActionConditionTypeEnum CustomerActionConditionType
             {
                 get { return (CustomerActionConditionTypeEnum)CustomerActionConditionTypeId; }
@@ -108,7 +103,6 @@ namespace Grand.Core.Domain.Customers
 
             public int ConditionId { get; set; }
 
-            [BsonIgnoreAttribute]
             public CustomerActionConditionEnum Condition
             {
                 get { return (CustomerActionConditionEnum)ConditionId; }
@@ -185,7 +179,6 @@ namespace Grand.Core.Domain.Customers
                 protected set { _urlCurrent = value; }
             }
 
-            [BsonIgnoreExtraElements]
             public partial class ProductAttributeValue: SubBaseEntity
             {
                 public string ProductAttributeId { get; set; }
@@ -197,14 +190,12 @@ namespace Grand.Core.Domain.Customers
                 public string Name { get; set; }
             }
 
-            [BsonIgnoreExtraElements]
             public partial class ProductSpecification : SubBaseEntity
             {
                 public string ProductSpecyficationId { get; set; }
                 public string ProductSpecyficationValueId { get; set; }
             }
 
-            [BsonIgnoreExtraElements]
             public partial class CustomerRegister : SubBaseEntity
             {
                 public string RegisterField { get; set; }

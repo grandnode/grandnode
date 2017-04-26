@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Directory
     /// <summary>
     /// Represents a measure dimension
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class MeasureDimension : BaseEntity
     {
         /// <summary>

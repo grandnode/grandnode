@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents an order note
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class OrderNote : BaseEntity
     {
         /// <summary>

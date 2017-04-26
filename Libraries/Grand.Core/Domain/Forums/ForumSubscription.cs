@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Forums
     /// <summary>
     /// Represents a forum subscription item
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ForumSubscription : BaseEntity
     {
         /// <summary>

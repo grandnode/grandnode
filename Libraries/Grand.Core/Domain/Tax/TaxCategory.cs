@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Tax
     /// <summary>
     /// Represents a tax category
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class TaxCategory : BaseEntity
     {
         /// <summary>

@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Localization
     /// <summary>
     /// Represents a localized property
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class LocalizedProperty : SubBaseEntity
     {
         /// <summary>

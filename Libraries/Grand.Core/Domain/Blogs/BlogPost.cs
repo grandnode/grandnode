@@ -10,7 +10,6 @@ namespace Grand.Core.Domain.Blogs
     /// <summary>
     /// Represents a blog post
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class BlogPost : BaseEntity, ISlugSupported, IStoreMappingSupported, ILocalizedEntity
     {
         public BlogPost()

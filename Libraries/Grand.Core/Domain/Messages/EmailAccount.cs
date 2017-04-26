@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Represents an email account
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class EmailAccount : BaseEntity
     {
         /// <summary>
@@ -52,7 +51,6 @@ namespace Grand.Core.Domain.Messages
         /// <summary>
         /// Gets a friendly email account name
         /// </summary>
-        [BsonIgnoreAttribute]
         public string FriendlyName
         {
             get

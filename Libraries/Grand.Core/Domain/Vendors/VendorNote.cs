@@ -3,14 +3,15 @@ using System;
 
 namespace Grand.Core.Domain.Vendors
 {
-    [BsonIgnoreExtraElements]
+    /// <summary>
+    /// Represents a vendor note
+    /// </summary>
     public partial class VendorNote : SubBaseEntity
     {
 
         /// <summary>
         /// Gets or sets the vendor identifier
         /// </summary>
-        [BsonIgnore]
         public string VendorId { get; set; }
         /// <summary>
         /// Gets or sets the note

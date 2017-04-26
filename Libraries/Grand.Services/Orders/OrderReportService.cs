@@ -638,7 +638,6 @@ namespace Grand.Services.Orders
             return profit;
         }
 
-        [BsonIgnoreExtraElements]
         public class UnwindedOrderItem
         {
             public OrderItem OrderItems { get; set; }

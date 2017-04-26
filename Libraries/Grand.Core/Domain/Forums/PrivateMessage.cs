@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Forums
     /// <summary>
     /// Represents a private message
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class PrivateMessage : BaseEntity
     {
         /// <summary>

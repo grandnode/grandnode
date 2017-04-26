@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Media
     /// <summary>
     /// Represents a download
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Download : BaseEntity
     {
         /// <summary>
@@ -28,7 +27,6 @@ namespace Grand.Core.Domain.Media
         /// <summary>
         /// Gets or sets the download binary
         /// </summary>
-        [BsonIgnoreAttribute]
         public byte[] DownloadBinary { get; set; }
 
         /// <summary>

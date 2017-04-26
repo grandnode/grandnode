@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Orders
     /// <summary>
     /// Represents an order item
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class OrderItem : SubBaseEntity
     {
 
@@ -39,43 +38,36 @@ namespace Grand.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the unit price in primary store currency (incl tax)
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal UnitPriceInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the unit price in primary store currency (excl tax)
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal UnitPriceExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the price in primary store currency (incl tax)
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal PriceInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the price in primary store currency (excl tax)
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal PriceExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the discount amount (incl tax)
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal DiscountAmountInclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the discount amount (excl tax)
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal DiscountAmountExclTax { get; set; }
 
         /// <summary>
         /// Gets or sets the original cost of this order item (when an order was placed), qty 1
         /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
         public decimal OriginalProductCost { get; set; }
 
         /// <summary>

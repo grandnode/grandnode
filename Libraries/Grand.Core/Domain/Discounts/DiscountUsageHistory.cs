@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Discounts
     /// <summary>
     /// Represents a discount usage history entry
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class DiscountUsageHistory : BaseEntity
     {
         /// <summary>

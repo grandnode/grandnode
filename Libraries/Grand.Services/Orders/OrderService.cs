@@ -634,7 +634,6 @@ namespace Grand.Services.Orders
 
         #region UnwindOrderItem
 
-        [BsonIgnoreExtraElements]
         public class UnwindOrderItem
         {
             public OrderItem OrderItems { get; set; }

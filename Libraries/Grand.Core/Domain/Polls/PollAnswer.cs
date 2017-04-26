@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Polls
     /// <summary>
     /// Represents a poll answer
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class PollAnswer : SubBaseEntity, ILocalizedEntity
     {
         private ICollection<PollVotingRecord> _pollVotingRecords;

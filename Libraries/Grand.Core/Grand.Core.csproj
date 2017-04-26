@@ -143,6 +143,7 @@
     <Compile Include="Domain\Tasks\TimeIntervalChoice.cs" />
     <Compile Include="Infrastructure\Mapper\AutoMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Mapper\IMapperConfiguration.cs" />
+    <Compile Include="Infrastructure\MongoDB\MongoDBMapperConfiguration.cs" />
     <Compile Include="ParentEntity.cs" />
     <Compile Include="SubBaseEntity.cs" />
     <Compile Include="Caching\IRedisConnectionWrapper.cs" />

@@ -3,10 +3,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Common
 {
-    [BsonIgnoreExtraElements]
     public partial class Address : BaseEntity, ICloneable
     {
-        [BsonIgnoreAttribute]
         public string CustomerId { get; set; }
 
         /// <summary>

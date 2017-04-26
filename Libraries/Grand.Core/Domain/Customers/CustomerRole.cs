@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer role
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerRole : BaseEntity
     {
 
@@ -17,7 +16,6 @@ namespace Grand.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the customer Id
         /// </summary>
-        [BsonIgnoreAttribute]
         public string CustomerId { get; set; }
 
         /// <summary>

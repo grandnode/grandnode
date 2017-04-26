@@ -11,7 +11,6 @@ namespace Grand.Core.Domain.News
     /// <summary>
     /// Represents a news item
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class NewsItem : BaseEntity, ISlugSupported, IStoreMappingSupported, ILocalizedEntity, IAclSupported
     {
         private ICollection<NewsComment> _newsComments;

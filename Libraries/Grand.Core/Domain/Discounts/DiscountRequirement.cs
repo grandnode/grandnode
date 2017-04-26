@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Discounts
     /// <summary>
     /// Represents a discount requirement
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class DiscountRequirement : SubBaseEntity
     {
         /// <summary>

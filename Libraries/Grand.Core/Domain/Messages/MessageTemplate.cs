@@ -8,7 +8,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Represents a message template
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class MessageTemplate : BaseEntity, ILocalizedEntity, IStoreMappingSupported
     {
         public MessageTemplate()
@@ -70,7 +69,6 @@ namespace Grand.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the period of message delay
         /// </summary>
-        [BsonIgnoreAttribute]
         public MessageDelayPeriod DelayPeriod
         {
             get { return (MessageDelayPeriod)this.DelayPeriodId; }

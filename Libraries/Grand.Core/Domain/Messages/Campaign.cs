@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Represents a campaign
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class Campaign : BaseEntity
     {
         private ICollection<string> _customerTags;
@@ -42,14 +41,12 @@ namespace Grand.Core.Domain.Messages
         public DateTime? CustomerLastPurchaseDateTo { get; set; }
 
         public int CustomerHasOrders { get; set; }
-        [BsonIgnoreAttribute]
         public CampaignCondition CustomerHasOrdersCondition {
             get { return (CampaignCondition)CustomerHasOrders; }
             set { this.CustomerHasOrders = (int)value; }
         }
 
         public int CustomerHasShoppingCart { get; set; }
-        [BsonIgnoreAttribute]
         public CampaignCondition CustomerHasShoppingCartCondition {
             get { return (CampaignCondition)CustomerHasShoppingCart; }
             set { this.CustomerHasShoppingCart = (int)value; }

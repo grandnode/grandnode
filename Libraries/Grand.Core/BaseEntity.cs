@@ -9,7 +9,6 @@ namespace Grand.Core
     /// <summary>
     /// Base class for entities
     /// </summary>
-    [BsonIgnoreExtraElements]
     public abstract partial class BaseEntity: ParentEntity
     {
         public BaseEntity()

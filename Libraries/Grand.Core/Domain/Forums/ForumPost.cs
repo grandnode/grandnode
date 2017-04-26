@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Forums
     /// <summary>
     /// Represents a forum post
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ForumPost : BaseEntity
     {
         /// <summary>

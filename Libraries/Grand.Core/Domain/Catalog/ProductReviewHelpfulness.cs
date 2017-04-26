@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product review helpfulness
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductReviewHelpfulness : SubBaseEntity
     {
         /// <summary>

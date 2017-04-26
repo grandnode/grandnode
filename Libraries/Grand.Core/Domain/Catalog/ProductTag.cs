@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product tag
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductTag : BaseEntity, ILocalizedEntity
     {
         public ProductTag()
@@ -28,7 +27,6 @@ namespace Grand.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets product id
         /// </summary>
-        [BsonIgnoreAttribute]
         public string ProductId { get; set; }
 
         /// <summary>

@@ -5,13 +5,11 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product attribute combination
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductAttributeCombination : SubBaseEntity
     {
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        [BsonIgnoreAttribute]
         public string ProductId { get; set; }
 
         /// <summary>

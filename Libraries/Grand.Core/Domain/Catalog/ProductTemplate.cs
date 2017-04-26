@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Represents a product template
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ProductTemplate : BaseEntity
     {
         /// <summary>

@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Blogs
     /// <summary>
     /// Represents a blog post tag
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class BlogPostTag
     {
         /// <summary>

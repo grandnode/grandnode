@@ -3,7 +3,9 @@ using System;
 
 namespace Grand.Core.Domain.Customers
 {
-    [BsonIgnoreExtraElements]
+    /// <summary>
+    /// Represents a Customer History Password
+    /// </summary>
     public partial class CustomerHistoryPassword : BaseEntity
     {
         public CustomerHistoryPassword()
@@ -39,7 +41,6 @@ namespace Grand.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the password format
         /// </summary>
-        [BsonIgnoreAttribute]
         public PasswordFormat PasswordFormat
         {
             get { return (PasswordFormat)PasswordFormatId; }

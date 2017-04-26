@@ -6,7 +6,6 @@ namespace Grand.Core.Domain.Messages
     /// <summary>
     /// Search term record (for statistics)
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ContactUs : BaseEntity
     {
         /// <summary>

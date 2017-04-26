@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer attribute value
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerAttributeValue : SubBaseEntity, ILocalizedEntity
     {
         public CustomerAttributeValue()

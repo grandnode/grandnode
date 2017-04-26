@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a customer reminder 
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerReminder : BaseEntity
     {
         private ICollection<ReminderCondition> _condition;
@@ -40,7 +39,6 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public int ConditionId { get; set; }
 
-        [BsonIgnoreAttribute]
         public CustomerReminderConditionEnum Condition
         {
             get { return (CustomerReminderConditionEnum)ConditionId; }
@@ -52,7 +50,6 @@ namespace Grand.Core.Domain.Customers
         /// </summary>
         public int ReminderRuleId { get; set; }
 
-        [BsonIgnoreAttribute]
         public CustomerReminderRuleEnum ReminderRule
         {
             get { return (CustomerReminderRuleEnum)ReminderRuleId; }
@@ -78,7 +75,6 @@ namespace Grand.Core.Domain.Customers
         }
 
 
-        [BsonIgnoreExtraElements]
         public partial class ReminderCondition: SubBaseEntity
         {
             private ICollection<string> _products;
@@ -93,7 +89,6 @@ namespace Grand.Core.Domain.Customers
 
             public int ConditionTypeId { get; set; }
 
-            [BsonIgnoreAttribute]
             public CustomerReminderConditionTypeEnum ConditionType
             {
                 get { return (CustomerReminderConditionTypeEnum)ConditionTypeId; }
@@ -102,7 +97,6 @@ namespace Grand.Core.Domain.Customers
 
             public int ConditionId { get; set; }
 
-            [BsonIgnoreAttribute]
             public CustomerReminderConditionEnum Condition
             {
                 get { return (CustomerReminderConditionEnum)ConditionId; }
@@ -151,8 +145,6 @@ namespace Grand.Core.Domain.Customers
                 protected set { _customCustomerAttributes = value; }
             }
 
-
-            [BsonIgnoreExtraElements]
             public partial class CustomerRegister: SubBaseEntity
             {
                 public string RegisterField { get; set; }
@@ -161,7 +153,6 @@ namespace Grand.Core.Domain.Customers
 
         }
 
-        [BsonIgnoreExtraElements]
         public partial class ReminderLevel: SubBaseEntity
         {
             public string Name { get; set; }

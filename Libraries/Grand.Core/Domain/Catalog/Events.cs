@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Catalog
     /// <summary>
     /// Product review approved event
     /// </summary>
-    [BsonIgnoreExtraElements]
     public class ProductReviewApprovedEvent
     {
         public ProductReviewApprovedEvent(ProductReview productReview)

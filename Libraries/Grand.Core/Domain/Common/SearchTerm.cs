@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Common
     /// <summary>
     /// Search term record (for statistics)
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class SearchTerm : BaseEntity
     {
         /// <summary>

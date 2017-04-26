@@ -7,7 +7,6 @@ namespace Grand.Core.Domain.Forums
     /// <summary>
     /// Represents a forum topic
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class ForumTopic : BaseEntity
     {
         /// <summary>
@@ -73,7 +72,6 @@ namespace Grand.Core.Domain.Forums
         /// <summary>
         /// Gets or sets the forum topic type
         /// </summary>
-        [BsonIgnoreAttribute]
         public ForumTopicType ForumTopicType
         {
             get

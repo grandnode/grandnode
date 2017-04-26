@@ -5,7 +5,6 @@ namespace Grand.Core.Domain.Customers
     /// <summary>
     /// Represents a product tag
     /// </summary>
-    [BsonIgnoreExtraElements]
     public partial class CustomerTag : BaseEntity
     {
         /// <summary>
