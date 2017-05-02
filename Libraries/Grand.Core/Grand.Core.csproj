@@ -125,6 +125,7 @@
     <Compile Include="Domain\Customers\CustomerByTimeReportLine.cs" />
     <Compile Include="Domain\Customers\CustomerHistoryPassword.cs" />
     <Compile Include="Domain\Customers\CustomerReminderHistory.cs" />
+    <Compile Include="Domain\Customers\CustomerTagProduct.cs" />
     <Compile Include="Domain\Directory\MeasureUnit.cs" />
     <Compile Include="Domain\Forums\ForumPostVote.cs" />
     <Compile Include="Domain\Messages\PopupArchive.cs" />
@@ -167,7 +168,7 @@
     <Compile Include="Domain\Customers\CustomerActionHistory.cs" />
     <Compile Include="Domain\Customers\CustomerActionType.cs" />
     <Compile Include="Domain\Customers\CustomerActionEnum.cs" />
-    <Compile Include="Domain\Customers\CustomerRoleProducts.cs" />
+    <Compile Include="Domain\Customers\CustomerRoleProduct.cs" />
     <Compile Include="Domain\Customers\CustomerAction.cs" />
     <Compile Include="Domain\Customers\CustomerTag.cs" />
     <Compile Include="Domain\Messages\PopupActive.cs" />

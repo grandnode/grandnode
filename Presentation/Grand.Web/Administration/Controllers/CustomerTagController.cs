@@ -269,5 +269,158 @@ namespace Grand.Admin.Controllers
 
 
         #endregion
+
+        #region Products
+
+        [HttpPost]
+        public ActionResult Products(string customerTagId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var products = _customerTagService.GetCustomerTagProducts(customerTagId);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => new CustomerRoleProductModel
+                {
+                    Id = x.Id,
+                    Name = _productService.GetProductById(x.ProductId)?.Name,
+                    DisplayOrder = x.DisplayOrder
+                }),
+                Total = products.Count()
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult ProductDelete(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var ctp = _customerTagService.GetCustomerTagProductById(id);
+            if (ctp == null)
+                throw new ArgumentException("No found the specified id");
+
+            _customerTagService.DeleteCustomerTagProduct(ctp);
+
+            return new NullJsonResult();
+        }
+
+        [HttpPost]
+        public ActionResult ProductUpdate(CustomerRoleProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var ctp = _customerTagService.GetCustomerTagProductById(model.Id);
+            if (ctp == null)
+                throw new ArgumentException("No customer tag product found with the specified id");
+
+            ctp.DisplayOrder = model.DisplayOrder;
+            _customerTagService.UpdateCustomerTagProduct(ctp);
+
+            return new NullJsonResult();
+        }
+
+        public ActionResult ProductAddPopup(string customerTagId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new CustomerTagProductModel.AddProductModel();
+            model.CustomerTagId = customerTagId;
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            var categories = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ProductAddPopupList(DataSourceRequest command, CustomerTagProductModel.AddProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
+            var products = _productService.SearchProducts(
+                categoryIds: searchCategoryIds,
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
+            var gridModel = new DataSourceResult();
+            gridModel.Data = products.Select(x => x.ToModel());
+            gridModel.Total = products.TotalCount;
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult ProductAddPopup(string btnId, CustomerTagProductModel.AddProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            if (model.SelectedProductIds != null)
+            {
+                foreach (string id in model.SelectedProductIds)
+                {
+                    var product = _productService.GetProductById(id);
+                    if (product != null)
+                    {
+                        var customerTagProduct = _customerTagService.GetCustomerTagProduct(model.CustomerTagId, id);
+                        if (customerTagProduct == null)
+                        {
+                            customerTagProduct = new CustomerTagProduct();
+                            customerTagProduct.CustomerTagId = model.CustomerTagId;
+                            customerTagProduct.ProductId = id;
+                            customerTagProduct.DisplayOrder = 0;
+                            _customerTagService.InsertCustomerTagProduct(customerTagProduct);
+                        }
+                    }
+                }
+            }
+
+            //a vendor should have access only to his products
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            return View(model);
+        }
+
+
+        #endregion
     }
 }

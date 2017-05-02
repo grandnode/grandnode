@@ -1,9 +1,7 @@
-using MongoDB.Bson.Serialization.Attributes;
-
 namespace Grand.Core.Domain.Customers
 {
     /// <summary>
-    /// Represents a customer role
+    /// Represents a customer role products
     /// </summary>
     public partial class CustomerRoleProduct : BaseEntity
     {
@@ -24,5 +22,6 @@ namespace Grand.Core.Domain.Customers
         public int DisplayOrder { get; set; }
 
     }
+    
 
 }

@@ -116,6 +116,14 @@ namespace Grand.Admin.Models.Settings
         public bool RecommendedProductsEnabled { get; set; }
         public bool RecommendedProductsEnabled_OverrideForStore { get; set; }
 
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.SuggestedProductsEnabled")]
+        public bool SuggestedProductsEnabled { get; set; }
+        public bool SuggestedProductsEnabled_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.SuggestedProductsNumber")]
+        public int SuggestedProductsNumber { get; set; }
+        public bool SuggestedProductsNumber_OverrideForStore { get; set; }
+
         [GrandResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsNumber")]
         public int NewProductsNumber { get; set; }
         public bool NewProductsNumber_OverrideForStore { get; set; }

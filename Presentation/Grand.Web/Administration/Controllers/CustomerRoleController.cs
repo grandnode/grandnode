@@ -350,7 +350,7 @@ namespace Grand.Admin.Controllers
                 Data = products.Select(x => new CustomerRoleProductModel
                 {
                     Id = x.Id,
-                    Name = _productService.GetProductById(x.ProductId).Name,
+                    Name = _productService.GetProductById(x.ProductId)?.Name,
                     DisplayOrder = x.DisplayOrder
                 }),
                 Total = products.Count()

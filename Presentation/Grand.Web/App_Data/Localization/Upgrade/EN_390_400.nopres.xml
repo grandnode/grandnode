@@ -8,7 +8,6 @@
   <LocaleResource Name="Order.CancelOrder">
     <Value>Cancel Order</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Configuration.Languages.ResourcesFilter.Fields.ResourceName">
     <Value>Resource Name</Value>
   </LocaleResource>
@@ -32,5 +31,38 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Filter.Value.hint">
     <Value>Setting Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products">
+    <Value>Suggested products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.AddNew">
+    <Value>Suggested products assigned to the Customer Tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.Info">
+    <Value>In order to use this functionality you have to enable the following setting: Configuration > Catalog settings > General > 'Suggested products' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.Fields.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.Fields.Name">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.SaveBeforeEdit">
+    <Value>You need to save the customer tag before you can add values for this page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsEnabled">
+    <Value>'Suggested products' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsEnabled.Hint">
+    <Value>Check to allow customers to use the 'Suggested products - customer tag' feature in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsNumber">
+    <Value>Number of 'Suggested products'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsNumber.Hint">
+    <Value>The number of 'Suggested products' to display when 'Suggested products' option is enabled.</Value>
   </LocaleResource>
 </Language>

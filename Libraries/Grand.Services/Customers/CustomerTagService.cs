@@ -9,6 +9,7 @@ using Grand.Services.Events;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using Grand.Core;
+using Grand.Core.Caching;
 
 namespace Grand.Services.Customers
 {
@@ -17,14 +18,22 @@ namespace Grand.Services.Customers
     /// </summary>
     public partial class CustomerTagService : ICustomerTagService
     {
-        
-
         #region Fields
 
         private readonly IRepository<CustomerTag> _customerTagRepository;
+        private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly CommonSettings _commonSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ICacheManager _cacheManager;
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer tag Id?
+        /// </remarks>
+        private const string CUSTOMERTAGPRODUCTS_ROLE_KEY = "Grand.customertagproducts.tag-{0}";
 
         #endregion
 
@@ -33,20 +42,20 @@ namespace Grand.Services.Customers
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="customerTagRepository">Customer tag repository</param>
-        /// <param name="commonSettings">Common settings</param>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="eventPublisher">Event published</param>
         public CustomerTagService(IRepository<CustomerTag> customerTagRepository,
+            IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<Customer> customerRepository,
             CommonSettings commonSettings,
-            IEventPublisher eventPublisher
+            IEventPublisher eventPublisher,
+            ICacheManager cacheManager
             )
         {
             this._customerTagRepository = customerTagRepository;
+            this._customerTagProductRepository = customerTagProductRepository;
             this._commonSettings = commonSettings;
             this._eventPublisher = eventPublisher;
             this._customerRepository = customerRepository;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -192,6 +201,110 @@ namespace Grand.Services.Customers
                 return query.FirstOrDefault().Count;
             return 0;
         }
+
+        #region Customer tag product
+
+
+        /// <summary>
+        /// Gets customer tag products for customer tag
+        /// </summary>
+        /// <param name="customerTagId">Customer tag id</param>
+        /// <returns>Customer tag products</returns>
+        public virtual IList<CustomerTagProduct> GetCustomerTagProducts(string customerTagId)
+        {
+            string key = string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from cr in _customerTagProductRepository.Table
+                            where (cr.CustomerTagId == customerTagId)
+                            orderby cr.DisplayOrder
+                            select cr;
+                var customerRoles = query.ToList();
+                return customerRoles;
+            });
+        }
+
+        /// <summary>
+        /// Gets customer tag products for customer tag
+        /// </summary>
+        /// <param name="customerTagId">Customer tag id</param>
+        /// <param name="productId">Product id</param>
+        /// <returns>Customer tag product</returns>
+        public virtual CustomerTagProduct GetCustomerTagProduct(string customerTagId, string productId)
+        {
+            var query = from cr in _customerTagProductRepository.Table
+                        where cr.CustomerTagId == customerTagId && cr.ProductId == productId
+                        orderby cr.DisplayOrder
+                        select cr;
+            var customerRoles = query.ToList();
+            return query.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets customer tag product
+        /// </summary>
+        /// <param name="Id">id</param>
+        /// <returns>Customer tag product</returns>
+        public virtual CustomerTagProduct GetCustomerTagProductById(string id)
+        {
+            return _customerTagProductRepository.GetById(id);
+        }
+
+        /// <summary>
+        /// Inserts a customer tag product
+        /// </summary>
+        /// <param name="customerTagProduct">Customer tag product</param>
+        public virtual void InsertCustomerTagProduct(CustomerTagProduct customerTagProduct)
+        {
+            if (customerTagProduct == null)
+                throw new ArgumentNullException("customerTagProduct");
+
+            _customerTagProductRepository.Insert(customerTagProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+
+            //event notification
+            _eventPublisher.EntityInserted(customerTagProduct);
+        }
+
+        /// <summary>
+        /// Updates the customer tag product
+        /// </summary>
+        /// <param name="customerTagProduct">Customer tag product</param>
+        public virtual void UpdateCustomerTagProduct(CustomerTagProduct customerTagProduct)
+        {
+            if (customerTagProduct == null)
+                throw new ArgumentNullException("customerTagProduct");
+
+            _customerTagProductRepository.Update(customerTagProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+
+            //event notification
+            _eventPublisher.EntityUpdated(customerTagProduct);
+        }
+
+        /// <summary>
+        /// Delete a customer tag product
+        /// </summary>
+        /// <param name="customerTagProduct">Customer tag product</param>
+        public virtual void DeleteCustomerTagProduct(CustomerTagProduct customerTagProduct)
+        {
+            if (customerTagProduct == null)
+                throw new ArgumentNullException("customerTagProduct");
+
+            _customerTagProductRepository.Delete(customerTagProduct);
+
+            //clear cache
+            _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+
+            //event notification
+            _eventPublisher.EntityDeleted(customerTagProduct);
+        }
+
+        #endregion
 
     }
 }

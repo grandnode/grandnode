@@ -313,6 +313,7 @@
     <Compile Include="Models\Customers\CustomerActionModel.cs" />
     <Compile Include="Models\Customers\CustomerAttributeModel.cs" />
     <Compile Include="Models\Customers\CustomerAttributeValueModel.cs" />
+    <Compile Include="Models\Customers\CustomerTagProductModel.cs" />
     <Compile Include="Models\Customers\CustomerTagModel.cs" />
     <Compile Include="Models\Customers\CustomerRoleProductModel.cs" />
     <Compile Include="Models\Directory\MeasureUnitModel.cs" />
@@ -1977,6 +1978,9 @@
     <Content Include="Views\InteractiveForm\_CreateOrUpdate.cshtml" />
     <Content Include="Views\InteractiveForm\_CreateOrUpdateAttribute.cshtml" />
     <Content Include="Views\InteractiveForm\_CreateOrUpdateAttributeValue.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\CustomerTag\ProductAddPopup.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

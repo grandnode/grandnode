@@ -75,5 +75,46 @@ namespace Grand.Services.Customers
         /// <param name="customerTagId">Customer tag identifier</param>
         /// <returns>Number of products</returns>
         int GetCustomerCount(string customerTagId);
+
+        /// <summary>
+        /// Gets customer tag products for customer tag
+        /// </summary>
+        /// <param name="customerTagId">Customer tag id</param>
+        /// <returns>Customer tag products</returns>
+        IList<CustomerTagProduct> GetCustomerTagProducts(string customerTagId);
+
+        /// <summary>
+        /// Gets customer tag products for customer tag
+        /// </summary>
+        /// <param name="customerTagId">Customer tag id</param>
+        /// <param name="productId">Product id</param>
+        /// <returns>Customer tag product</returns>
+        CustomerTagProduct GetCustomerTagProduct(string customerTagId, string productId);
+
+        /// <summary>
+        /// Gets customer tag product
+        /// </summary>
+        /// <param name="Id">id</param>
+        /// <returns>Customer tag product</returns>
+        CustomerTagProduct GetCustomerTagProductById(string id);
+
+        /// <summary>
+        /// Inserts a customer tag product
+        /// </summary>
+        /// <param name="customerTagProduct">Customer tag product</param>
+        void InsertCustomerTagProduct(CustomerTagProduct customerTagProduct);
+
+        /// <summary>
+        /// Updates the customer tag product
+        /// </summary>
+        /// <param name="customerTagProduct">Customer tag product</param>
+        void UpdateCustomerTagProduct(CustomerTagProduct customerTagProduct);
+
+        /// <summary>
+        /// Delete a customer tag product
+        /// </summary>
+        /// <param name="customerTagProduct">Customer tag product</param>
+        void DeleteCustomerTagProduct(CustomerTagProduct customerTagProduct);
+
     }
 }

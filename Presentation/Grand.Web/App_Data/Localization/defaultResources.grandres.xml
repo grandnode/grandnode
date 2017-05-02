@@ -5166,6 +5166,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecommendedProductsEnabled.Hint">
     <Value>Check to allow customers to use the 'Recommended products - customer role' feature in your store</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsEnabled">
+    <Value>'Suggested products' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsEnabled.Hint">
+    <Value>Check to allow customers to use the 'Suggested products - customer tag' feature in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsNumber">
+    <Value>Number of 'Suggested products'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsNumber.Hint">
+    <Value>The number of 'Suggested products' to display when 'Suggested products' option is enabled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.Search">
     <Value>Search</Value>
   </LocaleResource>
@@ -9595,7 +9607,28 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerTags.Info">
     <Value>Tag Info</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products">
+    <Value>Suggested products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.AddNew">
+    <Value>Suggested products assigned to the Customer Tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.Info">
+    <Value>In order to use this functionality you have to enable the following setting: Configuration > Catalog settings > General > 'Suggested products' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.Fields.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.Fields.Name">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerTags.Products.SaveBeforeEdit">
+    <Value>You need to save the customer tag before you can add values for this page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers">
     <Value>Customers</Value>
   </LocaleResource>

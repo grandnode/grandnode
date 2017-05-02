@@ -154,6 +154,16 @@ namespace Grand.Core.Domain.Catalog
         public bool RecommendedProductsEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether "Suggested products" feature is enabled
+        /// </summary>
+        public bool SuggestedProductsEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of "Suggested products"
+        /// </summary>
+        public int SuggestedProductsNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets a number of products on the "New products" page
         /// </summary>
         public int NewProductsNumber { get; set; }

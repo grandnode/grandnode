@@ -78,6 +78,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
+        private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
@@ -171,6 +172,7 @@ namespace Grand.Services.Installation
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
+            IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
@@ -259,6 +261,7 @@ namespace Grand.Services.Installation
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
+            this._customerTagProductRepository = customerTagProductRepository;
             this._customerHistoryPasswordRepository = customerHistoryPasswordRepository;
             this._specificationAttributeRepository = specificationAttributeRepository;
             this._checkoutAttributeRepository = checkoutAttributeRepository;
@@ -4997,6 +5000,8 @@ namespace Grand.Services.Installation
                 RecentlyViewedProductsNumber = 3,
                 RecentlyViewedProductsEnabled = true,
                 RecommendedProductsEnabled = false,
+                SuggestedProductsEnabled = false,
+                SuggestedProductsNumber = 6,
                 NewProductsNumber = 6,
                 NewProductsEnabled = true,
                 CompareProductsEnabled = true,
@@ -10841,6 +10846,10 @@ namespace Grand.Services.Installation
             _customerRoleRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
+
+            //customer tag history
+            _customerTagProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerTagProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerTagProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerTagProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerTagId_DisplayOrder", Unique = false });
 
             //customer history password
             _customerHistoryPasswordRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerHistoryPassword>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

@@ -1081,6 +1081,8 @@ namespace Grand.Admin.Controllers
                 model.RecentlyViewedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsNumber, storeScope);
                 model.RecentlyViewedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeScope);
                 model.RecommendedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecommendedProductsEnabled, storeScope);
+                model.SuggestedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.SuggestedProductsEnabled, storeScope);
+                model.SuggestedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.SuggestedProductsNumber, storeScope);
                 model.NewProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsNumber, storeScope);
                 model.NewProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsEnabled, storeScope);
                 model.CompareProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CompareProductsEnabled, storeScope);
@@ -1258,6 +1260,16 @@ namespace Grand.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.RecommendedProductsEnabled, storeScope, false);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(catalogSettings, x => x.RecommendedProductsEnabled, storeScope);
+
+            if (model.SuggestedProductsEnabled_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.SuggestedProductsEnabled, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.SuggestedProductsEnabled, storeScope);
+
+            if (model.SuggestedProductsNumber_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(catalogSettings, x => x.SuggestedProductsNumber, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(catalogSettings, x => x.SuggestedProductsNumber, storeScope);
 
             if (model.NewProductsNumber_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(catalogSettings, x => x.NewProductsNumber, storeScope, false);
