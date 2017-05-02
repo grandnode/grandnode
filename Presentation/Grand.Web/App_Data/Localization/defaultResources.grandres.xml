@@ -15145,6 +15145,9 @@
   <LocaleResource Name="HomePage.Recommended.Products">
     <Value>Recommended products for you</Value>
   </LocaleResource>
+  <LocaleResource Name="HomePage.Suggested.Products">
+    <Value>Suggested products for you</Value>
+  </LocaleResource>
   <LocaleResource Name="Languages">
     <Value>Languages</Value>
   </LocaleResource>

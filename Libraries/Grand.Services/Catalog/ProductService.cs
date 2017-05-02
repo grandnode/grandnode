@@ -60,6 +60,14 @@ namespace Grand.Services.Catalog
         /// </remarks>
         private const string PRODUCTS_CUSTOMER_ROLE = "Grand.product.cr-{0}";
 
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product ID
+        /// </remarks>
+        private const string PRODUCTS_CUSTOMER_TAG = "Grand.product.ct-{0}";
+
         #endregion
 
         #region Fields
@@ -71,6 +79,7 @@ namespace Grand.Services.Catalog
         private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
+        private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<ProductDeleted> _productDeletedRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
@@ -94,24 +103,6 @@ namespace Grand.Services.Catalog
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="aclRepository">ACL record repository</param>
-        /// <param name="productPictureRepository">Product picture repository</param>
-        /// <param name="productAttributeService">Product attribute service</param>
-        /// <param name="productAttributeParser">Product attribute parser service</param>
-        /// <param name="languageService">Language service</param>
-        /// <param name="workflowMessageService">Workflow message service</param>
-        /// <param name="dbContext">Database Context</param>
-        /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
-        /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="commonSettings">Common settings</param>
-        /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher">Event published</param>
-        /// <param name="aclService">ACL service</param>
-        /// <param name="storeMappingService">Store mapping service</param>
-        /// <param name="productTagRepository">Product Tag repository</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductReview> productReviewRepository,
@@ -119,6 +110,7 @@ namespace Grand.Services.Catalog
             IRepository<UrlRecord> urlRecordRepository,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
+            IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<ProductDeleted> productDeletedRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
@@ -143,6 +135,7 @@ namespace Grand.Services.Catalog
             this._urlRecordRepository = urlRecordRepository;
             this._customerRepository = customerRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
+            this._customerTagProductRepository = customerTagProductRepository;
             this._productDeletedRepository = productDeletedRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
@@ -2026,6 +2019,39 @@ namespace Grand.Services.Catalog
         }
 
         #endregion
+
+        #region Suggested products
+
+        /// <summary>
+        /// Gets suggested products for customer tags
+        /// </summary>
+        /// <param name="customerTagIds">Customer role ids</param>
+        /// <returns>Products</returns>
+        public virtual IList<Product> GetSuggestedProducts(string[] customerTagIds)
+        {
+
+            return _cacheManager.Get(string.Format(PRODUCTS_CUSTOMER_TAG, string.Join(",", customerTagIds)),
+                () =>
+                {
+                    var query = from cr in _customerTagProductRepository.Table
+                                where customerTagIds.Contains(cr.CustomerTagId)
+                                orderby cr.DisplayOrder
+                                select cr.ProductId;
+
+                    var productIds = query.ToList().Distinct();
+
+                    var products = new List<Product>();
+
+                    foreach (var product in GetProductsByIds(productIds.ToArray()))
+                        if (product.Published)
+                            products.Add(product);
+
+                    return products;
+                });
+        }
+
+        #endregion
+
 
         #region Product reviews
 

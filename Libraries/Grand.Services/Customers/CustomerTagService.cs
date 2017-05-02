@@ -35,6 +35,8 @@ namespace Grand.Services.Customers
         /// </remarks>
         private const string CUSTOMERTAGPRODUCTS_ROLE_KEY = "Grand.customertagproducts.tag-{0}";
 
+        private const string PRODUCTS_CUSTOMER_TAG = "Grand.product.ct";
+
         #endregion
 
         #region Ctor
@@ -263,6 +265,7 @@ namespace Grand.Services.Customers
 
             //clear cache
             _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
             _eventPublisher.EntityInserted(customerTagProduct);
@@ -281,6 +284,7 @@ namespace Grand.Services.Customers
 
             //clear cache
             _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
 
             //event notification
             _eventPublisher.EntityUpdated(customerTagProduct);
@@ -299,7 +303,7 @@ namespace Grand.Services.Customers
 
             //clear cache
             _cacheManager.RemoveByPattern(string.Format(CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-
+            _cacheManager.RemoveByPattern(PRODUCTS_CUSTOMER_TAG);
             //event notification
             _eventPublisher.EntityDeleted(customerTagProduct);
         }

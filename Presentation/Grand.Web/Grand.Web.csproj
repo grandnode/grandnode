@@ -3082,6 +3082,7 @@
     <Content Include="Views\Product\_AddToWishlistGroup.cshtml" />
     <Content Include="Views\Shared\_ProductBoxList.cshtml" />
     <Content Include="Views\Catalog\HomepageManufacturers.cshtml" />
+    <Content Include="Views\Product\SuggestedProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\bin\" />

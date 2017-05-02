@@ -379,7 +379,7 @@ namespace Grand.Web.Controllers
 
         #endregion
 
-        #region Home page bestseller, recommended and products
+        #region Home page bestseller, recommended,, suggested and products
 
         [ChildActionOnly]
         public virtual ActionResult HomepageBestSellers(int? productThumbPictureSize)
@@ -450,6 +450,30 @@ namespace Grand.Web.Controllers
 
             return PartialView(model);
         }
+
+        [ChildActionOnly]
+        public virtual ActionResult SuggestedProducts(int? productThumbPictureSize)
+        {
+            if (!_catalogSettings.SuggestedProductsEnabled || _catalogSettings.SuggestedProductsNumber == 0)
+                return Content("");
+
+            var products = _productService.GetSuggestedProducts(_workContext.CurrentCustomer.CustomerTags.ToArray());
+
+            //ACL and store mapping
+            products = products.Where(p => _aclService.Authorize(p) && _storeMappingService.Authorize(p)).ToList();
+
+            //availability dates
+            products = products.Where(p => p.IsAvailable()).ToList();
+
+            if (!products.Any())
+                return Content("");
+
+            //prepare model
+            var model = _productWebService.PrepareProductOverviewModels(products.Take(_catalogSettings.SuggestedProductsNumber), true, true, productThumbPictureSize).ToList();
+
+            return PartialView(model);
+        }
+
         #endregion
 
         #region Product reviews

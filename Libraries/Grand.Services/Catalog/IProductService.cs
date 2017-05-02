@@ -33,6 +33,12 @@ namespace Grand.Services.Catalog
         IList<Product> GetRecommendedProducts(string[] customerRoleIds);
 
         /// <summary>
+        /// Gets recommended products for customer roles
+        /// </summary>
+        /// <returns>Products</returns>
+        IList<Product> GetSuggestedProducts(string[] customerTagIds);
+
+        /// <summary>
         /// Gets product
         /// </summary>
         /// <param name="productId">Product identifier</param>

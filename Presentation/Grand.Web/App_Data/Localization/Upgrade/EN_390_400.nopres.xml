@@ -65,4 +65,7 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SuggestedProductsNumber.Hint">
     <Value>The number of 'Suggested products' to display when 'Suggested products' option is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="HomePage.Suggested.Products">
+    <Value>Suggested products for you</Value>
+  </LocaleResource>
 </Language>
