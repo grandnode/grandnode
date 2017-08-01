@@ -154,9 +154,9 @@ $RECYCLE.BIN/
 glob:*.user
 *.patch
 *.hg
-Presentation/Grand.Web/Content/Images/Thumbs/*.jpg
-Presentation/Grand.Web/Content/Images/Thumbs/*.jpeg
-Presentation/Grand.Web/Content/Images/Thumbs/*.png
-Presentation/Grand.Web/App_Data/InstalledPlugins.txt
-Presentation/Grand.Web/App_Data/Settings.txt
+Grand.Web/wwwroot/Content/Images/Thumbs/*.jpg
+Grand.Web/wwwroot/Content/Images/Thumbs/*.jpeg
+Grand.Web/wwwroot/Content/Images/Thumbs/*.png
+Grand.Web/wwwroot/App_Data/InstalledPlugins.txt
+Grand.Web/wwwroot/App_Data/Settings.txt
 
