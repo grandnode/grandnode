@@ -1,11 +1,5 @@
 ﻿@model CustomerUserSettingsModel
 @using Grand.Core.Domain.Customers;
-
-
-
-
-
-
 <script type="text/javascript">
         $(document).ready(function () {
 
@@ -285,5 +279,4 @@
         </div>
     </div>
 </div>
-//render custom address attributes
-Html.Action("ListBlock", "AddressAttribute")
+@await Html.PartialAsync("../AddressAttribute/ListBlock.cshtml")

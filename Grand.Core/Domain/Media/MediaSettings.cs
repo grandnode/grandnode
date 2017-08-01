@@ -39,11 +39,10 @@ namespace Grand.Core.Domain.Media
 
         #region Watermark Text
         public string WatermarkText { get; set; }
+        public FontStyle WatermarkStyle { get; set; }
+        public System.Drawing.Color WatermarkFontColor { get; set; }
         //TO DO
-        //public FontStyle WatermarkStyle { get; set; }
-        public Rgba32 WatermarkFontColor { get; set; }
-        //TO DO
-        //public GenericFontFamilies WatermarkFontFamily { get; set; }
+        public System.Drawing.Text.GenericFontFamilies WatermarkFontFamily { get; set; }
         public int WatermarkPositionXPercent { get; set; }
         public int WatermarkPositionYPercent { get; set; }
         public int WatermarkFontSizePercent { get; set; }

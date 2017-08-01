@@ -936,8 +936,7 @@ namespace Grand.Services.Media
                             image
                                 .DrawText(
                                 _mediaSettings.WatermarkText,
-                                font,
-                                _mediaSettings.WatermarkFontColor,
+                                font, new Rgba32(_mediaSettings.WatermarkFontColor.R, _mediaSettings.WatermarkFontColor.G, _mediaSettings.WatermarkFontColor.B), 
                                 new PointF(calculatedHorizontalPixel, calculatedVerticalPixel),
                                 new TextGraphicsOptions
                                 {

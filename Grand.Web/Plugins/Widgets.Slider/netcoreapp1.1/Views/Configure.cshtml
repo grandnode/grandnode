@@ -3,8 +3,7 @@
 }
 @model Grand.Plugin.Widgets.Slider.Models.ConfigurationModel
 @using Grand.Framework;
-
- @await Component.InvokeAsync("StoreScopeConfiguration") 
+@await Component.InvokeAsync("StoreScopeConfiguration") 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

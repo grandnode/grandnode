@@ -1,11 +1,5 @@
 ﻿@model CustomerUserSettingsModel
 @using Grand.Core.Domain.Customers;
-
-
-
-
-
-
 <script type="text/javascript">
         $(document).ready(function () {
 
@@ -433,5 +427,4 @@
         </div>
     </div>
 </div>
-//render custom customer attributes
-Html.Action("ListBlock", "CustomerAttribute")
+@await Html.PartialAsync("../CustomerAttribute/ListBlock.cshtml")

@@ -80,8 +80,6 @@ namespace Grand.Web.Areas.Admin.Models.Settings
 
         #endregion
 
-
-
         #region Watermark Text
         [GrandResourceDisplayName("Admin.Configuration.Settings.Media.WatermarkText")]
         public string WatermarkText { get; set; }
