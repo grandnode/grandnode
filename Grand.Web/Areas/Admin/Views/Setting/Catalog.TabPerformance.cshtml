@@ -1,0 +1,102 @@
+﻿@model CatalogSettingsModel
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.IgnoreAcl, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IgnoreAcl)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IgnoreAcl)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.IgnoreStoreLimitations, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IgnoreStoreLimitations)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.IgnoreDiscounts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IgnoreDiscounts)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.IgnoreFeaturedProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IgnoreFeaturedProducts)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreFilterableSpecAttributeOption_OverrideForStore, model => model.IgnoreFilterableSpecAttributeOption, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.IgnoreFilterableSpecAttributeOption, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IgnoreFilterableSpecAttributeOption)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IgnoreFilterableSpecAttributeOption)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.IgnoreFilterableAvailableStartEndDateTime_OverrideForStore, model => model.IgnoreFilterableAvailableStartEndDateTime, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.IgnoreFilterableAvailableStartEndDateTime, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IgnoreFilterableAvailableStartEndDateTime)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.CacheProductPrices, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.CacheProductPrices)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.CacheProductPrices)
+            </div>
+        </div>
+    </div>
+</div>

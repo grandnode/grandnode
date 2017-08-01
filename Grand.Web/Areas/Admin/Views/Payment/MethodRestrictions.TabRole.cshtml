@@ -1,0 +1,82 @@
+﻿@model PaymentMethodRestrictionModel
+
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12">
+                <div class="note note-info">
+                    @T("Admin.Configuration.Payment.MethodRestrictions.DescriptionRole")
+                </div>
+                @if (Model.AvailablePaymentMethods.Count == 0)
+                {
+                    <text>No payment methods installed</text>
+                }
+                else if (Model.AvailableCustomerRoles.Count == 0)
+                {
+                    <text>No roles available</text>
+                }
+                else
+                {
+                    <script type="text/javascript">
+                            $(document).ready(function () {
+                                @foreach (var pm in Model.AvailablePaymentMethods)
+                                {
+                                    var systemNameWithoutDot = pm.SystemName.Replace(".", "");
+                                    <text>
+                                    $('#selectroleall-@(systemNameWithoutDot)').click(function () {
+                                        $('.restrictrole_@(systemNameWithoutDot)').prop('checked', $(this).is(':checked')).change();
+                                    });
+
+                                    </text>
+                                }
+                            });
+                    </script>
+                        <table class="table table-bordered table-striped table-hover table-hover">
+                            <tbody>
+                                <tr>
+                                    <th scope="col">
+                                        <strong>@T("Admin.Configuration.Payment.MethodRestrictions.Role")</strong>
+                                    </th>
+                                    @foreach (var pm in Model.AvailablePaymentMethods)
+                                    {
+                                        var systemNameWithoutDot = pm.SystemName.Replace(".", "");
+                                        <th scope="col">
+                                            <strong>@pm.FriendlyName</strong>
+                                            <input type="checkbox" id="selectroleall-@(systemNameWithoutDot)" />
+                                        </th>
+                                    }
+                                </tr>
+                                @{
+                                    bool altRow = true;
+                                }
+                                @foreach (var c in Model.AvailableCustomerRoles)
+                                {
+                                    altRow = !altRow;
+                                    <tr class="@(altRow ? "altrowstyle" : "rowstyle")">
+                                        <td>
+                                            <span>@c.Name</span>
+                                        </td>
+                                        @foreach (var pm in Model.AvailablePaymentMethods)
+                                        {
+                                            var resticted = Model.RestictedRole.ContainsKey(pm.SystemName) && Model.RestictedRole[pm.SystemName][c.Id];
+
+                                            var systemNameWithoutDot = pm.SystemName.Replace(".", "");
+                                            <td style="text-align:center">
+                                                <input class="restrictrole_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrictrole_@(pm.SystemName)" @(resticted ? " checked=checked" : null) />
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                                    }
+            </div>
+        </div>
+    </div>
+</div>

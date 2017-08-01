@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Caching;
 using Grand.Core.Data;
 using Grand.Plugin.Shipping.ByWeight.Domain;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Plugin.Shipping.ByWeight.Services
 {
@@ -48,19 +48,19 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
         public virtual IPagedList<ShippingByWeightRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(SHIPPINGBYWEIGHT_ALL_KEY, pageIndex, pageSize);
-            return _cacheManager.Get(key, () =>
-            {
+            //return _cacheManager.Get(key, () =>
+            //{
                 var query = from sbw in _sbwRepository.Table
                             orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.From
                             select sbw;
 
                 var records = new PagedList<ShippingByWeightRecord>(query, pageIndex, pageSize);
                 return records;
-            });
+            //});
         }
 
         public virtual ShippingByWeightRecord FindRecord(string shippingMethodId,
-            string storeId, string warehouseId, 
+            string storeId, string warehouseId,
             string countryId, string stateProvinceId, string zip, decimal weight)
         {
             if (zip == null)
@@ -117,7 +117,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
             var matchedByZip = new List<ShippingByWeightRecord>();
             foreach (var sbw in matchedByStateProvince)
                 if ((String.IsNullOrEmpty(zip) && String.IsNullOrEmpty(sbw.Zip)) ||
-                    (zip.Equals(sbw.Zip, StringComparison.InvariantCultureIgnoreCase)))
+                    (zip.Equals(sbw.Zip, StringComparison.OrdinalIgnoreCase)))
                     matchedByZip.Add(sbw);
 
             if (matchedByZip.Count == 0)
@@ -158,4 +158,5 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
 
         #endregion
     }
+
 }

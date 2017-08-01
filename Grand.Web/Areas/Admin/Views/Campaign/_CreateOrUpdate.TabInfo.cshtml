@@ -1,0 +1,46 @@
+﻿@model CampaignModel
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Subject)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Subject)
+                @Html.ValidationMessageFor(model => model.Subject)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Body)
+            <div class="col-md-9 col-sm-9">
+                @{
+                    ViewData["Grand.RichEditor.EnableFullPage"] = true;
+                }
+                @Html.EditorFor(model => model.Body, "RichEditor")
+                @Html.ValidationMessageFor(model => model.Body)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.EmailAccountId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName"))
+                @Html.ValidationMessageFor(model => model.EmailAccountId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AllowedTokens)
+            <div class="col-md-9 col-sm-9">
+                @Html.DisplayFor(model => model.AllowedTokens)
+            </div>
+        </div>
+    </div>
+</div>

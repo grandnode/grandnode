@@ -1,0 +1,90 @@
+﻿@model TopMenuModel
+
+
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_before" })
+    @if (Model.DisplayHomePageMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+    }
+    @{
+        var rootCategories = Model.Categories.ToList();
+    }
+    @foreach (var category in rootCategories)
+    {
+        var categoryLineModel = new TopMenuModel.CategoryLineModel
+        {
+            Category = category
+        };
+        @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+
+    }
+
+    @foreach (var topic in Model.Topics)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Topic", new { SeName=topic.SeName })">@topic.Name</a></li>
+    }
+    @if (Model.Manufacturers.Any())
+    {
+        <li class="nav-item dropdown">
+            <span class="fa fa-angle-down hidden-lg-up text-white" aria-hidden="true"></span>
+            <a class="pr-3 pl-3 nav-link dropdown-toggle" href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.Menu")</a>
+            <ul class="dropdown-menu first-level">
+                @foreach (var manuf in Model.Manufacturers)
+                {
+                    <li class="nav-item">
+                        <a class="pr-3 pl-3 nav-link" href="@Url.RouteUrl("Manufacturer", new { SeName = manuf.SeName })">
+                            @manuf.Name
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+    @if (Model.NewProductsEnabled && Model.DisplayNewProductsMenu)
+    {
+        <li class="nav-item">
+            <a class="nav-link" href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
+        </li>
+    }
+    @if (Model.DisplaySearchMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
+    }
+    @if (Model.DisplayCustomerMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+    }
+    @if (Model.BlogEnabled && Model.DisplayBlogMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+    }
+    @if (Model.ForumEnabled && Model.DisplayForumsMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+    }
+    @if (Model.DisplayContactUsMenu)
+    {
+        <li class="nav-item"><a class="pl-3 nav-link" href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "header_menu_after" })
+
+@{
+    var rootCategoriesResponsive = Model.Categories.ToList();
+    //name it "Categories" if we have only categories. Otherwise, "Menu"
+    var responsiveMenuTitle = (rootCategoriesResponsive.Count > 0 && Model.Topics.Count == 0) ? T("Categories") : T("Menu");
+
+    <script type="text/javascript">
+        $(".nav-item .fa").on('click', function () {
+            var x = $(this).siblings("a").attr('href');
+            $('a[href$="' + x + '"]').siblings(".first-level").toggleClass('open');
+            $('a[href$="' + x + '"]').siblings(".next-level").toggleClass('open');
+            $('a[href$="' + x + '"]').parent().siblings().children(".first-level").removeClass("open");
+            $('a[href$="' + x + '"]').siblings(".fa").toggleClass("rotate");
+            $('a[href$="' + x + '"]').parent(".nav-item").siblings().find(".fa").removeClass("rotate");
+        });
+
+        $(".general-opener").on('click', function () {
+            $("#generalDropDown").toggle();
+        });
+    </script>
+}

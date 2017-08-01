@@ -1,0 +1,28 @@
+﻿@model CustomerAddressEditModel
+@using Grand.Web.Models.Customer;
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="page account-page address-edit-page">
+        <h2 class="generalTitle">@T("Account.CustomerAddresses.AddNew")</h2>
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        @{
+            var dataDictAddress = new ViewDataDictionary(ViewData);
+            dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+            @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
+        }
+        <div class="buttons generalMarginSupporter mt-1 mb-1">
+            <input type="submit" class="btn btn-success save-address-button" value="@T("Common.Save")" />
+        </div>
+    </div>
+}

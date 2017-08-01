@@ -1,0 +1,59 @@
+﻿@model CheckoutAttributeModel
+
+@using Grand.Core.Domain.Catalog;
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.SubjectToAcl)").click(toggleAcl);
+
+            toggleAcl();
+        });
+
+
+        function toggleAcl() {
+            if ($('#@Html.FieldIdFor(model => model.SubjectToAcl)').is(':checked')) {
+                $('#pnl-acl').show();
+            }
+            else {
+                $('#pnl-acl').hide();
+            }
+        }
+
+</script>
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.SubjectToAcl)
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SubjectToAcl)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SubjectToAcl)
+            </div>
+        </div>
+        <div class="form-group" id="pnl-acl">
+            @Html.GrandLabelFor(model => model.AvailableCustomerRoles)
+            <div class="col-md-9 col-sm-9">
+                @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
+                {
+                    @await Component.InvokeAsync("CommonAclDisabledWarning")
+                    <div class="mt-checkbox-list">
+                        @foreach (var customerRole in Model.AvailableCustomerRoles)
+                        {
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds!=null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                                <span></span>
+                            </label>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="note note-info">No customer roles defined</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+﻿@model DiscountModel
+@using Grand.Core.Domain.Discounts;
+@using Grand.Framework.UI;
+
+
+
+
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    <div id="usagehistory-grid"></div>
+
+    <script>
+        $(document).ready(function () {
+            $("#usagehistory-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("UsageHistoryList", "Discount", new { discountId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("UsageHistoryDelete", "Discount"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                //do not implicitly specify all fields
+                                //we do it only for fields which implicitly require it
+                                //otherwise, they'll be formatted wrong way
+                                CreatedOn: {type: "date" }
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "CreatedOn",
+                    title: "@T("Admin.Promotions.Discounts.History.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "OrderId",
+                    title: "@T("Admin.Promotions.Discounts.History.Order")",
+                    width: 200,
+                    template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#"><i class="fa fa-search"></i> #=OrderNumber# - @T("Admin.Common.View")</a>'
+                }, {
+                    field: "OrderTotal",
+                    title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",
+                    width: 200
+                },{
+                    command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                    title: "@T("Admin.Common.Delete")",
+                    width: 100
+                }]
+            });
+        });
+    </script>
+}

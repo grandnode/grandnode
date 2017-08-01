@@ -1,0 +1,8 @@
+﻿@model EditForumTopicModel
+@using Grand.Web.Models.Boards;
+@{    
+    Layout = "_ColumnsOne";
+
+    Html.AddTitleParts(T("Forum.PageTitle.TopicNew").Text);    
+}
+@Html.Partial("_CreateUpdateTopic", Model)

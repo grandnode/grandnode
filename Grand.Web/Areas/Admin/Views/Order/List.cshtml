@@ -1,0 +1,498 @@
+﻿@model OrderListModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Orders").Text;
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-basket"></i>
+                        @T("Admin.Orders")
+                    </div>
+                    <div class="actions btn-group btn-group-devided util-btn-margin-bottom-5">
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            <div class="btn-group btn-group-devided">
+                                <a class="btn default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <i class="fa fa-download"></i>
+                                    @T("Admin.Common.Export")
+                                    <i class="fa fa-angle-down"></i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li>
+                                        <input type="submit" name="exportxml-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.All")" />
+                                    </li>
+                                    <li>
+                                        <input type="button" id="exportxml-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToXml.Selected")" />
+                                    </li>
+                                    <li>
+                                        <input type="submit" name="exportexcel-all" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.All")" />
+                                    </li>
+                                    <li>
+                                        <input type="button" id="exportexcel-selected" class="btn default" style="width: 100%;" value="@T("Admin.Common.ExportToExcel.Selected")" />
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        <button type="submit" name="pdf-invoice-all" class="btn green">
+                            <i class="fa fa-file-pdf-o"></i>
+                            @T("Admin.Orders.PdfInvoice.All")
+                        </button>
+                        <button type="button" id="pdf-invoice-selected" class="btn green">
+                            <i class="fa fa-file-pdf-o"></i>
+                            @T("Admin.Orders.PdfInvoice.Selected")
+                        </button>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body col-md-6">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.StartDate, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.StartDate)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.EndDate, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.EndDate)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.BillingEmail, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.BillingEmail)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.BillingLastName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.BillingLastName)
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.BillingCountryId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.BillingCountryId, Model.AvailableCountries)
+                                </div>
+                            </div>                            
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.ProductId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    <input class="form-control" type="text" id="search-product-name" autocomplete="off" />
+                                    <span id="search-product-friendly-name"></span>
+                                    <input type="button" id="search-product-clear" class="k-button" style="display:none;" value="@T("Admin.Common.Clear")" />
+                                    
+                                    @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
+                                    <script type="text/javascript">
+                                            $(document).ready(function() {
+                                                $('#search-product-name').autocomplete({
+                                                    delay: 500,
+                                                    minLength: 3,
+                                                    source: '@(Url.Action("ProductSearchAutoComplete"))',
+                                                    select: function(event, ui) {
+                                                        $('#@Html.FieldIdFor(model => model.ProductId)').val(ui.item.productid);
+                                                        $('#search-product-friendly-name').text(ui.item.label);
+
+                                                        $('#search-product-clear').show();
+                                                        return false;
+                                                    }
+                                                });
+
+                                                //remove button
+                                                $('#search-product-clear').click(function () {
+                                                    $('#@Html.FieldIdFor(model => model.ProductId)').val('0');
+                                                    $('#search-product-friendly-name').text('');
+                                                    $('#search-product-clear').hide();
+                                                    return false;
+                                                });
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.OrderGuid, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.OrderGuid)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.GoDirectlyToNumber, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.GoDirectlyToNumber)
+                                    <input type="submit" name="go-to-order-by-number" class="k-button" value="@T("Admin.Common.Go")" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-body col-md-6">
+                            <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                @Html.GrandLabelFor(model => model.OrderStatusId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.OrderStatusId, Model.AvailableOrderStatuses)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.PaymentStatusId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.PaymentStatusId, Model.AvailablePaymentStatuses)
+                                </div>
+                            </div>
+                            <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                @Html.GrandLabelFor(model => model.ShippingStatusId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.ShippingStatusId, Model.AvailableShippingStatuses)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.StoreId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                                </div>
+                            </div>
+                            <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                @Html.GrandLabelFor(model => model.VendorId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.WarehouseId, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
+                                </div>
+                            </div>
+                            <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                @Html.GrandLabelFor(model => model.PaymentMethodSystemName, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.PaymentMethodSystemName, Model.AvailablePaymentMethods)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-5 col-sm-offset-5 col-md-7 col-sm-7">
+                                    <button class="btn btn-success filter-submit" id="search-orders">
+                                        <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="portlet-body">
+                            <div id="orders-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#orders-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("OrderList", "Order"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "read") {
+                            var response = e.response;
+                            if (response) {
+                                //store extra data
+                                reportAggregates = e.response["ExtraData"];
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                dataBound: onDataBound,
+                columns: [
+                    {
+                        field: "Id",
+                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                        width: 50
+                    },
+                    {
+                        field: "OrderNumber",
+                        title: "@T("Admin.Orders.Fields.Id")",
+                        width: 50
+                    },
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        //a vendor does not have access to this functionality
+                        <text>{
+                        field: "OrderStatus",
+                    title: "@T("Admin.Orders.Fields.OrderStatus")",
+                width: 200
+            },</text>
+                    }
+                    {
+                        field: "PaymentStatus",
+                        title: "@T("Admin.Orders.Fields.PaymentStatus")",
+                        width: 200
+                    },
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        //a vendor does not have access to this functionality
+                        <text>{
+                        field: "ShippingStatus",
+                            title: "@T("Admin.Orders.Fields.ShippingStatus")",
+                width: 200
+            },</text>
+                    }
+                    {
+                        field: "CustomerEmail",
+                        title: "@T("Admin.Orders.Fields.Customer")",
+                        width: 300,
+                        template: '#=CustomerFullName# (#=CustomerEmail#)'
+                    },
+                    {
+                        field: "StoreName",
+                        title: "@T("Admin.Orders.Fields.Store")",
+                        width: 200
+                    }, {
+                        field: "CreatedOn",
+                        title: "@T("Admin.Orders.Fields.CreatedOn")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    },
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        //a vendor does not have access to this functionality
+                        <text>{
+                        field: "OrderTotal",
+                        title: "@T("Admin.Orders.Fields.OrderTotal")",
+                        width: 200,
+                        footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary"):</strong></div>' +
+                                                '<div>@T("Admin.Orders.Report.Profit"): <span id=\"aggregator-profit-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Shipping"): <span id=\"aggregator-shipping-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Tax"): <span id=\"aggregator-tax-block\"></span></div>' +
+                                                '<div>@T("Admin.Orders.Report.Total"): <span id=\"aggregator-total-block\"></span></div>'
+                    },</text>
+                    }
+                    {
+                        field: "Id",
+                        title: "@T("Admin.Common.View")",
+                        width: 100,
+                        template: '<a class="btn btn-sm btn-default" href="Edit/#=Id#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                    }
+                ]
+            } );
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        var selectedIds = [];
+        var reportAggregates = "";
+
+        $(document).ready(function () {
+
+            //search button
+            $('#search-orders').click(function () {
+                //search
+                var grid = $('#orders-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                //clear selected checkboxes
+                $('.checkboxGroups').prop('checked', false).change();
+                selectedIds = [];
+                return false;
+            });
+
+            $("#@Html.FieldIdFor(model => model.BillingEmail)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-orders").click();
+                    return false;
+                }
+            });
+
+            $("#@Html.FieldIdFor(model => model.BillingLastName)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-orders").click();
+                    return false;
+                }
+            });
+
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            });
+
+            //wire up checkboxes.
+            $('#orders-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+                var $check = $(this);
+                if ($check.is(":checked") == true) {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked == -1) {
+                        //add id to selectedIds.
+                        selectedIds.push($check.val());
+                    }
+                }
+                else {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked > -1) {
+                        //remove id from selectedIds.
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
+                    }
+                }
+                updateMasterCheckbox();
+            });
+        });
+
+        function additionalData() {
+            var data = {
+                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
+                PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
+                ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val(),
+                StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
+                VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
+                WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),
+                BillingEmail: $('#@Html.FieldIdFor(model => model.BillingEmail)').val(),
+                BillingLastName: $('#@Html.FieldIdFor(model => model.BillingLastName)').val(),
+                BillingCountryId: $('#@Html.FieldIdFor(model => model.BillingCountryId)').val(),
+                PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
+                ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
+                OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+        function onDataBound(e) {
+
+            $('#orders-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                var currentId = $(this).val();
+                var checked = jQuery.inArray(currentId, selectedIds);
+                //set checked based on if current checkbox's value is in selectedIds.
+                $(this).prop('checked', checked > -1);
+            });
+
+            updateMasterCheckbox();
+
+            //update order totals summary
+            if (reportAggregates != "") {
+                for (var key in reportAggregates) {
+                    $('#aggregator-profit-block').text(reportAggregates['aggregatorprofit']);
+                    $('#aggregator-shipping-block').text(reportAggregates['aggregatorshipping']);
+                    $('#aggregator-tax-block').text(reportAggregates['aggregatortax']);
+                    $('#aggregator-total-block').text(reportAggregates['aggregatortotal']);
+                }
+            }
+        }
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#orders-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#orders-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+        }
+    </script>
+}
+
+
+@*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+@using (Html.BeginForm("ExportXmlSelected", "Order", FormMethod.Post, new { id = "export-xml-selected-form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#exportxml-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-xml-selected-form #selectedIds').val(ids);
+            $('#export-xml-selected-form').submit();
+            return false;
+        });
+    });
+
+</script>
+
+@*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+@using (Html.BeginForm("ExportExcelSelected", "Order", FormMethod.Post, new { id = "export-excel-selected-form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#exportexcel-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#export-excel-selected-form #selectedIds').val(ids);
+            $('#export-excel-selected-form').submit();
+            return false;
+        });
+    });
+
+</script>
+
+@*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+@using (Html.BeginForm("PdfInvoiceSelected", "Order", FormMethod.Post, new { id = "pdf-invoice-selected-form" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#pdf-invoice-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#pdf-invoice-selected-form #selectedIds').val(ids);
+            $('#pdf-invoice-selected-form').submit();
+            return false;
+        });
+    });
+
+</script>

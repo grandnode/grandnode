@@ -24,6 +24,5 @@ namespace Grand.Plugin.Widgets.Slider
         public string Picture5Id { get; set; }
         public string Text5 { get; set; }
         public string Link5 { get; set; }
-
     }
 }

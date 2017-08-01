@@ -1,0 +1,96 @@
+﻿@model CustomerUserSettingsModel
+@using Grand.Core.Domain.Customers;
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.CustomerUser").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.CustomerUser")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div id="customersettings-edit" style="display:none">
+                        <ul>
+                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings")
+                            </li>
+                        </ul>
+                        <div>
+                            @Html.Partial("CustomerUser.TabCustomerSettings", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("CustomerUser.TabCustomerFormFields", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("CustomerUser.TabAddressFormFields", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("CustomerUser.TabDateTimeSettings", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("CustomerUser.TabExternalAuthenticationSettings", Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Html.ValidationSummary(false)
+
+    <script>
+        $(document).ready(function () {
+            $("#customersettings-edit").show();
+            $("#customersettings-edit").kendoTabStrip({
+                animation:  {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
+
+
+    {
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "customersettings-edit");
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+
+    @*save selected tab index*@
+    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+}

@@ -1,0 +1,109 @@
+﻿@model SpecificationAttributeModel
+
+@{
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="specificationattributeoptions-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewOption" value="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 350, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefresh" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#specificationattributeoptions-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("OptionList", "SpecificationAttribute", new { specificationAttributeId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("OptionDelete", "SpecificationAttribute"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id"
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        //TODO display localized values here
+                        field: "Name",
+                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name")"
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder")",
+                        width: 100
+                    }, {
+                        field: "NumberOfAssociatedProducts",
+                        title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.NumberOfAssociatedProducts")"
+                    }, {
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?specificationAttributeId=#=SpecificationAttributeId#&btnId=btnRefresh&formId=specificationattribute-form', 800, 450, true); return false;\" class='k-button' />"
+                    }, {
+                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }]
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    var grid = $("#specificationattributeoptions-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Catalog.Attributes.SpecificationAttributes.Options.SaveBeforeEdit")
+        </div>
+    }
+
+
+
+}

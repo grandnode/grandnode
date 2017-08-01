@@ -1,0 +1,55 @@
+﻿@model CustomerTagModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#customertag-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+
+   
+<div id="customertag-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerTags.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerTags.Products")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerTags.Customers")
+        </li>
+    </ul>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabProducts", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabCustomers", Model)
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customertag-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

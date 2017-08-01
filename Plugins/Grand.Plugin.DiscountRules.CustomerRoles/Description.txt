@@ -1,8 +1,0 @@
-﻿Group: Discount requirements
-FriendlyName: Must be assigned to customer role
-SystemName: DiscountRequirement.MustBeAssignedToCustomerRole
-Version: 1.12
-SupportedVersions: 4.00
-Author: grandnode team, nopcommerce team
-DisplayOrder: 1
-FileName: Grand.Plugin.DiscountRules.CustomerRoles.dll

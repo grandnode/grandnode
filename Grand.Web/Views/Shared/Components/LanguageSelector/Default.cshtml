@@ -1,0 +1,54 @@
+﻿@model LanguageSelectorModel
+@using Microsoft.AspNetCore.Http
+@using System.Net
+@using Grand.Core
+@inject IWebHelper webHelper
+@inject IHttpContextAccessor httpContextAccessor
+@if (Model.AvailableLanguages.Count > 1)
+{
+    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
+
+    if (Model.UseImages)
+    {
+
+        <div class="btn-group btn-group-sm float-xs-right">
+                <ul class="list-inline language-list pl-0 mb-0">
+                    @foreach (var lang in Model.AvailableLanguages)
+                        {
+                        <li class="list-inline-item">
+                            <a href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new {langid = lang.Id}), "returnurl=" + WebUtility.UrlEncode(rawUrl), null)" title="@lang.Name">
+                                <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguageId ? " class=selected" : null)
+                                     src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " />
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+    }
+    else
+    {
+        var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
+        {
+            Text = lang.Name,
+            Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new { langid = lang.Id }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+            Selected = lang.Id.Equals(Model.CurrentLanguageId)
+        });
+
+        <div class="btn-group btn-group-sm float-xs-right ml-1">
+            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                <span>@languages.FirstOrDefault(x => x.Selected).Text</span>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <ul class="pl-0 mb-0">
+                    @foreach (var item in languages)
+                    {
+                        <li>
+                            <a href="@item.Value">@item.Text</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+}

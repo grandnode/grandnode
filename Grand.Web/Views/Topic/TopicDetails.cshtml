@@ -1,0 +1,107 @@
+﻿@model TopicModel
+@using Grand.Core.Domain.Seo
+@using Grand.Core.Infrastructure
+@using Grand.Web.Models.Topics;
+@{
+    var isPopup = ViewBag.IsPopup;
+    if (isPopup == null || isPopup == false)
+    {
+        Layout = "_ColumnsOne";
+    }
+    else
+    {
+        /*pop-up windows*/
+        Layout = "_RootPopup";
+    }
+
+    if (!Model.IsPasswordProtected)
+    {
+        Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+        Html.AddMetaDescriptionParts(Model.MetaDescription);
+        Html.AddMetaKeywordParts(Model.MetaKeywords);
+    }
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        Html.AddCanonicalUrlParts(topicUrl);
+    }
+}
+@if (Model.IsPasswordProtected)
+{
+    // For popup topics, use a minimal layout that includes the Ajax and jQuery scripts
+    if (isPopup != null && isPopup == true)
+    {
+        Layout = "_RootPopup";
+    }
+
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#button-password').click(function () {
+                var postData = {
+                    id: $("#@Html.FieldIdFor(model => model.Id)").val(),
+                    password: $('#password').val()
+                };
+                addAntiForgeryToken(postData);
+
+
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("TopicAuthenticate")',
+                    data: postData,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Authenticated) {
+                            $('#ph-topic #ph-title h1').html(data.Title);
+                            if ($('#ph-topic #ph-title h1').text().length == 0) {
+                                $('#ph-title').hide();
+                            }
+                            $('#ph-topic .page-body').html(data.Body);
+                            $('#ph-password').hide();
+                            $('#ph-topic').show();
+                            $.validator.unobtrusive.parse('#ph-topic');
+                        }
+                        else {
+                            $('#password-error').text(data.Error);
+                            $('#ph-password #password').select().focus();
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
+        $(document).ready(function () {
+            $('#ph-topic').hide();
+            $('#ph-password #password').select().focus();
+        });
+    </script>
+    <div class="page topic-password" id="ph-password">
+        @using (Html.BeginRouteForm("TopicAuthenticate"))
+        {
+            @Html.HiddenFor(model => model.Id)
+            <div class="enter-password-title">
+                @T("Topic.EnterPassword")
+            </div>
+            <div class="enter-password-form">
+                @Html.Password("password", null, new { @class = "form-control mt-1" })
+                <input type="submit" id="button-password" value="@T("Topic.Button")" class="btn btn-secondary topic-password-button mt-1 mb-1" />
+            </div>
+            <div class="password-error text-danger h5 mt-1 mb-1">
+                <span id="password-error"></span>
+            </div>
+        }
+    </div>
+}
+<div class="page topic-page" id="ph-topic">
+    <div class="page-title" id="ph-title">
+        <h1>@Model.Title</h1>
+    </div>
+    <div class="page-body">
+        @Html.Raw(Model.Body)
+    </div>
+</div>

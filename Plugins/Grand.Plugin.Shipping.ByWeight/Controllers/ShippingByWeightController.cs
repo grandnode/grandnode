@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Web.Mvc;
 using Grand.Core;
 using Grand.Core.Domain.Directory;
 using Grand.Plugin.Shipping.ByWeight.Domain;
@@ -14,14 +13,18 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Shipping;
 using Grand.Services.Stores;
-using Grand.Web.Framework.Controllers;
-using Grand.Web.Framework.Kendoui;
-using Grand.Web.Framework.Mvc;
-using Grand.Web.Framework.Security;
+using Grand.Framework.Controllers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Grand.Framework.Mvc.Filters;
+using Grand.Framework.Security;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Framework.Kendoui;
 
 namespace Grand.Plugin.Shipping.ByWeight.Controllers
 {
-    [AdminAuthorize]
+    [AuthorizeAdmin]
+    [Area("Admin")]
     public class ShippingByWeightController : BaseShippingController
     {
         private readonly IShippingService _shippingService;
@@ -67,24 +70,13 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             this._measureService = measureService;
             this._measureSettings = measureSettings;
         }
-        
-        protected override void Initialize(System.Web.Routing.RequestContext requestContext)
-        {
-            //little hack here
-            //always set culture to 'en-US' (Telerik has a bug related to editing decimal values in other cultures). Like currently it's done for admin area in Global.asax.cs
-            CommonHelper.SetTelerikCulture();
-
-            base.Initialize(requestContext);
-        }
-
-        [ChildActionOnly]
-        public ActionResult Configure()
+        public IActionResult Configure()
         {
             var model = new ShippingByWeightListModel();
             //other settings
             model.LimitMethodsToCreated = _shippingByWeightSettings.LimitMethodsToCreated;
 
-            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -98,6 +90,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             return Json(new { Result = true });
         }
 
+
         [HttpPost]
         [AdminAntiForgery]
         public ActionResult RatesList(DataSourceRequest command)
@@ -107,58 +100,58 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
             var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
             var sbwModel = records.Select(x =>
+            {
+                var m = new ShippingByWeightModel
                 {
-                    var m = new ShippingByWeightModel
-                    {
-                        Id = x.Id,
-                        StoreId = x.StoreId,
-                        WarehouseId = x.WarehouseId,
-                        ShippingMethodId = x.ShippingMethodId,
-                        CountryId = x.CountryId,
-                        From = x.From,
-                        To = x.To,
-                        AdditionalFixedCost = x.AdditionalFixedCost,
-                        PercentageRateOfSubtotal = x.PercentageRateOfSubtotal,
-                        RatePerWeightUnit = x.RatePerWeightUnit,
-                        LowerWeightLimit = x.LowerWeightLimit,
-                    };
-                    //shipping method
-                    var shippingMethod = _shippingService.GetShippingMethodById(x.ShippingMethodId);
-                    m.ShippingMethodName = (shippingMethod != null) ? shippingMethod.Name : "Unavailable";
-                    //store
-                    var store = _storeService.GetStoreById(x.StoreId);
-                    m.StoreName = (store != null) ? store.Name : "*";
-                    //warehouse
-                    var warehouse = _shippingService.GetWarehouseById(x.WarehouseId);
-                    m.WarehouseName = (warehouse != null) ? warehouse.Name : "*";
-                    //country
-                    var c = _countryService.GetCountryById(x.CountryId);
-                    m.CountryName = (c != null) ? c.Name : "*";
-                    //state
-                    var s = _stateProvinceService.GetStateProvinceById(x.StateProvinceId);
-                    m.StateProvinceName = (s != null) ? s.Name : "*";
-                    //zip
-                    m.Zip = (!String.IsNullOrEmpty(x.Zip)) ? x.Zip : "*";
+                    Id = x.Id,
+                    StoreId = x.StoreId,
+                    WarehouseId = x.WarehouseId,
+                    ShippingMethodId = x.ShippingMethodId,
+                    CountryId = x.CountryId,
+                    From = x.From,
+                    To = x.To,
+                    AdditionalFixedCost = x.AdditionalFixedCost,
+                    PercentageRateOfSubtotal = x.PercentageRateOfSubtotal,
+                    RatePerWeightUnit = x.RatePerWeightUnit,
+                    LowerWeightLimit = x.LowerWeightLimit,
+                };
+                //shipping method
+                var shippingMethod = _shippingService.GetShippingMethodById(x.ShippingMethodId);
+                m.ShippingMethodName = (shippingMethod != null) ? shippingMethod.Name : "Unavailable";
+                //store
+                var store = _storeService.GetStoreById(x.StoreId);
+                m.StoreName = (store != null) ? store.Name : "*";
+                //warehouse
+                var warehouse = _shippingService.GetWarehouseById(x.WarehouseId);
+                m.WarehouseName = (warehouse != null) ? warehouse.Name : "*";
+                //country
+                var c = _countryService.GetCountryById(x.CountryId);
+                m.CountryName = (c != null) ? c.Name : "*";
+                //state
+                var s = _stateProvinceService.GetStateProvinceById(x.StateProvinceId);
+                m.StateProvinceName = (s != null) ? s.Name : "*";
+                //zip
+                m.Zip = (!String.IsNullOrEmpty(x.Zip)) ? x.Zip : "*";
 
 
-                    var htmlSb = new StringBuilder("<div>");
-                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.From"), m.From);
-                    htmlSb.Append("<br />");
-                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.To"), m.To);
-                    htmlSb.Append("<br />");
-                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost"), m.AdditionalFixedCost);
-                    htmlSb.Append("<br />");
-                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit"), m.RatePerWeightUnit);
-                    htmlSb.Append("<br />");
-                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit"), m.LowerWeightLimit);
-                    htmlSb.Append("<br />");
-                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal"), m.PercentageRateOfSubtotal);
-                    
-                    htmlSb.Append("</div>");
-                    m.DataHtml = htmlSb.ToString();
+                var htmlSb = new StringBuilder("<div>");
+                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.From"), m.From);
+                htmlSb.Append("<br />");
+                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.To"), m.To);
+                htmlSb.Append("<br />");
+                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost"), m.AdditionalFixedCost);
+                htmlSb.Append("<br />");
+                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit"), m.RatePerWeightUnit);
+                htmlSb.Append("<br />");
+                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit"), m.LowerWeightLimit);
+                htmlSb.Append("<br />");
+                htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal"), m.PercentageRateOfSubtotal);
 
-                    return m;
-                })
+                htmlSb.Append("</div>");
+                m.DataHtml = htmlSb.ToString();
+
+                return m;
+            })
                 .ToList();
             var gridModel = new DataSourceResult
             {
@@ -171,7 +164,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
 
         [HttpPost]
         [AdminAntiForgery]
-        public ActionResult RateDelete(string id)
+        public IActionResult RateDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -180,11 +173,10 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             if (sbw != null)
                 _shippingByWeightService.DeleteShippingByWeightRecord(sbw);
 
-            return new NullJsonResult();
+            return Content("");
         }
 
-        //add
-        public ActionResult AddPopup()
+        public IActionResult AddPopup()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return Content("Access denied");
@@ -199,25 +191,25 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
                 return Content("No shipping methods can be loaded");
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "" });
+            model.AvailableStores.Add(new SelectListItem { Text = "*", Value = " " });
             foreach (var store in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
             //warehouses
-            model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "" });
+            model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = " " });
             foreach (var warehouses in _shippingService.GetAllWarehouses())
                 model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
             //shipping methods
             foreach (var sm in shippingMethods)
                 model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString() });
             //countries
-            model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "" });
+            model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = " " });
             var countries = _countryService.GetAllCountries(showHidden: true);
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //states
-            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "" });
+            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = " " });
 
-            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/AddPopup.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/AddPopup.cshtml", model);
         }
         [HttpPost]
         [AdminAntiForgery]
@@ -247,7 +239,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/AddPopup.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/AddPopup.cshtml", model);
         }
 
         //edit
@@ -302,16 +294,16 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
                 model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString(), Selected = (selectedShippingMethod != null && sm.Id == selectedShippingMethod.Id) });
             //countries
             model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "" });
-            var countries = _countryService.GetAllCountries(showHidden:true);
+            var countries = _countryService.GetAllCountries(showHidden: true);
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (selectedCountry != null && c.Id == selectedCountry.Id) });
             //states
-            var states = selectedCountry != null ? _stateProvinceService.GetStateProvincesByCountryId(selectedCountry.Id, showHidden:true).ToList() : new List<StateProvince>();
+            var states = selectedCountry != null ? _stateProvinceService.GetStateProvincesByCountryId(selectedCountry.Id, showHidden: true).ToList() : new List<StateProvince>();
             model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "" });
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (selectedState != null && s.Id == selectedState.Id) });
 
-            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/EditPopup.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/EditPopup.cshtml", model);
         }
         [HttpPost]
         [AdminAntiForgery]
@@ -343,18 +335,9 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/EditPopup.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/EditPopup.cshtml", model);
         }
 
-        public override IList<string> ValidateShippingForm(FormCollection form)
-        {
-            //you can implement here any validation logic
-            return new List<string>();
-        }
 
-        public override JsonResult GetFormPartialView(string shippingOption)
-        {
-            return Json("", JsonRequestBehavior.AllowGet);
-        }
     }
 }

@@ -1,8 +1,0 @@
-﻿Group: Payment methods
-FriendlyName: Pay In Store
-SystemName: Payments.PayInStore
-Version: 1.07
-SupportedVersions: 4.00
-Author: grandnode team, nopcommerce team
-DisplayOrder: 1
-FileName: Grand.Plugin.Payments.PayInStore.dll

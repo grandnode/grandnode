@@ -1,0 +1,68 @@
+﻿@model GeneralCommonSettingsModel
+
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.PdfSettings.LetterPageSizeEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.PdfSettings.LogoPictureId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-9 col-sm-9" class="adminData" id="pdf-logo-picture">
+                @Html.GrandEditorFor(model => model.PdfSettings.LogoPictureId)
+                @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn1, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn1, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.TextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn1, new { style = "Width: 250px; Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn2, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn2, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.TextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn2, new { style = "Width: 250px; Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
+            </div>
+        </div>
+    </div>
+</div>

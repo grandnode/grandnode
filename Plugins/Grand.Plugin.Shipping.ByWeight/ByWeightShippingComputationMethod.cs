@@ -1,16 +1,18 @@
-﻿using System;
-using System.Web.Routing;
-using Grand.Core;
-using Grand.Core.Domain.Shipping;
+﻿using Grand.Core;
 using Grand.Core.Plugins;
+using Grand.Services.Shipping;
+using System;
+using Grand.Core.Domain.Orders;
+using Grand.Services.Shipping.Tracking;
+using System.Collections.Generic;
+using Grand.Services.Configuration;
+using Grand.Core.Domain.Shipping;
+using Grand.Services.Localization;
 using Grand.Plugin.Shipping.ByWeight.Services;
 using Grand.Services.Catalog;
-using Grand.Services.Configuration;
-using Grand.Services.Localization;
-using Grand.Services.Shipping;
-using Grand.Services.Shipping.Tracking;
-using Grand.Core.Domain.Orders;
-using System.Collections.Generic;
+using Grand.Core.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Plugin.Shipping.ByWeight
 {
@@ -20,45 +22,43 @@ namespace Grand.Plugin.Shipping.ByWeight
 
         private readonly IShippingService _shippingService;
         private readonly IStoreContext _storeContext;
-        private readonly IShippingByWeightService _shippingByWeightService;
         private readonly IPriceCalculationService _priceCalculationService;
-        private readonly ShippingByWeightSettings _shippingByWeightSettings;
-        //private readonly ShippingByWeightObjectContext _objectContext;
         private readonly ISettingService _settingService;
-
+        private readonly IWebHelper _webHelper;
         #endregion
 
         #region Ctor
         public ByWeightShippingComputationMethod(IShippingService shippingService,
             IStoreContext storeContext,
-            IShippingByWeightService shippingByWeightService,
-            IPriceCalculationService priceCalculationService, 
+            IPriceCalculationService priceCalculationService,
             ShippingByWeightSettings shippingByWeightSettings,
-            //ShippingByWeightObjectContext objectContext,
-            ISettingService settingService)
+            ISettingService settingService,
+            IWebHelper webHelper)
         {
             this._shippingService = shippingService;
             this._storeContext = storeContext;
-            this._shippingByWeightService = shippingByWeightService;
             this._priceCalculationService = priceCalculationService;
-            this._shippingByWeightSettings = shippingByWeightSettings;
-            //this._objectContext = objectContext;
             this._settingService = settingService;
+            this._webHelper = webHelper;
         }
         #endregion
 
         #region Utilities
-        
+
         private decimal? GetRate(decimal subTotal, decimal weight, string shippingMethodId,
             string storeId, string warehouseId, string countryId, string stateProvinceId, string zip)
         {
-            var shippingByWeightRecord = _shippingByWeightService.FindRecord(shippingMethodId,
+
+            var shippingByWeightService = EngineContext.Current.Resolve<IShippingByWeightService>();
+            var shippingByWeightSettings = EngineContext.Current.Resolve<ShippingByWeightSettings>();
+
+            var shippingByWeightRecord = shippingByWeightService.FindRecord(shippingMethodId,
                 storeId, warehouseId, countryId, stateProvinceId, zip, weight);
             if (shippingByWeightRecord == null)
             {
-                if (_shippingByWeightSettings.LimitMethodsToCreated)
+                if (shippingByWeightSettings.LimitMethodsToCreated)
                     return null;
-                
+
                 return decimal.Zero;
             }
 
@@ -82,7 +82,7 @@ namespace Grand.Plugin.Shipping.ByWeight
                 shippingTotal = decimal.Zero;
             return shippingTotal;
         }
-        
+
         #endregion
 
         #region Methods
@@ -157,66 +157,12 @@ namespace Grand.Plugin.Shipping.ByWeight
         }
 
         /// <summary>
-        /// Gets a route for provider configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = "Configure";
-            controllerName = "ShippingByWeight";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Shipping.ByWeight.Controllers" }, { "area", null } };
-        }
-        
-        /// <summary>
         /// Install plugin
         /// </summary>
         public override void Install()
         {
             //settings
-            var settings = new ShippingByWeightSettings
-            {
-                LimitMethodsToCreated = false,
-            };
-            _settingService.SaveSetting(settings);
 
-
-            //database objects
-            //_objectContext.Install();
-
-            //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store", "Store");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store.Hint", "If an asterisk is selected, then this shipping rate will apply to all stores.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Warehouse", "Warehouse");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Warehouse.Hint", "If an asterisk is selected, then this shipping rate will apply to all warehouses.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country", "Country");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint", "If an asterisk is selected, then this shipping rate will apply to all customers, regardless of the country.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince", "State / province");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince.Hint", "If an asterisk is selected, then this shipping rate will apply to all customers from the given country, regardless of the state.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Zip", "Zip");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Zip.Hint", "Zip / postal code. If zip is empty, then this shipping rate will apply to all customers from the given country or state, regardless of the zip code.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod", "Shipping method");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod.Hint", "The shipping method.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From", "Order weight from");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From.Hint", "Order weight from.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To", "Order weight to");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To.Hint", "Order weight to.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost", "Additional fixed cost");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost.Hint", "Specify an additional fixed cost per shopping cart for this option. Set to 0 if you don't want an additional fixed cost to be applied.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit", "Lower weight limit");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit.Hint", "Lower weight limit. This field can be used for \"per extra weight unit\" scenarios.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal", "Charge percentage (of subtotal)");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal.Hint", "Charge percentage (of subtotal).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit", "Rate per weight unit");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit.Hint", "Rate per weight unit.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated", "Limit shipping methods to configured ones");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated.Hint", "If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they'll be able to choose any existing shipping options even they've not configured here (zero shipping fee in this case).");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.DataHtml", "Data");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord", "Add record");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Formula", "Formula to calculate rates");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Formula.Value", "[additional fixed cost] + ([order total weight] - [lower weight limit]) * [rate per weight unit] + [order subtotal] * [charge percentage]");
-            
             base.Install();
         }
 
@@ -225,44 +171,6 @@ namespace Grand.Plugin.Shipping.ByWeight
         /// </summary>
         public override void Uninstall()
         {
-            //settings
-            _settingService.DeleteSetting<ShippingByWeightSettings>();
-
-            //database objects
-            //_objectContext.Uninstall();
-
-            //locales
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Store.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Warehouse");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Warehouse.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Zip");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Zip.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated.Hint");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.DataHtml");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Formula");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Formula.Value");
-            
             base.Uninstall();
         }
 
@@ -279,14 +187,14 @@ namespace Grand.Plugin.Shipping.ByWeight
             return false;
         }
 
+        #endregion
+
+        #region Properties
 
         public Type GetControllerType()
         {
             return typeof(Controllers.ShippingByWeightController);
         }
-        #endregion
-
-        #region Properties
 
         /// <summary>
         /// Gets a shipping rate computation method type
@@ -309,10 +217,32 @@ namespace Grand.Plugin.Shipping.ByWeight
             {
                 //uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
                 //return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
-                return null; 
+                return null;
             }
         }
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
+        {
+            return $"{_webHelper.GetStoreLocation()}Admin/ShippingByWeight/Configure";
+        }
+
+        public IList<string> ValidateShippingForm(IFormCollection form)
+        {
+            //you can implement here any validation logic
+            return new List<string>();
+        }
+
+        public JsonResult GetFormPartialView(string shippingOption)
+        {
+            //you can use here any view 
+            return new JsonResult("");
+        }
+
+        IShipmentTracker IShippingRateComputationMethod.ShipmentTracker => throw new NotImplementedException();
 
         #endregion
     }
+
 }

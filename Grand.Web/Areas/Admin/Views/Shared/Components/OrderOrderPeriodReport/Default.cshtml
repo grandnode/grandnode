@@ -1,0 +1,54 @@
+﻿
+<div id="order-period-grid"></div>
+<script>
+        $(document).ready(function () {
+            $("#order-period-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ReportOrderPeriodList", "Order"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Period",
+                    title: "@T("Admin.SalesReport.Period.Name")"
+                }, {
+                    field: "Count",
+                    title: "@T("Admin.SalesReport.Period.Count")",
+                    width: 50
+                }, {
+                    field: "Amount",
+                    title: "@T("Admin.SalesReport.Period.Amount")",
+                    width: 150
+                }]
+            });
+        });
+</script>

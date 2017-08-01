@@ -1,0 +1,84 @@
+﻿@model GeneralCommonSettingsModel
+
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
+            </div>
+        </div>
+    </div>
+</div>

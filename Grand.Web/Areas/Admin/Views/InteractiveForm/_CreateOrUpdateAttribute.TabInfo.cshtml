@@ -1,0 +1,130 @@
+﻿@model InteractiveFormAttributeModel
+
+
+
+<script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.FormControlTypeId)").change(toggleAttributeControlType);
+
+            toggleAttributeControlType();
+
+            function toggleAttributeControlType() {
+                var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.FormControlTypeId)").val();
+                if (selectedAttributeControlTypeId == @(((int)Grand.Core.Domain.Messages.FormControlType.TextBox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlDefaultValue').show();
+                    $('#pnlRegexValidation').show();
+                    $('#tab-values').hide();
+                } else if (selectedAttributeControlTypeId == @(((int)Grand.Core.Domain.Messages.FormControlType.MultilineTextbox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlDefaultValue').show();
+                    $('#pnlRegexValidation').show();
+                    $('#tab-values').hide();
+                } else {
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                    $('#pnlDefaultValue').hide();
+                    $('#pnlRegexValidation').hide();
+                    $('#tab-values').show();
+                }
+            }
+
+        });
+
+</script>
+@(Html.LocalizedEditor<InteractiveFormAttributeModel, InteractiveFormAttributeLocalizedModel>("attribute-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].Name)
+                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+        </div>
+    </div>
+    ))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.SystemName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.SystemName)
+                @Html.ValidationMessageFor(model => model.SystemName)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Style)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Style)
+                @Html.ValidationMessageFor(model => model.Style)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Class)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Class)
+                @Html.ValidationMessageFor(model => model.Class)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsRequired)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.IsRequired)
+                @Html.ValidationMessageFor(model => model.IsRequired)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.FormControlTypeId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.FormControlTypeId, ((Grand.Core.Domain.Messages.FormControlType)Model.FormControlTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.FormControlTypeId)
+            </div>
+        </div>
+        <div class="form-group" id="pnlRegexValidation">
+            @Html.GrandLabelFor(model => model.RegexValidation)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.RegexValidation)
+                @Html.ValidationMessageFor(model => model.RegexValidation)
+            </div>
+        </div>
+        <div class="form-group" id="pnlValidationMinLength">
+            @Html.GrandLabelFor(model => model.ValidationMinLength)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ValidationMinLength)
+                @Html.ValidationMessageFor(model => model.ValidationMinLength)
+            </div>
+        </div>
+        <div class="form-group" id="pnlValidationMaxLength">
+            @Html.GrandLabelFor(model => model.ValidationMaxLength)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ValidationMaxLength)
+                @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDefaultValue">
+            @Html.GrandLabelFor(model => model.DefaultValue)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DefaultValue)
+                @Html.ValidationMessageFor(model => model.DefaultValue)
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿@model ProductModel.TierPriceModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.ProductId)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Quantity, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Quantity)
+                @Html.ValidationMessageFor(model => model.Quantity)
+            </div>
+        </div>        
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Price, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Price)
+                @Html.ValidationMessageFor(model => model.Price)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.StoreId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                @Html.ValidationMessageFor(model => model.StoreId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerRoleId, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+                @Html.ValidationMessageFor(model => model.CustomerRoleId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.StartDateTimeUtc, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.StartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.EndDateTimeUtc, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.EndDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+            </div>
+        </div>
+    </div>
+</div>
+
+

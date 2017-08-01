@@ -1,0 +1,50 @@
+﻿@model CatalogSettingsModel
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.CompareProductsEnabled_OverrideForStore, model => model.CompareProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.CompareProductsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.CompareProductsEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, model => model.IncludeShortDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.IncludeShortDescriptionInCompareProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IncludeShortDescriptionInCompareProducts)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IncludeShortDescriptionInCompareProducts)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.IncludeFullDescriptionInCompareProducts_OverrideForStore, model => model.IncludeFullDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.IncludeFullDescriptionInCompareProducts, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IncludeFullDescriptionInCompareProducts)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IncludeFullDescriptionInCompareProducts)
+            </div>
+        </div>
+    </div>
+</div>

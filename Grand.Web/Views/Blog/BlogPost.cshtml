@@ -1,0 +1,136 @@
+﻿@model BlogPostModel
+@using Grand.Web.Models.Blogs;
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+}
+@section left {
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_before" })
+    @await Component.InvokeAsync("BlogMonths")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_blog_archive" })
+    @await Component.InvokeAsync("BlogTags")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_blog_after" })
+}
+<div class="page blogpost-page">
+    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_top", additionalData = Model.Id })
+    <div class="card">
+        <h4 class="card-header">@Model.Title</h4>
+        <div class="card-block">
+            <div class="post-date generalMarginSupporter text-muted">
+                <strong>@Model.CreatedOn.ToString("D")</strong>
+            </div>
+            @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_body", additionalData = Model.Id })
+            <div class="post-body">
+                @Html.Raw(Model.Body)
+            </div>
+        </div>
+    </div>
+
+
+    @if (Model.Tags.Count > 0)
+    {
+        <div class="tags generalMarginSupporter">
+            <label>@T("Blog.Tags"):</label>
+            @for (int i = 0; i < Model.Tags.Count; i++)
+            {
+                var tag = Model.Tags[i];
+                <a class="btn btn-secondary" href="@Url.RouteUrl("BlogByTag", new {tag = tag})">@tag</a>
+            }
+        </div>
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_before_comments", additionalData = Model.Id })
+    @if (Model.AllowComments)
+    {
+        <div class="fieldset new-comment generalMarginSupporter" id="comments">
+            <h4 class="generalTitle generalMarginSupporter">@T("Blog.Comments.LeaveYourComment")</h4>
+            <div class="notifications">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                @{
+                    var result = TempData["Grand.blog.addcomment.result"] as string;
+                }
+                @if (!String.IsNullOrEmpty(result))
+                {
+                    <div class="result">@result</div>
+                }
+            </div>
+            @using (Html.BeginForm())
+                {
+                @Html.AntiForgeryToken()
+                <div class="form-fields">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AddNewComment.CommentText, new { @class = "col-form-label" }, ":")
+                        @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "enter-comment-text form-control" })
+                        @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                    </div>
+                    @if (Model.AddNewComment.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            @Html.Raw(Html.GenerateCaptcha())
+                        </div>
+                    }
+                </div>
+                    <div class="buttons text-xs-center text-md-left generalMarginSupporter">
+                        <input type="submit" name="add-comment" class="btn btn-success blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
+                    </div>
+            }
+        </div>
+                    if (Model.Comments.Count > 0)
+                    {
+                        <div class="comment-list">
+                            <h4 class="generalTitle generalMarginSupporter"><strong>@T("Blog.Comments")</strong></h4>
+                            <div class="comments">
+                                @foreach (var comment in Model.Comments)
+                                {
+                                    <div class="card comment blog-comment text-center text-sm-left">
+                                        @if (comment.AllowViewingProfiles)
+                                        {
+                                            <h5 class="card-header"><a href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="username">@(comment.CustomerName)</a></h5>
+                                        }
+                                        else
+                                        {
+                                            <h5 class="username card-header">@(comment.CustomerName)</h5>
+                                        }
+
+
+                                        <div class="card-block row">
+                                            @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                            {
+                                            <div class="col-12 col-xl-2 col-lg-3 col-sm-4 col-md-3 user-info">
+                                                    <div class="avatar">
+                                                        @if (comment.AllowViewingProfiles)
+                                                        {
+                                                            <a href="@Url.RouteUrl("CustomerProfile", new {id = comment.CustomerId})" class="avatar-img-link">
+                                                                <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
+                                                            </a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
+                                                        }
+                                                    </div>
+                                            </div>
+                                            }
+                                            <div class="col-12 col-sm-9 comment-content">
+                                                <div class="comment-time">
+                                                    <label>@T("Blog.Comments.CreatedOn"):</label>
+                                                    <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                                </div>
+                                                <div class="comment-body text-center text-sm-left">
+                                                    @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
+                                                </div>
+                                            </div>
+                                            @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_inside_comment", additionalData = comment.Id })
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        }
+                    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_after_comments", additionalData = Model.Id })
+    @await Component.InvokeAsync("Widget", new { widgetZone = "blogpost_page_bottom", additionalData = Model.Id })
+</div>

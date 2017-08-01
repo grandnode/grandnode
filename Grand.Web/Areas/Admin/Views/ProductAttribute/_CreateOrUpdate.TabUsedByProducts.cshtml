@@ -1,0 +1,73 @@
+﻿@model ProductAttributeModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
+        ().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
+        ().GridPageSizes;
+    <div class="note note-info">
+        @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Hint")
+    </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="used-by-products-grid"></div>
+            </div>
+        </div>
+        <script>
+        $(document).ready(function () {
+            $("#used-by-products-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("UsedByProducts", "ProductAttribute", new { productAttributeId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductName",
+                    title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")",
+                    width: 400
+                }, {
+                    field: "Published",
+                    title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(Published) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                },
+                {
+                    field: "Id",
+                    title: "@T("Admin.Common.View")",
+                    width: 100,
+                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                }]
+            });
+        });
+        </script>
+
+}

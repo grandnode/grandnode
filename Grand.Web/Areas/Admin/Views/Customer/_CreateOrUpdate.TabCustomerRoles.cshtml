@@ -1,0 +1,23 @@
+﻿@model CustomerModel
+@using Grand.Core.Domain.Orders;
+@using Grand.Services.Customers;
+@using System.Text;
+
+
+@if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
+{
+
+    <div class="mt-checkbox-list">
+        @foreach (var customerRole in Model.AvailableCustomerRoles)
+        {
+            <label class="mt-checkbox mt-checkbox-outline">
+                <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds!=null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                <span></span>
+            </label>
+        }
+    </div>
+}
+else
+{
+    @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
+}

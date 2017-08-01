@@ -1,0 +1,61 @@
+﻿@model Grand.Plugin.Widgets.Slider.Models.PublicInfoModel
+@using Grand.Framework.UI
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner" role="listbox">
+        @foreach (var item in Model.Slide)
+        {
+            if (!string.IsNullOrEmpty(item.PictureUrl))
+            {
+                if (!string.IsNullOrEmpty(item.Link))
+                {
+                    <div data-target="#grandCarousel" class="carousel-item @item.CssClass">
+                        <a href="@item.Link">
+                            <img class="d-block img-fluid" src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="@item.Text" title="" />
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div data-target="#myCarousel" class="carousel-item">
+                        <img src="@item.PictureUrl" data-thumb="@item.PictureUrl" data-transition="" alt="" title="@item.Text" />
+                    </div>
+                }
+            }
+
+        }
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+<script>
+        $("#next").click(function () {
+            $('#grandCarousel').carousel('next');
+        });
+
+        $("#prev").click(function () {
+            $('#grandCarousel').carousel('prev');
+        });
+
+        $(".carousel").on("touchstart", function (event) {
+            var xClick = event.originalEvent.touches[0].pageX;
+            $(this).one("touchmove", function (event) {
+                var xMove = event.originalEvent.touches[0].pageX;
+                if (Math.floor(xClick - xMove) > 5) {
+                    $(".carousel").carousel('next');
+                }
+                else if (Math.floor(xClick - xMove) < -5) {
+                    $(".carousel").carousel('prev');
+                }
+            });
+            $(".carousel").on("touchend", function () {
+                $(this).off("touchmove");
+            });
+        });
+</script>
+

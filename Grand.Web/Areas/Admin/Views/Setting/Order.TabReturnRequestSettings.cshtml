@@ -1,0 +1,41 @@
+﻿@model OrderSettingsModel
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="note note-info">
+                @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
+                <br />
+                @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.ReturnRequestsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.ReturnRequestsEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.ReturnRequestsEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.NumberOfDaysReturnRequestAvailable_OverrideForStore, model => model.NumberOfDaysReturnRequestAvailable, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.NumberOfDaysReturnRequestAvailable, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.NumberOfDaysReturnRequestAvailable)
+                @Html.ValidationMessageFor(model => model.NumberOfDaysReturnRequestAvailable)
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_ReturnRequestReasons")
+@Html.Partial("_ReturnRequestActions")

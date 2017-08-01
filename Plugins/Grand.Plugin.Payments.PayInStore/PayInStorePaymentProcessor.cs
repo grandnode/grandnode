@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Web.Routing;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Plugins;
@@ -9,6 +8,9 @@ using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Orders;
 using Grand.Services.Payments;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Grand.Core;
 
 namespace Grand.Plugin.Payments.PayInStore
 {
@@ -22,24 +24,35 @@ namespace Grand.Plugin.Payments.PayInStore
         private readonly ISettingService _settingService;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ILocalizationService _localizationService;
+        private readonly IWebHelper _webHelper;
         #endregion
 
         #region Ctor
 
         public PayInStorePaymentProcessor(PayInStorePaymentSettings payInStorePaymentSettings,
             ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, IWebHelper webHelper)
         {
             this._payInStorePaymentSettings = payInStorePaymentSettings;
             this._settingService = settingService;
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._localizationService = localizationService;
+            this._webHelper = webHelper;
         }
 
         #endregion
-        
+
         #region Methods
-        
+
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
+        {
+            return $"{_webHelper.GetStoreLocation()}Admin/PaymentPayInStore/Configure";
+        }
+
+
         /// <summary>
         /// Process a payment
         /// </summary>
@@ -160,32 +173,6 @@ namespace Grand.Plugin.Payments.PayInStore
             return false;
         }
 
-        /// <summary>
-        /// Gets a route for provider configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = "Configure";
-            controllerName = "PaymentPayInStore";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Grand.Plugin.Payments.PayInStore.Controllers" }, { "area", null } };
-        }
-
-        /// <summary>
-        /// Gets a route for payment info
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetPaymentInfoRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = "PaymentInfo";
-            controllerName = "PaymentPayInStore";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Grand.Plugin.Payments.PayInStore.Controllers" }, { "area", null } };
-        }
-
         public Type GetControllerType()
         {
             return typeof(PaymentPayInStoreController);
@@ -226,6 +213,21 @@ namespace Grand.Plugin.Payments.PayInStore
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.PaymentMethodDescription");
 
             base.Uninstall();
+        }
+
+        public IList<string> ValidatePaymentForm(IFormCollection form)
+        {
+            return new List<string>();
+        }
+
+        public ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
+        {
+            return new ProcessPaymentRequest();
+        }
+
+        public void GetPublicViewComponent(out string viewComponentName)
+        {
+            viewComponentName = "PaymentPayInStore";
         }
 
         #endregion

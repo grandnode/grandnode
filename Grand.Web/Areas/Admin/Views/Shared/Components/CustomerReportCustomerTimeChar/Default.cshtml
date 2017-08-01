@@ -1,0 +1,74 @@
+﻿<div id="customer-time-char"></div>
+<script>
+    $(document).ready(function () {
+        $("#customer-time-char").kendoChart({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ReportCustomerTimeChar", "Customer"))",
+                            dataType: "json",
+                            type: "POST",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                },
+                theme: "Metro",
+                title: {
+                    text: "@T("Admin.Dashboard.ReportCustomerTime.TitleChart")",
+                    font: " 14px Open Sans, sans-serif",
+                },
+                legend: {
+                    visible: true
+                },
+                seriesDefaults: {
+                    type: "column",
+                    area: {
+                        line: {
+                            style: "smooth"
+                        }
+                    }
+                },
+                series: [{
+                    field: "Registered",
+                    tooltip: {
+                        visible: true,
+                        template: "#: kendo.format('{0:N0}', value) #",
+                    }
+                }],
+                categoryAxis: {
+                    field: "Time",
+                    visible: true,
+                    labels: {
+                            rotation:-45,
+                    },
+                    crosshair: {
+                        tooltip: {
+                            template: "#: value #",
+                            visible: true
+                        },
+                        visible: false
+                    },
+                }
+            });
+
+
+        function additionalData() {
+            var data = {
+                startdate: $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD'),
+                endDate: $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD'),
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+
+    });
+
+
+
+</script>

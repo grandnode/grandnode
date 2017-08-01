@@ -1,0 +1,106 @@
+﻿<div id="order-time-char"></div>
+<script>
+    $(document).ready(function () {
+        $("#order-time-char").kendoChart({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ReportOrderTimeChar", "Order"))",
+                            dataType: "json",
+                            type: "POST",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                },
+                theme: "Bootstrap",
+                title: {
+                    text: "@T("Admin.Dashboard.ReportOrderTime.TitleChart")",
+                    font: " 14px Open Sans, sans-serif",
+                },
+                legend: {
+                    visible: true
+                },
+                seriesDefaults: {
+                    type: "area",
+                    area: {
+                        line: {
+                            style: "smooth"
+                        }
+                    },
+                },
+                series: [{
+                    field: "SumOrders",
+                    type: "area",
+                    axis: "sal",
+                    tooltip: {
+                        visible: true,
+                        template: "#: kendo.format('{0:N2}', value) #",
+                    }
+                },
+                {
+                    field: "TotalOrders",
+                    type: "line",
+                    style: "smooth",
+                    axis: "qty",
+                    tooltip: {
+                        visible: true,
+                        template: "#: value #",
+                    }
+
+                }],
+                valueAxis: [
+                    {
+                        name: "sal",
+                        title: {
+                            text: "@T("Admin.Dashboard.ReportOrderTime.TotalSales")",
+                            font: " 14px Open Sans, sans-serif",
+                        },
+                        format: '{0:N2}',
+                        visible: true
+                    },
+                    {
+                        name: "qty",
+                        title: {
+                            text: "@T("Admin.Dashboard.ReportOrderTime.Count")",
+                            font: " 14px Open Sans, sans-serif",
+                        },
+                        visible: true
+                }],
+                categoryAxis: {
+                    field: "Time",
+                    visible: true,
+                    labels: {
+                        rotation: -45,
+                    },
+                    axisCrossingValues: [0, 100],
+                    crosshair: {
+                        tooltip: {
+                            template: "#: value #",
+                            visible: true
+                        },
+                        visible: false
+                    },
+                }
+            });
+
+
+        function additionalData() {
+            var data = {
+                startdate: $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD'),
+                endDate: $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD'),
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+
+    });
+
+
+
+</script>

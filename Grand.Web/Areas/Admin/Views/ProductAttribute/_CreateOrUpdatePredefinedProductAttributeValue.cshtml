@@ -1,0 +1,79 @@
+﻿@model PredefinedProductAttributeValueModel
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.ProductAttributeId)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+@(Html.LocalizedEditor<PredefinedProductAttributeValueModel, PredefinedProductAttributeValueLocalizedModel>("productattributevalue-localized",
+@<div class="form-horizontal">
+     <div class="form-body">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Locales[item].Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Locales[item].Name)
+                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+             </div>
+         </div>
+         @Html.HiddenFor(model => model.Locales[item].LanguageId)
+     </div>
+</div>
+,
+@<div class="form-horizontal">
+     <div class="form-group">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Name)
+                 @Html.ValidationMessageFor(model => model.Name)
+             </div>
+         </div>
+     </div>
+</div>
+))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.PriceAdjustment, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.PriceAdjustment)
+                @Html.ValidationMessageFor(model => model.PriceAdjustment)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.WeightAdjustment, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.WeightAdjustment)
+                @Html.ValidationMessageFor(model => model.WeightAdjustment)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Cost, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-sm-9 col-md-9">
+                @Html.GrandEditorFor(model => model.Cost)
+                @Html.ValidationMessageFor(model => model.Cost)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsPreSelected, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsPreSelected)
+                @Html.ValidationMessageFor(model => model.IsPreSelected)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+    </div>
+</div>
+

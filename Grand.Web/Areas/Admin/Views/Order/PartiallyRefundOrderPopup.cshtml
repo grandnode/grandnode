@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model OrderModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Orders.Fields.PartialRefund").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-tag"></i>
+                        @T("Admin.Orders.Fields.PartialRefund")
+                    </div>
+                </div>
+                <div class="note note-info">
+                    <strong>
+                        @string.Format(T("Admin.Orders.Fields.PartialRefund.OrderInfo").Text, Model.Id)
+                    </strong>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.AmountToRefund)
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.AmountToRefund): &nbsp;&nbsp;&nbsp; <span style="white-space: nowrap">
+                                        @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <input type="submit" name="partialrefundorder" value="@T("Admin.Orders.Fields.Refund")" id="partialrefundorder" class="btn default" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Html.ValidationSummary(false)
+    
+    if (ViewBag.RefreshPage == true)
+    {
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+    </script>
+    }
+}

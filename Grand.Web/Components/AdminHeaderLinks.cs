@@ -1,0 +1,27 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+using Grand.Web.Services;
+using System.Linq;
+using Grand.Core;
+
+namespace Grand.Web.ViewComponents
+{
+    public class AdminHeaderLinksViewComponent : ViewComponent
+    {
+        private readonly ICommonWebService _commonWebService;
+        private readonly IWorkContext _workContext;
+        public AdminHeaderLinksViewComponent(ICommonWebService commonWebService,
+            IWorkContext workContext)
+        {
+            this._commonWebService = commonWebService;
+            this._workContext = workContext;
+        }
+
+        public IViewComponentResult Invoke()
+        {
+            var model = _commonWebService.PrepareAdminHeaderLinks(_workContext.CurrentCustomer);
+            return View(model);
+        }
+    }
+}

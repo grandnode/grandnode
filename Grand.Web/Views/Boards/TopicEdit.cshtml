@@ -1,0 +1,9 @@
+﻿@model EditForumTopicModel
+@using Grand.Web.Models.Boards;
+@{    
+    Layout = "_ColumnsOne";
+    Html.AddTitleParts(T("Forum.PageTitle.TopicEdit").Text);    
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "boards_topicedit_before", additionalData = Model.Id })
+    @await Html.PartialAsync("_CreateUpdateTopic", Model)
+@await Component.InvokeAsync("Widget", new { widgetZone = "boards_topicedit_after", additionalData = Model.Id })

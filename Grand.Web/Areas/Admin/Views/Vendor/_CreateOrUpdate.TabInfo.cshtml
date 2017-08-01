@@ -1,0 +1,145 @@
+﻿@model VendorModel
+
+
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+            togglePageSize();
+        });
+
+        function togglePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
+            }
+        }
+</script>
+@(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].Name)
+                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Description)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+        ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Description)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.Description, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Description)
+                </div>
+            </div>
+        </div>
+    </div>
+    ))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Email)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+        @if (!String.IsNullOrEmpty(Model.Id))
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.AssociatedCustomers)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label">
+                        @if (Model.AssociatedCustomers.Count > 0)
+                        {
+                            for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
+                            {
+                                @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
+                                if (i != Model.AssociatedCustomers.Count - 1)
+                                {
+                                    <text>, </text>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            @T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")
+                        }
+                    </label>
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.PictureId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.PictureId)
+                @Html.ValidationMessageFor(model => model.PictureId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AdminComment)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandTextAreaFor(model => model.AdminComment, new { style = "Height: 100px;" })
+                @Html.ValidationMessageFor(model => model.AdminComment)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AllowCustomersToSelectPageSize)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
+                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+            </div>
+        </div>
+        <div class="form-group" id="pnlPageSize">
+            @Html.GrandLabelFor(model => model.PageSize)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(x => x.PageSize)
+                @Html.ValidationMessageFor(model => model.PageSize)
+            </div>
+        </div>
+        <div class="form-group" id="pnlPageSizeOptions">
+            @Html.GrandLabelFor(model => model.PageSizeOptions)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(x => x.PageSizeOptions)
+                @Html.ValidationMessageFor(model => model.PageSizeOptions)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Active)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+    </div>
+</div>

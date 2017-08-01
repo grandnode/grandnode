@@ -1,0 +1,3 @@
+Payments.PayInStore
+Shipping.ByWeight
+Widgets.Slider

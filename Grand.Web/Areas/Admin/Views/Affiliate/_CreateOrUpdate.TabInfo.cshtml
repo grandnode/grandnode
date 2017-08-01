@@ -1,0 +1,51 @@
+﻿@model AffiliateModel
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        @if (!String.IsNullOrEmpty(Model.Id))
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Id)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label">@Model.Id</label>
+                </div>
+            </div>
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Url)
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label">@Model.Url</label>
+                    </div>
+                </div>
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Active)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </div>
+        </div>
+    </div>
+</div>
+@Html.EditorFor(model => model.Address, "Address")
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AdminComment)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandTextAreaFor(model => model.AdminComment, new { style = "Height: 100px;" })
+                @Html.ValidationMessageFor(model => model.AdminComment)
+            </div>
+        </div>
+        <div class="form-body">
+            @Html.GrandLabelFor(model => model.FriendlyUrlName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.FriendlyUrlName)
+                @Html.ValidationMessageFor(model => model.FriendlyUrlName)
+            </div>
+        </div>
+    </div>
+</div>

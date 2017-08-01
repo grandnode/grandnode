@@ -1,0 +1,48 @@
+﻿@model SendPrivateMessageModel
+@using Grand.Web.Models.PrivateMessages;
+@{
+    Layout = "_ColumnsOne";
+
+    Html.AddTitleParts(T("PageTitle.SendPM").Text);
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="page private-messages private-message-send-page">
+            <h2 class="text-center generalTitle py-3 mb-3">@T("PrivateMessages.Send.PostMessage")</h2>
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            @Html.HiddenFor(model => model.ToCustomerId)
+            @Html.HiddenFor(model => model.ReplyToMessageId)
+                <div class="card form-fields">
+                    <h5 class="card-header">
+                        @T("PrivateMessages.Send.To")
+                        @if (Model.AllowViewingToProfile)
+                        {
+                            <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.ToCustomerId })">@(Model.CustomerToName)</a>
+                        }
+                        else
+                        {
+                            <span>@Model.CustomerToName</span>
+                        }
+                    </h5>
+                    
+                    <div class="card-block">
+                        <div class="form-group">
+                            <label class="">@T("PrivateMessages.Send.Subject")</label>
+                            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control pm-title-text" })
+                            @Html.ValidationMessageFor(model => model.Subject)
+                        </div>
+                        <div class="form-group message">
+                            <label>@T("PrivateMessages.Send.Message")</label>
+                            @Html.BBCodeEditor("Message")
+                            @Html.TextAreaFor(model => model.Message, new { @class = "form-control bb-editor-text", TextMode = "MultiLine" })
+                            @Html.ValidationMessageFor(model => model.Message)
+                        </div>
+                    </div>
+                </div>
+            <div class="col-12 btn-group text-center mb-2 text-center">
+                <input type="submit" class="btn btn-success send-pm-button" value="@T("PrivateMessages.Send.SendButton")" />
+                <input type="button" class="btn btn-secondary cancel-pm-button" value="@T("PrivateMessages.Send.CancelButton")" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')" />
+            </div>
+        </div>
+}

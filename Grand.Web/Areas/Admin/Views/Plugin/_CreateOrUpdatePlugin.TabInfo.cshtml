@@ -1,0 +1,49 @@
+﻿@model PluginModel
+   
+@(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].FriendlyName)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].FriendlyName)
+                    @Html.ValidationMessageFor(model => model.Locales[item].FriendlyName)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+        ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.FriendlyName)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.FriendlyName)
+                    @Html.ValidationMessageFor(model => model.FriendlyName)
+                </div>
+            </div>
+        </div>
+    </div>
+))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+        @if (Model.CanChangeEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.IsEnabled)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.IsEnabled)
+                    @Html.ValidationMessageFor(model => model.IsEnabled)
+                </div>
+            </div>
+        }
+    </div>
+</div>

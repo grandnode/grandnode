@@ -1,0 +1,68 @@
+﻿@model CategoryModel
+@(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].MetaKeywords)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].MetaKeywords)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].MetaDescription)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(model => model.Locales[item].MetaDescription)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].MetaTitle)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].MetaTitle)
+                    @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].SeName)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].SeName)
+                    @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+               ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.MetaKeywords)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(x => x.MetaKeywords)
+                    @Html.ValidationMessageFor(model => model.MetaKeywords)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.MetaDescription)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandTextAreaFor(x => x.MetaDescription)
+                    @Html.ValidationMessageFor(model => model.MetaDescription)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.MetaTitle)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(x => x.MetaTitle)
+                    @Html.ValidationMessageFor(model => model.MetaTitle)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SeName)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(x => x.SeName)
+                    @Html.ValidationMessageFor(model => model.SeName)
+                </div>
+            </div>
+        </div>
+    </div>))

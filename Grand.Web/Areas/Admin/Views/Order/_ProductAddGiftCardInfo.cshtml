@@ -1,0 +1,43 @@
+﻿@model OrderModel.AddOrderProductModel.GiftCardModel
+@if (Model.IsGiftCard)
+{
+    //Actually just a copy of \Presentation\Grand.Web\Views\Catalog\_GiftCardInfo.cshtml
+    <div class="form-group">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.RecipientName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.RecipientName)
+            </div>
+        </div>
+        <div class="form-group">
+            @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
+            {
+                @Html.GrandLabelFor(model => model.RecipientEmail)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.RecipientEmail)
+                </div>
+            }
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.SenderName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.SenderName)
+            </div>
+        </div>
+        <div class="form-group">
+            @if (Model.GiftCardType == Grand.Core.Domain.Catalog.GiftCardType.Virtual)
+            {
+                @Html.GrandLabelFor(model => model.SenderEmail)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.SenderEmail)
+                </div>
+            }
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Message)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandTextAreaFor(model => model.Message, new { style = "Width: 300px; Height: 100px;" })
+            </div>
+        </div>
+    </div>
+}

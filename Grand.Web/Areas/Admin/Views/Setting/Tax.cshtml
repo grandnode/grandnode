@@ -1,0 +1,388 @@
+﻿@model TaxSettingsModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Tax").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
+            $("#@Html.FieldIdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
+            $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
+            $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
+
+
+            toggleTaxDisplayType();
+            toggleShipping();
+            togglePayment();
+            toggleEUVAT();
+        });
+
+        function toggleTaxDisplayType() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
+                $('#pnlTaxDisplayType').hide();
+            }
+            else {
+                $('#pnlTaxDisplayType').show();
+            }
+        }
+
+        function toggleShipping() {
+            if ($('#@Html.FieldIdFor(model => model.ShippingIsTaxable)').is(':checked')) {
+                $('#pnlShippingPriceIncludesTax').show();
+                $('#pnlShippingTaxClass').show();
+            }
+            else {
+                $('#pnlShippingPriceIncludesTax').hide();
+                $('#pnlShippingTaxClass').hide();
+            }
+        }
+
+        function togglePayment() {
+            if ($('#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
+                $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
+                $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+            }
+            else {
+                $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
+                $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+            }
+        }
+
+        function toggleEUVAT() {
+            if ($('#@Html.FieldIdFor(model => model.EuVatEnabled)').is(':checked')) {
+                $('#pnlEuVatShopCountry').show();
+                $('#pnlEuVatAllowVATExemption').show();
+                $('#pnlEuVatAssumeValid').show();
+                $('#pnlEuVatUseWebService').show();
+                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
+            }
+            else {
+                $('#pnlEuVatShopCountry').hide();
+                $('#pnlEuVatAllowVATExemption').hide();
+                $('#pnlEuVatAssumeValid').hide();
+                $('#pnlEuVatUseWebService').hide();
+                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
+            }
+        }
+    </script>
+
+    @Html.ValidationSummary(false)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.Tax")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PricesIncludeTax_OverrideForStore, model => model.PricesIncludeTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PricesIncludeTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.PricesIncludeTax)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.PricesIncludeTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToSelectTaxDisplayType_OverrideForStore, model => model.AllowCustomersToSelectTaxDisplayType, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowCustomersToSelectTaxDisplayType, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AllowCustomersToSelectTaxDisplayType)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlTaxDisplayType">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.TaxDisplayType_OverrideForStore, model => model.TaxDisplayType, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.TaxDisplayType, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.TaxDisplayType, Model.TaxDisplayTypeValues)
+                                    @Html.ValidationMessageFor(model => model.TaxDisplayType)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxSuffix_OverrideForStore, model => model.DisplayTaxSuffix, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DisplayTaxSuffix, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayTaxSuffix)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.DisplayTaxSuffix)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxRates_OverrideForStore, model => model.DisplayTaxRates, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DisplayTaxRates, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayTaxRates)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.DisplayTaxRates)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.HideZeroTax_OverrideForStore, model => model.HideZeroTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.HideZeroTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.HideZeroTax)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.HideZeroTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.HideTaxInOrderSummary_OverrideForStore, model => model.HideTaxInOrderSummary, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.HideTaxInOrderSummary, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.HideTaxInOrderSummary)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.HideTaxInOrderSummary)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ForceTaxExclusionFromOrderSubtotal_OverrideForStore, model => model.ForceTaxExclusionFromOrderSubtotal, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ForceTaxExclusionFromOrderSubtotal, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ForceTaxExclusionFromOrderSubtotal)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.TaxBasedOn_OverrideForStore, model => model.TaxBasedOn, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.TaxBasedOn, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
+                                    @Html.ValidationMessageFor(model => model.TaxBasedOn)
+                                </div>
+                            </div>
+                            <div class="form-horizontal portlet light bg-inverse form-fit">
+                                <div class="form-group" style="padding-top:15px;margin-bottom: 0px;">
+                                    <div class="col-md-4 col-sm-4 text-right">
+                                        @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxAddress_OverrideForStore, "pnlDefaultTaxAddress", Model.ActiveStoreScopeConfiguration)
+                                        <strong>@T("Admin.Configuration.Settings.Tax.DefaultTaxAddress")</strong>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div id="pnlDefaultTaxAddress">
+                                        @Html.EditorFor(x => x.DefaultTaxAddress, "Address")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShippingIsTaxable_OverrideForStore, model => model.ShippingIsTaxable, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShippingIsTaxable, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShippingIsTaxable)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShippingIsTaxable)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlShippingPriceIncludesTax">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShippingPriceIncludesTax_OverrideForStore, model => model.ShippingPriceIncludesTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShippingPriceIncludesTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShippingPriceIncludesTax)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShippingPriceIncludesTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DefaultTaxCategoryId_OverrideForStore, model => model.DefaultTaxCategoryId, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DefaultTaxCategoryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.DefaultTaxCategoryId, Model.TaxCategories)
+                                    @Html.ValidationMessageFor(model => model.DefaultTaxCategoryId)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlShippingTaxClass">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShippingTaxClassId_OverrideForStore, model => model.ShippingTaxClassId, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShippingTaxClassId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.ShippingTaxClassId, Model.TaxCategories)
+                                    @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIsTaxable_OverrideForStore, model => model.PaymentMethodAdditionalFeeIsTaxable, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeIsTaxable, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIsTaxable)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlPaymentMethodAdditionalFeeIncludesTax">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeIncludesTax_OverrideForStore, model => model.PaymentMethodAdditionalFeeIncludesTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeIncludesTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeIncludesTax)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlPaymentMethodAdditionalFeeTaxClass">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PaymentMethodAdditionalFeeTaxClassId_OverrideForStore, model => model.PaymentMethodAdditionalFeeTaxClassId, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PaymentMethodAdditionalFeeTaxClassId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.PaymentMethodAdditionalFeeTaxClassId, Model.PaymentMethodAdditionalFeeTaxCategories)
+                                    @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatEnabled_OverrideForStore, model => model.EuVatEnabled, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.EuVatEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.EuVatEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatShopCountry">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatShopCountryId_OverrideForStore, model => model.EuVatShopCountryId, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatShopCountryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandDropDownListFor(model => model.EuVatShopCountryId, Model.EuVatShopCountries)
+                                    @Html.ValidationMessageFor(model => model.EuVatShopCountryId)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatAllowVATExemption">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatAllowVatExemption_OverrideForStore, model => model.EuVatAllowVatExemption, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatAllowVatExemption, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.EuVatAllowVatExemption)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.EuVatAllowVatExemption)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatAssumeValid">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatAssumeValid_OverrideForStore, model => model.EuVatAssumeValid, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatAssumeValid, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.EuVatAssumeValid)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.EuVatAssumeValid)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatUseWebService">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatUseWebService_OverrideForStore, model => model.EuVatUseWebService, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatUseWebService, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.EuVatUseWebService)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.EuVatUseWebService)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlEuVatEmailAdminWhenNewVATSubmitted">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, model => model.EuVatEmailAdminWhenNewVatSubmitted, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EuVatEmailAdminWhenNewVatSubmitted, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.EuVatEmailAdminWhenNewVatSubmitted)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,8 @@
+﻿@model EditForumPostModel
+@using Grand.Web.Models.Boards;
+@{   
+    Layout = "_ColumnsOne";
+
+    Html.AddTitleParts(T("Forum.PageTitle.PostEdit").Text);
+}
+@await Html.PartialAsync("_CreateUpdateTopic", Model)

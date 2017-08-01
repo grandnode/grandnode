@@ -1,0 +1,171 @@
+﻿@model GeneralCommonSettingsModel
+
+
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.StoreClosed, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.StoreInformationSettings.StoreClosed)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, "theme-selection-block", Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <div class="row">
+                    <ul class="clearer" style="list-style: none;" id="theme-selection-block">
+                        @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
+                        {
+                            <li style="float: left; width: 210px;">
+                                <p style="float: left; padding-top: 55px;">
+                                    <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
+                                           @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>      }>
+                                </p>
+                                <p style="float: left;">
+                                    <label for="id_image_@theme.ThemeName">
+                                        <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
+                                        <br />
+                                        <label style="text-align:center;font-weight:bold;width:170px;">@theme.ThemeTitle</label>
+                                    </label>
+                                </p>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)
+                <div class="note note-info">@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore") <a href="http://www.grandnode.com/extensions?category=4&utm_source=admin-panel&utm_medium=theme-settings&utm_campaign=admin-panel" target="_blank">http://www.grandnode.com/extensions</a></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, model => model.StoreInformationSettings.AllowCustomerToSelectTheme, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.LogoPictureId_OverrideForStore, model => model.StoreInformationSettings.LogoPictureId, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.LogoPictureId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.StoreInformationSettings.LogoPictureId)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.LogoPictureId)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.FacebookLink_OverrideForStore, model => model.StoreInformationSettings.FacebookLink, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.FacebookLink, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.StoreInformationSettings.FacebookLink)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.FacebookLink)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.TwitterLink_OverrideForStore, model => model.StoreInformationSettings.TwitterLink, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.TwitterLink, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.StoreInformationSettings.TwitterLink)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.TwitterLink)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.YoutubeLink_OverrideForStore, model => model.StoreInformationSettings.YoutubeLink, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.YoutubeLink, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.StoreInformationSettings.YoutubeLink)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.YoutubeLink)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.GooglePlusLink_OverrideForStore, model => model.StoreInformationSettings.GooglePlusLink, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.GooglePlusLink, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.StoreInformationSettings.GooglePlusLink)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.GooglePlusLink)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm_OverrideForStore, model => model.StoreInformationSettings.StoreInDatabaseContactUsForm, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreInDatabaseContactUsForm)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+            </div>
+        </div>
+    </div>
+</div>

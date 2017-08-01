@@ -1,0 +1,363 @@
+﻿@model RegisterModel
+@using System.Text.Encodings.Web
+
+@{
+    Layout = "_ColumnsOne";
+    //title
+    Html.AddTitleParts(T("PageTitle.Register").Text);
+}
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryId"))",
+                    data: { "countryId": selectedItem, "addSelectStateItem": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }
+                });
+            });
+        });
+    </script>
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="page registration-page">
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+
+        @await Html.PartialAsync("_ExternalAuthentication.AssociateMessage")
+
+
+        <div class="card mb-3">
+            <h3 class="h4 card-header">@T("Account.YourPersonalDetails")</h3>
+            <div class="card-block">
+
+                    @if (Model.GenderEnabled)
+                    {
+                        <div class="col-lg-3 col-sm-12">
+                            <div class="d-flex row">
+                                <span>@T("Account.Fields.Gender"):</span>
+                            </div>
+                        </div>
+                        <fieldset class="col-lg-9 col-sm-12 gender">
+                            <legend class="sr-only">@T("plugins.feed.froogle.products.gender")</legend>
+                            <div class="d-flex row">
+                                <label class="male custom-control custom-radio">
+                                    <input id="gender-male" name="Gender" type="radio" value="M" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="forcheckbox custom-control-description">Male</span>
+                                </label>
+                                <label class="female custom-control custom-radio">
+                                    <input id="gender-female" name="Gender" type="radio" value="F" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="forcheckbox custom-control-description">Female</span>
+                                </label>
+                            </div>
+                        </fieldset>
+                    }
+                        <fieldset class="col-12 px-0 form-group">
+                            <legend class="sr-only">@T("account.fields.firstname")</legend>
+                            @Html.LabelFor(model => model.FirstName, new { @class = "col-form-label" }, ":")
+                            @Html.GrandEditorFor(model => model.FirstName)
+                            @Html.ValidationMessageFor(model => model.FirstName)
+                        </fieldset>
+                        <fieldset class="col-12 px-0 form-group">
+                            <legend class="sr-only">@T("account.fields.lastname")</legend>
+                            @Html.LabelFor(model => model.LastName, new { @class = "col-form-label" }, ":")
+                            @Html.GrandEditorFor(model => model.LastName)
+                            @Html.ValidationMessageFor(model => model.LastName)
+                        </fieldset>
+
+                    @if (Model.DateOfBirthEnabled)
+                    {
+                        <fieldset class="form-group date-of-birth col-sm-12">
+                            <legend class="sr-only">@T("Account.Fields.DateOfBirth")</legend>
+                            <div class="row">
+                                <span class="col-form-label col-12 py-0 px-0">@T("Account.Fields.DateOfBirth"):</span>
+                                @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
+                                            Html.FieldNameFor(x => x.DateOfBirthMonth),
+                                            Html.FieldNameFor(x => x.DateOfBirthYear),
+                                            DateTime.Now.Year - 110,
+                                            DateTime.Now.Year,
+                                            Model.DateOfBirthDay,
+                                            Model.DateOfBirthMonth,
+                                            Model.DateOfBirthYear,
+                                            false,
+                                            new { @class = "col custom-select" })
+                                @Html.ValidationMessageFor(model => model.DateOfBirthDay)
+                                @Html.ValidationMessageFor(model => model.DateOfBirthMonth)
+                                @Html.ValidationMessageFor(model => model.DateOfBirthYear)
+                            </div>
+                        </fieldset>
+                    }
+                    <fieldset class="form-group col-md-12 mail">
+                        <legend class="sr-only">@T("account.fields.email")</legend>
+                        <div class="row">
+                            @Html.LabelFor(model => model.Email, new { @class = "col-form-label" }, ":")
+                            @Html.GrandEditorFor(model => model.Email)
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                    </fieldset>
+
+                    @if (Model.UsernamesEnabled)
+                    {
+                        <div class="form-group">
+                            <div class="col-lg-3 col-sm-12">
+                                @Html.LabelFor(model => model.Username, new { }, ":")
+                            </div>
+                            @Html.EditorFor(model => model.Username)
+                            @Html.ValidationMessageFor(model => model.Username)
+                            @if (Model.CheckUsernameAvailabilityEnabled)
+                            {
+                                @Html.Partial("_CheckUsernameAvailability")
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+        @if (Model.CompanyEnabled)
+                {
+            <div class="card mb-3">
+                <h3 class="h5 card-header">@T("Account.CompanyDetails")</h3>
+                <div class="card-block">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Company, new { @class = "col-form-label" }, ":")
+                        @Html.GrandEditorFor(model => model.Company)
+                        @Html.ValidationMessageFor(model => model.Company)
+                    </div>
+
+                </div>
+            </div>
+        }
+        @if (Model.DisplayVatNumber)
+                {
+            <div class="card mb-3">
+                <div class="card-block">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VatNumber, new { }, ":")
+                        @Html.GrandEditorFor(model => model.VatNumber)
+                        <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.StreetAddressEnabled ||
+                Model.StreetAddress2Enabled ||
+                Model.ZipPostalCodeEnabled ||
+                Model.CityEnabled ||
+                Model.CountryEnabled)
+        {
+            <div class="card mb-3">
+                <h3 class="h5 card-header">
+                    @T("Account.YourAddress")
+                </h3>
+                <div class="card-block">
+                    <div class="form-fields d-flex row">
+                        @if (Model.StreetAddressEnabled)
+                    {
+                            <fieldset class="form-group col-12 col-sm-6">
+                                <legend class="sr-only">@T("account.fields.streetaddress")</legend>
+                                @Html.LabelFor(model => model.StreetAddress, new { @class = "col-form-label" }, ":")
+                                @Html.GrandEditorFor(model => model.StreetAddress)
+                                @Html.ValidationMessageFor(model => model.StreetAddress)
+                            </fieldset>
+                        }
+                        @if (Model.StreetAddress2Enabled)
+                    {
+                            <fieldset class="form-group col-12 col-sm-6">
+                                <legend class="sr-only">@T("account.fields.streetaddress2")</legend>
+                                @Html.LabelFor(model => model.StreetAddress2, new { @class = "col-form-label" }, ":")
+                                @Html.GrandEditorFor(model => model.StreetAddress2)
+                                @Html.ValidationMessageFor(model => model.StreetAddress2)
+                            </fieldset>
+                        }
+                        @if (Model.ZipPostalCodeEnabled)
+                    {
+                            <fieldset class="form-group col-12 col-sm-6">
+                                <legend class="sr-only">@T("account.fields.zippostalcode")</legend>
+                                @Html.LabelFor(model => model.ZipPostalCode, new { @class = "col-form-label" }, ":")
+                                @Html.GrandEditorFor(model => model.ZipPostalCode)
+                                @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                            </fieldset>
+                        }
+                        @if (Model.CityEnabled)
+                    {
+                            <fieldset class="form-group col-12 col-sm-6">
+                                <legend class="sr-only">@T("account.fields.city")</legend>
+                                @Html.LabelFor(model => model.City, new { @class = "col-form-label" }, ":")
+                                @Html.GrandEditorFor(model => model.City)
+                                @Html.ValidationMessageFor(model => model.City)
+                            </fieldset>
+                        }
+                        @if (Model.CountryEnabled)
+                    {
+                            <fieldset class="form-group col-12 col-sm-6">
+                                <legend class="sr-only">@T("account.fields.country")</legend>
+                                @Html.LabelFor(model => model.CountryId, new { @class = "col-form-label" }, ":")
+                                @Html.DropDownList("CountryId", Model.AvailableCountries, new { @class = "custom-select form-control" })
+                                @Html.ValidationMessageFor(model => model.CountryId)
+                            </fieldset>
+                        }
+                        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+                    {
+                            <fieldset class="form-group col-12 col-sm-6">
+                                <legend class="sr-only">@T("account.fields.stateprovince")</legend>
+                                @Html.LabelFor(model => model.StateProvinceId, new { @class = "col-form-label" }, ":")
+                                @Html.DropDownList("StateProvinceId", Model.AvailableStates, new { @class = "custom-select form-control" })
+                                @Html.ValidationMessageFor(model => model.StateProvinceId)
+                                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                            </fieldset>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.PhoneEnabled || Model.FaxEnabled)
+        {
+            <div class="card mb-3">
+                <h3 class="h5 card-header">@T("Account.YourContactInformation")</h3>
+                <div class="card-block">
+                    <div class="d-flex row">
+                        @if (Model.PhoneEnabled)
+                    {
+                            <fieldset class="form-group col-12 col-sm-6">
+                                <legend class="sr-only">@T("account.fields.phone")</legend>
+                                @Html.LabelFor(model => model.Phone, new { @class = "col-form-label" }, ":")
+                                @Html.GrandEditorFor(model => model.Phone)
+                                @Html.ValidationMessageFor(model => model.Phone)
+                            </fieldset>
+                        }
+                        @if (Model.FaxEnabled)
+                    {
+                            <fieldset class="form-group col-12 col-sm-6">
+                                <legend class="sr-only">@T("account.fields.fax")</legend>
+                                @Html.LabelFor(model => model.Fax, new { @class = "col-form-label" }, ":")
+                                @Html.GrandEditorFor(model => model.Fax)
+                                @Html.ValidationMessageFor(model => model.Fax)
+                            </fieldset>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
+        {
+            <div class="card mb-3">
+                <h3 class="h5 card-header">@T("Account.Options")</h3>
+                <div class="card-block">
+                        @if (Model.NewsletterEnabled)
+                        {
+                            <div class="form-group">
+                                <span class="col-form-label">@T("account.fields.newsletter")</span>
+                                <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
+                                    <input checked="checked" type="checkbox" class="custom-control-input" data-val="true" data-val-required="'Newsletter' must not be empty." id="Newsletter" name="Newsletter" value="true">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">&nbsp;</span>
+                                    <span class="sr-only">@T("account.fields.newsletter")</span>
+                                </label>
+                                @Html.ValidationMessageFor(model => model.Newsletter)
+                            </div>
+                        }
+                        @if (Model.CustomerAttributes.Count > 0)
+                        {
+                            @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                        }
+                </div>
+            </div>
+        }
+        @if (Model.AllowCustomersToSetTimeZone)
+        {
+            <div class="card mb-3">
+                <h3 class="h5 card-header">@T("Account.Preferences")</h3>
+                <div class="card-block">
+                    @if (Model.AllowCustomersToSetTimeZone)
+                    {
+                        <div class="form-group col-12 text-left px-0">
+                                @Html.LabelFor(model => model.TimeZoneId, new { @class = "col-form-label" }, ":")
+                                @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones, new { @class = "custom-select form-control" })
+                                @Html.ValidationMessageFor(model => model.TimeZoneId)
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        <div class="card mb-3">
+            <h3 class="h5 card-header">@T("Account.YourPassword")</h3>
+            <div class="card-block">
+                <div class="form-group col-12">
+                    <div class="row">
+                        @Html.LabelFor(model => model.Password, new { @class = "col-form-label" }, ":")
+                        @Html.GrandEditorFor(model => model.Password)
+                        @Html.ValidationMessageFor(model => model.Password)
+                    </div>
+                </div>
+                <div class="form-group col-12">
+                    <div class="row">
+                        @Html.LabelFor(model => model.ConfirmPassword, new { @class = "col-form-label" }, ":")
+                        @Html.GrandEditorFor(model => model.ConfirmPassword)
+                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                    </div>
+                </div>
+                @if (Model.DisplayCaptcha)
+                {
+                    <div class="captcha-box form-group">
+                        @Html.Raw(Html.GenerateCaptcha())
+                    </div>
+                }
+                @if (Model.HoneypotEnabled)
+                {
+                    <div class="form-group">
+                        @Html.Raw(Html.GenerateHoneypotInput())
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (Model.AcceptPrivacyPolicyEnabled)
+        {
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#register-button').click(function () {
+                        if ($('#accept-privacy-policy').is(':checked')) {
+                            //do some stuff
+                            return true;
+                        }
+                        else {
+                            //just show validation errors, dont post
+                            alert('@Html.Raw(JavaScriptEncoder.Default.Encode(T("Account.Fields.AcceptPrivacyPolicy.Required").Text))');
+                            return false;
+                        }
+                    });
+                });
+            </script>
+
+                <label class="custom-control custom-checkbox">
+                    <input id="accept-privacy-policy" name="accept-privacy-policy" type="checkbox" class="custom-control-input">
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description">@T("Account.Fields.AcceptPrivacyPolicy")</span>
+                    <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+                </label>
+        }
+    </div>
+    <input type="submit" id="register-button" class="btn btn-secondary register-next-step-button mt-3 mb-3" value="@T("Account.Register.Button")" name="register-button" />
+}

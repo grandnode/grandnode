@@ -1,0 +1,53 @@
+﻿@model TopMenuModel.CategoryLineModel
+<li class="@(Model.Category.SubCategories.Count() == 0 ? "nav-item": "nav-item dropdown" )">
+
+    @if (Model.Category.SubCategories.Count() > 0)
+            {
+        <span class="fa fa-angle-down hidden-lg-up text-white" aria-hidden="true"></span>
+    }
+
+    <a class="pr-3 pl-3 @(Model.Category.SubCategories.Count() == 0 ? "nav-link": "nav-link dropdown-toggle" )  @(Model.Category.IncludeInTopMenu ? "": "hidden-lg-up")" href="@Url.RouteUrl("Category", new { SeName = Model.Category.SeName })">
+        @Model.Category.Name
+    </a>
+    @{
+        //subcategories
+        var subCategories =
+            Model.Category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
+
+        var levelClass = "";
+        if (Model.Level == 0)
+        {
+            levelClass = "first-level";
+            <ul class="dropdown-menu @levelClass">
+                @foreach (var subCategory in subCategories)
+                {
+                    var categoryLineModel = new TopMenuModel.CategoryLineModel
+                    {
+                        Category = subCategory,
+                        Level = Model.Level + 1,
+                        ResponsiveMobileMenu = Model.ResponsiveMobileMenu
+                    };
+                    @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                }
+            </ul>
+        }
+        if (Model.Level == 1 && subCategories.Any())
+        {
+            levelClass = "next-level";
+            <ul class="dropdown-menu @levelClass">
+                @foreach (var subCategory in subCategories)
+                {
+                    var categoryLineModel = new TopMenuModel.CategoryLineModel
+                    {
+                        Category = subCategory,
+                        Level = Model.Level + 1,
+                        ResponsiveMobileMenu = Model.ResponsiveMobileMenu
+                    };
+                    @await Html.PartialAsync("_CategoryLine.TopMenu", categoryLineModel)
+                }
+            </ul>
+        }
+    }
+</li>
+
+

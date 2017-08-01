@@ -1,0 +1,76 @@
+﻿@model CatalogSettingsModel
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductReviewsMustBeApproved_OverrideForStore, model => model.ProductReviewsMustBeApproved, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.ProductReviewsMustBeApproved, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.ProductReviewsMustBeApproved)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.ProductReviewsMustBeApproved)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, model => model.AllowAnonymousUsersToReviewProduct, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.AllowAnonymousUsersToReviewProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.AllowAnonymousUsersToReviewProduct)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToReviewProduct)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, model => model.NotifyStoreOwnerAboutNewProductReviews, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.NotifyStoreOwnerAboutNewProductReviews, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowProductReviewsPerStore_OverrideForStore, model => model.ShowProductReviewsPerStore, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.ShowProductReviewsPerStore, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.ShowProductReviewsPerStore)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.ShowProductReviewsPerStore)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductReviewPossibleOnlyAfterPurchasing_OverrideForStore, model => model.ProductReviewPossibleOnlyAfterPurchasing, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.ProductReviewPossibleOnlyAfterPurchasing, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.ProductReviewPossibleOnlyAfterPurchasing)
+            </div>
+        </div>
+    </div>
+</div>

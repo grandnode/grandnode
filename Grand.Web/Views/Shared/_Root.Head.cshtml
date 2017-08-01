@@ -1,0 +1,54 @@
+﻿@using Grand.Core.Domain.Common;
+@using Grand.Core.Domain;
+@using Grand.Core.Domain.Seo;
+@inject CommonSettings commonSettings
+@inject SeoSettings seoSettings
+@inject StoreInformationSettings storeInformationSettings
+@{
+    var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore;
+    //X-UA-Compatible tag
+    if (commonSettings.RenderXuaCompatible)
+    {
+        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
+    }
+    //custom tag(s);
+    if (!string.IsNullOrEmpty(seoSettings.CustomHeadTags))
+    {
+        Html.AppendHeadCustomParts(seoSettings.CustomHeadTags);
+    }
+
+}
+<!DOCTYPE html>
+<html @await Html.PartialAsync("LanguageAttributes")>
+<head>
+
+    <title>@Html.GrandTitle(true)</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@(Html.NopMetaDescription())" />
+    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+    <meta name="generator" content="grandnode" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @Html.GrandHeadCustom()
+    @*This is used so that themes can inject content into the header*@
+    @await Html.PartialAsync("Head")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
+
+    @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
+    @Html.GrandScripts(this.Url, ResourceLocation.Head)
+    @Html.GrandCanonicalUrls()
+    @await Component.InvokeAsync("NewsRssHeaderLink")
+    @await Component.InvokeAsync("BlogRssHeaderLink")
+    @*Favicon - upload favicon.ico file to the root directory*@
+    @await Component.InvokeAsync("Favicon")
+    @if (displayMiniProfiler)
+    {
+        <mini-profiler />
+    }
+</head>
+
+<body>
+    @RenderBody()
+    @Html.GrandCssFiles(this.Url, ResourceLocation.Foot)
+    @Html.GrandScripts(this.Url, ResourceLocation.Foot)
+</body>
+</html>

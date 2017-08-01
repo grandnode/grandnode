@@ -1,0 +1,75 @@
+﻿@model CustomerReminderModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#customerreminder-edit").show();
+        $("#customerreminder-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+
+        $("#@Html.FieldIdFor(model => model.AllowRenew)").change(toggleAllowRenew);
+
+        toggleAllowRenew();
+
+        function toggleAllowRenew() {
+            if ($('#@Html.FieldIdFor(model => model.AllowRenew)').is(':checked')) {
+                $('#pnlAllowRenew').show();
+            } else {
+                $('#pnlAllowRenew').hide();
+            }
+        }
+
+    });
+</script>
+
+
+   
+<div id="customerreminder-edit" style="display:none">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerReminder.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerReminder.Conditions")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerReminder.Levels")
+        </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerReminder.History")
+        </li>
+    </ul>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabConditions", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabLevels", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabHistory", Model)
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customerreminder-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

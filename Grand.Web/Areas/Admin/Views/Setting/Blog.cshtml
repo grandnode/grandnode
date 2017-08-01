@@ -1,0 +1,113 @@
+﻿@model BlogSettingsModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Blog").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.Blog")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.Enabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.Enabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.Enabled)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.PostsPageSize, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.PostsPageSize)
+                                    @Html.ValidationMessageFor(model => model.PostsPageSize)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewBlogComments_OverrideForStore, model => model.NotifyAboutNewBlogComments, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.NotifyAboutNewBlogComments, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.NotifyAboutNewBlogComments)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.NumberOfTags_OverrideForStore, model => model.NumberOfTags, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.NumberOfTags, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.NumberOfTags)
+                                    @Html.ValidationMessageFor(model => model.NumberOfTags)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShowHeaderRssUrl, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowHeaderRssUrl)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

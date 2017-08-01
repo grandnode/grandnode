@@ -1,0 +1,36 @@
+﻿@model CurrencySelectorModel
+@using Grand.Web.Models.Common;
+@using Grand.Core;
+@using Grand.Core.Infrastructure;
+@using System.Net;
+@using Microsoft.AspNetCore.Http;
+@inject IWebHelper webHelper
+@inject IHttpContextAccessor httpContextAccessor
+    @if(Model.AvailableCurrencies.Count > 1)
+{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+    var currencies = Model.AvailableCurrencies.Select(x => new 
+    {
+		Name = x.Name,
+        Text = x.CurrencyCode,
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
+        Selected = x.Id.Equals(Model.CurrentCurrencyId)
+    });
+        <div class="btn-group btn-group-sm float-xs-right ml-1">
+            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                @currencies.FirstOrDefault(x => x.Selected).Text
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <ul class="pl-0 mb-0">
+                    @foreach (var item in currencies)
+                    {
+                        <li>
+                            <a href="@item.Value">@item.Text</a>
+                        </li>
+                    }
+                    </ul>
+            </div>
+        </div>
+}

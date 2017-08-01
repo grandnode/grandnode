@@ -1,0 +1,72 @@
+﻿@model CheckoutAttributeModel
+
+@using Grand.Core.Domain.Catalog;
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function () {
+        $("#checkoutattribute-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+<div id="checkoutattribute-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Values")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores")
+        </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Acl")
+        </li>
+        @if (Model.ConditionAllowed)
+        {
+            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")
+            </li>
+        }
+    </ul>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabValues", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabStores", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabAcl", Model)
+    </div>
+    @if (Model.ConditionAllowed)
+    {
+        <div>
+            @Html.Partial("_CreateOrUpdate.TabCondition", Model)
+        </div>
+    }
+</div>
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

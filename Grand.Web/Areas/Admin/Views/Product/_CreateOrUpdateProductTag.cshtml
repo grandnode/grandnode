@@ -1,0 +1,37 @@
+﻿@model ProductTagModel
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+@(Html.LocalizedEditor<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
+@<div class="form-horizontal">
+     <div class="form-body">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Locales[item].Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Locales[item].Name)
+                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
+             </div>
+         </div>
+         @Html.HiddenFor(model => model.Locales[item].LanguageId)
+     </div>
+</div>
+,
+@<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+    </div>
+</div>
+))

@@ -5,9 +5,9 @@ using Grand.Core.Data;
 using Grand.Core.Infrastructure;
 using Grand.Core.Infrastructure.DependencyManagement;
 using Grand.Data;
+using Grand.Plugin.Shipping.ByWeight.Controllers;
 using Grand.Plugin.Shipping.ByWeight.Domain;
 using Grand.Plugin.Shipping.ByWeight.Services;
-using Grand.Web.Framework.Mvc;
 
 namespace Grand.Plugin.Shipping.ByWeight
 {
@@ -16,6 +16,8 @@ namespace Grand.Plugin.Shipping.ByWeight
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, GrandConfig config)
         {
             builder.RegisterType<ShippingByWeightService>().As<IShippingByWeightService>().InstancePerLifetimeScope();
+            //base shipping controller
+            builder.RegisterType<ShippingByWeightController>();
         }
 
         public int Order

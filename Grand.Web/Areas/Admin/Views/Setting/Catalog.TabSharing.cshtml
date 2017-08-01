@@ -1,0 +1,51 @@
+﻿@model CatalogSettingsModel
+
+
+
+
+
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.ShowShareButton)").click(togglePageShareCode);
+
+            togglePageShareCode();
+        });
+
+        function togglePageShareCode() {
+            if ($('#@Html.FieldIdFor(model => model.ShowShareButton)').is(':checked')) {
+                $('#pnlPageShareCode').show();
+            }
+            else {
+                $('#pnlPageShareCode').hide();
+            }
+        }
+</script>
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowShareButton_OverrideForStore, model => model.ShowShareButton, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.ShowShareButton, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.ShowShareButton)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.ShowShareButton)
+            </div>
+        </div>
+        <div class="form-group" id="pnlPageShareCode">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.PageShareCode_OverrideForStore, model => model.PageShareCode, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.PageShareCode, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandTextAreaFor(model => model.PageShareCode, new { style = "Height: 100px;" })
+                @Html.ValidationMessageFor(model => model.PageShareCode)
+            </div>
+        </div>
+    </div>
+</div>

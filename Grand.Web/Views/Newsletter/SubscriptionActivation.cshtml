@@ -1,0 +1,11 @@
+﻿@model SubscriptionActivationModel
+@using Grand.Web.Models.Newsletter;
+@{
+    Layout = "_ColumnsOne";
+}
+<div class="page newsletter-page">
+    <h1 class="h2 text-xs-center generalTitle">@T("Newsletter.Title")</h1>
+    <strong>
+        @Model.Result
+    </strong>
+</div>

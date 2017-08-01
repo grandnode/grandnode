@@ -1,0 +1,151 @@
+﻿@model CategoryModel
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+            togglePageSize();
+        });
+
+        function togglePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
+            }
+        }
+</script>
+@(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].Name)
+                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Description)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Description)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(x => x.Description, "RichEditor")
+                    @Html.ValidationMessageFor(model => model.Description)
+                </div>
+            </div>
+        </div>
+    </div>
+    ))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CategoryTemplateId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.CategoryTemplateId, Model.AvailableCategoryTemplates)
+                @Html.ValidationMessageFor(model => model.CategoryTemplateId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.PictureId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.PictureId)
+                @Html.ValidationMessageFor(model => model.PictureId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ParentCategoryId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ParentCategoryId, Model.AvailableCategories)
+                @Html.ValidationMessageFor(model => model.ParentCategoryId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.PriceRanges)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(x => x.PriceRanges)
+                @Html.ValidationMessageFor(model => model.PriceRanges)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ShowOnHomePage)
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(x => x.ShowOnHomePage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.ShowOnHomePage)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IncludeInTopMenu)
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(x => x.IncludeInTopMenu)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AllowCustomersToSelectPageSize)
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(x => x.AllowCustomersToSelectPageSize)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+            </div>
+        </div>
+        <div class="form-group" id="pnlPageSize">
+            @Html.GrandLabelFor(model => model.PageSize)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(x => x.PageSize)
+                @Html.ValidationMessageFor(model => model.PageSize)
+            </div>
+        </div>
+        <div class="form-group" id="pnlPageSizeOptions">
+            @Html.GrandLabelFor(model => model.PageSizeOptions)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(x => x.PageSizeOptions)
+                @Html.ValidationMessageFor(model => model.PageSizeOptions)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Published)
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(x => x.Published)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.Published)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+    </div>
+</div>

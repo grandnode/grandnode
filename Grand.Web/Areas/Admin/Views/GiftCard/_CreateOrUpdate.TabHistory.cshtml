@@ -1,0 +1,66 @@
+﻿@model GiftCardModel
+@using Grand.Core.Domain.Catalog;
+
+
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    <div id="usagehistory-grid"></div>
+
+    <script>
+        $(document).ready(function () {
+            $("#usagehistory-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("UsageHistoryList", "GiftCard", new { giftCardId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "CreatedOn",
+                    title: "@T("Admin.GiftCards.History.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "OrderId",
+                    title: "@T("Admin.GiftCards.History.Order")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderNumber# - @T("Admin.Common.View")</a>'
+                }, {
+                    field: "UsedValue",
+                    title: "@T("Admin.GiftCards.History.UsedValue")",
+                    width: 200
+                }]
+            });
+        });
+    </script>
+}

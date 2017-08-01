@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model StateProvinceModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Countries.States.EditStateDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-globe"></i>
+                        @T("Admin.Configuration.Countries.States.EditStateDetails")
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    @Html.Partial("_CreateOrUpdateState", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+}

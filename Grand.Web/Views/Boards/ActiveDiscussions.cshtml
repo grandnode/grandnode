@@ -1,0 +1,16 @@
+﻿@model ActiveDiscussionsModel
+@using Grand.Web.Models.Boards;
+@{
+    Layout = "_ColumnsOne";
+
+    Html.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
+}
+<div class="page active-discussions-page">
+    @await Component.InvokeAsync("ForumBreadcrumb")
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_activediscussions_after_header" })
+    @await Html.PartialAsync("_ActiveTopics", Model)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_activediscussions_after_topics" })
+
+
+</div>

@@ -1,0 +1,36 @@
+﻿@model ProductDetailsModel.ProductBreadcrumbModel
+@using Grand.Core.Domain.Common;
+@using Grand.Core.Infrastructure;
+@using Grand.Web.Models.Catalog;
+@inject CommonSettings commonSettings
+@{
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
+}
+@if (Model.Enabled)
+{
+        <ol class="breadcrumb">
+            @await Component.InvokeAsync("Widget", new { widgetZone = "productbreadcrumb_before" })
+            <li class="breadcrumb-item">
+                <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <a href="@Url.RouteUrl("HomePage")" itemprop="url">
+                        <span itemprop="title">@T("Products.Breadcrumb.Top")</span>
+                    </a>
+                </span>
+            </li>
+            @foreach (var category in Model.CategoryBreadcrumb)
+            {
+                <li class="breadcrumb-item">
+                    <span itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+                        <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })" itemprop="url">
+                            <span itemprop="title">@category.Name</span>
+                        </a>
+                    </span>
+                </li>
+            }
+            <li class="breadcrumb-item active">
+                <strong class="current-item">@Model.ProductName</strong>
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productbreadcrumb_after", additionalData = Model.Id })
+            </li>
+        </ol>
+
+}

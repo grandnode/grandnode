@@ -1,0 +1,113 @@
+﻿@model CustomerReminderModel
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Active)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.StartDateTimeUtc)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.StartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.EndDateTimeUtc)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.EndDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.LastUpdateDate)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.LastUpdateDate)
+                @Html.ValidationMessageFor(model => model.LastUpdateDate)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AllowRenew)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.AllowRenew)
+                @Html.ValidationMessageFor(model => model.AllowRenew)
+            </div>
+        </div>
+        <div class="form-group" id="pnlAllowRenew">
+            @Html.GrandLabelFor(model => model.RenewedDay)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.RenewedDay)
+                @Html.ValidationMessageFor(model => model.RenewedDay)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ReminderRuleId)
+            <div class="col-md-9 col-sm-9">
+                @if (Model.ConditionCount > 0)
+                {
+                    @Html.GrandDropDownListFor(model => model.ReminderRuleId, ((Grand.Core.Domain.Customers.CustomerReminderRuleEnum)Model.ReminderRuleId).ToSelectList(), new { @disabled = "disabled" })
+                }
+                else
+                {
+                    @Html.GrandDropDownListFor(model => model.ReminderRuleId, ((Grand.Core.Domain.Customers.CustomerReminderRuleEnum)Model.ReminderRuleId).ToSelectList())
+                }
+                @Html.ValidationMessageFor(model => model.ReminderRuleId)
+                <div class="note note-info margin-top-10">
+                    @T("admin.customers.customerreminder.text1")
+                </div>
+                <div class="note note-warning">
+                    @T("admin.customers.customerreminder.text2")
+                </div>
+                <div class="note note-info">
+                    @T("admin.customers.customerreminder.text3")
+                </div>
+                <div class="note note-warning">
+                    @T("admin.customers.customerreminder.text4")
+                </div>
+                <div class="note note-info">
+                    @T("admin.customers.customerreminder.text5")
+                </div>
+                <div class="note note-warning">
+                    @T("admin.customers.customerreminder.text6")
+                </div>
+                <div class="note note-info">
+                    @T("admin.customers.customerreminder.text7")
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ConditionId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ConditionId, ((Grand.Core.Domain.Customers.CustomerReminderConditionEnum)Model.ConditionId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ConditionId)
+                <div class="note note-info margin-top-10">
+                    @T("admin.customers.actiontype.helpText.OneOfThem")
+                </div>
+                <div class="note note-warning">
+                    @T("admin.customers.actiontype.helpText.AllOfThem")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "_Root.Head";
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
+@Html.Partial("_Notifications")
+@await Component.InvokeAsync("JavaScriptDisabledWarning")
+@Html.Partial("OldInternetExplorerWarning")
+
+<div class="container">
+@Html.Partial("Header")
+<nav class="navbar navbar-toggleable-md bg-inverse container mainNav mb-1 pl-0 pr-0">
+        <button class="navbar-toggler hidden-lg-up text-white" type="button" data-toggle="collapse" data-target="#collapsing-navbar-2">
+            <span>&#9776;</span>
+            <span class="text-white hidden-lg-up pl-2">
+                @T("Categories")
+            </span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsing-navbar-2">
+            <ul class="nav navbar-nav">
+                @await Component.InvokeAsync("TopMenu")
+            </ul>
+        </div>
+</nav>
+
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before"})
+
+
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb")
+        }
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+</div>
+@await Component.InvokeAsync("Footer")
+
+
+<script>
+
+
+    $(document).ready(function () {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            if ($(window).width() < 1050 & $(window).width() > 991) {
+                $("a.dropdown-toggle").click(function (e) {
+                    e.preventDefault();
+                    $(this).unbind(e);
+                });
+            };
+        };
+    });
+    AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '.flyout-cart');
+
+</script>
+@await Component.InvokeAsync("EuCookieLaw")
+@await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })

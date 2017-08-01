@@ -1,0 +1,14 @@
+﻿@model ForumGroupModel
+@using Grand.Web.Models.Boards;
+@{
+    Layout = "_ColumnsOne";
+
+    Html.AddTitleParts(Model.Name);
+}
+<div class="page forum-group-page">
+    @await Component.InvokeAsync("ForumBreadcrumb", new { forumGroupId = Model.Id })
+    @await Html.PartialAsync("_ForumHeader")
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forumgroup_after_header" })
+    @await Html.PartialAsync("_ForumGroup", Model)
+    @await Component.InvokeAsync("Widget", new { widgetZone = "boards_forumgroup_bottom" })
+</div>

@@ -1,0 +1,121 @@
+﻿@model CheckoutAttributeModel
+@using Grand.Core.Domain.Catalog;
+@{
+
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        /*TODO display the following warning if values are not supported by selected attribute control type
+         'Values are not required for this attribute control type'
+         */
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="checkoutattributevalues-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 350, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefresh" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#checkoutattributevalues-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ValueList", "CheckoutAttribute", new { checkoutAttributeId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ValueDelete", "CheckoutAttribute"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id"
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name")"
+                    }, {
+                        field: "PriceAdjustment",
+                        title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.PriceAdjustment")",
+                        width: 200
+                    }, {
+                        field: "WeightAdjustment",
+                        title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.WeightAdjustment")",
+                        width: 200
+                    }, {
+                        field: "IsPreSelected",
+                        title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.IsPreSelected")",
+                        width: 100,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(IsPreSelected) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
+                        width: 100
+                    },{
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/")#=Id#?checkoutAttributeId=@Model.Id&btnId=btnRefresh&formId=checkoutattribute-form', 800, 350, true); return false;\" class='k-button' />"
+                    }, {
+                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }]
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    var grid = $("#checkoutattributevalues-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.SaveBeforeEdit")
+        </div>
+    }
+}

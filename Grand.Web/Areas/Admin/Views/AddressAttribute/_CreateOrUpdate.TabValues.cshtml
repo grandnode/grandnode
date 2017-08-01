@@ -1,0 +1,117 @@
+﻿@model AddressAttributeModel
+
+@using Grand.Core.Domain.Catalog
+
+
+
+
+
+@{
+
+
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="addressattributevalues-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewValue" value="@T("Admin.Address.AddressAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 350, true); return false;" class="btn green" />
+                <input type="submit" id="btnRefresh" style="display: none" />
+            </div>
+        </div>
+        <script>
+                            $(document).ready(function () {
+                                $("#addressattributevalues-grid").kendoGrid({
+                                    dataSource: {
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("ValueList", "AddressAttribute", new { addressAttributeId = Model.Id }))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            },
+                                            destroy: {
+                                                url: "@Html.Raw(Url.Action("ValueDelete", "AddressAttribute"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors",
+                                            model: {
+                                                id: "Id"
+                                            }
+                                        },
+                                        error: function(e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        numeric: false,
+                                        previousNext: false,
+                                        info: false
+                                    },
+                                    editable: {
+                                        confirmation: false,
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [{
+                                        field: "Name",
+                                        title: "@T("Admin.Address.AddressAttributes.Values.Fields.Name")"
+                                    }, {
+                                        field: "IsPreSelected",
+                                        title: "@T("Admin.Address.AddressAttributes.Values.Fields.IsPreSelected")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '# if(IsPreSelected) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")",
+                                        width: 100
+                                    },{
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")#=Id#?addressAttributeId=@(Model.Id)&btnId=btnRefresh&formId=addressattribute-form', 800, 350, true); return false;\" class='k-button' />"
+                                    }, {
+                                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                                        title: "@T("Admin.Common.Delete")",
+                                        width: 100
+                                    }]
+                                });
+                            });
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    var grid = $("#addressattributevalues-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Address.AddressAttributes.Values.SaveBeforeEdit")
+        </div>
+    }
+}

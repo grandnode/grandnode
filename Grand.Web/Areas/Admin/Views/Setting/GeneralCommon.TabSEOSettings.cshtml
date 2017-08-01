@@ -1,0 +1,164 @@
+﻿@model GeneralCommonSettingsModel
+
+
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.PageTitleSeparator, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.SeoSettings.PageTitleSeparator)
+                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeparator)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, model => model.SeoSettings.PageTitleSeoAdjustment, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.PageTitleSeoAdjustment, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandDropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment, Model.SeoSettings.PageTitleSeoAdjustmentValues)
+                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.DefaultTitle, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.SeoSettings.DefaultTitle)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultTitle)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaKeywords_OverrideForStore, model => model.SeoSettings.DefaultMetaKeywords, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.DefaultMetaKeywords, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.SeoSettings.DefaultMetaKeywords)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaKeywords)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaDescription_OverrideForStore, model => model.SeoSettings.DefaultMetaDescription, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.DefaultMetaDescription, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.SeoSettings.DefaultMetaDescription)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaDescription)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.GenerateProductMetaDescription_OverrideForStore, model => model.SeoSettings.GenerateProductMetaDescription, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.GenerateProductMetaDescription, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SeoSettings.GenerateProductMetaDescription)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SeoSettings.GenerateProductMetaDescription)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.ConvertNonWesternChars, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SeoSettings.ConvertNonWesternChars)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.WwwRequirement_OverrideForStore, model => model.SeoSettings.WwwRequirement, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.WwwRequirement, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandDropDownListFor(model => model.SeoSettings.WwwRequirement, Model.SeoSettings.WwwRequirementValues)
+                @Html.ValidationMessageFor(model => model.SeoSettings.WwwRequirement)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.EnableJsBundling, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SeoSettings.EnableJsBundling)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SeoSettings.EnableJsBundling)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableCssBundling_OverrideForStore, model => model.SeoSettings.EnableCssBundling, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.EnableCssBundling, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SeoSettings.EnableCssBundling)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SeoSettings.EnableCssBundling)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.TwitterMetaTags_OverrideForStore, model => model.SeoSettings.TwitterMetaTags, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.TwitterMetaTags, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SeoSettings.TwitterMetaTags)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SeoSettings.TwitterMetaTags)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.OpenGraphMetaTags_OverrideForStore, model => model.SeoSettings.OpenGraphMetaTags, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.SeoSettings.OpenGraphMetaTags, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SeoSettings.OpenGraphMetaTags)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SeoSettings.OpenGraphMetaTags)
+            </div>
+        </div>
+    </div>
+</div>

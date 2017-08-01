@@ -1,12 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Web.Routing;
 using Grand.Core;
 using Grand.Core.Plugins;
 using Grand.Services.Cms;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Media;
+using Microsoft.AspNetCore.Routing;
 
 namespace Grand.Plugin.Widgets.Slider
 {
@@ -36,37 +37,6 @@ namespace Grand.Plugin.Widgets.Slider
             return new List<string> { "home_page_top" };
         }
 
-        /// <summary>
-        /// Gets a route for provider configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = "Configure";
-            controllerName = "WidgetsSlider";
-            routeValues = new RouteValueDictionary { { "Namespaces", "Grand.Plugin.Widgets.Slider.Controllers" }, { "area", null } };
-        }
-
-        /// <summary>
-        /// Gets a route for displaying widget
-        /// </summary>
-        /// <param name="widgetZone">Widget zone where it's displayed</param>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        public void GetDisplayWidgetRoute(string widgetZone, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
-        {
-            actionName = "PublicInfo";
-            controllerName = "WidgetsSlider";
-            routeValues = new RouteValueDictionary
-            {
-                {"Namespaces", "Grand.Plugin.Widgets.Slider.Controllers"},
-                {"area", null},
-                {"widgetZone", widgetZone}
-            };
-        }
         
         /// <summary>
         /// Install plugin
@@ -74,7 +44,7 @@ namespace Grand.Plugin.Widgets.Slider
         public override void Install()
         {
             //pictures
-            var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.Slider/Content/slider/sample-images/");
+            var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.Slider/netcoreapp1.1/Content/slider/sample-images/");
 
             //settings
             var settings = new SliderSettings
@@ -126,6 +96,19 @@ namespace Grand.Plugin.Widgets.Slider
             this.DeletePluginLocaleResource("Plugins.Widgets.Slider.Link.Hint");
             
             base.Uninstall();
+        }
+
+        public void GetPublicViewComponent(out string viewComponentName)
+        {
+            viewComponentName = "Grand.Plugin.Widgets.Slider";
+        }
+
+        /// <summary>
+        /// Gets a configuration page URL
+        /// </summary>
+        public override string GetConfigurationPageUrl()
+        {
+            return $"{_webHelper.GetStoreLocation()}Admin/WidgetsSlider/Configure";
         }
     }
 }

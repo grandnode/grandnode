@@ -1,8 +1,0 @@
-﻿Group: Misc
-FriendlyName: Facebook shop
-SystemName: Misc.FacebookShop
-Version: 1.18
-SupportedVersions: 4.00
-Author: grandnode team, nopcommerce team
-DisplayOrder: 1
-FileName: Grand.Plugin.Misc.FacebookShop.dll

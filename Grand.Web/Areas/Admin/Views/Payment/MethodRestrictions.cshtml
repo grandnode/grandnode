@@ -1,0 +1,79 @@
+﻿@model PaymentMethodRestrictionModel
+@{               
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Payment.MethodRestrictions").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-money"></i>
+                        @T("Admin.Configuration.Payment.MethodRestrictions")
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#paymentrestriction-edit').show();
+                            $("#paymentrestriction-edit").kendoTabStrip({
+                                animation: {
+                                    open: {
+                                        effects: "fadeIn"
+                                    }
+                                },
+                                select: tabstrip_on_tab_select
+                            });
+                        });
+                    </script>                    
+                    
+                    <div id="paymentrestriction-edit" style="display:none">
+                        <ul>
+                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Payment.MethodRestrictions.Country")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Payment.MethodRestrictions.Role")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                                @T("Admin.Configuration.Payment.MethodRestrictions.Shipping")
+                            </li>
+                        </ul>
+                        <div>
+                            @Html.Partial("MethodRestrictions.TabCountry", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("MethodRestrictions.TabRole", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("MethodRestrictions.TabShipping", Model)
+                        </div>
+                    </div>
+
+                    @{
+                        //custom tabs
+                        var eventMessage = new AdminTabStripCreated(this.Html, "paymentrestriction-edit");
+                        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+                        foreach (var eventBlock in eventMessage.BlocksToRender)
+                        {
+                            @eventBlock
+                        }
+                    }
+
+
+                    @*save selected tab index*@
+                    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

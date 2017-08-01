@@ -1,0 +1,47 @@
+﻿@model ProductModel
+@using Grand.Core.Domain.Catalog
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    if (Model.AvailableProductAttributes.Count > 0)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#productattribute-edit").kendoTabStrip({
+                    animation: {
+                        open: {
+                            effects: "fadeIn"
+                        }
+                    }
+                });
+            });
+        </script>
+        <div id="productattribute-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, 0)>
+                    @T("Admin.Catalog.Products.ProductAttributes.Attributes")
+                </li>
+                <li>
+                    @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")
+                </li>
+            </ul>
+            <div>
+                @Html.Partial("_CreateOrUpdate.ProductAttributes.TabAttributes", Model)
+            </div>
+            <div>
+                @Html.Partial("_CreateOrUpdate.ProductAttributes.TabAttributeCombinations", Model)
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable")
+        </div>
+    }
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Catalog.Products.ProductAttributes.SaveBeforeEdit")
+    </div>
+}

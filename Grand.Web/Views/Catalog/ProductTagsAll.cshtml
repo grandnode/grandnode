@@ -1,0 +1,21 @@
+﻿@model PopularProductTagsModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.AllProductTags").Text);
+}
+@using Grand.Web.Models.Catalog;
+<div class="page product-tags-all-page">
+        <h2 class="generalTitle">@T("Products.Tags.All")</h2>
+        @if (Model.Tags.Count > 0)
+        {
+            <div class="product-tags-list">
+                @foreach (var item in Model.Tags)
+                {
+                        <a class="btn btn-secondary" href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" class="btn btn-sm btn-secondary" style="font-size:@(Model.GetFontSize(item))%;">
+                        @item.Name</a>
+                }
+            </div>
+        }
+</div>

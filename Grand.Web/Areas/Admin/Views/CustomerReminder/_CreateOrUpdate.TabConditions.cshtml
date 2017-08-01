@@ -1,0 +1,103 @@
+﻿@model CustomerReminderModel
+
+
+
+@{
+
+    if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerReminder.SaveBeforeEdit")
+        </div>
+    }
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="conditions-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewCondition" name="btnAddNewCondition" value="@T("Admin.Customers.CustomerReminder.Conditions.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddCondition", "CustomerReminder", new { customerReminderId = Model.Id }))'); return false;" class="btn default" />
+            </div>
+        </div>
+
+
+
+        <script>
+                        $(document).ready(function () {
+                            $("#conditions-grid").kendoGrid({
+                                dataSource: {
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("Conditions", "CustomerReminder", new { customerReminderId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ConditionDelete", "CustomerReminder", new { customerReminderId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.Customers.CustomerReminder.Fields.Name")",
+                                    width: 300,
+                                    filterable: false,
+                                    sortable: false
+                                },
+                                {
+                                    field: "Condition",
+                                    title: "@T("Admin.Customers.CustomerReminder.Fields.ConditionType")",
+                                    width: 100,
+                                },
+                                {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: '<a href="@Url.Content("~/Admin/CustomerReminder/EditCondition")?customerReminderId=@(Model.Id)&cid=#=Id#">@T("Admin.Common.Edit")</a>'
+                                },
+                                {
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 100
+                                }]
+                            });
+                        });
+        </script>
+    }
+}

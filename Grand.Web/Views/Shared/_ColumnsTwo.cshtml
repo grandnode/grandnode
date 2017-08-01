@@ -1,0 +1,67 @@
+﻿@{
+    Layout = "_Root";
+}
+@{
+    //current category ID
+    string currentCategoryId = "";
+    if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.OrdinalIgnoreCase) &&
+        Url.ActionContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.OrdinalIgnoreCase))
+    {
+        currentCategoryId = Url.ActionContext.RouteData.Values["categoryId"].ToString();
+    }
+
+
+    //current manufacturer ID
+    string currentManufacturerId = "";
+    if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.OrdinalIgnoreCase) &&
+        Url.ActionContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.OrdinalIgnoreCase))
+    {
+        currentManufacturerId = Url.ActionContext.RouteData.Values["manufacturerId"].ToString();
+    }
+
+
+    //current product ID
+    string currentProductId = "";
+    if (Url.ActionContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.OrdinalIgnoreCase) &&
+        Url.ActionContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.OrdinalIgnoreCase))
+    {
+        currentProductId = Url.ActionContext.RouteData.Values["productId"].ToString();
+    }
+}
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @section Breadcrumb {
+        @RenderSection("Breadcrumb")
+    }
+}
+<div class="d-lg-flex d-grid flex-md-row mx-0">
+
+    <div class="col-lg-3 col-md-12 generalLeftSide pl-0">
+        @if (IsSectionDefined("left"))
+        {
+            @RenderSection("left")
+        }
+        else
+        {
+            if (IsSectionDefined("filters"))
+            {
+                @RenderSection("filters")
+            }
+
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_before" })
+            @await Component.InvokeAsync("CategoryNavigation", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after_category_navigation" })
+            @await Component.InvokeAsync("ManufacturerNavigation", new { currentManufacturerId = currentManufacturerId })
+            @await Component.InvokeAsync("VendorNavigation")
+            @await Component.InvokeAsync("RecentlyViewedProductsBlock", new { productThumbPictureSize = 64 })
+            @await Component.InvokeAsync("PopularProductTags")
+            @await Component.InvokeAsync("PollBlock", new { systemKeyword = "LeftColumnPoll" })
+            @await Component.InvokeAsync("Widget", new { widgetZone = "left_side_column_after" })
+        }
+    </div>
+    <div class="col-lg-9 col-md-12 generalSideRight pl-0 pr-0">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_before" })
+        @RenderBody()
+        @await Component.InvokeAsync("Widget", new { widgetZone = "main_column_after" })
+    </div>
+</div>

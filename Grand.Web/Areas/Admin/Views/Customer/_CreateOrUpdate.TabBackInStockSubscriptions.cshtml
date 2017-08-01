@@ -1,0 +1,74 @@
+﻿@model CustomerModel
+@using Grand.Core.Domain.Orders;
+@using Grand.Services.Customers;
+@using System.Text;
+
+
+
+
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="backinstock-subscriptions-grid"></div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#backinstock-subscriptions-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("BackInStockSubscriptionList", "Customer", new { customerId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "StoreName",
+                    title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Store")",
+                    width: 200,
+                }, {
+                    field: "ProductId",
+                    title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Product")",
+                    width: 300,
+                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+                },{
+                    field: "CreatedOn",
+                    title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                }]
+            });
+        });
+    </script>
+}

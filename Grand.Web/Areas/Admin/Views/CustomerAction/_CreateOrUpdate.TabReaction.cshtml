@@ -1,0 +1,60 @@
+﻿@model CustomerActionModel
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ReactionTypeId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ReactionTypeId, ((Grand.Core.Domain.Customers.CustomerReactionTypeEnum)Model.ReactionTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ReactionTypeId)
+                <div class="note note-info margin-top-10">
+                    <p>@T("admin.customers.actiontype.helpText.Banner")</p>
+                    <p>@T("admin.customers.actiontype.helpText.InteractiveForm")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Email")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Customerrole")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Customertag")</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" id="plnBanner">
+            @Html.GrandLabelFor(model => model.BannerId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.BannerId, Model.Banners)
+                @Html.ValidationMessageFor(model => model.BannerId)
+            </div>
+        </div>
+        <div class="form-group" id="plnInteractiveForm">
+            @Html.GrandLabelFor(model => model.InteractiveFormId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.InteractiveFormId, Model.InteractiveForms)
+                @Html.ValidationMessageFor(model => model.InteractiveFormId)
+            </div>
+        </div>
+        <div class="form-group" id="plnMessage">
+            @Html.GrandLabelFor(model => model.MessageTemplateId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.MessageTemplateId, Model.MessageTemplates)
+                @Html.ValidationMessageFor(model => model.MessageTemplateId)
+            </div>
+        </div>
+        <div class="form-group" id="plnRole">
+            @Html.GrandLabelFor(model => model.CustomerRoleId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.CustomerRoleId, Model.CustomerRoles)
+                @Html.ValidationMessageFor(model => model.CustomerRoleId)
+            </div>
+        </div>
+        <div class="form-group" id="plnTag">
+            @Html.GrandLabelFor(model => model.CustomerTagId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.CustomerTagId, Model.CustomerTags)
+                @Html.ValidationMessageFor(model => model.CustomerTagId)
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+﻿@model RecurringPaymentModel
+@using Grand.Core.Domain.Catalog;
+
+
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <td>
+            @if (!String.IsNullOrEmpty(Model.NextPaymentDate))
+            {
+                @T("Admin.RecurringPayments.History.NextPaymentDate")
+                <text>:</text> @Model.NextPaymentDate
+                <input type="submit" name="processnextpayment" class="k-button" value="@T("Admin.RecurringPayments.History.ProcessNextPayment")" />
+            }
+            @if (Model.CanCancelRecurringPayment)
+            {
+                <input type="submit" name="cancelpayment" class="k-button" value="@T("Admin.RecurringPayments.History.CancelPayment")" />
+            }
+        </td>
+    </tr>
+</table>
+
+<div id="history-grid"></div>
+<script>
+        $(document).ready(function () {
+            $("#history-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new { recurringPaymentId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "OrderId",
+                    title: "@T("Admin.RecurringPayments.History.Order")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                }, {
+                    field: "OrderStatus",
+                    title: "@T("Admin.RecurringPayments.History.OrderStatus")",
+                    width: 200
+                }, {
+                    field: "PaymentStatus",
+                    title: "@T("Admin.RecurringPayments.History.PaymentStatus")",
+                    width: 200
+                }, {
+                    field: "ShippingStatus",
+                    title: "@T("Admin.RecurringPayments.History.ShippingStatus")",
+                    width: 200
+                }, {
+                    field: "CreatedOn",
+                    title: "@T("Admin.RecurringPayments.History.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
+                }]
+            });
+        });
+</script>

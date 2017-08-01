@@ -1,0 +1,56 @@
+﻿@using Grand.Core.Plugins
+@using Grand.Services.Security
+@using Grand.Framework.Menu
+@inject IPluginFinder pluginFinder
+@inject IPermissionService permissionService
+@{
+    //load sitemap
+    var siteMap = new XmlSiteMap();
+    siteMap.LoadFrom("~/Areas/Admin/sitemap.config");
+}
+<div class="page-sidebar-wrapper">
+    <div class="page-sidebar navbar-collapse collapse">
+        <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
+            <li class="sidebar-toggler-wrapper hide">
+                <div class="sidebar-toggler">
+                    <span></span>
+                </div>
+            </li>
+            @{
+                //standard (default) items
+                var rootNode = siteMap.RootNode;
+
+                //plugins
+                var adminMenuPlugins = EngineContext.Current.Resolve<Grand.Core.Plugins.IPluginFinder>()
+                    .GetPlugins<IAdminMenuPlugin>()
+                    .ToList();
+                foreach (var adminMenuPlugin in adminMenuPlugins)
+                {
+                    adminMenuPlugin.ManageSiteMap(rootNode);
+                }
+                //"Plugins" menu item should be visible when it has some child nodes
+                var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
+                if (pluginNode != null && pluginNode.Visible)
+                {
+                    var permissionService = EngineContext.Current.Resolve<Grand.Services.Security.IPermissionService>();
+                    var hasManagePluginsPermission = permissionService.Authorize(Grand.Services.Security.StandardPermissionProvider.ManagePlugins);
+                    pluginNode.Visible = hasManagePluginsPermission && pluginNode.ChildNodes.Any(x => x.Visible);
+                }
+            }
+            @foreach (var item in rootNode.ChildNodes.Where(x => x.Visible))
+            {
+                @await Html.PartialAsync("_MenuItem", item)
+            }
+        </ul>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('.nav-item.active.open')
+            .parentsUntil('.page-sidebar-menu')
+            .each(function (i, v) {
+                $(this)
+                    .addClass("active open");
+            });
+    });
+</script>

@@ -1,0 +1,287 @@
+﻿@model ShoppingCartSettingsModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.ShoppingCart").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.ShoppingCart")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DisplayCartAfterAddingProduct_OverrideForStore, model => model.DisplayCartAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DisplayCartAfterAddingProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayCartAfterAddingProduct)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.DisplayCartAfterAddingProduct)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DisplayWishlistAfterAddingProduct_OverrideForStore, model => model.DisplayWishlistAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DisplayWishlistAfterAddingProduct, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayWishlistAfterAddingProduct)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.DisplayWishlistAfterAddingProduct)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, model => model.AllowOutOfStockItemsToBeAddedToWishlist, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MaximumShoppingCartItems_OverrideForStore, model => model.MaximumShoppingCartItems, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MaximumShoppingCartItems, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.MaximumShoppingCartItems)
+                                    @Html.ValidationMessageFor(model => model.MaximumShoppingCartItems)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MaximumWishlistItems_OverrideForStore, model => model.MaximumWishlistItems, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MaximumWishlistItems, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.MaximumWishlistItems)
+                                    @Html.ValidationMessageFor(model => model.MaximumWishlistItems)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MoveItemsFromWishlistToCart_OverrideForStore, model => model.MoveItemsFromWishlistToCart, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MoveItemsFromWishlistToCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.MoveItemsFromWishlistToCart)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.MoveItemsFromWishlistToCart)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, model => model.ShowProductImagesOnShoppingCart, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShowProductImagesOnShoppingCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowProductImagesOnShoppingCart)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShowProductImagesOnShoppingCart)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnWishList_OverrideForStore, model => model.ShowProductImagesOnWishList, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShowProductImagesOnWishList, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowProductImagesOnWishList)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShowProductImagesOnWishList)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowDiscountBox_OverrideForStore, model => model.ShowDiscountBox, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShowDiscountBox, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowDiscountBox)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShowDiscountBox)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowGiftCardBox_OverrideForStore, model => model.ShowGiftCardBox, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShowGiftCardBox, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowGiftCardBox)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShowGiftCardBox)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.CrossSellsNumber_OverrideForStore, model => model.CrossSellsNumber, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.CrossSellsNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.CrossSellsNumber)
+                                    @Html.ValidationMessageFor(model => model.CrossSellsNumber)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EmailWishlistEnabled_OverrideForStore, model => model.EmailWishlistEnabled, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EmailWishlistEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.EmailWishlistEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.EmailWishlistEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlAllowAnonymousUsersToEmailWishlist">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, model => model.AllowAnonymousUsersToEmailWishlist, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowAnonymousUsersToEmailWishlist, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartEnabled_OverrideForStore, model => model.MiniShoppingCartEnabled, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MiniShoppingCartEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.MiniShoppingCartEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.MiniShoppingCartEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlMiniShoppingCartProductNumber">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartProductNumber_OverrideForStore, model => model.MiniShoppingCartProductNumber, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.MiniShoppingCartProductNumber, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.MiniShoppingCartProductNumber)
+                                    @Html.ValidationMessageFor(model => model.MiniShoppingCartProductNumber)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlShowProductImagesInMiniShoppingCart">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInMiniShoppingCart_OverrideForStore, model => model.ShowProductImagesInMiniShoppingCart, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShowProductImagesInMiniShoppingCart, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShowProductImagesInMiniShoppingCart)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShowProductImagesInMiniShoppingCart)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowCartItemEditing_OverrideForStore, model => model.AllowCartItemEditing, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowCartItemEditing, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowCartItemEditing)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AllowCartItemEditing)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartEnabled);
+            $("#@Html.FieldIdFor(model => model.EmailWishlistEnabled)").click(toggleEmailWishlistEnabled);
+
+            toggleMiniShoppingCartEnabled();
+            toggleEmailWishlistEnabled();
+        });
+
+        function toggleMiniShoppingCartEnabled() {
+            if ($('#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
+                $('#pnlMiniShoppingCartProductNumber').show();
+                $('#pnlShowProductImagesInMiniShoppingCart').show();
+            }
+            else {
+                $('#pnlMiniShoppingCartProductNumber').hide();
+                $('#pnlShowProductImagesInMiniShoppingCart').hide();
+            }
+        }
+
+        function toggleEmailWishlistEnabled() {
+            if ($('#@Html.FieldIdFor(model => model.EmailWishlistEnabled)').is(':checked')) {
+                $('#pnlAllowAnonymousUsersToEmailWishlist').show();
+            }
+            else {
+                $('#pnlAllowAnonymousUsersToEmailWishlist').hide();
+            }
+        }
+
+    </script>
+
+
+
+}

@@ -1,0 +1,346 @@
+﻿@model DashboardModel
+@using Grand.Services.Security
+@{
+    //page title
+    ViewBag.Title = T("Admin.Dashboard").Text;
+
+    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+    var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
+    var customerSettings = EngineContext.Current.Resolve<Grand.Core.Domain.Customers.CustomerSettings>();
+    var customerService = EngineContext.Current.Resolve<Grand.Services.Customers.ICustomerService>();
+    var orderReportService = EngineContext.Current.Resolve<Grand.Services.Orders.IOrderReportService>();
+    var customersOnline = customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineCustomerMinutes),
+    null, 1, 1).TotalCount;
+    var customersShoppingCart = customerService.GetCountOnlineShoppingCart(DateTime.UtcNow.AddMinutes(-customerSettings.OnlineShoppingCartMinutes));
+    var ordersToday = orderReportService.GetOrderPeriodReport(0);
+    var ordersAmount = EngineContext.Current.Resolve<Grand.Services.Catalog.IPriceFormatter>().FormatPrice(ordersToday.Amount, true, false);
+}
+@Html.AntiForgeryToken()
+<div class="page-bar" style="height:43px;">
+    <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-fit-height green" data-placement="top" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase hidden-xs"></span>&nbsp;
+            <i class="fa fa-angle-down"></i>
+        </div>
+    </div>
+</div>
+<div class="content-header">
+    <h3 class="page-title">
+        <i class="icon-home"></i>
+        @T("Admin.Dashboard")
+        <small>@T("Admin.Dashboard.StoreStatistics")</small>
+    </h3>
+</div>
+<div class="content">
+    <div class="row">
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_dashboard_top" })
+        <div class="col-md-12">
+            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            {
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
+                        <div class="dashboard-stat green">
+                            <div class="visual">
+                                <i class="fa fa-group fa-icon-medium"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number" style="padding-top:15px;"> @customersOnline </div>
+                                <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.OnlineCustomers")</div>
+                                <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.OnlineCustomerMinutes", customerSettings.OnlineCustomerMinutes) </div>
+                            </div>
+                            <a class="more" href="@Url.Action("List", "OnlineCustomer")">
+                                @T("Admin.Dashboard.ViewMore")
+                                <i class="m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
+                        <div class="dashboard-stat red">
+                            <div class="visual">
+                                <i class="fa fa-shopping-cart"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number" style="padding-top:15px;"> @customersShoppingCart </div>
+                                <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.ActiveShoppingCarts") </div>
+                                <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.OnlineShoppingCart", customerSettings.OnlineShoppingCartMinutes) </div>
+                            </div>
+                            <a class="more" href="@Url.Action("CurrentCarts", "ShoppingCart")">
+                                @T("Admin.Dashboard.ViewMore")
+                                <i class="m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 margin-bottom-10">
+                        <div class="dashboard-stat blue">
+                            <div class="visual">
+                                <i class="fa fa-briefcase fa-icon-medium"></i>
+                            </div>
+                            <div class="details">
+                                <div class="number" style="padding-top:15px;"> @ordersAmount / @ordersToday.Count</div>
+                                <div class="desc" style="font-size:20px;"> @T("Admin.Dashboard.TodayOrders") </div>
+                                <div class="desc" style="font-size:14px;"> @T("Admin.Dashboard.TodayOrders.AmountCount") </div>
+                            </div>
+                            <a class="more" href="@Url.Action("List", "Order", new { startDate = DateTime.UtcNow.ToUniversalTime() })">
+                                @T("Admin.Dashboard.ViewMore")
+                                <i class="m-icon-swapright m-icon-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-sm-12 col-lg-4 col-md-12">
+                            <div class="portlet light bordered">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="icon-share font-blue"></i>
+                                        <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ActivityOverview")</span>
+                                        <span class="caption-helper">@T("Admin.Dashboard.ReportOverviewHelper")</span>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="partialContents" data-url="@Url.Action("DashboardActivity")">
+                                        <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-8 col-md-12">
+                            @await Component.InvokeAsync("OrderReportOrderTimeChar")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        @if (!Model.HideReportGA)
+                        {
+                            <div class="col-sm-12 col-lg-4 col-md-12">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-line-chart font-blue"></i>
+                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardGeneralData", "GoogleAnalytics")">
+                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-sm-12 col-lg-8 col-md-12">
+                            @await Component.InvokeAsync("CustomerReportCustomerTimeChar")
+                        </div>
+                    </div>
+                </div>
+                if (!Model.HideReportGA)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-sm-12 col-lg-6 col-md-12">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-sign-in font-blue"></i>
+                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Source")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataBySource", "GoogleAnalytics")">
+                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-6 col-md-12">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-sign-out font-blue"></i>
+                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Exit")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByExit", "GoogleAnalytics")">
+                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-sm-12 col-lg-6 col-md-12">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-laptop font-blue"></i>
+                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Device")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByDevice", "GoogleAnalytics")">
+                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-6 col-md-12">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-map-marker font-blue"></i>
+                                            <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.GoogleAnalytics.Localization")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="partialContents Dashboard_GoogleAnalytics_Data" data-url="@Url.Action("DashboardDataByLocalization", "GoogleAnalytics")">
+                                            <img src="~/Administration/Images/loading.gif" /> Loading ...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            @if (canManageOrders)
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="fa fa-briefcase font-blue"></i>
+                                    <span class="caption-subject font-blue bold uppercase">@T("Admin.Dashboard.ReportLatestOrder")</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                @await Component.InvokeAsync("OrderReportLatestOrder")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        @await Component.InvokeAsync("AdminWidget", new { widgetZone = "admin_dashboard_bottom" })
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        var site = site || {};
+        site.baseUrl = site.baseUrl || "";
+        $(".partialContents").each(function (index, item) {
+            var url = site.baseUrl + $(item).data("url");
+            if (url && url.length > 0) {
+                $(item).load(url);
+            }
+        });
+    });
+
+
+    var Dashboard = function () {
+        return {
+            initDashboardDaterange: function () {
+                if (!jQuery().daterangepicker) {
+                    return;
+                }
+
+                $('#dashboard-report-range').daterangepicker({
+                    startDate: moment().startOf('month'),
+                    "ranges": {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                        'Last 7 Days': [moment().subtract('days', 6), moment()],
+                        'Last 30 Days': [moment().subtract('days', 29), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                    },
+                    "locale": {
+                        "format": "MM/DD/YYYY",
+                        "separator": " - ",
+                        "applyLabel": "Apply",
+                        "cancelLabel": "Cancel",
+                        "fromLabel": "From",
+                        "toLabel": "To",
+                        "customRangeLabel": "Custom",
+                        "daysOfWeek": [
+                            "Su",
+                            "Mo",
+                            "Tu",
+                            "We",
+                            "Th",
+                            "Fr",
+                            "Sa"
+                        ],
+                        "monthNames": [
+                            "January",
+                            "February",
+                            "March",
+                            "April",
+                            "May",
+                            "June",
+                            "July",
+                            "August",
+                            "September",
+                            "October",
+                            "November",
+                            "December"
+                        ],
+                        "firstDay": 1
+                    },
+                    opens: (App.isRTL() ? 'right' : 'left'),
+                }, function (start, end, label) {
+                    $('#dashboard-report-range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                });
+
+                $('#dashboard-report-range span').html(moment().startOf('month').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+                $('#dashboard-report-range').show();
+            },
+
+            init: function () {
+                this.initDashboardDaterange();
+            }
+        }
+    }();
+
+
+    //jQuery(document).ready(function () {
+    Dashboard.init();
+    //});
+
+    $('#dashboard-report-range').on('apply.daterangepicker', function (ev, picker) {
+        var chartOrderTime = $('#order-time-char').data('kendoChart');
+        if(chartOrderTime!=undefined)
+        {
+            chartOrderTime.dataSource.read();
+        }
+        var chartCustomerTime = $('#customer-time-char').data('kendoChart');
+        if (chartCustomerTime != undefined) {
+            chartCustomerTime.dataSource.read();
+        }
+        var gridOrders = $('#latest-orders-grid').data('kendoGrid');
+        if (gridOrders != undefined) {
+            gridOrders.dataSource.read();
+        }
+
+        $(".Dashboard_GoogleAnalytics_Data").each(function (index, item) {
+            $(item).html('<img src="Administration/Images/loading.gif" /> Loading ...');
+            var url = $(item).data("url") + '?startDate=' + $('#dashboard-report-range').data('daterangepicker').startDate.format('YYYY-MM-DD') + '&endDate=' + $('#dashboard-report-range').data('daterangepicker').endDate.format('YYYY-MM-DD');
+            if (url && url.length > 0) {
+                $(item).load(url);
+            }
+        });
+
+
+    });
+
+</script>

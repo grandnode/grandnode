@@ -1,0 +1,294 @@
+﻿@model GeneralCommonSettingsModel
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
+
+        toggleReCaptcha();
+    });
+
+    function toggleReCaptcha() {
+        if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
+            $('#ssCaptchaShowOnLoginPagepnl').show();
+            $('#ssCaptchaShowOnRegistrationPagepnl').show();
+            $('#ssCaptchaShowOnContactUsPagepnl').show();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+            $('#ssCaptchaShowOnAskQuestionPagepnl').show();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+            $('#ssCaptchaShowOnProductReviewPagepnl').show();
+            $('#ssReCaptchaPublicKeypnl').show();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').show();
+            $('#ssReCaptchaPrivateKeypnl').show();
+            $('#ssReCaptchaVersionpnl').show();
+        }
+        else {
+            $('#ssCaptchaShowOnLoginPagepnl').hide();
+            $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+            $('#ssCaptchaShowOnContactUsPagepnl').hide();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+            $('#ssCaptchaShowOnAskQuestionPagepnl').hide();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+            $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+            $('#ssReCaptchaPublicKeypnl').hide();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
+            $('#ssReCaptchaPrivateKeypnl').hide();
+            $('#ssReCaptchaVersionpnl').hide();
+        }
+    }
+</script>
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.EncryptionKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <div class="input-group">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.EncryptionKey)
+                    @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
+                    <span class="input-group-btn">
+                        <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="btn default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.ForceSslForAllPages, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.ForceSslForAllPages)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ForceSslForAllPages)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.HoneypotEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.HoneypotEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.HoneypotEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="note note-info">
+                A CAPTCHA is a program that can tell whether its user is a human or a computer.
+                You've probably seen them — colorful images with distorted text at the bottom of
+                Web registration forms. CAPTCHAs are used by many websites to prevent abuse from
+                "bots," or automated programs usually written to generate spam. No computer program
+                can read distorted text as well as humans can, so bots cannot navigate sites protected
+                by CAPTCHAs. <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaEnabled)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnLoginPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnLoginPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnRegistrationPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnEmailProductToFriendPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnAskQuestionPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnAskQuestionPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnBlogCommentPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnNewsCommentPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnProductReviewPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssCaptchaShowOnApplyVendorPagepnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+            </div>
+        </div>
+        <div class="form-group" id="ssReCaptchaVersionpnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.ReCaptchaVersion, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandDropDownListFor(model => model.SecuritySettings.ReCaptchaVersion, Model.SecuritySettings.AvailableReCaptchaVersions)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaVersion)
+            </div>
+        </div>
+        <div class="form-group" id="ssReCaptchaPublicKeypnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.ReCaptchaPublicKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+            </div>
+        </div>
+        <div class="form-group" id="ssReCaptchaPrivateKeypnl">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.SecuritySettings.ReCaptchaPrivateKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+            </div>
+        </div>
+    </div>
+</div>

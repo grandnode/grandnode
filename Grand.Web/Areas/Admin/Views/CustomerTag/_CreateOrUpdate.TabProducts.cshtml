@@ -1,0 +1,128 @@
+﻿@model CustomerTagModel
+
+
+
+@{
+    if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerTags.Products.SaveBeforeEdit")
+        </div>
+    }
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerTags.Products.Info")
+        </div>
+
+        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="products-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Customers.CustomerTags.Products.Fields.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "CustomerTag", new { customerTagId = Model.Id, btnId = "btnRefreshProducts" }))    ', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="btnRefreshProducts" style="display: none" />
+            </div>
+        </div>
+        <script>
+                $(document).ready(function () {
+                    $("#products-grid").kendoGrid({
+                        dataSource: {
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("Products", "CustomerTag", new {customerTagId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                    update: {
+                                    url: "@Html.Raw(Url.Action("ProductUpdate", "CustomerTag"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("ProductDelete", "CustomerTag"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Name: { editable: false, type: "string" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                    }
+                                }
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                        {
+                                field: "Name",
+                                title: "@T("Admin.Customers.CustomerTags.Products.Fields.Name")",
+                                width: 300,
+                                filterable: false,
+                                sortable: false
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Customers.CustomerTags.Products.Fields.DisplayOrder")",
+                            width: 100
+                        },{
+                            command: [
+                                {
+                                    name: "edit",
+                                    text: {
+                                        edit: "@T("Admin.Common.Edit")",
+                                        update: "@T("Admin.Common.Update")",
+                                        cancel: "@T("Admin.Common.Cancel")"
+                                    }
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }
+                            ],
+                            width: 200,
+                            filterable: false
+                        }]
+                    });
+                });
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshProducts').click(function () {
+                    var grid = $("#products-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                    return false;
+                });
+            });
+        </script>
+    }
+}

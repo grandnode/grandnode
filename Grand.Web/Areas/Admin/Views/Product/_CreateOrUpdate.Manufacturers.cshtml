@@ -1,0 +1,181 @@
+﻿@model ProductModel
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    if (Model.AvailableManufacturers.Count > 0)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")
+            </div>
+            <div class="panel-body">
+                <div id="productmanufacturers-grid"></div>
+            </div>
+        </div>
+
+
+            <script>
+                $(document).ready(function () {
+                    $("#productmanufacturers-grid").kendoGrid({
+                        dataSource: {
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ProductManufacturerList", "Product", new { productId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                create: {
+                                    url: "@Html.Raw(Url.Action("ProductManufacturerInsert", "Product", new { productId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                update: {
+                                    url:"@Html.Raw(Url.Action("ProductManufacturerUpdate", "Product"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("ProductManufacturerDelete", "Product"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Manufacturer: { editable: true, type: "string" },
+                                        ManufacturerId: { editable: true, type: "string" },
+                                        IsFeaturedProduct: { editable: true, type: "boolean" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        Id: { editable: false, type: "string" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "create" || e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                        edit: function(e) {
+                            if (e.model.isNew()) {
+                                //little hack here
+                                //pre-select the first value of kendoui dropdownlist datasource
+                                //for some reasons (maybe, bug) it always sends 0
+                                //if no value has been selected (changed) in the dropdownlist
+                                if (allManufacturers.length > 0) {
+                                    e.model.ManufacturerId = allManufacturers[0].Id;
+                                }
+                            }
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "ManufacturerId",
+                                title: "@T("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")",
+                                width: 200,
+                                editor: manufacturerDropDownEditor,
+                                template: "#:Manufacturer#"
+                            },
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                //vendor cannot edit this field
+                                <text>{
+                                field: "IsFeaturedProduct",
+                                title: "@T("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")",
+                                width: 200,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '# if(IsFeaturedProduct) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    },</text>
+                            }
+
+                        {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Catalog.Products.Manufacturers.Fields.DisplayOrder")",
+                            width: 200,
+                            //integer format
+                            format: "{0:0}"
+                        }, {
+                            command: [{
+                                name: "edit",
+                                text: {
+                                    edit: "@T("Admin.Common.Edit")",
+                                    update: "@T("Admin.Common.Update")",
+                                    cancel: "@T("Admin.Common.Cancel")"
+                                }
+                            }, {
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 200
+                        }]
+                    });
+                });
+
+                //local datasource
+                var allManufacturers = [
+                    @for (int i = 0; i < Model.AvailableManufacturers.Count; i++)
+                    {
+                        var manufacturerItem = Model.AvailableManufacturers[i];
+                        <text>
+                        {
+                            Id: '@(manufacturerItem.Value)',
+                            Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(manufacturerItem.Text)))"
+                        }
+                        </text>
+                        if (i != Model.AvailableManufacturers.Count - 1)
+                        {
+                            <text>,</text>
+                        }
+                    }
+                ];
+
+                function manufacturerDropDownEditor(container, options) {
+                    $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:ManufacturerId"/>')
+                        .appendTo(container)
+                        .kendoDropDownList({
+                            autoBind: true,
+                            dataSource: allManufacturers
+                        });
+                }
+            </script>
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
+        </div>
+    }
+}
+else
+{
+    <div class="note note-info">
+            @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+    </div>
+}

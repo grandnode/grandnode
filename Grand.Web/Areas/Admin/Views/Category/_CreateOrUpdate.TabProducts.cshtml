@@ -1,0 +1,132 @@
+﻿@model CategoryModel
+@if (!String.IsNullOrEmpty(Model.Id))
+{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
+    ().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>
+        ().GridPageSizes;
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="products-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewProduct" value="@T("Admin.Catalog.Categories.Products.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new { categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form" }))', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshProducts" style="display: none" />
+        </div>
+    </div>
+        <script>
+        $(document).ready(function () {
+            $("#products-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ProductList", "Category", new { categoryId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("ProductUpdate", "Category"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("ProductDelete", "Category"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                ProductName: {editable: false, type: "string" },
+                                IsFeaturedProduct: {editable: true, type: "boolean" },
+                                DisplayOrder: {editable: true, type: "number" },
+                                ProductId: {editable: false, type: "string" }
+                            }
+                        }
+                    },
+                    requestEnd: function(e) {
+                        if(e.type=="update") {
+                            this.read();
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductName",
+                    title: "@T("Admin.Catalog.Categories.Products.Fields.Product")"
+                }, {
+                    field: "IsFeaturedProduct",
+                    title: "@T("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '# if(IsFeaturedProduct) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("Admin.Catalog.Categories.Products.Fields.DisplayOrder")",
+                    format: "{0:0}",
+                }, {
+                    field: "ProductId",
+                    title: "@T("Admin.Common.View")",
+                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                }, {
+                    command: [{
+                        name: "edit",
+                        text: {
+                            edit: "@T("Admin.Common.Edit")",
+                            update: "@T("Admin.Common.Update")",
+                            cancel: "@T("Admin.Common.Cancel")"
+                        }
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                    width: 200
+                }]
+            });
+        });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshProducts').click(function () {
+                    //refresh grid
+                    var grid = $("#products-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+}
+else
+{
+    <div class="note note-info">
+        @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+    </div>
+}

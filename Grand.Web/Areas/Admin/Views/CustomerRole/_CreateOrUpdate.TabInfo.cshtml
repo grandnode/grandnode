@@ -1,0 +1,89 @@
+﻿@model CustomerRoleModel
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.SystemName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.SystemName)
+                @Html.ValidationMessageFor(model => model.SystemName)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.FreeShipping)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.FreeShipping)
+                @Html.ValidationMessageFor(model => model.FreeShipping)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.TaxExempt)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.TaxExempt)
+                @Html.ValidationMessageFor(model => model.TaxExempt)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Active)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.EnablePasswordLifetime)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.EnablePasswordLifetime)
+                @Html.ValidationMessageFor(model => model.EnablePasswordLifetime)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsSystemRole)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label"> @Model.IsSystemRole.ToString()</label>
+                @Html.HiddenFor(model => model.IsSystemRole)
+                @Html.ValidationMessageFor(model => model.IsSystemRole)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.PurchasedWithProductId)
+            <div class="col-md-9 col-sm-9">
+                @Html.HiddenFor(model => model.PurchasedWithProductId)
+                <span id="purchased-with-product-name">@Model.PurchasedWithProductName</span>
+                @Html.ValidationMessageFor(model => model.PurchasedWithProductId)
+                <input type="submit" value=@T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose") onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToCustomerRolePopup", "CustomerRole", new { productIdInput = Html.FieldIdFor(model => model.PurchasedWithProductId), productNameInput = "purchased-with-product-name", btnId = "btnRefreshPurchasedWithProduct" }))', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="purchased-with-product-name-remove" value=@T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Remove") class="btn default" />
+                <input type="submit" id="btnRefreshPurchasedWithProduct" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#purchased-with-product-name-remove').click(function () {
+                            $('#purchased-with-product-name').text('');
+                            $("#@Html.FieldIdFor(model => model.PurchasedWithProductId)").val(0);
+                            toggleRemoveButton();
+                            //return false to don't reload a page
+                            return false;
+                        });
+
+                        $('#btnRefreshPurchasedWithProduct').click(function () {
+                            toggleRemoveButton();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+
+            </div>
+        </div>
+    </div>
+</div>

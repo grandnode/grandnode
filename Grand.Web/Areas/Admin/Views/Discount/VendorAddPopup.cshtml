@@ -1,0 +1,179 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model DiscountModel.AddVendorToDiscountModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Promotions.Discounts.AppliedToVendors.AddNew").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cubes"></i>
+                        @T("Admin.Promotions.Discounts.AppliedToVendors.AddNew")
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchVendorName, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.SearchVendorName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchVendorEmail, new Dictionary<string, object> { { "class", "col-sm-3" } })
+                                <div class="col-md-9 col-sm-9">
+                                    @Html.GrandEditorFor(model => model.SearchVendorEmail)
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-1 col-md-11 col-sm-11 btn-group btn-group-devided">
+                                        <button class="btn btn-success filter-submit" id="search-vendors">
+                                            <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                        </button>
+                                        <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="vendors-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            $("#vendors-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("VendorAddPopupList", "Discount"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: additionalData
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Id",
+                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                    headerAttributes: { style: "text-align:center" },
+                    template: "<input type='checkbox' name='SelectedVendorIds' value='#=Id#' class='checkboxGroups' />",
+                    attributes: { style: "text-align:center" },
+                    width: 50
+                }, {
+                    field: "Name",
+                    title: "@T("Admin.Catalog.Vendors.Fields.Name")"
+                }
+                , {
+                    field: "Email",
+                    title: "@T("Admin.Catalog.Vendors.Fields.Email")"
+                }
+                ]
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#search-vendors').click(function() {
+                var grid = $('#vendors-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                //clear selected checkboxes
+                $('.checkboxGroups').prop('checked', false).change();
+                return false;
+            });
+
+            $("#@Html.FieldIdFor(model => model.SearchVendorName)").keydown(function(event) {
+                if (event.keyCode == 13) {
+                    $("#search-vendors").click();
+                    return false;
+                }
+            });
+
+            $("#@Html.FieldIdFor(model => model.SearchVendorEmail)").keydown(function(event) {
+                if (event.keyCode == 13) {
+                    $("#search-vendors").click();
+                    return false;
+                }
+            });
+
+            //wire up checkboxes
+            $('#mastercheckbox').click(function() {
+                $('.checkboxGroups').prop('checked', $(this).is(':checked')).change();
+            });
+
+            $('#vendors-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                updateMasterCheckbox();
+            });
+        });
+
+        function additionalData() {
+            var data = {
+                SearchVendorName: $('#@Html.FieldIdFor(model => model.SearchVendorName)').val(),
+                SearchVendorEmail: $('#@Html.FieldIdFor(model => model.SearchVendorEmail)').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#vendors-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#vendors-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+            $('#mastercheckbox').prop('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+        }
+
+    </script>
+
+}

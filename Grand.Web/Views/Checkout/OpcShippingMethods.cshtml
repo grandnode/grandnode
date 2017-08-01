@@ -1,0 +1,83 @@
+﻿@model CheckoutShippingMethodModel
+@using Grand.Web.Models.Checkout;
+@using Grand.Core.Infrastructure;
+
+@{ 
+    var storeLocation = EngineContext.Current.Resolve<Grand.Core.IWebHelper>().GetStoreLocation();
+}
+<script type="text/javascript">
+    function loadPartialView(arg_value) {
+        var url = '@(storeLocation)/checkout/GetShippingFormPartialView?shippingOption=' + arg_value;
+        $.ajax({
+            url: url,
+            success: function (data) {
+                $('#shipping_form').html(data);
+            }
+        });
+    }
+</script>
+
+<div class="checkout-data">
+    <div class="shipping-method">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_top" })
+        @if (Model.Warnings.Count == 0)
+        {
+            var selectedShippingMethod = Model.ShippingMethods.FirstOrDefault(x => x.Selected);
+            if (selectedShippingMethod != null)
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        loadPartialView('@(selectedShippingMethod.Name)___@(selectedShippingMethod.ShippingRateComputationMethodSystemName)');
+                    });
+                </script>
+            }
+
+            <ul class="method-list">
+                @for (int i = 0; i < Model.ShippingMethods.Count; i++)
+                {
+                    var shippingMethod = Model.ShippingMethods[i];
+
+                    <li>
+                        <label class="custom-control custom-checkbox">
+                            <input id="shippingoption_@(i)" type="radio" 
+                                   onclick="loadPartialView(value)"
+                                   name="shippingoption" 
+                                   value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" 
+                                   checked="@shippingMethod.Selected" 
+                                   class="custom-control-input">
+                            <span class="custom-control-indicator"></span>
+                            <span  for="shippingoption_@(i)" class="custom-control-description">
+                                @T("Checkout.SelectShippingMethod.MethodAndFee", shippingMethod.Name, shippingMethod.Fee)
+                            
+                                @if (!String.IsNullOrEmpty(shippingMethod.Description))
+                                {
+                                        @Html.Raw(shippingMethod.Description)
+                                }
+                            
+                            </span>
+                        </label>
+                    </li>
+                }
+            </ul>
+            if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
+            {
+                <div class="multiple-locations">
+                    @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+                </div>
+            }
+            <div id="shipping_form"></div>
+        }
+        else
+        {
+            <div class="message-error">
+                <ul>
+                    @foreach (var warning in Model.Warnings)
+                    {
+                        <li>@warning</li>
+                    }
+                </ul>
+            </div>
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_shipping_method_bottom" })
+    </div>
+</div>

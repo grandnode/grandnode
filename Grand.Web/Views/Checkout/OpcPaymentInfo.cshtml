@@ -1,0 +1,20 @@
+﻿@model CheckoutPaymentInfoModel
+@using Grand.Web.Models.Checkout;
+<div class="checkout-data">
+    <div class="col-12 px-0">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_info_top" })
+        <div class="section payment-info">
+            <div class="info">
+                @await Component.InvokeAsync(Model.PaymentViewComponentName)
+            </div>
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        </div>
+        @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_info_bottom" })
+        @if (Model.DisplayOrderTotals)
+        {
+            <div class="order-summary">
+                @await Component.InvokeAsync("OrderSummary")
+            </div>
+        }
+    </div>
+</div>

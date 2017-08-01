@@ -1,0 +1,197 @@
+﻿@model PluginListModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>
+                        @T("Admin.Configuration.Plugins.Local")
+                    </div>
+                    <div class="actions btn-group btn-group-devided">
+                        <a href="@Url.Action("ReloadList")" class="btn default">@T("Admin.Configuration.Plugins.ReloadList")</a>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="note note-info">
+                            <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
+                            <ol>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
+                            </ol>
+                        <p>
+                            You can download more grandnode plugins on our <a href="http://www.grandnode.com/extensions?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
+                        </p>
+
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchLoadModeId)
+                                <div class="col-md-4 col-sm-6">
+                                    @Html.GrandDropDownListFor(model => model.SearchLoadModeId, Model.AvailableLoadModes)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.GrandLabelFor(model => model.SearchGroup)
+                                <div class="col-md-4 col-sm-6">
+                                    @Html.GrandDropDownListFor(model => model.SearchGroup, Model.AvailableGroups)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                                    <button class="btn btn-success filter-submit" id="search-plugins">
+                                        <i class="fa fa-search"></i> @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div id="plugins-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //install a plugin
+            $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
+                $("html, body").animate({ scrollTop: 0 }, 400);
+                showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
+                return true;
+            });
+
+            //uninstall a plugin
+            $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
+                $("html, body").animate({ scrollTop: 0 }, 400);
+                showThrobber('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
+                return true;
+            });
+        });
+    </script>
+
+
+                <script>
+                    $(document).ready(function() {
+                        $("#plugins-grid").kendoGrid({
+                            dataSource: {
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "Group",
+                                    title: "@T("Admin.Configuration.Plugins.Fields.Group")"
+                                }, {
+                                    field: "LogoUrl",
+                                    title: "@T("Admin.Configuration.Plugins.Fields.Logo")",
+                                    width: 100,
+                                    template: '<img src="#=LogoUrl#" />',
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" }
+                                }, {
+                                    field: "FriendlyName",
+                                    title: "@T("Admin.Configuration.Plugins.Info")",
+                                    template: '<b>#:FriendlyName#</b>' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.Version"): #:Version#' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.Author"): #:Author#' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.SystemName"): #:SystemName#' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.DisplayOrder"): #:DisplayOrder#' +
+                                        '<br />@T("Admin.Configuration.Plugins.Fields.Installed"): # if(Installed) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} # ' +
+                                        '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled"):  # if(IsEnabled) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} # #} #' +
+                                        //allow configuration only when a plugin has a configuration URL specified
+                                        '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn default" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
+                                        '<a class="btn default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>',
+                                }, {
+                                    field: "Installed",
+                                    title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
+                                    template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="btn red" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="btn green" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> #} #',
+                                    headerAttributes: {style: "text-align:center" },
+                                    attributes: { style: "text-align:center" }
+                                }
+                            ]
+                        });
+                    });
+                </script>
+                <input type="submit" id="btnRefresh" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var grid = $("#plugins-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        //search button
+                        $('#search-plugins').click(function () {
+                            //search
+                            var grid = $('#plugins-grid').data('kendoGrid');
+                            grid.dataSource.read();
+
+                            return false;
+                        });
+                    });
+
+                    function additionalData() {
+                        var data = {
+                            SearchLoadModeId: $('#SearchLoadModeId').val(),
+                            SearchGroup: $('#SearchGroup').val()
+                        };
+                        addAntiForgeryToken(data);
+                        return data;
+                    }
+
+                </script>
+}

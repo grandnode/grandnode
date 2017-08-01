@@ -1,0 +1,67 @@
+﻿@model CustomerActionModel
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Active)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.StartDateTimeUtc)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.StartDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.StartDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.EndDateTimeUtc)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.EndDateTimeUtc)
+                @Html.ValidationMessageFor(model => model.EndDateTimeUtc)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ActionTypeId)
+            <div class="col-md-9 col-sm-9">
+                @if (Model.ConditionCount > 0)
+                {
+                    @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType, new { @disabled = "disabled" })
+                }
+                else
+                {
+                    @Html.GrandDropDownListFor(model => model.ActionTypeId, Model.ActionType)
+                }
+                @Html.ValidationMessageFor(model => model.ActionTypeId)
+                <div class="note note-info margin-top-10">
+                    <p>@T("admin.customers.actiontype.helpText.AddToCart")</p>
+                    <p>@T("admin.customers.actiontype.helpText.AddOrder")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Viewed")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Url")</p>
+                    <p>@T("admin.customers.actiontype.helpText.Registration")</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ConditionId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ConditionId, ((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ConditionId)
+                <div class="note note-info margin-top-10">
+                    <p>@T("admin.customers.actiontype.helpText.OneOfThem")</p>
+                    <p>@T("admin.customers.actiontype.helpText.AllOfThem")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+﻿@model GeneralCommonSettingsModel
+
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="note note-info">
+        <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help1")</p>
+        <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help2")</p>
+        <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help3")</p>
+        <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help4")</p>
+        <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help5")</p>
+        <p>@T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics_help6")</p>
+    </div>
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaprivateKey_OverrideForStore, model => model.GoogleAnalyticsSettings.gaprivateKey, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.GoogleAnalyticsSettings.gaprivateKey, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.GoogleAnalyticsSettings.gaprivateKey)
+                @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.gaprivateKey)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail_OverrideForStore, model => model.GoogleAnalyticsSettings.gaserviceAccountEmail, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail)
+                @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.gaserviceAccountEmail)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.GoogleAnalyticsSettings.gaviewID_OverrideForStore, model => model.GoogleAnalyticsSettings.gaviewID, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.GoogleAnalyticsSettings.gaviewID, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandEditorFor(model => model.GoogleAnalyticsSettings.gaviewID)
+                @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.gaviewID)
+            </div>
+        </div>
+    </div>
+</div>

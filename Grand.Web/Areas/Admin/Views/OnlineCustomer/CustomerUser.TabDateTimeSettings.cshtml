@@ -1,0 +1,30 @@
+﻿@model CustomerUserSettingsModel
+@using Grand.Core.Domain.Customers;
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.DateTimeSettings.AllowCustomersToSetTimeZone)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                @Html.GrandDropDownListFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId, Model.DateTimeSettings.AvailableTimeZones)
+                @Html.ValidationMessageFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
+            </div>
+        </div>
+    </div>
+</div>

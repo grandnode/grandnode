@@ -1,0 +1,454 @@
+﻿@model CustomerModel
+@using Grand.Core.Domain.Orders;
+@using Grand.Services.Customers;
+@using System.Text;
+
+
+
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+
+                var postData = {
+                    countryId: selectedItem,
+                    addSelectStateItem: "true"
+                };
+
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: postData,
+                    success: function(data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                    }
+                });
+            });
+        });
+</script>
+}
+<div class="form-horizontal">
+    <div class="form-body">
+        @if (Model.UsernamesEnabled)
+            {
+                if (String.IsNullOrEmpty(Model.Id) || Model.AllowUsersToChangeUsernames)
+                {
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Username)
+                    <div class="col-md-9 col-sm-9">
+                        @Html.GrandEditorFor(model => model.Username)
+                        @Html.ValidationMessageFor(model => model.Username)
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.GrandLabelFor(model => model.Username)
+                    <div class="col-md-9 col-sm-9">
+                        <label class="control-label"> @Model.Username</label>
+                        @Html.HiddenFor(model => model.Username)
+                    </div>
+                </div>
+            }
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Email)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Password)
+            <div class="col-md-9 col-sm-9">
+                <div class="input-group">
+                    <div class="input-icon">
+                        <i class="fa fa-lock fa-fw"></i>
+                        @Html.GrandEditorFor(model => model.Password)
+                    </div>
+                    <span class="input-group-btn">
+                        <input type="submit" name="changepassword" class="btn btn-success" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerTags)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.CustomerTags)
+                @Html.ValidationMessageFor(model => model.CustomerTags)
+            </div>
+        </div>
+        @if (!String.IsNullOrEmpty(Model.Id) && Model.AssociatedExternalAuthRecords.Count > 0)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.AssociatedExternalAuthRecords)
+                <div class="col-md-9 col-sm-9">
+                    <div id="externalauthrecords-grid"></div>
+                    <script>
+
+                            //local datasource
+                            var externalauthrecords = [
+                                @for (int i = 0; i < Model.AssociatedExternalAuthRecords.Count; i++)
+                            {
+                                var aear = Model.AssociatedExternalAuthRecords[i];
+                                <text>
+        {
+            AuthMethodName: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.AuthMethodName)))",
+            Email: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.Email)))",
+            ExternalIdentifier: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(aear.ExternalIdentifier)))"
+        }
+    </text>
+                                if (i != Model.AssociatedExternalAuthRecords.Count - 1)
+                                {
+                                    <text>,</text>
+                                }
+                            }
+                            ];
+
+                            $(document).ready(function () {
+                                $("#externalauthrecords-grid").kendoGrid({
+                                    dataSource: {
+                                        data: externalauthrecords,
+                                        schema: {
+                                            model: {
+                                                fields: {
+                                                    AuthMethodName: { type: "string" },
+                                                    Email: { type: "string" },
+                                                    ExternalIdentifier: { type: "string" }
+                                                }
+                                            }
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        }
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        numeric: false,
+                                        previousNext: false,
+                                        info: false
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "AuthMethodName",
+                                            title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")",
+                                            width: 100
+                                        }, {
+                                            field: "Email",
+                                            title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")",
+                                            width: 100
+                                        },{
+                                            field: "ExternalIdentifier",
+                                            title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier")",
+                                            width: 300
+                                        }
+                                    ]
+                                });
+                            });
+
+                    </script>
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.VendorId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                @Html.ValidationMessageFor(model => model.VendorId)
+                <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
+            </div>
+        </div>
+        @if (Model.GenderEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Gender)
+                <div class="col-md-9 col-sm-9">
+                    <div class="gender">
+                        @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
+                        <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
+                    </div>
+                    <div class="gender">
+                        @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+                        <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.FirstName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.FirstName)
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.LastName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.LastName)
+                @Html.ValidationMessageFor(model => model.LastName)
+            </div>
+        </div>
+        @if (Model.DateOfBirthEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.DateOfBirth)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.DateOfBirth)
+                    @Html.ValidationMessageFor(model => model.DateOfBirth)
+                </div>
+            </div>
+        }
+        @if (Model.CompanyEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Company)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Company)
+                    @Html.ValidationMessageFor(model => model.Company)
+                </div>
+            </div>
+        }
+        @if (Model.StreetAddressEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.StreetAddress)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.StreetAddress)
+                    @Html.ValidationMessageFor(model => model.StreetAddress)
+                </div>
+            </div>
+        }
+        @if (Model.StreetAddress2Enabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.StreetAddress2)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.StreetAddress2)
+                    @Html.ValidationMessageFor(model => model.StreetAddress2)
+                </div>
+            </div>
+        }
+        @if (Model.ZipPostalCodeEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.ZipPostalCode)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.ZipPostalCode)
+                    @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                </div>
+            </div>
+        }
+        @if (Model.CityEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.City)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.City)
+                    @Html.ValidationMessageFor(model => model.City)
+                </div>
+            </div>
+        }
+        @if (Model.CountryEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CountryId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.CountryId, Model.AvailableCountries)
+                    @Html.ValidationMessageFor(model => model.CountryId)
+                </div>
+            </div>
+        }
+        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.StateProvinceId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+                    @Html.ValidationMessageFor(model => model.StateProvinceId)
+                </div>
+            </div>
+        }
+        @if (Model.PhoneEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Phone)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Phone)
+                    @Html.ValidationMessageFor(model => model.Phone)
+                </div>
+            </div>
+        }
+        @if (Model.FaxEnabled)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Fax)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Fax)
+                    @Html.ValidationMessageFor(model => model.Fax)
+                </div>
+            </div>
+        }
+        @if (Model.CustomerAttributes.Count > 0)
+            {
+            <div class="form-group">
+                @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+            </div>
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AdminComment)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandTextAreaFor(model => model.AdminComment, new { style = "Height: 100px;" })
+                @Html.ValidationMessageFor(model => model.AdminComment)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsTaxExempt)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.IsTaxExempt)
+                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.FreeShipping)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.FreeShipping)
+                @Html.ValidationMessageFor(model => model.FreeShipping)
+            </div>
+        </div>
+        @if (Model.AllowCustomersToSetTimeZone)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.TimeZoneId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.TimeZoneId, Model.AvailableTimeZones)
+                    @Html.ValidationMessageFor(model => model.TimeZoneId)
+                </div>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.AffiliateId))
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.AffiliateId)
+                <div class="col-md-9 col-sm-9">
+                    <a class="btn default" href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                    <input type="submit" name="remove-affiliate" class="btn red" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
+                </div>
+            </div>
+        }
+        @if (Model.DisplayVatNumber)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.VatNumber)
+                <div class="col-md-9 col-sm-9">
+                    <div class="input-group-control">
+                        @Html.GrandEditorFor(model => model.VatNumber)
+                        <label class="control-label">
+                            (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
+                        </label>
+                        <input type="submit" name="markVatNumberAsValid" class="btn green" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
+                        <input type="submit" name="markVatNumberAsInvalid" class="btn red" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
+                    </div>
+                    @Html.ValidationMessageFor(model => model.VatNumber)
+                </div>
+            </div>
+        }
+        @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.SelectedNewsletterSubscriptionStoreIds)
+                <div class="col-md-9 col-sm-9">
+                    @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
+                    {
+                        <div>
+                            <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))
+                        </div>
+
+                    }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="note note-info">
+                @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
+            </div>
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Active)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Active)
+                @Html.ValidationMessageFor(model => model.Active)
+            </div>
+        </div>
+        @if (!String.IsNullOrEmpty(Model.Id))
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LastIpAddress)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label"> @Html.DisplayFor(model => model.LastIpAddress)</label>
+                </div>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.Id))
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CreatedOn)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label"> @Html.DisplayFor(model => model.CreatedOn)</label>
+                </div>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.Id))
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LastActivityDate)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label"> @Html.DisplayFor(model => model.LastActivityDate)</label>
+                </div>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastVisitedPage))
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LastVisitedPage)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label"> @Html.DisplayFor(model => model.LastVisitedPage)</label>
+                </div>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.Id) && !String.IsNullOrEmpty(Model.LastUrlReferrer))
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LastUrlReferrer)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label"> @Html.DisplayFor(model => model.LastUrlReferrer)</label>
+                </div>
+            </div>
+        }
+        @if (!String.IsNullOrEmpty(Model.Id) && Model.LastPurchaseDate.HasValue)
+            {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.LastPurchaseDate)
+                <div class="col-md-9 col-sm-9">
+                    <label class="control-label"> @Html.DisplayFor(model => model.LastPurchaseDate)</label>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

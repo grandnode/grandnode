@@ -1,0 +1,231 @@
+﻿@model SettingFilterModel
+@using Grand.Services.Stores
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
+}
+
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light form-fit">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cubes"></i>
+                    @T("Admin.Configuration.Settings.AllSettings")
+                </div>
+               
+            </div>
+
+            <div class="portlet-body form">
+                <div class="form-horizontal">
+                    <div class="form-body">
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SettingFilterName)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.SettingFilterName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.GrandLabelFor(model => model.SettingFilterValue)
+                            <div class="col-md-9 col-sm-9">
+                                @Html.GrandEditorFor(model => model.SettingFilterValue)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="button" id="search-settings" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="settings-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#settings-grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: additionalData
+                    },
+                    create: {
+                        url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    update: {
+                        url:"@Html.Raw(Url.Action("SettingUpdate", "Setting"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("SettingDelete", "Setting"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    },
+                    parameterMap: function(data, operation) {
+                        if (operation != "read") {
+                            return data;
+                        } else {
+                            //for some reasons only such "Filter" data be parsed
+                            return JSON.stringify(data);
+                        }
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Name: { editable: true, type: "string" },
+                            Value: { editable: true, type: "string" },
+                            Store: { editable: true, type: "string" },
+                            StoreId: { editable: true, type: "string" },
+                            Id: { editable: false, type: "string" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "create" || e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: false,
+                serverSorting: false
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Name",
+                title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Name")",
+                width: 300,
+                filterable: true,
+                sortable: true
+            }, {
+                field: "Value",
+                title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Value")",
+                width: 300,
+                filterable: true,
+                sortable: true
+            }, {
+                field: "StoreId",
+                title: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName")",
+                width: 150,
+                editor: storeDropDownEditor,
+                template: "#:Store#",
+                filterable: false,
+                sortable: false
+            }, {
+                command: [{
+                    name: "edit",
+                    text: {
+                        edit: "@T("Admin.Common.Edit")",
+                        update: "@T("Admin.Common.Update")",
+                        cancel: "@T("Admin.Common.Cancel")"
+                    }
+                }, {
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 200,
+                filterable: false
+            }]
+        });
+    });
+
+    //local datasource
+    var allStores = [
+        {
+            Id : " ",
+            Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
+        }
+        @{
+            var storeService = EngineContext.Current.Resolve<IStoreService>();
+            var allStores = storeService.GetAllStores();
+        }
+        @foreach (var store in allStores)
+        {
+            <text>
+            , {
+                Id: "@(store.Id)",
+                Name: "@(Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(store.Name)))"
+            }
+            </text>
+        }
+    ];
+
+    function storeDropDownEditor(container, options) {
+        $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                dataSource: allStores,                            
+                autoBind: true,                            
+            });
+    }
+
+
+    $(document).ready(function() {
+        $('#search-settings').click(function() {
+            var grid = $('#settings-grid').data('kendoGrid');
+            grid.dataSource.page(1);
+            return false;
+        });
+    });
+
+    function additionalData() {
+        var data = {
+            SettingFilterName: $('#@Html.FieldIdFor(model => model.SettingFilterName)').val(),
+            SettingFilterValue: $('#@Html.FieldIdFor(model => model.SettingFilterValue)').val()
+        };
+        addAntiForgeryToken(data);
+        return data;
+    }
+
+    $("".concat("#@Html.FieldIdFor(model => model.SettingFilterName),",
+        "#@Html.FieldIdFor(model => model.SettingFilterValue)")).keydown(function(event) {
+            if (event.keyCode === 13) {
+                $("#search-settings").click();
+                return false;
+            }
+        });
+
+
+</script>

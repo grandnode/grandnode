@@ -1,0 +1,114 @@
+﻿@model InteractiveFormAttributeModel
+
+
+@{
+
+    if (!string.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="attributeValues-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewValues" value="@T("Admin.Promotions.InteractiveForms.Attribute.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "InteractiveForm", new { form = Model.FormId, aId = Model.Id, formId = "attribute-form", btnId = "btnRefreshValues" }))', 800, 800, true); return false;" class="btn default" />
+                <input type="submit" id="btnRefreshValues" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#attributeValues-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("AttributeValuesList", "InteractiveForm", new { formId = Model.FormId, aId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("AttributeValuesDelete", "InteractiveForm", new { formId = Model.FormId, aId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken,
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.Name")"
+                    },
+                    {
+                        field: "IsPreSelected",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.IsPreSelected")",
+                        width: 200,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(IsPreSelected) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                     },
+                     {
+                         field: "DisplayOrder",
+                         title: "@T("Admin.Promotions.InteractiveForms.Attribute.Values.Fields.DisplayOrder")",
+                        width: 150
+                    },
+                    {
+                        field: "Id",
+                        title: "@T("Admin.Common.View")",
+                        width: 150,
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/InteractiveForm/ValueEditPopup/")#=Id#?form=@Model.FormId&aId=@Model.Id&btnId=btnRefreshValues&formId=attribute-form', 800, 350, true); return false;\" class='k-button' />"
+
+                    }, {
+                        command: [{
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 150
+                    }]
+                });
+            });
+        </script>
+        <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefreshValues').click(function () {
+                                var grid = $("#attributeValues-grid").data('kendoGrid');
+                                grid.dataSource.read();
+                                return false;
+                            });
+                        });
+        </script>
+
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Promotions.InteractiveForms.SaveBeforeEdit")
+        </div>
+    }
+}

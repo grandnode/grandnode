@@ -1,0 +1,79 @@
+﻿@model CampaignModel
+
+
+
+@{
+
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="customers-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <a href="@Url.Action("ExportCsv", new { campaignId = Model.Id })" class="btn default">
+                    <i class="fa fa-file-excel-o"></i> @T("Admin.Common.ExportToCsv")
+                </a>
+            </div>
+        </div>
+            <script>
+            $(document).ready(function () {
+                $("#customers-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("Customers", "Campaign", new { campaignId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                        },
+                        requestEnd: function(e) {
+                            if(e.type=="update") {
+                                this.read();
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(defaultGridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(gridPageSizes)]
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Email",
+                        title: "@T("Admin.Promotions.Campaigns.Fields.Email")"
+                    }]
+                });
+            });
+            </script>
+
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Promotions.Campaigns.SaveBeforeEdit")
+        </div>
+
+    }
+}

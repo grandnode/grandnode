@@ -1,0 +1,111 @@
+﻿@model CustomerActionConditionModel
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.CustomerActionId)
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#customeractioncondition-edit").show();
+        $("#customeractioncondition-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select,
+        });
+    });
+</script>
+<div id="customeractioncondition-edit" style="display:none">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex()) id="tab-info">
+            @T("Admin.Customers.CustomerActionCondition.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex()) id="tab-product">
+            @T("Admin.Customers.CustomerActionCondition.Products")
+        </li>
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex()) id="tab-category">
+            @T("Admin.Customers.CustomerActionCondition.Categories")
+        </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex()) id="tab-manufacturer">
+            @T("Admin.Customers.CustomerActionCondition.Manufacturers")
+        </li>
+        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex()) id="tab-vendor">
+            @T("Admin.Customers.CustomerActionCondition.Vendors")
+        </li>
+        <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex()) id="tab-productAttribute">
+            @T("Admin.Customers.CustomerActionCondition.ProductAttributes")
+        </li>
+        <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex()) id="tab-productSpecification">
+            @T("Admin.Customers.CustomerActionCondition.ProductSpecifications")
+        </li>
+        <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex()) id="tab-customerRole">
+            @T("Admin.Customers.CustomerActionCondition.CustomerRole")
+        </li>
+        <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex()) id="tab-customerTag">
+            @T("Admin.Customers.CustomerActionCondition.CustomerTag")
+        </li>
+        <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex()) id="tab-customerRegister">
+            @T("Admin.Customers.CustomerActionCondition.CustomerRegister")
+        </li>
+        <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex()) id="tab-customAttribute">
+            @T("Admin.Customers.CustomerActionCondition.CustomCustomerAttribute")
+        </li>
+        <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex()) id="tab-urlReferrer">
+            @T("Admin.Customers.CustomerActionCondition.UrlReferrer")
+        </li>
+        <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex()) id="tab-urlCurrent">
+            @T("Admin.Customers.CustomerActionCondition.UrlCurrent")
+        </li>
+    </ul>
+    <div>
+        @*@Html.Partial("_ConditionInfo", Model)*@
+    </div>
+    <div>
+        @Html.Partial("_ConditionProduct", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionCategory", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionManufacturer", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionVendor", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionProductAttribute", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionProductSpecification", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionCustomerRole", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionCustomerTag", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionCustomerRegister", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionCustomCustomerAttribute", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionUrlReferrer", Model)
+    </div>
+    <div>
+        @Html.Partial("_ConditionUrlCurrent", Model)
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customeractioncondition-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

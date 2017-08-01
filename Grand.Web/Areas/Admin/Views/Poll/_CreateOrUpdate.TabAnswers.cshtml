@@ -1,0 +1,125 @@
+﻿@model PollModel
+
+
+
+@{
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="answers-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewOption" value="@T("Admin.ContentManagement.Polls.Answer.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("PollAnswerCreatePopup", "Poll", new { pollId = Model.Id, btnId = "btnRefresh", formId = "poll-form" }))', 800, 350, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefresh" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#answers-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new { pollId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("PollAnswerDelete", "Poll"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Name: { editable: true, type: "string" },
+                                    NumberOfVotes: { editable: false, type: "number" },
+                                    DisplayOrder: { editable: true, type: "number" },
+                                    Id: { editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        requestEnd: function (e) {
+                            if (e.type == "create" || e.type == "update") {
+                                this.read();
+                            }
+                        },
+                        error: function (e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.Name")",
+                        width: 300
+                    }, {
+                        field: "NumberOfVotes",
+                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.NumberOfVotes")",
+                        width: 100
+                    }, {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.ContentManagement.Polls.Answers.Fields.DisplayOrder")",
+                        //integer format
+                        format: "{0:0}",
+                        width: 100
+                    },
+                    {
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Poll/PollAnswerEditPopup/")#=Id#?pollId=@(Model.Id)&btnId=btnRefresh&formId=poll-form', 800, 450, true); return false;\" class='k-button' />"
+                    },
+                    {
+                        command: [{
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 200
+                    }]
+                });
+            });
+
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefresh').click(function () {
+                    //refresh grid
+                    var grid = $("#answers-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.ContentManagement.Polls.Answers.SaveBeforeEdit")
+        </div>
+    }}

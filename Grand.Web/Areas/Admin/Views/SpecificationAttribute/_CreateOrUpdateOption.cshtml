@@ -1,0 +1,97 @@
+﻿@model SpecificationAttributeOptionModel
+@{
+    Html.AddScriptParts("~/Scripts/farbtastic.js");
+    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
+}
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.SpecificationAttributeId)
+@{
+    if (String.IsNullOrEmpty(Model.ColorSquaresRgb))
+    {
+        Model.ColorSquaresRgb = "#FFFFFF";
+    }
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(Context.Request.Query["formId"])'].@(Context.Request.Query["btnId"]).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)").click(toggleEnableColorSquaresRgb);
+        toggleEnableColorSquaresRgb();
+    });
+
+    function toggleEnableColorSquaresRgb() {
+        if ($('#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)').is(':checked')) {
+            $('#pnlColorSquaresRgb').show();
+        } else {
+            $('#pnlColorSquaresRgb').hide();
+        }
+    }
+</script>
+
+@(Html.LocalizedEditor<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
+@<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Locales[item].Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Locales[item].Name)
+                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Locales[item].LanguageId)        
+    </div>
+</div>
+,
+@<div class="form-horizontal">
+     <div class="form-body">
+         <div class="form-group">
+             @Html.GrandLabelFor(model => model.Name, new Dictionary<string, object> { { "class", "col-sm-3" } })
+             <div class="col-md-9 col-sm-9">
+                 @Html.GrandEditorFor(model => model.Name)
+                 @Html.ValidationMessageFor(model => model.Name)
+             </div>
+         </div>
+     </div>
+</div>
+))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.EnableColorSquaresRgb, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.EnableColorSquaresRgb)
+                @Html.ValidationMessageFor(model => model.EnableColorSquaresRgb)
+            </div>
+        </div>
+        <div class="form-group" id="pnlColorSquaresRgb">
+            @Html.GrandLabelFor(model => model.ColorSquaresRgb, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ColorSquaresRgb)
+                <div id="color-picker"></div>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                    });
+                </script>
+                @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder, new Dictionary<string, object> { { "class", "col-sm-3" } })
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+    </div>
+</div>
+

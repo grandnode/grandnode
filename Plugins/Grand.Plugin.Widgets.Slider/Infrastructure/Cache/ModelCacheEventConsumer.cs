@@ -28,7 +28,7 @@ namespace Grand.Plugin.Widgets.Slider.Infrastructure.Cache
         public ModelCacheEventConsumer()
         {
             //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>();
+            this._cacheManager = EngineContext.Current/*.ContainerManager*/.Resolve<ICacheManager>();
         }
 
         public void HandleEvent(EntityInserted<Setting> eventMessage)

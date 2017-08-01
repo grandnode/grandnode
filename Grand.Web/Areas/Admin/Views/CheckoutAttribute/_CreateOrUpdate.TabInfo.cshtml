@@ -1,0 +1,180 @@
+﻿@model CheckoutAttributeModel
+
+@using Grand.Core.Domain.Catalog;
+
+
+<script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
+                $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
+
+                toggleTax();
+                toggleAttributeControlType();
+            });
+
+            function toggleTax() {
+                if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
+                    $('#pnlTaxCategory').hide();
+                } else {
+                    $('#pnlTaxCategory').show();
+                }
+            }
+
+            function toggleAttributeControlType() {
+                var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
+                if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                    $('#pnlDefaultValue').show();
+                } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+                    $('#pnlValidationMinLength').show();
+                    $('#pnlValidationMaxLength').show();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                    $('#pnlDefaultValue').show();
+                } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                    $('#pnlValidationFileMaximumSize').show();
+                    $('#pnlValidationFileAllowedExtensions').show();
+                    $('#pnlDefaultValue').hide();
+                } else {
+                    $('#pnlValidationMinLength').hide();
+                    $('#pnlValidationMaxLength').hide();
+                    $('#pnlValidationFileMaximumSize').hide();
+                    $('#pnlValidationFileAllowedExtensions').hide();
+                    $('#pnlDefaultValue').hide();
+                }
+            }
+</script>
+
+@(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].Name)
+                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Locales[item].TextPrompt)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Locales[item].TextPrompt)
+                    @Html.ValidationMessageFor(model => model.Locales[item].TextPrompt)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.Name)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.TextPrompt)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.TextPrompt)
+                    @Html.ValidationMessageFor(model => model.TextPrompt)
+                </div>
+            </div>
+        </div>
+    </div>
+    ))
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsRequired)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsRequired)
+                @Html.ValidationMessageFor(model => model.IsRequired)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ShippableProductRequired)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.ShippableProductRequired)
+                @Html.ValidationMessageFor(model => model.ShippableProductRequired)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsTaxExempt)
+            <div class="col-md-9 col-sm-9">
+                @Html.EditorFor(model => model.IsTaxExempt)
+                @Html.ValidationMessageFor(model => model.IsTaxExempt)
+            </div>
+        </div>
+        <div class="form-group" id="pnlTaxCategory">
+            @Html.GrandLabelFor(model => model.TaxCategoryId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.TaxCategoryId, Model.AvailableTaxCategories)
+                @Html.ValidationMessageFor(model => model.TaxCategoryId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AttributeControlTypeId)
+            <div class="col-md-9 col-sm-9">
+                @{
+                    var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId).ToSelectList(valuesToExclude:
+                        new[] { (int)AttributeControlType.ImageSquares });
+                }
+                @Html.GrandDropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
+                @Html.ValidationMessageFor(model => model.AttributeControlTypeId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.DisplayOrder)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </div>
+        </div>
+        <div class="form-group" id="pnlValidationMinLength">
+            @Html.GrandLabelFor(model => model.ValidationMinLength)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ValidationMinLength)
+                @Html.ValidationMessageFor(model => model.ValidationMinLength)
+            </div>
+        </div>
+        <div class="form-group" id="pnlValidationMaxLength">
+            @Html.GrandLabelFor(model => model.ValidationMaxLength)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ValidationMaxLength)
+                @Html.ValidationMessageFor(model => model.ValidationMaxLength)
+            </div>
+        </div>
+        <div class="form-group" id="pnlValidationFileAllowedExtensions">
+            @Html.GrandLabelFor(model => model.ValidationFileAllowedExtensions)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ValidationFileAllowedExtensions)
+                @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
+            </div>
+        </div>
+        <tr id="pnlValidationFileMaximumSize">
+            <td class="adminTitle">
+                @Html.GrandLabelFor(model => model.ValidationFileMaximumSize)
+            </td>
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.ValidationFileMaximumSize)
+                @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
+            </div>
+        </tr>
+        <div class="form-group" id="pnlDefaultValue">
+            @Html.GrandLabelFor(model => model.DefaultValue)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DefaultValue)
+                @Html.ValidationMessageFor(model => model.DefaultValue)
+            </div>
+        </div>
+    </div>
+</div>

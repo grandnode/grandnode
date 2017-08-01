@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>ImageSharp.Drawing</id>
+    <version>1.0.0-alpha9-00166</version>
+    <authors>James Jackson-South and contributors</authors>
+    <owners>James Jackson-South and contributors</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/JimBobSquarePants/ImageSharp</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/JimBobSquarePants/ImageSharp/master/build/icons/imagesharp-logo-128.png</iconUrl>
+    <description>An extension to ImageSharp that allows the drawing of images, paths, and text.</description>
+    <tags>Image Draw Shape Path Font</tags>
+    <repository type="git" url="https://github.com/JimBobSquarePants/ImageSharp" />
+    <dependencies>
+      <group targetFramework=".NETStandard1.1">
+        <dependency id="ImageSharp" version="1.0.0-alpha9" exclude="Build,Analyzers" />
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+        <dependency id="SixLabors.Shapes.Text" version="0.1.0-alpha0018" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

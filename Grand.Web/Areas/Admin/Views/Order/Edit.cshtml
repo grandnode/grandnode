@@ -1,0 +1,118 @@
+﻿@model OrderModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "order-form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-basket"></i>
+                        @T("Admin.Orders.EditOrderDetails") - @Model.OrderNumber
+                        <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.BackToList").Text, "List")</small>
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided util-btn-margin-bottom-5">
+                            <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="btn purple">
+                                <i class="fa fa-file-pdf-o"></i> @T("Admin.Orders.PdfInvoice")
+                            </a>
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                <span id="order-delete" class="btn red"><i class="fa fa-trash-o"></i> @T("Admin.Common.Delete")</span>
+                            }
+                            <input type="submit" id="btnRefreshPage" style="display: none" />
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                $('#btnRefreshPage').click(function () {
+                                //refresh page
+                                location.reload();
+                                });
+                            });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div id="order-edit" style="display:none">
+                        <ul>
+                            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                                @T("Admin.Orders.Info")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                                @T("Admin.Orders.BillingInfo")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                                @T("Admin.Orders.ShippingInfo")
+                            </li>
+                            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                                @T("Admin.Orders.Products")
+                            </li>
+                            @if (!Model.IsLoggedInAsVendor)
+                            {
+                                <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                                    @T("Admin.Orders.OrderNotes")
+                                </li>
+                            }
+                        </ul>
+                        <div>
+                            @Html.Partial("_OrderDetails.Info", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("_OrderDetails.Billing", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("_OrderDetails.Shipping", Model)
+                        </div>
+                        <div>
+                            @Html.Partial("_OrderDetails.Products", Model)
+                        </div>
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            <div>
+                                @Html.Partial("_OrderDetails.Notes", Model)
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Html.ValidationSummary(false)
+
+    <script>
+        $(document).ready(function () {
+            $('#order-edit').show();
+            $("#order-edit").kendoTabStrip({
+                animation:  {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
+
+    {
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "order-edit");
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+
+
+    @*save selected tab index*@
+    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+}
+@Html.DeleteConfirmation("order-delete")

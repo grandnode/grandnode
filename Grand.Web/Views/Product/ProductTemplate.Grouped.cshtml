@@ -1,0 +1,241 @@
+﻿@model ProductDetailsModel
+@using Grand.Core
+@using Grand.Core.Domain.Seo;
+@using Grand.Core.Infrastructure;
+@using Grand.Services.Localization;
+@using Grand.Web.Models.Catalog;
+@using Microsoft.AspNetCore.Http.Extensions
+@{
+    Layout = "_ColumnsOne";
+
+    //title, meta
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
+
+    //canonical URL
+    if (seoSettings.CanonicalUrlsEnabled)
+    {
+        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
+        Html.AddCanonicalUrlParts(productUrl);
+    }
+
+    //open graph META tags
+    if (seoSettings.OpenGraphMetaTags)
+    {
+        Html.AddHeadCustomParts("<meta property=\"og:type\" content=\"product\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
+    }
+
+    //Twitter META tags
+    if (seoSettings.TwitterMetaTags)
+    {
+        Html.AddHeadCustomParts("<meta property=\"twitter:card\" content=\"summary\" />");
+        Html.AddHeadCustomParts("<meta property=\"twitter:site\" content=\"" + Html.Encode(Model.CurrentStoreName) + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + Html.Encode(Model.Name) + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(Model.MetaDescription) + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DefaultPictureModel.ImageUrl + "\" />");
+        Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + this.Url.ActionContext.HttpContext.Request.GetEncodedUrl() + "\" />");
+    }
+}
+<!--product breadcrumb-->
+@section Breadcrumb
+{
+    @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
+<div class="page product-details-page">
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
+        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post,null ,new { id = "product-details-form" }))
+        {
+            <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
+                <div class="col-12 product-essential px-0">
+                    <div class="col d-md-inline-flex d-md-flex px-0">
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
+                        <!--product pictures-->
+                        @Html.Partial("_ProductDetailsPictures", Model)
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_pictures", additionalData = Model.Id })
+                        <div class="overview col-md-6 col-12">
+                            @Html.Partial("_Discontinued", Model)
+                            <div class="product-name">
+                                <h2 class="generalTitle mb-3" itemprop="name">
+                                    @Model.Name
+                                </h2>
+                            </div>
+                            @if (!String.IsNullOrEmpty(Model.ShortDescription))
+                            {
+                                <div class="short-description mb-3">
+                                    @Html.Raw(Model.ShortDescription)
+                                </div>
+                            }
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
+                            <!--product reviews-->
+                            @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
+                            <!--product manufacturers-->
+                            @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
+                            <!--compare, email a friend-->
+                            <div class="overview-buttons mt-3 mb-3">
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
+                                @Html.Partial("_CompareProductsButton", Model)
+                                @Html.Partial("_ProductEmailAFriendButton", Model)
+                                @Html.Partial("_ProductAskQuestionButton", Model)
+                                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })
+                            </div>
+                            @Html.Partial("_ShareButton", Model)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-2 mb-2">
+                    <div class="flex-row">
+                        <ul class="nav nav-tabs" role="tablist">
+                            @if (!String.IsNullOrEmpty(Model.FullDescription))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#desctipt" role="tab">
+                                        <i class="fa fa-sticky-note-o hidden-lg-up" aria-hidden="true"></i>
+                                        <span class="hidden-md-down">@T("Products.Description")</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.ProductTags.Any())
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#tags" role="tab">
+                                        <i class="fa fa-tags hidden-lg-up" aria-hidden="true"></i>
+                                        <span class="hidden-md-down">@T("Products.Tags")</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.ProductSpecifications.Any())
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#ProductSpecifications" role="tab">
+                                        <span class="hidden-md-down">@T("Products.Specs")</span>
+                                        <i class="fa fa-puzzle-piece hidden-lg-up" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="desctipt" role="tabpanel">
+
+                                @if (!String.IsNullOrEmpty(Model.FullDescription))
+                                {
+                                    <article class="col-12 full-description generalMarginSupporter" itemprop="description">
+                                        @Html.Raw(Model.FullDescription)
+                                    </article>
+                                }
+                            </div>
+                            <div class="tab-pane pt-1" id="tags" role="tabpanel">
+                                @Html.Partial("_ProductTags", Model.ProductTags)
+
+                            </div>
+                            <div class="tab-pane pt-1" id="ProductSpecifications" role="tabpanel">
+                                @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_collateral", additionalData = Model.Id })
+                <div class="product-collateral col-12 mb-1 mt-1">
+                    <div class="d-flex row">
+                        <!--associated products-->
+                        @foreach (var variant in Model.AssociatedProducts)
+                        {
+                                        <div class="col-12 associatedItem mb-3"  data-productid="@variant.Id">
+                                            <div class="flex-sm-row row">
+                                                @if (!String.IsNullOrWhiteSpace(variant.DefaultPictureModel.ImageUrl))
+                                                {
+                                                    <div class="col-sm-3 col-12">
+                                                        <img class="card-img-top img-fluid" alt="@variant.DefaultPictureModel.AlternateText" src="@variant.DefaultPictureModel.ImageUrl"
+                                                             title="@variant.DefaultPictureModel.Title" id="main-product-img-@variant.Id" />
+                                                    </div>
+                                                }
+                                                <div class="col-sm-9 col-12">
+                                                    @if (!String.IsNullOrWhiteSpace(variant.Name))
+                                                    {
+                                                        <div class="variant-name">
+                                                            @variant.Name
+                                                        </div>
+                                                    }
+                                                    @if (!String.IsNullOrWhiteSpace(variant.ShortDescription))
+                                                    {
+                                                        <div class="variant-description">
+                                                            @Html.Raw(variant.ShortDescription)
+                                                        </div>
+                                                    }
+                                                    <!--availability-->
+                                                    @Html.Partial("_Availability", variant)
+                                                    <!--SKU, MAN, GTIN, vendor-->
+                                                    @Html.Partial("_SKU_Man_GTIN_Ven", variant)
+                                                    <!--delivery-->
+                                                    @Html.Partial("_DeliveryInfo", variant)
+                                                    <!--sample download-->
+                                                    @Html.Partial("_DownloadSample", variant)
+                                                    <!--attributes-->
+                                                    @{
+                                                        var dataDictAttributes = new ViewDataDictionary(ViewData);
+                                                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
+                                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
+                                                    }
+                                                    <!--gift card-->
+                                                    @{
+                                                        var dataDictGiftCard = new ViewDataDictionary(ViewData);
+                                                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
+                                                        @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
+                                                    }
+                                                    <!--rental info-->
+                                                    @{
+                                                        var dataDictRental = new ViewDataDictionary(ViewData);
+                                                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
+                                                        @Html.Partial("_RentalInfo", variant, dataDictRental)
+                                                    }
+                                                    <!--price breaks-->
+                                                    @Html.Partial("_ProductTierPrices", variant.TierPrices)
+                                                    @{
+                                                        var dataDictAddToCart = new ViewDataDictionary(ViewData);
+                                                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                                    }
+                                                    <!--price & add to cart-->
+                                                    @{
+                                                        var dataDictPrice = new ViewDataDictionary(ViewData);
+                                                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
+                                                        @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
+                                                    }
+                                                    
+                                                </div>
+                                            </div>
+                                                <div class="col-12 col-sm-9 flex-row d-flex my-3 ml-auto px-0">
+                                                    @{
+                                                        @Html.Partial("_AddToCartGroup", variant.AddToCart, dataDictAddToCart)
+                                                        var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
+                                                        dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+
+                                                        @Html.Partial("_AddToWishlistGroup", variant.AddToCart, dataDictAddToWishlist)
+
+                                                    }
+                                                </div>
+                                    </div>
+                        }
+
+                        @if (Model.AssociatedProducts.Count == 0)
+                        {
+                            <div class="no-associated-products">
+                                @T("Products.NoAssociatedProducts")
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+                @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
+        }
+        @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
+    </div>

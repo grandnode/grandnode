@@ -1,0 +1,212 @@
+﻿@model ShippingSettingsModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Settings.Shipping").Text;
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
+            toggleFreeShippingOverX();
+        });
+
+        function toggleFreeShippingOverX() {
+            if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
+            $('#pnlValueOfX').show();
+            $('#pnlValueOfXincltax').show();
+        } else {
+            $('#pnlValueOfX').hide();
+            $('#pnlValueOfXincltax').hide();
+        }
+    }
+
+    </script>
+
+
+    @Html.ValidationSummary(false)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light form-fit">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-fw fa-sliders"></i>
+                        @T("Admin.Configuration.Settings.Shipping")
+                    </div>
+                    <div class="actions">
+                        <div class="btn-group btn-group-devided">
+                            <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            @await Component.InvokeAsync("StoreScopeConfiguration") 
+                        </div>
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShipToSameAddress_OverrideForStore, model => model.ShipToSameAddress, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.ShipToSameAddress, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.ShipToSameAddress)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.ShipToSameAddress)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowPickUpInStore_OverrideForStore, model => model.AllowPickUpInStore, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowPickUpInStore, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.AllowPickUpInStore)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AllowPickUpInStore)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.UseWarehouseLocation_OverrideForStore, model => model.UseWarehouseLocation, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.UseWarehouseLocation, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.UseWarehouseLocation)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.UseWarehouseLocation)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, model => model.NotifyCustomerAboutShippingFromMultipleLocations, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXEnabled_OverrideForStore, model => model.FreeShippingOverXEnabled, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.FreeShippingOverXEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.FreeShippingOverXEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.FreeShippingOverXEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlValueOfX">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXValue_OverrideForStore, model => model.FreeShippingOverXValue, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.FreeShippingOverXValue, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    @Html.GrandEditorFor(model => model.FreeShippingOverXValue)
+                                    @Html.ValidationMessageFor(model => model.FreeShippingOverXValue)
+                                </div>
+                            </div>
+                            <div class="form-group" id="pnlValueOfXincltax">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXIncludingTax_OverrideForStore, model => model.FreeShippingOverXIncludingTax, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.FreeShippingOverXIncludingTax, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.FreeShippingOverXIncludingTax)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.FreeShippingOverXIncludingTax)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.EstimateShippingEnabled_OverrideForStore, model => model.EstimateShippingEnabled, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.EstimateShippingEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.EstimateShippingEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.EstimateShippingEnabled)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToCustomers_OverrideForStore, model => model.DisplayShipmentEventsToCustomers, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DisplayShipmentEventsToCustomers, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayShipmentEventsToCustomers)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.DisplayShipmentEventsToCustomers)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.DisplayShipmentEventsToStoreOwner_OverrideForStore, model => model.DisplayShipmentEventsToStoreOwner, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.DisplayShipmentEventsToStoreOwner, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DisplayShipmentEventsToStoreOwner)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.DisplayShipmentEventsToStoreOwner)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.BypassShippingMethodSelectionIfOnlyOne_OverrideForStore, model => model.BypassShippingMethodSelectionIfOnlyOne, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.BypassShippingMethodSelectionIfOnlyOne, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.BypassShippingMethodSelectionIfOnlyOne)
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    @T("admin.configuration.settings.shipping.shippingoriginaddress")
+                                    @Html.OverrideStoreCheckboxFor(model => model.ShippingOriginAddress_OverrideForStore, "pnlShippingOriginAddress", Model.ActiveStoreScopeConfiguration)
+                                </div>
+                                <div class="form-group" id="pnlShippingOriginAddress">
+                                    <div>
+                                        @Html.EditorFor(x => x.ShippingOriginAddress, "Address")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

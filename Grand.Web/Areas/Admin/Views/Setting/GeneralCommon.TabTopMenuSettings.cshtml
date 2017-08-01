@@ -1,0 +1,104 @@
+﻿@model GeneralCommonSettingsModel
+
+
+
+
+
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayMenuSettings.DisplayHomePageMenu_OverrideForStore, model => model.DisplayMenuSettings.DisplayHomePageMenu, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.DisplayMenuSettings.DisplayHomePageMenu, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.DisplayMenuSettings.DisplayHomePageMenu)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.DisplayMenuSettings.DisplayHomePageMenu)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayMenuSettings.DisplayNewProductsMenu_OverrideForStore, model => model.DisplayMenuSettings.DisplayNewProductsMenu, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.DisplayMenuSettings.DisplayNewProductsMenu, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.DisplayMenuSettings.DisplayNewProductsMenu)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.DisplayMenuSettings.DisplayNewProductsMenu)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayMenuSettings.DisplaySearchMenu_OverrideForStore, model => model.DisplayMenuSettings.DisplaySearchMenu, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.DisplayMenuSettings.DisplaySearchMenu, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.DisplayMenuSettings.DisplaySearchMenu)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.DisplayMenuSettings.DisplaySearchMenu)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayMenuSettings.DisplayCustomerMenu_OverrideForStore, model => model.DisplayMenuSettings.DisplayCustomerMenu, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.DisplayMenuSettings.DisplayCustomerMenu, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.DisplayMenuSettings.DisplayCustomerMenu)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.DisplayMenuSettings.DisplayCustomerMenu)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayMenuSettings.DisplayBlogMenu_OverrideForStore, model => model.DisplayMenuSettings.DisplayBlogMenu, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.DisplayMenuSettings.DisplayBlogMenu, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.DisplayMenuSettings.DisplayBlogMenu)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.DisplayMenuSettings.DisplayBlogMenu)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayMenuSettings.DisplayForumsMenu_OverrideForStore, model => model.DisplayMenuSettings.DisplayForumsMenu, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.DisplayMenuSettings.DisplayForumsMenu, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.DisplayMenuSettings.DisplayForumsMenu)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.DisplayMenuSettings.DisplayForumsMenu)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayMenuSettings.DisplayContactUsMenu_OverrideForStore, model => model.DisplayMenuSettings.DisplayContactUsMenu, Model.ActiveStoreScopeConfiguration)
+                @Html.GrandLabelFor(model => model.DisplayMenuSettings.DisplayContactUsMenu, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.DisplayMenuSettings.DisplayContactUsMenu)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.DisplayMenuSettings.DisplayContactUsMenu)
+            </div>
+        </div>
+
+    </div>
+</div>

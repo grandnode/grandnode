@@ -1,0 +1,59 @@
+﻿@model CustomerRoleModel
+
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        toggleRemoveButton();
+
+        $("#customerrole-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+
+    function toggleRemoveButton() {
+        if ($('#@Html.FieldIdFor(model => model.PurchasedWithProductId)').val() > 0) {
+            $('#purchased-with-product-name-remove').show();
+        }
+        else {
+            $('#purchased-with-product-name-remove').hide();
+        }
+    }
+</script>
+
+
+<div id="customerrole-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerRoles.Info")
+        </li>
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Customers.CustomerRoles.Products")
+        </li>
+    </ul>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabInfo", Model)
+    </div>
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabProducts", Model)
+    </div>
+</div>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "customerrole-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">

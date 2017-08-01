@@ -1,0 +1,79 @@
+﻿@model CampaignModel
+
+
+
+<div class="col-md-12">
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CustomerCreatedDateFrom)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CustomerCreatedDateFrom)
+                    <text>@T("Admin.Promotions.Campaigns.Fields.CustomerCreatedDateTo")</text>
+                    @Html.GrandEditorFor(model => model.CustomerCreatedDateTo)
+                    @Html.ValidationMessageFor(model => model.CustomerCreatedDateFrom)
+                    @Html.ValidationMessageFor(model => model.CustomerCreatedDateTo)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CustomerLastActivityDateFrom)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CustomerLastActivityDateFrom)
+                    <text>@T("Admin.Promotions.Campaigns.Fields.CustomerLastActivityDateTo")</text>
+                    @Html.GrandEditorFor(model => model.CustomerLastActivityDateTo)
+                    @Html.ValidationMessageFor(model => model.CustomerLastActivityDateFrom)
+                    @Html.ValidationMessageFor(model => model.CustomerLastActivityDateTo)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CustomerLastPurchaseDateFrom)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandEditorFor(model => model.CustomerLastPurchaseDateFrom)
+                    <text>@T("Admin.Promotions.Campaigns.Fields.CustomerLastPurchaseDateTo")</text>
+                    @Html.GrandEditorFor(model => model.CustomerLastPurchaseDateTo)
+                    @Html.ValidationMessageFor(model => model.CustomerLastPurchaseDateFrom)
+                    @Html.ValidationMessageFor(model => model.CustomerLastPurchaseDateTo)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CustomerHasOrders)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.CustomerHasOrders, ((Grand.Core.Domain.Messages.CampaignCondition)Model.CustomerHasOrders).ToSelectList())
+                    @Html.ValidationMessageFor(model => model.CustomerHasOrders)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CustomerHasShoppingCart)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.CustomerHasShoppingCart, ((Grand.Core.Domain.Messages.CampaignCondition)Model.CustomerHasShoppingCart).ToSelectList())
+                    @Html.ValidationMessageFor(model => model.CustomerHasShoppingCart)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CustomerTags)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.CustomerTags, new { SelectList = Model.AvailableCustomerTags })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.CustomerRoles)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.CustomerRoles, new { SelectList = Model.AvailableCustomerRoles })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.NewsletterCategories)
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.NewsletterCategories, new { SelectList = Model.AvailableNewsletterCategories })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.StoreId)
+                <div class="col-md-9 col-sm-9">
+                    @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                    @Html.ValidationMessageFor(model => model.StoreId)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

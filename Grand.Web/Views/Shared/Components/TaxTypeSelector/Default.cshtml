@@ -1,0 +1,42 @@
+﻿@model TaxTypeSelectorModel
+@using Grand.Core;
+@using Grand.Core.Domain.Tax;
+@using Grand.Core.Infrastructure;
+@using Grand.Web.Models.Common;
+@using Microsoft.AspNetCore.Http
+@using System.Net
+@inject IWebHelper webHelper
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var rawUrl = webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request);
+    var taxTypes = new List<SelectListItem>();
+    taxTypes.Add(new SelectListItem
+    {
+        Text = T("Tax.Inclusive").Text,
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax) }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+        Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
+    });
+    taxTypes.Add(new SelectListItem
+    {
+        Text = T("Tax.Exclusive").Text,
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax) }), "returnurl=" + WebUtility.UrlEncode(rawUrl), null),
+        Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
+    });
+}
+<div class="btn-group btn-group-sm float-xs-right ml-1">
+    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+        <span class="hidden-md-down">@taxTypes.FirstOrDefault(x => x.Selected).Text</span>
+        <span class="fa fa-info hidden-lg-up"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <div class="dropdown-menu dropdown-menu-left tax">
+        <ul class="pl-0 mb-0">
+            @foreach (var item in taxTypes)
+            {
+                <li>
+                    <a href="@item.Value">@item.Text</a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

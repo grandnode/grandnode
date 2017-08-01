@@ -1,0 +1,2042 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ImageSharp.Drawing</name>
+    </assembly>
+    <members>
+        <member name="T:ImageSharp.Drawing.Brushes.Brushes">
+            <summary>
+            A collection of methods for creating generic brushes.
+            </summary>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.Brushes.Percent10Pattern">
+            <summary>
+            Percent10 Hatch Pattern
+            </summary>
+            ---> x axis
+            ^
+            | y - axis
+            |
+            see PatternBrush for details about how to make new patterns work
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.Brushes.Percent20Pattern">
+            <summary>
+            Percent20 pattern.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.Brushes.HorizontalPattern">
+            <summary>
+            Horizontal Hatch Pattern
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.Brushes.MinPattern">
+            <summary>
+            Min Pattern
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.Brushes.VerticalPattern">
+            <summary>
+            Vertical Pattern
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.Brushes.ForwardDiagonalPattern">
+            <summary>
+            Forward Diagonal Pattern
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.Brushes.BackwardDiagonalPattern">
+            <summary>
+            Backward Diagonal Pattern
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Solid``1(``0)">
+            <summary>
+            Create as brush that will paint a solid color
+            </summary>
+            <param name="color">The color.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Percent10``1(``0)">
+            <summary>
+            Create as brush that will paint a Percent10 Hatch Pattern with the specified colors
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Percent10``1(``0,``0)">
+            <summary>
+            Create as brush that will paint a Percent10 Hatch Pattern with the specified colors
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <param name="backColor">Color of the background.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Percent20``1(``0)">
+            <summary>
+            Create as brush that will paint a Percent20 Hatch Pattern with the specified foreground color and a
+            transparent background.
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Percent20``1(``0,``0)">
+            <summary>
+            Create as brush that will paint a Percent20 Hatch Pattern with the specified colors
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <param name="backColor">Color of the background.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Horizontal``1(``0)">
+            <summary>
+            Create as brush that will paint a Horizontal Hatch Pattern with the specified foreground color and a
+            transparent background.
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Horizontal``1(``0,``0)">
+            <summary>
+            Create as brush that will paint a Horizontal Hatch Pattern with the specified colors
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <param name="backColor">Color of the background.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Min``1(``0)">
+            <summary>
+            Create as brush that will paint a Min Hatch Pattern with the specified foreground color and a
+            transparent background.
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Min``1(``0,``0)">
+            <summary>
+            Create as brush that will paint a Min Hatch Pattern with the specified colors
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <param name="backColor">Color of the background.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Vertical``1(``0)">
+            <summary>
+            Create as brush that will paint a Vertical Hatch Pattern with the specified foreground color and a
+            transparent background.
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.Vertical``1(``0,``0)">
+            <summary>
+            Create as brush that will paint a Vertical Hatch Pattern with the specified colors
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <param name="backColor">Color of the background.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.ForwardDiagonal``1(``0)">
+            <summary>
+            Create as brush that will paint a Forward Diagonal Hatch Pattern with the specified foreground color and a
+            transparent background.
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.ForwardDiagonal``1(``0,``0)">
+            <summary>
+            Create as brush that will paint a Forward Diagonal Hatch Pattern with the specified colors
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <param name="backColor">Color of the background.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.BackwardDiagonal``1(``0)">
+            <summary>
+            Create as brush that will paint a Backward Diagonal Hatch Pattern with the specified foreground color and a
+            transparent background.
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.Brushes.BackwardDiagonal``1(``0,``0)">
+            <summary>
+            Create as brush that will paint a Backward Diagonal Hatch Pattern with the specified colors
+            </summary>
+            <param name="foreColor">Color of the foreground.</param>
+            <param name="backColor">Color of the background.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <returns>A New <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/></returns>
+        </member>
+        <member name="T:ImageSharp.Drawing.Brushes.ImageBrush`1">
+            <summary>
+            Provides an implementation of an image brush for painting images within areas.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.ImageBrush`1.image">
+            <summary>
+            The image to paint.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.ImageBrush`1.#ctor(ImageSharp.ImageBase{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.ImageBrush`1"/> class.
+            </summary>
+            <param name="image">The image.</param>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.ImageBrush`1.CreateApplicator(ImageSharp.ImageBase{`0},SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator">
+            <summary>
+            The image brush applicator.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.source">
+            <summary>
+            The source image.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.yLength">
+            <summary>
+            The y-length.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.xLength">
+            <summary>
+            The x-length.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.offsetY">
+            <summary>
+            The Y offset.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.offsetX">
+            <summary>
+            The X offset.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.#ctor(ImageSharp.ImageBase{`0},ImageSharp.ImageBase{`0},SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator"/> class.
+            </summary>
+            <param name="target">The target image.</param>
+            <param name="image">The image.</param>
+            <param name="region">The region.</param>
+            <param name="options">The options</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets the color for a single pixel.
+            </summary>
+            <param name="x">The x.</param>
+            <param name="y">The y.</param>
+            <returns>
+            The color
+            </returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.ImageBrush`1.ImageBrushApplicator.Apply(System.Span{System.Single},System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:ImageSharp.Drawing.Brushes.PatternBrush`1">
+            <summary>
+            Provides an implementation of a pattern brush for painting patterns.
+            </summary>
+            <remarks>
+            The patterns that are used to create a custom pattern brush are made up of a repeating matrix of flags,
+            where each flag denotes whether to draw the foreground color or the background color.
+            so to create a new bool[,] with your flags
+            <para>
+            For example if you wanted to create a diagonal line that repeat every 4 pixels you would use a pattern like so
+            1000
+            0100
+            0010
+            0001
+            </para>
+            <para>
+            or you want a horizontal stripe which is 3 pixels apart you would use a pattern like
+             1
+             0
+             0
+            </para>
+            </remarks>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.PatternBrush`1.pattern">
+            <summary>
+            The pattern.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.PatternBrush`1.#ctor(`0,`0,System.Boolean[0:,0:])">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/> class.
+            </summary>
+            <param name="foreColor">Color of the fore.</param>
+            <param name="backColor">Color of the back.</param>
+            <param name="pattern">The pattern.</param>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.PatternBrush`1.#ctor(`0,`0,ImageSharp.Memory.Fast2DArray{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/> class.
+            </summary>
+            <param name="foreColor">Color of the fore.</param>
+            <param name="backColor">Color of the back.</param>
+            <param name="pattern">The pattern.</param>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.PatternBrush`1.#ctor(ImageSharp.Drawing.Brushes.PatternBrush{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1"/> class.
+            </summary>
+            <param name="brush">The brush.</param>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.PatternBrush`1.CreateApplicator(ImageSharp.ImageBase{`0},SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:ImageSharp.Drawing.Brushes.PatternBrush`1.PatternBrushApplicator">
+            <summary>
+            The pattern brush applicator.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.PatternBrush`1.PatternBrushApplicator.pattern">
+            <summary>
+            The pattern.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.PatternBrush`1.PatternBrushApplicator.#ctor(ImageSharp.ImageBase{`0},ImageSharp.Memory.Fast2DArray{`0},ImageSharp.Memory.Fast2DArray{System.Numerics.Vector4},ImageSharp.GraphicsOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.PatternBrush`1.PatternBrushApplicator" /> class.
+            </summary>
+            <param name="source">The source image.</param>
+            <param name="pattern">The pattern.</param>
+            <param name="patternVector">The patternVector.</param>
+            <param name="options">The options</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.PatternBrush`1.PatternBrushApplicator.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets the color for a single pixel.
+            </summary>#
+            <param name="x">The x.</param>
+            <param name="y">The y.</param>
+            <returns>
+            The Color.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.PatternBrush`1.PatternBrushApplicator.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.PatternBrush`1.PatternBrushApplicator.Apply(System.Span{System.Single},System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:ImageSharp.Drawing.Brushes.RecolorBrush`1">
+            <summary>
+            Provides an implementation of a brush that can recolor an image
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.RecolorBrush`1.#ctor(`0,`0,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.RecolorBrush`1" /> class.
+            </summary>
+            <param name="sourceColor">Color of the source.</param>
+            <param name="targeTPixel">Color of the target.</param>
+            <param name="threshold">The threshold as a value between 0 and 1.</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.RecolorBrush`1.Threshold">
+            <summary>
+            Gets the threshold.
+            </summary>
+            <value>
+            The threshold.
+            </value>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.RecolorBrush`1.SourceColor">
+            <summary>
+            Gets the source color.
+            </summary>
+            <value>
+            The color of the source.
+            </value>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.RecolorBrush`1.TargeTPixel">
+            <summary>
+            Gets the target color.
+            </summary>
+            <value>
+            The color of the target.
+            </value>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.RecolorBrush`1.CreateApplicator(ImageSharp.ImageBase{`0},SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator">
+            <summary>
+            The recolor brush applicator.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator.sourceColor">
+            <summary>
+            The source color.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator.targetColor">
+            <summary>
+            The target color.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator.threshold">
+            <summary>
+            The threshold.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator.#ctor(ImageSharp.ImageBase{`0},`0,`0,System.Single,ImageSharp.GraphicsOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator" /> class.
+            </summary>
+            <param name="source">The source image.</param>
+            <param name="sourceColor">Color of the source.</param>
+            <param name="targetColor">Color of the target.</param>
+            <param name="threshold">The threshold .</param>
+            <param name="options">The options</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets the color for a single pixel.
+            </summary>
+            <param name="x">The x.</param>
+            <param name="y">The y.</param>
+            <returns>
+            The color
+            </returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.RecolorBrush`1.RecolorBrushApplicator.Apply(System.Span{System.Single},System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:ImageSharp.Drawing.Brushes.SolidBrush`1">
+            <summary>
+            Provides an implementation of a solid brush for painting solid color areas.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+        </member>
+        <member name="F:ImageSharp.Drawing.Brushes.SolidBrush`1.color">
+            <summary>
+            The color to paint.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.SolidBrush`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.SolidBrush`1"/> class.
+            </summary>
+            <param name="color">The color.</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.SolidBrush`1.Color">
+            <summary>
+            Gets the color.
+            </summary>
+            <value>
+            The color.
+            </value>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.SolidBrush`1.CreateApplicator(ImageSharp.ImageBase{`0},SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:ImageSharp.Drawing.Brushes.SolidBrush`1.SolidBrushApplicator">
+            <summary>
+            The solid brush applicator.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.SolidBrush`1.SolidBrushApplicator.#ctor(ImageSharp.ImageBase{`0},`0,ImageSharp.GraphicsOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Brushes.SolidBrush`1.SolidBrushApplicator"/> class.
+            </summary>
+            <param name="source">The source image.</param>
+            <param name="color">The color.</param>
+            <param name="options">The options</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.SolidBrush`1.SolidBrushApplicator.Colors">
+            <summary>
+            Gets the colors.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Brushes.SolidBrush`1.SolidBrushApplicator.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets the color for a single pixel.
+            </summary>
+            <param name="x">The x.</param>
+            <param name="y">The y.</param>
+            <returns>
+            The color
+            </returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.SolidBrush`1.SolidBrushApplicator.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:ImageSharp.Drawing.Brushes.SolidBrush`1.SolidBrushApplicator.Apply(System.Span{System.Single},System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="T:ImageSharp.Drawing.IBrush`1">
+            <summary>
+            Brush represents a logical configuration of a brush which can be used to source pixel colors
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <remarks>
+            A brush is a simple class that will return an <see cref="T:ImageSharp.Drawing.Processors.BrushApplicator`1" /> that will perform the
+            logic for converting a pixel location to a <typeparamref name="TPixel"/>.
+            </remarks>
+        </member>
+        <member name="M:ImageSharp.Drawing.IBrush`1.CreateApplicator(ImageSharp.ImageBase{`0},SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <summary>
+            Creates the applicator for this brush.
+            </summary>
+            <param name="source">The source image.</param>
+            <param name="region">The region the brush will be applied to.</param>
+            <param name="options">The graphic options</param>
+            <returns>
+            The brush applicator for this brush
+            </returns>
+            <remarks>
+            The <paramref name="region" /> when being applied to things like shapes would usually be the
+            bounding box of the shape not necessarily the bounds of the whole image
+            </remarks>
+        </member>
+        <member name="T:ImageSharp.Drawing.Processors.BrushApplicator`1">
+            <summary>
+            primitive that converts a point in to a color for discovering the fill color based on an implementation
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.BrushApplicator`1.#ctor(ImageSharp.ImageBase{`0},ImageSharp.GraphicsOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Processors.BrushApplicator`1"/> class.
+            </summary>
+            <param name="target">The target.</param>
+            <param name="options">The options.</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.BrushApplicator`1.Blender">
+            <summary>
+            Gets the blendder
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.BrushApplicator`1.Target">
+            <summary>
+            Gets the destinaion
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.BrushApplicator`1.Options">
+            <summary>
+            Gets the blend percentage
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.BrushApplicator`1.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets the color for a single pixel.
+            </summary>
+            <param name="x">The x cordinate.</param>
+            <param name="y">The y cordinate.</param>
+            <returns>The a <typeparamref name="TPixel"/> that should be applied to the pixel.</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.BrushApplicator`1.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.BrushApplicator`1.Apply(System.Span{System.Single},System.Int32,System.Int32)">
+            <summary>
+            Applies the opactiy weighting for each pixel in a scanline to the target based on the pattern contained in the brush.
+            </summary>
+            <param name="scanline">The a collection of opacity values between 0 and 1 to be merged with the brushed color value before being applied to the target.</param>
+            <param name="x">The x position in the target pixel space that the start of the scanline data corresponds to.</param>
+            <param name="y">The y position in  the target pixel space that whole scanline corresponds to.</param>
+            <remarks>scanlineBuffer will be > scanlineWidth but provide and offset in case we want to share a larger buffer across runs.</remarks>
+        </member>
+        <member name="T:ImageSharp.Drawing.Processors.DrawImageProcessor`1">
+            <summary>
+            Combines two images together by blending the pixels.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.DrawImageProcessor`1.#ctor(ImageSharp.Image{`0},SixLabors.Primitives.Size,SixLabors.Primitives.Point,ImageSharp.GraphicsOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Processors.DrawImageProcessor`1"/> class.
+            </summary>
+            <param name="image">The image to blend with the currently processing image.</param>
+            <param name="size">The size to draw the blended image.</param>
+            <param name="location">The location to draw the blended image.</param>
+            <param name="options">The opacity of the image to blend. Between 0 and 100.</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.DrawImageProcessor`1.Image">
+            <summary>
+            Gets the image to blend.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.DrawImageProcessor`1.Alpha">
+            <summary>
+            Gets the alpha percentage value.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.DrawImageProcessor`1.Size">
+            <summary>
+            Gets the size to draw the blended image.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.DrawImageProcessor`1.Location">
+            <summary>
+            Gets the location to draw the blended image.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.DrawImageProcessor`1.OnApply(ImageSharp.ImageBase{`0},SixLabors.Primitives.Rectangle)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ImageSharp.Drawing.Processors.FillProcessor`1">
+            <summary>
+            Using the bursh as a source of pixels colors blends the brush color with source.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+        </member>
+        <member name="F:ImageSharp.Drawing.Processors.FillProcessor`1.brush">
+            <summary>
+            The brush.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.FillProcessor`1.#ctor(ImageSharp.Drawing.IBrush{`0},ImageSharp.GraphicsOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Processors.FillProcessor`1"/> class.
+            </summary>
+            <param name="brush">The brush to source pixel colors from.</param>
+            <param name="options">The options</param>
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.FillProcessor`1.OnApply(ImageSharp.ImageBase{`0},SixLabors.Primitives.Rectangle)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ImageSharp.Drawing.Processors.FillRegionProcessor`1">
+            <summary>
+            Usinf a brsuh and a shape fills shape with contents of brush the
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <seealso cref="T:ImageSharp.Processing.ImageProcessor`1" />
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.FillRegionProcessor`1.#ctor(ImageSharp.Drawing.IBrush{`0},ImageSharp.Drawing.Region,ImageSharp.GraphicsOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Processors.FillRegionProcessor`1" /> class.
+            </summary>
+            <param name="brush">The details how to fill the region of interest.</param>
+            <param name="region">The region of interest to be filled.</param>
+            <param name="options">The configuration options.</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.FillRegionProcessor`1.Brush">
+            <summary>
+            Gets the brush.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.FillRegionProcessor`1.Region">
+            <summary>
+            Gets the region that this processor applies to.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Processors.FillRegionProcessor`1.Options">
+            <summary>
+            Gets the options.
+            </summary>
+            <value>
+            The options.
+            </value>
+        </member>
+        <member name="M:ImageSharp.Drawing.Processors.FillRegionProcessor`1.OnApply(ImageSharp.ImageBase{`0},SixLabors.Primitives.Rectangle)">
+            <inheritdoc/>
+        </member>
+        <member name="T:ImageSharp.Drawing.ShapePath">
+            <summary>
+            A mapping between a <see cref="T:SixLabors.Shapes.IPath"/> and a region.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.ShapePath.#ctor(SixLabors.Shapes.IPath,ImageSharp.Drawing.Pens.IPen)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.ShapePath"/> class.
+            </summary>
+            <param name="shape">The shape.</param>
+            <param name="pen">The pen to apply to the shape.</param>
+        </member>
+        <member name="T:ImageSharp.Drawing.ShapeRegion">
+            <summary>
+            A mapping between a <see cref="T:SixLabors.Shapes.IPath"/> and a region.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.ShapeRegion.#ctor(SixLabors.Shapes.IPath)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.ShapeRegion"/> class.
+            </summary>
+            <param name="shape">The shape.</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.ShapeRegion.Shape">
+            <summary>
+            Gets the fillable shape
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.ShapeRegion.MaxIntersections">
+            <inheritdoc/>
+        </member>
+        <member name="P:ImageSharp.Drawing.ShapeRegion.Bounds">
+            <inheritdoc/>
+        </member>
+        <member name="M:ImageSharp.Drawing.ShapeRegion.Scan(System.Single,System.Span{System.Single})">
+            <inheritdoc/>
+        </member>
+        <member name="T:ImageSharp.Drawing.Pens.IPen`1">
+            <summary>
+            Interface representing a Pen
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+        </member>
+        <member name="P:ImageSharp.Drawing.Pens.IPen`1.StrokeFill">
+            <summary>
+            Gets the stroke fill.
+            </summary>
+        </member>
+        <member name="T:ImageSharp.Drawing.Pens.IPen">
+            <summary>
+            Iterface represting the pattern and size of the stroke to apply with a Pen.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Pens.IPen.StrokeWidth">
+            <summary>
+            Gets the width to apply to the stroke
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Pens.IPen.StrokePattern">
+            <summary>
+            Gets the stoke pattern.
+            </summary>
+        </member>
+        <member name="T:ImageSharp.Drawing.Pens.Pens">
+            <summary>
+            Common Pen styles
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.Solid``1(``0,System.Single)">
+            <summary>
+            Create a solid pen with out any drawing patterns
+            </summary>
+            <param name="color">The color.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.Solid``1(ImageSharp.Drawing.IBrush{``0},System.Single)">
+            <summary>
+            Create a solid pen with out any drawing patterns
+            </summary>
+            <param name="brush">The brush.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.Dash``1(``0,System.Single)">
+            <summary>
+            Create a pen with a 'Dash' drawing patterns
+            </summary>
+            <param name="color">The color.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.Dash``1(ImageSharp.Drawing.IBrush{``0},System.Single)">
+            <summary>
+            Create a pen with a 'Dash' drawing patterns
+            </summary>
+            <param name="brush">The brush.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.Dot``1(``0,System.Single)">
+            <summary>
+            Create a pen with a 'Dot' drawing patterns
+            </summary>
+            <param name="color">The color.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.Dot``1(ImageSharp.Drawing.IBrush{``0},System.Single)">
+            <summary>
+            Create a pen with a 'Dot' drawing patterns
+            </summary>
+            <param name="brush">The brush.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.DashDot``1(``0,System.Single)">
+            <summary>
+            Create a pen with a 'Dash Dot' drawing patterns
+            </summary>
+            <param name="color">The color.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.DashDot``1(ImageSharp.Drawing.IBrush{``0},System.Single)">
+            <summary>
+            Create a pen with a 'Dash Dot' drawing patterns
+            </summary>
+            <param name="brush">The brush.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.DashDotDot``1(``0,System.Single)">
+            <summary>
+            Create a pen with a 'Dash Dot Dot' drawing patterns
+            </summary>
+            <param name="color">The color.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pens.DashDotDot``1(ImageSharp.Drawing.IBrush{``0},System.Single)">
+            <summary>
+            Create a pen with a 'Dash Dot Dot' drawing patterns
+            </summary>
+            <param name="brush">The brush.</param>
+            <param name="width">The width.</param>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <returns>The Pen</returns>
+        </member>
+        <member name="T:ImageSharp.Drawing.Pens.Pen`1">
+            <summary>
+            Provides a pen that can apply a pattern to a line with a set brush and thickness
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <remarks>
+            The pattern will be in to the form of new float[]{ 1f, 2f, 0.5f} this will be
+            converted into a pattern that is 3.5 times longer that the width with 3 sections
+            section 1 will be width long (making a square) and will be filled by the brush
+            section 2 will be width * 2 long and will be empty
+            section 3 will be width/2 long and will be filled
+            the the pattern will imidiatly repeat without gap.
+            </remarks>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pen`1.#ctor(`0,System.Single,System.Single[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Pens.Pen`1"/> class.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="width">The width.</param>
+            <param name="pattern">The pattern.</param>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pen`1.#ctor(ImageSharp.Drawing.IBrush{`0},System.Single,System.Single[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Pens.Pen`1"/> class.
+            </summary>
+            <param name="brush">The brush.</param>
+            <param name="width">The width.</param>
+            <param name="pattern">The pattern.</param>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pen`1.#ctor(`0,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Pens.Pen`1"/> class.
+            </summary>
+            <param name="color">The color.</param>
+            <param name="width">The width.</param>
+        </member>
+        <member name="M:ImageSharp.Drawing.Pens.Pen`1.#ctor(ImageSharp.Drawing.IBrush{`0},System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.Pens.Pen`1"/> class.
+            </summary>
+            <param name="brush">The brush.</param>
+            <param name="width">The width.</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.Pens.Pen`1.StrokeFill">
+            <inheritdoc/>
+        </member>
+        <member name="P:ImageSharp.Drawing.Pens.Pen`1.StrokeWidth">
+            <inheritdoc/>
+        </member>
+        <member name="P:ImageSharp.Drawing.Pens.Pen`1.StrokePattern">
+            <inheritdoc/>
+        </member>
+        <member name="T:ImageSharp.Drawing.PointInfo">
+            <summary>
+            Returns details about how far away from the inside of a shape and the color the pixel could be.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.PointInfo.DistanceAlongPath">
+            <summary>
+            The distance along path
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.PointInfo.DistanceFromPath">
+            <summary>
+            The distance from path
+            </summary>
+        </member>
+        <member name="T:ImageSharp.Drawing.Region">
+            <summary>
+            Represents a region of an image.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Region.MaxIntersections">
+            <summary>
+            Gets the maximum number of intersections to could be returned.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.Region.Bounds">
+            <summary>
+            Gets the bounding box that entirely surrounds this region.
+            </summary>
+            <remarks>
+            This should always contains all possible points returned from <see cref="M:ImageSharp.Drawing.Region.Scan(System.Single,System.Span{System.Single})"/>.
+            </remarks>
+        </member>
+        <member name="M:ImageSharp.Drawing.Region.Scan(System.Single,System.Span{System.Single})">
+            <summary>
+            Scans the X axis for intersections at the Y axis position.
+            </summary>
+            <param name="y">The position along the y axis to find intersections.</param>
+            <param name="buffer">The buffer.</param>
+            <returns>The number of intersections found.</returns>
+        </member>
+        <member name="T:ImageSharp.Drawing.TextGraphicsOptions">
+            <summary>
+            Options for influencing the drawing functions.
+            </summary>
+        </member>
+        <member name="F:ImageSharp.Drawing.TextGraphicsOptions.Default">
+            <summary>
+            Represents the default <see cref="T:ImageSharp.Drawing.TextGraphicsOptions"/>.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.TextGraphicsOptions.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ImageSharp.Drawing.TextGraphicsOptions" /> struct.
+            </summary>
+            <param name="enableAntialiasing">If set to <c>true</c> [enable antialiasing].</param>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.Antialias">
+            <summary>
+            Gets or sets a value indicating whether antialiasing should be applied.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.AntialiasSubpixelDepth">
+            <summary>
+            Gets or sets a value indicating the number of subpixels to use while rendering with antialiasing enabled.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.BlendPercentage">
+            <summary>
+            Gets or sets a value indicating the blending percentage to apply to the drawing operation
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.BlenderMode">
+            <summary>
+            Gets or sets a value indicating the blending percentage to apply to the drawing operation
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.ApplyKerning">
+            <summary>
+            Gets or sets a value indicating whether the text should be drawing with kerning enabled.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.TabWidth">
+            <summary>
+            Gets or sets a value indicating the number of space widths a tab should lock to.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.UseImageResolution">
+            <summary>
+            Gets or sets a value indicating whether to use the current image resultion to for point size scaling.
+            If this is [false] the text renders at 72dpi otherwise it renders at Image resolution
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.WrapTextWidth">
+            <summary>
+            Gets or sets a value indicating if greater than zero determine the width at which text should wrap.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.HorizontalAlignment">
+            <summary>
+            Gets or sets a value indicating how to align the text relative to the rendering space.
+            If <see cref="P:ImageSharp.Drawing.TextGraphicsOptions.WrapTextWidth"/> is greater than zero it will align relative to the space
+            defined by the location and width, if <see cref="P:ImageSharp.Drawing.TextGraphicsOptions.WrapTextWidth"/> equals zero, and thus
+            wrapping disabled, then the alignment is relative to the drawing location.
+            </summary>
+        </member>
+        <member name="P:ImageSharp.Drawing.TextGraphicsOptions.VerticalAlignment">
+            <summary>
+            Gets or sets a value indicating how to align the text relative to the rendering space.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.Drawing.TextGraphicsOptions.op_Implicit(ImageSharp.GraphicsOptions)~ImageSharp.Drawing.TextGraphicsOptions">
+            <summary>
+            Performs an implicit conversion from <see cref="T:ImageSharp.GraphicsOptions"/> to <see cref="T:ImageSharp.Drawing.TextGraphicsOptions"/>.
+            </summary>
+            <param name="options">The options.</param>
+            <returns>
+            The result of the conversion.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.Drawing.TextGraphicsOptions.op_Explicit(ImageSharp.Drawing.TextGraphicsOptions)~ImageSharp.GraphicsOptions">
+            <summary>
+            Performs an explicit conversion from <see cref="T:ImageSharp.Drawing.TextGraphicsOptions"/> to <see cref="T:ImageSharp.GraphicsOptions"/>.
+            </summary>
+            <param name="options">The options.</param>
+            <returns>
+            The result of the conversion.
+            </returns>
+        </member>
+        <member name="T:ImageSharp.ImageExtensions">
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+            <summary>
+            Extension methods for the <see cref="T:ImageSharp.Image`1"/> type.
+            </summary>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawImage``1(ImageSharp.Image{``0},ImageSharp.Image{``0},SixLabors.Primitives.Size,SixLabors.Primitives.Point,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the given image together with the current one by blending their pixels.
+            </summary>
+            <param name="source">The image this method extends.</param>
+            <param name="image">The image to blend with the currently processing image.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="size">The size to draw the blended image.</param>
+            <param name="location">The location to draw the blended image.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Blend``1(ImageSharp.Image{``0},ImageSharp.Image{``0},System.Single)">
+            <summary>
+            Draws the given image together with the current one by blending their pixels.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="image">The image to blend with the currently processing image.</param>
+            <param name="percent">The opacity of the image image to blend. Must be between 0 and 1.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Blend``1(ImageSharp.Image{``0},ImageSharp.Image{``0},ImageSharp.PixelFormats.PixelBlenderMode,System.Single)">
+            <summary>
+            Draws the given image together with the current one by blending their pixels.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="image">The image to blend with the currently processing image.</param>
+            <param name="blender">The blending mode.</param>
+            <param name="percent">The opacity of the image image to blend. Must be between 0 and 1.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Blend``1(ImageSharp.Image{``0},ImageSharp.Image{``0},ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the given image together with the current one by blending their pixels.
+            </summary>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="image">The image to blend with the currently processing image.</param>
+            <param name="options">The options, including the blending type and belnding amount.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawImage``1(ImageSharp.Image{``0},ImageSharp.Image{``0},System.Single,SixLabors.Primitives.Size,SixLabors.Primitives.Point)">
+            <summary>
+            Draws the given image together with the current one by blending their pixels.
+            </summary>
+            <param name="source">The image this method extends.</param>
+            <param name="image">The image to blend with the currently processing image.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="percent">The opacity of the image image to blend. Must be between 0 and 1.</param>
+            <param name="size">The size to draw the blended image.</param>
+            <param name="location">The location to draw the blended image.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawImage``1(ImageSharp.Image{``0},ImageSharp.Image{``0},ImageSharp.PixelFormats.PixelBlenderMode,System.Single,SixLabors.Primitives.Size,SixLabors.Primitives.Point)">
+            <summary>
+            Draws the given image together with the current one by blending their pixels.
+            </summary>
+            <param name="source">The image this method extends.</param>
+            <param name="image">The image to blend with the currently processing image.</param>
+            <typeparam name="TPixel">The pixel format.</typeparam>
+            <param name="blender">The type of bending to apply.</param>
+            <param name="percent">The opacity of the image image to blend. Must be between 0 and 1.</param>
+            <param name="size">The size to draw the blended image.</param>
+            <param name="location">The location to draw the blended image.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image with the specified brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The details how to fill the region of interest.</param>
+            <param name="options">The graphics options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0})">
+            <summary>
+            Flood fills the image with the specified brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The details how to fill the region of interest.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0)">
+            <summary>
+            Flood fills the image with the specified color.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},ImageSharp.Drawing.Region,ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image with in the region with the specified brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="region">The region.</param>
+            <param name="options">The graphics options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},ImageSharp.Drawing.Region)">
+            <summary>
+            Flood fills the image with in the region with the specified brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="region">The region.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,ImageSharp.Drawing.Region,ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image with in the region with the specified color.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="region">The region.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,ImageSharp.Drawing.Region)">
+            <summary>
+            Flood fills the image with in the region with the specified color.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="region">The region.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawBeziers``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as an open Bezier path at the provided thickness with the supplied brush
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawBeziers``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as an open Bezier path at the provided thickness with the supplied brush
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawBeziers``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as an open Bezier path at the provided thickness with the supplied brush
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawBeziers``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as an open Bezier path at the provided thickness with the supplied brush
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawBeziers``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as an open Bezier path with the supplied pen
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawBeziers``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as an open Bezier path with the supplied pen
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawLines``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as an open Linear path at the provided thickness with the supplied brush
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawLines``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as an open Linear path at the provided thickness with the supplied brush
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawLines``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as an open Linear path at the provided thickness with the supplied brush
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawLines``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as an open Linear path at the provided thickness with the supplied brush
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawLines``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as an open Linear path with the supplied pen
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawLines``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as an open Linear path with the supplied pen
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Shapes.IPath,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="path">The path.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Shapes.IPath)">
+            <summary>
+            Draws the outline of the polygon with the provided pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="path">The path.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Shapes.IPath,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="path">The shape.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Shapes.IPath)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="path">The path.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Shapes.IPath,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="path">The path.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Shapes.IPath)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="path">The path.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Shapes.IPathCollection,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="paths">The paths.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Shapes.IPathCollection)">
+            <summary>
+            Draws the outline of the polygon with the provided pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="paths">The paths.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Shapes.IPathCollection,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="paths">The shapes.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Shapes.IPathCollection)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="paths">The paths.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Shapes.IPathCollection,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="paths">The paths.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Shapes.IPathCollection)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="paths">The paths.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawPolygon``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as a closed Linear Polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawPolygon``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as a closed Linear Polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawPolygon``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as a closed Linear Polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawPolygon``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as a closed Linear Polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawPolygon``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF[])">
+            <summary>
+            Draws the provided Points as a closed Linear Polygon with the provided Pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawPolygon``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the provided Points as a closed Linear Polygon with the provided Pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="shape">The shape.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.RectangleF)">
+            <summary>
+            Draws the outline of the polygon with the provided pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="pen">The pen.</param>
+            <param name="shape">The shape.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="shape">The shape.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Single,SixLabors.Primitives.RectangleF)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="shape">The shape.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="shape">The shape.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Draw``1(ImageSharp.Image{``0},``0,System.Single,SixLabors.Primitives.RectangleF)">
+            <summary>
+            Draws the outline of the polygon with the provided brush at the provided thickness.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="thickness">The thickness.</param>
+            <param name="shape">The shape.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Action{SixLabors.Shapes.PathBuilder},ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="path">The shape.</param>
+            <param name="options">The graphics options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},System.Action{SixLabors.Shapes.PathBuilder})">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="path">The path.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,System.Action{SixLabors.Shapes.PathBuilder},ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="path">The path.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,System.Action{SixLabors.Shapes.PathBuilder})">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="path">The path.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},SixLabors.Shapes.IPathCollection,ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="paths">The shapes.</param>
+            <param name="options">The graphics options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},SixLabors.Shapes.IPathCollection)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="paths">The paths.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,SixLabors.Shapes.IPathCollection,ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="paths">The paths.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,SixLabors.Shapes.IPathCollection)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="paths">The paths.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},SixLabors.Shapes.IPath,ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="path">The shape.</param>
+            <param name="options">The graphics options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},SixLabors.Shapes.IPath)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="path">The path.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,SixLabors.Shapes.IPath,ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="path">The path.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,SixLabors.Shapes.IPath)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="path">The path.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.FillPolygon``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of a Linear polygon described by the points
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.FillPolygon``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},SixLabors.Primitives.PointF[])">
+            <summary>
+            Flood fills the image in the shape of a Linear polygon described by the points
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.FillPolygon``1(ImageSharp.Image{``0},``0,SixLabors.Primitives.PointF[],ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of a Linear polygon described by the points
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="points">The points.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.FillPolygon``1(ImageSharp.Image{``0},``0,SixLabors.Primitives.PointF[])">
+            <summary>
+            Flood fills the image in the shape of a Linear polygon described by the points
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="points">The points.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="shape">The shape.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},ImageSharp.Drawing.IBrush{``0},SixLabors.Primitives.RectangleF)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="brush">The brush.</param>
+            <param name="shape">The shape.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,SixLabors.Primitives.RectangleF,ImageSharp.GraphicsOptions)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="shape">The shape.</param>
+            <param name="options">The options.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.Fill``1(ImageSharp.Image{``0},``0,SixLabors.Primitives.RectangleF)">
+            <summary>
+            Flood fills the image in the shape of the provided polygon with the specified brush..
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="color">The color.</param>
+            <param name="shape">The shape.</param>
+            <returns>The <see cref="T:ImageSharp.Image`1"/>.</returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,``0,SixLabors.Primitives.PointF)">
+            <summary>
+            Draws the text onto the the image filled via the brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="color">The color.</param>
+            <param name="location">The location.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,``0,SixLabors.Primitives.PointF,ImageSharp.Drawing.TextGraphicsOptions)">
+            <summary>
+            Draws the text onto the the image filled via the brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="color">The color.</param>
+            <param name="location">The location.</param>
+            <param name="options">The options.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.IBrush{``0},SixLabors.Primitives.PointF)">
+            <summary>
+            Draws the text onto the the image filled via the brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="brush">The brush.</param>
+            <param name="location">The location.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.IBrush{``0},SixLabors.Primitives.PointF,ImageSharp.Drawing.TextGraphicsOptions)">
+            <summary>
+            Draws the text onto the the image filled via the brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="brush">The brush.</param>
+            <param name="location">The location.</param>
+            <param name="options">The options.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF)">
+            <summary>
+            Draws the text onto the the image outlined via the pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="pen">The pen.</param>
+            <param name="location">The location.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF,ImageSharp.Drawing.TextGraphicsOptions)">
+            <summary>
+            Draws the text onto the the image outlined via the pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="pen">The pen.</param>
+            <param name="location">The location.</param>
+            <param name="options">The options.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.IBrush{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF)">
+            <summary>
+            Draws the text onto the the image filled via the brush then outlined via the pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="brush">The brush.</param>
+            <param name="pen">The pen.</param>
+            <param name="location">The location.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.IBrush{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Primitives.PointF,ImageSharp.Drawing.TextGraphicsOptions)">
+            <summary>
+            Draws the text onto the the image filled via the brush then outlined via the pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="brush">The brush.</param>
+            <param name="pen">The pen.</param>
+            <param name="location">The location.</param>
+            <param name="options">The options.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,``0,SixLabors.Shapes.IPath)">
+            <summary>
+            Draws the text onto the the image filled via the brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="color">The color.</param>
+            <param name="path">The path.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,``0,SixLabors.Shapes.IPath,ImageSharp.Drawing.TextGraphicsOptions)">
+            <summary>
+            Draws the text onto the the image filled via the brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="color">The color.</param>
+            <param name="path">The path.</param>
+            <param name="options">The options.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.IBrush{``0},SixLabors.Shapes.IPath)">
+            <summary>
+            Draws the text onto the the image filled via the brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="brush">The brush.</param>
+            <param name="path">The location.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.IBrush{``0},SixLabors.Shapes.IPath,ImageSharp.Drawing.TextGraphicsOptions)">
+            <summary>
+            Draws the text onto the the image filled via the brush.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="brush">The brush.</param>
+            <param name="path">The path.</param>
+            <param name="options">The options.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Shapes.IPath)">
+            <summary>
+            Draws the text onto the the image outlined via the pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="pen">The pen.</param>
+            <param name="path">The path.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Shapes.IPath,ImageSharp.Drawing.TextGraphicsOptions)">
+            <summary>
+            Draws the text onto the the image outlined via the pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="pen">The pen.</param>
+            <param name="path">The path.</param>
+            <param name="options">The options.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.IBrush{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Shapes.IPath)">
+            <summary>
+            Draws the text onto the the image filled via the brush then outlined via the pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="brush">The brush.</param>
+            <param name="pen">The pen.</param>
+            <param name="path">The path.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+        <member name="M:ImageSharp.ImageExtensions.DrawText``1(ImageSharp.Image{``0},System.String,SixLabors.Fonts.Font,ImageSharp.Drawing.IBrush{``0},ImageSharp.Drawing.Pens.IPen{``0},SixLabors.Shapes.IPath,ImageSharp.Drawing.TextGraphicsOptions)">
+            <summary>
+            Draws the text onto the the image filled via the brush then outlined via the pen.
+            </summary>
+            <typeparam name="TPixel">The type of the color.</typeparam>
+            <param name="source">The image this method extends.</param>
+            <param name="text">The text.</param>
+            <param name="font">The font.</param>
+            <param name="brush">The brush.</param>
+            <param name="pen">The pen.</param>
+            <param name="path">The path.</param>
+            <param name="options">The options.</param>
+            <returns>
+            The <see cref="T:ImageSharp.Image`1" />.
+            </returns>
+        </member>
+    </members>
+</doc>

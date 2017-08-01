@@ -1,17 +1,19 @@
-﻿using System.Web.Mvc;
-using Grand.Core;
+﻿using Grand.Core;
 using Grand.Core.Caching;
-using Grand.Plugin.Widgets.Slider.Infrastructure.Cache;
 using Grand.Plugin.Widgets.Slider.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
 using Grand.Services.Media;
 using Grand.Services.Stores;
-using Grand.Web.Framework.Controllers;
+using Grand.Framework.Controllers;
 using System;
+using Microsoft.AspNetCore.Mvc;
+using Grand.Framework.Mvc.Filters;
 
 namespace Grand.Plugin.Widgets.Slider.Controllers
 {
+    [AuthorizeAdmin]
+    [Area("Admin")]
     public class WidgetsSliderController : BasePluginController
     {
         private readonly IWorkContext _workContext;
@@ -39,22 +41,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             this._localizationService = localizationService;
         }
 
-        protected string GetPictureUrl(string pictureId)
-        {
-            string cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, pictureId);
-            return _cacheManager.Get(cacheKey, () =>
-            {
-                var url = _pictureService.GetPictureUrl(pictureId, false, showDefaultPicture: false);
-                //little hack here. nulls aren't cacheable so set it to ""
-                if (url == null)
-                    url = "";
-
-                return url;
-            });
-        }
-
-        [AdminAuthorize]
-        [ChildActionOnly]
+        [AuthorizeAdmin]
         public ActionResult Configure()
         {
             //load settings for a chosen store scope
@@ -96,12 +83,11 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 model.Link5_OverrideForStore = _settingService.SettingExists(sliderSettings, x => x.Link5, storeScope);
             }
 
-            return View("~/Plugins/Widgets.Slider/Views/WidgetsSlider/Configure.cshtml", model);
+            return View("~/Plugins/Widgets.Slider/netcoreapp1.1/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
+        [AuthorizeAdmin]
         public ActionResult Configure(ConfigurationModel model)
         {
             //load settings for a chosen store scope
@@ -208,40 +194,5 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
             return Configure();
         }
 
-        [ChildActionOnly]
-        public ActionResult PublicInfo(string widgetZone, object additionalData = null)
-        {
-            var sliderSettings = _settingService.LoadSetting<SliderSettings>(_storeContext.CurrentStore.Id);
-
-            var model = new PublicInfoModel();
-            model.Picture1Url = GetPictureUrl(sliderSettings.Picture1Id);
-            model.Text1 = sliderSettings.Text1;
-            model.Link1 = sliderSettings.Link1;
-
-            model.Picture2Url = GetPictureUrl(sliderSettings.Picture2Id);
-            model.Text2 = sliderSettings.Text2;
-            model.Link2 = sliderSettings.Link2;
-
-            model.Picture3Url = GetPictureUrl(sliderSettings.Picture3Id);
-            model.Text3 = sliderSettings.Text3;
-            model.Link3 = sliderSettings.Link3;
-
-            model.Picture4Url = GetPictureUrl(sliderSettings.Picture4Id);
-            model.Text4 = sliderSettings.Text4;
-            model.Link4 = sliderSettings.Link4;
-
-            model.Picture5Url = GetPictureUrl(sliderSettings.Picture5Id);
-            model.Text5 = sliderSettings.Text5;
-            model.Link5 = sliderSettings.Link5;
-
-            if (string.IsNullOrEmpty(model.Picture1Url) && string.IsNullOrEmpty(model.Picture2Url) &&
-                string.IsNullOrEmpty(model.Picture3Url) && string.IsNullOrEmpty(model.Picture4Url) &&
-                string.IsNullOrEmpty(model.Picture5Url))
-                //no pictures uploaded
-                return Content("");
-
-
-            return View("~/Plugins/Widgets.Slider/Views/WidgetsSlider/PublicInfo.cshtml", model);
-        }
     }
 }

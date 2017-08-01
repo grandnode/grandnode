@@ -1,0 +1,20 @@
+﻿@model CustomerUserSettingsModel
+@using Grand.Core.Domain.Customers;
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            <div class="col-md-4 col-sm-4 text-right">
+                @Html.GrandLabelFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+            </div>
+            <div class="col-md-8 col-sm-8">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
+            </div>
+        </div>
+    </div>
+</div>

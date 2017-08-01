@@ -1,0 +1,19 @@
+﻿@model ShoppingCartModel
+@using Grand.Web.Models.Checkout
+@using Grand.Web.Models.ShoppingCart;
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ShoppingCart").Text);
+}
+@if (!Model.OnePageCheckoutEnabled)
+{
+    @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Cart })
+}
+<div class="page shopping-cart-page">
+        <h2 class="generalTitle text-sm-center mt-3">@T("ShoppingCart")</h2>
+    <div class="page-body">
+        @await Component.InvokeAsync("OrderSummary", new { overriddenModel = Model })
+    </div>
+</div>

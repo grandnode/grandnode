@@ -1,0 +1,155 @@
+﻿@model DashboardModel
+
+@using Grand.Services.Security
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Dashboard.Statistics").Text;
+
+    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+    var canManageOrders = permissionService.Authorize(StandardPermissionProvider.ManageOrders);
+    var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
+    var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
+}
+@Html.AntiForgeryToken()
+<div class="page-bar" style="height:43px;">
+    <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase">@DateTime.Now.ToLocalTime().ToString("dddd, dd MMMM yyyy hh:mm:ss")</span>&nbsp;
+        </div>
+    </div>
+</div>
+<div class="content-header">
+    <h3 class="page-title">
+        <i class="icon-bulb"></i>
+        @T("Admin.Dashboard")
+        <small>@T("Admin.Dashboard.Statistics")</small>
+    </h3>
+</div>
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            @if (!Model.IsLoggedInAsVendor && canManageOrders)
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.Average")</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                @await Component.InvokeAsync("OrderOrderAverageReport")                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (!Model.IsLoggedInAsVendor)
+            {
+                if (canManageOrders || canManageCustomers || canManageProducts)
+                {
+                    <div class="row">
+                        @if (canManageOrders)
+                        {
+                            <div class="col-md-6">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.Incomplete")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        @await Component.InvokeAsync("OrderOrderIncompleteReport")
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (canManageCustomers)
+                        {
+                            <div class="col-md-6">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-dark bold uppercase">@T("Admin.Customers.Reports.RegisteredCustomers")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        @await Component.InvokeAsync("CustomerReportRegisteredCustomers")
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        @if (canManageProducts)
+                        {
+                            <div class="col-md-6">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-dark bold uppercase">@T("Admin.SearchTermReport")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        @await Component.InvokeAsync("CommonPopularSearchTermsReport")
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (canManageOrders)
+                        {
+                            <div class="col-md-6">
+                                <div class="portlet light bordered">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.Period")</span>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        @await Component.InvokeAsync("OrderOrderPeriodReport")
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                }
+            }
+
+            @if (canManageOrders)
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.BestSellers.ByQuantity")</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                @await Component.InvokeAsync("OrderBestsellersBriefReportByQuantity")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="portlet light bordered">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <span class="caption-subject font-dark bold uppercase">@T("Admin.SalesReport.BestSellers.ByAmount")</span>
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                @await Component.InvokeAsync("OrderBestsellersBriefReportByAmount")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

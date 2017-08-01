@@ -1,0 +1,108 @@
+﻿@model DiscountModel
+@using Grand.Core.Domain.Discounts;
+@using Grand.Framework.UI;
+
+
+
+
+@{
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="vendors-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewVendor" value="@T("Admin.Promotions.Discounts.AppliedToVendors.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("VendorAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshVendors", formId = "discount-form" }))', 800, 800, true); return false;" class="btn default" />
+                <input type="button" id="btnRefreshVendors" style="display: none" />
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#vendors-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("VendorList", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("VendorDelete", "Discount", new { discountId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "VendorId",
+                                fields: {
+                                    VendorName: {editable: false, type: "string" },
+                                    VendorId: {editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "VendorName",
+                        title: "@T("Admin.Promotions.Discounts.AppliedToVendors.Vendor")"
+                    },  {
+                        field: "VendorId",
+                        title: "@T("Admin.Common.View")",
+                        width: 150,
+                        template: '<a class="btn btn-sm btn-default" href="@Url.Content("~/Admin/Vendor/Edit/")#=VendorId#"><i class="fa fa-search"></i> @T("Admin.Common.View")</a>'
+                    }, {
+                        command: [{
+                            name: "destroy",
+                            text: "@T("Admin.Common.Delete")"
+                        }],
+                        width: 150
+                    }]
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshVendors').click(function () {
+                    //refresh grid
+                    var grid = $("#vendors-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Promotions.Discounts.AppliedToVendors.SaveBeforeEdit")
+        </div>
+    }
+}

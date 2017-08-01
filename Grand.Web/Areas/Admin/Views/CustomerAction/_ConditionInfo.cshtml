@@ -1,0 +1,244 @@
+﻿@model CustomerActionConditionModel
+
+
+<script type="text/javascript">
+            $(document).ready(function () {
+                $("#@Html.FieldIdFor(model => model.CustomerActionConditionTypeId)").change(toggleConditionType);
+                toggleConditionType();
+            });
+
+        function toggleConditionType() {
+            var selectedConditionTypeId = $("#@Html.FieldIdFor(model => model.CustomerActionConditionTypeId)").val();
+            if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Product).ToString()))
+            {
+                $('#tab-product').show();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Manufacturer).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').show();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+
+            } else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Category).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').show();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.Vendor).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').show();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.ProductAttribute).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').show();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.ProductSpecification).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').show();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomerRole).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').show();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomerTag).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').show();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomerRegisterField).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').show();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.CustomCustomerAttribute).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').show();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.UrlReferrer).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').show();
+                $('#tab-urlCurrent').hide();
+            }
+            else if (selectedConditionTypeId == @(((int)Grand.Core.Domain.Customers.CustomerActionConditionTypeEnum.UrlCurrent).ToString()))
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').show();
+            }
+            else
+            {
+                $('#tab-product').hide();
+                $('#tab-manufacturer').hide();
+                $('#tab-category').hide();
+                $('#tab-vendor').hide();
+                $('#tab-productAttribute').hide();
+                $('#tab-productSpecification').hide();
+                $('#tab-customerRole').hide();
+                $('#tab-customerTag').hide();
+                $('#tab-customerRegister').hide();
+                $('#tab-customAttribute').hide();
+                $('#tab-urlReferrer').hide();
+                $('#tab-urlCurrent').hide();
+             }
+        }
+
+</script>
+
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Name)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerActionConditionTypeId)
+            <div class="col-md-9 col-sm-9">
+                @if (!String.IsNullOrEmpty(Model.Id))
+                {
+                    @Html.GrandDropDownListFor(model => model.CustomerActionConditionTypeId, Model.CustomerActionConditionType, new { @disabled = "disabled" })
+                }
+                else
+                {
+                    @Html.GrandDropDownListFor(model => model.CustomerActionConditionTypeId, Model.CustomerActionConditionType)
+                }
+                @Html.ValidationMessageFor(model => model.CustomerActionConditionTypeId)
+                @Html.HiddenFor(x => x.CustomerActionConditionTypeId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ConditionId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.ConditionId, ((Grand.Core.Domain.Customers.CustomerActionConditionEnum)Model.ConditionId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.ConditionId)
+            </div>
+        </div>
+    </div>
+</div>

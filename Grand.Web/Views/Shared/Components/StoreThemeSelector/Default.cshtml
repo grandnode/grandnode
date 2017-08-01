@@ -1,0 +1,18 @@
+﻿@model StoreThemeSelectorModel
+@using Grand.Core;
+@using System.Net
+@using Microsoft.AspNetCore.Http
+@inject IWebHelper webHelper
+@inject IHttpContextAccessor httpContextAccessor
+@if (Model.AvailableStoreThemes.Count > 1)
+{
+    var themes = Model.AvailableStoreThemes.Select(x => new SelectListItem
+    {
+        Text = x.Title,
+        Value = webHelper.ModifyQueryString(Url.Action("SetStoreTheme", "Common", new { themename = x.Name }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
+        Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.OrdinalIgnoreCase)
+    });
+    <div class="theme-selector col-12 col-md-4">
+        @Html.DropDownList("store-theme", themes, new {@class="custom-select form-control", onchange = "setLocation(this.value);" })
+    </div>
+}

@@ -1,0 +1,96 @@
+﻿@model InteractiveFormModel
+
+
+
+
+@{
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="interactiveformattributes-grid"></div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewValue" value="@T("Admin.Promotions.InteractiveForms.Attribute.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddAttribute", "InteractiveForm", new { formId = Model.Id }))'); return false;" class="k-button" />
+            </div>
+        </div>
+
+            <script>
+            $(document).ready(function () {
+                $("#interactiveformattributes-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("FormAttributesList", "InteractiveForm", new { formId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("FormAttributesDelete", "InteractiveForm", new { formId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id"
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [{
+                        field: "Name",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Fields.Name")"
+                    }, {
+                        field: "SystemName",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Fields.SystemName")"
+                    }, {
+                        field: "Type",
+                        title: "@T("Admin.Promotions.InteractiveForms.Attribute.Fields.FormControlTypeId")",
+                        width: 200
+                    },{
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: '<a href="@Url.Content("~/Admin/InteractiveForm/EditAttribute")?formId=@(Model.Id)&aid=#=Id#">@T("Admin.Common.Edit")</a>'
+                    },
+                    {
+                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
+                        title: "@T("Admin.Common.Delete")",
+                        width: 100
+                    }]
+                });
+            });
+            </script>
+
+    }
+    else
+    {
+        <div class="note note-info">
+            @T("Admin.Promotions.InteractiveForms.SaveBeforeEdit")
+        </div>
+    }
+}

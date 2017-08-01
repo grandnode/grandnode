@@ -1,0 +1,92 @@
+﻿@model CustomerReminderModel
+
+
+
+@{
+
+    if (String.IsNullOrEmpty(Model.Id))
+    {
+        <div class="note note-info">
+            @T("Admin.Customers.CustomerReminder.SaveBeforeEdit")
+        </div>
+    }
+
+
+    if (!String.IsNullOrEmpty(Model.Id))
+    {
+        var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+        var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="history-grid"></div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("#history-grid").kendoGrid({
+                    dataSource: {
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("History", "CustomerReminder", new { customerReminderId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                        },
+                    schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors"
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        pageSize: @(defaultGridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(gridPageSizes)]
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+                    {
+                        field: "SendDate",
+                        title: "@T("Admin.Customers.CustomerReminder.History.Fields.SendDate")",
+                        width: 200,
+                        type: "date",
+                        format: "{0:G}"
+                    },
+                    {
+                        field: "Email",
+                        title: "@T("Admin.Customers.CustomerReminder.History.Fields.Customer")",
+                        width: 100,
+                    },
+                    {
+                        field: "Level",
+                        title: "@T("Admin.Customers.CustomerReminder.History.Fields.Level")",
+                        width: 50,
+                    },
+                    {
+                        field: "OrderId",
+                        title: "@T("Admin.Customers.CustomerReminder.History.Fields.Order")",
+                        width: 50,
+                        headerAttributes: { style: "text-align:center" },
+                        attributes: { style: "text-align:center" },
+                        template: '# if(OrderId) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
+                    }]
+                });
+            });
+        </script>
+    }
+}

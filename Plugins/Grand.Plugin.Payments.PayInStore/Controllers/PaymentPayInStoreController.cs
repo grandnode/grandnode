@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
 using Grand.Plugin.Payments.PayInStore.Models;
 using Grand.Services.Configuration;
 using Grand.Services.Payments;
-using Grand.Web.Framework.Controllers;
+using Grand.Framework.Controllers;
+using Grand.Framework.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace Grand.Plugin.Payments.PayInStore.Controllers
 {
+    [AuthorizeAdmin]
+    [Area("Admin")]
     public class PaymentPayInStoreController : BasePaymentController
     {
         private readonly ISettingService _settingService;
@@ -14,12 +18,11 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
 
         public PaymentPayInStoreController(ISettingService settingService, PayInStorePaymentSettings payInStorePaymentSettings)
         {
-            this._settingService = settingService;
+            this._settingService = settingService; 
             this._payInStorePaymentSettings = payInStorePaymentSettings;
         }
         
-        [AdminAuthorize]
-        [ChildActionOnly]
+        [AuthorizeAdmin]        
         public ActionResult Configure()
         {
             var model = new ConfigurationModel();
@@ -27,12 +30,11 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
             model.AdditionalFee = _payInStorePaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = _payInStorePaymentSettings.AdditionalFeePercentage;
 
-            return View("~/Plugins/Payments.PayInStore/Views/PaymentPayInStore/Configure.cshtml", model);
+            return View("~/Plugins/Payments.PayInStore/netcoreapp1.1/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
-        [AdminAuthorize]
-        [ChildActionOnly]
+        [AuthorizeAdmin]        
         public ActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
@@ -46,30 +48,29 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
 
             return Configure();
         }
+        
+        //public ActionResult PaymentInfo()
+        //{
+        //    var model = new PaymentInfoModel()
+        //    {
+        //        DescriptionText = _payInStorePaymentSettings.DescriptionText
+        //    };
 
-        [ChildActionOnly]
-        public ActionResult PaymentInfo()
-        {
-            var model = new PaymentInfoModel()
-            {
-                DescriptionText = _payInStorePaymentSettings.DescriptionText
-            };
+        //    return View("~/Plugins/Payments.PayInStore/Views/PaymentPayInStore/PaymentInfo.cshtml", model);
+        //}
 
-            return View("~/Plugins/Payments.PayInStore/Views/PaymentPayInStore/PaymentInfo.cshtml", model);
-        }
+        //[NonAction]
+        //public override IList<string> ValidatePaymentForm(IFormCollection form)
+        //{
+        //    var warnings = new List<string>();
+        //    return warnings;
+        //}
 
-        [NonAction]
-        public override IList<string> ValidatePaymentForm(FormCollection form)
-        {
-            var warnings = new List<string>();
-            return warnings;
-        }
-
-        [NonAction]
-        public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
-        {
-            var paymentInfo = new ProcessPaymentRequest();
-            return paymentInfo;
-        }
+        //[NonAction]
+        //public override ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
+        //{
+        //    var paymentInfo = new ProcessPaymentRequest();
+        //    return paymentInfo;
+        //}
     }
 }
