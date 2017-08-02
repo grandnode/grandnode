@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Widgets.Slider
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.PayInStore", "Plugins\Grand.Plugin.Payments.PayInStore\Grand.Plugin.Payments.PayInStore.csproj", "{B467732D-A98E-445D-AB9B-377F7E398187}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Tax.FixedRate", "Plugins\Grand.Plugin.Tax.FixedRate\Grand.Plugin.Tax.FixedRate.csproj", "{24CE0A09-4213-4AE9-A33C-62D142DC60C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{B467732D-A98E-445D-AB9B-377F7E398187}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B467732D-A98E-445D-AB9B-377F7E398187}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B467732D-A98E-445D-AB9B-377F7E398187}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24CE0A09-4213-4AE9-A33C-62D142DC60C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24CE0A09-4213-4AE9-A33C-62D142DC60C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24CE0A09-4213-4AE9-A33C-62D142DC60C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24CE0A09-4213-4AE9-A33C-62D142DC60C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,5 +82,6 @@ Global
 		{E4CD6887-DF00-4242-9CC0-0C648BCB6D4E} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{1E2F01EB-28D1-4C47-899B-559535578807} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{B467732D-A98E-445D-AB9B-377F7E398187} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
+		{24CE0A09-4213-4AE9-A33C-62D142DC60C1} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 	EndGlobalSection
 EndGlobal

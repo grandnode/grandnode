@@ -1,2 +1,4 @@
 Payments.PayInStore
 Shipping.ByWeight
+Tax.FixedRate
+Widgets.Slider

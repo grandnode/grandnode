@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v1.1": {
-      "grand.plugin.widgets.slider/1.0.0": {
+      "grand.plugin.tax.fixedrate/1.0.0": {
         "dependencies": {
           "Grand.Core": "1.0.0",
           "Grand.Data": "1.0.0",
@@ -14,7 +14,7 @@
           "Grand.Services": "1.0.0"
         },
         "runtime": {
-          "Grand.Plugin.Widgets.Slider.dll": {}
+          "Grand.Plugin.Tax.FixedRate.dll": {}
         }
       },
       "autofac/4.6.0": {
@@ -1717,7 +1717,7 @@
     }
   },
   "libraries": {
-    "grand.plugin.widgets.slider/1.0.0": {
+    "grand.plugin.tax.fixedrate/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

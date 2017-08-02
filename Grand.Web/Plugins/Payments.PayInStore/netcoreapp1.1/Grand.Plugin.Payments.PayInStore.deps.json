@@ -1643,6 +1643,7 @@
       "grand.data/1.0.0": {
         "dependencies": {
           "Grand.Core": "1.0.0",
+          "ImageSharp.Drawing": "1.0.0-alpha9-00170",
           "MongoDB.Bson": "2.4.4",
           "MongoDB.Driver": "2.4.4",
           "MongoDB.Driver.Core": "2.4.4"
@@ -1698,7 +1699,6 @@
           "NETCore.MailKit": "1.1.1",
           "OfficeOpenXml.Core.ExcelPackage": "1.0.0",
           "SixLabors.Core": "0.1.0-alpha0002",
-          "SixLabors.Fonts": "0.1.0-alpha0016",
           "SixLabors.Shapes": "0.1.0-alpha0019",
           "SixLabors.Shapes.Text": "0.1.0-alpha0019",
           "System.Net.Mail": "1.0.0-rtm-00002",
