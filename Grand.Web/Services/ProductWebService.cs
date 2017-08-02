@@ -400,8 +400,8 @@ namespace Grand.Web.Services
 
                         var pictureModel = new PictureModel
                         {
-                            ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ApplyWatermarkForProduct, pictureSize),
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ApplyWatermarkForProduct)
+                            ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, pictureSize),
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId)
                         };
                         //"title" attribute
                         pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
@@ -731,8 +731,8 @@ namespace Grand.Web.Services
 
                 var defaultPictureModel = new PictureModel
                 {
-                    ImageUrl = _pictureService.GetPictureUrl(defaultPicture.PictureId, _mediaSettings.ApplyWatermarkForProduct, defaultPictureSize, !isAssociatedProduct),
-                    FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture.PictureId, _mediaSettings.ApplyWatermarkForProduct, 0, !isAssociatedProduct),
+                    ImageUrl = _pictureService.GetPictureUrl(defaultPicture.PictureId, defaultPictureSize, !isAssociatedProduct),
+                    FullSizeImageUrl = _pictureService.GetPictureUrl(defaultPicture.PictureId, 0, !isAssociatedProduct),
                 };
                 //"title" attribute
                 defaultPictureModel.Title = (defaultPicture != null && !string.IsNullOrEmpty(defaultPicture.TitleAttribute)) ?
@@ -749,8 +749,8 @@ namespace Grand.Web.Services
                 {
                     var pictureModel = new PictureModel
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ApplyWatermarkForProduct, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
-                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ApplyWatermarkForProduct),
+                        ImageUrl = _pictureService.GetPictureUrl(picture.PictureId, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture.PictureId),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat.Details"), model.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat.Details"), model.Name),
                     };
@@ -1007,8 +1007,8 @@ namespace Grand.Web.Services
                                 {
                                     return new PictureModel
                                     {
-                                        FullSizeImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ApplyWatermarkForProduct),
-                                        ImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ApplyWatermarkForProduct, _mediaSettings.ImageSquarePictureSize)
+                                        FullSizeImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture),
+                                        ImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
                                     };
                                 }
                                 return new PictureModel();
@@ -1029,8 +1029,8 @@ namespace Grand.Web.Services
                                 {
                                     return new PictureModel
                                     {
-                                        FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ApplyWatermarkForProduct),
-                                        ImageUrl = _pictureService.GetPictureUrl(valuePicture, _mediaSettings.ApplyWatermarkForProduct, defaultPictureSize)
+                                        FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture),
+                                        ImageUrl = _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
                                     };
                                 }
                                 return new PictureModel();

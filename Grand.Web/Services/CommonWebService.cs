@@ -156,7 +156,7 @@ namespace Grand.Web.Services
                 var logoPictureId = _storeInformationSettings.LogoPictureId;
                 if (!String.IsNullOrEmpty(logoPictureId))
                 {
-                    logo = _pictureService.GetPictureUrl(logoPictureId, false, showDefaultPicture: false);
+                    logo = _pictureService.GetPictureUrl(logoPictureId, showDefaultPicture: false);
                 }
                 if (String.IsNullOrEmpty(logo))
                 {

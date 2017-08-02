@@ -24,127 +24,131 @@ namespace Grand.Framework.Security
         /// <returns>Result</returns>
         public static bool CheckPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
-            bool flag = false;
-            bool flag2 = false;
-            bool flag3 = false;
-            bool flag4 = false;
-            bool flag5 = false;
-            bool flag6 = false;
-            bool flag7 = false;
-            bool flag8 = false;
-            WindowsIdentity current = WindowsIdentity.GetCurrent();
-            AuthorizationRuleCollection rules;
-            try
+            if (OperatingSystem.IsWindows())
             {
-                rules = new DirectorySecurity(path, AccessControlSections.Access).GetAccessRules(true, true, typeof(SecurityIdentifier));
-            }
-            catch
-            {
-                return true;
-            }
-            try
-            {
-                foreach (FileSystemAccessRule rule in rules)
+                bool flag = false;
+                bool flag2 = false;
+                bool flag3 = false;
+                bool flag4 = false;
+                bool flag5 = false;
+                bool flag6 = false;
+                bool flag7 = false;
+                bool flag8 = false;
+                WindowsIdentity current = WindowsIdentity.GetCurrent();
+                AuthorizationRuleCollection rules;
+                try
                 {
-                    if (!current.User.Equals(rule.IdentityReference))
-                    {
-                        continue;
-                    }
-                    if (AccessControlType.Deny.Equals(rule.AccessControlType))
-                    {
-                        if ((FileSystemRights.Delete & rule.FileSystemRights) == FileSystemRights.Delete)
-                            flag4 = true;
-                        if ((FileSystemRights.Modify & rule.FileSystemRights) == FileSystemRights.Modify)
-                            flag3 = true;
-
-                        if ((FileSystemRights.Read & rule.FileSystemRights) == FileSystemRights.Read)
-                            flag = true;
-
-                        if ((FileSystemRights.Write & rule.FileSystemRights) == FileSystemRights.Write)
-                            flag2 = true;
-
-                        continue;
-                    }
-                    if (AccessControlType.Allow.Equals(rule.AccessControlType))
-                    {
-                        if ((FileSystemRights.Delete & rule.FileSystemRights) == FileSystemRights.Delete)
-                        {
-                            flag8 = true;
-                        }
-                        if ((FileSystemRights.Modify & rule.FileSystemRights) == FileSystemRights.Modify)
-                        {
-                            flag7 = true;
-                        }
-                        if ((FileSystemRights.Read & rule.FileSystemRights) == FileSystemRights.Read)
-                        {
-                            flag5 = true;
-                        }
-                        if ((FileSystemRights.Write & rule.FileSystemRights) == FileSystemRights.Write)
-                        {
-                            flag6 = true;
-                        }
-                    }
+                    rules = new DirectorySecurity(path, AccessControlSections.Access).GetAccessRules(true, true, typeof(SecurityIdentifier));
                 }
-                foreach (IdentityReference reference in current.Groups)
+                catch
                 {
-                    foreach (FileSystemAccessRule rule2 in rules)
+                    return true;
+                }
+                try
+                {
+                    foreach (FileSystemAccessRule rule in rules)
                     {
-                        if (!reference.Equals(rule2.IdentityReference))
+                        if (!current.User.Equals(rule.IdentityReference))
                         {
                             continue;
                         }
-                        if (AccessControlType.Deny.Equals(rule2.AccessControlType))
+                        if (AccessControlType.Deny.Equals(rule.AccessControlType))
                         {
-                            if ((FileSystemRights.Delete & rule2.FileSystemRights) == FileSystemRights.Delete)
+                            if ((FileSystemRights.Delete & rule.FileSystemRights) == FileSystemRights.Delete)
                                 flag4 = true;
-                            if ((FileSystemRights.Modify & rule2.FileSystemRights) == FileSystemRights.Modify)
+                            if ((FileSystemRights.Modify & rule.FileSystemRights) == FileSystemRights.Modify)
                                 flag3 = true;
-                            if ((FileSystemRights.Read & rule2.FileSystemRights) == FileSystemRights.Read)
+
+                            if ((FileSystemRights.Read & rule.FileSystemRights) == FileSystemRights.Read)
                                 flag = true;
-                            if ((FileSystemRights.Write & rule2.FileSystemRights) == FileSystemRights.Write)
+
+                            if ((FileSystemRights.Write & rule.FileSystemRights) == FileSystemRights.Write)
                                 flag2 = true;
+
                             continue;
                         }
-                        if (AccessControlType.Allow.Equals(rule2.AccessControlType))
+                        if (AccessControlType.Allow.Equals(rule.AccessControlType))
                         {
-                            if ((FileSystemRights.Delete & rule2.FileSystemRights) == FileSystemRights.Delete)
+                            if ((FileSystemRights.Delete & rule.FileSystemRights) == FileSystemRights.Delete)
+                            {
                                 flag8 = true;
-                            if ((FileSystemRights.Modify & rule2.FileSystemRights) == FileSystemRights.Modify)
+                            }
+                            if ((FileSystemRights.Modify & rule.FileSystemRights) == FileSystemRights.Modify)
+                            {
                                 flag7 = true;
-                            if ((FileSystemRights.Read & rule2.FileSystemRights) == FileSystemRights.Read)
+                            }
+                            if ((FileSystemRights.Read & rule.FileSystemRights) == FileSystemRights.Read)
+                            {
                                 flag5 = true;
-                            if ((FileSystemRights.Write & rule2.FileSystemRights) == FileSystemRights.Write)
+                            }
+                            if ((FileSystemRights.Write & rule.FileSystemRights) == FileSystemRights.Write)
+                            {
                                 flag6 = true;
+                            }
                         }
                     }
+                    foreach (IdentityReference reference in current.Groups)
+                    {
+                        foreach (FileSystemAccessRule rule2 in rules)
+                        {
+                            if (!reference.Equals(rule2.IdentityReference))
+                            {
+                                continue;
+                            }
+                            if (AccessControlType.Deny.Equals(rule2.AccessControlType))
+                            {
+                                if ((FileSystemRights.Delete & rule2.FileSystemRights) == FileSystemRights.Delete)
+                                    flag4 = true;
+                                if ((FileSystemRights.Modify & rule2.FileSystemRights) == FileSystemRights.Modify)
+                                    flag3 = true;
+                                if ((FileSystemRights.Read & rule2.FileSystemRights) == FileSystemRights.Read)
+                                    flag = true;
+                                if ((FileSystemRights.Write & rule2.FileSystemRights) == FileSystemRights.Write)
+                                    flag2 = true;
+                                continue;
+                            }
+                            if (AccessControlType.Allow.Equals(rule2.AccessControlType))
+                            {
+                                if ((FileSystemRights.Delete & rule2.FileSystemRights) == FileSystemRights.Delete)
+                                    flag8 = true;
+                                if ((FileSystemRights.Modify & rule2.FileSystemRights) == FileSystemRights.Modify)
+                                    flag7 = true;
+                                if ((FileSystemRights.Read & rule2.FileSystemRights) == FileSystemRights.Read)
+                                    flag5 = true;
+                                if ((FileSystemRights.Write & rule2.FileSystemRights) == FileSystemRights.Write)
+                                    flag6 = true;
+                            }
+                        }
+                    }
+                    bool flag9 = !flag4 && flag8;
+                    bool flag10 = !flag3 && flag7;
+                    bool flag11 = !flag && flag5;
+                    bool flag12 = !flag2 && flag6;
+                    bool flag13 = true;
+                    if (checkRead)
+                    {
+                        flag13 = flag13 && flag11;
+                    }
+                    if (checkWrite)
+                    {
+                        flag13 = flag13 && flag12;
+                    }
+                    if (checkModify)
+                    {
+                        flag13 = flag13 && flag10;
+                    }
+                    if (checkDelete)
+                    {
+                        flag13 = flag13 && flag9;
+                    }
+                    return flag13;
                 }
-                bool flag9 = !flag4 && flag8;
-                bool flag10 = !flag3 && flag7;
-                bool flag11 = !flag && flag5;
-                bool flag12 = !flag2 && flag6;
-                bool flag13 = true;
-                if (checkRead)
+                catch (IOException)
                 {
-                    flag13 = flag13 && flag11;
                 }
-                if (checkWrite)
-                {
-                    flag13 = flag13 && flag12;
-                }
-                if (checkModify)
-                {
-                    flag13 = flag13 && flag10;
-                }
-                if (checkDelete)
-                {
-                    flag13 = flag13 && flag9;
-                }
-                return flag13;
+                return false;
             }
-            catch (IOException)
-            {
-            }
-            return false;
+            return true;
         }
 
         /// <summary>

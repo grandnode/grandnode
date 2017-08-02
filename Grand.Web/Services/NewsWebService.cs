@@ -99,7 +99,6 @@ namespace Grand.Web.Services
                     {
                         commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
                             customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                            false,
                             _mediaSettings.AvatarPictureSize,
                             _customerSettings.DefaultAvatarEnabled,
                             defaultPictureType: PictureType.Avatar);

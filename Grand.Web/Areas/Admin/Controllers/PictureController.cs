@@ -90,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 success = true,
                 pictureId = picture.Id,
-                imageUrl = _pictureService.GetPictureUrl(picture, false, 100)
+                imageUrl = _pictureService.GetPictureUrl(picture, 100)
             });
         }
     }

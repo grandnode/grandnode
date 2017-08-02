@@ -46,7 +46,7 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
             string cacheKey = string.Format(ModelCacheEventConsumer.PICTURE_URL_MODEL_KEY, pictureId);
             return _cacheManager.Get(cacheKey, () =>
             {
-                var url = _pictureService.GetPictureUrl(pictureId, false, showDefaultPicture: false);
+                var url = _pictureService.GetPictureUrl(pictureId, showDefaultPicture: false);
                 if (url == null)
                     url = "";
 

@@ -628,7 +628,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     };
                     //picture
                     var orderItemPicture = product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
-                    orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, _mediaSettings.ApplyWatermarkForProduct ,75, true);
+                    orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
 
                     //license file
                     if (!String.IsNullOrEmpty(orderItem.LicenseDownloadId))

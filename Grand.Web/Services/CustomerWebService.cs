@@ -688,7 +688,6 @@ namespace Grand.Web.Services
             var model = new CustomerAvatarModel();
             model.AvatarUrl = _pictureService.GetPictureUrl(
                 customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                false,
                 _mediaSettings.AvatarPictureSize,
                 false);
 

@@ -565,7 +565,7 @@ namespace Grand.Services.Messages
                         var picture = pictureService.GetPictureById(product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault().PictureId);
                         if(picture!=null)
                         {
-                            pictureUrl = pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForProduct, _templatesSettings.PictureSize);
+                            pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
                         }
                     }
                     sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
@@ -622,7 +622,7 @@ namespace Grand.Services.Messages
                         var picture = pictureService.GetPictureById(item.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
                         if (picture != null)
                         {
-                            pictureUrl = pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForProduct, _templatesSettings.PictureSize);
+                            pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
                         }
                     }
                     sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));
@@ -670,7 +670,7 @@ namespace Grand.Services.Messages
                         var picture = pictureService.GetPictureById(item.ProductPictures.OrderBy(x => x.DisplayOrder).FirstOrDefault().PictureId);
                         if (picture != null)
                         {
-                            pictureUrl = pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForProduct, _templatesSettings.PictureSize);
+                            pictureUrl = pictureService.GetPictureUrl(picture, _templatesSettings.PictureSize);
                         }
                     }
                     sb.Append(string.Format("<td><img src=\"{0}\" alt=\"\"/></td>", pictureUrl));

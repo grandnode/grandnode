@@ -1201,7 +1201,6 @@ namespace Grand.Web.Controllers
                     
                     model.AvatarUrl = pictureService.GetPictureUrl(
                         customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                        false,
                         mediaSettings.AvatarPictureSize,
                         false);
                     return View(model);
@@ -1216,7 +1215,6 @@ namespace Grand.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.AvatarUrl = pictureService.GetPictureUrl(
                 customer.GetAttribute<string>(SystemCustomerAttributeNames.AvatarPictureId),
-                false,
                 mediaSettings.AvatarPictureSize,
                 false);
             return View(model);

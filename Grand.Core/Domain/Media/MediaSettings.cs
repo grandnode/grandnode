@@ -1,6 +1,4 @@
 ﻿using Grand.Core.Configuration;
-using ImageSharp;
-using System.Drawing;
 
 namespace Grand.Core.Domain.Media
 {
@@ -32,45 +30,7 @@ namespace Grand.Core.Domain.Media
         /// </summary>
         public bool MultipleThumbDirectories { get; set; }
 
-        /// <summary>
-        /// Get/set value whether use Pingo Image Compression
-        /// </summary>
-        public bool UseImageCompress { get; set; }
-
-        #region Watermark Text
-        public string WatermarkText { get; set; }
-        public FontStyle WatermarkStyle { get; set; }
-        public System.Drawing.Color WatermarkFontColor { get; set; }
-        //TO DO
-        public System.Drawing.Text.GenericFontFamilies WatermarkFontFamily { get; set; }
-        public int WatermarkPositionXPercent { get; set; }
-        public int WatermarkPositionYPercent { get; set; }
-        public int WatermarkFontSizePercent { get; set; }
-        public int WatermarkOpacityPercent { get; set; }
-        public bool WatermarkDropShadow { get; set; }
-        public bool WatermarkVertical { get; set; }
-        public bool WatermarkRightToLeft { get; set; }
-
-        #endregion
-
-
-        #region Watermark Misc Options
-        public int WatermarkForPicturesAboveSize { get; set; }
-        public bool ApplyWatermarkOnPicturesWithOriginalSize { get; set; }
-        public bool ApplyWatermarkForProduct { get; set; }
-        public bool ApplyWatermarkForCategory { get; set; }
-        public bool ApplyWatermarkForManufacturer { get; set; }
-
-        #endregion
-
-
-        #region Watermark Overlay
-        public string WatermarkOverlayID { get; set; }
-        public int WatermarkOverlayPositionXPercent { get; set; }
-        public int WatermarkOverlayPositionYPercent { get; set; }
-        public int WatermarkOverlaySizePercent { get; set; }
-        public int WatermarkOverlayOpacityPercent { get; set; }
-        #endregion
-
+        
+        
     }
 }

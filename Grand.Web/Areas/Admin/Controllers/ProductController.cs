@@ -953,10 +953,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 productModel.FullDescription = "";
 
                 //picture
-                var defaultProductPicture = x.ProductPictures.FirstOrDefault();  //_pictureService.GetPicturesByProductId(x.Id, 1).FirstOrDefault();
+                var defaultProductPicture = x.ProductPictures.FirstOrDefault();  
                 if (defaultProductPicture == null)
                     defaultProductPicture = new ProductPicture();
-                productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture.PictureId, _mediaSettings.ApplyWatermarkForProduct, 75, true);
+                productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture.PictureId, 75, true);
                 //product type
                 productModel.ProductTypeName = x.ProductType.GetLocalizedEnum(_localizationService, _workContext);
                 //friendly stock qantity
@@ -2397,7 +2397,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         Id = x.Id,
                         ProductId = product.Id,
                         PictureId = x.PictureId,
-                        PictureUrl = picture!=null ? _pictureService.GetPictureUrl(picture, _mediaSettings.ApplyWatermarkForProduct) : null,
+                        PictureUrl = picture!=null ? _pictureService.GetPictureUrl(picture) : null,
                         OverrideAltAttribute = picture != null ? picture.AltAttribute : null,
                         OverrideTitleAttribute = picture != null ? picture.TitleAttribute : null,
                         DisplayOrder = x.DisplayOrder
@@ -4162,10 +4162,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                     {
                         associatedProduct = _productService.GetProductById(x.AssociatedProductId);
                     }
-                    var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct, 75, false);
+                    var pictureThumbnailUrl = _pictureService.GetPictureUrl(x.PictureId, 75, false);
                     //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
                     if (String.IsNullOrEmpty(pictureThumbnailUrl))
-                        pictureThumbnailUrl = _pictureService.GetPictureUrl("", false, 1, true);
+                        pictureThumbnailUrl = _pictureService.GetPictureUrl("", 1, true);
                     return new ProductModel.ProductAttributeValueModel
                     {
                         Id = x.Id,
@@ -4238,7 +4238,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct),
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
@@ -4326,7 +4326,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct),
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
@@ -4398,7 +4398,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct),
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
@@ -4482,7 +4482,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     Id = x.Id,
                     ProductId = product.Id,
                     PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSettings.ApplyWatermarkForProduct),
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
                     DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
