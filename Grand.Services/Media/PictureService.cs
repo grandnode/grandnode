@@ -207,7 +207,7 @@ namespace Grand.Services.Media
         protected virtual void DeletePictureThumbs(Picture picture)
         {
             string filter = string.Format("{0}*.*", picture.Id);
-            var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "content\\images\\thumbs");
+            var thumbDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "content/images/thumbs");
             string[] currentFiles = System.IO.Directory.GetFiles(thumbDirectoryPath, filter, SearchOption.AllDirectories);
             foreach (string currentFileName in currentFiles)
             {
@@ -223,7 +223,7 @@ namespace Grand.Services.Media
         /// <returns>Local picture thumb path</returns>
         protected virtual string GetThumbLocalPath(string thumbFileName)
         {
-            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "content\\images\\thumbs");
+            var thumbsDirectoryPath = Path.Combine(_hostingEnvironment.WebRootPath, "content/images/thumbs");
             if (_mediaSettings.MultipleThumbDirectories)
             {
                 //get the first two letters of the file name
@@ -253,7 +253,7 @@ namespace Grand.Services.Media
             storeLocation = !String.IsNullOrEmpty(storeLocation)
                                     ? storeLocation
                                     : _webHelper.GetStoreLocation();
-            var url = storeLocation + "content\\images\\thumbs\\";
+            var url = storeLocation + "content/images/thumbs/";
 
             if (_mediaSettings.MultipleThumbDirectories)
             {
@@ -278,7 +278,7 @@ namespace Grand.Services.Media
         /// <returns>Local picture path</returns>
         protected virtual string GetPictureLocalPath(string fileName)
         {
-            return Path.Combine(_hostingEnvironment.WebRootPath, "content\\images", fileName);
+            return Path.Combine(_hostingEnvironment.WebRootPath, "content/images", fileName);
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace Grand.Services.Media
                 string url = (!String.IsNullOrEmpty(storeLocation)
                                  ? storeLocation
                                  : _webHelper.GetStoreLocation())
-                                 + "content\\images\\" + defaultImageFileName;
+                                 + "content/images/" + defaultImageFileName;
                 return url;
             }
             else
@@ -609,7 +609,7 @@ namespace Grand.Services.Media
         public virtual void ClearThumbs()
         {
             const string searchPattern = "*.*";
-            string path = Path.Combine(_hostingEnvironment.WebRootPath, "content\\images\\thumbs");
+            string path = Path.Combine(_hostingEnvironment.WebRootPath, "content/images/thumbs");
 
             if (!System.IO.Directory.Exists(path))
                 return;
