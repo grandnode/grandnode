@@ -20,8 +20,7 @@
             }
             else
             {
-                using (Html.BeginForm())
-                {
+                <form asp-route="ProductEmailAFriend" method="post">
                     @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="form-fields">
@@ -51,7 +50,7 @@
                     <div class="btn-group">
                         <input type="submit" name="send-email" class="btn btn-success send-email-a-friend-button" value="@T("Products.EmailAFriend.Button")" />
                     </div>
-                }
+                </form>
             }
         </div>
     </div>

@@ -581,6 +581,7 @@ namespace Grand.Web.Controllers
             var model = _boardsWebService.PrepareEditForumTopic(forum);
             var firstPost = forumTopic.GetFirstPost(_forumService);
             model.Text = firstPost.Text;
+            model.Subject = forumTopic.Subject;
             if (model.IsCustomerAllowedToSubscribe)
             {
                 var forumSubscription = _forumService.GetAllSubscriptions(_workContext.CurrentCustomer.Id,

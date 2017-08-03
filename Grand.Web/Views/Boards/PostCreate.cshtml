@@ -5,4 +5,6 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.PostNew").Text);
 }
-@await Html.PartialAsync("_CreateUpdatePost", Model)
+<form asp-route="PostCreate" method="post">
+    @await Html.PartialAsync("_CreateUpdatePost", Model)
+</form>

@@ -5,8 +5,7 @@
 
     Html.AddTitleParts(T("PageTitle.SendPM").Text);
 }
-@using (Html.BeginForm())
-{
+<form asp-route="SendPM" method="post">
     @Html.AntiForgeryToken()
     <div class="page private-messages private-message-send-page">
             <h2 class="text-center generalTitle py-3 mb-3">@T("PrivateMessages.Send.PostMessage")</h2>
@@ -45,4 +44,4 @@
                 <input type="button" class="btn btn-secondary cancel-pm-button" value="@T("PrivateMessages.Send.CancelButton")" onclick="setLocation('@Url.RouteUrl("PrivateMessages")')" />
             </div>
         </div>
-}
+</form>

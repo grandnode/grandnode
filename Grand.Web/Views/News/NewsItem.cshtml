@@ -32,12 +32,8 @@
                         <div class="result">@result</div>
                     }
                 </div>
-                @using (Html.BeginForm())
-                {
+                <form asp-route="NewsItem" asp-route-sename="@Model.SeName" method="post">
                     @Html.AntiForgeryToken()
-
-                    
-                    
                         <fieldset class="form-group">
                             @Html.LabelFor(model => model.AddNewComment.CommentTitle, new { @class = "col-form-label" }, ":")
                                     @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "form-control enter-comment-title" })
@@ -48,8 +44,7 @@
                                     @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "form-control enter-comment-text" })
                                     @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                         </fieldset>
-
-                        if (Model.AddNewComment.DisplayCaptcha)
+                        @if (Model.AddNewComment.DisplayCaptcha)
                         {
                             <div class="captcha-box">
                                 @Html.Raw(Html.GenerateCaptcha())
@@ -58,7 +53,7 @@
                     <div class="buttons pt-1 pb-1">
                         <input type="submit" name="add-comment" class="btn btn-sm btn-success news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
                     </div>
-                }
+                </form>
             </fieldset>
                         if (Model.Comments.Count > 0)
                         {
@@ -83,8 +78,6 @@
                                                 {
                                                     <div class="col-sm-3 col-12 comment-info">
                                                         <div class="user-info">
-
-                                                       
                                                                 <div class="avatar">
                                                                     @if (comment.AllowViewingProfiles)
                                                                     {
@@ -97,7 +90,6 @@
                                                                         <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
                                                                     }
                                                                 </div>
-                                                        
                                                         </div>
                                                     </div>
                                                 }

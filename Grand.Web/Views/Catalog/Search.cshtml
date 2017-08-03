@@ -28,8 +28,7 @@
 
     <h2 class="generalTitle">@T("Search")</h2>
     <div class="search-input">
-        @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
-            {
+        <form asp-route="ProductSearch" method="get">
             <div class="fieldset">
                 <div class="form-fields">
                     <div class="basic-search">
@@ -109,7 +108,7 @@
             <div class="buttons mt-1 mb-1">
                 <input type="submit" class="btn btn-success search-button" value="@T("Search.Button")" />
             </div>
-        }
+        </form>
     </div>
 </div>
 @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })

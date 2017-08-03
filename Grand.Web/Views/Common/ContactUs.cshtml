@@ -19,8 +19,7 @@
         }
         else
         {
-            using (Html.BeginForm())
-            {
+            <form asp-route="ContactUs" method="post">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                     <div class="form-fields">
@@ -57,7 +56,7 @@
                 <div class="buttons mt-1 mb-1">
                     <input type="submit" name="send-email" class="btn btn-success contact-us-button" value="@T("ContactUs.Button")" />
                 </div>
-            }
+            </form>
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "contactus_bottom" })
     </div>

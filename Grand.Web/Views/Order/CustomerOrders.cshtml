@@ -21,8 +21,7 @@
                         @T("Account.CustomerOrders.RecurringOrders")
                     </strong>
                 </h5>
-                @using (Html.BeginForm())
-                {
+                <form asp-route="CustomerOrders" method="post">
                     @Html.AntiForgeryToken()
                     <div class="table-responsive">
                         <table class="table teble-hover data-table">
@@ -93,7 +92,7 @@
                             </tbody>
                         </table>
                     </div>
-                }
+                </form>
             </div>
             if (Model.CancelRecurringPaymentErrors.Count > 0)
             {

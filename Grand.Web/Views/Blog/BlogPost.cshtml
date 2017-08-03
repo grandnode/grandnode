@@ -57,8 +57,7 @@
                     <div class="result">@result</div>
                 }
             </div>
-            @using (Html.BeginForm())
-                {
+            <form asp-route="BlogPost" asp-route-sename="@Model.SeName" method="post">
                 @Html.AntiForgeryToken()
                 <div class="form-fields">
                     <div class="form-group">
@@ -76,7 +75,7 @@
                     <div class="buttons text-xs-center text-md-left generalMarginSupporter">
                         <input type="submit" name="add-comment" class="btn btn-success blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
                     </div>
-            }
+            </form>
         </div>
                     if (Model.Comments.Count > 0)
                     {

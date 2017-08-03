@@ -29,7 +29,7 @@
     {
 
 
-if (Model.AllowedQuantities.Count > 0)
+    if (Model.AllowedQuantities.Count > 0)
         {
             @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "col-2 custom-select form-control qty-dropdown" })
         }

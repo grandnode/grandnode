@@ -18,8 +18,7 @@
         }
         else
         {
-            using (Html.BeginForm())
-            {
+            <form asp-route="AskQuestion" method="post">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                         <fieldset class="form-group">
@@ -43,7 +42,7 @@
                                 @Html.ValidationMessageFor(model => model.Message)
                         </fieldset>
 
-                        if (Model.DisplayCaptcha)
+                        @if (Model.DisplayCaptcha)
                         {
                             <div class="captcha-box">
                                 @Html.Raw(Html.GenerateCaptcha())
@@ -53,6 +52,6 @@
                     <input type="submit" name="send-email" class="btn btn-success send-ask-question-button" value="@T("Products.AskQuestion.Button")" />
                     <span class="sr-only">@T("Products.AskQuestion.Button")</span>
                 </div>
-            }
+            </form>
         }
 </div>

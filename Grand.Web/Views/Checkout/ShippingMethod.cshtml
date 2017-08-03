@@ -25,10 +25,9 @@
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Shipping })
         <h2 class="generalTitle text-sm-center ">@T("Checkout.SelectShippingMethod")</h2>
         <div class="shipping-method">
-            @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
-            {
+            <form asp-route="CheckoutShippingMethod" method="post">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top")
-                if (Model.Warnings.Count == 0)
+                @if (Model.Warnings.Count == 0)
                 {
                     var selectedShippingMethod = Model.ShippingMethods.FirstOrDefault(x => x.Selected);
                     if (selectedShippingMethod != null)
@@ -61,19 +60,16 @@
                             </li>
                         }
                     </ul>
-                    if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
+                    @if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
                     {
-                    <div class="multiple-locations">
-                        @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+                        <div class="multiple-locations">
+                            @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+                        </div>
+                    }
+                    <div id="shipping_form"></div>
+                    <div class="buttons">
+                        <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success mt-1 mb-1 shipping-method-next-step-button" />
                     </div>
-                    }
-                <div id="shipping_form"></div>
-                    {
-                        <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                    }
-                <div class="buttons">
-                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success mt-1 mb-1 shipping-method-next-step-button" />
-                </div>
                 }
                 else
                 {
@@ -87,7 +83,7 @@
                 </div>
                 }
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom")
-            }
+            </form>
         </div>
         <div class="order-summary">
                 <h5 class="generalTitle"><strong>@T("Checkout.OrderSummary")</strong></h5>

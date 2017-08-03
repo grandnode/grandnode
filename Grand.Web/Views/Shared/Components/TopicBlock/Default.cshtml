@@ -43,8 +43,7 @@
         });
     </script>
     <div class="topic-password" id="ph-password-@Model.Id">
-        @using (Html.BeginRouteForm("TopicAuthenticate"))
-        {
+        <form asp-route="TopicAuthenticate" method="post">
             @Html.HiddenFor(model => model.Id)
             <div class="enter-password-title">
                 @T("Topic.EnterPassword")
@@ -56,7 +55,7 @@
             <div class="password-error">
                 <span id="password-error-@Model.Id"></span>
             </div>
-        }
+        </form>
     </div>
 
 

@@ -31,9 +31,8 @@
                     });
                 });
             </script>
-            using (Html.BeginRouteForm("CustomerForumSubscriptions", FormMethod.Post))
-            {
-            <div class="subscription-list">
+            <form asp-route="CustomerForumSubscriptions" method="post">
+                <div class="subscription-list">
                 <div class="table-responsive">
                     <table class="table table-hover data-table">
                         <colgroup>
@@ -96,7 +95,7 @@
                     <input type="submit" value="@T("Account.ForumSubscriptions.DeleteSelected")" class="btn btn-secondary delete-selected-fs-button" />
                 </div>
             </div>
-            }
+            </form>
         }
         else
         {

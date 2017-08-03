@@ -10,11 +10,9 @@
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Address })
         <h2 class="generalTitle text-sm-center ">@T("Checkout.BillingAddress")</h2>
     <div class="checkout-data">
-        @using (Html.BeginRouteForm("CheckoutBillingAddress", FormMethod.Post))
-        {
+        <form asp-route="CheckoutBillingAddress" method="post">
             <div class="billing-addresses">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_billing_address_top" })
-
                 @if (Model.ShipToSameAddressAllowed)
                 {
                     <div  class="ship-to-same-address">
@@ -155,10 +153,10 @@
                 <div class="col-12 buttons mt-1 mb-1 pl-0">
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success new-address-next-step-button" />
                 </div>
-            }
-            <div class="order-summary">
-                    <h2 class="generalTitle"><strong>@T("Checkout.OrderSummary")</strong></h2>
-                    @await Component.InvokeAsync("OrderSummary")
-            </div>
+        </form>
+        <div class="order-summary">
+            <h2 class="generalTitle"><strong>@T("Checkout.OrderSummary")</strong></h2>
+            @await Component.InvokeAsync("OrderSummary")
+        </div>
     </div>
 </div>

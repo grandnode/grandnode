@@ -52,8 +52,7 @@
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
 <div class="page product-details-page">
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_top", additionalData = Model.Id })
-        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post,null ,new { id = "product-details-form" }))
-        {
+        <form asp-route="Product" asp-route-sename="@Model.SeName" method="post" id="product-details-form">
             <div itemscope itemtype="http://schema.org/Product" data-productid="@Model.Id">
                 <div class="col-12 product-essential px-0">
                     <div class="col d-md-inline-flex d-md-flex px-0">
@@ -235,7 +234,7 @@
                     </div>
                 </div>
             </div>
-                @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
-        }
+            @await Component.InvokeAsync("RelatedProducts", new { productId = Model.Id })
+        </form>
         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_bottom", additionalData = Model.Id })
     </div>

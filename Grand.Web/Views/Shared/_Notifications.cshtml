@@ -60,8 +60,7 @@
 </div>
 <a class="popup-action-form" data-mfp-src="#action_modal_form" style="display:none"></a>
 <div id="action_modal_form" class="zoom-anim-dialog mfp-hide">
-    @using (Html.BeginRouteForm("PopupInteractiveForm", FormMethod.Post, new { id = "interactive-form" }))
-    {
+    <form asp-route="PopupInteractiveForm" method="post" id = "interactive-form">
         <div class="message-error">
             <div class="validation-summary-errors">
                 <div id="errorMessages"></div>
@@ -71,7 +70,7 @@
         <div style="padding: 20px 0px 0px 0px;">
             <input type="submit" id="send-interactive-form" class="btn btn-success interactive-form-button" value="@T("PopupInteractiveForm.Send")" />
         </div>
-    }
+    </form>
 </div>
 
 <script>

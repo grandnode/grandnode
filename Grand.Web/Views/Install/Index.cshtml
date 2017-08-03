@@ -28,9 +28,7 @@
 </head>
 <body>
     <div class="container">
-        @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
-        {
-            //Contributor : The orchard project.
+        <form asp-action="Index" asp-controller="Install" id="installation-form" method="post">
             <script type="text/javascript">
             $(document).ready(function () {
                 $('#installation-form').submit(function () {
@@ -114,7 +112,7 @@
                         </div>
                     </div>
                 </div>
-                if (!Model.DisableSampleDataOption)
+                @if (!Model.DisableSampleDataOption)
                 {
                         <div nowrap="nowrap" align="left">
                             <label class="custom-control custom-checkbox my-3">
@@ -190,8 +188,6 @@
 
                         </div>
                 </div>
-
-                
                 <div class="throbber">
                     <div class="curtain">
                     </div>
@@ -207,9 +203,7 @@
                         </div>
                     </div>
                 </div>
-
-
-        }
+        </form>
     </div>
 </body>
 </html>

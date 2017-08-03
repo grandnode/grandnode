@@ -10,8 +10,7 @@
 <div class="page move-topic-page">
     <h1 class="h2 generalTitle">@T("Forum.MoveTopic")</h1>
 
-    @using (Html.BeginForm())
-    {
+    <form asp-route="TopicMove" method="post">
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Id)
         <div class="form-fields">
@@ -24,5 +23,5 @@
             <input type="submit" value="@T("Forum.Submit")" class="btn btn-secondary submit-forum-topic-button" />
             <input type="button" class="btn btn-secondary cancel-forum-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.Id, slug = Model.TopicSeName })')" />
         </div>
-    }
+    </form>
 </div>

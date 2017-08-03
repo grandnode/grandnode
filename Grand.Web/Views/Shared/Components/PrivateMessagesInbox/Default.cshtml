@@ -17,8 +17,7 @@
     </script>
     @if (Model.Messages.Count > 0)
     {
-        using (Html.BeginRouteForm("PrivateMessagesInbox", FormMethod.Post))
-        {
+        <form asp-route="PrivateMessagesInbox" method="post">
             @Html.AntiForgeryToken()
             <div class="table-responsive">
                 <table class="table table-hover data-table" id="pm-inbox-table">
@@ -53,55 +52,55 @@
                     </thead>
                     <tbody>
                         @for (int i = 0; i < Model.Messages.Count; i++)
-                    {
-                        var item = Model.Messages[i];
-                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                <td>
-                                    <div class="col-12">
-                                        <div class="row text-center text-sm-left">
-                                            <div class="select col-sm-1 col-12 text-left">
-                                                <label class="custom-control custom-checkbox">
-                                                    <input name="pm@(item.Id)" id="pm@(item.Id)" type="checkbox" class="custom-control-input rowcheckbox">
-                                                    <span class="custom-control-indicator"></span>
-                                                    <span class="custom-control-description">&nbsp;</span>
-                                                </label>
-                                            </div>
-                                            <div class="from col-sm-2 col-12 pb-1">
-                                                @if (item.AllowViewingFromProfile)
-                                                {
-                                                    @Html.RouteLink(item.CustomerFromName, "CustomerProfile", new { Id = item.FromCustomerId })
-                                                }
-                                                else
-                                                {
-                                                    @item.CustomerFromName
-                                                }
-                                            </div>
-                                            <div class="subject col-sm-5 col-12">
-                                                @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = (item.IsRead) ? "pm-read" : "pm-unread" })
-                                            </div>
-                                            <div class="date col-sm-4 col-12">
-                                                @item.CreatedOn
-                                            </div>
+                        {
+                            var item = Model.Messages[i];
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                            <td>
+                                <div class="col-12">
+                                    <div class="row text-center text-sm-left">
+                                        <div class="select col-sm-1 col-12 text-left">
+                                            <label class="custom-control custom-checkbox">
+                                                <input name="pm@(item.Id)" id="pm@(item.Id)" type="checkbox" class="custom-control-input rowcheckbox">
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">&nbsp;</span>
+                                            </label>
+                                        </div>
+                                        <div class="from col-sm-2 col-12 pb-1">
+                                            @if (item.AllowViewingFromProfile)
+                                            {
+                                                @Html.RouteLink(item.CustomerFromName, "CustomerProfile", new { Id = item.FromCustomerId })
+                                            }
+                                            else
+                                            {
+                                                @item.CustomerFromName
+                                            }
+                                        </div>
+                                        <div class="subject col-sm-5 col-12">
+                                            @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = (item.IsRead) ? "pm-read" : "pm-unread" })
+                                        </div>
+                                        <div class="date col-sm-4 col-12">
+                                            @item.CreatedOn
                                         </div>
                                     </div>
-                                </td>
+                                </div>
+                            </td>
 
-                            </tr>
+                        </tr>
                         }
                     </tbody>
                 </table>
             </div>
-            var pager = Html.Pager(Model.PagerModel);
-            if (pager!=null)
+            @{ var pager = Html.Pager(Model.PagerModel); }
+            @if (pager!=null)
             {
-                <div class="pager">
-                    @pager
-                </div>
+            <div class="pager">
+                @pager
+            </div>
             }
             <div class="btn-group btn-group-sm mb-2">
                 <input class="btn btn-secondary delete-selected-pm-button" name="delete-inbox" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />
                 <input class="btn btn-secondary mark-unread-pm-button" name="mark-unread" type="submit" value="@T("PrivateMessages.Inbox.MarkAsUnread")" />
             </div>
-        }
+        </form>
     }
 </div>

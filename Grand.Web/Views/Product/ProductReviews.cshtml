@@ -20,65 +20,64 @@
         {
             <div class="write-review" id="review-form">
                     <h5 class="generalTitle"><strong>@T("Reviews.Write")</strong></h5>
-                @using (Html.BeginForm())
-                {
-                    @Html.AntiForgeryToken()
-                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                    <fieldset>
-                        <div class="form-fields">
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.AddProductReview.Title, new {@class = "col-form-label" }, ":")
-                                        @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "form-control review-title" }) : (object)(new { @class = "form-control review-title", disabled = "disabled" }))
-                                        @Html.ValidationMessageFor(model => model.AddProductReview.Title)
-                            </div>
-                                @Html.LabelFor(model => model.AddProductReview.ReviewText, new { @class = "col-form-label" }, ":")
-                                        @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "form-control review-text" }) : (object)(new { @class = "form-control review-text", disabled = "disabled" }))
-                                        @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
-                            <div class="form-group review-rating row d-flex justify-content-around">
-                                @Html.LabelFor(model => model.AddProductReview.Rating, new { @class = "col-12 col-form-label" }, ":")
-                                    <span class="col col-form-label label first hidden-sm-down text-right">@T("Reviews.Fields.Rating.Bad")</span>
-                                    <div class="col-12 col-sm-6 rating-options text-center">
-                                        <label class="custom-control custom-radio">
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1", new { @class = "custom-control-input", id = "addproductrating_1" })
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description">1</span>
-                                        </label>
-                                        <label class="custom-control custom-radio">
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2", new { @class = "custom-control-input", id = "addproductrating_2" })
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description">2</span>
-                                        </label>
-                                        <label class="custom-control custom-radio">
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3", new { @class = "custom-control-input", id = "addproductrating_3" })
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description">3</span>
-                                        </label>
-                                        <label class="custom-control custom-radio">
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4", new { @class = "custom-control-input", id = "addproductrating_4" })
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description">4</span>
-                                        </label>
-                                        <label class="custom-control custom-radio">
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5", new { @class = "custom-control-input", id = "addproductrating_5" })
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description">5</span>
-                                        </label>
-                                    </div>
-                                    <span class="label col col-form-label hidden-sm-down text-left">@T("Reviews.Fields.Rating.Excellent")</span>
-
-                            </div>
-                            @if (Model.AddProductReview.DisplayCaptcha)
-                            {
-                                <div class="captcha-box">
-                                    @Html.Raw(Html.GenerateCaptcha())
+                    <form asp-route="ProductReviews" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                        <fieldset>
+                            <div class="form-fields">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AddProductReview.Title, new {@class = "col-form-label" }, ":")
+                                            @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "form-control review-title" }) : (object)(new { @class = "form-control review-title", disabled = "disabled" }))
+                                            @Html.ValidationMessageFor(model => model.AddProductReview.Title)
                                 </div>
-                            }
+                                    @Html.LabelFor(model => model.AddProductReview.ReviewText, new { @class = "col-form-label" }, ":")
+                                            @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "form-control review-text" }) : (object)(new { @class = "form-control review-text", disabled = "disabled" }))
+                                            @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
+                                <div class="form-group review-rating row d-flex justify-content-around">
+                                    @Html.LabelFor(model => model.AddProductReview.Rating, new { @class = "col-12 col-form-label" }, ":")
+                                        <span class="col col-form-label label first hidden-sm-down text-right">@T("Reviews.Fields.Rating.Bad")</span>
+                                        <div class="col-12 col-sm-6 rating-options text-center">
+                                            <label class="custom-control custom-radio">
+                                                @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1", new { @class = "custom-control-input", id = "addproductrating_1" })
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">1</span>
+                                            </label>
+                                            <label class="custom-control custom-radio">
+                                                @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2", new { @class = "custom-control-input", id = "addproductrating_2" })
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">2</span>
+                                            </label>
+                                            <label class="custom-control custom-radio">
+                                                @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3", new { @class = "custom-control-input", id = "addproductrating_3" })
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">3</span>
+                                            </label>
+                                            <label class="custom-control custom-radio">
+                                                @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4", new { @class = "custom-control-input", id = "addproductrating_4" })
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">4</span>
+                                            </label>
+                                            <label class="custom-control custom-radio">
+                                                @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5", new { @class = "custom-control-input", id = "addproductrating_5" })
+                                                <span class="custom-control-indicator"></span>
+                                                <span class="custom-control-description">5</span>
+                                            </label>
+                                        </div>
+                                        <span class="label col col-form-label hidden-sm-down text-left">@T("Reviews.Fields.Rating.Excellent")</span>
+
+                                </div>
+                                @if (Model.AddProductReview.DisplayCaptcha)
+                                {
+                                    <div class="captcha-box">
+                                        @Html.Raw(Html.GenerateCaptcha())
+                                    </div>
+                                }
+                            </div>
+                        </fieldset>
+                        <div class="buttons text-left my-3">
+                            <input type="submit" name="add-review" class="btn btn-success write-product-review-button" value="@T("Reviews.SubmitButton")" />
                         </div>
-                    </fieldset>
-                    <div class="buttons text-left my-3">
-                        <input type="submit" name="add-review" class="btn btn-success write-product-review-button" value="@T("Reviews.SubmitButton")" />
-                    </div>
-                }
+                    </form>
             </div>
         }
         @if (Model.Items.Count > 0)

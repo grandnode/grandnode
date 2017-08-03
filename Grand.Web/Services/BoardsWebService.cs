@@ -372,7 +372,6 @@ namespace Grand.Web.Services
             model.TopicPriorities = ForumTopicTypesList();
             model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
             model.Subscribed = false;
-
             return model;
         }
         public virtual EditForumPostModel PrepareEditForumPost(Forum forum, ForumTopic forumTopic, string quote)

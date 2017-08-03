@@ -35,9 +35,8 @@
                     </ul>
                 </div>
             }
-            @using (Html.BeginRouteForm("Wishlist", FormMethod.Post))
-            {
-                    <table class="table table-hover">
+            <form asp-route="Wishlist" method="post">
+                <table class="table table-hover">
                         <colgroup></colgroup>
                         <thead class="thead-inverse">
                             <tr>
@@ -89,7 +88,7 @@
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Items)
-                    {
+                            {
                                 <tr class="align-middle">
                                         @if (Model.IsEditable || Model.DisplayAddToCart)
                                         {
@@ -126,7 +125,7 @@
                                                                 </label>
                                                             </fieldset>
                                                         }
-</div>
+                                                    </div>
                                                 </div>
                                             </td>
                                         }
@@ -265,7 +264,7 @@
                             }
                         </tbody>
                     </table>
-                if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
+                @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
                 {
                     var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
@@ -297,7 +296,7 @@
                         </button>
                     }
                 </div>
-            }
+            </form>
         </div>
     }
     else

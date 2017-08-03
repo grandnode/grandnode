@@ -57,7 +57,6 @@
     <div class="order-details-area">
         <div class="card">
             <div class="card-block d-flex flex-row row">
-
                 <div class="col-sm-6 col-12 billing">
                         <ul class="billing-info pl-0">
                             <li class="title">
@@ -173,14 +172,13 @@
                                 {
                                     @*Complete payment (for redirection payment methods)*@
                                     <li class="repost">
-                                        @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
-                                        {
+                                        <form asp-route="OrderDetails" method="post">
                                             @Html.AntiForgeryToken()
                                             <input type="submit" name="repost-payment" value="@T("Order.RetryPayment")" class="btn btn-secondary re-order-button" />
                                             <p class="hint">
                                                 <em>@T("Order.RetryPayment.Hint")</em>
                                             </p>
-                                        }
+                                        </form>
                                     </li>
                                 }
                             }

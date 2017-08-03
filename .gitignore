@@ -157,6 +157,6 @@ glob:*.user
 Grand.Web/wwwroot/Content/Images/Thumbs/*.jpg
 Grand.Web/wwwroot/Content/Images/Thumbs/*.jpeg
 Grand.Web/wwwroot/Content/Images/Thumbs/*.png
-Grand.Web/wwwroot/App_Data/InstalledPlugins.txt
-Grand.Web/wwwroot/App_Data/Settings.txt
+Grand.Web/App_Data/InstalledPlugins.txt
+Grand.Web/App_Data/Settings.txt
 

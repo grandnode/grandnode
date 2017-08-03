@@ -27,44 +27,43 @@
 <div class="page forum-search-page">
         <h1 class="h2 text-center generalTitle">@T("Forum.Search")</h1>
         <div class="search-input">
-            @using (Html.BeginRouteForm("Search", FormMethod.Get))
-            {
-                        <div class="form-group">
-                            <div class="col-form-label">
-                                    @T("Forum.Search.SearchKeyword")
-                            </div>
-                            <div class="col-12">
-                                <div class="row">
-                                @Html.TextBox("searchterms", null, new { @class = "form-control" }) 
-                                    <div class="inputs reversed">
-                                        <label class="custom-control custom-checkbox">
-                                            <input class="custom-control-input" id="adv" type="checkbox" name="adv" value="true" @(Model.ShowAdvancedSearch ? Html.Raw("checked") : Html.Raw("")) />
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description">@T("Forum.Search.AdvanceSearch")</span>
-                                        </label>
-                                    </div>
-                                </div>           
+            <form asp-route="Search" method="get">
+                <div class="form-group">
+                    <div class="col-form-label">
+                        @T("Forum.Search.SearchKeyword")
+                    </div>
+                    <div class="col-12">
+                        <div class="row">
+                            @Html.TextBox("searchterms", null, new { @class = "form-control" })
+                            <div class="inputs reversed">
+                                <label class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" id="adv" type="checkbox" name="adv" value="true" @(Model.ShowAdvancedSearch ? Html.Raw("checked") : Html.Raw("")) />
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">@T("Forum.Search.AdvanceSearch")</span>
+                                </label>
                             </div>
                         </div>
-                        <div class="advanced-search" id="advanced-search" style="display: none;">
-                            <fieldset>
-                                <label class="ol-form-label">@T("Forum.Search.SearchInForum")</label>
-                                    @Html.DropDownList("forumId", new SelectList(Model.ForumList, "Value", "Text", Model.ForumIdSelected), new { @class = "custom-select form-control" })
+                    </div>
+                </div>
+                <div class="advanced-search" id="advanced-search" style="display: none;">
+                    <fieldset>
+                        <label class="ol-form-label">@T("Forum.Search.SearchInForum")</label>
+                        @Html.DropDownList("forumId", new SelectList(Model.ForumList, "Value", "Text", Model.ForumIdSelected), new { @class = "custom-select form-control" })
 
-                            </fieldset>
-                            <fieldset>
-                                <label class="col-form-label">@T("Forum.Search.SearchWithin")</label>
-                                    @Html.DropDownList("within", new SelectList(Model.WithinList, "Value", "Text", Model.WithinSelected), new { @class = "custom-select form-control" })
-                            </fieldset>
-                            <fieldset>
-                                <label class="col-form-label">@T("Forum.Search.LimitResultsToPrevious")</label>
-                                    @Html.DropDownList("limitDays", new SelectList(Model.LimitList, "Value", "Text", Model.LimitDaysSelected), new { @class = "custom-select form-control" })
-                            </fieldset>
-                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <label class="col-form-label">@T("Forum.Search.SearchWithin")</label>
+                        @Html.DropDownList("within", new SelectList(Model.WithinList, "Value", "Text", Model.WithinSelected), new { @class = "custom-select form-control" })
+                    </fieldset>
+                    <fieldset>
+                        <label class="col-form-label">@T("Forum.Search.LimitResultsToPrevious")</label>
+                        @Html.DropDownList("limitDays", new SelectList(Model.LimitList, "Value", "Text", Model.LimitDaysSelected), new { @class = "custom-select form-control" })
+                    </fieldset>
+                </div>
                 <div class="generalMarginSupporter text-center">
                     <input type="submit" class="btn btn-outline-success forum-search-button" value="@T("Forum.SearchButton")" />
                 </div>
-            }
+            </form>
         </div>
         <div class="search-error text-danger pt-1 pb-1 text-center">
             @Model.Error
@@ -213,7 +212,7 @@
                                             </td>
                                         }
                                         <td class="latest-post">
-                                            @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
+                                            @await Component.InvokeAsync("ForumLastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                         </td>
                                     </tr>
                                 }

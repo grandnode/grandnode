@@ -9,8 +9,7 @@
 <div class="page checkout-page order-confirm-page">
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Confirm })
     <div class="confirm-order">
-        @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
-            {
+        <form asp-route="CheckoutConfirm" method="post" id="confirm-order-form">
             <script>
                 $(document).ready(function () {
                     $('.confirm-order-next-step-button').click(function () {
@@ -45,7 +44,7 @@
                 </div>
             </div>
 
-            if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+            @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
             {
                 <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
             }
@@ -54,7 +53,7 @@
                 <div class="row m-0">
                    
                         @if (Model.TermsOfServiceOnOrderConfirmPage)
-                    {
+                        {
 
                             <div class="modal fade" title="@T("Checkout.TermsOfService")" id="terms-of-service-warning-box" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
@@ -87,7 +86,6 @@
                                 <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="btn btn-success btn-block confirm-order-next-step-button" />
                             </div>
                         </div>
-
                     </div>
                 <script>
                     $('#confirm-order-form').on('submit', function () {
@@ -98,7 +96,7 @@
                     });
                 </script>
             }
-            if (Model.Warnings.Count > 0)
+            @if (Model.Warnings.Count > 0)
             {
                 <div class="message-error">
                     <ul>
@@ -109,7 +107,7 @@
                     </ul>
                 </div>
             }
-        }
+        </form>
     </div>
 
 </div>

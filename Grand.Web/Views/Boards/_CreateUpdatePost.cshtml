@@ -13,54 +13,51 @@
         {
             <h1 class="generalTitle">@T("Forum.NewPost")</h1>
         }
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="message-error"></div>
-            @Html.HiddenFor(model => model.Id)
-            @Html.HiddenFor(model => model.ForumTopicId)
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.ForumTopicId)
 
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex flex-column flex-md-row">
-                        <label class="col-md-3 col-12">@T("Forum.ForumName"):</label>
-                        <div class="col-md col-12">
-                            <strong class="forum-subject">@Model.ForumName</strong>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column flex-md-row">
-                        <label class="col-md-3 col-12">@T("Forum.TopicTitle"):</label>
-                        <div class="col-md col-12">
-                            <strong class="topic-subject">@Model.ForumTopicSubject</strong>
-                        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex flex-column flex-md-row">
+                    <label class="col-md-3 col-12">@T("Forum.ForumName"):</label>
+                    <div class="col-md col-12">
+                        <strong class="forum-subject">@Model.ForumName</strong>
                     </div>
                 </div>
-                <div class="card-block">
-                    <div class="form-group">
-                        @if (Model.ForumEditor == EditorType.BBCodeEditor)
-                        {
-                            <div class="col-12 text-sm-right">
-                                @Html.BBCodeEditor("Text")
-                            </div>
-                        }
-                        @Html.TextAreaFor(model => model.Text, new { @class = "form-control card-text", TextMode = "MultiLine" })
-                        @Html.ValidationMessageFor(model => model.Text)
+                <div class="d-flex flex-column flex-md-row">
+                    <label class="col-md-3 col-12">@T("Forum.TopicTitle"):</label>
+                    <div class="col-md col-12">
+                        <strong class="topic-subject">@Model.ForumTopicSubject</strong>
                     </div>
-                    @if (Model.IsCustomerAllowedToSubscribe)
+                </div>
+            </div>
+            <div class="card-block">
+                <div class="form-group">
+                    @if (Model.ForumEditor == EditorType.BBCodeEditor)
                     {
-                        <fieldset class="form-group">
-                            <label class="custom-control custom-checkbox text-sm-center">
-                                <input class="custom-control-input" id="Subscribed" type="checkbox" name="Subscribed" value="true" @(Model.Subscribed ? Html.Raw("checked") : Html.Raw("")) />
-                                <span class="custom-control-indicator"></span>
-                                <span class="custom-control-description">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</span>
-                            </label>
-                        </fieldset>
+                    <div class="col-12 text-sm-right">
+                        @Html.BBCodeEditor("Text")
+                    </div>
                     }
+                    @Html.TextAreaFor(model => model.Text, new { @class = "form-control card-text", TextMode = "MultiLine" })
+                    @Html.ValidationMessageFor(model => model.Text)
                 </div>
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                <fieldset class="form-group">
+                    <label class="custom-control custom-checkbox text-sm-center">
+                        <input class="custom-control-input" id="Subscribed" type="checkbox" name="Subscribed" value="true" @(Model.Subscribed ? Html.Raw("checked") : Html.Raw("")) />
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">@T("Forum.NotifyWhenSomeonePostsInThisTopic")</span>
+                    </label>
+                </fieldset>
+                }
             </div>
-            <div class="btn-group mb-1 mt-1">
-                <input type="submit" value="@T("Forum.Submit")" class="btn btn-secondary submit-post-button" />
-                <input type="button" class="btn btn-secondary cancel-post-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')" />
-            </div>
-        }
+        </div>
+        <div class="btn-group mb-1 mt-1">
+            <input type="submit" value="@T("Forum.Submit")" class="btn btn-secondary submit-post-button" />
+            <input type="button" class="btn btn-secondary cancel-post-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')" />
+        </div>
 </div>

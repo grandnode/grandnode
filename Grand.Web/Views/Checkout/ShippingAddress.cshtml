@@ -9,9 +9,8 @@
 <div class="page checkout-page shipping-address-page">
     @await Component.InvokeAsync("CheckoutProgress", new { step = CheckoutProgressStep.Address })
     <h2 class="generalTitle text-sm-center ">@T("Checkout.ShippingAddress")</h2>
-    @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
-    {
-        if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
+    <form asp-route="CheckoutShippingAddress" method="post">
+        @if (Model.AllowPickUpInStore && !Model.PickUpInStoreOnly && Model.PickupPoints.Any())
         {
             <div class="pickup-in-store genera">
                 <div class="selector">
@@ -46,7 +45,7 @@
             </div>
         }
 
-        if (Model.AllowPickUpInStore)
+        @if (Model.AllowPickUpInStore)
         {
             <div class="pickup-points" id="pickup-points-form">
                 @if (Model.PickupPoints.Any())
@@ -112,9 +111,7 @@
                 }
             </div>
         }
-
-
-        if (!Model.PickUpInStoreOnly)
+        @if (!Model.PickUpInStoreOnly)
         {
             <div class="shipping-addresses" id="shipping-addresses-form">
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_top" })
@@ -239,11 +236,12 @@
                 </div>
                 @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_address_bottom" })
             </div>
-                            }
-                            <div class="buttons col-12 mb-2 mt-2">
-                                <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success new-address-next-step-button" />
-                            </div>
-                            }
+        }
+        <div class="buttons col-12 mb-2 mt-2">
+           <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="btn btn-success new-address-next-step-button" />
+        </div>
+    </form>
+
     <div class="order-summary">
         <h5 class="generalTitle">
             <strong>@T("Checkout.OrderSummary")</strong>

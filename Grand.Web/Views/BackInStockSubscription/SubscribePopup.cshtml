@@ -3,8 +3,7 @@
 @{
     Layout = "";
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "back-in-stock-subscription-form" }))
-{
+<form asp-route="BackInStockSubscribePopup" method="post" id="back-in-stock-subscription-form">
     <div class="back-in-stock-subscription-page text-center">
         <h1 class="h5">
             @if (Model.AlreadySubscribed)
@@ -53,4 +52,4 @@
                 </script>
         }
     </div>
-}
+</form>
