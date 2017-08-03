@@ -420,7 +420,7 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 if (_customerSettings.UsernamesEnabled && model.Username != null)
                 {
@@ -738,7 +738,7 @@ namespace Grand.Web.Controllers
 
             try
             {
-                if (ModelState.IsValid)
+                if (ModelState.IsValid && ModelState.ErrorCount == 0)
                 {
                     //username 
                     if (_customerSettings.UsernamesEnabled && this._customerSettings.AllowUsersToChangeUsernames)

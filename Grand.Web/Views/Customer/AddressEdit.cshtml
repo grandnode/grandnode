@@ -10,8 +10,8 @@
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
-@using (Html.BeginForm())
-{
+
+<form asp-route="CustomerAddressEdit" method="post">
     @Html.AntiForgeryToken()
     <div class="page account-page address-edit-page">
             <h1 class="h2 generalTitle">@T("Account.CustomerAddresses.Edit")</h1>
@@ -25,4 +25,4 @@
                 <input type="submit" class="btn btn-success save-address-button" value="@T("Common.Save")" />
             </div>
     </div>
-                }
+</form>

@@ -66,15 +66,11 @@ namespace Grand.Web.Validators.Customer
                     var dateOfBirth = x.ParseDateOfBirth();
                     //entered?
                     if (!dateOfBirth.HasValue)
-                    {
                         context.AddFailure(new ValidationFailure("DateOfBirthDay", localizationService.GetResource("Account.Fields.DateOfBirth.Required")));
-                    }
-                    //minimum age
-                    if (customerSettings.DateOfBirthMinimumAge.HasValue &&
-                        CommonHelper.GetDifferenceInYears(dateOfBirth.Value, DateTime.Today) < customerSettings.DateOfBirthMinimumAge.Value)
-                    {
+                    else
+                        //minimum age
+                        if (customerSettings.DateOfBirthMinimumAge.HasValue && CommonHelper.GetDifferenceInYears(dateOfBirth.Value, DateTime.Today) < customerSettings.DateOfBirthMinimumAge.Value)
                         context.AddFailure(new ValidationFailure("DateOfBirthDay", string.Format(localizationService.GetResource("Account.Fields.DateOfBirth.MinimumAge"), customerSettings.DateOfBirthMinimumAge.Value)));
-                    }
                 });
             }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)

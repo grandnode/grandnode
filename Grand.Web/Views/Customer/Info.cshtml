@@ -45,8 +45,7 @@
 <div class="page account-page customer-info-page">
     <h2 class="generalTitle">@T("Account.CustomerInfo")</h2>
 
-    @using (Html.BeginForm())
-    {
+    <form asp-route="CustomerInfo" method="post">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
         <div class="card mb-3">
@@ -153,14 +152,14 @@
                 }
             </div>
         </div>
-        if (Model.CompanyEnabled || Model.DisplayVatNumber)
+        @if (Model.CompanyEnabled || Model.DisplayVatNumber)
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.CompanyDetails")</h3>
                 <div class="card-block">
                     <div class="form-fields">
                         @if (Model.CompanyEnabled)
-                    {
+                        {
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Company, new { @class = "col-form-label" }, ":")
                                 @Html.GrandEditorFor(model => model.Company)
@@ -168,7 +167,7 @@
                             </div>
                         }
                         @if (Model.DisplayVatNumber)
-                    {
+                        {
                             <div class="form-group">
                                 @Html.LabelFor(model => model.VatNumber, new { @class = "col-form-label" }, ":")
                                 @Html.GrandEditorFor(model => model.VatNumber)
@@ -180,11 +179,11 @@
                 </div>
             </div>
         }
-        if (Model.StreetAddressEnabled ||
-                    Model.StreetAddress2Enabled ||
-                    Model.ZipPostalCodeEnabled ||
-                    Model.CityEnabled ||
-                    Model.CountryEnabled)
+        @if (Model.StreetAddressEnabled ||
+            Model.StreetAddress2Enabled ||
+            Model.ZipPostalCodeEnabled ||
+            Model.CityEnabled ||
+            Model.CountryEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">
@@ -194,7 +193,7 @@
                     <div class="form-fields">
                         <div class="row d-flex">
                             @if (Model.StreetAddressEnabled)
-                    {
+                            {
                                 <fieldset class="form-group col-12 col-sm-6">
                                     <legend class="sr-only">@T("account.fields.streetaddress")</legend>
                                     @Html.LabelFor(model => model.StreetAddress, new { @class = "col-form-label" }, ":")
@@ -203,7 +202,7 @@
                                 </fieldset>
                             }
                             @if (Model.StreetAddress2Enabled)
-                    {
+                            {
                                 <fieldset class="form-group col-12 col-sm-6">
                                     <legend class="sr-only">@T("account.fields.streetaddress2")</legend>
                                     @Html.LabelFor(model => model.StreetAddress2, new { @class = "col-form-label" }, ":")
@@ -212,7 +211,7 @@
                                 </fieldset>
                             }
                             @if (Model.ZipPostalCodeEnabled)
-                    {
+                            {
                                 <fieldset class="form-group col-12 col-sm-6">
                                     <legend class="sr-only">@T("account.fields.zippostalcode")</legend>
                                     @Html.LabelFor(model => model.ZipPostalCode, new { @class = "col-form-label" }, ":")
@@ -221,7 +220,7 @@
                                 </fieldset>
                             }
                             @if (Model.CityEnabled)
-                    {
+                            {
                                 <fieldset class="form-group col-12 col-sm-6">
                                     <legend class="sr-only">@T("account.fields.city")</legend>
                                     @Html.LabelFor(model => model.City, new { @class = "col-form-label" }, ":")
@@ -230,7 +229,7 @@
                                 </fieldset>
                             }
                             @if (Model.CountryEnabled)
-                    {
+                            {
                                 <fieldset class="form-group col-12">
                                     <legend class="sr-only">@T("account.fields.country")</legend>
                                     @Html.LabelFor(model => model.CountryId, new { @class = "col-form-label" }, ":")
@@ -239,7 +238,7 @@
                                 </fieldset>
                             }
                             @if (Model.CountryEnabled && Model.StateProvinceEnabled)
-                    {
+                            {
                                 <fieldset class="form-group col-12">
                                     <legend class="sr-only">@T("account.fields.stateprovince")</legend>
                                     @Html.LabelFor(model => model.StateProvinceId, new { @class = "col-form-label" }, ":")
@@ -254,13 +253,13 @@
                 </div>
             </div>
         }
-        if (Model.PhoneEnabled || Model.FaxEnabled)
+        @if (Model.PhoneEnabled || Model.FaxEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.YourContactInformation")</h3>
                 <div class="card-block d-flex flex-row row">
                     @if (Model.PhoneEnabled)
-                    {
+                {
                         <fieldset class="form-group col-12 col-sm-6">
                             <legend class="sr-only">@T("account.fields.phone")</legend>
                             @Html.LabelFor(model => model.Phone, new { @class = "col-form-label" }, ":")
@@ -269,7 +268,7 @@
                         </fieldset>
                     }
                     @if (Model.FaxEnabled)
-                    {
+                {
                         <fieldset class="form-group col-12 col-sm-6">
                             <legend class="sr-only">@T("account.fields.fax")</legend>
                             @Html.LabelFor(model => model.Fax, new { @class = "ol-form-label" }, ":")
@@ -281,7 +280,7 @@
             </div>
         }
 
-        if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
+        @if (Model.NewsletterEnabled || Model.CustomerAttributes.Count > 0)
         {
             <div class="card mb-3">
                 <h3 class="card-header">
@@ -291,7 +290,7 @@
                     <fieldset class="form-fields">
                         <legend class="sr-only">@T("account.fields.newsletter")</legend>
                         @if (Model.NewsletterEnabled)
-                    {
+                        {
                             <div class="form-group">
                                 <span class="custom-control custom-checkbox">
                                     <input class="custom-control-input" id="Newsletter" type="checkbox" name="Newsletter" value="true" @(Model.Newsletter ? Html.Raw("checked") : Html.Raw("")) />
@@ -302,14 +301,14 @@
                         }
 
                         @if (Model.CustomerAttributes.Count > 0)
-                    {
+                        {
                             @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
                         }
                     </fieldset>
                 </div>
             </div>
         }
-        if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
+        @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.Preferences")</h3>
@@ -317,7 +316,7 @@
                     <fieldset class="form-fields">
                         <legend class="sr-only">@T("account.fields.timezone")</legend>
                         @if (Model.AllowCustomersToSetTimeZone)
-                    {
+                        {
                             <div class="form-group">
                                 @Html.LabelFor(model => model.TimeZoneId, new { @class = "col-form-label" }, ":")
                                 @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones, new { @class = "form-control custom-select" })
@@ -326,7 +325,7 @@
                         }
 
                         @if (Model.SignatureEnabled)
-                    {
+                        {
                             <div class="form-group">
                                 @Html.LabelFor(model => model.Signature, new { @class = "col-form-label" }, ":")
                                 @Html.TextAreaFor(model => model.Signature, new { @class = "form-control account-signature-text" })
@@ -337,7 +336,7 @@
             </div>
         }
 
-        if (Model.NumberOfExternalAuthenticationProviders > 0)
+        @if (Model.NumberOfExternalAuthenticationProviders > 0)
         {
             <div class="card mb-3">
                 <h3 class="card-header">@T("Account.AssociatedExternalAuth")</h3>
@@ -394,7 +393,7 @@
             </div>
         }
 
-        if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
+        @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)
         {
             //we can add more external records
             <div class="form-fields add-more-external-records">
@@ -404,7 +403,7 @@
         <div class="generalMarginSupporter">
             <input type="submit" value="@T("Common.Save")" name="save-info-button" class="btn btn-secondary save-customer-info-button" />
         </div>
-    }
+    </form>
 </div>
 
 <script type="text/javascript">

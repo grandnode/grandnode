@@ -31,8 +31,7 @@
                 });
             });
         </script>
-        using (Html.BeginRouteForm("CustomerBackInStockSubscriptions", FormMethod.Post))
-        {
+        <form asp-route="CustomerBackInStockSubscriptions" method="post">
             <div class="subscription-list">
                 <div class="table-responsive">
                     <table class="table table-hover data-table">
@@ -59,18 +58,18 @@
                             @for (int i = 0; i < Model.Subscriptions.Count; i++)
                             {
                                 var item = Model.Subscriptions[i];
-                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                    <td class="select-boxes">
-                                        <label class="custom-control custom-checkbox">
-                                            <input id="selectall" type="checkbox" name="biss@(item.Id)" class="rowcheckbox custom-control-input">
-                                            <span class="custom-control-indicator"></span>
-                                            <span class="custom-control-description">&nbsp;</span>
-                                        </label>
-                                    </td>
-                                    <td class="product">
-                                        @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
-                                    </td>
-                                </tr>
+                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                <td class="select-boxes">
+                                    <label class="custom-control custom-checkbox">
+                                        <input id="selectall" type="checkbox" name="biss@(item.Id)" class="rowcheckbox custom-control-input">
+                                        <span class="custom-control-indicator"></span>
+                                        <span class="custom-control-description">&nbsp;</span>
+                                    </label>
+                                </td>
+                                <td class="product">
+                                    @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -79,7 +78,7 @@
                     var pager = Html.Pager(Model.PagerModel);
                 }
                 @if (!String.IsNullOrEmpty(pager.ToHtmlString()))
-                    {
+                {
                     <div class="pager">
                         @pager
                     </div>
@@ -88,10 +87,10 @@
                     <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="btn btn-secondary delete-selected-biss-button" />
                 </div>
             </div>
-        }
-    }
-    else
-    {
+        </form>
+                    }
+                    else
+                    {
         <div class="no-data">
             @T("Account.BackInStockSubscriptions.NoSubscriptions")
         </div>

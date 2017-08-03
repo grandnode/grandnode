@@ -17,8 +17,7 @@
     <h1 class="h2 generalTitle">@T("Account.CustomerAddresses")</h1>
     @if (Model.Addresses.Count > 0)
     {
-        using (Html.BeginForm())
-        {
+        
             @Html.AntiForgeryToken()
             <div class="col-12 address-list">
                 <div class="row">
@@ -149,7 +148,6 @@
                     }
                 }
             </script>
-        }
     }
     else
     {
