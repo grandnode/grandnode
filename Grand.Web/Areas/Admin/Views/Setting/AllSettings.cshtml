@@ -8,8 +8,6 @@
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
 }
 
-@Html.AntiForgeryToken()
-
 <div class="row">
     <div class="col-md-12">
         <div class="portlet light form-fit">
@@ -63,7 +61,7 @@
                         url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
                         type: "POST",
                         dataType: "json",
-                        contentType: "application/json",
+                        //contentType: "application/json",
                         data: additionalData
                     },
                     create: {
@@ -84,14 +82,14 @@
                         dataType: "json",
                         data: addAntiForgeryToken
                     },
-                    parameterMap: function(data, operation) {
-                        if (operation != "read") {
-                            return data;
-                        } else {
-                            //for some reasons only such "Filter" data be parsed
-                            return JSON.stringify(data);
-                        }
-                    }
+                    //parameterMap: function (data, operation) {
+                    //    if (operation != "read") {
+                    //        return data;
+                    //    } else {
+                    //        //for some reasons only such "Filter" data be parsed
+                    //        return JSON.stringify(data);
+                    //    }
+                    //}
                 },
                 schema: {
                     data: "Data",
@@ -212,15 +210,15 @@
 
     function additionalData() {
         var data = {
-            SettingFilterName: $('#@Html.FieldIdFor(model => model.SettingFilterName)').val(),
-            SettingFilterValue: $('#@Html.FieldIdFor(model => model.SettingFilterValue)').val()
+            SettingFilterName: $('#@Html.IdFor(model => model.SettingFilterName)').val(),
+            SettingFilterValue: $('#@Html.IdFor(model => model.SettingFilterValue)').val()
         };
         addAntiForgeryToken(data);
         return data;
     }
 
-    $("".concat("#@Html.FieldIdFor(model => model.SettingFilterName),",
-        "#@Html.FieldIdFor(model => model.SettingFilterValue)")).keydown(function(event) {
+    $("".concat("#@Html.IdFor(model => model.SettingFilterName),",
+        "#@Html.IdFor(model => model.SettingFilterValue)")).keydown(function(event) {
             if (event.keyCode === 13) {
                 $("#search-settings").click();
                 return false;

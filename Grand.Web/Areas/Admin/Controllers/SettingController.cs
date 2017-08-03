@@ -3105,7 +3105,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         [AdminAntiForgery(true)]
-        public IActionResult AllSettings(SettingFilterModel model, DataSourceRequest command)
+        public IActionResult AllSettings(DataSourceRequest command, SettingFilterModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -3152,6 +3152,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(gridModel);
         }
         [HttpPost]
+        [AdminAntiForgery(true)]
         public IActionResult SettingUpdate(SettingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -3196,6 +3197,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
+        [AdminAntiForgery(true)]
         public IActionResult SettingAdd( SettingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
@@ -3227,6 +3229,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return new NullJsonResult();
         }
         [HttpPost]
+        [AdminAntiForgery(true)]
         public IActionResult SettingDelete(string id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
