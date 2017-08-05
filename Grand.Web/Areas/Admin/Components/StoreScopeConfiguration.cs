@@ -62,7 +62,7 @@ namespace Grand.Web.Areas.Admin.Components
             var storeId = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration);
             var store = storeService.GetStoreById(storeId);
 
-            return store != null ? store.Id : string.Empty;
+            return store != null ? store.Id : "";
         }
 
         #endregion

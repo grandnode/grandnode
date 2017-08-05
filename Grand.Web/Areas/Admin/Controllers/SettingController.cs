@@ -180,6 +180,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration, storeid);
             }
+            else
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+                    SystemCustomerAttributeNames.AdminAreaStoreScopeConfiguration, "");
+
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
