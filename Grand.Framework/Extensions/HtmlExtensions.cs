@@ -326,7 +326,7 @@ namespace Grand.Framework
             if (String.IsNullOrEmpty(parentContainer) && datainputIds == null)
                 throw new ArgumentException("Specify at least one selector");
 
-            IHtmlContent result = null;
+            var result = new StringBuilder();
             if (!String.IsNullOrEmpty(activeStoreScopeConfiguration))
             {
                 //render only when a certain store is chosen
@@ -341,14 +341,17 @@ namespace Grand.Framework
                     dataInputSelector = "#" + String.Join(", #", datainputIds);
                 }
                 var onClick = string.Format("checkOverriddenStoreValue(this, '{0}')", dataInputSelector);
-                result = helper.CheckBoxFor(expression, new Dictionary<string, object>
+                result.Append("<label class=\"mt-checkbox\">");
+                result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
                 {
                     { "class", cssClass },
                     { "onclick", onClick },
                     { "data-for-input-selector", dataInputSelector },
-                });
+                }));
+                result.Append("<span></span>");
+                result.Append("</label>");
             }
-            return result;
+            return new StringHtmlContent(result.ToString());
         }
 
         public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)
