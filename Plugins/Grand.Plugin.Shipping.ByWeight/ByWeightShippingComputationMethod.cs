@@ -191,11 +191,6 @@ namespace Grand.Plugin.Shipping.ByWeight
 
         #region Properties
 
-        public Type GetControllerType()
-        {
-            return typeof(Controllers.ShippingByWeightController);
-        }
-
         /// <summary>
         /// Gets a shipping rate computation method type
         /// </summary>
@@ -234,10 +229,10 @@ namespace Grand.Plugin.Shipping.ByWeight
             return new List<string>();
         }
 
-        public JsonResult GetFormPartialView(string shippingOption)
+
+        public void GetPublicViewComponent(out string viewComponentName)
         {
-            //you can use here any view 
-            return new JsonResult("");
+            viewComponentName = "";
         }
 
         IShipmentTracker IShippingRateComputationMethod.ShipmentTracker => throw new NotImplementedException();

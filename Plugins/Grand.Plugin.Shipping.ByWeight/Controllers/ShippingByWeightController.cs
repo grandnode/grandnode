@@ -76,7 +76,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             //other settings
             model.LimitMethodsToCreated = _shippingByWeightSettings.LimitMethodsToCreated;
 
-            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/Configure.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -209,7 +209,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             //states
             model.AvailableStates.Add(new SelectListItem { Text = "*", Value = " " });
 
-            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/AddPopup.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/AddPopup.cshtml", model);
         }
         [HttpPost]
         [AdminAntiForgery]
@@ -239,7 +239,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/AddPopup.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/AddPopup.cshtml", model);
         }
 
         //edit
@@ -303,7 +303,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (selectedState != null && s.Id == selectedState.Id) });
 
-            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/EditPopup.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/EditPopup.cshtml", model);
         }
         [HttpPost]
         [AdminAntiForgery]
@@ -335,7 +335,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Controllers
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
 
-            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/ShippingByWeight/EditPopup.cshtml", model);
+            return View("~/Plugins/Shipping.ByWeight/netcoreapp1.1/Views/EditPopup.cshtml", model);
         }
 
 

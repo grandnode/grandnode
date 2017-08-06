@@ -1,0 +1,29 @@
+﻿@model List<SelectListItem>
+@using Grand.Framework;
+
+<script>
+    function renderShippingOptionInfo(param) {
+        if (param != "") {
+            var _url = '/SelectedShippingPoint/Get?shippingOptionId=' + param;
+            $.ajax({
+                url: _url,
+                success: function (data) {
+                    $("#shippingOptionInfo").html(data);
+                }
+            });
+        }
+        else{
+            $("#shippingOptionInfo").html("");
+        }
+    }
+</script>
+
+<h6>@T("Plugins.Shipping.ShippingPoint.ChooseShippingPoint")</h6>
+<select class="form-control" name="selectedShippingOption" onchange="renderShippingOptionInfo(value)">
+    @foreach (var shippingOption in Model)
+    {
+        <option value="@shippingOption.Value">@shippingOption.Text</option>
+    }
+</select>
+
+<div id="shippingOptionInfo"></div>

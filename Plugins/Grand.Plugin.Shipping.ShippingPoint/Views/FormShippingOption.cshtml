@@ -1,0 +1,16 @@
+﻿
+@model Grand.Plugin.Shipping.ShippingPoint.Models.PointModel
+@using Grand.Framework;
+
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="row">
+            <div class="col-md-2 text-right">@T("Plugins.Shipping.ShippingPoint.ShippingPointName")</div>
+            <div class="col-md-10">@T("Plugins.Shipping.ShippingPoint.MethodAndFee", @Model.ShippingPointName, @Model.PickupFee)</div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 text-right"><label for="">@T("Plugins.Shipping.ShippingPoint.Address")</label></div>
+            <div class="col-md-10">@Model.CountryName,&nbsp;@Model.ZipPostalCode&nbsp;@Model.City,&nbsp;@Model.Address1</div>
+        </div>
+    </div>
+</div>

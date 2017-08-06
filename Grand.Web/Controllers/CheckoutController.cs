@@ -103,7 +103,7 @@ namespace Grand.Web.Controllers
         #region Utilities
 
         [NonAction]
-        protected IShippingRateComputationMethod GetBaseShippingController(string input)
+        protected IShippingRateComputationMethod GetShippingComputation(string input)
         {
             var shippingMethodName = input.Split(new[] { "___" }, StringSplitOptions.RemoveEmptyEntries)[1];
             var shippingMethod = _shippingService.LoadShippingRateComputationMethodBySystemName(shippingMethodName);
@@ -116,7 +116,7 @@ namespace Grand.Web.Controllers
         [NonAction]
         protected void ValidateShippingForm(IFormCollection form, out List<string> warnings)
         {
-            warnings = GetBaseShippingController(form["shippingoption"]).ValidateShippingForm(form).ToList();
+            warnings = GetShippingComputation(form["shippingoption"]).ValidateShippingForm(form).ToList();
             foreach (var warning in warnings)
                 ModelState.AddModelError("", warning);
         }
@@ -939,9 +939,16 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult GetShippingFormPartialView(string shippingoption)
+        public virtual IActionResult GetShippingFormPartialView(string shippingOption)
         {
-            return GetBaseShippingController(shippingoption).GetFormPartialView(shippingoption);
+            string viewcomponent = "";
+            GetShippingComputation(shippingOption).GetPublicViewComponent(out viewcomponent);
+            if (string.IsNullOrEmpty(viewcomponent))
+                return Content("");
+
+            var actionContext = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
+            var component = this.RenderViewComponentToString(viewcomponent, new { shippingOption = shippingOption });
+            return Content(component);
         }
 
 

@@ -43,7 +43,7 @@ namespace Grand.Framework.Controllers
         /// </summary>
         /// <param name="componentName">Component name</param>
         /// <returns>Result</returns>
-        protected virtual string RenderViewComponentToString(string componentName)
+        protected virtual string RenderViewComponentToString(string componentName, object arguments = null)
         {
             //original implementation: https://github.com/aspnet/Mvc/blob/dev/src/Microsoft.AspNetCore.Mvc.ViewFeatures/Internal/ViewComponentResultExecutor.cs
             //we customized it to allow running from controllers
@@ -59,7 +59,7 @@ namespace Grand.Framework.Controllers
             //var context = actionContextAccessor.ActionContext; //= HttpContext.;  //actionContextAccessor.ActionContext;
             var context = new ActionContext(this.HttpContext, this.RouteData, this.ControllerContext.ActionDescriptor, this.ModelState);
 
-            var viewComponentResult = ViewComponent(componentName);
+            var viewComponentResult = ViewComponent(componentName, arguments);
 
             var viewData = this.ViewData;
             if (viewData == null)

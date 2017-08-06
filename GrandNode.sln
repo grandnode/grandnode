@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Tax.FixedRate"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Tax.CountryStateZip", "Plugins\Grand.Plugin.Tax.CountryStateZip\Grand.Plugin.Tax.CountryStateZip.csproj", "{2B85C079-5B43-42A9-9D7F-373E4B7AC4C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grand.Plugin.Shipping.ShippingPoint", "Plugins\Grand.Plugin.Shipping.ShippingPoint\Grand.Plugin.Shipping.ShippingPoint.csproj", "{699A1235-B623-4D15-8604-60935CB24F0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{2B85C079-5B43-42A9-9D7F-373E4B7AC4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B85C079-5B43-42A9-9D7F-373E4B7AC4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B85C079-5B43-42A9-9D7F-373E4B7AC4C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{699A1235-B623-4D15-8604-60935CB24F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{699A1235-B623-4D15-8604-60935CB24F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{699A1235-B623-4D15-8604-60935CB24F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{699A1235-B623-4D15-8604-60935CB24F0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,5 +96,6 @@ Global
 		{B467732D-A98E-445D-AB9B-377F7E398187} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{24CE0A09-4213-4AE9-A33C-62D142DC60C1} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{2B85C079-5B43-42A9-9D7F-373E4B7AC4C7} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
+		{699A1235-B623-4D15-8604-60935CB24F0A} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 	EndGlobalSection
 EndGlobal

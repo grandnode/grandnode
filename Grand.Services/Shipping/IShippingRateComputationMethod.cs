@@ -45,15 +45,14 @@ namespace Grand.Services.Shipping
         /// </summary>
         IShipmentTracker ShipmentTracker { get; }
 
-        /// <summary>
-        /// Gets controller type
-        /// </summary>
-        /// <returns></returns>
-        Type GetControllerType();
 
         IList<string> ValidateShippingForm(IFormCollection form);
 
-        JsonResult GetFormPartialView(string shippingOption);
+        /// <summary>
+        /// Gets a view component for displaying plugin in public store ("shipping" checkout step)
+        /// </summary>
+        /// <param name="viewComponentName">View component name</param>
+        void GetPublicViewComponent(out string viewComponentName);
 
     }
 }
