@@ -1,20 +1,21 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v1.1",
-    "signature": "fa2c7a9ca4f3e8e2955f2a09a4b6c74aaa62f700"
+    "signature": "d72762bd5c150c6aaa1e506270c029bf12e2e811"
   },
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v1.1": {
-      "grand.plugin.shipping.shippingpoint/1.0.0": {
+      "grand.plugin.payments.cashondelivery/1.0.0": {
         "dependencies": {
           "Grand.Core": "1.0.0",
           "Grand.Data": "1.0.0",
           "Grand.Framework": "1.0.0",
-          "Grand.Services": "1.0.0"
+          "Grand.Services": "1.0.0",
+          "Grand.Web": "1.0.0"
         },
         "runtime": {
-          "Grand.Plugin.Shipping.ShippingPoint.dll": {}
+          "Grand.Plugin.Payments.CashOnDelivery.dll": {}
         }
       },
       "autofac/4.6.0": {
@@ -210,6 +211,24 @@
         },
         "runtime": {
           "lib/netstandard1.4/MaxMind.GeoIP2.dll": {}
+        }
+      },
+      "microsoft.applicationinsights/2.2.0": {
+        "runtime": {
+          "lib/netstandard1.5/Microsoft.ApplicationInsights.dll": {}
+        }
+      },
+      "microsoft.applicationinsights.aspnetcore/2.0.0": {
+        "dependencies": {
+          "Microsoft.ApplicationInsights": "2.2.0",
+          "Microsoft.AspNetCore.Hosting": "1.1.2",
+          "Microsoft.Extensions.Configuration": "1.1.2",
+          "Microsoft.Extensions.Configuration.Json": "1.1.2",
+          "Microsoft.Extensions.DiagnosticAdapter": "1.1.0",
+          "Microsoft.Extensions.Logging.Abstractions": "1.1.2"
+        },
+        "runtime": {
+          "lib/netstandard1.6/Microsoft.ApplicationInsights.AspNetCore.dll": {}
         }
       },
       "microsoft.aspnetcore/1.1.2": {
@@ -1670,11 +1689,29 @@
         "runtime": {
           "Grand.Services.dll": {}
         }
+      },
+      "grand.web/1.0.0": {
+        "dependencies": {
+          "Grand.Core": "1.0.0",
+          "Grand.Data": "1.0.0",
+          "Grand.Framework": "1.0.0",
+          "Grand.Services": "1.0.0",
+          "Microsoft.ApplicationInsights.AspNetCore": "2.0.0",
+          "Microsoft.AspNetCore": "1.1.2",
+          "Microsoft.AspNetCore.StaticFiles": "1.1.2",
+          "Microsoft.Extensions.FileProviders.Abstractions": "1.1.1",
+          "Microsoft.Extensions.FileProviders.Composite": "1.1.1",
+          "Microsoft.Extensions.FileProviders.Embedded": "1.1.1",
+          "Microsoft.Extensions.FileProviders.Physical": "1.1.1"
+        },
+        "runtime": {
+          "Grand.Web.dll": {}
+        }
       }
     }
   },
   "libraries": {
-    "grand.plugin.shipping.shippingpoint/1.0.0": {
+    "grand.plugin.payments.cashondelivery/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1832,6 +1869,20 @@
       "sha512": "sha512-Rux/MXentsa+96gOREaNEuHdYR/5MAB5vkfNA6C9qNxHpA8iJEazfLDIBt3pZ0uYYbAr96b8jw7disA8OBIU7g==",
       "path": "maxmind.geoip2/2.8.0",
       "hashPath": "maxmind.geoip2.2.8.0.nupkg.sha512"
+    },
+    "microsoft.applicationinsights/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+JJ6qygUKQY2YnRfr0GlgdbKAhUqZhwd9zija0aKdDVQK60lQtnsBKzFY8/kMg0SH2MRXtmLkHG53oiNDQsLJQ==",
+      "path": "microsoft.applicationinsights/2.2.0",
+      "hashPath": "microsoft.applicationinsights.2.2.0.nupkg.sha512"
+    },
+    "microsoft.applicationinsights.aspnetcore/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LcbwEaO9oA063w5yzxLgkxZkFIF9VCYxG98E2XZ2Ua/Uj2I3WMhyRp/gE7HI9sUapYRT3WCyJ/LYXT69WYrKow==",
+      "path": "microsoft.applicationinsights.aspnetcore/2.0.0",
+      "hashPath": "microsoft.applicationinsights.aspnetcore.2.0.0.nupkg.sha512"
     },
     "microsoft.aspnetcore/1.1.2": {
       "type": "package",
@@ -2829,6 +2880,11 @@
       "sha512": ""
     },
     "grand.services/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "grand.web/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

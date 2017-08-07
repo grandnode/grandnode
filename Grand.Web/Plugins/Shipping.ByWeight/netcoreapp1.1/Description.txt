@@ -3,6 +3,6 @@ FriendlyName: Shipping by weight
 SystemName: Shipping.ByWeight
 Version: 1.45
 SupportedVersions: 4.00
-Author: grandnode team, nopcommerce team
+Author: grandnode team
 DisplayOrder: 1
 FileName: Grand.Plugin.Shipping.ByWeight.dll

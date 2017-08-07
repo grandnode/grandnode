@@ -1,0 +1,8 @@
+﻿Group: Payment methods
+FriendlyName: Cash On Delivery (COD)
+SystemName: Payments.CashOnDelivery
+Version: 1.14
+SupportedVersions: 4.00
+Author: grandnode team
+DisplayOrder: 1
+FileName: Grand.Plugin.Payments.CashOnDelivery.dll

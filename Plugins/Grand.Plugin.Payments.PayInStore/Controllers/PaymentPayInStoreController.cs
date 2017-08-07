@@ -48,29 +48,5 @@ namespace Grand.Plugin.Payments.PayInStore.Controllers
 
             return Configure();
         }
-        
-        //public ActionResult PaymentInfo()
-        //{
-        //    var model = new PaymentInfoModel()
-        //    {
-        //        DescriptionText = _payInStorePaymentSettings.DescriptionText
-        //    };
-
-        //    return View("~/Plugins/Payments.PayInStore/Views/PaymentPayInStore/PaymentInfo.cshtml", model);
-        //}
-
-        //[NonAction]
-        //public override IList<string> ValidatePaymentForm(IFormCollection form)
-        //{
-        //    var warnings = new List<string>();
-        //    return warnings;
-        //}
-
-        //[NonAction]
-        //public override ProcessPaymentRequest GetPaymentInfo(IFormCollection form)
-        //{
-        //    var paymentInfo = new ProcessPaymentRequest();
-        //    return paymentInfo;
-        //}
     }
 }
