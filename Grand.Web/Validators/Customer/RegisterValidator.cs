@@ -37,8 +37,11 @@ namespace Grand.Web.Validators.Customer
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
             {
                 RuleFor(x => x.CountryId)
+                    .NotNull()
+                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
+                RuleFor(x => x.CountryId)
                     .NotEqual("")
-                    .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"));
+                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
             }
             if (customerSettings.CountryEnabled &&
                 customerSettings.StateProvinceEnabled &&
@@ -50,13 +53,13 @@ namespace Grand.Web.Validators.Customer
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Count > 0;
                     if (hasStates)
                     {
-                        //if yes, then ensure that a state is selected
+                        //if yes, then ensure that state is selected
                         if (String.IsNullOrEmpty(x.StateProvinceId))
                         {
-                            return true;
+                            return false;
                         }
                     }
-                    return false;
+                    return true;
                 }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required"));
             }
             if (customerSettings.DateOfBirthEnabled && customerSettings.DateOfBirthRequired)

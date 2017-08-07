@@ -10,9 +10,9 @@
 {
     <script type="text/javascript">
         $(function () {
-            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+            $("#@Html.IdFor(model => model.CountryId)").change(function () {
                 var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
                 statesProgress.show();
                 $.ajax({
@@ -69,15 +69,15 @@
                     }
                     <fieldset class="col-12 px-0 form-group">
                         <legend class="sr-only">@T("account.fields.firstname")</legend>
-                        @Html.LabelFor(model => model.FirstName, new { @class = "col-form-label" }, ":")
-                        @Html.GrandEditorFor(model => model.FirstName)
-                        @Html.ValidationMessageFor(model => model.FirstName)
+                        <label asp-for="FirstName" class="col-form-label">@T("Account.Fields.FirstName"):</label>
+                        <input asp-for="FirstName" class="form-control"/>
+                        <span asp-validation-for="FirstName"></span>
                     </fieldset>
                     <fieldset class="col-12 px-0 form-group">
                         <legend class="sr-only">@T("account.fields.lastname")</legend>
-                        @Html.LabelFor(model => model.LastName, new { @class = "col-form-label" }, ":")
-                        @Html.GrandEditorFor(model => model.LastName)
-                        @Html.ValidationMessageFor(model => model.LastName)
+                        <label asp-for="LastName" class="col-form-label">@T("Account.Fields.LastName"):</label>
+                        <input asp-for="LastName" class="form-control"/>
+                        <span asp-validation-for="LastName"></span>
                     </fieldset>
 
                     @if (Model.DateOfBirthEnabled)
@@ -96,18 +96,20 @@
                                             Model.DateOfBirthYear,
                                             false,
                                             new { @class = "col custom-select" })
-                                @Html.ValidationMessageFor(model => model.DateOfBirthDay)
-                                @Html.ValidationMessageFor(model => model.DateOfBirthMonth)
-                                @Html.ValidationMessageFor(model => model.DateOfBirthYear)
+                            </div>
+                            <div class="row">
+                                <span asp-validation-for="DateOfBirthDay"></span>
+                                <span asp-validation-for="DateOfBirthMonth"></span>
+                                <span asp-validation-for="DateOfBirthYear"></span>
                             </div>
                         </fieldset>
                     }
                     <fieldset class="form-group col-md-12 mail">
                         <legend class="sr-only">@T("account.fields.email")</legend>
                         <div class="row">
-                            @Html.LabelFor(model => model.Email, new { @class = "col-form-label" }, ":")
-                            @Html.GrandEditorFor(model => model.Email)
-                            @Html.ValidationMessageFor(model => model.Email)
+                            <label asp-for="Email" class="col-form-label">@T("Account.Fields.Email"):</label>
+                            <input asp-for="Email" class="form-control"/>
+                            <span asp-validation-for="Email"></span>
                         </div>
                     </fieldset>
 
@@ -115,13 +117,13 @@
                     {
                         <div class="form-group">
                             <div class="col-lg-3 col-sm-12">
-                                @Html.LabelFor(model => model.Username, new { }, ":")
+                                <label asp-for="Username" class="col-form-label">@T("Account.Fields.Username"):</label>
                             </div>
-                            @Html.EditorFor(model => model.Username)
-                            @Html.ValidationMessageFor(model => model.Username)
+                            <input asp-for="Username" class="form-control"/>
+                            <span asp-validation-for="Username"></span>
                             @if (Model.CheckUsernameAvailabilityEnabled)
                             {
-                                @Html.Partial("_CheckUsernameAvailability")
+                                @await Html.PartialAsync("_CheckUsernameAvailability")
                             }
                         </div>
                     }
@@ -134,21 +136,21 @@
                 <h3 class="h5 card-header">@T("Account.CompanyDetails")</h3>
                 <div class="card-block">
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Company, new { @class = "col-form-label" }, ":")
-                        @Html.GrandEditorFor(model => model.Company)
-                        @Html.ValidationMessageFor(model => model.Company)
+                        <label asp-for="Company" class="col-form-label">@T("Account.Fields.Company"):</label>
+                        <input asp-for="Company"  class="form-control"/>
+                        <span asp-validation-for="Company"></span>
                     </div>
 
                 </div>
             </div>
         }
         @if (Model.DisplayVatNumber)
-                {
+        {
             <div class="card mb-3">
                 <div class="card-block">
                     <div class="form-group">
-                        @Html.LabelFor(model => model.VatNumber, new { }, ":")
-                        @Html.GrandEditorFor(model => model.VatNumber)
+                        <label asp-for="VatNumber" class="col-form-label">@T("Account.Fields.VatNumber"):</label>
+                        <input asp-for="VatNumber" class="form-control" />
                         <span class="vat-note"><em>@T("Account.Fields.VatNumber.Note")</em></span>
                     </div>
                 </div>
@@ -167,57 +169,58 @@
                 <div class="card-block">
                     <div class="form-fields d-flex row">
                         @if (Model.StreetAddressEnabled)
-                    {
+                        {
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.streetaddress")</legend>
-                                @Html.LabelFor(model => model.StreetAddress, new { @class = "col-form-label" }, ":")
-                                @Html.GrandEditorFor(model => model.StreetAddress)
-                                @Html.ValidationMessageFor(model => model.StreetAddress)
+                                <label asp-for="StreetAddress" class="col-form-label">@T("Account.Fields.StreetAddress"):</label>
+                                <input asp-for="StreetAddress" class="form-control"/>
+                                <span asp-validation-for="StreetAddress"></span>
+
                             </fieldset>
                         }
                         @if (Model.StreetAddress2Enabled)
-                    {
+                        {
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.streetaddress2")</legend>
-                                @Html.LabelFor(model => model.StreetAddress2, new { @class = "col-form-label" }, ":")
-                                @Html.GrandEditorFor(model => model.StreetAddress2)
-                                @Html.ValidationMessageFor(model => model.StreetAddress2)
+                                <label asp-for="StreetAddress2" class="col-form-label">@T("Account.Fields.StreetAddress2"):</label>
+                                <input asp-for="StreetAddress2" class="form-control"/>
+                                <span asp-validation-for="StreetAddress2"></span>
                             </fieldset>
                         }
                         @if (Model.ZipPostalCodeEnabled)
-                    {
+                        {
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.zippostalcode")</legend>
-                                @Html.LabelFor(model => model.ZipPostalCode, new { @class = "col-form-label" }, ":")
-                                @Html.GrandEditorFor(model => model.ZipPostalCode)
-                                @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                                <label asp-for="ZipPostalCode" class="col-form-label">@T("Account.Fields.ZipPostalCode"):</label>
+                                <input asp-for="ZipPostalCode" class="form-control"/>
+                                <span asp-validation-for="ZipPostalCode"></span>
                             </fieldset>
                         }
                         @if (Model.CityEnabled)
-                    {
+                        {
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.city")</legend>
-                                @Html.LabelFor(model => model.City, new { @class = "col-form-label" }, ":")
-                                @Html.GrandEditorFor(model => model.City)
-                                @Html.ValidationMessageFor(model => model.City)
+                                <label asp-for="City" class="col-form-label">@T("Account.Fields.City"):</label>
+                                <input asp-for="City" class="form-control"/>
+                                <span asp-validation-for="City"></span>
                             </fieldset>
                         }
                         @if (Model.CountryEnabled)
-                    {
+                        {
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.country")</legend>
-                                @Html.LabelFor(model => model.CountryId, new { @class = "col-form-label" }, ":")
-                                @Html.DropDownList("CountryId", Model.AvailableCountries, new { @class = "custom-select form-control" })
-                                @Html.ValidationMessageFor(model => model.CountryId)
+                                <label asp-for="CountryId" class="col-form-label">@T("Account.Fields.Country"):</label>
+                                <select asp-for="CountryId" class="custom-select form-control" asp-items="Model.AvailableCountries"></select>
+                                <span asp-validation-for="CountryId"></span>
                             </fieldset>
                         }
                         @if (Model.CountryEnabled && Model.StateProvinceEnabled)
-                    {
+                        {
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.stateprovince")</legend>
-                                @Html.LabelFor(model => model.StateProvinceId, new { @class = "col-form-label" }, ":")
-                                @Html.DropDownList("StateProvinceId", Model.AvailableStates, new { @class = "custom-select form-control" })
-                                @Html.ValidationMessageFor(model => model.StateProvinceId)
+                                <label asp-for="StateProvinceId" class="col-form-label">@T("Account.Fields.StateProvince"):</label>
+                                <select asp-for="StateProvinceId" class="custom-select form-control" asp-items="Model.AvailableStates"></select>
+                                <span asp-validation-for="StateProvinceId"></span>
                                 <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                             </fieldset>
                         }
@@ -233,21 +236,21 @@
                 <div class="card-block">
                     <div class="d-flex row">
                         @if (Model.PhoneEnabled)
-                    {
+                        {
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.phone")</legend>
-                                @Html.LabelFor(model => model.Phone, new { @class = "col-form-label" }, ":")
-                                @Html.GrandEditorFor(model => model.Phone)
-                                @Html.ValidationMessageFor(model => model.Phone)
+                                <label asp-for="Phone" class="col-form-label">@T("Account.Fields.Phone"):</label>
+                                <input asp-for="Phone" class="form-control"/>
+                                <span asp-validation-for="Phone"></span>
                             </fieldset>
                         }
                         @if (Model.FaxEnabled)
-                    {
+                        {
                             <fieldset class="form-group col-12 col-sm-6">
                                 <legend class="sr-only">@T("account.fields.fax")</legend>
-                                @Html.LabelFor(model => model.Fax, new { @class = "col-form-label" }, ":")
-                                @Html.GrandEditorFor(model => model.Fax)
-                                @Html.ValidationMessageFor(model => model.Fax)
+                                <label asp-for="Fax" class="col-form-label">@T("Account.Fields.Fax"):</label>
+                                <input asp-for="Fax" class="form-control"/>
+                                <span asp-validation-for="Fax"></span>
                             </fieldset>
                         }
                     </div>
@@ -265,17 +268,17 @@
                             <div class="form-group">
                                 <span class="col-form-label">@T("account.fields.newsletter")</span>
                                 <label for="Newsletter" class="ml-1 custom-control custom-checkbox">
-                                    <input checked="checked" type="checkbox" class="custom-control-input" data-val="true" data-val-required="'Newsletter' must not be empty." id="Newsletter" name="Newsletter" value="true">
+                                    <input class="custom-control-input" asp-for="Newsletter" />
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description">&nbsp;</span>
                                     <span class="sr-only">@T("account.fields.newsletter")</span>
                                 </label>
-                                @Html.ValidationMessageFor(model => model.Newsletter)
+                                <span asp-validation-for="Newsletter"></span>
                             </div>
                         }
                         @if (Model.CustomerAttributes.Count > 0)
                         {
-                            @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                            @await Html.PartialAsync("_CustomerAttributes", Model.CustomerAttributes)
                         }
                 </div>
             </div>
@@ -288,9 +291,9 @@
                     @if (Model.AllowCustomersToSetTimeZone)
                     {
                         <div class="form-group col-12 text-left px-0">
-                                @Html.LabelFor(model => model.TimeZoneId, new { @class = "col-form-label" }, ":")
-                                @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones, new { @class = "custom-select form-control" })
-                                @Html.ValidationMessageFor(model => model.TimeZoneId)
+                            <label asp-for="TimeZoneId" class="col-form-label">@T("Account.Fields.TimeZone"):</label>
+                            <select asp-for="TimeZoneId" class="custom-select form-control" asp-items="Model.AvailableTimeZones"></select>
+                            <span asp-validation-for="TimeZoneId"></span>
                         </div>
                     }
                 </div>
@@ -301,16 +304,16 @@
             <div class="card-block">
                 <div class="form-group col-12">
                     <div class="row">
-                        @Html.LabelFor(model => model.Password, new { @class = "col-form-label" }, ":")
-                        @Html.GrandEditorFor(model => model.Password)
-                        @Html.ValidationMessageFor(model => model.Password)
+                        <label asp-for="Password" class="col-form-label">@T("Account.Fields.Password"):</label>
+                        <input asp-for="Password" class="form-control"/>
+                        <span asp-validation-for="Password"></span>
                     </div>
                 </div>
                 <div class="form-group col-12">
                     <div class="row">
-                        @Html.LabelFor(model => model.ConfirmPassword, new { @class = "col-form-label" }, ":")
-                        @Html.GrandEditorFor(model => model.ConfirmPassword)
-                        @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                        <label asp-for="ConfirmPassword" class="col-form-label">@T("Account.Fields.ConfirmPassword"):</label>
+                        <input asp-for="ConfirmPassword" class="form-control"/>
+                        <span asp-validation-for="ConfirmPassword"></span>
                     </div>
                 </div>
                 @if (Model.DisplayCaptcha)
@@ -345,13 +348,12 @@
                     });
                 });
             </script>
-
-                <label class="custom-control custom-checkbox">
-                    <input id="accept-privacy-policy" name="accept-privacy-policy" type="checkbox" class="custom-control-input">
-                    <span class="custom-control-indicator"></span>
-                    <span class="custom-control-description">@T("Account.Fields.AcceptPrivacyPolicy")</span>
-                    <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
-                </label>
+            <label class="custom-control custom-checkbox">
+                <input id="accept-privacy-policy" name="accept-privacy-policy" type="checkbox" class="custom-control-input">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">@T("Account.Fields.AcceptPrivacyPolicy")</span>
+                <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "privacyinfo" })', 450, 500, true)">@T("Account.Fields.AcceptPrivacyPolicy.Read")</span>
+            </label>
         }
     </div>
     <input type="submit" id="register-button" class="btn btn-secondary register-next-step-button mt-3 mb-3" value="@T("Account.Register.Button")" name="register-button" />
