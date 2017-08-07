@@ -35,11 +35,11 @@
                                         {
                                         <div class="form-group row">
                                             <div class="col-lg-3 col-12">
-                                                @Html.LabelFor(m => m.Username, new { @class = "col-form-label" }, ":")
+                                                <label asp-for="Username" class="col-form-label">@T("Account.Login.Fields.UserName"):</label>
                                             </div>
                                             <div class="col-lg-9 col-12">
-                                                @Html.TextBoxFor(m => m.Username, new { @class = "form-control username", autofocus = "autofocus" })
-                                                @Html.ValidationMessageFor(m => m.Username)
+                                                <input asp-for="Username" class="form-control username" autofocus="autofocus" />
+                                                <span asp-validation-for="Username"></span>
                                             </div>
                                         </div>
                                         }
@@ -47,32 +47,32 @@
                                         {
                                         <div class="form-group row">
                                             <div class="col-lg-3 col-12">
-                                                @Html.LabelFor(m => m.Email, new { @class = "col-form-label" })
+                                                <label asp-for="Email" class="col-form-label">@T("Account.Login.Fields.Email"):</label>
                                             </div>
                                             <div class="col-lg-9 col-12">
-                                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control email ", autofocus = "autofocus" })
-                                                @Html.ValidationMessageFor(m => m.Email)
+                                                <input asp-for="Email" class="form-control email" autofocus="autofocus" />
+                                                <span asp-validation-for="Email"></span>
                                             </div>
                                         </div>
                                         }
                                     <div class="form-group row">
                                         <div class="col-lg-3 col-12">
-                                            @Html.LabelFor(m => m.Password, new { @class = "col-form-label" }, ":")
+                                            <label asp-for="Password" class="col-form-label">@T("Account.Login.Fields.Password"):</label>
                                         </div>
                                         <div class="col-lg-9 col-12">
-                                            @Html.PasswordFor(m => m.Password, new { @class = "form-control password" })
-                                            @Html.ValidationMessageFor(m => m.Password)
+                                            <input asp-for="Password" class="form-control password" />
+                                            <span asp-validation-for="Password"></span>
                                         </div>
                                     </div>
                                     <div class="inputs d-flex flex-row">
                                         <label class="custom-control custom-checkbox">
-                                            <input class="custom-control-input" data-val="true" data-val-required="'Remember Me' must not be empty." id="RememberMe" name="RememberMe" type="checkbox" value="true">
+                                            <input class="custom-control-input" asp-for="RememberMe" />
                                             <input class="custom-control-indicator" name="RememberMe" type="hidden" value="false">
                                             <span class="custom-control-indicator"></span>
                                             <span class="custom-control-description">@T("Account.Login.Fields.RememberMe")</span>
                                         </label>
                                         <span class="forgot-password">
-                                            @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
+                                            <a asp-route="PasswordRecovery">@T("Account.Login.ForgotPassword")</a>
                                         </span>
                                     </div>
                                     @if (Model.DisplayCaptcha)
