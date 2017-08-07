@@ -309,7 +309,7 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 //try to find an address with the same values (don't duplicate records)
                 var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(
@@ -485,7 +485,7 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 //try to find an address with the same values (don't duplicate records)
                 var address = _workContext.CurrentCustomer.Addresses.ToList().FindAddress(

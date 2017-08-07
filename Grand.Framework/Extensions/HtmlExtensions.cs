@@ -342,16 +342,17 @@ namespace Grand.Framework
                 }
                 var onClick = string.Format("checkOverriddenStoreValue(this, '{0}')", dataInputSelector);
                 result.Append("<label class=\"mt-checkbox\">");
-                result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
+                var check = helper.CheckBoxFor(expression, new Dictionary<string, object>
                 {
                     { "class", cssClass },
                     { "onclick", onClick },
                     { "data-for-input-selector", dataInputSelector },
-                }));
+                });
+                result.Append(check.ToHtmlString());
                 result.Append("<span></span>");
                 result.Append("</label>");
             }
-            return new StringHtmlContent(result.ToString());
+            return new HtmlString(result.ToString());
         }
 
         public static string FieldNameFor<T, TResult>(this IHtmlHelper<T> html, Expression<Func<T, TResult>> expression)

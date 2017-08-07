@@ -38,21 +38,21 @@ namespace Grand.Web.Validators.Common
             }
             if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
             {
-                RuleFor(x => x).Custom((x, context) =>
+                RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country has states?
                     var countryId = !String.IsNullOrEmpty(x.CountryId) ? x.CountryId : "";
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Count > 0;
-
                     if (hasStates)
                     {
                         //if yes, then ensure that state is selected
-                        if (String.IsNullOrEmpty(x.StateProvinceId) || x.StateProvinceId == "")
+                        if (String.IsNullOrEmpty(x.StateProvinceId))
                         {
-                            context.AddFailure(new ValidationFailure("StateProvinceId", localizationService.GetResource("Address.Fields.StateProvince.Required")));
+                            return false;
                         }
                     }
-                });
+                    return true;
+                }).WithMessage(localizationService.GetResource("Address.Fields.StateProvince.Required"));
             }
             if (addressSettings.CompanyRequired && addressSettings.CompanyEnabled)
             {

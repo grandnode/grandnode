@@ -982,7 +982,7 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 var address = model.Address.ToEntity();
                 address.CustomAttributes = customAttributes;
@@ -1048,7 +1048,7 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", error);
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && ModelState.ErrorCount == 0)
             {
                 address = model.Address.ToEntity(address);
                 address.CustomAttributes = customAttributes;

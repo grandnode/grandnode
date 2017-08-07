@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Common;
+using FluentValidation.Attributes;
+using Grand.Web.Validators.Customer;
 
 namespace Grand.Web.Models.Checkout
 {
+    [Validator(typeof(CheckoutBillingAddressValidator))]
     public partial class CheckoutBillingAddressModel : BaseGrandModel
     {
         public CheckoutBillingAddressModel()

@@ -26,7 +26,7 @@
         <h2 class="generalTitle text-sm-center ">@T("Checkout.SelectShippingMethod")</h2>
         <div class="shipping-method">
             <form asp-route="CheckoutShippingMethod" method="post">
-                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_top" })
                 @if (Model.Warnings.Count == 0)
                 {
                     var selectedShippingMethod = Model.ShippingMethods.FirstOrDefault(x => x.Selected);
@@ -82,7 +82,7 @@
                     </ul>
                 </div>
                 }
-                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom")
+                @await Component.InvokeAsync("Widget", new { widgetZone = "checkout_shipping_method_bottom" })
             </form>
         </div>
         <div class="order-summary">

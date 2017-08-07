@@ -28,7 +28,7 @@ namespace Grand.Web.Areas.Admin.Validators.Customers
                 customerSettings.StateProvinceRequired)
             {
                 
-                RuleFor(x => x).Custom((x, context) =>
+                RuleFor(x => x).Must((x, context) =>
                 {
                     //does selected country have states?
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Any();
@@ -36,9 +36,10 @@ namespace Grand.Web.Areas.Admin.Validators.Customers
                     {
                         //if yes, then ensure that a state is selected
                         if (string.IsNullOrEmpty(x.StateProvinceId))
-                            context.AddFailure(new ValidationFailure("StateProvinceId", localizationService.GetResource("Account.Fields.StateProvince.Required")));
+                            return true;
                     }
-                });
+                    return false;
+                }).WithMessage(localizationService.GetResource("Account.Fields.StateProvince.Required"));
 
             }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
