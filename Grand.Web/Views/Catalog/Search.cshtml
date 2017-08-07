@@ -9,13 +9,13 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        $("#@Html.FieldIdFor(model => model.adv)").click(toggleAdvancedSearch);
+        $("#@Html.IdFor(model => model.adv)").click(toggleAdvancedSearch);
         toggleAdvancedSearch();
     });
 
     function toggleAdvancedSearch() {
 
-        if ($('#@Html.FieldIdFor(model => model.adv)').is(':checked')) {
+        if ($('#@Html.IdFor(model => model.adv)').is(':checked')) {
             $('#advanced-search-block').show();
         }
         else {
@@ -33,14 +33,14 @@
                 <div class="form-fields">
                     <div class="basic-search">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.q, new { }, ":")
-                            @Html.TextBoxFor(model => model.q, new { @class = "form-control search-text" })
+                            <label asp-for="q">@T("Search.SearchTerm"):</label>
+                            <input asp-for="q" class="form-control search-text" />
                         </div>
                         @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_basic" })
                         <div class="inputs reversed">
                             <label for="adv" class="custom-control custom-checkbox">
                                 <span class="sr-only">adv</span>
-                                @Html.CheckBoxFor(model => model.adv, new { @class = "custom-control-input" })
+                                <input asp-for="adv" class="custom-control-input" />
                                 <span class="custom-control-indicator"></span>
                                 <span class="custom-control-description">@T("search.advancedsearch")</span>
                             </label>
@@ -50,13 +50,13 @@
                         @if (Model.AvailableCategories.Count > 0)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.cid, new { }, ":")
-                                @Html.DropDownListFor(model => model.cid, Model.AvailableCategories, new { @class = "form-control" })
+                                <label asp-for="cid">@T("Search.Category"):</label>
+                                <select asp-for="cid" class="form-control" asp-items="Model.AvailableCategories"></select>
                             </div>
                             <div class="inputs reversed">
                                 <label for="isc" class="custom-control custom-checkbox">
                                     <span class="sr-only">isc</span>
-                                    @Html.CheckBoxFor(model => model.isc, new { @class = "custom-control-input" })
+                                    <input asp-for="isc" class="custom-control-input"/>
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description">@T("admin.catalog.products.list.searchincludesubcategories.hint")</span>
                                 </label>
@@ -66,37 +66,35 @@
                         @if (Model.AvailableManufacturers.Count > 0)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.mid, new { }, ":")
-                                @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers, new { @class = "form-control mb-3" })
+                                <label asp-for="mid">@T("Search.Manufacturer"):</label>
+                                <select asp-for="mid" class="form-control mb-3" asp-items="Model.AvailableManufacturers"></select>
                             </div>
                         }
                         @if (Model.asv && Model.AvailableVendors.Count > 0)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.vid, new { }, ":")
-                                @Html.DropDownListFor(model => model.vid, Model.AvailableVendors, new { @class = "form-control mb-3" })
+                                <label asp-for="vid">@T("Search.Vendor"):</label>
+                                <select asp-for="vid" class="form-control mb-3" asp-items="Model.AvailableVendors"></select>
                             </div>
                         }
-
                         <div class="inputs pt-1">
                             <div class="flex-sm-row">
                                 <label class="col-12 px-0 mt-1">@T("Search.PriceRange"):</label>
                                 <div class="price-range flex-sm-row row">
                                     <div class="col">
-                                        @Html.LabelFor(model => model.pf)
-                                        @Html.TextBoxFor(model => model.pf, new { @class = "form-control price-from" })
+                                        <label asp-for="pf">@T("Search.PriceRange.From")</label>
+                                        <input asp-for="pf" class="form-control price-from" />
                                     </div>
-
                                     <div class="col">
-                                        @Html.LabelFor(model => model.pt)
-                                        @Html.TextBoxFor(model => model.pt, new { @class = "form-control price-to" })
+                                        <label asp-for="pt">@T("Search.PriceRange.To")</label>
+                                        <input asp-for="pt" class="form-control price-to" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="inputs reversed">
                             <label for="sid" class="custom-control custom-checkbox">
-                                @Html.CheckBoxFor(model => model.sid, new { @class = "custom-control-input" })
+                                <input asp-for="sid" class="custom-control-input"/>
                                 <span class="custom-control-indicator"></span>
                                 <span class="custom-control-description">@T("search.searchindescriptions")</span>
                             </label>
@@ -117,33 +115,33 @@
     @if (Model.Products.Count > 0)
             {
         <div class="col">
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
+            @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         </div>
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = "productsearch_page_before_results" })
     @if (!String.IsNullOrEmpty(Model.Warning))
-            {
+    {
         <div class="warning text-danger pt-1 pb-1">
             @Model.Warning
         </div>
     }
     @if (Model.NoResults)
-            {
+    {
         <div class="no-result text-danger text-center pt-1 pb-1">
             @T("Search.NoResultsText")
         </div>
     }
 
     @if (Model.Products.Count > 0)
-            {
-                if (Model.PagingFilteringContext.ViewMode == "grid")
-                {
+    {
+        if (Model.PagingFilteringContext.ViewMode == "grid")
+        {
             <div class="col-12">
                 <div class="row flex-grid">
                     @foreach (var product in Model.Products)
                     {
                         <div class="col-12 col-md-6 col-lg-4">
-                            @Html.Partial("_ProductBox", product)
+                            @await Html.PartialAsync("_ProductBox", product)
                         </div>
                     }
                 </div>
@@ -156,7 +154,7 @@
                     @foreach (var product in Model.Products)
                     {
                         <div class="col-12 Boxlist pb-1">
-                            @Html.Partial("_ProductBoxList", product)
+                            @await Html.PartialAsync("_ProductBoxList", product)
                         </div>
                     }
                 </div>
