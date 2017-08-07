@@ -25,8 +25,10 @@
     <div class="buttons-more">
         <blockquote class="card-blockquote">
             <p>@T("EUCookieLaw.Description2")</p>
+            <p>
+                <a class="ok-button btn-sm btn btn-success" id="eu-cookie-ok">@T("Common.OK")</a>
+                <a class="btn btn-sm btn-info learn-more" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("privacyinfo") })">@T("EUCookieLaw.LearnMore")</a>
+            </p>
         </blockquote>
-            <a class="ok-button btn-sm btn btn-success" id="eu-cookie-ok">@T("Common.OK")</a>
-            <a class="btn btn-sm btn-info learn-more" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("privacyinfo") })">@T("EUCookieLaw.LearnMore")</a>
     </div>
 </div>
