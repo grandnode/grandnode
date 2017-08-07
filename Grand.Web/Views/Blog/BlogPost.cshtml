@@ -61,9 +61,9 @@
                 @Html.AntiForgeryToken()
                 <div class="form-fields">
                     <div class="form-group">
-                        @Html.LabelFor(model => model.AddNewComment.CommentText, new { @class = "col-form-label" }, ":")
-                        @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "enter-comment-text form-control" })
-                        @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                        <label asp-for="AddNewComment.CommentText" class="col-form-label">@T("Blog.Comments.CommentText"):</label>
+                        <textarea asp-for="AddNewComment.CommentText" class="enter-comment-text form-control"></textarea>
+                        <span asp-validation-for="AddNewComment.CommentText"></span>
                     </div>
                     @if (Model.AddNewComment.DisplayCaptcha)
                     {
