@@ -80,8 +80,8 @@
                             Value = x.Id.ToString()
                         }).ToList();
                     }
-                    @Html.LabelFor(model => model.ReturnRequestReasonId, new { @class = "col-form-label" }, ":")
-                    @Html.DropDownListFor(model => model.ReturnRequestReasonId, reasonsSelectList, new { @class = "form-control custom-select return-reasons" })
+                    <label asp-for="ReturnRequestReasonId" class="col-form-label">@T("ReturnRequests.ReturnReason"):</label>
+                    <select asp-for="ReturnRequestReasonId" asp-items="@reasonsSelectList" class="form-control custom-select return-reasons"></select>
                 </div>
                 <div class="form-group">
                     @{
@@ -91,13 +91,13 @@
                             Value = x.Id.ToString()
                         }).ToList();
                     }
-                    @Html.LabelFor(model => model.ReturnRequestActionId, new { @class = "col-form-label" }, ":")
-                    @Html.DropDownListFor(model => model.ReturnRequestActionId, actionsSelectList, new { @class = "form-control custom-select return-actions" })
+                    <label asp-for="ReturnRequestActionId" class="col-form-label">@T("ReturnRequests.ReturnAction"):</label>
+                    <select asp-for="ReturnRequestActionId" asp-items="@actionsSelectList" class="form-control custom-select return-actions"></select>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Comments, new { @class = "col-form-label" }, ":")
-                    @Html.TextAreaFor(model => model.Comments, new { @class = "form-control comment" })
-                    @Html.ValidationMessageFor(model => model.Comments)
+                    <label asp-for="Comments" class="col-form-label">@T("Account.Fields.FirstName"):</label>
+                    <textarea asp-for="Comments" class="form-control comment"></textarea>
+                    <span asp-validation-for="Comments"></span>
                 </div>
             </div>
             <div class="col-12 btn-group mt-1 mb-1">
