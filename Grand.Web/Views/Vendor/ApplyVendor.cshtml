@@ -18,32 +18,31 @@
         }
         else
         {
-            using (Html.BeginForm())
-            {
+            <form asp-route="ApplyVendorAccount" method="post">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
-                    <div class="form-fields">
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Name, new { @class = "col-form-label" })
-                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control name", placeholder = T("Vendors.ApplyAccount.Name.Hint") })
-                                @Html.ValidationMessageFor(model => model.Name)
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Email, new { @class = "col-form-label" })
-                                @Html.TextBoxFor(model => model.Email, new { @class = "form-control email", placeholder = T("Vendors.ApplyAccount.Email.Hint") })
-                                @Html.ValidationMessageFor(model => model.Email)
-                        </div>
-                        @if (Model.DisplayCaptcha)
-                        {
-                            <div class="captcha-box">
-                                @Html.Raw(Html.GenerateCaptcha())
-                            </div>
-                        }
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label asp-for="Name" class="col-form-label">@T("Vendors.ApplyAccount.Name"):</label>
+                        <input asp-for="Name" class="form-control name" placeholder="@T("Vendors.ApplyAccount.Name.Hint")" />
+                        <span asp-validation-for="Name"></span>
                     </div>
-                <div class="col-12 buttons pt-1 pb-1">
-                        <input type="submit" name="send-email" class="btn btn-success apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
+                    <div class="form-group">
+                        <label asp-for="Email" class="col-form-label">@T("Vendors.ApplyAccount.Email"):</label>
+                        <input asp-for="Email" class="form-control name" placeholder="@T("Vendors.ApplyAccount.Email.Hint")" />
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            @Html.Raw(Html.GenerateCaptcha())
+                        </div>
+                    }
                 </div>
-            }
+                <div class="col-12 buttons pt-1 pb-1">
+                    <input type="submit" name="send-email" class="btn btn-success apply-vendor-button" value="@T("Vendors.ApplyAccount.Button")" />
+                </div>
+            </form>
         }
-        @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom"})
-    </div>
+                @await Component.InvokeAsync("Widget", new { widgetZone = "applyvendor_bottom" })
+</div>
