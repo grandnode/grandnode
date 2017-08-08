@@ -18,7 +18,7 @@
                     <label class="custom-control custom-checkbox">
                         @Html.CheckBoxFor(x => x.PickUpInStore, new { @class = "custom-control-input" } )
                         <span class="custom-control-indicator"></span>
-                        <span for="@Html.FieldIdFor(model => model.PickUpInStore)" class="custom-control-description">@T("Checkout.PickupPoints").Text</span>
+                        <span for="@Html.IdFor(model => model.PickUpInStore)" class="custom-control-description">@T("Checkout.PickupPoints").Text</span>
                     </label>
 
 
@@ -28,12 +28,12 @@
                 </div>
                 <script type="text/javascript">
                     $(document).ready(function () {
-                        $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
+                        $("#@Html.IdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
                         togglePickUpInStore();
                     });
 
                     function togglePickUpInStore() {
-                        if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
+                        if ($('#@Html.IdFor(model => model.PickUpInStore)').is(':checked')) {
                             $('#pickup-points-form').show();
                             $('#shipping-addresses-form').hide();
                         } else {

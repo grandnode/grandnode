@@ -51,7 +51,7 @@
 
             });
             function toggleMongoDBConnectionInfo() {
-                if ($('#@Html.FieldIdFor(model => model.MongoDBConnectionInfo)').is(':checked')) {
+                if ($('#@Html.IdFor(model => model.MongoDBConnectionInfo)').is(':checked')) {
                     $('#MongoDBDatabaseConnectionString').show();
                     $('#MongoDBSimpleData').hide();
 

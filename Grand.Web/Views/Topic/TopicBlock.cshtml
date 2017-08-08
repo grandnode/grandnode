@@ -6,7 +6,7 @@
         $(function() {
             $('#button-password-@Model.Id').click(function() {
                 var postData = {
-                    id: $("#@Html.FieldIdFor(model => model.Id)").val(),
+                    id: $("#@Html.IdFor(model => model.Id)").val(),
                     password: $('#password-@Model.Id').val()
                 };
                 addAntiForgeryToken(postData);

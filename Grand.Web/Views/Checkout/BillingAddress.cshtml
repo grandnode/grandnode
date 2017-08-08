@@ -113,7 +113,7 @@
                                                     <input type="button" value="@T("Checkout.BillToThisAddress")" class="btn btn-secondary select-billing-address-button" onclick="selectBillingAddress@(item.Id)()" />
                                                     <script type="text/javascript">
                                                         function selectBillingAddress@(item.Id)() {
-                                                            if ($('#@Html.FieldIdFor(model => model.ShipToSameAddress)').is(':checked')) {
+                                                            if ($('#@Html.IdFor(model => model.ShipToSameAddress)').is(':checked')) {
                                                                 setLocation('@Html.Raw(Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id, shipToSameAddress = "true"}))');
                                                             } else {
                                                                 setLocation('@Url.RouteUrl("CheckoutSelectBillingAddress", new {addressId = item.Id })');

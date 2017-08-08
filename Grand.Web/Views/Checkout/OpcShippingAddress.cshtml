@@ -9,7 +9,7 @@
                 <label class="custom-control custom-checkbox">
                     @Html.CheckBoxFor(x => x.PickUpInStore, new { @class = "custom-control-input", @onclick = "Shipping.togglePickUpInStore(this)" })
                     <span class="custom-control-indicator"></span>
-                    <span class="custom-control-description" for="@Html.FieldIdFor(model => model.PickUpInStore)">
+                    <span class="custom-control-description" for="@Html.IdFor(model => model.PickUpInStore)">
                         @T("Checkout.PickupPoints").Text
                     </span>
                 </label>
@@ -19,7 +19,7 @@
             </p>
             <script type="text/javascript">
                 $(document).ready(function () {
-                    Shipping.togglePickUpInStore($('#@Html.FieldIdFor(model => model.PickUpInStore)'));
+                    Shipping.togglePickUpInStore($('#@Html.IdFor(model => model.PickUpInStore)'));
                 });
             </script>
         </div>
