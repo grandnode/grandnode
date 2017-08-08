@@ -2,11 +2,9 @@
 @using Grand.Web.Models.Newsletter;
 <div class="newsletter d-flex justify-content-center justify-content-lg-start px-0 pt-3">
         <div class="newsletter-subscribe" id="newsletter-subscribe-block">
-
             <strong>@T("Newsletter.Title")</strong>
             <div class="input-group flex-row">
-                @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email", @class = "form-control newsletter-subscribe-text", placeholder = T("Newsletter.Email.Placeholder") })
-
+                <input asp-for="NewsletterEmail" id="newsletter-email" class="form-control newsletter-subscribe-text" placeholder=@T("Newsletter.Email.Placeholder") />
                 <label for="newsletter-email" class="sr-only">newsletter</label>
                 <span id="newsletter-subscribe-button" class="btn btn-secondary input-group-addon">
                     <span class="fa fa-envelope-open-o"></span>

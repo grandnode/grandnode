@@ -24,8 +24,8 @@
                 </fieldset>
                 <fieldset class="form-group">
                     <label class="col-form-label">@T("Forum.TopicTitle"):</label>
-                        @Html.TextBoxFor(model => model.Subject, new { @class = "form-control forum-topic-title-text" })
-                        @Html.ValidationMessageFor(model => model.Subject)
+                    <input asp-for="Subject" class="form-control forum-topic-title-text" />
+                    <span asp-validation-for="Subject"></span>
                 </fieldset>
                 <fieldset class="form-group">
                     @if (Model.ForumEditor == EditorType.BBCodeEditor)
