@@ -68,4 +68,10 @@
   <LocaleResource Name="HomePage.Suggested.Products">
     <Value>Suggested products for you</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.Message.Required">
+    <Value>Message is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.AskQuestion.FullName.Required">
+    <Value>FullName is required.</Value>
+  </LocaleResource>
 </Language>

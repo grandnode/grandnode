@@ -11,5 +11,8 @@ namespace Grand.Web.Validators.Catalog
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Products.AskQuestion.Email.Required"));
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail"));
-        }}
+            RuleFor(x => x.Message).NotEmpty().WithMessage(localizationService.GetResource("Products.AskQuestion.Message.Required"));
+            RuleFor(x => x.FullName).NotEmpty().WithMessage(localizationService.GetResource("Products.AskQuestion.FullName.Required"));
+        }
+    }
 }
