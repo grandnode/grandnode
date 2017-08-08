@@ -9,9 +9,9 @@
 {
     <div class="customer-entered-price mb-1">
         <div class="price-input">
-            @Html.LabelFor(model => model.CustomerEnteredPrice, new { @class = "enter-price-label" })
+            <label asp-for="CustomerEnteredPrice" class="enter-price-label">@("Products.EnterProductPrice"):</label>
             @*round price*@
-            @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { @class = "form-control enter-price-input" })
+            <input asp-for="CustomerEnteredPrice" value="@Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice))" class="form-control enter-price-input" />
         </div>
         <div class="price-range pt-1">
             @Model.CustomerEnteredPriceRange
@@ -31,22 +31,22 @@
 
     if (Model.AllowedQuantities.Count > 0)
         {
-            @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "col-2 custom-select form-control qty-dropdown" })
+            <select asp-for="EnteredQuantity" asp-items="Model.AllowedQuantities" class="col-2 custom-select form-control qty-dropdown"></select>
         }
         else
         {
 
             var addId = "addtocart_" + @Model.ProductId + "_EnteredQuantity";
-        <label for="@addId" class="sr-only">@T("ShoppingCart.AddToCart")</label>
-    @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "form-control qty-input" })
-    if (!String.IsNullOrEmpty(Model.MeasureUnit))
-    {
-        <span class="qty-unit mr-2">
-            @Model.MeasureUnit
-        </span>
-    }
+            <label for="@addId" class="sr-only">@T("ShoppingCart.AddToCart")</label>
+            <input asp-for="EnteredQuantity" class="form-control qty-input" type="text" />
+            if (!String.IsNullOrEmpty(Model.MeasureUnit))
+            {
+                <span class="qty-unit mr-2">
+                    @Model.MeasureUnit
+                </span>
+            }
 
-}
+    }
 {
     var addToCartText = "";
     if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId) && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
