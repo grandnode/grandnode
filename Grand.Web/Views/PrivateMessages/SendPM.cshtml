@@ -10,8 +10,8 @@
     <div class="page private-messages private-message-send-page">
             <h2 class="text-center generalTitle py-3 mb-3">@T("PrivateMessages.Send.PostMessage")</h2>
             <div asp-validation-summary="ModelOnly" class="message-error"></div>
-            @Html.HiddenFor(model => model.ToCustomerId)
-            @Html.HiddenFor(model => model.ReplyToMessageId)
+            <input asp-for="ToCustomerId" type="hidden" />
+            <input asp-for="ReplyToMessageId" type="hidden" />
                 <div class="card form-fields">
                     <h5 class="card-header">
                         @T("PrivateMessages.Send.To")

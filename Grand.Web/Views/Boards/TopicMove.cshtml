@@ -12,7 +12,7 @@
 
     <form asp-route="TopicMove" method="post">
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(model => model.Id)
+        <input asp-for="Id" type="hidden" />
         <div class="form-fields">
             <div class="inputs">
                 <label>@T("Forum.SelectTheForumToMoveTopic"):</label>
