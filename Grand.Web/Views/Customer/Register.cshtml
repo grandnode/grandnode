@@ -52,17 +52,17 @@
                             </div>
                         </div>
                         <fieldset class="col-lg-9 col-sm-12 gender">
-                            <legend class="sr-only">@T("plugins.feed.froogle.products.gender")</legend>
+                            <legend class="sr-only">@T("Account.Fields.Gender")</legend>
                             <div class="d-flex row">
                                 <label class="male custom-control custom-radio">
-                                    <input id="gender-male" name="Gender" type="radio" value="M" class="custom-control-input">
+                                    <input id="gender-male" name="Gender" type="radio" value="M" checked="@(Model.Gender == "M")" class="custom-control-input">
                                     <span class="custom-control-indicator"></span>
-                                    <span class="forcheckbox custom-control-description">Male</span>
+                                    <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Male")</span>
                                 </label>
                                 <label class="female custom-control custom-radio">
-                                    <input id="gender-female" name="Gender" type="radio" value="F" class="custom-control-input">
+                                    <input id="gender-female" name="Gender" type="radio" value="F" checked="@(Model.Gender == "F")" class="custom-control-input">
                                     <span class="custom-control-indicator"></span>
-                                    <span class="forcheckbox custom-control-description">Female</span>
+                                    <span class="forcheckbox custom-control-description">@T("Account.Fields.Gender.Female")</span>
                                 </label>
                             </div>
                         </fieldset>
@@ -175,7 +175,6 @@
                                 <label asp-for="StreetAddress" class="col-form-label">@T("Account.Fields.StreetAddress"):</label>
                                 <input asp-for="StreetAddress" class="form-control"/>
                                 <span asp-validation-for="StreetAddress"></span>
-
                             </fieldset>
                         }
                         @if (Model.StreetAddress2Enabled)
