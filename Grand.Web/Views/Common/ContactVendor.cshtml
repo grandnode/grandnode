@@ -22,27 +22,27 @@
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                 <div class="form-fields d-flex row">
                     <div class="form-group col-12 col-sm-6">
-                        @Html.LabelFor(model => model.FullName, new { @class = "col-form-label" }, ":")
-                        @Html.TextBoxFor(model => model.FullName, new { @class = "form-control fullname", placeholder = T("ContactVendor.FullName.Hint") })
-                        @Html.ValidationMessageFor(model => model.FullName)
+                        <label asp-for="FullName" class="col-form-label">@T("ContactVendor.FullName"):</label>
+                        <input asp-for="FullName" placeholder="@T("ContactVendor.FullName.Hint")" class="form-control fullname" />
+                        <span asp-validation-for="FullName"></span>
                     </div>
                     <div class="form-group col-12 col-sm-6">
-                        @Html.LabelFor(model => model.Email, new { @class = "col-form-label" }, ":")
-                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control email", placeholder = T("ContactVendor.Email.Hint") })
-                        @Html.ValidationMessageFor(model => model.Email)
+                        <label asp-for="Email" class="col-form-label">@T("ContactVendor.Email"):</label>
+                        <input asp-for="Email" placeholder="@T("ContactVendor.Email.Hint")" class="form-control email" />
+                        <span asp-validation-for="Email"></span>
                     </div>
                     @if (Model.SubjectEnabled)
                         {
                         <div class="form-group col-12">
-                            @Html.LabelFor(model => model.Subject, new { @class = "col-form-label" }, ":")
-                            @Html.TextBoxFor(model => model.Subject, new { @class = "form-control subject", placeholder = T("ContactVendor.Subject.Hint") })
-                            @Html.ValidationMessageFor(model => model.Subject)
+                            <label asp-for="Subject" class="col-form-label">@T("ContactVendor.Subject"):</label>
+                            <input asp-for="Subject" placeholder="@T("ContactVendor.Subject.Hint")" class="form-control subject" />
+                            <span asp-validation-for="Subject"></span>
                         </div>
                         }
                     <div class="form-group col-12">
-                        @Html.LabelFor(model => model.Enquiry, new { @class = "col-form-label" }, ":")
-                        @Html.TextAreaFor(model => model.Enquiry, new { @class = "form-control enquiry", placeholder = T("ContactVendor.Enquiry.Hint") })
-                        @Html.ValidationMessageFor(model => model.Enquiry)
+                        <label asp-for="Enquiry" class="col-form-label">@T("ContactVendor.Enquiry"):</label>
+                        <input asp-for="Enquiry" placeholder="@T("ContactVendor.Enquiry.Hint")" class="form-control enquiry" />
+                        <span asp-validation-for="Enquiry"></span>
                     </div>
                     @if (Model.DisplayCaptcha)
                         {
