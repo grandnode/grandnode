@@ -36,41 +36,41 @@
                                                 @address.FirstName @address.LastName
                                             </li>
                                             <li class="email">
-                                                @Html.LabelFor(model => model.Addresses[i].Email, new { }, ":")
+                                                <label>@T("Address.Fields.Email"):</label>
                                                 @address.Email
                                             </li>
                                             @if (address.PhoneEnabled)
-                        {
+                                            {
                                                 <li class="phone">
-                                                    @Html.LabelFor(model => model.Addresses[i].PhoneNumber, new { }, ":")
+                                                    <label>@T("Address.Fields.PhoneNumber"):</label>
                                                     @address.PhoneNumber
                                                 </li>
                                             }
                                             @if (address.FaxEnabled)
-                        {
+                                            {
                                                 <li class="fax">
-                                                    @Html.LabelFor(model => model.Addresses[i].FaxNumber, new { }, ":")
+                                                    <label>@T("Address.Fields.FaxNumber"):</label>
                                                     @address.FaxNumber
                                                 </li>
                                             }
                                             @if (address.CompanyEnabled && !String.IsNullOrEmpty(address.Company))
-                        {
+                                            {
                                                 <li class="company">@address.Company</li>
                                             }
                                             @if (address.StreetAddressEnabled)
-                        {
+                                            {
                                                 <li class="address1">
                                                     @address.Address1
                                                 </li>
                                             }
                                             @if (address.StreetAddress2Enabled && !String.IsNullOrEmpty(address.Address2))
-                        {
+                                            {
                                                 <li class="address2">
                                                     @address.Address2
                                                 </li>
                                             }
                                             @if (address.CityEnabled || address.StateProvinceEnabled || address.ZipPostalCodeEnabled)
-                        {
+                            {
                             var cityStateZip = "";
                             if (address.CityEnabled)
                             {
@@ -101,13 +101,13 @@
                             </li>
                                             }
                                             @if (address.CountryEnabled && !String.IsNullOrEmpty(address.CountryName))
-                        {
+                                            {
                                                 <li class="country">
                                                     @address.CountryName
                                                 </li>
                                             }
                                             @if (!String.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
-                        {
+                                            {
                                                 <li class="custom-attributes-view">
                                                     @Html.Raw(address.FormattedCustomAddressAttributes)
                                                 </li>
