@@ -101,7 +101,7 @@
                     @foreach (var item in Model.FeaturedProducts)
                     {
                         <div class="col-lg-4 col-sm-6 col-12">
-                            @Html.Partial("_ProductBox", item)
+                            @await Html.PartialAsync("_ProductBox", item)
                         </div>
                     }
                 </div>
@@ -125,7 +125,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <div class="col-lg-4 col-sm-6 col-12">
-                                @Html.Partial("_ProductBox", product)
+                                @await Html.PartialAsync("_ProductBox", product)
                             </div>
                         }
                     </div>
@@ -147,14 +147,14 @@
                 <div class="col-12">
                     <div class="row">
                         @foreach (var product in Model.Products)
-                    {
-                            @Html.Partial("_ProductBoxList", product)
+                        {
+                            @await Html.PartialAsync("_ProductBoxList", product)
                         }
                         @{
                             var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
                         }
                         @if (!pager.IsEmpty())
-                    {
+                        {
                             <nav aria-label="Page navigation">
                                 @pager
                             </nav>

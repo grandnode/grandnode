@@ -245,7 +245,7 @@
                 @if (Model.IsEditable)
                 {
                 <div class="col-12 col-md-6 checkoutAttributes">
-                    @Html.Partial("_CheckoutAttributes", Model.CheckoutAttributes)
+                    @await Html.PartialAsync("_CheckoutAttributes", Model.CheckoutAttributes)
                 </div>
                 }
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))

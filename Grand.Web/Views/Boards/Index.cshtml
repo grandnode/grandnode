@@ -7,7 +7,7 @@
 }
 <div class="page forums-main-page">
     @await Component.InvokeAsync("TopicBlock", new { systemName = "ForumWelcomeMessage" })
-    @Html.Partial("_ForumHeader")
+    @await Html.PartialAsync("_ForumHeader")
     @foreach (var forumGroup in Model.ForumGroups)
     {
         Html.RenderPartial("_ForumGroup", forumGroup);

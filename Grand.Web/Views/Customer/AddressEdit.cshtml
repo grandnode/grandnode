@@ -19,7 +19,7 @@
             @{
                 var dataDictAddress = new ViewDataDictionary(ViewData);
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
-                @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
+                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
             }
             <div class="buttons generalMarginSupporter">
                 <input type="submit" class="btn btn-success save-address-button" value="@T("Common.Save")" />

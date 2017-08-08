@@ -47,7 +47,7 @@
 <!--product breadcrumb-->
 @section Breadcrumb
 {
-    @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
+    @await Html.PartialAsync("_ProductBreadcrumb", Model.Breadcrumb)
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_breadcrumb", additionalData = Model.Id })
 <div class="page product-details-page">
@@ -58,10 +58,10 @@
                     <div class="col d-md-inline-flex d-md-flex px-0">
                         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_before_pictures", additionalData = Model.Id })
                         <!--product pictures-->
-                        @Html.Partial("_ProductDetailsPictures", Model)
+                        @await Html.PartialAsync("_ProductDetailsPictures", Model)
                         @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_after_pictures", additionalData = Model.Id })
                         <div class="overview col-md-6 col-12">
-                            @Html.Partial("_Discontinued", Model)
+                            @await Html.PartialAsync("_Discontinued", Model)
                             <div class="product-name">
                                 <h2 class="generalTitle mb-3" itemprop="name">
                                     @Model.Name
@@ -75,18 +75,18 @@
                             }
                             @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_top", additionalData = Model.Id })
                             <!--product reviews-->
-                            @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
+                            @await Html.PartialAsync("_ProductReviewOverview", Model.ProductReviewOverview)
                             <!--product manufacturers-->
-                            @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
+                            @await Html.PartialAsync("_ProductManufacturers", Model.ProductManufacturers)
                             <!--compare, email a friend-->
                             <div class="overview-buttons mt-3 mb-3">
                                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_before", additionalData = Model.Id })
-                                @Html.Partial("_CompareProductsButton", Model)
-                                @Html.Partial("_ProductEmailAFriendButton", Model)
-                                @Html.Partial("_ProductAskQuestionButton", Model)
+                                @await Html.PartialAsync("_CompareProductsButton", Model)
+                                @await Html.PartialAsync("_ProductEmailAFriendButton", Model)
+                                @await Html.PartialAsync("_ProductAskQuestionButton", Model)
                                 @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_inside_overview_buttons_after", additionalData = Model.Id })
                             </div>
-                            @Html.Partial("_ShareButton", Model)
+                            @await Html.PartialAsync("_ShareButton", Model)
                             @await Component.InvokeAsync("Widget", new { widgetZone = "productdetails_overview_bottom", additionalData = Model.Id })
                         </div>
                     </div>
@@ -134,11 +134,11 @@
                                 }
                             </div>
                             <div class="tab-pane pt-1" id="tags" role="tabpanel">
-                                @Html.Partial("_ProductTags", Model.ProductTags)
+                                @await Html.PartialAsync("_ProductTags", Model.ProductTags)
 
                             </div>
                             <div class="tab-pane pt-1" id="ProductSpecifications" role="tabpanel">
-                                @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
+                                @await Html.PartialAsync("_ProductSpecifications", Model.ProductSpecifications)
                             </div>
                         </div>
                     </div>
@@ -172,33 +172,33 @@
                                                         </div>
                                                     }
                                                     <!--availability-->
-                                                    @Html.Partial("_Availability", variant)
+                                                    @await Html.PartialAsync("_Availability", variant)
                                                     <!--SKU, MAN, GTIN, vendor-->
-                                                    @Html.Partial("_SKU_Man_GTIN_Ven", variant)
+                                                    @await Html.PartialAsync("_SKU_Man_GTIN_Ven", variant)
                                                     <!--delivery-->
-                                                    @Html.Partial("_DeliveryInfo", variant)
+                                                    @await Html.PartialAsync("_DeliveryInfo", variant)
                                                     <!--sample download-->
-                                                    @Html.Partial("_DownloadSample", variant)
+                                                    @await Html.PartialAsync("_DownloadSample", variant)
                                                     <!--attributes-->
                                                     @{
                                                         var dataDictAttributes = new ViewDataDictionary(ViewData);
                                                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
-                                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
+                                                        @await Html.PartialAsync("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
                                                     }
                                                     <!--gift card-->
                                                     @{
                                                         var dataDictGiftCard = new ViewDataDictionary(ViewData);
                                                         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
-                                                        @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
+                                                        @await Html.PartialAsync("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
                                                     }
                                                     <!--rental info-->
                                                     @{
                                                         var dataDictRental = new ViewDataDictionary(ViewData);
                                                         dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
-                                                        @Html.Partial("_RentalInfo", variant, dataDictRental)
+                                                        @await Html.PartialAsync("_RentalInfo", variant, dataDictRental)
                                                     }
                                                     <!--price breaks-->
-                                                    @Html.Partial("_ProductTierPrices", variant.TierPrices)
+                                                    @await Html.PartialAsync("_ProductTierPrices", variant.TierPrices)
                                                     @{
                                                         var dataDictAddToCart = new ViewDataDictionary(ViewData);
                                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
@@ -207,19 +207,17 @@
                                                     @{
                                                         var dataDictPrice = new ViewDataDictionary(ViewData);
                                                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
-                                                        @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
+                                                        @await Html.PartialAsync("_ProductPrice", variant.ProductPrice, dataDictPrice)
                                                     }
                                                     
                                                 </div>
                                             </div>
                                                 <div class="col-12 col-sm-9 flex-row d-flex my-3 ml-auto px-0">
                                                     @{
-                                                        @Html.Partial("_AddToCartGroup", variant.AddToCart, dataDictAddToCart)
+                                                        @await Html.PartialAsync("_AddToCartGroup", variant.AddToCart, dataDictAddToCart)
                                                         var dataDictAddToWishlist = new ViewDataDictionary(ViewData);
                                                         dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-
-                                                        @Html.Partial("_AddToWishlistGroup", variant.AddToCart, dataDictAddToWishlist)
-
+                                                        @await Html.PartialAsync("_AddToWishlistGroup", variant.AddToCart, dataDictAddToWishlist)
                                                     }
                                                 </div>
                                     </div>

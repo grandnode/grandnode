@@ -1,0 +1,65 @@
+﻿@model CatalogPagingFilteringModel.PriceRangeFilterModel
+@using Grand.Web.Models.Catalog;
+@{
+    var selectedItem = Model.Items.FirstOrDefault(x => x.Selected);
+}
+
+@functions {
+    public string FormatPriceRangeText(CatalogPagingFilteringModel.PriceRangeFilterItem filterItem)
+    {
+        string rangeText = "";
+        if (String.IsNullOrWhiteSpace(filterItem.From))
+        {
+            rangeText = string.Format(T("Filtering.PriceRangeFilter.Under").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.To));
+        }
+        else if (String.IsNullOrWhiteSpace(filterItem.To))
+        {
+            rangeText = string.Format(T("Filtering.PriceRangeFilter.Over").Text, string.Format("<span class=\"PriceRange\">{0}</span>", filterItem.From));
+        }
+        else
+        {
+            rangeText = string.Format("<span class=\"PriceRange\">{0}</span> - <span class=\"PriceRange\">{1}</span>", filterItem.From, filterItem.To);
+        }
+        return rangeText;
+    }
+}
+@if (Model.Enabled)
+    {
+        if (selectedItem == null)
+        {
+        <div id="block-product-price-filter" class="block product-filter product-price-filter">
+            <h2 class="h5 bg-faded p-3 hidden-lg-up"><strong>@T("Filtering.PriceRangeFilter")</strong><i id="specificationFilter-navigator" class="fa fa-angle-down fa-1x float-sm-right" aria-hidden="true"></i></h2>
+            <h2 class="h5 generalTitle hidden-md-down">
+                <strong>@T("Filtering.PriceRangeFilter")</strong>
+            </h2>
+            <div class="viewBox">
+                @foreach (var item in Model.Items)
+                {
+                    <a class="btn btn-sm btn-secondary mb-1" href="@item.FilterUrl">@Html.Raw(FormatPriceRangeText(item))</a>
+                }
+            </div>
+        </div>
+
+    }
+    else
+    {
+
+        <div id="block-product-price-filter" class="block product-filter product-price-filter">
+            <h2 class="h5 bg-faded p-1 hidden-lg-up"><strong>@T("Filtering.PriceRangeFilter")</strong><i id="specificationFilter-navigator" class="fa fa-angle-down fa-1x ml-auto" aria-hidden="true"></i></h2>
+            <h2 class="h5 generalTitle hidden-md-down">
+                <strong>@T("Filtering.PriceRangeFilter")</strong>
+            </h2>
+
+            <div class="viewbox">
+                <div class="col-12 filtered-items pt-1 pb-1">
+                    <div class="row">
+                        <span class="item">@Html.Raw(FormatPriceRangeText(selectedItem))</span>
+                    </div>
+                </div>
+                <div class="col-12 remove-filter pb-1 mb-1 pl-0">
+                    <a class="btn btn-secondary btn-sm mb-1" href="@Model.RemoveFilterUrl">@T("Filtering.PriceRangeFilter.Remove")</a>
+                </div>
+            </div>
+        </div>
+    }
+}

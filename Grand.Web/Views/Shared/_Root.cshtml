@@ -2,12 +2,12 @@
     Layout = "_Root.Head";
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "body_start_html_tag_after" })
-@Html.Partial("_Notifications")
+@await Html.PartialAsync("_Notifications")
 @await Component.InvokeAsync("JavaScriptDisabledWarning")
-@Html.Partial("OldInternetExplorerWarning")
+@await Html.PartialAsync("OldInternetExplorerWarning")
 
 <div class="container">
-@Html.Partial("Header")
+@await Html.PartialAsync("Header")
 <nav class="navbar navbar-toggleable-md bg-inverse container mainNav mb-1 pl-0 pr-0">
         <button class="navbar-toggler hidden-lg-up text-white" type="button" data-toggle="collapse" data-target="#collapsing-navbar-2">
             <span>&#9776;</span>
@@ -33,11 +33,7 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
 </div>
 @await Component.InvokeAsync("Footer")
-
-
 <script>
-
-
     $(document).ready(function () {
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
             if ($(window).width() < 1050 & $(window).width() > 991) {

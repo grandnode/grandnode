@@ -35,7 +35,7 @@
            @*contact vendor*@
            @if (Model.Products.Count > 0)
            {
-               @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
+               @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
            }
        </div>
         @*product list*@
@@ -46,9 +46,9 @@
                 <div class="col-12">
                     <div class="row flex-grid">
                         @foreach (var product in Model.Products)
-                    {
+                        {
                             <div class="col-lg-4 col-sm-6 col-12">
-                                @Html.Partial("_ProductBox", product)
+                                @await Html.PartialAsync("_ProductBox", product)
                             </div>
                         }
                     </div>
@@ -59,7 +59,7 @@
                 <div class="col-12">
                     @foreach (var product in Model.Products)
                     {
-                        @Html.Partial("_ProductBoxList", product)
+                        @await Html.PartialAsync("_ProductBoxList", product)
                     }
                 </div>
             }

@@ -21,7 +21,7 @@
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_top", additionalData = Model.Id })
         @if (Model.Products.Count > 0)
         {
-            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext)
+            @await Html.PartialAsync("_CatalogSelectors", Model.PagingFilteringContext)
         }
         @await Component.InvokeAsync("Widget", new { widgetZone = "productsbytag_before_product_list", additionalData = Model.Id })
             @if (Model.Products.Count > 0)
@@ -32,7 +32,7 @@
                         @foreach (var product in Model.Products)
                         {
                                 <div class="col-12 col-md-6 col-lg-4">
-                                    @Html.Partial("_ProductBox", product)
+                                    @await Html.PartialAsync("_ProductBox", product)
                                 </div>
                         }
                     </div>
@@ -43,7 +43,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <div class="col-12 Boxlist pb-1">
-                                @Html.Partial("_ProductBoxList", product)
+                                @await Html.PartialAsync("_ProductBoxList", product)
                             </div>
                         }
                     </div>
