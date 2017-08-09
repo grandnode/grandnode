@@ -91,29 +91,14 @@ namespace Grand.Services.Localization
 
             if (!String.IsNullOrEmpty(languageId))
             {
-                //ensure that we have at least two published languages
-                bool loadLocalizedValue = true;
-                if (ensureTwoPublishedLanguages)
+                if (entity.Locales.Count > 0)
                 {
-                    var lService = EngineContext.Current.Resolve<ILanguageService>();
-                    var totalPublishedLanguages = lService.GetAllLanguages().Count;
-                    loadLocalizedValue = totalPublishedLanguages >= 2;
-                }
-
-                //localized value
-                if (loadLocalizedValue)
-                {
-                    //var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
-                    //resultStr = leService.GetLocalizedValue(languageId, entity.Id, localeKeyGroup, localeKey);
-                    if (entity.Locales.Count > 0)
+                    var en = entity.Locales.FirstOrDefault(x => x.LanguageId == languageId && x.LocaleKey == localeKey);
+                    if (en != null)
                     {
-                        var en = entity.Locales.Where(x => x.LanguageId == languageId && x.LocaleKey == localeKey).FirstOrDefault();
-                        if (en != null)
-                        {
-                            resultStr = en.LocaleValue;
-                            if (!String.IsNullOrEmpty(resultStr))
-                                result = CommonHelper.To<TPropType>(resultStr);
-                        }
+                        resultStr = en.LocaleValue;
+                        if (!String.IsNullOrEmpty(resultStr))
+                            result = CommonHelper.To<TPropType>(resultStr);
                     }
                 }
             }
