@@ -12,7 +12,6 @@
 }
 
 <form asp-route="CustomerAddressEdit" method="post">
-    @Html.AntiForgeryToken()
     <div class="page account-page address-edit-page">
             <h1 class="h2 generalTitle">@T("Account.CustomerAddresses.Edit")</h1>
             <div asp-validation-summary="ModelOnly" class="message-error"></div>

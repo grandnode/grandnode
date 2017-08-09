@@ -13,7 +13,6 @@
         {
             <h2 class="generalTitle">@T("Forum.NewTopic")</h2>
         }
-        @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="message-error"></div>
         <input asp-for="Id" type="hidden" />
         <input asp-for="ForumId" type="hidden" />

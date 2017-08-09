@@ -19,7 +19,6 @@
         else
         {
             <form asp-route="AskQuestion" method="post">
-                @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="message-error"></div>
                         <fieldset class="form-group">
                             <label asp-for="Email" class="col-form-label">@T("Products.AskQuestion.Email"):</label>

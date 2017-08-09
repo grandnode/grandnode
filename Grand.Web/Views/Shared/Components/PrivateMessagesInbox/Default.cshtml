@@ -18,7 +18,6 @@
     @if (Model.Messages.Count > 0)
     {
         <form asp-route="PrivateMessagesInbox" method="post">
-            @Html.AntiForgeryToken()
             <div class="table-responsive">
                 <table class="table table-hover data-table" id="pm-inbox-table">
                     <colgroup>

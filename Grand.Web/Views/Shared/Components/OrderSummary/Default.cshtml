@@ -24,7 +24,6 @@
         }
         @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
         <form asp-route="ShoppingCart" method="post" enctype="multipart/form-data" id="shopping-cart-form">
-            @Html.AntiForgeryToken()
             <div class="cartTable">
                 <table class="table table-hover">
                     <colgroup>

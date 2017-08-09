@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
+﻿
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Grand.Framework.TagHelpers
 {
     [HtmlTargetElement("input", Attributes = ForAttributeName)]
-    public class GrandInputTagHelper : InputTagHelper
+    public class InputTagHelper : Microsoft.AspNetCore.Mvc.TagHelpers.InputTagHelper
     {
         private const string ForAttributeName = "asp-for";
 
         [HtmlAttributeName("asp-disabled")]
         public string IsDisabled { set; get; }
 
-        public GrandInputTagHelper(IHtmlGenerator generator) : base(generator)
+        public InputTagHelper(IHtmlGenerator generator) : base(generator)
         {
         }
 

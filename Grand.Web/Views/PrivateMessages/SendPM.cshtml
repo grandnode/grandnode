@@ -6,7 +6,6 @@
     Html.AddTitleParts(T("PageTitle.SendPM").Text);
 }
 <form asp-route="SendPM" method="post">
-    @Html.AntiForgeryToken()
     <div class="page private-messages private-message-send-page">
             <h2 class="text-center generalTitle py-3 mb-3">@T("PrivateMessages.Send.PostMessage")</h2>
             <div asp-validation-summary="ModelOnly" class="message-error"></div>

@@ -58,7 +58,6 @@
                 }
             </div>
             <form asp-route="BlogPost" asp-route-sename="@Model.SeName" method="post">
-                @Html.AntiForgeryToken()
                 <div class="form-fields">
                     <div class="form-group">
                         <label asp-for="AddNewComment.CommentText" class="col-form-label">@T("Blog.Comments.CommentText"):</label>

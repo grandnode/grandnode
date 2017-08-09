@@ -11,7 +11,6 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Addresses })
 }
 <form asp-route="CustomerAddressAdd" method="post">
-    @Html.AntiForgeryToken()
     <div class="page account-page address-edit-page">
         <h2 class="generalTitle">@T("Account.CustomerAddresses.AddNew")</h2>
         <div asp-validation-summary="ModelOnly" class="message-error"></div>

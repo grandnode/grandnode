@@ -11,7 +11,6 @@
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Avatar })
 }
 <form asp-route="CustomerAvatar" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
     <div class="page account-page avatar-page">
         <h1 class="h2 generalTitle">@T("Account.Avatar")</h1>
         <div asp-validation-summary="ModelOnly" class="message-error"></div>

@@ -21,7 +21,6 @@
             <div class="write-review" id="review-form">
                     <h5 class="generalTitle"><strong>@T("Reviews.Write")</strong></h5>
                     <form asp-route="ProductReviews" method="post">
-                        @Html.AntiForgeryToken()
                         <div asp-validation-summary="ModelOnly" class="message-error"></div>
                         <fieldset>
                             <div class="form-fields">

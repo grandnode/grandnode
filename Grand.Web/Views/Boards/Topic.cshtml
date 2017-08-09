@@ -10,8 +10,6 @@
     @await Component.InvokeAsync("ForumBreadcrumb", new { forumTopicId = Model.Id })
     @await Html.PartialAsync("_ForumHeader")
     @await Component.InvokeAsync("Widget", new { widgetZone = "boards_topic_after_header", additionalData = Model.Id })
-    @Html.AntiForgeryToken()
-
     <h2 class="generalTitle text--center">@Model.Subject</h2>
     <div class="topic-actions upper">
         <div class="btn-group btn-group-sm" role="group">

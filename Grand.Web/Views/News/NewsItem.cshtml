@@ -33,7 +33,6 @@
                     }
                 </div>
                 <form asp-route="NewsItem" asp-route-sename="@Model.SeName" method="post">
-                    @Html.AntiForgeryToken()
                         <fieldset class="form-group">
                             <label asp-for="AddNewComment.CommentTitle" class="col-form-label">@T("News.Comments.CommentTitle"):</label>
                             <input asp-for="AddNewComment.CommentTitle" class="form-control enter-comment-title" />

@@ -173,7 +173,6 @@
                                     @*Complete payment (for redirection payment methods)*@
                                     <li class="repost">
                                         <form asp-route="OrderDetails" method="post">
-                                            @Html.AntiForgeryToken()
                                             <input type="submit" name="repost-payment" value="@T("Order.RetryPayment")" class="btn btn-secondary re-order-button" />
                                             <p class="hint">
                                                 <em>@T("Order.RetryPayment.Hint")</em>
