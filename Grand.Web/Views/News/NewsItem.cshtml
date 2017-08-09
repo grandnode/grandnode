@@ -46,7 +46,7 @@
                         @if (Model.AddNewComment.DisplayCaptcha)
                         {
                             <div class="captcha-box">
-                                @Html.Raw(Html.GenerateCaptcha())
+                                <captcha />
                             </div>
                         }
                     <div class="buttons pt-1 pb-1">

@@ -317,7 +317,7 @@
                 @if (Model.DisplayCaptcha)
                 {
                     <div class="captcha-box form-group">
-                        @Html.Raw(Html.GenerateCaptcha())
+                        <captcha />
                     </div>
                 }
                 @if (Model.HoneypotEnabled)
