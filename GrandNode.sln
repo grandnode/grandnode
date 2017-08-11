@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.CashO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRules.CustomerRoles", "Plugins\Grand.Plugin.DiscountRules.CustomerRoles\Grand.Plugin.DiscountRules.CustomerRoles.csproj", "{340E63D8-F70C-4F73-9F7F-434BEA80250B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.CheckMoneyOrder", "Plugins\Grand.Plugin.Payments.CheckMoneyOrder\Grand.Plugin.Payments.CheckMoneyOrder.csproj", "{21796F6D-BE29-4820-BDB9-302B5911349E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{340E63D8-F70C-4F73-9F7F-434BEA80250B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{340E63D8-F70C-4F73-9F7F-434BEA80250B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{340E63D8-F70C-4F73-9F7F-434BEA80250B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21796F6D-BE29-4820-BDB9-302B5911349E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21796F6D-BE29-4820-BDB9-302B5911349E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21796F6D-BE29-4820-BDB9-302B5911349E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21796F6D-BE29-4820-BDB9-302B5911349E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,5 +117,6 @@ Global
 		{699A1235-B623-4D15-8604-60935CB24F0A} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{E11097D1-0A02-4E57-8B0D-3998C9E260BB} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{340E63D8-F70C-4F73-9F7F-434BEA80250B} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
+		{21796F6D-BE29-4820-BDB9-302B5911349E} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 	EndGlobalSection
 EndGlobal

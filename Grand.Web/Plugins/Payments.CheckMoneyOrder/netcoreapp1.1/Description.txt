@@ -1,0 +1,8 @@
+﻿Group: Payment methods
+FriendlyName: Check / Money Order
+SystemName: Payments.CheckMoneyOrder
+Version: 1.17
+SupportedVersions: 4.00
+Author: grandnode team
+DisplayOrder: 1
+FileName: Grand.Plugin.Payments.CheckMoneyOrder.dll

@@ -1,0 +1,90 @@
+﻿@{
+    Layout = "_ConfigurePlugin";
+}
+@model ConfigurationModel
+@using Grand.Plugin.Payments.CheckMoneyOrder.Models
+@using Grand.Framework;
+@await Component.InvokeAsync("StoreScopeConfiguration")
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @(Html.LocalizedEditor<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.Locales[item].DescriptionText, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.Locales[item].DescriptionText, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.TextAreaFor(model => model.Locales[item].DescriptionText, new { style = "Width: 550px; Height: 350px;" })
+                    @Html.ValidationMessageFor(model => model.Locales[item].DescriptionText)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>
+    </div>
+    ,
+    @<div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.DescriptionText, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.DescriptionText, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.TextAreaFor(model => model.DescriptionText, new { style = "Width: 550px; Height: 350px;" })
+                    @Html.ValidationMessageFor(model => model.DescriptionText)
+                </div>
+            </div>
+        </div>
+    </div>
+    ,
+    //localizable settings per store (overrriden store settings) are not supported yet
+    true
+    ))
+    <div class="form-horizontal">
+        <div class="form-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.AdditionalFee, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.AdditionalFee)
+                    @Html.ValidationMessageFor(model => model.AdditionalFee)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.AdditionalFeePercentage, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.AdditionalFeePercentage)
+                    @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 text-right">
+                    @Html.OverrideStoreCheckboxFor(model => model.ShippableProductRequired_OverrideForStore, model => model.ShippableProductRequired, Model.ActiveStoreScopeConfiguration)
+                    @Html.GrandLabelFor(model => model.ShippableProductRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                </div>
+                <div class="col-md-9 col-sm-9">
+                    @Html.EditorFor(model => model.ShippableProductRequired)
+                    @Html.ValidationMessageFor(model => model.ShippableProductRequired)
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-sm-offset-3 col-md-9 col-sm-9">
+                    <input type="submit" name="save" class="btn green" value="@T("Admin.Common.Save")" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+}
