@@ -160,3 +160,5 @@ Grand.Web/wwwroot/Content/Images/Thumbs/*.png
 Grand.Web/wwwroot/bundles/*.*
 Grand.Web/App_Data/InstalledPlugins.txt
 Grand.Web/App_Data/Settings.txt
+/Grand.Web/App_Data/_Settings.txt
+/Grand.Web/App_Data/_InstalledPlugins.txt

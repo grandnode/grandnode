@@ -33,7 +33,7 @@
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.custom.css", kendoVersion), excludeFromBundle: true);
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion), excludeFromBundle: true);
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css", excludeFromBundle: true);
-
+    Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", excludeFromBundle: true);
     if (supportRtl)
     {
         Html.AppendCssFileParts("~/Administration/global/css/plugins-rtl.min.css", excludeFromBundle: true);

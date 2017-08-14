@@ -6,10 +6,6 @@
 @using Grand.Services.Security
 @using Grand.Framework.UI
 @{
-    //we do not bundle this script file (does not work for some reasons in bundle)
-    //Html.AddScriptParts("~/lib/tinymce/tinymce.min.js", excludeFromBundle: true);
-    Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", excludeFromBundle:true);
-
     // tinyMCE language
     var language = TinyMceHelper.GetTinyMceLanguage();
 
@@ -108,4 +104,7 @@
         tinyMCE.init(getAdditionalEditorSettings@(random)(defaultEditorSettings@(random)));
     });
 </script>
-<textarea asp-for="@Model">@ViewData.TemplateInfo.FormattedModelValue</textarea>
+
+@Html.TextArea(string.Empty, /* Name suffix */
+    ViewData.TemplateInfo.FormattedModelValue /* Initial value */
+)
