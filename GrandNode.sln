@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRules.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRules.HadSpentAmount", "Plugins\Grand.Plugin.DiscountRules.HadSpentAmount\Grand.Plugin.DiscountRules.HadSpentAmount.csproj", "{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRules.HasOneProduct", "Plugins\Grand.Plugin.DiscountRules.HasOneProduct\Grand.Plugin.DiscountRules.HasOneProduct.csproj", "{43EC414B-704B-482C-A06E-57531ADED9AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43EC414B-704B-482C-A06E-57531ADED9AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43EC414B-704B-482C-A06E-57531ADED9AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43EC414B-704B-482C-A06E-57531ADED9AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43EC414B-704B-482C-A06E-57531ADED9AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,5 +138,6 @@ Global
 		{21796F6D-BE29-4820-BDB9-302B5911349E} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{EF7D6994-F3B6-483F-8EE3-41162D7321D9} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
+		{43EC414B-704B-482C-A06E-57531ADED9AF} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 	EndGlobalSection
 EndGlobal
