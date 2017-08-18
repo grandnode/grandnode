@@ -151,12 +151,6 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddGrandAuthentication(this IServiceCollection services)
         {
-            //set the authentication scheme corresponding to the default middleware
-            //services.AddAuthentication(options =>
-            //{
-            //    options.SignInScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
-            //});
-
             //enable main cookie authentication
             services.AddAuthentication(options =>
             {
