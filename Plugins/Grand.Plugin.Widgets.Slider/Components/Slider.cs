@@ -102,7 +102,7 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
             if(model.Slide.Where(x=> string.IsNullOrEmpty(x.PictureUrl)).Count() ==0 )
                 return Content("");
 
-            return View("/Plugins/Widgets.Slider/netcoreapp1.1/Views/PublicInfo.cshtml", model);
+            return View("/Plugins/Widgets.Slider/netcoreapp2.0/Views/PublicInfo.cshtml", model);
         }
     }
 }

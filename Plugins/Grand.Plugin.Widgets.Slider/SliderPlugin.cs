@@ -44,7 +44,7 @@ namespace Grand.Plugin.Widgets.Slider
         public override void Install()
         {
             //pictures
-            var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.Slider/netcoreapp1.1/Content/slider/sample-images/");
+            var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.Slider/netcoreapp2.0/Content/slider/sample-images/");
 
             //settings
             var settings = new SliderSettings

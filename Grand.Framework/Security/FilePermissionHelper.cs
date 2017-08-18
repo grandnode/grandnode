@@ -24,7 +24,7 @@ namespace Grand.Framework.Security
         /// <returns>Result</returns>
         public static bool CheckPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
-            if (OperatingSystem.IsWindows())
+            if (Core.OperatingSystem.IsWindows())
             {
                 bool flag = false;
                 bool flag2 = false;

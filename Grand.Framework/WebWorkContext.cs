@@ -36,7 +36,7 @@ namespace Grand.Framework
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly CurrencySettings _currencySettings;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IGrandAuthenticationService _authenticationService;
         private readonly ICurrencyService _currencyService;
         private readonly ICustomerService _customerService;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -61,7 +61,7 @@ namespace Grand.Framework
 
         public WebWorkContext(IHttpContextAccessor httpContextAccessor, 
             CurrencySettings currencySettings,
-            IAuthenticationService authenticationService,
+            IGrandAuthenticationService authenticationService,
             ICurrencyService currencyService,
             ICustomerService customerService,
             IGenericAttributeService genericAttributeService,

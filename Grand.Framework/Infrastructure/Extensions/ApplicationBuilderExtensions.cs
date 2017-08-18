@@ -138,35 +138,14 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// Congifure authentication
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        public static void UseAuthentication(this IApplicationBuilder application)
+        public static void UseGrandAuthentication(this IApplicationBuilder application)
         {                    
             //check whether database is installed
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            //enable main cookie authentication
-            application.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme,
-                CookieName = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme,
-                LoginPath = GrandCookieAuthenticationDefaults.LoginPath,
-                AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath,
-                CookieHttpOnly = true,
-                AutomaticAuthenticate = false,
-                AutomaticChallenge = true
-            });
-
-            //enable external authentication
-            application.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme,
-                CookieName = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme,
-                LoginPath = GrandCookieAuthenticationDefaults.LoginPath,
-                AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath,
-                CookieHttpOnly = true,
-                AutomaticAuthenticate = false,
-                AutomaticChallenge = false
-            });
+            application.UseAuthentication();
+            
         }
 
         /// <summary>

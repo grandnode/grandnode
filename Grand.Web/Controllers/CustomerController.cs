@@ -42,7 +42,7 @@ namespace Grand.Web.Controllers
     {
         #region Fields
         private readonly ICustomerWebService _customerWebService;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IGrandAuthenticationService _authenticationService;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly TaxSettings _taxSettings;
         private readonly ILocalizationService _localizationService;
@@ -71,7 +71,7 @@ namespace Grand.Web.Controllers
 
         public CustomerController(
             ICustomerWebService customerWebService,
-            IAuthenticationService authenticationService,
+            IGrandAuthenticationService authenticationService,
             DateTimeSettings dateTimeSettings, 
             TaxSettings taxSettings,
             ILocalizationService localizationService,

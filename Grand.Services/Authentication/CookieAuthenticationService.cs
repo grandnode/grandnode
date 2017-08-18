@@ -2,14 +2,14 @@
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Authentication;
 using Grand.Core.Domain.Customers;
 using Grand.Services.Customers;
 using Grand.Services.Authentication;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Grand.Service.Authentication
 {
-    public partial class CookieAuthenticationService : IAuthenticationService
+    public partial class CookieAuthenticationService : IGrandAuthenticationService
     {
         #region Fields
 
@@ -43,7 +43,7 @@ namespace Grand.Service.Authentication
         /// <param name="isPersistent">Whether the authentication session is persisted across multiple requests</param>
         public virtual void SignIn(Customer customer, bool isPersistent)
         {
-            var authenticationManager = _httpContextAccessor.HttpContext?.Authentication;
+            var authenticationManager = _httpContextAccessor.HttpContext;
             if (authenticationManager == null)
                 return;
 
@@ -78,7 +78,7 @@ namespace Grand.Service.Authentication
         /// </summary>
         public virtual void SignOut()
         {
-            var authenticationManager = _httpContextAccessor.HttpContext?.Authentication;
+            var authenticationManager = _httpContextAccessor.HttpContext;
             if (authenticationManager == null)
                 return;
 
@@ -100,14 +100,14 @@ namespace Grand.Service.Authentication
             if (_cachedCustomer != null)
                 return _cachedCustomer;
 
-            var authenticationManager = _httpContextAccessor.HttpContext?.Authentication;
+            var authenticationManager = _httpContextAccessor.HttpContext;
             if (authenticationManager == null)
                 return null;
 
             //try to get authenticated user identity
             var authenticateTask = authenticationManager.AuthenticateAsync(GrandCookieAuthenticationDefaults.AuthenticationScheme);
             var userPrincipal = authenticateTask.Result;
-            var userIdentity = userPrincipal?.Identities?.FirstOrDefault(identity => identity.IsAuthenticated);
+            var userIdentity = userPrincipal?.Principal?.Identities?.FirstOrDefault(identity => identity.IsAuthenticated);
             if (userIdentity == null)
                 return null;
 

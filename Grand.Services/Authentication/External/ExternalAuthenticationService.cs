@@ -27,7 +27,7 @@ namespace Grand.Services.Authentication.External
 
         private readonly CustomerSettings _customerSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IGrandAuthenticationService _authenticationService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerService _customerService;
@@ -49,7 +49,7 @@ namespace Grand.Services.Authentication.External
 
         public ExternalAuthenticationService(CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
-            IAuthenticationService authenticationService,
+            IGrandAuthenticationService authenticationService,
             ICustomerActivityService customerActivityService,
             ICustomerRegistrationService customerRegistrationService,
             ICustomerService customerService,

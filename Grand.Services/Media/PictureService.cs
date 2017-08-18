@@ -5,10 +5,11 @@ using Grand.Services.Configuration;
 using Grand.Services.Events;
 using Grand.Services.Logging;
 using Grand.Services.Seo;
-using ImageSharp;
-using ImageSharp.Processing;
 using Microsoft.AspNetCore.Hosting;
 using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 
@@ -319,7 +320,7 @@ namespace Grand.Services.Media
         protected virtual void SaveThumb(string thumbFilePath, string thumbFileName, byte[] binary)
         {
             File.WriteAllBytes(thumbFilePath, binary);
-            
+
         }
 
 
@@ -401,7 +402,7 @@ namespace Grand.Services.Media
 
                         if (!GeneratedThumbExists(thumbFilePath, thumbFileName))
                         {
-                            using (var b = Image.Load(filePath))
+                            using (var b = Image.FromFile(filePath))
                             {
                                 var pictureBinary = File.ReadAllBytes(filePath);
 
@@ -522,10 +523,10 @@ namespace Grand.Services.Media
                                 {
                                     using (var stream = new MemoryStream(pictureBinary))
                                     {
-                                        Image<Rgba32> b = null;
+                                        Image b = null;
                                         try
                                         {
-                                            b = Image.Load(stream);
+                                            b = Image.FromStream(stream);
                                         }
                                         catch (ArgumentException exc)
                                         {
@@ -773,10 +774,9 @@ namespace Grand.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] byteArray, string mimeType)
         {
-            var image = Image.Load(byteArray);
-
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream(byteArray))
             {
+                var image = Image.FromStream(ms);
                 if (image.Width >= image.Height)
                 {
                     //horizontal rectangle or square
@@ -795,31 +795,34 @@ namespace Grand.Services.Media
 
         protected byte[] ApplyResize(byte[] byteArray, int targetSize, Size originalSize = default(Size))
         {
-            var image = Image.Load(byteArray);
-
-            var size = default(Size);
-            if (originalSize != default(Size))
+            using (MemoryStream ms = new MemoryStream(byteArray))
             {
-                size = CalculateDimensions(originalSize, targetSize);
-            }
-            else
-            {
-                size = new Size(targetSize, targetSize);
-            }
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                image
-                    .Resize(new ResizeOptions
-                    {
-                        Mode = ResizeMode.Max,
-                        Size = size,
-                    })
-                    .Save(ms); //TO DO Picture, ImageFormats.Jpeg);
-                return ms.ToArray();
+                var image = Image.FromStream(ms);
+                var size = default(Size);
+                if (originalSize != default(Size))
+                {
+                    size = CalculateDimensions(originalSize, targetSize);
+                }
+                else
+                {
+                    size = new Size(targetSize, targetSize);
+                }
+                
+                var resized = new Bitmap(size.Width, size.Height);
+                using (var graphics = Graphics.FromImage(resized))
+                {
+                    graphics.CompositingQuality = CompositingQuality.HighSpeed;
+                    graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    graphics.CompositingMode = CompositingMode.SourceCopy;
+                    graphics.DrawImage(image, 0, 0, size.Width, size.Height);
+                }
+                using (var ms2 = new MemoryStream())
+                {
+                    resized.Save(ms2, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    return ms2.ToArray();
+                }
             };
-        }
-
+        }        
         #endregion
 
         #region Properties

@@ -15,6 +15,7 @@ using MongoDB.Bson;
 using Grand.Services.ExportImport.Help;
 using Grand.Core.Domain.Media;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Grand.Services.ExportImport
 {
@@ -88,12 +89,10 @@ namespace Grand.Services.ExportImport
 
         protected virtual string GetMimeTypeFromFilePath(string filePath)
         {
-            var mimeType = MimeKit.MimeTypes.GetMimeType(filePath);
-
-            //little hack here because MimeMapping does not contain all mappings (e.g. PNG)
-            if (mimeType == "application/octet-stream")
+            new FileExtensionContentTypeProvider().TryGetContentType(filePath, out string mimeType);
+            //set to jpeg in case mime type cannot be found
+            if (mimeType == null)
                 mimeType = "image/jpeg";
-
             return mimeType;
         }
 

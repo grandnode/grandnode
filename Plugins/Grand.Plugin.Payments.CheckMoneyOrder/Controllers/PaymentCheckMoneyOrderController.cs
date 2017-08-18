@@ -63,7 +63,7 @@ namespace Grand.Plugin.Payments.CheckMoneyOrder.Controllers
                 model.ShippableProductRequired_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
             }
 
-            return View("~/Plugins/Payments.CheckMoneyOrder/netcoreapp1.1/Views/PaymentCheckMoneyOrder/Configure.cshtml", model);
+            return View("~/Plugins/Payments.CheckMoneyOrder/netcoreapp2.0/Views/PaymentCheckMoneyOrder/Configure.cshtml", model);
         }
 
         [HttpPost]

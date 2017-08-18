@@ -83,7 +83,7 @@ namespace Grand.Plugin.Widgets.Slider.Controllers
                 model.Link5_OverrideForStore = _settingService.SettingExists(sliderSettings, x => x.Link5, storeScope);
             }
 
-            return View("~/Plugins/Widgets.Slider/netcoreapp1.1/Views/Configure.cshtml", model);
+            return View("~/Plugins/Widgets.Slider/netcoreapp2.0/Views/Configure.cshtml", model);
         }
 
         [HttpPost]

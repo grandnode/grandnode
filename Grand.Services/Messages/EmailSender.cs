@@ -6,8 +6,6 @@ using System.Net;
 using System.Net.Mail;
 using Grand.Core.Domain.Messages;
 using Grand.Services.Media;
-using MailKit.Net.Smtp;
-using MimeKit;
 
 namespace Grand.Services.Messages
 {
@@ -47,47 +45,53 @@ namespace Grand.Services.Messages
             string attachmentFilePath = null, string attachmentFileName = null,
             string attachedDownloadId = "")
         {
-            var message = new MimeMessage();
-            //from
-            message.From.Add(new MailboxAddress(fromName, fromAddress));
-            //to
-            message.To.Add(new MailboxAddress(toName, toAddress));
-            //reply to list
+            var message = new MailMessage();
+            //from, to, reply to
+            message.From = new MailAddress(fromAddress, fromName);
+            message.To.Add(new MailAddress(toAddress, toName));
             if (!String.IsNullOrEmpty(replyTo))
             {
-                message.InReplyTo = replyTo;
+                message.ReplyToList.Add(new MailAddress(replyTo, replyToName));
             }
-            //bcc
+
+            //BCC
             if (bcc != null)
             {
                 foreach (var address in bcc.Where(bccValue => !String.IsNullOrWhiteSpace(bccValue)))
                 {
-                    message.Bcc.Add(new MailboxAddress(address.Trim()));
+                    message.Bcc.Add(address.Trim());
                 }
             }
-            //cc
+
+            //CC
             if (cc != null)
             {
                 foreach (var address in cc.Where(ccValue => !String.IsNullOrWhiteSpace(ccValue)))
                 {
-                    message.Cc.Add(new MailboxAddress(address.Trim()));
+                    message.CC.Add(address.Trim());
                 }
             }
-            //subject
+
+            //content
             message.Subject = subject;
-            //body
-            message.Body = new TextPart("plain") { Text = body };
-            //attachment
+            message.Body = body;
+            message.IsBodyHtml = true;
+
+            //create  the file attachment for this e-mail message
             if (!String.IsNullOrEmpty(attachmentFilePath) &&
                 File.Exists(attachmentFilePath))
             {
-
-                var builder = new BodyBuilder();
-                builder.TextBody = body;
-                builder.Attachments.Add(attachmentFilePath);
-                message.Body = builder.ToMessageBody();
+                var attachment = new Attachment(attachmentFilePath);
+                attachment.ContentDisposition.CreationDate = File.GetCreationTime(attachmentFilePath);
+                attachment.ContentDisposition.ModificationDate = File.GetLastWriteTime(attachmentFilePath);
+                attachment.ContentDisposition.ReadDate = File.GetLastAccessTime(attachmentFilePath);
+                if (!String.IsNullOrEmpty(attachmentFileName))
+                {
+                    attachment.Name = attachmentFileName;
+                }
+                message.Attachments.Add(attachment);
             }
-            //another attachment
+            //another attachment?
             if (!String.IsNullOrEmpty(attachedDownloadId))
             {
                 var download = _downloadService.GetDownloadById(attachedDownloadId);
@@ -98,23 +102,31 @@ namespace Grand.Services.Messages
                     {
                         string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id;
                         fileName += download.Extension;
-                        var builder = new BodyBuilder()
-                        {
-                            TextBody = body
-                        };
+
+
                         var ms = new MemoryStream(download.DownloadBinary);
-                        builder.Attachments.Add(download.Filename, ms.ToArray());
-                        message.Body = builder.ToMessageBody();
+                        var attachment = new Attachment(ms, fileName);
+                        //string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+                        //var attachment = new Attachment(ms, fileName, contentType);
+                        attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
+                        attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
+                        attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
+                        message.Attachments.Add(attachment);
                     }
                 }
             }
+
             //send email
-            using (var client = new SmtpClient())
+            using (var smtpClient = new SmtpClient())
             {
-                client.Connect(emailAccount.Host, emailAccount.Port, emailAccount.EnableSsl);
-                client.Authenticate(emailAccount.Email, emailAccount.Password);
-                client.Send(message);
-                client.Disconnect(true);
+                smtpClient.UseDefaultCredentials = emailAccount.UseDefaultCredentials;
+                smtpClient.Host = emailAccount.Host;
+                smtpClient.Port = emailAccount.Port;
+                smtpClient.EnableSsl = emailAccount.EnableSsl;
+                smtpClient.Credentials = emailAccount.UseDefaultCredentials ?
+                                    CredentialCache.DefaultNetworkCredentials :
+                                    new NetworkCredential(emailAccount.Username, emailAccount.Password);
+                smtpClient.Send(message);
             }
         }
 

@@ -28,7 +28,7 @@ namespace Grand.Framework.Infrastructure
         public void Configure(IApplicationBuilder application)
         {
             //configure authentication
-            application.UseAuthentication();
+            application.UseGrandAuthentication();
 
             //set request culture
             application.UseCulture();

@@ -9,7 +9,7 @@ namespace Grand.Plugin.Payments.PayPalStandard.Controllers
 
         public IViewComponentResult Invoke()
         {
-            return View("~/Plugins/Payments.PayPalStandard/netcoreapp1.1/Views/PaymentPayPalStandard/PaymentInfo.cshtml");
+            return View("~/Plugins/Payments.PayPalStandard/netcoreapp2.0/Views/PaymentPayPalStandard/PaymentInfo.cshtml");
         }
     }
 }

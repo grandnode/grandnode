@@ -44,7 +44,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Controllers
                     CountryName = _countryService.GetCountryById(shippingPoint.CountryId)?.Name,
                     ZipPostalCode = shippingPoint.ZipPostalCode,
                 };
-                return View("~/Plugins/Shipping.ShippingPoint/netcoreapp1.1/Views/FormShippingOption.cshtml", viewModel);
+                return View("~/Plugins/Shipping.ShippingPoint/netcoreapp2.0/Views/FormShippingOption.cshtml", viewModel);
             }
             return Content("ShippingPointController: given Shipping Option doesn't exist");
         }

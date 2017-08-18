@@ -86,7 +86,7 @@ namespace Grand.Plugin.DiscountRules.HasOneProduct.Controllers
             //add a prefix
             ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesHasOneProduct{0}-{1}", discount.Id, !String.IsNullOrEmpty(discountRequirementId) ? discountRequirementId : "");
 
-            return View("~/Plugins/DiscountRules.HasOneProduct/netcoreapp1.1/Views/DiscountRulesHasOneProduct/Configure.cshtml", model);
+            return View("~/Plugins/DiscountRules.HasOneProduct/netcoreapp2.0/Views/DiscountRulesHasOneProduct/Configure.cshtml", model);
         }
 
         [HttpPost]
@@ -162,7 +162,7 @@ namespace Grand.Plugin.DiscountRules.HasOneProduct.Controllers
             ViewBag.productIdsInput = productIdsInput;
             ViewBag.btnId = btnId;
 
-            return View("~/Plugins/DiscountRules.HasOneProduct/netcoreapp1.1/Views/DiscountRulesHasOneProduct/ProductAddPopup.cshtml", model);
+            return View("~/Plugins/DiscountRules.HasOneProduct/netcoreapp2.0/Views/DiscountRulesHasOneProduct/ProductAddPopup.cshtml", model);
         }
 
         [HttpPost]

@@ -17,7 +17,7 @@ namespace Grand.Plugin.Payments.PayInStore.Components
             {
                 DescriptionText = _payInStorePaymentSettings.DescriptionText
             };
-            return View("/Plugins/Payments.PayInStore/netcoreapp1.1/Views/PaymentInfo.cshtml", model);
+            return View("/Plugins/Payments.PayInStore/netcoreapp2.0/Views/PaymentInfo.cshtml", model);
         }
     }
 }

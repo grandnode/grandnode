@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Services.Authentication;
 using Grand.Service.Authentication;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -33,13 +34,13 @@ namespace Grand.Framework.Mvc.Filters
             /// <param name="filterContext">Authorization filter context</param>
             public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
-                var authenticationManager = filterContext?.HttpContext?.Authentication;
+                var authenticationManager = filterContext?.HttpContext;
                 if (authenticationManager == null)
                     return;
 
                 //sign out from the external authentication scheme
                 var userPrincipal = authenticationManager.AuthenticateAsync(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme).Result;
-                var userIdentity = userPrincipal?.Identities?.FirstOrDefault(identity => identity.IsAuthenticated);
+                var userIdentity = userPrincipal?.Principal?.Identities?.FirstOrDefault(identity => identity.IsAuthenticated);
                 if (userIdentity != null)
                     authenticationManager.SignOutAsync(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme).Wait();
             }

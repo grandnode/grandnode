@@ -106,7 +106,10 @@ namespace Grand.Framework.Infrastructure.Extensions
             //override cookie name
             services.AddAntiforgery(options =>
             {
-                options.CookieName = ".Grand.Antiforgery";
+                options.Cookie = new CookieBuilder()
+                {
+                    Name = ".Grand.Antiforgery"
+                };
             });
         }
 
@@ -118,8 +121,11 @@ namespace Grand.Framework.Infrastructure.Extensions
         {
             services.AddSession(options =>
             {
-                options.CookieName = ".Grand.Session";
-                options.CookieHttpOnly = true;
+                options.Cookie = new CookieBuilder()
+                {
+                    Name = ".Grand.Session",
+                    HttpOnly = true,
+                };
             });
         }
 
@@ -146,10 +152,55 @@ namespace Grand.Framework.Infrastructure.Extensions
         public static void AddGrandAuthentication(this IServiceCollection services)
         {
             //set the authentication scheme corresponding to the default middleware
+            //services.AddAuthentication(options =>
+            //{
+            //    options.SignInScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+            //});
+
+            //enable main cookie authentication
             services.AddAuthentication(options =>
             {
-                options.SignInScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
-            });
+                options.DefaultScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(GrandCookieAuthenticationDefaults.AuthenticationScheme,
+                options =>
+                {
+                    options.ClaimsIssuer = GrandCookieAuthenticationDefaults.ClaimsIssuer;
+                    options.Cookie = new CookieBuilder()
+                    {
+                        Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme,
+                        HttpOnly = true,
+                    };
+                    options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
+                    options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
+                    options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
+                }
+            );
+
+            //enable external authentication
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+            })
+            .AddCookie(GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme,
+                options =>
+                {
+                    options.ClaimsIssuer = GrandCookieAuthenticationDefaults.ClaimsIssuer;
+                    options.Cookie = new CookieBuilder()
+                    {
+                        Name = GrandCookieAuthenticationDefaults.CookiePrefix + GrandCookieAuthenticationDefaults.AuthenticationScheme,
+                        HttpOnly = true,
+                    };
+                    options.LoginPath = GrandCookieAuthenticationDefaults.LoginPath;
+                    options.AccessDeniedPath = GrandCookieAuthenticationDefaults.AccessDeniedPath;
+                    options.LogoutPath = GrandCookieAuthenticationDefaults.LogoutPath;
+                }
+            );
+
+
+
+
+
         }
 
         /// <summary>
