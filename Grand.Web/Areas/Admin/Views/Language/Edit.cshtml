@@ -40,8 +40,8 @@
 
 <div class="modal-dialog" id="importxml-window" style="display:none; padding: 0 10px;">
 
-    @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
+    @using (Html.BeginForm("ImportXml", "Language", FormMethod.Post, new { enctype = "multipart/form-data", id = Model.Id }))
+    {
         @Html.AntiForgeryToken()
         <ul class="common-list">
             <li>

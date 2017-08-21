@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Extensions;
@@ -9,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Localization;
 using Grand.Core;
@@ -18,13 +15,10 @@ using Grand.Services.Directory;
 using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Stores;
-using Grand.Framework;
-using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security;
 using Microsoft.AspNetCore.Http;
-using System.Net;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -301,8 +295,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Resources
 
         [HttpPost]
-        //do not validate request token (XSRF)
-        //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)]
         public IActionResult Resources(string languageId, DataSourceRequest command,
             LanguageResourceFilterModel model)
