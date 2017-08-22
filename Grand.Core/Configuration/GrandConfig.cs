@@ -11,7 +11,7 @@ namespace Grand.Core.Configuration
         /// <summary>
         /// Indicates whether we should ignore startup tasks
         /// </summary>
-        public bool IgnoreStartupTasks { get; private set; }
+        public bool IgnoreStartupTasks { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to clear /Plugins/bin directory on application startup
@@ -21,75 +21,75 @@ namespace Grand.Core.Configuration
         /// <summary>
         /// Path to database with user agent strings
         /// </summary>
-        public string UserAgentStringsPath { get; private set; }
+        public string UserAgentStringsPath { get; set; }
 
-        public string CrawlerOnlyUserAgentStringsPath { get; private set; }
+        public string CrawlerOnlyUserAgentStringsPath { get; set; }
         /// <summary>
         /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
         /// </summary>
-        public bool RedisCachingEnabled { get; private set; }
+        public bool RedisCachingEnabled { get; set; }
         /// <summary>
         /// Redis connection string. Used when Redis caching is enabled
         /// </summary>
-        public string RedisCachingConnectionString { get; private set; }
+        public string RedisCachingConnectionString { get; set; }
 
 
         /// <summary>
         /// A value indicating whether the site is run on multiple instances (e.g. web farm, Windows Azure with multiple instances, etc).
         /// Do not enable it if you run on Azure but use one instance only
         /// </summary>
-        public bool MultipleInstancesEnabled { get; private set; }
+        public bool MultipleInstancesEnabled { get; set; }
 
         /// <summary>
         /// A value indicating whether the site is run on Windows Azure Web Apps
         /// </summary>
-        public bool RunOnAzureWebApps { get; private set; }
+        public bool RunOnAzureWebApps { get; set; }
 
         /// <summary>
         /// Connection string for Azure BLOB storage
         /// </summary>
-        public string AzureBlobStorageConnectionString { get; private set; }
+        public string AzureBlobStorageConnectionString { get; set; }
 
         /// <summary>
         /// Container name for Azure BLOB storage
         /// </summary>
-        public string AzureBlobStorageContainerName { get; private set; }
+        public string AzureBlobStorageContainerName { get; set; }
         /// <summary>
         /// End point for Azure BLOB storage
         /// </summary>
-        public string AzureBlobStorageEndPoint { get; private set; }
+        public string AzureBlobStorageEndPoint { get; set; }
 
         /// <summary>
         /// Amazon Access Key
         /// </summary>
-        public string AmazonAwsAccessKeyId { get; private set; }
+        public string AmazonAwsAccessKeyId { get; set; }
 
         /// <summary>
         /// Amazon Secret Access Key
         /// </summary>
-        public string AmazonAwsSecretAccessKey { get; private set; }
+        public string AmazonAwsSecretAccessKey { get; set; }
 
         /// <summary>
         /// Amazon Bucket Name using for identifying resources
         /// </summary>
-        public string AmazonBucketName { get; private set; }
+        public string AmazonBucketName { get; set; }
 
         /// <summary>
         /// Amazon Region 
         /// http://docs.amazonwebservices.com/AmazonS3/latest/BucketConfiguration.html#LocationSelection
         /// </summary>
-        public string AmazonRegion { get; private set; }
+        public string AmazonRegion { get; set; }
 
         /// <summary>
         /// A value indicating whether a store owner can install sample data during installation
         /// </summary>
-        public bool DisableSampleDataDuringInstallation { get; private set; }
+        public bool DisableSampleDataDuringInstallation { get; set; }
 
         
         /// <summary>
         /// A list of plugins ignored during installation
         /// </summary>
-        public string PluginsIgnoredDuringInstallation { get; private set; }
+        public string PluginsIgnoredDuringInstallation { get; set; }
 
         /// <summary>
         /// Gets or sets a value of "Cache-Control" header value for static content
