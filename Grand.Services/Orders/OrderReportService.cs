@@ -465,7 +465,7 @@ namespace Grand.Services.Orders
                         o.CreatedOnUtc >= date
                         group o by 1 into g
                         select new ReportPeriodOrder() { Amount = g.Sum(x => x.OrderTotal), Count = g.Count() };
-            var report = query.ToList().FirstOrDefault();
+            var report = query.ToList()?.FirstOrDefault();
             if (report == null)
                 report = new ReportPeriodOrder();
             report.Date = date;

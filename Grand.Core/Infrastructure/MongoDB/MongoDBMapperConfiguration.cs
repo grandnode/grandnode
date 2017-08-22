@@ -15,19 +15,19 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 
-
 namespace Grand.Core.Infrastructure.MongoDB
 {
     public class MongoDBMapperConfiguration
     {
+
         /// <summary>
         /// Register MongoDB mappings
         /// </summary>
         /// <param name="config">Config</param>
         public static void RegisterMongoDBMappings(GrandConfig config)
         {
-            //decimal will be serialized into double, an equivalent of [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
-            BsonSerializer.RegisterSerializer<decimal>(new DecimalSerializer().WithRepresentation(BsonType.Double));
+            BsonSerializer.RegisterSerializer(typeof(decimal), new DecimalSerializer(BsonType.Decimal128));
+            BsonSerializer.RegisterSerializer(typeof(decimal?), new NullableSerializer<decimal>(new DecimalSerializer(BsonType.Decimal128)));
 
             //global set an equivalent of [BsonIgnoreExtraElements] for every Domain Model
             var cp = new ConventionPack();

@@ -211,7 +211,7 @@
             $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:ProductAttributeId"/>')
                 .appendTo(container)
                 .kendoDropDownList({
-                    autoBind: false,
+                    autoBind: true,
                     dataSource: allProductAttributes
                 });
         }
@@ -220,7 +220,7 @@
             $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:AttributeControlTypeId"/>')
                 .appendTo(container)
                 .kendoDropDownList({
-                    autoBind: false,
+                    autoBind: true,
                     dataSource: allAttributeControlTypes
                 });
         }
