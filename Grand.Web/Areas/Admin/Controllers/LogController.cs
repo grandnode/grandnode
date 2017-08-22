@@ -54,7 +54,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             var model = new LogListModel();
             model.AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList();
-            model.AvailableLogLevels.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            model.AvailableLogLevels.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
 
             return View(model);
         }

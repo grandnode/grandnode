@@ -1,11 +1,5 @@
 ﻿@model GeneralCommonSettingsModel
 
-
-
-
-
-
-
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
@@ -26,7 +20,7 @@
                 @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
                 @Html.GrandLabelFor(model => model.PdfSettings.LogoPictureId, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9" class="adminData" id="pdf-logo-picture">
+            <div class="col-md-8 col-sm-8" id="pdf-logo-picture">
                 @Html.GrandEditorFor(model => model.PdfSettings.LogoPictureId)
                 @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
             </div>
