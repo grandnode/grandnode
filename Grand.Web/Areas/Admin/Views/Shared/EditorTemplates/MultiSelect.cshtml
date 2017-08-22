@@ -5,7 +5,6 @@
         $("#@Html.IdForModel()").kendoMultiSelect({
             select: function (e) {
                 var current = this.value();
-
                 if (this.dataSource.view()[e.item.index()].value === "0") {
                     this.value("");
                 }

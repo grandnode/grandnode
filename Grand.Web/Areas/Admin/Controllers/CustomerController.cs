@@ -855,6 +855,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString(), Selected = (cr.Id == _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id) }).ToList(),
                 AvailableCustomerTags = _customerTagService.GetAllCustomerTags().Select(ct => new SelectListItem() { Text = ct.Name, Value = ct.Id.ToString() }).ToList(),
+                SearchCustomerRoleIds = new List<string> { _customerService.GetAllCustomerRoles(true).FirstOrDefault(x => x.Id == _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id).Id },
             };
             return View(model);
         }
