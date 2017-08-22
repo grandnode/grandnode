@@ -2256,7 +2256,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             try
             {
                 var xml = _exportManager.ExportCustomersToXml(customers);
-                return null;//return new XmlDownloadResult(xml, "customers.xml");
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
             }
             catch (Exception exc)
             {
@@ -2282,7 +2282,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             }
 
             var xml = _exportManager.ExportCustomersToXml(customers);
-            return null; //return new XmlDownloadResult(xml, "customers.xml");
+            return File(Encoding.UTF8.GetBytes(xml), "application/xml", "customers.xml");
         }
 
         #endregion
