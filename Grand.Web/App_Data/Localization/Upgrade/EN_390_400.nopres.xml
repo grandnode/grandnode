@@ -74,4 +74,7 @@
   <LocaleResource Name="Products.AskQuestion.FullName.Required">
     <Value>FullName is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ContactForm.deleteall">
+    <Value>Delete all</Value>
+  </LocaleResource>
 </Language>
