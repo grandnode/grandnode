@@ -1,8 +1,10 @@
-@using System.Globalization
-@model DateTime?
-<input id="@Html.IdForModel()" name="@Html.NameForModel()" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToLocalTime().ToString(CultureInfo.CurrentCulture.DateTimeFormat) : null)" />
+@model Decimal?
+@Html.TextBoxFor(model => model)
 <script>
     $(document).ready(function () {
-        $("#@Html.IdForModel()").kendoDateTimePicker();
+        $("#@Html.IdForModel()").kendoNumericTextBox({
+            format: "#.00",
+            decimals: 2 //always display 2 digits
+        });
     });
 </script>
