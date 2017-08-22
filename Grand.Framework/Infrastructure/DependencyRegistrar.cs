@@ -318,19 +318,19 @@ namespace Grand.Framework.Infrastructure
 
 
             //TASKS
-            builder.RegisterType<QueuedMessagesSendScheduleTask>().SingleInstance();
-            builder.RegisterType<ClearCacheScheduleTask>().SingleInstance();
-            builder.RegisterType<ClearLogScheduleTask>().SingleInstance();
-            builder.RegisterType<CustomerReminderAbandonedCartScheduleTask>().SingleInstance();
-            builder.RegisterType<CustomerReminderBirthdayScheduleTask>().SingleInstance();
-            builder.RegisterType<CustomerReminderCompletedOrderScheduleTask>().SingleInstance();
-            builder.RegisterType<CustomerReminderLastActivityScheduleTask>().SingleInstance();
-            builder.RegisterType<CustomerReminderLastPurchaseScheduleTask>().SingleInstance();
-            builder.RegisterType<CustomerReminderRegisteredCustomerScheduleTask>().SingleInstance();
-            builder.RegisterType<CustomerReminderUnpaidOrderScheduleTask>().SingleInstance();
-            builder.RegisterType<DeleteGuestsScheduleTask>().SingleInstance();
-            builder.RegisterType<UpdateExchangeRateScheduleTask>().SingleInstance();
-            builder.RegisterType<KeepAliveScheduleTask>().SingleInstance();
+            builder.RegisterType<QueuedMessagesSendScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<ClearCacheScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<ClearLogScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderAbandonedCartScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderBirthdayScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderCompletedOrderScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderLastActivityScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderLastPurchaseScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderRegisteredCustomerScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerReminderUnpaidOrderScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<DeleteGuestsScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<UpdateExchangeRateScheduleTask>().InstancePerLifetimeScope();
+            builder.RegisterType<KeepAliveScheduleTask>().InstancePerLifetimeScope();
             
         }
 
