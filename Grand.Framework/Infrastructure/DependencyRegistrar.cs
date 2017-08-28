@@ -106,13 +106,13 @@ namespace Grand.Framework.Infrastructure
             //cache manager
             if (config.RedisCachingEnabled)
             {
-                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
+                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("grand_cache_static").SingleInstance();
                 builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
                 builder.RegisterType<RedisCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
             }
             else
             {
-                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
+                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("grand_cache_static").SingleInstance();
             }
 
             if (config.RunOnAzureWebApps)
@@ -185,16 +185,14 @@ namespace Grand.Framework.Infrastructure
             builder.RegisterType<StoreMappingService>().As<IStoreMappingService>().InstancePerLifetimeScope();
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerLifetimeScope();
 
-
-            //pass MemoryCacheManager as cacheManager (cache settings between requests)
             if (config.RedisCachingEnabled)
             {
                 builder.RegisterType<SettingService>().As<ISettingService>()
-                    .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                    .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("grand_cache_static"))
                     .InstancePerLifetimeScope();
 
                 builder.RegisterType<LocalizationService>().As<ILocalizationService>()
-                    .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                    .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("grand_cache_static"))
                     .InstancePerLifetimeScope();
             }
             else
