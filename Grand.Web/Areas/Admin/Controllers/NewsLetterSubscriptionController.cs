@@ -88,14 +88,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             var model = new NewsLetterSubscriptionListModel();
 
             //stores
-            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //active
             model.ActiveList.Add(new SelectListItem
             {
-                Value = "",
+                Value = " ",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
             });
             model.ActiveList.Add(new SelectListItem
@@ -110,7 +110,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             });
 
             //customer roles
-            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
             foreach (var cr in _customerService.GetAllCustomerRoles(true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString() });
 
@@ -142,7 +142,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 					var m = x.ToModel();
 				    var store = _storeService.GetStoreById(x.StoreId);
 				    m.StoreName = store != null ? store.Name : "Unknown store";
-					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc).ToLongTimeString();
                     m.Categories = GetCategoryNames(x.Categories.ToList());
                     return m;
 				}),

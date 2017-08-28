@@ -1036,6 +1036,8 @@ namespace Grand.Services.ExportImport
                 sb.Append(separator);
                 sb.Append(subscription.Active);
                 sb.Append(separator);
+                sb.Append(subscription.CreatedOnUtc);
+                sb.Append(separator);
                 sb.Append(subscription.StoreId);
                 sb.Append(Environment.NewLine);  //new line
             }
