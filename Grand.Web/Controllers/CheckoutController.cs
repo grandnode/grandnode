@@ -135,7 +135,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("ShoppingCart");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //reset checkout data
             _customerService.ResetCheckoutData(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id);
@@ -175,7 +175,7 @@ namespace Grand.Web.Controllers
         {
             //validation
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             Order order = null;
             if (!String.IsNullOrEmpty(orderId))
@@ -228,7 +228,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //model
             var model = _checkoutWebService.PrepareBillingAddress(cart, prePopulateNewAddressWithCustomerFields: true);
@@ -299,7 +299,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //custom address attributes
             var customAttributes = _addressWebService.ParseCustomAddressAttributes(form);
@@ -372,7 +372,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!cart.RequiresShipping())
             {
@@ -420,7 +420,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!cart.RequiresShipping())
             {
@@ -533,7 +533,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!cart.RequiresShipping())
             {
@@ -574,7 +574,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!cart.RequiresShipping())
             {
@@ -650,7 +650,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //Check whether payment workflow is required
             //we ignore reward points during cart total calculation
@@ -705,7 +705,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //reward points
             if (_rewardPointsSettings.Enabled)
@@ -755,7 +755,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //Check whether payment workflow is required
             bool isPaymentWorkflowRequired = _checkoutWebService.IsPaymentWorkflowRequired(cart);
@@ -804,7 +804,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //Check whether payment workflow is required
             bool isPaymentWorkflowRequired = _checkoutWebService.IsPaymentWorkflowRequired(cart);
@@ -859,7 +859,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             //model
             var model = _checkoutWebService.PrepareConfirmOrder(cart);
@@ -880,7 +880,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
 
             //model
@@ -1106,7 +1106,7 @@ namespace Grand.Web.Controllers
                 return RedirectToRoute("Checkout");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = new OnePageCheckoutModel
             {
@@ -1727,7 +1727,7 @@ namespace Grand.Web.Controllers
                     return RedirectToRoute("HomePage");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
-                    return new UnauthorizedResult();
+                    return Challenge();
 
                 //get the order
                 var order = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,

@@ -386,7 +386,7 @@ namespace Grand.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToDeleteTopic(_workContext.CurrentCustomer, forumTopic))
                 {
-                    return new UnauthorizedResult();
+                    return new ChallengeResult();
                 }
                 var forum = _forumService.GetForumById(forumTopic.ForumId);
 
@@ -420,7 +420,7 @@ namespace Grand.Web.Controllers
             }
             if (_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum) == false)
             {
-                return new UnauthorizedResult();
+                return new ChallengeResult();
             }
             var model = _boardsWebService.PrepareEditForumTopic(forum);
             return View(model);
@@ -448,7 +448,7 @@ namespace Grand.Web.Controllers
                 {
                     if (!_forumService.IsCustomerAllowedToCreateTopic(_workContext.CurrentCustomer, forum))
                     {
-                        return new UnauthorizedResult();
+                        return new ChallengeResult();
                     }
 
                     string subject = model.Subject;
@@ -569,7 +569,7 @@ namespace Grand.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
             {
-                return new UnauthorizedResult();
+                return new ChallengeResult();
             }
 
             var forum = _forumService.GetForumById(forumTopic.ForumId);
@@ -618,7 +618,7 @@ namespace Grand.Web.Controllers
                 {
                     if (!_forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic))
                     {
-                        return new UnauthorizedResult();
+                        return new ChallengeResult();
                     }
 
                     string subject = model.Subject;
@@ -748,7 +748,7 @@ namespace Grand.Web.Controllers
             {
                 if (!_forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, forumPost))
                 {
-                    return new UnauthorizedResult();
+                    return new ChallengeResult();
                 }
 
                 var forumTopic = _forumService.GetTopicById(forumPost.TopicId);
@@ -794,7 +794,7 @@ namespace Grand.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
             {
-                return new UnauthorizedResult();
+                return new ChallengeResult();
             }
 
             var forum = _forumService.GetForumById(forumTopic.ForumId);
@@ -826,7 +826,7 @@ namespace Grand.Web.Controllers
                 try
                 {
                     if (!_forumService.IsCustomerAllowedToCreatePost(_workContext.CurrentCustomer, forumTopic))
-                        return new UnauthorizedResult();
+                        return new ChallengeResult();
 
                     var text = model.Text;
                     var maxPostLength = _forumSettings.PostMaxLength;
@@ -937,7 +937,7 @@ namespace Grand.Web.Controllers
             }
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
             {
-                return new UnauthorizedResult();
+                return new ChallengeResult();
             }
             var forumTopic = _forumService.GetTopicById(forumPost.TopicId);
             if (forumTopic == null)
@@ -992,7 +992,7 @@ namespace Grand.Web.Controllers
 
             if (!_forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, forumPost))
             {
-                return new UnauthorizedResult();
+                return new ChallengeResult();
             }
 
             var forumTopic = _forumService.GetTopicById(forumPost.TopicId);

@@ -709,7 +709,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult Info()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -724,7 +724,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult Info(CustomerInfoModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -887,7 +887,7 @@ namespace Grand.Web.Controllers
         {
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var openAuthenticationService = EngineContext.Current.Resolve<IExternalAuthenticationService>();
 
@@ -918,7 +918,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult Addresses()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = _customerWebService.PrepareAddressList(_workContext.CurrentCustomer);
             return View(model);
@@ -930,7 +930,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult AddressDelete(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -954,7 +954,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult AddressAdd()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = new CustomerAddressEditModel();
             _addressWebService.PrepareModel(model: model.Address,
@@ -970,7 +970,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult AddressAdd(CustomerAddressEditModel model, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1008,7 +1008,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult AddressEdit(string addressId)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
@@ -1031,7 +1031,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult AddressEdit(CustomerAddressEditModel model, string addressId, IFormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
             //find address (ensure that it belongs to the current customer)
@@ -1074,7 +1074,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult DownloadableProducts()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (_customerSettings.HideDownloadableProductsTab)
                 return RedirectToRoute("CustomerInfo");
@@ -1100,7 +1100,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult ChangePassword()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var model = new ChangePasswordModel();
 
@@ -1116,7 +1116,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult ChangePassword(ChangePasswordModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1149,7 +1149,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult Avatar()
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
@@ -1165,7 +1165,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult UploadAvatar(CustomerAvatarModel model, IFormFile uploadedFile)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
@@ -1226,7 +1226,7 @@ namespace Grand.Web.Controllers
         public virtual IActionResult RemoveAvatar(CustomerAvatarModel model)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
-                return new UnauthorizedResult();
+                return Challenge();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
                 return RedirectToRoute("CustomerInfo");
