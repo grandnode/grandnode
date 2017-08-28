@@ -94,7 +94,6 @@ namespace Grand.Framework.Infrastructure
             }
             else
             {
-                //builder.RegisterType<MongoClient>().As<IMongoClient>().InstancePerLifetimeScope();
                 builder.RegisterType<MongoDBContext>().As<IMongoDBContext>().InstancePerLifetimeScope();
             }
 
@@ -107,8 +106,9 @@ namespace Grand.Framework.Infrastructure
             //cache manager
             if (config.RedisCachingEnabled)
             {
-                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();                
-                builder.RegisterType<RedisCacheManager>().As<ICacheManager>().SingleInstance();
+                builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
+                builder.RegisterType<RedisConnectionWrapper>().As<IRedisConnectionWrapper>().SingleInstance();
+                builder.RegisterType<RedisCacheManager>().As<ICacheManager>().InstancePerLifetimeScope();
             }
             else
             {

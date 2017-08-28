@@ -1,11 +1,7 @@
 ﻿using Grand.Core.Configuration;
-using RedLock;
 using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace Grand.Core.Caching
 {
@@ -17,7 +13,6 @@ namespace Grand.Core.Caching
 
         private readonly Lazy<string> _connectionString;
         private volatile ConnectionMultiplexer _connection;
-        private volatile RedisLockFactory _redisLockFactory;
         private readonly object _lock = new object();
 
         #endregion
@@ -28,7 +23,6 @@ namespace Grand.Core.Caching
         {
             this._config = config;
             this._connectionString = new Lazy<string>(GetConnectionString);
-            this._redisLockFactory = CreateRedisLockFactory();
         }
 
         #endregion
@@ -67,37 +61,6 @@ namespace Grand.Core.Caching
             }
 
             return _connection;
-        }
-
-        /// <summary>
-        /// Create instance of RedisLockFactory
-        /// </summary>
-        /// <returns>RedisLockFactory</returns>
-        protected RedisLockFactory CreateRedisLockFactory()
-        {
-            //get password and value whether to use ssl from connection string
-            var password = string.Empty;
-            var useSsl = false;
-            foreach (var option in GetConnectionString().Split(',').Where(option => option.Contains('=')))
-            {
-                switch (option.Substring(0, option.IndexOf('=')).Trim().ToLowerInvariant())
-                {
-                    case "password":
-                        password = option.Substring(option.IndexOf('=') + 1).Trim();
-                        break;
-                    case "ssl":
-                        bool.TryParse(option.Substring(option.IndexOf('=') + 1).Trim(), out useSsl);
-                        break;
-                }
-            }
-
-            //create RedisLockFactory for using Redlock distributed lock algorithm
-            return new RedisLockFactory(GetEndPoints().Select(endPoint => new RedisLockEndPoint
-            {
-                EndPoint = endPoint,
-                Password = password,
-                Ssl = useSsl
-            }));
         }
 
         #endregion
@@ -148,29 +111,6 @@ namespace Grand.Core.Caching
         }
 
         /// <summary>
-        /// Perform some action with Redis distributed lock
-        /// </summary>
-        /// <param name="resource">The thing we are locking on</param>
-        /// <param name="expirationTime">The time after which the lock will automatically be expired by Redis</param>
-        /// <param name="action">Action to be performed with locking</param>
-        /// <returns>True if lock was acquired and action was performed; otherwise false</returns>
-        public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
-        {
-            //use RedLock library
-            using (var redisLock = _redisLockFactory.Create(resource, expirationTime))
-            {
-                //ensure that lock is acquired
-                if (!redisLock.IsAcquired)
-                    return false;
-
-                //perform action
-                action();
-
-                return true;
-            }
-        }
-
-        /// <summary>
         /// Release all resources associated with this object
         /// </summary>
         public void Dispose()
@@ -178,10 +118,6 @@ namespace Grand.Core.Caching
             //dispose ConnectionMultiplexer
             if (_connection != null)
                 _connection.Dispose();
-
-            //dispose RedisLockFactory
-            if (_redisLockFactory != null)
-                _redisLockFactory.Dispose();
         }
 
         #endregion

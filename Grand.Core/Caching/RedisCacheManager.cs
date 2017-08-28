@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Text;
 using Newtonsoft.Json;
 using Grand.Core.Configuration;
 using StackExchange.Redis;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Caching.Redis;
 
 namespace Grand.Core.Caching
 {
@@ -16,27 +13,22 @@ namespace Grand.Core.Caching
     {
         #region Fields
 
-        private readonly ICacheManager _perRequestCacheManager;
         private readonly IRedisConnectionWrapper _connectionWrapper;
-
         private readonly IDatabase _db;
 
         #endregion
 
         #region Ctor
 
-        public RedisCacheManager(ICacheManager perRequestCacheManager,
+        public RedisCacheManager(/*ICacheManager perRequestCacheManager,*/
             IRedisConnectionWrapper connectionWrapper,
             GrandConfig config)
         {
             if (string.IsNullOrEmpty(config.RedisCachingConnectionString))
                 throw new Exception("Redis connection string is empty");
 
-            this._perRequestCacheManager = perRequestCacheManager;
-
-            // ConnectionMultiplexer.Connect should only be called once and shared between callers
             this._connectionWrapper = connectionWrapper;
-
+            
             this._db = _connectionWrapper.GetDatabase();
         }
 
@@ -52,11 +44,6 @@ namespace Grand.Core.Caching
         /// <returns>The cached value associated with the specified key</returns>
         public virtual T Get<T>(string key)
         {
-            //little performance workaround here:
-            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
-            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
-                return _perRequestCacheManager.Get<T>(key);
 
             //get serialized item from cache
             var serializedItem = _db.StringGet(key);
@@ -67,9 +54,6 @@ namespace Grand.Core.Caching
             var item = JsonConvert.DeserializeObject<T>(serializedItem);
             if (item == null)
                 return default(T);
-
-            //set item in the per-request cache
-            _perRequestCacheManager.Set(key, item, 0);
 
             return item;
         }
@@ -102,12 +86,6 @@ namespace Grand.Core.Caching
         /// <returns>True if item already is in cache; otherwise false</returns>
         public virtual bool IsSet(string key)
         {
-            //little performance workaround here:
-            //we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
-            //this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (_perRequestCacheManager.IsSet(key))
-                return true;
-
             return _db.KeyExists(key);
         }
 
@@ -119,7 +97,6 @@ namespace Grand.Core.Caching
         {
             //remove item from caches
             _db.KeyDelete(key);
-            _perRequestCacheManager.Remove(key);
         }
 
         /// <summary>
@@ -145,10 +122,6 @@ namespace Grand.Core.Caching
             foreach (var endPoint in _connectionWrapper.GetEndPoints())
             {
                 var server = _connectionWrapper.GetServer(endPoint);
-                //we can use the code below (commented)
-                //but it requires administration permission - ",allowAdmin=true"
-                //server.FlushDatabase();
-
                 //that's why we simply interate through all elements now
                 var keys = server.Keys(database: _db.Database);
                 foreach (var key in keys)
@@ -161,8 +134,6 @@ namespace Grand.Core.Caching
         /// </summary>
         public virtual void Dispose()
         {
-            //if (_connectionWrapper != null)
-            //    _connectionWrapper.Dispose();
         }
 
         #endregion
