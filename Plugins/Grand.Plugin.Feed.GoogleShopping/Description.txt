@@ -1,0 +1,8 @@
+﻿Group: Promotion feeds
+FriendlyName: Google Shopping - Google Product Search
+SystemName: PromotionFeed.GoogleShopping
+Version: 1.76
+SupportedVersions: 4.00
+Author: grandnode team
+DisplayOrder: 1
+FileName: Grand.Plugin.Feed.GoogleShopping.dll

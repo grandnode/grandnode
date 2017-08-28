@@ -1,0 +1,125 @@
+﻿@model FeedGoogleShoppingModel
+@using Grand.Core.Infrastructure
+@using Grand.Plugin.Feed.GoogleShopping.Models;
+@using Grand.Framework;
+@using Grand.Framework.UI;
+@using Grand.Core.Domain.Common;
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+@{
+
+
+    <div class="panel panel-default GoogleShopping">
+        <div class="panel-body">
+            <div id="GoogleShoppingproducts-grid"></div>
+        </div>
+    </div>
+    <script id="google-popup-editor" type="text/x-kendo-template">
+        <div class="editor-label"><label for="GoogleCategory">@T("Plugins.Feed.GoogleShopping.Products.GoogleCategory")</label></div>
+        <div class="editor-field"><input name="GoogleCategory" /></div>
+        <div class="editor-label"><label for="Gender">@T("Plugins.Feed.GoogleShopping.Products.Gender")</label></div>
+        <div class="editor-field"><input name="Gender" /></div>
+        <div class="editor-label"><label for="AgeGroup">@T("Plugins.Feed.GoogleShopping.Products.AgeGroup")</label></div>
+        <div class="editor-field"><input name="AgeGroup" /></div>
+        <div class="editor-label"><label for="Color">@T("Plugins.Feed.GoogleShopping.Products.Color")</label></div>
+        <div class="editor-field"><input name="Color" /></div>
+        <div class="editor-label"><label for="GoogleSize">@T("Plugins.Feed.GoogleShopping.Products.Size")</label></div>
+        <div class="editor-field"><input name="GoogleSize" /></div>
+        <div class="editor-label"><label for="CustomGoods">@T("Plugins.Feed.GoogleShopping.Products.CustomGoods")</label></div>
+        <div class="editor-field"><input name="CustomGoods" type="checkbox" /></div>
+    </script>
+
+        <script>
+                    $(document).ready(function() {
+                        $("#GoogleShoppingproducts-grid").kendoGrid({
+                            dataSource: {
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("GoogleProductList", "FeedGoogleShopping"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("GoogleProductUpdate", "FeedGoogleShopping"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            ProductId: { editable: false, type: "string" },
+                                            ProductName: { editable: false, type: "string" },
+                                            GoogleCategory: { editable: true, type: "string" },
+                                            Gender: { editable: true, type: "string" },
+                                            AgeGroup: { editable: true, type: "string" },
+                                            Color: { editable: true, type: "string" },
+                                            GoogleSize: { editable: true, type: "string" },
+                                            CustomGoods: { editable: true, type: "bool" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function(e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "popup",
+                                template: kendo.template($("#google-popup-editor").html())
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "ProductName",
+                                title: "@T("Plugins.Feed.GoogleShopping.Products.ProductName")",
+                                width: 300
+                            }, {
+                                field: "Id",
+                                title: "Data",
+                                width: 300,
+                                template: '<div class="google-info">' +
+                                    '<dl>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.GoogleCategory", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(GoogleCategory !== null) {# #:GoogleCategory# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Gender", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(Gender !== null) {# #:Gender# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.AgeGroup", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(AgeGroup !== null) {# #:AgeGroup# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Color", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(Color !== null) {# #:Color# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.Size", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd># if(GoogleSize !== null) {# #:GoogleSize# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.GoogleShopping.Products.CustomGoods", new Dictionary<string, object> { { "class", "control-label" } }, false)</dt><dd>#:CustomGoods#</dd>' +
+                                    '</dl>' +
+                                    '</div>'
+                            }, {
+                                command: {name: "edit", text: "@T("Admin.Common.Edit")"},
+                                title: "@T("Admin.Common.Edit")",
+                                width: 150
+                            }
+                            ]
+                        });
+                    });
+        </script>
+}

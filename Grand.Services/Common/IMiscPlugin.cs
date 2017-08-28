@@ -9,12 +9,6 @@ namespace Grand.Services.Common
     /// </summary>
     public partial interface IMiscPlugin : IPlugin
     {
-        /// <summary>
-        /// Gets a route for plugin configuration
-        /// </summary>
-        /// <param name="actionName">Action name</param>
-        /// <param name="controllerName">Controller name</param>
-        /// <param name="routeValues">Route values</param>
-        void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues);
+        
     }
 }
