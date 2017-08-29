@@ -724,8 +724,7 @@ namespace Grand.Web.Services
             var productPicturesCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DETAILS_PICTURES_MODEL_KEY, product.Id, defaultPictureSize, isAssociatedProduct, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
             var cachedPictures = _cacheManager.Get(productPicturesCacheKey, () =>
             {
-                //_pictureService.GetPicturesByProductId(product.Id);
-                var defaultPicture = product.ProductPictures.FirstOrDefault();
+                var defaultPicture = product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault();
                 if (defaultPicture == null)
                     defaultPicture = new ProductPicture();
 
@@ -745,7 +744,7 @@ namespace Grand.Web.Services
 
                 //all pictures
                 var pictureModels = new List<PictureModel>();
-                foreach (var picture in product.ProductPictures)
+                foreach (var picture in product.ProductPictures.OrderBy(x => x.DisplayOrder))
                 {
                     var pictureModel = new PictureModel
                     {
