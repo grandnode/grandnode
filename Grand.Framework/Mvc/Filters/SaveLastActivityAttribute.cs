@@ -67,7 +67,7 @@ namespace Grand.Framework.Mvc.Filters
                 if (_workContext.CurrentCustomer.LastActivityDateUtc.AddMinutes(1.0) < DateTime.UtcNow)
                 {
                     _workContext.CurrentCustomer.LastActivityDateUtc = DateTime.UtcNow;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    _customerService.UpdateCustomerLastActivityDate(_workContext.CurrentCustomer);
                 }
             }
 

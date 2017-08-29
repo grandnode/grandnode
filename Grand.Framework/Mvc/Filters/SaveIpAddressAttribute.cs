@@ -75,7 +75,7 @@ namespace Grand.Framework.Mvc.Filters
                 if (!currentIpAddress.Equals(_workContext.CurrentCustomer.LastIpAddress, StringComparison.OrdinalIgnoreCase))
                 {
                     _workContext.CurrentCustomer.LastIpAddress = currentIpAddress;
-                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                    _customerService.UpdateCustomerLastIpAddress(_workContext.CurrentCustomer);
                 }
             }
 
