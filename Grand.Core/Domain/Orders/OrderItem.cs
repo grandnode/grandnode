@@ -97,8 +97,7 @@ namespace Grand.Core.Domain.Orders
 
         /// <summary>
         /// Gets or sets the total weight of one item
-        /// </summary>
-        [BsonRepresentation(BsonType.Double, AllowTruncation = true)]
+        /// </summary>       
         public decimal? ItemWeight { get; set; }
 
         /// <summary>

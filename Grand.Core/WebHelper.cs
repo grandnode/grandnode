@@ -80,20 +80,7 @@ namespace Grand.Core
             {
                 return false;
             }
-        }
-
-        protected virtual bool TryWriteGlobalAsax()
-        {
-            try
-            {
-                File.SetLastWriteTimeUtc(CommonHelper.MapPath("~/global.asax"), DateTime.UtcNow);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+        }        
 
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
