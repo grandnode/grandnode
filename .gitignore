@@ -157,7 +157,7 @@ glob:*.user
 Grand.Web/wwwroot/Content/Images/Thumbs/*.jpg
 Grand.Web/wwwroot/Content/Images/Thumbs/*.jpeg
 Grand.Web/wwwroot/Content/Images/Thumbs/*.png
-Grand.Web/wwwroot/Content/Files/ExportImport/*.xml
+Grand.Web/wwwroot/Content/Files/ExportImport/*.*
 Grand.Web/wwwroot/bundles/*.*
 Grand.Web/App_Data/InstalledPlugins.txt
 Grand.Web/App_Data/Settings.txt
