@@ -6,9 +6,11 @@
 }
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
 @using (Html.BeginForm("AddProductToOrderDetails", "Order",
-                new RouteValueDictionary(new { orderId = Model.OrderId, productId = Model.ProductId }),
-                FormMethod.Post,
-                new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+            new { orderId = Model.OrderId, productId = Model.ProductId },
+            FormMethod.Post,
+            false,
+             new Dictionary<string, Object> { { "enctype", "multipart/form-data" } })
+             )
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(false)
@@ -72,20 +74,24 @@
                                     </div>
                                 </div>
                                 
-                                @Html.Partial("_ProductAddAttributes", Model.ProductAttributes)
-                                
-
+                                @*@Html.Partial("_ProductAddAttributes", Model.ProductAttributes)*@
+                                @{ 
+                                    var dataDict = new ViewDataDictionary(ViewData) { new KeyValuePair<string, object>("productId", Model.ProductId) };
+                                    @await Html.PartialAsync("_ProductAddAttributes", Model.ProductAttributes, dataDict)
+                                }
                                 @{
-                                    var dataDictGiftCard = new ViewDataDictionary();
+
+                                    var dataDictGiftCard = new ViewDataDictionary(ViewData);
                                     dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
-                                    @Html.Partial("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
+                                    @await Html.PartialAsync("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
+
                                 }
                                 <div class="form-group">
                                     @Html.Partial("_ProductAddRentalInfo", Model)
                                 </div>
                                 <div class="form-actions">
                                     <div class="row">
-                                        <div class="col-md-offset-3 col-md-11 col-sm-11">
+                                        <div class="col-md-offset-3 col-md-9 col-sm-9">
                                             <div class="note note-info">
                                                 <strong>@T("Admin.Orders.Products.AddNew.Note2")</strong>
                                             </div>
@@ -96,24 +102,24 @@
                                 </div>
                             </div>
                         </div>
-                                }
-                                else if (Model.ProductType == ProductType.GroupedProduct)
-                                {
+                                    }
+                                    else if (Model.ProductType == ProductType.GroupedProduct)
+                                    {
                                     <div>
                                         @*TODO add support for grouped products to be added to an existing order*@
                                         <div class="note note-info">
                                             Grouped products are not currently supported for adding to an existing order
                                         </div>
                                     </div>
-                                }
-                                else
-                                {
+                                    }
+                                    else
+                                    {
                                     <div class="note note-info">
                                         This product type (unknown) is not currently supported for adding to an existing order
                                     </div>
-                                }
+                                    }
                 </div>
             </div>
         </div>
     </div>
-                                }
+                                    }
