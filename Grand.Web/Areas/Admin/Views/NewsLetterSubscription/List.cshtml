@@ -45,12 +45,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.GrandLabelFor(model => model.CustomerRoleId)
-                                <div class="col-md-9 col-sm-9">
-                                    @Html.GrandDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 @Html.GrandLabelFor(model => model.SearchCategoryIds)
                                 <div class="col-md-8 col-sm-8">
                                     @Html.EditorFor(model => model.SearchCategoryIds, new { SelectList = Model.AvailableCategories })
@@ -214,7 +208,6 @@
                 SearchCategoryIds: categoryIds,
                 ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
                 StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
-                CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),
                 SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
             };
             addAntiForgeryToken(data);

@@ -109,11 +109,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
 
-            //customer roles
-            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
-            foreach (var cr in _customerService.GetAllCustomerRoles(true))
-                model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString() });
-
             foreach (var ca in _newsletterCategoryService.GetAllNewsletterCategory())
                 model.AvailableCategories.Add(new SelectListItem { Text = ca.Name, Value = ca.Id.ToString() });
 

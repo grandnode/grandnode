@@ -15,7 +15,6 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         {
             AvailableStores = new List<SelectListItem>();
             ActiveList = new List<SelectListItem>();
-            AvailableCustomerRoles = new List<SelectListItem>();
             SearchCategoryIds = new List<string>();
             AvailableCategories = new List<SelectListItem>();
         }
@@ -31,10 +30,6 @@ namespace Grand.Web.Areas.Admin.Models.Messages
         public int ActiveId { get; set; }
         [GrandResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive")]
         public IList<SelectListItem> ActiveList { get; set; }
-
-        [GrandResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles")]
-        public int CustomerRoleId { get; set; }
-        public IList<SelectListItem> AvailableCustomerRoles { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.Categories")]
         
