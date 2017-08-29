@@ -5,6 +5,7 @@ using Grand.Core;
 using Grand.Core.Domain.Affiliates;
 using Grand.Services.Affiliates;
 using Grand.Services.Customers;
+using Grand.Core.Data;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -89,7 +90,10 @@ namespace Grand.Framework.Mvc.Filters
 
                 //check request query parameters
                 var request = context.HttpContext.Request;
-                if (request.Query == null || !request.Query.Any())
+                if (request?.Query == null || !request.Query.Any())
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;
 
                 //try to find by ID

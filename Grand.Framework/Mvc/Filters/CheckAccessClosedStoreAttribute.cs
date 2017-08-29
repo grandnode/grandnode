@@ -17,14 +17,18 @@ namespace Grand.Framework.Mvc.Filters
     /// </summary>
     public class CheckAccessClosedStoreAttribute : TypeFilterAttribute
     {
+        private readonly bool _ignoreFilter;
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessClosedStoreAttribute(bool ignore = false) : base(typeof(CheckAccessClosedStoreFilter))
         {
+            this._ignoreFilter = ignore;
             this.Arguments = new object[] { ignore };
         }
+
+        public bool IgnoreFilter => _ignoreFilter;
 
         #region Nested filter
 
@@ -68,11 +72,15 @@ namespace Grand.Framework.Mvc.Filters
             /// <param name="context">A context for action filters</param>
             public void OnActionExecuting(ActionExecutingContext context)
             {
-                //ignore filter (the action available even when a store is closed)
-                if (_ignoreFilter)
+                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
                     return;
 
-                if (context == null || context.HttpContext == null || context.HttpContext.Request == null)
+                //check whether this filter has been overridden for the Action
+                var actionFilter = context.ActionDescriptor.FilterDescriptors
+                    .Where(f => f.Scope == FilterScope.Action)
+                    .Select(f => f.Filter).OfType<CheckAccessClosedStoreAttribute>().FirstOrDefault();
+
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return;
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())

@@ -6,19 +6,24 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Logging;
 using Grand.Core.Domain.Security;
+using System.Linq;
 
 namespace Grand.Framework.Security
 {
     public class AdminAntiForgeryAttribute : TypeFilterAttribute
     {
+        private readonly bool _ignoreFilter;
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         public AdminAntiForgeryAttribute(bool ignore = false) : base(typeof(AdminAntiForgeryFilter))
         {
+            this._ignoreFilter = ignore;
             this.Arguments = new object[] {ignore};
         }
 
+        public bool IgnoreFilter => _ignoreFilter;
 
         #region Nested filter
 
@@ -29,18 +34,18 @@ namespace Grand.Framework.Security
         {
             #region Fields
 
-            private readonly bool _ignore;
+            private readonly bool _ignoreFilter;
             private readonly SecuritySettings _securitySettings;
 
             #endregion
 
             #region Ctor
 
-            public AdminAntiForgeryFilter(bool ignore, SecuritySettings securitySettings, IAntiforgery antiforgery,
+            public AdminAntiForgeryFilter(bool ignoreFilter, SecuritySettings securitySettings, IAntiforgery antiforgery,
                 ILoggerFactory loggerFactory)
                 : base(antiforgery, loggerFactory)
             {
-                this._ignore = ignore;
+                this._ignoreFilter = ignoreFilter;
                 this._securitySettings = securitySettings;
             }
 
@@ -55,9 +60,6 @@ namespace Grand.Framework.Security
                     return false;
                 }
 
-                if (_ignore)
-                    return false;
-
                 if (!_securitySettings.EnableXsrfProtectionForAdminArea)
                     return false;
 
@@ -66,6 +68,15 @@ namespace Grand.Framework.Security
                 if (request == null)
                     return false;
                 if (request.Method.ToLower()=="get")
+                    return false;
+
+                //check whether this filter has been overridden for the Action
+                var actionFilter = context.ActionDescriptor.FilterDescriptors
+                    .Where(f => f.Scope == FilterScope.Action)
+                    .Select(f => f.Filter).OfType<AdminAntiForgeryAttribute>().FirstOrDefault();
+
+                //ignore this filter
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
                     return false;
 
                 return true;

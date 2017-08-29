@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Services.Security;
+using Grand.Core.Data;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -11,14 +12,19 @@ namespace Grand.Framework.Mvc.Filters
     /// </summary>
     public class AuthorizeAdminAttribute : TypeFilterAttribute
     {
+        private readonly bool _ignoreFilter;
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public AuthorizeAdminAttribute(bool ignore = false) : base(typeof(AuthorizeAdminFilter))
         {
+            this._ignoreFilter = ignore;
             this.Arguments = new object[] { ignore };
         }
+
+        public bool IgnoreFilter => _ignoreFilter;
 
         #region Nested filter
 
@@ -52,12 +58,21 @@ namespace Grand.Framework.Mvc.Filters
             /// <param name="filterContext">Authorization filter context</param>
             public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
-                //ignore filter actions
-                if (_ignoreFilter)
-                    return;
-
+                
                 if (filterContext == null)
                     throw new ArgumentNullException("filterContext");
+
+                //check whether this filter has been overridden for the action
+                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
+                    .Where(f => f.Scope == FilterScope.Action)
+                    .Select(f => f.Filter).OfType<AuthorizeAdminAttribute>().FirstOrDefault();
+
+                //ignore filter (the action is available even if a customer hasn't access to the admin area)
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                    return;
+
+                if (!DataSettingsHelper.DatabaseIsInstalled())
+                    return;
 
                 //there is AdminAuthorizeFilter, so check access
                 if (filterContext.Filters.Any(filter => filter is AuthorizeAdminFilter))

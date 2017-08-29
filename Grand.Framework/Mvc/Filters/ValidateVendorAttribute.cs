@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Core;
 using Grand.Core.Data;
 using Grand.Core.Domain.Customers;
+using System.Linq;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -12,14 +13,19 @@ namespace Grand.Framework.Mvc.Filters
     /// </summary>
     public class ValidateVendorAttribute : TypeFilterAttribute
     {
+        private readonly bool _ignoreFilter;
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public ValidateVendorAttribute(bool ignore = false) : base(typeof(ValidateVendorFilter))
         {
+            this._ignoreFilter = ignore;
             this.Arguments = new object[] { ignore };
         }
+
+        public bool IgnoreFilter => _ignoreFilter;
 
         #region Nested filter
 
@@ -54,11 +60,17 @@ namespace Grand.Framework.Mvc.Filters
             public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
                 //ignore filter actions
-                if (_ignoreFilter)
-                    return;
-
                 if (filterContext == null)
-                    throw new ArgumentNullException("filterContext");
+                    throw new ArgumentNullException(nameof(filterContext));
+
+                //check whether this filter has been overridden for the Action
+                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
+                    .Where(f => f.Scope == FilterScope.Action)
+                    .Select(f => f.Filter).OfType<ValidateVendorAttribute>().FirstOrDefault();
+
+                //ignore filter (the action is available even if the current customer isn't a vendor)
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                    return;
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;

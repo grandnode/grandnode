@@ -189,7 +189,7 @@ namespace Grand.Web.Controllers
         //contact us page
         [HttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
-        //[CheckAccessClosedStore(true)]
+        [CheckAccessClosedStore(true)]
         public virtual IActionResult ContactUs()
         {
             var model = _commonWebService.PrepareContactUs();

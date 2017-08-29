@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Grand.Core.Data;
 using Grand.Services.Security;
+using System.Linq;
 
 namespace Grand.Framework.Mvc.Filters
 {
@@ -11,14 +12,19 @@ namespace Grand.Framework.Mvc.Filters
     /// </summary>
     public class CheckAccessPublicStoreAttribute : TypeFilterAttribute
     {
+        private readonly bool _ignoreFilter;
+
         /// <summary>
         /// Create instance of the filter attribute
         /// </summary>
         /// <param name="ignore">Whether to ignore the execution of filter actions</param>
         public CheckAccessPublicStoreAttribute(bool ignore = false) : base(typeof(CheckAccessPublicStoreFilter))
         {
+            this._ignoreFilter = ignore;
             this.Arguments = new object[] { ignore };
         }
+
+        public bool IgnoreFilter => _ignoreFilter;
 
         #region Nested filter
 
@@ -53,11 +59,17 @@ namespace Grand.Framework.Mvc.Filters
             public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
                 //ignore filter (the action available even when navigation is not allowed)
-                if (_ignoreFilter)
-                    return;
-
                 if (filterContext == null)
-                    throw new ArgumentNullException("filterContext");
+                    throw new ArgumentNullException(nameof(filterContext));
+
+                //check whether this filter has been overridden for the Action
+                var actionFilter = filterContext.ActionDescriptor.FilterDescriptors
+                    .Where(f => f.Scope == FilterScope.Action)
+                    .Select(f => f.Filter).OfType<CheckAccessPublicStoreAttribute>().FirstOrDefault();
+
+                //ignore filter (the action is available even if navigation is not allowed)
+                if (actionFilter?.IgnoreFilter ?? _ignoreFilter)
+                    return;
 
                 if (!DataSettingsHelper.DatabaseIsInstalled())
                     return;

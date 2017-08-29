@@ -56,7 +56,7 @@ namespace Grand.Framework.Mvc.Filters
             /// <param name="filterContext">Authorization filter context</param>
             public void OnAuthorization(AuthorizationFilterContext filterContext)
             {
-                if (filterContext == null)
+                if (filterContext == null || filterContext.HttpContext.Request == null)
                     throw new ArgumentNullException("filterContext");
 
                 //whether honeypot is enabled
