@@ -133,7 +133,7 @@
                                 @Html.GrandLabelFor(model => model.GoDirectlyToNumber, new Dictionary<string, object> { { "class", "control-label col-md-4 col-sm-4 " } }, false)
                                 <div class="col-md-8 col-sm-8">
                                     @Html.GrandEditorFor(model => model.GoDirectlyToNumber)
-                                    <input type="submit" name="go-to-order-by-number" class="k-button" value="@T("Admin.Common.Go")" />
+                                    <input type="submit" name="go-to-order-by-number" id="gotoorderbynumber" class="k-button" value="@T("Admin.Common.Go")" />
                                 </div>
                             </div>
                         </div>
@@ -352,6 +352,39 @@
             });
 
             $("#@Html.FieldIdFor(model => model.BillingLastName)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-orders").click();
+                    return false;
+                }
+            });
+
+            $("#@Html.FieldIdFor(model => model.OrderGuid)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-orders").click();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.StartDate)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-orders").click();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.EndDate)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-orders").click();
+                    return false;
+                }
+            });
+
+            $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#gotoorderbynumber").click();
+                    return false;
+                }
+            });
+
+            $("#search-product-name").keydown(function (event) {
                 if (event.keyCode == 13) {
                     $("#search-orders").click();
                     return false;

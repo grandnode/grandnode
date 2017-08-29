@@ -731,7 +731,7 @@ namespace Grand.Services.ExportImport
                 xmlWriter.WriteElementString("OrderDiscount", null, order.OrderDiscount.ToString());
                 xmlWriter.WriteElementString("CurrencyRate", null, order.CurrencyRate.ToString());
                 xmlWriter.WriteElementString("CustomerCurrencyCode", null, order.CustomerCurrencyCode);
-                xmlWriter.WriteElementString("AffiliateId", null, order.AffiliateId.ToString());
+                xmlWriter.WriteElementString("AffiliateId", null, order.AffiliateId);
                 xmlWriter.WriteElementString("AllowStoringCreditCardNumber", null, order.AllowStoringCreditCardNumber.ToString());
                 xmlWriter.WriteElementString("CardType", null, order.CardType);
                 xmlWriter.WriteElementString("CardName", null, order.CardName);
