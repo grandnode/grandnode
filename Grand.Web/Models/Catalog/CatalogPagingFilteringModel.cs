@@ -95,22 +95,29 @@ namespace Grand.Web.Models.Catalog
                 var priceRanges = new List<PriceRange>();
                 if (string.IsNullOrWhiteSpace(priceRangesStr))
                     return priceRanges;
-                string[] rangeArray = priceRangesStr.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string str1 in rangeArray)
+                try
                 {
-                    string[] fromTo = str1.Trim().Split(new [] { '-' });
+                    string[] rangeArray = priceRangesStr.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string str1 in rangeArray)
+                    {
+                        string[] fromTo = str1.Trim().Split(new[] { '-' });
 
-                    decimal? from = null;
-                    if (!String.IsNullOrEmpty(fromTo[0]) && !String.IsNullOrEmpty(fromTo[0].Trim()))
-                        from = decimal.Parse(fromTo[0].Trim(), new CultureInfo("en-US"));
+                        decimal? from = null;
+                        if (!String.IsNullOrEmpty(fromTo[0]) && !String.IsNullOrEmpty(fromTo[0].Trim()))
+                            from = decimal.Parse(fromTo[0].Trim(), new CultureInfo("en-US"));
 
-                    decimal? to = null;
-                    if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
-                        to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
+                        decimal? to = null;
+                        if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
+                            to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
 
-                    priceRanges.Add(new PriceRange { From = from, To = to });
+                        priceRanges.Add(new PriceRange { From = from, To = to });
+                    }
+                    return priceRanges;
                 }
-                return priceRanges;
+                catch
+                {
+                    return priceRanges;
+                }
             }
 
             protected virtual string ExcludeQueryStringParams(string url, IWebHelper webHelper)

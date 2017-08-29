@@ -394,7 +394,7 @@ namespace Grand.Web.Services
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, currentLanguageId, _webHelper.IsCurrentConnectionSecured(), currentStoreId);
                     model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
                     {
-                        var picture = product.ProductPictures.FirstOrDefault();
+                        var picture = product.ProductPictures.OrderBy(x=>x.DisplayOrder).FirstOrDefault();
                         if (picture == null)
                             picture = new ProductPicture();
 
