@@ -353,14 +353,14 @@ namespace Grand.Web.Infrastructure
 
             //order downloads
             routeBuilder.MapRoute("GetDownload",
-                            "download/getdownload/{orderItemId:guid}/{agree}",
+                            "download/getdownload/{orderItemId}/{agree?}",
                             new { controller = "Download", action = "GetDownload" });
 
             routeBuilder.MapRoute("GetLicense",
-                            "download/getlicense/{orderItemId:guid}/",
+                            "download/getlicense/{orderItemId}/",
                             new { controller = "Download", action = "GetLicense" });
             routeBuilder.MapLocalizedRoute("DownloadUserAgreement",
-                            "customer/useragreement/{orderItemId:guid}",
+                            "customer/useragreement/{orderItemId}",
                             new { controller = "Customer", action = "UserAgreement" });
             routeBuilder.MapRoute("GetOrderNoteFile",
                             "download/ordernotefile/{ordernoteid}",
