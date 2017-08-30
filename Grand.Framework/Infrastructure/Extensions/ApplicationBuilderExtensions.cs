@@ -144,8 +144,8 @@ namespace Grand.Framework.Infrastructure.Extensions
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
 
-            application.UseAuthentication();
-            
+            application.UseMiddleware<AuthenticationMiddleware>();
+
         }
 
         /// <summary>

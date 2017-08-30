@@ -1,0 +1,13 @@
+﻿@using Grand.Framework.UI
+@{
+    Layout = "";
+    Html.AddCssFileParts("~/Plugins/ExternalAuth.Facebook/netcoreapp2.0/Content/facebookstyles.css");
+}
+<div class="facebook-login-block">
+    <div class="title">
+        @T("Plugins.ExternalAuth.Facebook.Login")
+    </div>
+    <div class="buttons">
+        <a href="@Url.Action("Login", "FacebookAuthentication", new { ReturnUrl = Context.Request.Query["ReturnUrl"].ToString()})" class="facebook-btn"></a>
+    </div>
+</div>

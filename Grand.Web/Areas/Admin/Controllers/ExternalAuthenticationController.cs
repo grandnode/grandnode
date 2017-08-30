@@ -63,6 +63,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             {
                 var tmp1 = method.ToModel();
                 tmp1.IsActive = method.IsMethodActive(_externalAuthenticationSettings);
+                tmp1.ConfigurationUrl = method.GetConfigurationPageUrl();
                 methodsModel.Add(tmp1);
             }
             methodsModel = methodsModel.ToList();

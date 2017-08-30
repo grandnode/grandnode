@@ -1,0 +1,8 @@
+Group: ExternalAuth methods
+FriendlyName: Facebook authentication
+SystemName: ExternalAuth.Facebook
+Version: 1.41
+SupportedVersions: 4.00
+Author: grandnode team
+DisplayOrder: 5
+FileName: Grand.Plugin.ExternalAuth.Facebook.dll

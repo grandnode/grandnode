@@ -18,6 +18,9 @@ using Grand.Framework.Themes;
 using Grand.Service.Authentication;
 using FluentValidation.AspNetCore;
 using FluentScheduler;
+using System.Linq;
+using Grand.Core.Plugins;
+using Grand.Services.Authentication.External;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -151,6 +154,27 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddGrandAuthentication(this IServiceCollection services)
         {
+
+            //set default authentication schemes
+            var authenticationBuilder = services.AddAuthentication(options =>
+            {
+                options.DefaultChallengeScheme = GrandCookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = GrandCookieAuthenticationDefaults.ExternalAuthenticationScheme;
+            });
+
+            //register external authentication plugins now
+            var typeFinder = new WebAppTypeFinder();
+            var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
+            //create and sort instances of external authentication configurations
+            var externalAuthInstances = externalAuthConfigurations
+                .Where(x => PluginManager.FindPlugin(x)?.Installed ?? true) //ignore not installed plugins
+                .Select(x => (IExternalAuthenticationRegistrar)Activator.CreateInstance(x))
+                .OrderBy(x => x.Order);
+
+            //configure services
+            foreach (var instance in externalAuthInstances)
+                instance.Configure(authenticationBuilder);
+
             //enable main cookie authentication
             services.AddAuthentication(options =>
             {
