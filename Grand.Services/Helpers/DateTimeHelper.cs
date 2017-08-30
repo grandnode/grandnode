@@ -121,7 +121,7 @@ namespace Grand.Services.Helpers
         public virtual DateTime ConvertToUtcTime(DateTime dt, DateTimeKind sourceDateTimeKind)
         {
             dt = DateTime.SpecifyKind(dt, sourceDateTimeKind);
-            return TimeZoneInfo.ConvertTime(dt, TimeZoneInfo.Utc);
+            return TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Utc);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Grand.Services.Helpers
             if (dt.Kind == DateTimeKind.Utc)
                 return dt;
 
-            return TimeZoneInfo.ConvertTime(dt, sourceTimeZone);
+            return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
         }
 
         /// <summary>
