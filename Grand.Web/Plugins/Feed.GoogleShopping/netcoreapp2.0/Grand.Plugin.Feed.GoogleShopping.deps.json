@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "e3e4822d634e8faff5e1004e4160883a7aded387"
+    "signature": "49617594ab326ef09ef4dd3bcb19a9420841a4fb"
   },
   "compilationOptions": {},
   "targets": {
@@ -60,14 +60,14 @@
           "lib/netstandard1.3/AutoMapper.dll": {}
         }
       },
-      "AutoMapper.Extensions.Microsoft.DependencyInjection/2.0.1": {
+      "AutoMapper.Extensions.Microsoft.DependencyInjection/3.0.1": {
         "dependencies": {
           "AutoMapper": "6.1.1",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "2.0.0",
           "Microsoft.Extensions.DependencyModel": "2.0.0"
         },
         "runtime": {
-          "lib/netstandard1.6/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
+          "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
       "AWSSDK.Core/3.3.17.5": {
@@ -378,6 +378,15 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Core.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.OAuth/2.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication": "2.0.0",
+          "Newtonsoft.Json": "10.0.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.OAuth.dll": {}
         }
       },
       "Microsoft.AspNetCore.Authorization/2.0.0": {
@@ -3063,7 +3072,7 @@
       "Grand.Core/1.0.0": {
         "dependencies": {
           "AutoMapper": "6.1.1",
-          "AutoMapper.Extensions.Microsoft.DependencyInjection": "2.0.1",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "3.0.1",
           "Autofac": "4.6.1",
           "Autofac.Extensions.DependencyInjection": "4.2.0",
           "Microsoft.AspNetCore.Http": "2.0.0",
@@ -3138,7 +3147,9 @@
           "Grand.Data": "1.0.0",
           "MaxMind.GeoIP2": "2.8.0",
           "Microsoft.AspNetCore": "2.0.0",
+          "Microsoft.AspNetCore.Authentication": "2.0.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "2.0.0",
+          "Microsoft.AspNetCore.Authentication.OAuth": "2.0.0",
           "Microsoft.AspNetCore.Mvc": "2.0.0",
           "Microsoft.AspNetCore.Routing": "2.0.0",
           "MimeMapping": "0.1.6",
@@ -3204,12 +3215,12 @@
       "path": "automapper/6.1.1",
       "hashPath": "automapper.6.1.1.nupkg.sha512"
     },
-    "AutoMapper.Extensions.Microsoft.DependencyInjection/2.0.1": {
+    "AutoMapper.Extensions.Microsoft.DependencyInjection/3.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YOMI/TncM6gBqXQm3SiHIhhe4TDcAHjnMFZJmqNBdR82BvTrx605KV8I/Pdmuz7GIgGJjnu8YJzyPrMMlZY4JQ==",
-      "path": "automapper.extensions.microsoft.dependencyinjection/2.0.1",
-      "hashPath": "automapper.extensions.microsoft.dependencyinjection.2.0.1.nupkg.sha512"
+      "sha512": "sha512-i3IAYqWdE2UbqsmiiXE2L3khtKwkr+J8mT0zvUaiFUg72zC6BgLBo3dFvU5krq7QKBSsKVQ0NTCl/NmDoC0Hng==",
+      "path": "automapper.extensions.microsoft.dependencyinjection/3.0.1",
+      "hashPath": "automapper.extensions.microsoft.dependencyinjection.3.0.1.nupkg.sha512"
     },
     "AWSSDK.Core/3.3.17.5": {
       "type": "package",
@@ -3385,6 +3396,13 @@
       "sha512": "sha512-fO3HRV8+8trdBvi0zpQBu/TtoK//JC4fdeREud08589wxc8+mkP9gzXuLMMst88fa5EkjPeIGEnc2OvRpOLyMw==",
       "path": "microsoft.aspnetcore.authentication.core/2.0.0",
       "hashPath": "microsoft.aspnetcore.authentication.core.2.0.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.OAuth/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sE4lO7U/rxI8NSgfRmvKMW5exMjr4NtHvlQU+HqjBBrbvgOs+GCI3heMN4hNb+bvtEBbnEzrh+QOXX3q/X4qSg==",
+      "path": "microsoft.aspnetcore.authentication.oauth/2.0.0",
+      "hashPath": "microsoft.aspnetcore.authentication.oauth.2.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authorization/2.0.0": {
       "type": "package",
