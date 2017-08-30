@@ -481,7 +481,7 @@ namespace Grand.Web.Infrastructure
 
             //private messages
             routeBuilder.MapLocalizedRoute("PrivateMessages",
-                            "privatemessages/{tab}",
+                            "privatemessages/{tab?}",
                             new { controller = "PrivateMessages", action = "Index" });
             routeBuilder.MapLocalizedRoute("PrivateMessagesPaged",
                             "privatemessages/{tab}/page/{page}",
