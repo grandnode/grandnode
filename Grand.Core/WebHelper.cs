@@ -217,10 +217,12 @@ namespace Grand.Core
 
             //try to get host from the request HOST header
             //TODO test (it's better to yuse server variables)
-            var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
-            if (!StringValues.IsNullOrEmpty(hostHeader))
-                result = "http://" + hostHeader.FirstOrDefault();
-
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                var hostHeader = _httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
+                if (!StringValues.IsNullOrEmpty(hostHeader))
+                    result = "http://" + hostHeader.FirstOrDefault();
+            }
             //whether database is installed
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
