@@ -87,7 +87,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsRequired)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.IsRequired)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IsRequired)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsRequired)
             </div>
         </div>
