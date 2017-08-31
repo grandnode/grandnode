@@ -16,7 +16,10 @@
         <div class="form-group" id="pnlUseMultipleWarehouses">
             @Html.GrandLabelFor(model => model.UseMultipleWarehouses)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.UseMultipleWarehouses)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.UseMultipleWarehouses)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.UseMultipleWarehouses)
             </div>
         </div>
@@ -62,7 +65,10 @@
                                         </div>
                                     </td>
                                     <td align="center" style="width: 10%;">
-                                        <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
+                                        <label class="mt-checkbox mt-checkbox-outline">
+                                            <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
+                                            <span></span>
+                                        </label>
                                         <script type="text/javascript">
                                                 $(document).ready(function() {
                                                     $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
@@ -121,14 +127,20 @@
         <div class="form-group" id="pnlDisplayStockAvailability">
             @Html.GrandLabelFor(model => model.DisplayStockAvailability)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.DisplayStockAvailability)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.DisplayStockAvailability)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.DisplayStockAvailability)
             </div>
         </div>
         <div class="form-group" id="pnlDisplayStockQuantity">
             @Html.GrandLabelFor(model => model.DisplayStockQuantity)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.DisplayStockQuantity)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.DisplayStockQuantity)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.DisplayStockQuantity)
             </div>
         </div>
@@ -163,7 +175,10 @@
         <div class="form-group" id="pnlAllowBackInStockSubscriptions">
             @Html.GrandLabelFor(model => model.AllowBackInStockSubscriptions)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.AllowBackInStockSubscriptions)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.AllowBackInStockSubscriptions)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AllowBackInStockSubscriptions)
             </div>
         </div>
@@ -191,7 +206,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.NotReturnable)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.NotReturnable)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.NotReturnable)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.NotReturnable)
             </div>
         </div>
@@ -209,21 +227,30 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsShipEnabled)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsShipEnabled)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsShipEnabled)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsShipEnabled)
             </div>
         </div>
         <div class="form-group" id="pnlFreeShipping">
             @Html.GrandLabelFor(model => model.IsFreeShipping)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsFreeShipping)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsFreeShipping)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsFreeShipping)
             </div>
         </div>
         <div class="form-group" id="pnlShipSeparately">
             @Html.GrandLabelFor(model => model.ShipSeparately)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.ShipSeparately)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.ShipSeparately)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.ShipSeparately)
             </div>
         </div>

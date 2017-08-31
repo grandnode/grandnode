@@ -28,21 +28,30 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.DisableBuyButton)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.DisableBuyButton)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.DisableBuyButton)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.DisableBuyButton)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.DisableWishlistButton)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.DisableWishlistButton)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.DisableWishlistButton)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.DisableWishlistButton)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AvailableForPreOrder)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.AvailableForPreOrder)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.AvailableForPreOrder)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AvailableForPreOrder)
             </div>
         </div>
@@ -56,14 +65,20 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.CallForPrice)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.CallForPrice)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.CallForPrice)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.CallForPrice)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.CustomerEntersPrice)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.CustomerEntersPrice)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.CustomerEntersPrice)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.CustomerEntersPrice)
             </div>
         </div>
@@ -84,7 +99,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.BasepriceEnabled)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.BasepriceEnabled)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.BasepriceEnabled)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.BasepriceEnabled)
             </div>
         </div>
@@ -119,7 +137,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsTaxExempt)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsTaxExempt)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsTaxExempt)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsTaxExempt)
             </div>
         </div>
@@ -133,7 +154,10 @@
         <div class="form-group" id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
             @Html.GrandLabelFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                <label class="mt-checkbox mt-checkbox-outline white-bg">
+                    @Html.EditorFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
             </div>
         </div>

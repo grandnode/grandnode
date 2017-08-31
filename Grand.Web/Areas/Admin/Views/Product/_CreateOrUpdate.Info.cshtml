@@ -401,7 +401,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.VisibleIndividually)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.VisibleIndividually)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.VisibleIndividually)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.VisibleIndividually)
             </div>
         </div>
@@ -496,7 +499,10 @@
         <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             @Html.GrandLabelFor(model => model.ShowOnHomePage)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.ShowOnHomePage)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.ShowOnHomePage)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.ShowOnHomePage)
             </div>
         </div>
@@ -510,9 +516,12 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AllowCustomerReviews)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.AllowCustomerReviews)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.AllowCustomerReviews)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AllowCustomerReviews)
-            </div>
+        </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.ProductTags)
@@ -563,7 +572,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.MarkAsNew)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.MarkAsNew)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.MarkAsNew)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.MarkAsNew)
             </div>
         </div>
@@ -584,7 +596,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Published)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.Published)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.Published)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.Published)
             </div>
         </div>

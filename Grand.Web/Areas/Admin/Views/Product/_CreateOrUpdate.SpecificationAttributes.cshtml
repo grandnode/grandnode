@@ -3,7 +3,6 @@
 
 @if (!String.IsNullOrEmpty(Model.Id))
 {
-
     /*hide "add spec" table if no attributes are defined*/
     if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
     {
@@ -12,9 +11,6 @@
                 <div id="specificationattributes-grid"></div>
             </div>
         </div>
-        
-            
-
             <script>
                 $(document).ready(function() {
                     $("#specificationattributes-grid").kendoGrid({
@@ -310,14 +306,20 @@
             <div class="form-group" id="pnlAllowFiltering">
                 @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.EditorFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
                 </div>
             </div>
             <div class="form-group">
                 @Html.GrandLabelFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.EditorFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
                 </div>
             </div>

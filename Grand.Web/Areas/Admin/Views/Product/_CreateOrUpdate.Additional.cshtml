@@ -36,7 +36,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsGiftCard)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsGiftCard)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsGiftCard)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsGiftCard)
             </div>
         </div>
@@ -62,7 +65,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsDownload)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsDownload)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsDownload)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsDownload)
             </div>
         </div>
@@ -104,7 +110,10 @@
         <div class="form-group" id="pnlHasUserAgreement">
             @Html.GrandLabelFor(model => model.HasUserAgreement)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.HasUserAgreement)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.HasUserAgreement)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.HasUserAgreement)
             </div>
         </div>
@@ -118,7 +127,10 @@
         <div class="form-group" id="pnlHasSampleDownload">
             @Html.GrandLabelFor(model => model.HasSampleDownload)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.HasSampleDownload)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.HasSampleDownload)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.HasSampleDownload)
             </div>
         </div>
@@ -137,7 +149,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsRental)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsRental)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsRental)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsRental)
             </div>
         </div>
@@ -163,7 +178,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsRecurring)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsRecurring)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsRecurring)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsRecurring)
             </div>
         </div>
@@ -196,7 +214,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.RequireOtherProducts)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.RequireOtherProducts)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.RequireOtherProducts)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.RequireOtherProducts)
             </div>
         </div>
@@ -224,7 +245,10 @@
         <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
             @Html.GrandLabelFor(model => model.AutomaticallyAddRequiredProducts)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.AutomaticallyAddRequiredProducts)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.AutomaticallyAddRequiredProducts)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AutomaticallyAddRequiredProducts)
             </div>
         </div>
