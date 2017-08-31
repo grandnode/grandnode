@@ -35,14 +35,20 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AllowsBilling)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.AllowsBilling)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.AllowsBilling)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AllowsBilling)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AllowsShipping)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.AllowsShipping)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.AllowsShipping)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AllowsShipping)
             </div>
         </div>
@@ -70,14 +76,20 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.SubjectToVat)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.SubjectToVat)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.SubjectToVat)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.SubjectToVat)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Published)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Published)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.Published)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.Published)
             </div>
         </div>
