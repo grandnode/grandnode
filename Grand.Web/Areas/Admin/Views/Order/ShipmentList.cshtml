@@ -60,7 +60,10 @@
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.LoadNotShipped)
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.LoadNotShipped)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.LoadNotShipped)
+                                        <span></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
