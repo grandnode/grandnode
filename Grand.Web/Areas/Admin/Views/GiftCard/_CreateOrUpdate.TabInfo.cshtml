@@ -61,7 +61,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsGiftCardActivated)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsGiftCardActivated)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsGiftCardActivated)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
             </div>
         </div>
