@@ -46,7 +46,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsPreSelected, new Dictionary<string, object> { { "class", "col-sm-3" } })
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsPreSelected)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsPreSelected)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsPreSelected)
             </div>
         </div>
