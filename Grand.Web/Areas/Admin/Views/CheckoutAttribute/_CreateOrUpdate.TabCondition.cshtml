@@ -25,7 +25,10 @@
                 <div class="form-group">
                     @Html.GrandLabelFor(model => model.ConditionModel.EnableCondition)
                     <div class="col-md-9 col-sm-9">
-                        @Html.EditorFor(model => model.ConditionModel.EnableCondition)
+                        <label class="mt-checkbox mt-checkbox-outline">
+                            @Html.EditorFor(model => model.ConditionModel.EnableCondition)
+                            <span></span>
+                        </label>
                         @Html.ValidationMessageFor(model => model.ConditionModel.EnableCondition)
                     </div>
                 </div>
