@@ -319,14 +319,20 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsTaxExempt)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.IsTaxExempt)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IsTaxExempt)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsTaxExempt)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.FreeShipping)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.FreeShipping)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.FreeShipping)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.FreeShipping)
             </div>
         </div>
@@ -375,7 +381,11 @@
                     @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
                     {
                         <div>
-                            <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))
+                                <span></span>
+                            </label>
+                            
                         </div>
 
                     }
@@ -391,7 +401,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Active)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Active)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.Active)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.Active)
             </div>
         </div>
