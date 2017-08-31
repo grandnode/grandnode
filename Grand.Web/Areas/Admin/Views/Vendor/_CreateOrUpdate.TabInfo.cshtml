@@ -109,7 +109,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AllowCustomersToSelectPageSize)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
             </div>
         </div>
@@ -130,7 +133,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Active)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.Active)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.Active)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.Active)
             </div>
         </div>
