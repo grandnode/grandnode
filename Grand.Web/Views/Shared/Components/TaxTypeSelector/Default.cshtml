@@ -23,7 +23,7 @@
         Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
     });
 }
-<div class="btn-group btn-group-sm float-xs-right ml-1">
+<div class="btn-group btn-group-sm float-xs-right mr-2">
     <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
         <span class="hidden-md-down">@taxTypes.FirstOrDefault(x => x.Selected).Text</span>
         <span class="fa fa-info hidden-lg-up"></span>

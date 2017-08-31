@@ -5,7 +5,6 @@
 @await Html.PartialAsync("_Notifications")
 @await Component.InvokeAsync("JavaScriptDisabledWarning")
 @await Html.PartialAsync("OldInternetExplorerWarning")
-
 <div class="container">
 @await Html.PartialAsync("Header")
 <nav class="navbar navbar-toggleable-md bg-inverse container mainNav mb-1 pl-0 pr-0">
@@ -16,21 +15,18 @@
             </span>
         </button>
         <div class="collapse navbar-collapse" id="collapsing-navbar-2">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav d-flex flex-wrap">
                 @await Component.InvokeAsync("TopMenu")
             </ul>
         </div>
 </nav>
-
-        @await Component.InvokeAsync("Widget", new { widgetZone = "content_before"})
-
-
-        @if (IsSectionDefined("Breadcrumb"))
-        {
-            @RenderSection("Breadcrumb")
-        }
-        @RenderBody()
-        @await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
+@await Component.InvokeAsync("Widget", new { widgetZone = "content_before"})
+@if (IsSectionDefined("Breadcrumb"))
+{
+    @RenderSection("Breadcrumb")
+}
+@RenderBody()
+@await Component.InvokeAsync("Widget", new { widgetZone = "content_after" })
 </div>
 @await Component.InvokeAsync("Footer")
 <script>

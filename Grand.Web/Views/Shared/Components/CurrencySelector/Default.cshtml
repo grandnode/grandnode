@@ -17,7 +17,7 @@
         Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }), "returnurl=" + WebUtility.UrlEncode(webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)), null),
         Selected = x.Id.Equals(Model.CurrentCurrencyId)
     });
-        <div class="btn-group btn-group-sm float-xs-right ml-1">
+        <div class="btn-group btn-group-sm float-xs-right mr-2">
             <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
                 @currencies.FirstOrDefault(x => x.Selected).Text
                 <span class="sr-only">Toggle Dropdown</span>

@@ -34,7 +34,7 @@
             Selected = lang.Id.Equals(Model.CurrentLanguageId)
         });
 
-        <div class="btn-group btn-group-sm float-xs-right ml-1">
+        <div class="btn-group btn-group-sm float-xs-right mr-2">
             <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
                 <span>@languages.FirstOrDefault(x => x.Selected).Text</span>
                 <span class="sr-only">Toggle Dropdown</span>
