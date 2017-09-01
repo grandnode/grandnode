@@ -77,4 +77,10 @@
   <LocaleResource Name="Admin.System.ContactForm.deleteall">
     <Value>Delete all</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.Or">
+    <Value>- or -</Value>
+  </LocaleResource>
+  <LocaleResource Name="Remove">
+    <Value>Remove</Value>
+  </LocaleResource>
 </Language>

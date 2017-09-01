@@ -12,6 +12,9 @@
   <LocaleResource Name="Account.AssociatedExternalAuth">
     <Value>External authentication</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.Or">
+    <Value>- or -</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.AssociatedExternalAuth.AddMoreRecords">
     <Value>You can associate your account with some external authentication systems on the following page (login once using them):</Value>
   </LocaleResource>
@@ -16569,6 +16572,9 @@
   </LocaleResource>
   <LocaleResource Name="Profile.TotalPosts">
     <Value>Total Posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Remove">
+    <Value>Remove</Value>
   </LocaleResource>
   <LocaleResource Name="ReturnRequests.Comments">
     <Value>Comments</Value>
