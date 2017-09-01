@@ -26,7 +26,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsActive)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsActive)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsActive)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsActive)
             </div>
         </div>
@@ -125,7 +128,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.SendImmediately)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.SendImmediately)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.SendImmediately)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.SendImmediately)
             </div>
         </div>
@@ -151,7 +157,10 @@
                     //we store a value into "ViewData" and then use it in the Download.cshtml file
                     ViewData["Grand.DownloadEditor.DisableUrl"] = true;
                 }
-                @Html.EditorFor(model => model.HasAttachedDownload) @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.HasAttachedDownload) @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                    <span></span>
+                </label>
                 <div id="pnlAttachedDownload">
                     @Html.EditorFor(model => model.AttachedDownloadId)
                     @Html.ValidationMessageFor(model => model.AttachedDownloadId)
