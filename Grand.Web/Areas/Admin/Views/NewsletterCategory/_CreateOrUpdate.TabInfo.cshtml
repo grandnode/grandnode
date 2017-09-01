@@ -1,9 +1,5 @@
 ﻿@model NewsletterCategoryModel
 
-
-
-
-
 @(Html.LocalizedEditor<NewsletterCategoryModel, NewsletterCategoryLocalizedModel>("newslettercategory-localized",
     @<div class="form-horizontal">
         <div class="form-body">
@@ -49,7 +45,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Selected)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Selected)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.Selected)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.Selected)
             </div>
         </div>
