@@ -149,14 +149,20 @@
                             </div>                            <div class="form-group">
                                 @Html.GrandLabelFor(model => model.Enabled)
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.Enabled)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.Enabled)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.Enabled)
                                 </div>
                             </div>
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.StopOnError)
                                 <div class="col-md-9 col-sm-9">
-                                    @Html.GrandEditorFor(model => model.StopOnError)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.StopOnError)
+                                        <span></span>
+                                    </label>
                                     @Html.ValidationMessageFor(model => model.StopOnError)
                                 </div>
                             </div>
