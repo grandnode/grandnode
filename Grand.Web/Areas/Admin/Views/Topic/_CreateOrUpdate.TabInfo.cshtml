@@ -77,7 +77,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IsPasswordProtected)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.IsPasswordProtected)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.IsPasswordProtected)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IsPasswordProtected)
             </div>
         </div>
@@ -91,35 +94,50 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IncludeInSitemap)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(x => x.IncludeInSitemap)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(x => x.IncludeInSitemap)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IncludeInSitemap)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IncludeInTopMenu)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(x => x.IncludeInTopMenu)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(x => x.IncludeInTopMenu)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IncludeInFooterColumn1)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(x => x.IncludeInFooterColumn1)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(x => x.IncludeInFooterColumn1)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IncludeInFooterColumn1)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IncludeInFooterColumn2)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(x => x.IncludeInFooterColumn2)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(x => x.IncludeInFooterColumn2)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IncludeInFooterColumn2)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.IncludeInFooterColumn3)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(x => x.IncludeInFooterColumn3)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(x => x.IncludeInFooterColumn3)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
             </div>
         </div>
@@ -133,7 +151,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AccessibleWhenStoreClosed)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(x => x.AccessibleWhenStoreClosed)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(x => x.AccessibleWhenStoreClosed)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AccessibleWhenStoreClosed)
             </div>
         </div>
