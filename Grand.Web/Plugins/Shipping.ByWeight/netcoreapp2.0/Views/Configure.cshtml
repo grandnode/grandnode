@@ -144,7 +144,10 @@
                             @Html.GrandLabelFor(model => model.LimitMethodsToCreated, null, false):
                         </td>
                         <td class="adminData">
-                            @Html.EditorFor(model => model.LimitMethodsToCreated)
+                            <label class="mt-checkbox mt-checkbox-outline">
+                                @Html.EditorFor(model => model.LimitMethodsToCreated)
+                                <span></span>
+                            </label>
                             @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
                         </td>
                     </tr>
