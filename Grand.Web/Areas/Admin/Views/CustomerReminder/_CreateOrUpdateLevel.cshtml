@@ -31,20 +31,20 @@
             </div>
             <div class="col-md-9 col-sm-9 form-inline">
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Day)
-                    <br />
+                    <label class="control-label">@T("Admin.Customers.CustomerReminder.Level.Fields.SendDay")</label>
+                    <br>
                     @Html.EditorFor(model => model.Day)
                     @Html.ValidationMessageFor(model => model.Day)
                 </div>
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Hour)
-                    <br />
+                    <label class="control-label">@T("Admin.Customers.CustomerReminder.Level.Fields.SendHour")</label>
+                    <br>
                     @Html.EditorFor(model => model.Hour)
                     @Html.ValidationMessageFor(model => model.Hour)
                 </div>
                 <div class="form-group">
-                    @Html.GrandLabelFor(model => model.Minutes)
-                    <br />
+                    <label class="control-label">@T("Admin.Customers.CustomerReminder.Level.Fields.SendMinutes")</label>
+                    <br>
                     @Html.EditorFor(model => model.Minutes)
                     @Html.ValidationMessageFor(model => model.Minutes)
                 </div>
