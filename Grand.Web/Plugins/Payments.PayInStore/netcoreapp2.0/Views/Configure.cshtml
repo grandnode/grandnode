@@ -31,7 +31,10 @@
                     @Html.GrandLabelFor(model => model.AdditionalFeePercentage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    @Html.EditorFor(model => model.AdditionalFeePercentage)
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.EditorFor(model => model.AdditionalFeePercentage)
+                        <span></span>
+                    </label>
                     @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
                 </div>
             </div>
