@@ -41,21 +41,30 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Published)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.Published)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.Published)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.Published)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.ShowOnHomePage)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.ShowOnHomePage)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.ShowOnHomePage)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.ShowOnHomePage)
             </div>
         </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AllowGuestsToVote)
             <div class="col-md-9 col-sm-9">
-                @Html.EditorFor(model => model.AllowGuestsToVote)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.AllowGuestsToVote)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.AllowGuestsToVote)
             </div>
         </div>
