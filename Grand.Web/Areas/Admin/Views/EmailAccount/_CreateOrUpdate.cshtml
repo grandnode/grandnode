@@ -53,14 +53,20 @@
         <div class="form-group">
                 @Html.GrandLabelFor(model => model.EnableSsl)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.EnableSsl)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.EnableSsl)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.EnableSsl)
             </div>
         </div>
         <div class="form-group">
                 @Html.GrandLabelFor(model => model.UseDefaultCredentials)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.UseDefaultCredentials)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.UseDefaultCredentials)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.UseDefaultCredentials)
             </div>
         </div>
