@@ -38,7 +38,10 @@
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
                                 <div class="col-md-4 col-sm-4">
-                                    @Html.GrandEditorFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.DeleteGuests.OnlyWithoutShoppingCart)
+                                        <span></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="form-actions">
