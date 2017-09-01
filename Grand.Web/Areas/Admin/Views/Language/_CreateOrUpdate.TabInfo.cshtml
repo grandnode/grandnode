@@ -67,7 +67,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Rtl)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Rtl)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.Rtl)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.Rtl)
             </div>
         </div>
@@ -81,7 +84,10 @@
         <div class="form-group">
             @Html.GrandLabelFor(model => model.Published)
             <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.Published)
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.Published)
+                    <span></span>
+                </label>
                 @Html.ValidationMessageFor(model => model.Published)
             </div>
         </div>
