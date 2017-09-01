@@ -47,7 +47,10 @@
                             <div class="form-group">
                                 @Html.GrandLabelFor(model => model.SearchLoadNotSent)
                                 <div class="col-md-4 col-sm-6">
-                                    @Html.GrandEditorFor(model => model.SearchLoadNotSent)
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.GrandEditorFor(model => model.SearchLoadNotSent)
+                                        <span></span>
+                                    </label>
                                 </div>
                             </div>
                             <div class="form-group">
