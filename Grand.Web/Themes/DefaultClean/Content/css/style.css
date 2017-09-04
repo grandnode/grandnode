@@ -946,6 +946,9 @@ span.product-quantity{
     top: 1px;
     margin-right: 5px;
 }
+.generalAdToCart select {
+    max-width: 62px;
+}
 .enter-price-input {
     display: block;
 }
