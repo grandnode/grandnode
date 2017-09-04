@@ -148,6 +148,12 @@ namespace Grand.Plugin.ExternalAuth.Facebook.Controllers
             //authenticate Grand user
             return _externalAuthenticationService.Authenticate(authenticationParameters, returnUrl);
         }
+        public IActionResult SignInFailed(string error_code, string error_message, string state)
+        {
+            //handle exception and display message to user
+            return View("~/Plugins/ExternalAuth.Facebook/netcoreapp2.0/Views/SignInFailed.cshtml", error_message);
+        }
+
 
         #endregion
     }
