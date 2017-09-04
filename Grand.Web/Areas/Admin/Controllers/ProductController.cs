@@ -2635,7 +2635,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (model.AttributeTypeId == (int)SpecificationAttributeType.Option)
             {
                 psa.AllowFiltering = model.AllowFiltering;
-                psa.SpecificationAttributeOptionId = model.ValueRaw;
+                psa.SpecificationAttributeOptionId = model.SpecificationAttributeOptionId;
             }
             else
             {
