@@ -30,6 +30,7 @@ using Grand.Core.Infrastructure;
 using Grand.Core.Domain.Logging;
 using Grand.Core.Data;
 using MongoDB.Driver;
+using System.Runtime.InteropServices;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -122,44 +123,36 @@ namespace Grand.Web.Areas.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new SystemInfoModel();
-            //model.GrandVersion = GrandVersion.CurrentVersion;
-            //try
-            //{
-            //    model.OperatingSystem = Environment.OSVersion.VersionString;
-            //}
-            //catch (Exception) { }
-            //try
-            //{
-            //    model.AspNetInfo = RuntimeEnvironment.GetSystemVersion();
-            //}
-            //catch (Exception) { }
-            //try
-            //{
-            //    model.IsFullTrust = AppDomain.CurrentDomain.IsFullyTrusted.ToString();
-            //}
-            //catch (Exception) { }
-            //model.ServerTimeZone = TimeZone.CurrentTimeZone.StandardName;
-            //model.ServerLocalTime = DateTime.Now;
-            //model.UtcTime = DateTime.UtcNow;
-            //model.HttpHost = _webHelper.ServerVariables("HTTP_HOST");
-            //foreach (var key in _httpContext.Request.ServerVariables.Keys)
-            //{
-            //    model.ServerVariables.Add(new SystemInfoModel.ServerVariableModel
-            //    {
-            //        Name = key,
-            //        Value = _httpContext.Request.ServerVariables[key]
-            //    });
-            //}
-            ////Environment.GetEnvironmentVariable("USERNAME");
-            //foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-            //{
-            //    model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly
-            //    {
-            //        FullName =  assembly.FullName,
-            //        //we cannot use Location property in medium trust
-            //        //Location = assembly.Location
-            //    });
-            //}
+            model.GrandVersion = GrandVersion.CurrentVersion;
+            try
+            {
+                model.OperatingSystem = RuntimeInformation.OSDescription;
+            }
+            catch (Exception) { }
+            try
+            {
+                model.AspNetInfo = RuntimeEnvironment.GetSystemVersion();
+            }
+            catch (Exception) { }
+            
+            model.ServerTimeZone = TimeZoneInfo.Local.StandardName;
+            model.ServerLocalTime = DateTime.Now;
+            model.UtcTime = DateTime.UtcNow;
+            foreach (var header in HttpContext.Request.Headers)
+            {
+                model.ServerVariables.Add(new SystemInfoModel.ServerVariableModel
+                {
+                    Name = header.Key,
+                    Value = header.Value
+                });
+            }
+            foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly
+                {
+                    FullName = assembly.FullName,                    
+                });
+            }
             return View(model);
         }
 

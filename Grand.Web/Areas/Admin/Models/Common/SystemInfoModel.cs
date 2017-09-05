@@ -19,8 +19,6 @@ namespace Grand.Web.Areas.Admin.Models.Common
         [GrandResourceDisplayName("Admin.System.SystemInfo.ASPNETInfo")]
         public string AspNetInfo { get; set; }
 
-        [GrandResourceDisplayName("Admin.System.SystemInfo.IsFullTrust")]
-        public string IsFullTrust { get; set; }
 
         [GrandResourceDisplayName("Admin.System.SystemInfo.NopVersion")]
         public string GrandVersion { get; set; }
@@ -36,9 +34,6 @@ namespace Grand.Web.Areas.Admin.Models.Common
 
         [GrandResourceDisplayName("Admin.System.SystemInfo.UTCTime")]
         public DateTime UtcTime { get; set; }
-
-        [GrandResourceDisplayName("Admin.System.SystemInfo.HTTPHOST")]
-        public string HttpHost { get; set; }
 
         [GrandResourceDisplayName("Admin.System.SystemInfo.ServerVariables")]
         public IList<ServerVariableModel> ServerVariables { get; set; }
