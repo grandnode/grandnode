@@ -1,4 +1,4 @@
-Group: Shipping rate computation
+﻿Group: Shipping rate computation
 FriendlyName: Shipping Point
 SystemName: Shipping.ShippingPoint
 Version: 1.0

@@ -394,18 +394,19 @@ namespace Grand.Web.Areas.Admin.Controllers
                 deliveryDate.Locales = UpdateLocales(deliveryDate, model);
 
                 //ensure valid color is chosen/entered
-                if (!String.IsNullOrEmpty(model.ColorSquaresRgb))
-                {
-                    try
-                    {
-                        //ensure color is valid (can be instanciated)
-                        System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
-                    }
-                    catch (Exception exc)
-                    {
-                        ModelState.AddModelError("", exc.Message);
-                    }
-                }
+                //TO DO
+                //if (!String.IsNullOrEmpty(model.ColorSquaresRgb))
+                //{
+                //    try
+                //    {
+                //        //ensure color is valid (can be instanciated)
+                //        System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                //    }
+                //    catch (Exception exc)
+                //    {
+                //        ModelState.AddModelError("", exc.Message);
+                //    }
+                //}
                 _shippingService.InsertDeliveryDate(deliveryDate);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.DeliveryDates.Added"));
@@ -453,19 +454,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No delivery date found with the specified id
                 return RedirectToAction("DeliveryDates");
 
-            //ensure valid color is chosen/entered
-            if (!String.IsNullOrEmpty(model.ColorSquaresRgb))
-            {
-                try
-                {
-                    //ensure color is valid (can be instanciated)
-                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
-                }
-                catch (Exception exc)
-                {
-                    ModelState.AddModelError("", exc.Message);
-                }
-            }
             if (ModelState.IsValid)
             {
                 deliveryDate = model.ToEntity(deliveryDate);

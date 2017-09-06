@@ -40,109 +40,109 @@
 <div class="form-horizontal">
     <div class="form-body">
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.StoreId, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandDropDownListFor(model => model.StoreId, Model.AvailableStores)
                 @Html.ValidationMessageFor(model => model.StoreId)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.WarehouseId, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandDropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
                 @Html.ValidationMessageFor(model => model.WarehouseId)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.CountryId, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandDropDownListFor(model => model.CountryId, Model.AvailableCountries)
                 @Html.ValidationMessageFor(model => model.CountryId)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.StateProvinceId, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandDropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
                 @Html.ValidationMessageFor(model => model.StateProvinceId)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.Zip, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.Zip)
                 @Html.ValidationMessageFor(model => model.Zip)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.ShippingMethodId, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandDropDownListFor(model => model.ShippingMethodId, Model.AvailableShippingMethods)
                 @Html.ValidationMessageFor(model => model.ShippingMethodId)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.From, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.From) [@Model.BaseWeightIn]
                 @Html.ValidationMessageFor(model => model.From)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.To, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.To) [@Model.BaseWeightIn]
                 @Html.ValidationMessageFor(model => model.To)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.AdditionalFixedCost, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.AdditionalFixedCost) [@Model.PrimaryStoreCurrencyCode]
                 @Html.ValidationMessageFor(model => model.AdditionalFixedCost)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.LowerWeightLimit, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.LowerWeightLimit)
                 @Html.ValidationMessageFor(model => model.LowerWeightLimit)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.RatePerWeightUnit, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.RatePerWeightUnit) [@Model.PrimaryStoreCurrencyCode]
                 @Html.ValidationMessageFor(model => model.RatePerWeightUnit)
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
+            <div class="col-md-3 col-sm-3 text-right">
                 @Html.GrandLabelFor(model => model.PercentageRateOfSubtotal, new Dictionary<string, object> { { "class", "control-label" } }, false)
             </div>
-            <div class="col-md-9 col-sm-9 col-xs-9">
+            <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.PercentageRateOfSubtotal)
                 @Html.ValidationMessageFor(model => model.PercentageRateOfSubtotal)
             </div>
