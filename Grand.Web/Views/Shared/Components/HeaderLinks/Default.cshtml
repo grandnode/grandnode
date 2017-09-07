@@ -10,12 +10,12 @@
             <span class="hidden-sm-down">@Model.CustomerEmailUsername</span>
         </a>
     </li>
-            <li class="nav-item">
-                <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
-                    <span class=""><span class="fa fa-sign-out"></span></span>
-                    <span class="hidden-sm-down">@T("Account.Logout")</span>
-                </a>
-            </li>
+    <li class="nav-item">
+        <a class="nav-link ico-logout" href="@Url.RouteUrl("Logout")">
+            <span class=""><span class="fa fa-sign-out"></span></span>
+            <span class="hidden-sm-down">@T("Account.Logout")</span>
+        </a>
+    </li>
 }
 else
 {
@@ -59,11 +59,18 @@ else
                 </span>
                 <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-menu dropdown-menu-right flyoutdropdown">
                 @await Component.InvokeAsync("FlyoutShoppingCart")
             </div>
         </div>
     </li>
+    <script>
+        $(document).ready(function () {
+            if ($('.mini-shopping-cart').length == 0) {
+                $(".flyoutdropdown").hide();
+            }
+        });
+    </script>
 }
 @await Component.InvokeAsync("Widget", new { widgetZone = "header_links_after" })
 @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
