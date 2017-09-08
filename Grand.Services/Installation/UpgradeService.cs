@@ -622,6 +622,15 @@ namespace Grand.Services.Installation
             }
 
             #endregion
+
+            #region CustomerProductPrice
+
+            var _customerProductPriceRepository = EngineContext.Current.Resolve<IRepository<CustomerProductPrice>>();
+            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
+
+
+            #endregion
         }
 
         private void InstallStringResources(string filenames)

@@ -79,6 +79,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
+        private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
@@ -175,6 +176,7 @@ namespace Grand.Services.Installation
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
+            IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
@@ -264,6 +266,7 @@ namespace Grand.Services.Installation
             this._currencyRepository = currencyRepository;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerProductPriceRepository = customerProductPriceRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
             this._customerTagProductRepository = customerTagProductRepository;
             this._customerHistoryPasswordRepository = customerHistoryPasswordRepository;
@@ -10857,6 +10860,10 @@ namespace Grand.Services.Installation
             _customerRoleRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
+
+            //customer product price
+            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
 
             //customer tag history
             _customerTagProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerTagProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });

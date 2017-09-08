@@ -1,14 +1,8 @@
 ﻿@model CustomerModel
-@using Grand.Core.Domain.Orders;
-@using Grand.Services.Customers;
-@using System.Text;
-
-
-
-
+@inject AdminAreaSettings adminAreaSettings
 @{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Grand.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
 
     <br />
     <strong>@T("Admin.Configuration.Activitylog")</strong>
@@ -19,62 +13,62 @@
     </div>
 
     <script>
-                    $(document).ready(function () {
-                        $("#activitylog-grid").kendoGrid({
-                            dataSource: {
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ListActivityLog", "Customer", new { customerId = Model.Id }))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "ActivityLogTypeName",
-                                title: "@T("Admin.Customers.Customers.ActivityLog.ActivityLogType")",
-                                width: 140,
-                            }, {
-                                field: "Comment",
-                                title: "@T("Admin.Customers.Customers.ActivityLog.Comment")",
-                                width: 250,
-                            }, {
-                                field: "CreatedOn",
-                                title: "@T("Admin.Customers.Customers.ActivityLog.CreatedOn")",
-                                width: 120,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "IpAddress",
-                                title: "@T("Admin.Customers.Customers.ActivityLog.IpAddress")",
-                                width: 50,
-                            }]
-                        });
-                    });
+        $(document).ready(function () {
+            $("#activitylog-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListActivityLog", "Customer", new { customerId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ActivityLogTypeName",
+                    title: "@T("Admin.Customers.Customers.ActivityLog.ActivityLogType")",
+                    width: 140,
+                }, {
+                    field: "Comment",
+                    title: "@T("Admin.Customers.Customers.ActivityLog.Comment")",
+                    width: 250,
+                }, {
+                    field: "CreatedOn",
+                    title: "@T("Admin.Customers.Customers.ActivityLog.CreatedOn")",
+                    width: 120,
+                    type: "date",
+                    format: "{0:G}"
+                }, {
+                    field: "IpAddress",
+                    title: "@T("Admin.Customers.Customers.ActivityLog.IpAddress")",
+                    width: 50,
+                }]
+            });
+        });
     </script>
 
     if (Model.ShowMessageContactForm)

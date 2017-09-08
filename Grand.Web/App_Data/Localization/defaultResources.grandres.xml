@@ -10100,6 +10100,18 @@
   <LocaleResource Name="Admin.Customers.Customers.PasswordChanged">
     <Value>The password has been changed successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice">
+    <Value>Individual Product Prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.AddNew">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.ProductName">
+    <Value>Product Name</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ReSendActivationMessage">
     <Value>Re-send activation message</Value>
   </LocaleResource>

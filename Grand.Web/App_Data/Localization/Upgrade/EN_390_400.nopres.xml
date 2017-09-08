@@ -83,4 +83,16 @@
   <LocaleResource Name="Remove">
     <Value>Remove</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice">
+    <Value>Individual Product Prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.AddNew">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.ProductName">
+    <Value>Product Name</Value>
+  </LocaleResource>
 </Language>
