@@ -61,10 +61,7 @@
                     @Html.GrandLabelFor(model => model.AdditionalFeePercentage, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    <label class="mt-checkbox mt-checkbox-outline">
-                        @Html.EditorFor(model => model.AdditionalFeePercentage)
-                        <span></span>
-                    </label>
+                    @Html.EditorFor(model => model.AdditionalFeePercentage)
                     @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
                 </div>
             </div>
@@ -74,10 +71,7 @@
                     @Html.GrandLabelFor(model => model.ShippableProductRequired, new Dictionary<string, object> { { "class", "control-label" } }, false)
                 </div>
                 <div class="col-md-9 col-sm-9">
-                    <label class="mt-checkbox mt-checkbox-outline">
-                        @Html.EditorFor(model => model.ShippableProductRequired)
-                        <span></span>
-                    </label>
+                    @Html.EditorFor(model => model.ShippableProductRequired)
                     @Html.ValidationMessageFor(model => model.ShippableProductRequired)
                 </div>
             </div>

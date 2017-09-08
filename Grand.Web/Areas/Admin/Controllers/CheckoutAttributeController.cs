@@ -541,15 +541,16 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //ensure valid color is chosen/entered
                 if (String.IsNullOrEmpty(model.ColorSquaresRgb))
                     ModelState.AddModelError("", "Color is required");
-                try
-                {
-                    //ensure color is valid (can be instanciated)
-                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
-                }
-                catch (Exception exc)
-                {
-                    ModelState.AddModelError("", exc.Message);
-                }
+                //TO DO
+                //try
+                //{
+                //    //ensure color is valid (can be instanciated)
+                //    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                //}
+                //catch (Exception exc)
+                //{
+                //    ModelState.AddModelError("", exc.Message);
+                //}
             }
 
             if (ModelState.IsValid)
@@ -634,15 +635,6 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //ensure valid color is chosen/entered
                 if (String.IsNullOrEmpty(model.ColorSquaresRgb))
                     ModelState.AddModelError("", "Color is required");
-                try
-                {
-                    //ensure color is valid (can be instanciated)
-                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
-                }
-                catch (Exception exc)
-                {
-                    ModelState.AddModelError("", exc.Message);
-                }
             }
 
             if (ModelState.IsValid)
