@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Extensions;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +6,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
-
 using Grand.Services.Security;
 using Grand.Framework.Security;
 using Microsoft.AspNetCore.Http;
@@ -31,17 +24,17 @@ namespace Grand.Web.Areas.Admin.Controllers
         /// <summary>
         /// Default path to root directory of uploaded files (if appropriate settings are not specified)
         /// </summary>
-        private const string DEFAULT_ROOT_DIRECTORY = "/images/uploaded";
+        private const string DEFAULT_ROOT_DIRECTORY = "/Content/images/uploaded";
 
         /// <summary>
         /// Path to directory of language files
         /// </summary>
-        private const string LANGUAGE_DIRECTORY = "/lib/Roxy_Fileman/lang";
+        private const string LANGUAGE_DIRECTORY = "/Content/Roxy_Fileman/lang";
 
         /// <summary>
         /// Path to configuration file
         /// </summary>
-        private const string CONFIGURATION_FILE = "/lib/Roxy_Fileman/conf.json";
+        private const string CONFIGURATION_FILE = "/Content/Roxy_Fileman/conf.json";
 
         #endregion
 
