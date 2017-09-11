@@ -59,6 +59,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Services.Tests", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Shipping.FixedRateShipping", "Plugins\Grand.Plugin.Shipping.FixedRateShipping\Grand.Plugin.Shipping.FixedRateShipping.csproj", "{EFEF8822-18EE-4DE9-964B-A5DB6A0641CF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Widgets.GoogleAnalytics", "Plugins\Grand.Plugin.Widgets.GoogleAnalytics\Grand.Plugin.Widgets.GoogleAnalytics.csproj", "{87C1BE44-52AF-4F46-B065-8356D59CEB13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,10 @@ Global
 		{EFEF8822-18EE-4DE9-964B-A5DB6A0641CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFEF8822-18EE-4DE9-964B-A5DB6A0641CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFEF8822-18EE-4DE9-964B-A5DB6A0641CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87C1BE44-52AF-4F46-B065-8356D59CEB13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87C1BE44-52AF-4F46-B065-8356D59CEB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87C1BE44-52AF-4F46-B065-8356D59CEB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87C1BE44-52AF-4F46-B065-8356D59CEB13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -190,6 +196,7 @@ Global
 		{8D7FD955-B372-470C-A935-FE0B172FC05D} = {02A095EA-356B-4419-86B4-E7893017CBF2}
 		{B7E666B3-2B28-493F-B980-9CE8E2B50732} = {02A095EA-356B-4419-86B4-E7893017CBF2}
 		{EFEF8822-18EE-4DE9-964B-A5DB6A0641CF} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
+		{87C1BE44-52AF-4F46-B065-8356D59CEB13} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65BA1180-F5CC-42E1-B689-71E14D588393}
