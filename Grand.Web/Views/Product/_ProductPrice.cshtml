@@ -1,9 +1,6 @@
 ﻿@model ProductDetailsModel.ProductPriceModel
-@using Grand.Core
-@using Grand.Core.Domain.Tax
-@using Grand.Core.Infrastructure
-@using Grand.Web.Models.Catalog;
 @using System.Text.RegularExpressions;
+@inject IWorkContext workContext
 <div class="prices" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
     @if (Model.CustomerEntersPrice)
     {
@@ -65,7 +62,7 @@
         }
         if (Model.DisplayTaxShippingInfo)
         {
-            var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+            var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
             //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
             //of course, you can modify appropriate locales to include VAT info there
             <div class="tax-shipping-info generalMarginSupporter">

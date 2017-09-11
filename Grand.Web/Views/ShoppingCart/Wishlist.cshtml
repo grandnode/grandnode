@@ -1,14 +1,11 @@
 @model WishlistModel
-@using Grand.Core
-@using Grand.Core.Domain.Tax
-@using Grand.Core.Infrastructure
-@using Grand.Web.Models.ShoppingCart
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
 @{
     Layout = "_ColumnsOne";
 
     //title
     Html.AddTitleParts(T("PageTitle.Wishlist").Text);
-    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
 <div class="page wishlist-page mt-3">
     <h2 class="text-center generalTitle mb-0">
@@ -266,7 +263,7 @@
                     </table>
                 @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
                 {
-                    var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                    var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
                     <div class="tax-shipping-info">

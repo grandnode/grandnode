@@ -1,6 +1,4 @@
 ﻿@model ProductDetailsModel.AddToCartModel
-@using Grand.Web.Models.Catalog;
-@using Grand.Core.Domain.Orders;
 @if (!String.IsNullOrEmpty(Model.UpdatedShoppingCartItemId))
 {
     @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)

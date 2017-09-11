@@ -1,23 +1,22 @@
 ﻿@model CategoryModel
+@inject SeoSettings seoSettings
+@inject CommonSettings commonSettings
 @{
     Layout = "_ColumnsTwo";
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
 
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(categoryUrl);
     }
 
-    var breadcrumbDelimiter = EngineContext.Current.Resolve<CommonSettings>().BreadcrumbDelimiter;
+    var breadcrumbDelimiter = commonSettings.BreadcrumbDelimiter;
 }
-@using Grand.Core.Domain.Common;
-@using Grand.Core.Domain.Seo;
-@using Grand.Core.Infrastructure;
-@using Grand.Web.Models.Catalog;
+
 @*category breadcrumb*@
 @section Breadcrumb
 {

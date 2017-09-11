@@ -1,7 +1,4 @@
-﻿@using Grand.Core.Domain.Common;
-@using Grand.Core.Domain;
-@using Grand.Core.Domain.Seo;
-@inject CommonSettings commonSettings
+﻿@inject CommonSettings commonSettings
 @inject SeoSettings seoSettings
 @inject StoreInformationSettings storeInformationSettings
 @{
@@ -21,7 +18,6 @@
 <!DOCTYPE html>
 <html @await Html.PartialAsync("LanguageAttributes")>
 <head>
-
     <title>@Html.GrandTitle(true)</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta name="description" content="@(Html.NopMetaDescription())" />
@@ -32,7 +28,6 @@
     @*This is used so that themes can inject content into the header*@
     @await Html.PartialAsync("Head")
     @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
-
     @Html.GrandCssFiles(this.Url, ResourceLocation.Head)
     @Html.GrandScripts(this.Url, ResourceLocation.Head)
     @Html.GrandCanonicalUrls()
@@ -45,7 +40,6 @@
         <mini-profiler />
     }
 </head>
-
 <body>
     @RenderBody()
     @Html.GrandCssFiles(this.Url, ResourceLocation.Foot)
