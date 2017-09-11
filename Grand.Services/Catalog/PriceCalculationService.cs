@@ -195,20 +195,22 @@ namespace Grand.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            var vendor = _vendorService.GetVendorById(product.VendorId);
-
-            if (vendor != null)
+            if (!string.IsNullOrEmpty(product.VendorId))
             {
-                if (vendor.AppliedDiscounts.Any())
+                var vendor = _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null)
                 {
-                    foreach (var appliedDiscount in vendor.AppliedDiscounts)
+                    if (vendor.AppliedDiscounts.Any())
                     {
-                        var discount = _discountService.GetDiscountById(appliedDiscount);
-                        if(discount!=null)
-                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                     discount.DiscountType == DiscountType.AssignedToVendors &&
-                                     !allowedDiscounts.ContainsDiscount(discount))
-                                allowedDiscounts.Add(discount);
+                        foreach (var appliedDiscount in vendor.AppliedDiscounts)
+                        {
+                            var discount = _discountService.GetDiscountById(appliedDiscount);
+                            if (discount != null)
+                                if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                         discount.DiscountType == DiscountType.AssignedToVendors &&
+                                         !allowedDiscounts.ContainsDiscount(discount))
+                                    allowedDiscounts.Add(discount);
+                        }
                     }
                 }
             }

@@ -158,7 +158,7 @@ namespace Grand.Services.Catalog
             int pageSize = int.MaxValue, 
             bool showHidden = false)
         {
-            var query = from m in _manufacturerRepository.Collection.AsQueryable()
+            var query = from m in _manufacturerRepository.Table
                         select m;
 
             if (!showHidden)

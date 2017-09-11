@@ -217,11 +217,11 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <returns>Products</returns>
         public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
-        {
-            var query = from p in _productRepository.Table
-                        where p.Published && p.ShowOnHomePage
-                        orderby p.DisplayOrder, p.Name
-                        select p;
+        {            
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.Published, true);
+            filter = filter & builder.Eq(x => x.ShowOnHomePage, true);
+            var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).SortBy(x=>x.Name);
             var products = query.ToList();
             return products;
         }

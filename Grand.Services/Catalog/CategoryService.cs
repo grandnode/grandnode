@@ -292,11 +292,11 @@ namespace Grand.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false)
-        {
-            var query = from c in _categoryRepository.Table
-                        where c.Published && c.ShowOnHomePage
-                        orderby c.DisplayOrder
-                        select c;
+        {            
+            var builder = Builders<Category>.Filter;
+            var filter = builder.Eq(x => x.Published, true);
+            filter = filter & builder.Eq(x => x.ShowOnHomePage, true);
+            var query = _categoryRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder);
 
             var categories = query.ToList();
             if (!showHidden)
