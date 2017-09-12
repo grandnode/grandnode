@@ -2086,7 +2086,7 @@ namespace Grand.Services.Catalog
             if (!String.IsNullOrEmpty(productId))
                 query = query.Where(c => c.ProductId == productId);
 
-            query = query.OrderBy(c => c.CreatedOnUtc);
+            query = query.OrderByDescending(c => c.CreatedOnUtc);
             var content = query.ToList();
             return content;
         }
