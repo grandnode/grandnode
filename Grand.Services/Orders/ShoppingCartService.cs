@@ -139,12 +139,12 @@ namespace Grand.Services.Orders
             }
 
             //delete item
-            customer.ShoppingCartItems.Remove(shoppingCartItem);
+            customer.ShoppingCartItems.Remove(customer.ShoppingCartItems.Where(x => x.Id == shoppingCartItem.Id).FirstOrDefault());
             _customerService.DeleteShoppingCartItem(shoppingCartItem);
+
             //reset "HasShoppingCartItems" property used for performance optimization
             customer.HasShoppingCartItems = customer.ShoppingCartItems.Any();
             _customerService.UpdateHasShoppingCartItems(customer);
-            //_customerService.UpdateCustomer(customer);
 
             //validate checkout attributes
             if (ensureOnlyActiveCheckoutAttributes &&

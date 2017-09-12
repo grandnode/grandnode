@@ -907,7 +907,29 @@ namespace Grand.Web.Controllers
             }
             return View(model);
         }
+        [HttpPost, ActionName("Cart")]
+        [FormValueRequired("clearcart")]
+        public virtual IActionResult ClearCart(IFormCollection form)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+                return RedirectToRoute("HomePage");
 
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .ToList();
+
+            var innerWarnings = new Dictionary<string, IList<string>>();
+            foreach (var sci in cart)
+            {
+                _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
+            }
+            //parse and save checkout attributes
+            _shoppingCartWebService.ParseAndSaveCheckoutAttributes(cart, form);
+
+            return RedirectToRoute("HomePage");
+
+        }
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("continueshopping")]
         public virtual IActionResult ContinueShopping()

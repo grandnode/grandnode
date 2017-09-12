@@ -16831,6 +16831,9 @@
   <LocaleResource Name="ShoppingCart.CheckoutAttributes.PriceAdjustment">
     <Value>{0} [{1}]</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.ClearCart">
+    <Value>Clear cart</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.ConflictingShipmentSchedules">
     <Value>Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.</Value>
   </LocaleResource>
