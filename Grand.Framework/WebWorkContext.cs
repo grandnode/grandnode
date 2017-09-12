@@ -294,6 +294,9 @@ namespace Grand.Framework
                 if (this.CurrentCustomer == null)
                     return null;
 
+                if (string.IsNullOrEmpty(this.CurrentCustomer.VendorId))
+                    return null;
+
                 //try to get vendor
                 var vendor = _vendorService.GetVendorById(this.CurrentCustomer.VendorId);
 
