@@ -256,6 +256,7 @@ namespace Grand.Core.Infrastructure
                 {
                     var assemblyLoader = new AssemblyLoader();
                     var shadowCopiedAssembly = assemblyLoader.LoadFromAssemblyPath(dllPath);
+                    assemblyNames.Add(shadowCopiedAssembly.FullName);
                 }
                 catch (BadImageFormatException ex)
                 {
