@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Grand.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Grand.Core.Domain.Catalog;

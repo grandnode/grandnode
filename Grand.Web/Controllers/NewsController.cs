@@ -2,20 +2,13 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Grand.Core;
-using Grand.Core.Caching;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Media;
 using Grand.Core.Domain.News;
-using Grand.Services.Helpers;
 using Grand.Services.Localization;
 using Grand.Services.Logging;
-using Grand.Services.Media;
-using Grand.Services.Messages;
 using Grand.Services.News;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using Grand.Framework;
 using Grand.Framework.Controllers;
 using Grand.Framework.Security;
 using Grand.Framework.Security.Captcha;
@@ -95,7 +88,7 @@ namespace Grand.Web.Controllers
             var feed = new RssFeed(
                 string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                 "News",
-                new Uri(_webHelper.GetStoreLocation(false)),
+                new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Grand.Core;
 using Grand.Core.Domain.Customers;
@@ -11,7 +10,6 @@ using Grand.Services.Localization;
 using Grand.Services.Logging;
 using Grand.Framework.Controllers;
 using Grand.Framework.Security;
-using Grand.Web.Models.Common;
 using Grand.Web.Models.PrivateMessages;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.AspNetCore.Http;
