@@ -173,7 +173,7 @@ namespace Grand.Web.Controllers
                     dataProviderInstance.InitDatabase();
 
                     var dataSettingsManager = new DataSettingsManager();
-                    var dataProviderSettings = dataSettingsManager.LoadSettings();
+                    var dataProviderSettings = dataSettingsManager.LoadSettings(reloadSettings: true);
 
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
