@@ -287,6 +287,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AllowCustomersToContactVendors_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToContactVendors, storeScope);
                 model.AllowCustomersToApplyForVendorAccount_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeScope);
                 model.AllowSearchByVendor_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowSearchByVendor, storeScope);
+
+                model.AllowVendorsToEditInfo_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowVendorsToEditInfo, storeScope);
+                model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.NotifyStoreOwnerAboutVendorInformationChange, storeScope);
+                model.TermsOfServiceEnabled_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.TermsOfServiceEnabled, storeScope);
             }
 
             return View(model);
@@ -326,11 +330,25 @@ namespace Grand.Web.Areas.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeScope);
 
-
             if (model.AllowSearchByVendor_OverrideForStore || storeScope == "")
                 _settingService.SaveSetting(vendorSettings, x => x.AllowSearchByVendor, storeScope);
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(vendorSettings, x => x.AllowSearchByVendor, storeScope);
+
+            if (model.AllowVendorsToEditInfo_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(vendorSettings, x => x.AllowVendorsToEditInfo, storeScope);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(vendorSettings, x => x.AllowVendorsToEditInfo, storeScope);
+
+            if (model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(vendorSettings, x => x.NotifyStoreOwnerAboutVendorInformationChange, storeScope);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(vendorSettings, x => x.NotifyStoreOwnerAboutVendorInformationChange, storeScope);
+
+            if (model.TermsOfServiceEnabled_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(vendorSettings, x => x.TermsOfServiceEnabled, storeScope);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(vendorSettings, x => x.TermsOfServiceEnabled, storeScope);
 
             //now clear cache
             _cacheManager.Clear();

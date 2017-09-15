@@ -1,19 +1,15 @@
 ﻿using MongoDB.Driver;
 using Grand.Core;
 using Grand.Core.Data;
-using Grand.Core.Domain;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Configuration;
 using Grand.Core.Domain.Customers;
-using Grand.Core.Domain.Directory;
 using Grand.Core.Domain.Localization;
-using Grand.Core.Domain.Media;
 using Grand.Core.Domain.Messages;
 using Grand.Core.Domain.Orders;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Topics;
-using Grand.Core.Domain.Vendors;
 using Grand.Core.Infrastructure;
 using Grand.Services.Configuration;
 using Grand.Services.Localization;
@@ -22,19 +18,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Grand.Core.Domain.Forums;
 using Grand.Core.Domain.Tasks;
 using Grand.Core.Domain.News;
 using Grand.Core.Domain.Logging;
-using Grand.Core.Domain.Security;
 using Grand.Services.Security;
 using MongoDB.Bson;
 using MongoDB.Driver.Core.Operations;
 using MongoDB.Driver.Core.Bindings;
 using System.Threading;
-using Grand.Data;
+using Grand.Services.Topics;
 
 namespace Grand.Services.Installation
 {
@@ -594,10 +587,17 @@ namespace Grand.Services.Installation
                                     IsActive = true,
                                     EmailAccountId = emailAccount.Id,
                                 },
+                                new MessageTemplate
+                                {
+                                    Name = "VendorInformationChange.StoreOwnerNotification",
+                                    Subject = "%Store.Name%. Vendor information change.",
+                                    Body = $"<p>{Environment.NewLine}<a href=\"%Store.URL%\">%Store.Name%</a>{Environment.NewLine}<br />{Environment.NewLine}<br />{Environment.NewLine}Vendor %Vendor.Name% (%Vendor.Email%) has just changed information about itself.{Environment.NewLine}</p>{Environment.NewLine}",
+                                    IsActive = true,
+                                    EmailAccountId = emailAccount.Id
+                                },
                             };
 
             EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
-
 
             #endregion
 
@@ -629,6 +629,28 @@ namespace Grand.Services.Installation
             _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x => x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
 
+
+            #endregion
+
+            #region Install new Topics
+
+            var defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault(tt => tt.Name == "Default template");
+            if(defaultTopicTemplate==null)
+                defaultTopicTemplate = EngineContext.Current.Resolve<IRepository<TopicTemplate>>().Table.FirstOrDefault();
+
+            var vendorTermsOfService = new Topic
+            {
+                SystemName = "VendorTermsOfService",
+                IncludeInSitemap = false,
+                IsPasswordProtected = false,
+                DisplayOrder = 1,
+                Title = "",
+                Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
+                TopicTemplateId = defaultTopicTemplate.Id
+            };
+
+            var topicService = EngineContext.Current.Resolve<ITopicService>();
+            topicService.InsertTopic(vendorTermsOfService);
 
             #endregion
         }

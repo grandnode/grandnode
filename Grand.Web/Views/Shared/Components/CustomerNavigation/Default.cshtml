@@ -74,6 +74,13 @@
                                                                                  else
                                                                                  {<text>inactive</text>}">@T("Account.ForumSubscriptions")</a></li>
             }
+            @if (Model.ShowVendorInfo)
+            {
+                <li><a href="@Url.RouteUrl("CustomerVendorInfo")" class="@if(Model.SelectedTab == CustomerNavigationEnum.VendorInfo)
+                                                                     {<text>active</text>}
+                                                                     else
+                                                                     {<text>inactive</text>}">@T("Account.VendorInfo")</a></li>
+            }
             @await Component.InvokeAsync("Widget", new { widgetZone = "account_navigation_after" })
         </ul>
 </div>

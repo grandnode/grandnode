@@ -1,0 +1,47 @@
+﻿@model VendorInfoModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Vendorinfo").Text);
+}
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.VendorInfo })
+}
+<div class="page vendorinfo-page">
+    <h2 class="text-center generalTitle">@T("Account.MyAccount") - @T("Account.VendorInfo")</h2>
+    <form asp-route="CustomerVendorInfo" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+        <div class="form-fields">
+            <div class="form-group">
+                <label asp-for="Name" class="col-form-label">@T("Account.VendorInfo.Name"):</label>
+                <input asp-for="Name" class="form-control name" placeholder="@T("Account.VendorInfo.Name.Hint")" />
+                <span asp-validation-for="Name"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="col-form-label">@T("Account.VendorInfo.Email"):</label>
+                <input asp-for="Email" class="form-control name" placeholder="@T("Account.VendorInfo.Email.Hint")" />
+                <span asp-validation-for="Email"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="col-form-label">@T("Account.VendorInfo.Description"):</label>
+                <textarea asp-for="Description" class="form-control description"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="PictureUrl" class="col-form-label">@T("Account.VendorInfo.Picture"):</label>
+                <input class="form-control-file" name="uploadedFile" type="file" />
+                @if (!String.IsNullOrEmpty(Model.PictureUrl))
+                {
+                    <div class="vendor-picture">
+                        <img src="@(Model.PictureUrl)" alt="picture" />
+                        <input type="submit" name="remove-picture" class="btn btn-danger remove-picture-button" value="@T("Account.VendorInfo.Picture.Remove")" />
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-12 buttons pt-1 pb-1">
+            <input type="submit" name="save-info-button" class="btn btn-success apply-vendor-button" value="@T("Common.Save")" />
+        </div>
+    </form>
+</div>

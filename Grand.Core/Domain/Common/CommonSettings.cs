@@ -74,5 +74,10 @@ namespace Grand.Core.Domain.Common
         public int DeleteGuestTaskOlderThanMinutes { get; set; }
 
         public bool TurnOffLog { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether "accept terms of service" links should be open in popup window. If disabled, then they'll be open on a new page.
+        /// </summary>
+        public bool PopupForTermsOfServiceLinks { get; set; }
     }
 }

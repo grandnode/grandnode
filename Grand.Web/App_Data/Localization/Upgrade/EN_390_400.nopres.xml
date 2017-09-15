@@ -98,4 +98,70 @@
   <LocaleResource Name="ShoppingCart.ClearCart">
     <Value>Clear cart</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo">
+    <Value>Vendor info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name.Required">
+    <Value>Vendor name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.Remove">
+    <Value>Remove picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.AcceptTermsOfService">
+    <Value>I accept terms of service</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.AcceptTermsOfService.Read">
+    <Value>(read)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.AcceptTermsOfService.Required">
+    <Value>Please accept terms of service</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo">
+    <Value>Allow vendors to edit info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo.Hint">
+    <Value>Check to allow vendors to edit information about themselves (in public store).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange">
+    <Value>Notify about vendor information changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange.Hint">
+    <Value>Check to notify a store owner about vendor information changes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.TermsOfServiceEnabled">
+    <Value>Terms of service</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.TermsOfServiceEnabled.Hint">
+    <Value>Require vendors to accept terms of service during registration.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.VendorInfo">
+    <Value>Vendor info</Value>
+  </LocaleResource>
 </Language>

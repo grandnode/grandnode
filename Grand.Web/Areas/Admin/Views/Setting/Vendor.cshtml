@@ -95,6 +95,45 @@
                                     @Html.ValidationMessageFor(model => model.AllowSearchByVendor)
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.AllowVendorsToEditInfo_OverrideForStore, model => model.AllowVendorsToEditInfo, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.AllowVendorsToEditInfo, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.AllowVendorsToEditInfo)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.AllowVendorsToEditInfo)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore, model => model.NotifyStoreOwnerAboutVendorInformationChange, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.NotifyStoreOwnerAboutVendorInformationChange, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.NotifyStoreOwnerAboutVendorInformationChange)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutVendorInformationChange)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-4 text-right">
+                                    @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceEnabled_OverrideForStore, model => model.TermsOfServiceEnabled, Model.ActiveStoreScopeConfiguration)
+                                    @Html.GrandLabelFor(model => model.TermsOfServiceEnabled, new Dictionary<string, object> { { "class", "control-label" } }, false)
+                                </div>
+                                <div class="col-md-8 col-sm-8">
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        @Html.EditorFor(model => model.TermsOfServiceEnabled)
+                                        <span></span>
+                                    </label>
+                                    @Html.ValidationMessageFor(model => model.TermsOfServiceEnabled)
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

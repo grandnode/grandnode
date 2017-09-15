@@ -370,10 +370,15 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("ContactVendor",
                             "contactvendor/{vendorId}",
                             new { controller = "Common", action = "ContactVendor" });
+
             //apply for vendor account
             routeBuilder.MapLocalizedRoute("ApplyVendorAccount",
                             "vendor/apply",
                             new { controller = "Vendor", action = "ApplyVendor" });
+
+            //vendor info
+            routeBuilder.MapLocalizedRoute("CustomerVendorInfo", "customer/vendorinfo",
+                new { controller = "Vendor", action = "Info" });
 
             //poll vote AJAX link
             routeBuilder.MapLocalizedRoute("PollVote",
