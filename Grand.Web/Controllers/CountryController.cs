@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Grand.Services.Localization;
-using Grand.Framework;
 using System.Collections.Generic;
 using Grand.Web.Services;
 using Grand.Framework.Mvc.Filters;

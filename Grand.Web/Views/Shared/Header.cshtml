@@ -2,9 +2,6 @@
     @await Component.InvokeAsync("Widget", new { widgetZone = "header" })
     <nav class="navbar fixed-top navbar-light bg-faded navUp p-0">
         <div class="collapse btn-toolbar generalDropDown" id="generalDropDown">
-            @await Component.InvokeAsync("TaxTypeSelector")
-            @await Component.InvokeAsync("CurrencySelector")
-            @await Component.InvokeAsync("LanguageSelector")
         </div>
         <div class="container">
             <ul class="nav navbar-nav header-links pl-0 flex-row">
@@ -14,10 +11,12 @@
                     </a>
                 </li>
                 <li class="nav-item float-xs-right hidden-sm-down mr-auto">
-                    <div class="generalDropDown btn-toolbar float-xs-right">
-                        @await Component.InvokeAsync("TaxTypeSelector")
-                        @await Component.InvokeAsync("CurrencySelector")
-                        @await Component.InvokeAsync("LanguageSelector")
+                    <div class="generalDropDown btn-toolbar float-xs-right ">
+                        <div class="settingSellector">
+                            @await Component.InvokeAsync("TaxTypeSelector")
+                            @await Component.InvokeAsync("CurrencySelector")
+                            @await Component.InvokeAsync("LanguageSelector")
+                        </div>
                     </div>
                 </li>
                 @await Component.InvokeAsync("HeaderLinks")
@@ -32,4 +31,9 @@
             @await Component.InvokeAsync("SearchBox")
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $(".settingSellector").appendTo(".generalDropDown");
+        });
+    </script>
 </header>

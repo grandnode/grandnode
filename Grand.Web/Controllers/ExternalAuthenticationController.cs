@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Grand.Core;
+﻿using Microsoft.AspNetCore.Mvc;
 using Grand.Services.Authentication.External;
-using Grand.Web.Models.Customer;
 using Grand.Web.Services;
 
 namespace Grand.Web.Controllers
