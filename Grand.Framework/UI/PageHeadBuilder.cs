@@ -5,12 +5,11 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using BundlerMinifier;
+using Grand.Core.Domain.Seo;
+using Grand.Services.Seo;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using Grand.Core;
-using Grand.Core.Domain.Seo;
-using Grand.Services.Seo;
 
 namespace Grand.Framework.UI
 {
@@ -67,10 +66,12 @@ namespace Grand.Framework.UI
 
         #region Utilities
 
-        protected virtual string GetBundleFileName(string[] parts)
+        protected virtual string GetBundleFileNameBasingOnModifyTime(string[] filePaths)
         {
-            if (parts == null || parts.Length == 0)
+            if (filePaths == null || filePaths.Length == 0)
                 throw new ArgumentException("parts");
+
+            var ticks = filePaths.Select(filePath => { return File.GetLastWriteTimeUtc(filePath).Ticks; });
 
             //calculate hash
             var hash = "";
@@ -78,9 +79,9 @@ namespace Grand.Framework.UI
             {
                 // string concatenation
                 var hashInput = "";
-                foreach (var part in parts)
+                foreach (var tick in ticks)
                 {
-                    hashInput += part;
+                    hashInput += tick;
                     hashInput += ",";
                 }
 
@@ -89,7 +90,6 @@ namespace Grand.Framework.UI
             }
             //ensure only valid chars
             hash = SeoExtensions.GetSeName(hash);
-            
             return hash;
         }
 
@@ -108,7 +108,7 @@ namespace Grand.Framework.UI
         {
             if (string.IsNullOrEmpty(part))
                 return;
-            
+
             _titleParts.Insert(0, part);
         }
         public virtual string GenerateTitle(bool addDefaultTitle)
@@ -133,7 +133,6 @@ namespace Grand.Framework.UI
                                 result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, _seoSettings.DefaultTitle);
                             }
                             break;
-                            
                     }
                 }
                 else
@@ -150,21 +149,22 @@ namespace Grand.Framework.UI
             return result;
         }
 
-
         public virtual void AddMetaDescriptionParts(string part)
         {
             if (string.IsNullOrEmpty(part))
                 return;
-            
+
             _metaDescriptionParts.Add(part);
         }
+
         public virtual void AppendMetaDescriptionParts(string part)
         {
             if (string.IsNullOrEmpty(part))
                 return;
-            
+
             _metaDescriptionParts.Insert(0, part);
         }
+
         public virtual string GenerateMetaDescription()
         {
             var metaDescription = string.Join(", ", _metaDescriptionParts.AsEnumerable().Reverse().ToArray());
@@ -172,14 +172,14 @@ namespace Grand.Framework.UI
             return result;
         }
 
-
         public virtual void AddMetaKeywordParts(string part)
         {
             if (string.IsNullOrEmpty(part))
                 return;
-            
+
             _metaKeywordParts.Add(part);
         }
+
         public virtual void AppendMetaKeywordParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -187,13 +187,13 @@ namespace Grand.Framework.UI
 
             _metaKeywordParts.Insert(0, part);
         }
+
         public virtual string GenerateMetaKeywords()
         {
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
             var result = !String.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
             return result;
         }
-    
 
         public virtual void AddScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
         {
@@ -214,6 +214,7 @@ namespace Grand.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+
         public virtual void AppendScriptParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle, bool isAsync)
         {
             if (!_scriptParts.ContainsKey(location))
@@ -233,6 +234,7 @@ namespace Grand.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+
         public virtual string GenerateScripts(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
@@ -242,7 +244,7 @@ namespace Grand.Framework.UI
                 return "";
 
             var debugModel = _hostingEnvironment.IsDevelopment();
-            
+
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
@@ -268,39 +270,56 @@ namespace Grand.Framework.UI
                     //ensure \bundles directory exists
                     Directory.CreateDirectory(Path.Combine(_hostingEnvironment.WebRootPath, "bundles"));
 
+                    var srcPath = string.Empty;
+
                     var bundle = new Bundle();
                     foreach (var item in partsToBundle)
                     {
                         var src = debugModel ? item.DebugSrc : item.Src;
                         src = urlHelper.Content(src);
                         //check whether this file exists. 
-                        var srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
+                        srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Remove(0, 1).Replace("/", "\\"));
                         if (File.Exists(srcPath))
                         {
                             //remove starting /
                             src = src.Remove(0, 1);
+
+                            if (File.Exists(srcPath))
+                                item.FilePath = srcPath;
                         }
                         else
                         {
                             //if not, it should be stored into /wwwroot directory
                             src = "wwwroot/" + src;
+
+                            srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
+
+                            if (File.Exists(srcPath))
+                                item.FilePath = srcPath;
                         }
                         bundle.InputFiles.Add(src);
                     }
-                    //output file
-                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
+                    //output file name
+                    var outputFileName = GetBundleFileNameBasingOnModifyTime(partsToBundle.Select(x => { return x.FilePath; }).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".js";
+
                     //save
                     string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
-                    lock (s_lock)
-                    {
-                        //store json file to see a generated config file (for debugging purposes)
-                        //BundleHandler.AddBundle(configFilePath, bundle);
 
-                        //process
-                        _processor.Process(configFilePath, new List<Bundle> {bundle});
+                    var budnleDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "bundles");
+                    var filePaths = Directory.EnumerateFiles(budnleDirectory);
+                    var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf("\\") + 1));
+
+                    if (!fileNames.Contains(outputFileName + ".min.js"))
+                    {
+                        lock (s_lock)
+                        {
+                            //process
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
+                        }
                     }
+
                     //render
                     result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content("~/bundles/" + outputFileName + ".min.js"), "text/javascript");
                     result.Append(Environment.NewLine);
@@ -323,13 +342,13 @@ namespace Grand.Framework.UI
                 foreach (var item in _scriptParts[location].Distinct())
                 {
                     var src = debugModel ? item.DebugSrc : item.Src;
-                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), "text/javascript", item.IsAsync ? "async ":"");
+                    result.AppendFormat("<script {2}src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(src), "text/javascript", item.IsAsync ? "async " : "");
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
             }
         }
-        
+
         public virtual void AddCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
@@ -348,6 +367,7 @@ namespace Grand.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+
         public virtual void AppendCssFileParts(ResourceLocation location, string src, string debugSrc, bool excludeFromBundle = false)
         {
             if (!_cssParts.ContainsKey(location))
@@ -366,6 +386,7 @@ namespace Grand.Framework.UI
                 DebugSrc = debugSrc
             });
         }
+
         public virtual string GenerateCssFiles(IUrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
@@ -376,7 +397,7 @@ namespace Grand.Framework.UI
 
 
             var debugModel = _hostingEnvironment.IsDevelopment();
-            
+
             if (!bundleFiles.HasValue)
             {
                 //use setting if no value is specified
@@ -396,7 +417,6 @@ namespace Grand.Framework.UI
 
                 var result = new StringBuilder();
 
-
                 //parts to  bundle
                 if (partsToBundle.Any())
                 {
@@ -414,27 +434,40 @@ namespace Grand.Framework.UI
                         {
                             //remove starting /
                             src = src.Remove(0, 1);
+                            srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
+                            if (File.Exists(srcPath))
+                                item.FilePath = srcPath;
                         }
                         else
                         {
                             //if not, it should be stored into /wwwroot directory
                             src = "wwwroot/" + src;
+                            srcPath = Path.Combine(_hostingEnvironment.ContentRootPath, src.Replace("/", "\\").Replace("\\\\", "\\"));
+                            if (File.Exists(srcPath))
+                                item.FilePath = srcPath;
                         }
                         bundle.InputFiles.Add(src);
                     }
-                    //output file
-                    var outputFileName = GetBundleFileName(partsToBundle.Select(x => { return debugModel ? x.DebugSrc : x.Src; }).ToArray());
+
+                    //output file name
+                    var outputFileName = GetBundleFileNameBasingOnModifyTime(partsToBundle.Select(x => { return x.FilePath; }).ToArray());
                     bundle.OutputFileName = "wwwroot/bundles/" + outputFileName + ".css";
+
                     //save
                     string configFilePath = _hostingEnvironment.ContentRootPath + "\\" + outputFileName + ".json";
                     bundle.FileName = configFilePath;
-                    lock (s_lock)
-                    {
-                        //store json file to see a generated config file (for debugging purposes)
-                        //BundleHandler.AddBundle(configFilePath, bundle);
 
-                        //process
-                        _processor.Process(configFilePath, new List<Bundle> { bundle });
+                    var bundleDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "bundles");
+                    var filePaths = Directory.EnumerateFiles(bundleDirectory);
+                    var fileNames = filePaths.Select(x => x.Substring(x.LastIndexOf("\\") + 1));
+
+                    if (!fileNames.Contains(outputFileName + ".min.css"))
+                    {
+                        lock (s_lock)
+                        {
+                            //process
+                            _processor.Process(configFilePath, new List<Bundle> { bundle });
+                        }
                     }
                     //render
                     result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content("~/bundles/" + outputFileName + ".min.css"), "text/css");
@@ -448,7 +481,6 @@ namespace Grand.Framework.UI
                     result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(src), "text/css");
                     result.Append(Environment.NewLine);
                 }
-
                 return result.ToString();
             }
             else
@@ -469,16 +501,18 @@ namespace Grand.Framework.UI
         {
             if (string.IsNullOrEmpty(part))
                 return;
-                       
+
             _canonicalUrlParts.Add(part);
         }
+
         public virtual void AppendCanonicalUrlParts(string part)
         {
             if (string.IsNullOrEmpty(part))
                 return;
-                       
+
             _canonicalUrlParts.Insert(0, part);
         }
+
         public virtual string GenerateCanonicalUrls()
         {
             var result = new StringBuilder();
@@ -490,7 +524,6 @@ namespace Grand.Framework.UI
             return result.ToString();
         }
 
-
         public virtual void AddHeadCustomParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -498,6 +531,7 @@ namespace Grand.Framework.UI
 
             _headCustomParts.Add(part);
         }
+
         public virtual void AppendHeadCustomParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -505,6 +539,7 @@ namespace Grand.Framework.UI
 
             _headCustomParts.Insert(0, part);
         }
+
         public virtual string GenerateHeadCustom()
         {
             //use only distinct rows
@@ -521,7 +556,6 @@ namespace Grand.Framework.UI
             return result.ToString();
         }
 
-        
         public virtual void AddPageCssClassParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -529,6 +563,7 @@ namespace Grand.Framework.UI
 
             _pageCssClassParts.Add(part);
         }
+
         public virtual void AppendPageCssClassParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -536,12 +571,12 @@ namespace Grand.Framework.UI
 
             _pageCssClassParts.Insert(0, part);
         }
+
         public virtual string GeneratePageCssClasses()
         {
             string result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
             return result;
         }
-
 
         /// <summary>
         /// Specify "edit page" URL
@@ -551,6 +586,7 @@ namespace Grand.Framework.UI
         {
             _editPageUrl = url;
         }
+
         /// <summary>
         /// Get "edit page" URL
         /// </summary>
@@ -560,7 +596,6 @@ namespace Grand.Framework.UI
             return _editPageUrl;
         }
 
-
         /// <summary>
         /// Specify system name of admin menu item that should be selected (expanded)
         /// </summary>
@@ -569,6 +604,7 @@ namespace Grand.Framework.UI
         {
             _activeAdminMenuSystemName = systemName;
         }
+
         /// <summary>
         /// Get system name of admin menu item that should be selected (expanded)
         /// </summary>
@@ -579,7 +615,7 @@ namespace Grand.Framework.UI
         }
 
         #endregion
-        
+
         #region Nested classes
 
         private class ScriptReferenceMeta
@@ -591,6 +627,8 @@ namespace Grand.Framework.UI
             public string Src { get; set; }
 
             public string DebugSrc { get; set; }
+
+            public string FilePath { get; set; }
         }
 
         private class CssReferenceMeta
@@ -600,6 +638,8 @@ namespace Grand.Framework.UI
             public string Src { get; set; }
 
             public string DebugSrc { get; set; }
+
+            public string FilePath { get; set; }
         }
         #endregion
     }
