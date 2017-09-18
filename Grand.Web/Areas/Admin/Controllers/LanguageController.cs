@@ -430,7 +430,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             try
             {
                 var xml = _localizationService.ExportResourcesToXml(language);
-                return null; //return new XmlDownloadResult(xml, "language_pack.xml");
+                return File(Encoding.UTF8.GetBytes(xml), "application/xml", "language_pack.xml");
             }
             catch (Exception exc)
             {
