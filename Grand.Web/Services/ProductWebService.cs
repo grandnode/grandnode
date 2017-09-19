@@ -1226,7 +1226,7 @@ namespace Grand.Web.Services
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
 
-            var productReviews = _productService.GetAllProductReviews("", true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : "", product.Id).OrderBy(pr => pr.CreatedOnUtc);
+            var productReviews = _productService.GetAllProductReviews("", true, null, null, "", _catalogSettings.ShowProductReviewsPerStore ? _storeContext.CurrentStore.Id : "", product.Id);
             foreach (var pr in productReviews)
             {
                 var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(pr.CustomerId);

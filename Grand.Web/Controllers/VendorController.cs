@@ -13,6 +13,11 @@ using Grand.Framework.Security.Captcha;
 using Grand.Web.Models.Vendors;
 using System;
 using Grand.Framework.Mvc.Filters;
+using Microsoft.AspNetCore.Http;
+using Grand.Services.Media;
+using Grand.Core.Domain.Common;
+using Grand.Framework.Controllers;
+using Grand.Core.Domain.Media;
 
 namespace Grand.Web.Controllers
 {
@@ -26,11 +31,13 @@ namespace Grand.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IVendorService _vendorService;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly IPictureService _pictureService;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
         private readonly CaptchaSettings _captchaSettings;
-
+        private readonly CommonSettings _commonSettings;
+        private readonly MediaSettings _mediaSettings;
         #endregion
 
         #region Constructors
@@ -41,9 +48,12 @@ namespace Grand.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             IVendorService vendorService,
             IUrlRecordService urlRecordService,
+            IPictureService pictureService,
             LocalizationSettings localizationSettings,
             VendorSettings vendorSettings,
-            CaptchaSettings captchaSettings)
+            CaptchaSettings captchaSettings,
+            CommonSettings commonSettings,
+            MediaSettings mediaSettings)
         {
             this._workContext = workContext;
             this._localizationService = localizationService;
@@ -51,10 +61,24 @@ namespace Grand.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._vendorService = vendorService;
             this._urlRecordService = urlRecordService;
+            this._pictureService = pictureService;
 
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
             this._captchaSettings = captchaSettings;
+            this._commonSettings = commonSettings;
+            this._mediaSettings = mediaSettings;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        protected virtual void UpdatePictureSeoNames(Vendor vendor)
+        {
+            var picture = _pictureService.GetPictureById(vendor.PictureId);
+            if (picture != null)
+                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
         }
 
         #endregion
@@ -81,13 +105,15 @@ namespace Grand.Web.Controllers
 
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
             model.Email = _workContext.CurrentCustomer.Email;
+            model.TermsOfServiceEnabled = _vendorSettings.TermsOfServiceEnabled;
+            model.TermsOfServicePopup = _commonSettings.PopupForTermsOfServiceLinks;
             return View(model);
         }
 
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
         [ValidateCaptcha]
-        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid)
+        public virtual IActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid, IFormFile uploadedFile)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
@@ -101,15 +127,36 @@ namespace Grand.Web.Controllers
                 ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
+            string pictureId = "";
+
+            if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
+            {
+                try
+                {
+                    var contentType = uploadedFile.ContentType;
+                    var vendorPictureBinary = uploadedFile.GetPictureBits();
+                    var picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+
+                    if (picture != null)
+                        pictureId = picture.Id;
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", _localizationService.GetResource("Vendors.ApplyAccount.Picture.ErrorMessage"));
+                }
+            }
+
             if (ModelState.IsValid)
             {
+                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
                 //disabled by default
                 var vendor = new Vendor
                 {
                     Name = model.Name,
                     Email = model.Email,
-                    //some default settings
+                    Description = description,
                     PageSize = 6,
+                    PictureId = pictureId,
                     AllowCustomersToSelectPageSize = true,
                     PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions
                 };
@@ -136,6 +183,116 @@ namespace Grand.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
             return View(model);
+        }
+
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult Info()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
+                return RedirectToRoute("CustomerInfo");
+
+            var model = new VendorInfoModel();
+            var vendor = _workContext.CurrentVendor;
+            model.Description = vendor.Description;
+            model.Email = vendor.Email;
+            model.Name = vendor.Name;
+
+            var picture = _pictureService.GetPictureById(vendor.PictureId);
+            var pictureSize = _mediaSettings.AvatarPictureSize;
+            model.PictureUrl = picture != null ? _pictureService.GetPictureUrl(picture, pictureSize) : string.Empty;
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Info")]
+        [PublicAntiForgery]
+        [FormValueRequired("save-info-button")]
+        public virtual IActionResult Info(VendorInfoModel model, IFormFile uploadedFile)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
+                return RedirectToRoute("CustomerInfo");
+
+            Picture picture = null;
+
+            if (uploadedFile != null && !string.IsNullOrEmpty(uploadedFile.FileName))
+            {
+                try
+                {
+                    var contentType = uploadedFile.ContentType;
+                    var vendorPictureBinary = uploadedFile.GetPictureBits();
+                    picture = _pictureService.InsertPicture(vendorPictureBinary, contentType, null);
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", _localizationService.GetResource("Account.VendorInfo.Picture.ErrorMessage"));
+                }
+            }
+
+            var vendor = _workContext.CurrentVendor;
+            var prevPicture = _pictureService.GetPictureById(vendor.PictureId);
+
+            if (ModelState.IsValid)
+            {
+                var description = Core.Html.HtmlHelper.FormatText(model.Description, false, false, true, false, false, false);
+
+                vendor.Name = model.Name;
+                vendor.Email = model.Email;
+                vendor.Description = description;
+
+                if (picture != null)
+                {
+                    vendor.PictureId = picture.Id;
+
+                    if (prevPicture != null)
+                        _pictureService.DeletePicture(prevPicture);
+                }
+
+                //update picture seo file name
+                UpdatePictureSeoNames(vendor);
+
+                _vendorService.UpdateVendor(vendor);
+
+                //notifications
+                if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
+                    _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+
+                return RedirectToAction("Info");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Info")]
+        [PublicAntiForgery]
+        [FormValueRequired("remove-picture")]
+        public virtual IActionResult RemovePicture()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            if (_workContext.CurrentVendor == null || !_vendorSettings.AllowVendorsToEditInfo)
+                return RedirectToRoute("CustomerInfo");
+
+            var vendor = _workContext.CurrentVendor;
+            var picture = _pictureService.GetPictureById(vendor.PictureId);
+
+            if (picture != null)
+                _pictureService.DeletePicture(picture);
+
+            vendor.PictureId = "";
+            _vendorService.UpdateVendor(vendor);
+
+            //notifications
+            if (_vendorSettings.NotifyStoreOwnerAboutVendorInformationChange)
+                _workflowMessageService.SendVendorInformationChangeNotification(vendor, _localizationSettings.DefaultAdminLanguageId);
+
+            return RedirectToAction("Info");
         }
 
         #endregion

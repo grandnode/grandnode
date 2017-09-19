@@ -1,11 +1,6 @@
 @model ShoppingCartModel
-@using Grand.Core
-@using Grand.Core.Domain.Tax
-@using Grand.Core.Infrastructure
-@using Grand.Web.Models.ShoppingCart;
-@{
-    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-}
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
 <div class="order-summary-content mt-3">
     @await Component.InvokeAsync("Widget", new { widgetZone = "order_summary_content_before" })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
@@ -235,6 +230,7 @@
                 {
                 <div class="common-buttons btn-group btn-group-sm text-sm-right d-flex justify-content-end">
                     <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" class="btn btn-secondary update-cart-button" />
+                    <input type="submit" name="clearcart" value="@T("ShoppingCart.ClearCart")" class="btn btn-secondary clear-cart-button" />
                     <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="btn btn-secondary continue-shopping-button" />
                 </div>
                 }
@@ -256,8 +252,7 @@
             </div>
             @if (Model.IsEditable && Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
             {
-            var inclTax = EngineContext.Current.Resolve<IWorkContext>
-                ().TaxDisplayType == TaxDisplayType.IncludingTax;
+            var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
                 //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                 //of course, you can modify appropriate locales to include VAT info there
                 <div class="tax-shipping-info d-flex justify-content-end mt-2 mb-2">

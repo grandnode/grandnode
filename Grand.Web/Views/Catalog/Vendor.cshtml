@@ -1,20 +1,19 @@
 ﻿@model VendorModel
+@inject SeoSettings seoSettings
 @{
     Layout = "_ColumnsTwo";
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
 
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var vendorUrl = Url.RouteUrl("Vendor", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(vendorUrl);
     }
 }
-@using Grand.Core.Domain.Seo;
-@using Grand.Core.Infrastructure;
-@using Grand.Web.Models.Catalog;
+
 <div class="page vendor-page">
        <div class="col-12"> 
     <h1 class="h2 generalTitle">

@@ -1,7 +1,5 @@
 ﻿@model TopicModel
-@using Grand.Core.Domain.Seo
-@using Grand.Core.Infrastructure
-@using Grand.Web.Models.Topics;
+@inject SeoSettings seoSettings
 @{
     var isPopup = ViewBag.IsPopup;
     if (isPopup == null || isPopup == false)
@@ -21,7 +19,7 @@
         Html.AddMetaKeywordParts(Model.MetaKeywords);
     }
 
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var topicUrl = Url.RouteUrl("Topic", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);

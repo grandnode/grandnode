@@ -1,7 +1,7 @@
 ﻿@model NewsletterCategoryModel
-@using Grand.Web.Models.Newsletter;
+@inject IWebHelper webHelper
 @{ 
-    var storeLocation = Grand.Core.Infrastructure.EngineContext.Current.Resolve<Grand.Core.IWebHelper>().GetStoreLocation();
+    var storeLocation = webHelper.GetStoreLocation();
 }
 <div class="newsletter-category">
     <div class="newsletter-category-title pb-3">

@@ -1,10 +1,6 @@
 ﻿@model ProductDetailsModel
-@using Grand.Core
-@using Grand.Core.Domain.Seo;
-@using Grand.Core.Infrastructure;
-@using Grand.Services.Localization;
-@using Grand.Web.Models.Catalog;
 @using Microsoft.AspNetCore.Http.Extensions
+@inject SeoSettings seoSettings
 @{
     Layout = "_ColumnsOne";
 
@@ -12,8 +8,6 @@
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
-
-    var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
 
     //canonical URL
     if (seoSettings.CanonicalUrlsEnabled)

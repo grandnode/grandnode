@@ -62,6 +62,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
+        private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<ForumPost> _forumPostRepository;
@@ -82,6 +83,7 @@ namespace Grand.Services.Customers
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
+            IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
             IRepository<Order> orderRepository,
@@ -98,6 +100,7 @@ namespace Grand.Services.Customers
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerProductPriceRepository = customerProductPriceRepository;
             this._customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
             this._orderRepository = orderRepository;
@@ -1343,6 +1346,95 @@ namespace Grand.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
         }
         #endregion
+
+        #region Customer Product Price
+
+        /// <summary>
+        /// Gets a customer product price
+        /// </summary>
+        /// <param name="Id">Identifier</param>
+        /// <returns>Customer product price</returns>
+        public virtual CustomerProductPrice GetCustomerProductPriceById(string id)
+        {
+            if (id == null)
+                throw new ArgumentNullException("Id");
+
+            return _customerProductPriceRepository.GetById(id);
+        }
+
+        /// <summary>
+        /// Gets a price
+        /// </summary>
+        /// <param name="customerId">Customer Identifier</param>
+        /// <param name="productId">Product Identifier</param>
+        /// <returns>Customer product price</returns>
+        public virtual decimal? GetPriceByCustomerProduct(string customerId, string productId)
+        {
+            var query = from pp in _customerProductPriceRepository.Table
+                        where pp.CustomerId == customerId && pp.ProductId == productId
+                        select pp;
+            var productprice = query.FirstOrDefault();
+            if (productprice == null)
+                return null;
+            else
+                return productprice.Price;
+        }
+
+        /// <summary>
+        /// Inserts a customer product price
+        /// </summary>
+        /// <param name="customerProductPrice">Customer product price</param>
+        public virtual void InsertCustomerProductPrice(CustomerProductPrice customerProductPrice)
+        {
+            if (customerProductPrice == null)
+                throw new ArgumentNullException("customerProductPrice");
+
+            _customerProductPriceRepository.Insert(customerProductPrice);
+
+            //event notification
+            _eventPublisher.EntityInserted(customerProductPrice);
+        }
+
+        /// <summary>
+        /// Updates the customer product price
+        /// </summary>
+        /// <param name="customerProductPrice">Customer product price</param>
+        public virtual void UpdateCustomerProductPrice(CustomerProductPrice customerProductPrice)
+        {
+            if (customerProductPrice == null)
+                throw new ArgumentNullException("customerProductPrice");
+
+            _customerProductPriceRepository.Update(customerProductPrice);
+
+            //event notification
+            _eventPublisher.EntityUpdated(customerProductPrice);
+        }
+
+        /// <summary>
+        /// Delete a customer product price
+        /// </summary>
+        /// <param name="customerProductPrice">Customer product price</param>
+        public virtual void DeleteCustomerProductPrice(CustomerProductPrice customerProductPrice)
+        {
+            if (customerProductPrice == null)
+                throw new ArgumentNullException("customerProductPrice");
+
+            _customerProductPriceRepository.Delete(customerProductPrice);
+
+            //event notification
+            _eventPublisher.EntityDeleted(customerProductPrice);
+        }
+
+        public virtual IPagedList<CustomerProductPrice> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = from pp in _customerProductPriceRepository.Table
+                        where pp.CustomerId == customerId
+                        select pp;
+            return new PagedList<CustomerProductPrice>(query, pageIndex, pageSize);
+        }
+
+        #endregion
+
 
         #endregion
     }

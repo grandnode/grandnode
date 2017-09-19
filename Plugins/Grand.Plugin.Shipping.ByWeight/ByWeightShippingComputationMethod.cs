@@ -272,8 +272,6 @@ namespace Grand.Plugin.Shipping.ByWeight
             viewComponentName = "";
         }
 
-        IShipmentTracker IShippingRateComputationMethod.ShipmentTracker => throw new NotImplementedException();
-
         #endregion
     }
 

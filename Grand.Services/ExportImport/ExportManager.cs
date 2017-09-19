@@ -767,25 +767,28 @@ namespace Grand.Services.ExportImport
                         xmlWriter.WriteElementString("OrderItemGuid", null, orderItem.OrderItemGuid.ToString());
                         xmlWriter.WriteElementString("ProductId", null, orderItem.ProductId.ToString());
 
-                        var product =  _productService.GetProductById(orderItem.ProductId);
-                        xmlWriter.WriteElementString("ProductName", null, product.Name);
-                        xmlWriter.WriteElementString("UnitPriceInclTax", null, orderItem.UnitPriceInclTax.ToString());
-                        xmlWriter.WriteElementString("UnitPriceExclTax", null, orderItem.UnitPriceExclTax.ToString());
-                        xmlWriter.WriteElementString("PriceInclTax", null, orderItem.PriceInclTax.ToString());
-                        xmlWriter.WriteElementString("PriceExclTax", null, orderItem.PriceExclTax.ToString());
-                        xmlWriter.WriteElementString("DiscountAmountInclTax", null, orderItem.DiscountAmountInclTax.ToString());
-                        xmlWriter.WriteElementString("DiscountAmountExclTax", null, orderItem.DiscountAmountExclTax.ToString());
-                        xmlWriter.WriteElementString("OriginalProductCost", null, orderItem.OriginalProductCost.ToString());
-                        xmlWriter.WriteElementString("AttributeDescription", null, orderItem.AttributeDescription);
-                        xmlWriter.WriteElementString("AttributesXml", null, orderItem.AttributesXml);
-                        xmlWriter.WriteElementString("Quantity", null, orderItem.Quantity.ToString());
-                        xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
-                        xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());
-                        xmlWriter.WriteElementString("LicenseDownloadId", null, orderItem.LicenseDownloadId.ToString());
-                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
-                        xmlWriter.WriteElementString("RentalStartDateUtc", null, rentalStartDate);
-                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
-                        xmlWriter.WriteElementString("RentalEndDateUtc", null, rentalEndDate);
+                        var product =  _productService.GetProductByIdIncludeArch(orderItem.ProductId);
+                        if (product != null)
+                        {
+                            xmlWriter.WriteElementString("ProductName", null, product.Name);
+                            xmlWriter.WriteElementString("UnitPriceInclTax", null, orderItem.UnitPriceInclTax.ToString());
+                            xmlWriter.WriteElementString("UnitPriceExclTax", null, orderItem.UnitPriceExclTax.ToString());
+                            xmlWriter.WriteElementString("PriceInclTax", null, orderItem.PriceInclTax.ToString());
+                            xmlWriter.WriteElementString("PriceExclTax", null, orderItem.PriceExclTax.ToString());
+                            xmlWriter.WriteElementString("DiscountAmountInclTax", null, orderItem.DiscountAmountInclTax.ToString());
+                            xmlWriter.WriteElementString("DiscountAmountExclTax", null, orderItem.DiscountAmountExclTax.ToString());
+                            xmlWriter.WriteElementString("OriginalProductCost", null, orderItem.OriginalProductCost.ToString());
+                            xmlWriter.WriteElementString("AttributeDescription", null, orderItem.AttributeDescription);
+                            xmlWriter.WriteElementString("AttributesXml", null, orderItem.AttributesXml);
+                            xmlWriter.WriteElementString("Quantity", null, orderItem.Quantity.ToString());
+                            xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
+                            xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());
+                            xmlWriter.WriteElementString("LicenseDownloadId", null, orderItem.LicenseDownloadId.ToString());
+                            var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                            xmlWriter.WriteElementString("RentalStartDateUtc", null, rentalStartDate);
+                            var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                            xmlWriter.WriteElementString("RentalEndDateUtc", null, rentalEndDate);
+                        }
                         xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();

@@ -594,6 +594,33 @@
   <LocaleResource Name="Account.YourPersonalDetails">
     <Value>Your Personal Details</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo">
+    <Value>Vendor info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Description">
+    <Value>Description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Email.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Name.Required">
+    <Value>Vendor name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.VendorInfo.Picture.Remove">
+    <Value>Remove picture</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AbandonedCart">
     <Value>Send email AbandonedCart - ('{0}')</Value>
   </LocaleResource>
@@ -7338,11 +7365,29 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowSearchByVendor.Hint">
     <Value>Check to allow customers to search by vendor in store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo">
+    <Value>Allow vendors to edit info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo.Hint">
+    <Value>Check to allow vendors to edit information about themselves (in public store)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange">
+    <Value>Notify about vendor information changes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange.Hint">
+    <Value>Check to notify a store owner about vendor information changes.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage">
     <Value>Show vendor on product details page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage.Hint">
     <Value>Check to display a vendor name on the product details page (if associated)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.TermsOfServiceEnabled">
+    <Value>Terms of service</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.TermsOfServiceEnabled.Hint">
+    <Value>Require vendors to accept terms of service during registration.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorsBlockItemsToDisplay">
     <Value>Number of vendors to display</Value>
@@ -10099,6 +10144,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.PasswordChanged">
     <Value>The password has been changed successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice">
+    <Value>Individual Product Prices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.AddNew">
+    <Value>Add new product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ProductPrice.ProductName">
+    <Value>Product Name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ReSendActivationMessage">
     <Value>Re-send activation message</Value>
@@ -14968,6 +15025,9 @@
   <LocaleResource Name="Forum.PageTitle.TopicNew">
     <Value>New Topic</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.VendorInfo">
+    <Value>Vendor info</Value>
+  </LocaleResource>
   <LocaleResource Name="Forum.Posted">
     <Value>Posted</Value>
   </LocaleResource>
@@ -16819,6 +16879,9 @@
   <LocaleResource Name="ShoppingCart.CheckoutAttributes.PriceAdjustment">
     <Value>{0} [{1}]</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.ClearCart">
+    <Value>Clear cart</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.ConflictingShipmentSchedules">
     <Value>Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.</Value>
   </LocaleResource>
@@ -17149,8 +17212,20 @@
   <LocaleResource Name="Vendors.ApplyAccount.AlreadyApplied">
     <Value>You already applied for a vendor account. Please register as a new customer in order to apply for one more vendor account.</Value>
   </LocaleResource>
+ <LocaleResource Name="Vendors.ApplyAccount.AcceptTermsOfService">
+    <Value>I accept terms of service</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.AcceptTermsOfService.Read">
+    <Value>(read)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.AcceptTermsOfService.Required">
+    <Value>Please accept terms of service</Value>
+  </LocaleResource>  
   <LocaleResource Name="Vendors.ApplyAccount.Button">
     <Value>Submit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Description">
+    <Value>Description</Value>
   </LocaleResource>
   <LocaleResource Name="Vendors.ApplyAccount.Email">
     <Value>Email</Value>
@@ -17169,6 +17244,12 @@
   </LocaleResource>
   <LocaleResource Name="Vendors.ApplyAccount.Name.Required">
     <Value>Vendor name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Picture.ErrorMessage">
+    <Value>You can add only picture file</Value>
   </LocaleResource>
   <LocaleResource Name="Vendors.ApplyAccount.Submitted">
     <Value>Your request has been submitted successfully. We'll contact you soon.</Value>

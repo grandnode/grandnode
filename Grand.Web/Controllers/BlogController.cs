@@ -100,7 +100,7 @@ namespace Grand.Web.Controllers
             var feed = new RssFeed(
                 string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                 "Blog",
-                new Uri(_webHelper.GetStoreLocation(false)),
+                new Uri(_webHelper.GetStoreLocation()),
                 DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
@@ -111,7 +111,6 @@ namespace Grand.Web.Controllers
             foreach (var blogPost in blogPosts)
             {
                 string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
-                //items.Add(new RssFeed(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
                 items.Add(new RssItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;

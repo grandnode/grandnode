@@ -1,11 +1,7 @@
 ﻿@model ProductOverviewModel
-@using Grand.Core
-@using Grand.Core.Domain.Orders
-@using Grand.Core.Domain.Tax
-@using Grand.Core.Infrastructure
-@using Grand.Web.Models.Catalog;
 @using Grand.Core.Domain.Catalog
-
+@inject CatalogSettings catalogSettings
+@inject IWorkContext workContext
 @{
     //prepare "Add to cart" AJAX link
     string addtocartlink = "";
@@ -36,7 +32,7 @@
                 <div class="card-block text-left">
                     <h2 class="h6 card-title">
                         <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a></strong>
-                        @if (EngineContext.Current.Resolve<CatalogSettings>().ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
+                        @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
                         {
                             <span class="d-block py-1">@Model.Sku</span>
                         }
@@ -73,7 +69,7 @@
                         <li class="price actual-price">@Model.ProductPrice.Price</li>
                         @if (Model.ProductPrice.DisplayTaxShippingInfo)
                         {
-                            var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                            var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
                             //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                             //of course, you can modify appropriate locales to include VAT info there
                             <li class="">

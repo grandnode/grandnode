@@ -1,5 +1,4 @@
 ﻿@model ProductDetailsModel
-@using Grand.Web.Models.Catalog;
 @if (Model.AskQuestionEnabled)
 {
         <button type="button" value="@T("Products.AskQuestion")" class="btn btn-secondary ask-a-question-button" onclick="setLocation('@Url.RouteUrl("AskQuestion", new { productId = Model.Id })')">

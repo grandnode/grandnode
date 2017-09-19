@@ -5,8 +5,6 @@
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
 }
-@using Grand.Web.Models.Customer
-@using Grand.Web.Models.Order;
 @section left
 {
     @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Orders})

@@ -30,6 +30,7 @@ namespace Grand.Services.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
+        private readonly ICustomerService _customerService;
         private readonly ICacheManager _cacheManager;
         private readonly IVendorService _vendorService;
         private readonly IStoreService _storeService;
@@ -47,6 +48,7 @@ namespace Grand.Services.Catalog
             IManufacturerService manufacturerService,
             IProductAttributeParser productAttributeParser, 
             IProductService productService,
+            ICustomerService customerService,
             ICacheManager cacheManager,
             IVendorService vendorService,
             IStoreService storeService,
@@ -60,6 +62,7 @@ namespace Grand.Services.Catalog
             this._manufacturerService = manufacturerService;
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
+            this._customerService = customerService;
             this._cacheManager = cacheManager;
             this._vendorService = vendorService;
             this._storeService = storeService;
@@ -192,20 +195,22 @@ namespace Grand.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            var vendor = _vendorService.GetVendorById(product.VendorId);
-
-            if (vendor != null)
+            if (!string.IsNullOrEmpty(product.VendorId))
             {
-                if (vendor.AppliedDiscounts.Any())
+                var vendor = _vendorService.GetVendorById(product.VendorId);
+                if (vendor != null)
                 {
-                    foreach (var appliedDiscount in vendor.AppliedDiscounts)
+                    if (vendor.AppliedDiscounts.Any())
                     {
-                        var discount = _discountService.GetDiscountById(appliedDiscount);
-                        if(discount!=null)
-                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                     discount.DiscountType == DiscountType.AssignedToVendors &&
-                                     !allowedDiscounts.ContainsDiscount(discount))
-                                allowedDiscounts.Add(discount);
+                        foreach (var appliedDiscount in vendor.AppliedDiscounts)
+                        {
+                            var discount = _discountService.GetDiscountById(appliedDiscount);
+                            if (discount != null)
+                                if (_discountService.ValidateDiscount(discount, customer).IsValid &&
+                                         discount.DiscountType == DiscountType.AssignedToVendors &&
+                                         !allowedDiscounts.ContainsDiscount(discount))
+                                    allowedDiscounts.Add(discount);
+                        }
                     }
                 }
             }
@@ -431,6 +436,11 @@ namespace Grand.Services.Catalog
                 //initial price
                 decimal price = product.Price;
 
+                //customer product price
+                var customerPrice = _customerService.GetPriceByCustomerProduct(customer.Id, product.Id);
+                if (customerPrice.HasValue && customerPrice.Value < price)
+                    price = customerPrice.Value;
+
                 //tier prices
                 var tierPrice = product.GetPreferredTierPrice(customer, _storeContext.CurrentStore.Id, quantity);
                 if (tierPrice != null)
@@ -467,9 +477,6 @@ namespace Grand.Services.Catalog
 
             if (includeDiscounts)
             {
-                //Discount instance cannnot be cached between requests (when "catalogSettings.CacheProductPrices" is "true)
-                //This is limitation of Entity Framework
-                //That's why we load it here after working with cache
                 foreach (var appliedDiscountId in cachedPrice.AppliedDiscountIds)
                 {
                     var appliedDiscount = _discountService.GetDiscountById(appliedDiscountId);

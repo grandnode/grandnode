@@ -25,7 +25,6 @@ using MongoDB.Driver.Linq;
 using MongoDB.Bson;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Services.Catalog
 {
@@ -217,11 +216,11 @@ namespace Grand.Services.Catalog
         /// </summary>
         /// <returns>Products</returns>
         public virtual IList<Product> GetAllProductsDisplayedOnHomePage()
-        {
-            var query = from p in _productRepository.Table
-                        where p.Published && p.ShowOnHomePage
-                        orderby p.DisplayOrder, p.Name
-                        select p;
+        {            
+            var builder = Builders<Product>.Filter;
+            var filter = builder.Eq(x => x.Published, true);
+            filter = filter & builder.Eq(x => x.ShowOnHomePage, true);
+            var query = _productRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).SortBy(x=>x.Name);
             var products = query.ToList();
             return products;
         }
@@ -2086,7 +2085,7 @@ namespace Grand.Services.Catalog
             if (!String.IsNullOrEmpty(productId))
                 query = query.Where(c => c.ProductId == productId);
 
-            query = query.OrderBy(c => c.CreatedOnUtc);
+            query = query.OrderByDescending(c => c.CreatedOnUtc);
             var content = query.ToList();
             return content;
         }

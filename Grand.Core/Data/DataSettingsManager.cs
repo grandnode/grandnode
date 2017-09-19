@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Grand.Core.Infrastructure;
 
 namespace Grand.Core.Data
 {
@@ -82,19 +83,22 @@ namespace Grand.Core.Data
         /// </summary>
         /// <param name="filePath">File path; pass null to use default settings file path</param>
         /// <returns></returns>
-        public virtual DataSettings LoadSettings(string filePath = null)
+        public virtual DataSettings LoadSettings(string filePath = null, bool reloadSettings = false)
         {
-            if (String.IsNullOrEmpty(filePath))
-            {
-                filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename); 
-            }
-            if (File.Exists(filePath))
-            {
-                string text = File.ReadAllText(filePath);
-                return ParseSettings(text);
-            }
-            
-            return new DataSettings();
+           
+            if (!reloadSettings && Singleton<DataSettings>.Instance != null)
+                return Singleton<DataSettings>.Instance;
+
+            if (string.IsNullOrEmpty(filePath))
+                filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
+
+            if (!File.Exists(filePath))
+                return new DataSettings();
+
+            var text = File.ReadAllText(filePath);
+            Singleton<DataSettings>.Instance = ParseSettings(text);
+            return Singleton<DataSettings>.Instance;
+
         }
 
         /// <summary>
@@ -105,6 +109,8 @@ namespace Grand.Core.Data
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
+
+            Singleton<DataSettings>.Instance = settings;
 
             string filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename); 
             if (!File.Exists(filePath))

@@ -1,11 +1,8 @@
 ﻿@model IList<ProductDetailsModel.ProductAttributeModel>
-@using Grand.Web.Models.Catalog;
-@using Grand.Core.Domain.Catalog;
-@using Grand.Core.Domain.Media;
-@using Grand.Core.Infrastructure;
 @using System.Text;
 @using System.Globalization;
 @using Grand.Services.Media;
+@using Grand.Core.Domain.Media
 @inject IDownloadService downloadService
 @inject CatalogSettings catalogSettings
 @if (Model.Count > 0)
@@ -105,7 +102,6 @@
                             break;
                         case AttributeControlType.FileUpload:
                             {
-                                var downloadService = EngineContext.Current.Resolve<Grand.Services.Media.IDownloadService>();
                                 Download download = null;
                                 if (!String.IsNullOrEmpty(attribute.DefaultValue))
                                 {

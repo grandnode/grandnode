@@ -30,5 +30,18 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public bool AllowSearchByVendor { get; set; }
         public bool AllowSearchByVendor_OverrideForStore { get; set; }
 
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowVendorsToEditInfo")]
+        public bool AllowVendorsToEditInfo { get; set; }
+        public bool AllowVendorsToEditInfo_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.NotifyStoreOwnerAboutVendorInformationChange")]
+        public bool NotifyStoreOwnerAboutVendorInformationChange { get; set; }
+        public bool NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.TermsOfServiceEnabled")]
+        public bool TermsOfServiceEnabled { get; set; }
+        public bool TermsOfServiceEnabled_OverrideForStore { get; set; }
+
     }
 }

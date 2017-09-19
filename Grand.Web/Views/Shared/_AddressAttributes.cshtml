@@ -1,5 +1,4 @@
-﻿@model IList<Grand.Web.Models.Common.AddressAttributeModel>
-@using Grand.Core.Domain.Catalog;
+﻿@model IList<AddressAttributeModel>
 @foreach (var attribute in Model)
 {
     string controlId = string.Format("address_attribute_{0}", attribute.Id);

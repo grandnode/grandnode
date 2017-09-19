@@ -1445,6 +1445,42 @@ namespace Grand.Services.Messages
         }
 
         /// <summary>
+        /// Sends 'Vendor information changed' message to a store owner
+        /// </summary>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendVendorInformationChangeNotification(Vendor vendor, string languageId)
+        {
+            if (vendor == null)
+                throw new ArgumentNullException(nameof(vendor));
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("VendorInformationChange.StoreOwnerNotification", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddVendorTokens(tokens, vendor);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+
+            return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName);
+        }
+
+
+        /// <summary>
         /// Sends a gift card notification
         /// </summary>
         /// <param name="giftCard">Gift card</param>

@@ -1,5 +1,4 @@
 ﻿@model CheckoutPaymentMethodModel
-@using Grand.Web.Models.Checkout;
 @await Component.InvokeAsync("Widget", new { widgetZone = "op_checkout_payment_method_top" })
 <div class="payment-method">
     @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)

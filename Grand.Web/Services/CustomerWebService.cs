@@ -25,9 +25,9 @@ using Grand.Web.Models.Customer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Core.Domain.Vendors;
 
 namespace Grand.Web.Services
 {
@@ -63,6 +63,7 @@ namespace Grand.Web.Services
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
         private readonly MediaSettings _mediaSettings;
+        private readonly VendorSettings _vendorSettings;
 
         public CustomerWebService(
                     IExternalAuthenticationService externalAuthenticationService,
@@ -93,7 +94,8 @@ namespace Grand.Web.Services
                     CaptchaSettings captchaSettings,
                     RewardPointsSettings rewardPointsSettings,
                     OrderSettings orderSettings,
-                    MediaSettings mediaSettings
+                    MediaSettings mediaSettings,
+                    VendorSettings vendorSettings
             )
         {
             this._externalAuthenticationService = externalAuthenticationService;
@@ -125,6 +127,7 @@ namespace Grand.Web.Services
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
             this._mediaSettings = mediaSettings;
+            this._vendorSettings = vendorSettings;
         }
 
         public virtual void TryAssociateAccountWithExternalAccount(Customer customer)
@@ -608,7 +611,10 @@ namespace Grand.Web.Services
                 _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, "", null, 0, 1).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
-
+            if (_vendorSettings.AllowVendorsToEditInfo && _workContext.CurrentVendor != null)
+            {
+                model.ShowVendorInfo = true;
+            }
             model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
 
             return model;

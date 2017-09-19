@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.Customers.EditCustomerDetails").Text;
 }
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "customer-form" }))
 {
     @Html.AntiForgeryToken()
     <div class="row">

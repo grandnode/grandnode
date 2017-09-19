@@ -79,6 +79,7 @@ namespace Grand.Services.Installation
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
+        private readonly IRepository<CustomerProductPrice> _customerProductPriceRepository;
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
@@ -175,6 +176,7 @@ namespace Grand.Services.Installation
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerRoleProduct> customerRoleProductRepository,
+            IRepository<CustomerProductPrice> customerProductPriceRepository,
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordRepository,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
@@ -264,6 +266,7 @@ namespace Grand.Services.Installation
             this._currencyRepository = currencyRepository;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
+            this._customerProductPriceRepository = customerProductPriceRepository;
             this._customerRoleProductRepository = customerRoleProductRepository;
             this._customerTagProductRepository = customerTagProductRepository;
             this._customerHistoryPasswordRepository = customerHistoryPasswordRepository;
@@ -4801,6 +4804,16 @@ namespace Grand.Services.Installation
                                            DisplayOrder = 1,
                                            Title = "",
                                            Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
+                                       },
+                                   new Topic
+                                       {
+                                           SystemName = "VendorTermsOfService",
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
+                                           DisplayOrder = 1,
+                                           Title = "",
+                                           Body = "<p>Put your terms of service information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                };
@@ -10840,7 +10853,7 @@ namespace Grand.Services.Installation
             //Language
             _languageRepository.Collection.Indexes.CreateOneAsync(Builders<Language>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId), new CreateIndexOptions() { Name = "Language" });
+            _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.LanguageId).Ascending(x=>x.ResourceName), new CreateIndexOptions() { Name = "Language" });
             _lsrRepository.Collection.Indexes.CreateOneAsync(Builders<LocaleStringResource>.IndexKeys.Ascending(x => x.ResourceName), new CreateIndexOptions() { Name = "ResourceName" });
 
             //Currency
@@ -10857,6 +10870,10 @@ namespace Grand.Services.Installation
             _customerRoleRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRole>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _customerRoleProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerRoleProduct>.IndexKeys.Ascending(x => x.Id).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "CustomerRoleId_DisplayOrder", Unique = false });
+
+            //customer product price
+            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
+            _customerProductPriceRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerProductPrice>.IndexKeys.Ascending(x => x.CustomerId).Ascending(x=>x.ProductId), new CreateIndexOptions() { Name = "CustomerProduct", Unique = true });
 
             //customer tag history
             _customerTagProductRepository.Collection.Indexes.CreateOneAsync(Builders<CustomerTagProduct>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
@@ -10882,7 +10899,7 @@ namespace Grand.Services.Installation
 
             //category
             _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
-            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
+            _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.DisplayOrder).Ascending(x=>x.ShowOnHomePage), new CreateIndexOptions() { Name = "DisplayOrder_1", Unique = false });
             _categoryRepository.Collection.Indexes.CreateOneAsync(Builders<Category>.IndexKeys.Ascending(x => x.ParentCategoryId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentCategoryId_1_DisplayOrder_1", Unique = false });
 
             //manufacturer
@@ -10894,7 +10911,7 @@ namespace Grand.Services.Installation
             //Product
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Id), new CreateIndexOptions() { Name = "Id", Unique = true });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.MarkAsNew).Ascending(x => x.CreatedOnUtc), new CreateIndexOptions() { Name = "MarkAsNew_1_CreatedOnUtc_1", Unique = false });
-            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.ShowOnHomePage).Ascending(x => x.Published).Ascending(x => x.DisplayOrder).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ShowOnHomePage_1_Published_1", Unique = false });
+            _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Published).Ascending(x => x.ShowOnHomePage).Ascending(x => x.DisplayOrder).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ShowOnHomePage_1_Published_1", Unique = false });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.ParentGroupedProductId).Ascending(x => x.DisplayOrder), new CreateIndexOptions() { Name = "ParentGroupedProductId_1_DisplayOrder_1", Unique = false });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.ProductTags).Ascending(x => x.Published).Ascending(x => x.VisibleIndividually).Ascending(x => x.Name), new CreateIndexOptions() { Name = "ProductTags._id_1_Name_1", Unique = false });
             _productRepository.Collection.Indexes.CreateOneAsync(Builders<Product>.IndexKeys.Ascending(x => x.Name), new CreateIndexOptions() { Name = "Name_1", Unique = false });

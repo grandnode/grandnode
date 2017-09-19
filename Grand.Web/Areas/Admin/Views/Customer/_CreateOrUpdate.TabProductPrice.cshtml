@@ -1,0 +1,111 @@
+﻿@model CustomerModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    <strong>@T("Admin.Customers.Customers.ProductPrice")</strong>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="productprice-grid"></div>
+        </div>
+        <div class="panel-footer">
+            <input type="submit" id="btnAddNewProduct" value="@T("Admin.Customers.Customers.ProductPrice.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Customer", new { customerId = Model.Id, btnId = "btnRefreshProducts", formId = "customer-form" }))', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefreshProducts" style="display: none" />
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#productprice-grid").kendoGrid({
+                dataSource: {
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListProductPrice", "Customer", new { customerId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url:"@Html.Raw(Url.Action("UpdateProductPrice", "Customer"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("DeleteProductPrice", "Customer"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                ProductName: {editable: false, type: "string" },
+                                Price: {editable: true, type: "number", format:"{0:c2}" },
+                            }
+                        }
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductName",
+                    title: "@T("Admin.Customers.Customers.ProductPrice.ProductName")",
+                    width: 200,
+                    template: '<a href="/Admin/Product/Edit/#=ProductId#" target="_blank">#=ProductName#</a>'
+                }, {
+                    field: "Price",
+                    title: "@T("Admin.Customers.Customers.ProductPrice.Price")",
+                    width: 50,
+                    type: "number",
+
+                }, {
+                command: [{
+                    name: "edit",
+                    text: {
+                        edit: "@T("Admin.Common.Edit")",
+                    update: "@T("Admin.Common.Update")",
+                cancel: "@T("Admin.Common.Cancel")"} }, {
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                    }],
+                width: 200
+                }]
+            });
+        });
+    </script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $('#btnRefreshProducts').click(function () {
+                    //refresh grid
+                    var grid = $("#productprice-grid").data('kendoGrid');
+                    grid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+    </script>
+
+}

@@ -1,20 +1,20 @@
 ﻿@model ManufacturerModel
+@inject SeoSettings seoSettings
+@inject CommonSettings commonSettings
 @{
     Layout = "_ColumnsTwo";
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
 
-    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    var canonicalUrlsEnabled = seoSettings.CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
         var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, this.Url.ActionContext.HttpContext.Request.Scheme);
         Html.AddCanonicalUrlParts(manufacturerUrl);
     }
 }
-@using Grand.Core.Domain.Seo;
-@using Grand.Core.Infrastructure;
-@using Grand.Web.Models.Catalog;
+
 <div class="page manufacturer-page">
     <div class="col-12">
         <h2 class="generalTitle">@Model.Name</h2>

@@ -1,5 +1,4 @@
 ﻿@model ShoppingCartModel.OrderReviewDataModel
-@using Grand.Web.Models.ShoppingCart;
 @if (Model.Display)
 {
     <div class="card">
@@ -17,72 +16,72 @@
                             <span>@T("Order.Email"):</span> @Model.BillingAddress.Email
                         </li>
                         @if (Model.BillingAddress.PhoneEnabled)
-                {
+                        {
                             <li class="phone">
                                 <span>@T("Order.Phone"):</span> @Model.BillingAddress.PhoneNumber
                             </li>
                         }
                         @if (Model.BillingAddress.FaxEnabled)
-                {
+                        {
                             <li class="fax">
                                 <span>@T("Order.Fax"):</span> @Model.BillingAddress.FaxNumber
                             </li>
                         }
                         @if (Model.BillingAddress.CompanyEnabled && !String.IsNullOrEmpty(Model.BillingAddress.Company))
-                {
+                        {
                             <li class="company">
                                 @Model.BillingAddress.Company
                             </li>
                         }
                         @if (Model.BillingAddress.StreetAddressEnabled)
-                {
+                        {
                             <li class="address1">
                                 @Model.BillingAddress.Address1
                             </li>
                         }
                         @if (Model.BillingAddress.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.BillingAddress.Address2))
-                {
+                        {
                             <li class="address2">
                                 @Model.BillingAddress.Address2
                             </li>
                         }
                         @if (Model.BillingAddress.CityEnabled ||
-Model.BillingAddress.StateProvinceEnabled ||
-Model.BillingAddress.ZipPostalCodeEnabled)
+                            Model.BillingAddress.StateProvinceEnabled ||
+                            Model.BillingAddress.ZipPostalCodeEnabled)
                         {
                             <li class="city-state-zip">
                                 @if (Model.BillingAddress.CityEnabled)
-                    {
+                                {
                                     @Model.BillingAddress.City
                                 }
                                 @if (Model.BillingAddress.CityEnabled && (Model.BillingAddress.StateProvinceEnabled || Model.BillingAddress.ZipPostalCodeEnabled))
-                    {
+                                {
                                     <text>,</text>
                                 }
                                 @if (Model.BillingAddress.StateProvinceEnabled)
-                    {
+                                {
                                     @Model.BillingAddress.StateProvinceName
                                 }
                                 @if (Model.BillingAddress.ZipPostalCodeEnabled)
-                    {
+                                {
                                     @Model.BillingAddress.ZipPostalCode
                                 }
                             </li>
                         }
                         @if (Model.BillingAddress.CountryEnabled && !String.IsNullOrEmpty(Model.BillingAddress.CountryName))
-                {
+                        {
                             <li class="country">
                                 @Model.BillingAddress.CountryName
                             </li>
                         }
                         @if (!String.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
-                {
+                        {
                             <li class="custom-attributes-view">
                                 @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
                             </li>
                         }
                         @if (!String.IsNullOrEmpty(Model.PaymentMethod))
-                {
+                        {
                             <li class="title">
                                 <h5>@T("Order.Payment")</h5>
                             </li>
@@ -96,18 +95,18 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                             </li>
                         }
                         @if (Model.CustomValues != null)
-                {
-                    foreach (var item in Model.CustomValues)
-                    {
-                                <li class="custom-value">
-                                    <span class="label">
-                                        @item.Key:
-                                    </span>
-                                    <span class="value">
-                                        @(item.Value != null ? item.Value.ToString() : "")
-                                    </span>
-                                </li>
-                            }
+                        {
+                            foreach (var item in Model.CustomValues)
+                            {
+                                        <li class="custom-value">
+                                            <span class="label">
+                                                @item.Key:
+                                            </span>
+                                            <span class="value">
+                                                @(item.Value != null ? item.Value.ToString() : "")
+                                            </span>
+                                        </li>
+                             }
                         }
                     </ul>
                 </div>
@@ -117,7 +116,7 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                     <div class="col-12 col-sm-6">
                         <ul class="shipping-info pl-0">
                             @if (!Model.SelectedPickUpInStore)
-                    {
+                            {
                                 <li class="title">
                                     <h5>@T("Order.ShippingAddress")</h5>
                                 </li>
@@ -163,19 +162,19 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                                 {
                                     <li class="city-state-zip">
                                         @if (Model.ShippingAddress.CityEnabled)
-                            {
+                                        {
                                             @Model.ShippingAddress.City
                                         }
                                         @if (Model.ShippingAddress.CityEnabled && (Model.ShippingAddress.StateProvinceEnabled || Model.ShippingAddress.ZipPostalCodeEnabled))
-                            {
+                                        {
                                             <text>,</text>
                                         }
                                         @if (Model.ShippingAddress.StateProvinceEnabled)
-                            {
+                                        {
                                             @Model.ShippingAddress.StateProvinceName
                                         }
                                         @if (Model.ShippingAddress.ZipPostalCodeEnabled)
-                            {
+                                        {
                                             @Model.ShippingAddress.ZipPostalCode
                                         }
                                     </li>
@@ -208,11 +207,11 @@ Model.BillingAddress.ZipPostalCodeEnabled)
                                 {
                                     <li class="city-state-zip">
                                         @if (!string.IsNullOrEmpty(Model.PickupAddress.City))
-                            {
+                                        {
                                             @Model.PickupAddress.City
                                         }
                                         @if (!string.IsNullOrEmpty(Model.PickupAddress.ZipPostalCode))
-                            {
+                                        {
                                             <text>,</text>
                                             @Model.PickupAddress.ZipPostalCode
                                         }

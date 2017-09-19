@@ -1,8 +1,5 @@
 ﻿@model FooterModel
-@using Grand.Core
-@using Grand.Core.Domain.Tax
-@using Grand.Core.Infrastructure
-@using Grand.Web.Models.Common;
+@inject IWorkContext workContext
 <footer class="mt-3 py-3">
     <div class="container">
         <div class="row flex-row">
@@ -160,7 +157,7 @@
                 <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
                 @if (Model.DisplayTaxShippingInfoFooter)
                 {
-                    var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                    var inclTax = workContext.TaxDisplayType == TaxDisplayType.IncludingTax;
                     <span class="footer-tax-shipping">
                         @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
                     </span>

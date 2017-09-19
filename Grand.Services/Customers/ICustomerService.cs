@@ -395,6 +395,51 @@ namespace Grand.Services.Customers
         void UpdateHasShoppingCartItems(Customer customer);
         #endregion
 
+        #region Customer Product Price
+
+        /// <summary>
+        /// Gets a customer product price
+        /// </summary>
+        /// <param name="id">Identifier</param>
+        /// <returns>Customer product price</returns>
+        CustomerProductPrice GetCustomerProductPriceById(string id);
+
+        /// <summary>
+        /// Gets a price
+        /// </summary>
+        /// <param name="customerId">Customer Identifier</param>
+        /// <param name="productId">Product Identifier</param>
+        /// <returns>Customer product price</returns>
+        decimal? GetPriceByCustomerProduct(string customerId, string productId);
+
+        /// <summary>
+        /// Inserts a customer product price
+        /// </summary>
+        /// <param name="customerProductPrice">Customer product price</param>
+        void InsertCustomerProductPrice(CustomerProductPrice customerProductPrice);
+
+        /// <summary>
+        /// Updates the customer product price
+        /// </summary>
+        /// <param name="customerProductPrice">Customer product price</param>
+        void UpdateCustomerProductPrice(CustomerProductPrice customerProductPrice);
+
+        /// <summary>
+        /// Delete a customer product price
+        /// </summary>
+        /// <param name="customerProductPrice">Customer product price</param>
+        void DeleteCustomerProductPrice(CustomerProductPrice customerProductPrice);
+
+
+
+        /// <summary>
+        /// Gets products price for customer
+        /// </summary>
+        /// <param name="customerId">Customer id</param>
+        /// <returns>Customer products price</returns>
+        IPagedList<CustomerProductPrice> GetProductsByCustomer(string customerId, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        #endregion
 
     }
 }

@@ -1,9 +1,7 @@
 ﻿@model CheckoutShippingMethodModel
-@using Grand.Web.Models.Checkout;
-@using Grand.Core.Infrastructure;
-
+@inject IWebHelper webHelper
 @{ 
-    var storeLocation = EngineContext.Current.Resolve<Grand.Core.IWebHelper>().GetStoreLocation();
+    var storeLocation = webHelper.GetStoreLocation();
 }
 <script type="text/javascript">
     function loadPartialView(arg_value) {

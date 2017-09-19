@@ -96,6 +96,9 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IContactUsService _contactUsService;
         private readonly ICustomerTagService _customerTagService;
+        private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
         #endregion
 
         #region Constructors
@@ -144,7 +147,10 @@ namespace Grand.Web.Areas.Admin.Controllers
             IWorkflowMessageService workflowMessageService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IContactUsService contactUsService,
-            ICustomerTagService customerTagService)
+            ICustomerTagService customerTagService,
+            IProductService productService,
+            ICategoryService categoryService,
+            IManufacturerService manufacturerService)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -191,6 +197,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._contactUsService = contactUsService;
             this._customerTagService = customerTagService;
+            this._productService = productService;
+            this._categoryService = categoryService;
+            this._manufacturerService = manufacturerService;
         }
 
         #endregion
@@ -862,7 +871,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         [HttpPost]
         public IActionResult CustomerList(DataSourceRequest command, CustomerListModel model,
-            /*[ModelBinder(typeof(CommaSeparatedModelBinder))]*/ string[] searchCustomerRoleIds, string[] searchCustomerTagIds)
+            string[] searchCustomerRoleIds, string[] searchCustomerTagIds)
         {
             //we use own own binder for searchCustomerRoleIds property 
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1101,8 +1110,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
-        [FormValueRequired("save", "save-continue")]
-        
+        [FormValueRequired("save", "save-continue")]        
         public IActionResult Edit(CustomerModel model, bool continueEditing, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
@@ -1409,8 +1417,6 @@ namespace Grand.Web.Areas.Admin.Controllers
             
             customer.AffiliateId = "";
             _customerService.UpdateAffiliate(customer);
-            //_customerService.UpdateCustomer(customer);
-
             return RedirectToAction("Edit", new { id = customer.Id });
         }
 
@@ -1803,7 +1809,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
-            var address = customer.Addresses.Where(x => x.Id == addressId).FirstOrDefault(); //_addressService.GetAddressById(addressId);
+            var address = customer.Addresses.Where(x => x.Id == addressId).FirstOrDefault();
             if (address == null)
                 //No address found with the specified id
                 return RedirectToAction("Edit", new { id = customer.Id });
@@ -2074,6 +2080,153 @@ namespace Grand.Web.Areas.Admin.Controllers
             };
 
             return Json(gridModel);
+        }
+
+        #endregion
+
+        #region Customer Product Price
+
+        [HttpPost]
+        public IActionResult ListProductPrice(DataSourceRequest command, string customerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            var productPrices = _customerService.GetProductsByCustomer(customerId, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = productPrices.Select(x =>
+                {
+                    var m = new CustomerModel.ProductPriceModel
+                    {
+                        Id = x.Id,
+                        Price = x.Price,
+                        ProductId = x.ProductId,
+                        ProductName = _productService.GetProductById(x.ProductId)?.Name
+                    };
+                    return m;
+
+                }),
+                Total = productPrices.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        public IActionResult ProductAddPopup(string customerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+
+            var model = new CustomerModel.AddProductModel();
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            var categories = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = " " });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ProductAddPopupList(DataSourceRequest command, CustomerModel.AddProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+            var searchCategoryIds = new List<string>();
+            if (!String.IsNullOrEmpty(model.SearchCategoryId))
+                searchCategoryIds.Add(model.SearchCategoryId);
+
+            var gridModel = new DataSourceResult();
+            var products = _productService.SearchProducts(
+                categoryIds: searchCategoryIds,
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
+            gridModel.Data = products.Select(x => x.ToModel());
+            gridModel.Total = products.TotalCount;
+
+            return Json(gridModel);
+        }
+        [HttpPost]
+        [FormValueRequired("save")]
+        public IActionResult ProductAddPopup(string customerId, string btnId, string formId, CustomerModel.AddProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            if (model.SelectedProductIds != null)
+            {
+                foreach (string id in model.SelectedProductIds)
+                {
+                    var product = _productService.GetProductById(id);
+                    if (product != null)
+                    {
+                        if(!_customerService.GetPriceByCustomerProduct(customerId, id).HasValue)
+                        {
+                            _customerService.InsertCustomerProductPrice(new CustomerProductPrice() { CustomerId = customerId, ProductId = id, Price = product.Price });
+                        }
+                    }
+                }
+            }
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+            return View(model);
+        }
+        public IActionResult UpdateProductPrice(CustomerModel.ProductPriceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var productPrice = _customerService.GetCustomerProductPriceById(model.Id);
+            if(productPrice!=null)
+            {
+                productPrice.Price = model.Price;
+                _customerService.UpdateCustomerProductPrice(productPrice);
+            }
+
+            return new NullJsonResult();
+        }
+
+        public IActionResult DeleteProductPrice(string id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var productPrice = _customerService.GetCustomerProductPriceById(id);
+            if (productPrice == null)
+                throw new ArgumentException("No productPrice found with the specified id");
+
+            _customerService.DeleteCustomerProductPrice(productPrice);
+
+            return new NullJsonResult();
         }
 
         #endregion
