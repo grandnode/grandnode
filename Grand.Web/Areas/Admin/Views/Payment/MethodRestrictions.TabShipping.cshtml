@@ -48,8 +48,8 @@
                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                         <th scope="col">
                                             <strong>@pm.FriendlyName</strong>
-                                            <input type="checkbox" id="selectshipall-@(systemNameWithoutDot)" />
-                                        </th>
+                                            <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectshipall-@(systemNameWithoutDot)" /><span></span></label>
+</th>
                                     }
                                 </tr>
                                 @{
@@ -67,8 +67,8 @@
                                             var resticted = Model.RestictedShipping.ContainsKey(pm.SystemName) && Model.RestictedShipping[pm.SystemName][c.Name];
                                             var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                             <td style="text-align:center">
-                                                <input class="restrictship_@(systemNameWithoutDot)" type="checkbox" value="@(c.Name)" name="restrictship_@(pm.SystemName)" @(resticted ? " checked=checked" : null) />
-                                            </td>
+                                                <label class='mt-checkbox mt-checkbox-outline'><input class="restrictship_@(systemNameWithoutDot)" type="checkbox" value="@(c.Name)" name="restrictship_@(pm.SystemName)" @(resticted ? " checked=checked" : null) /><span></span></label>
+</td>
                                         }
                                     </tr>
                                 }
