@@ -28,7 +28,7 @@ namespace Grand.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Service provider</returns>
-        IServiceProvider ConfigureServices(IServiceCollection services, IConfigurationRoot configuration);
+        IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Configure HTTP request pipeline

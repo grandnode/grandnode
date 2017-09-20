@@ -35,7 +35,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Configured service provider</returns>
-        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfigurationRoot configuration)
+        public static IServiceProvider ConfigureApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             //add NopConfig configuration parameters
             services.ConfigureStartupConfig<GrandConfig>(configuration.GetSection("Grand"));

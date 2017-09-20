@@ -166,7 +166,7 @@ namespace Grand.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
         /// <returns>Service provider</returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        public IServiceProvider ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();

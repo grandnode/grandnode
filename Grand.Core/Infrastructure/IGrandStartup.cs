@@ -11,7 +11,7 @@ namespace Grand.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
-        void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration);
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Configure the using of added middleware

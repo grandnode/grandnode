@@ -17,7 +17,7 @@ namespace Grand.Web
         /// <summary>
         /// Get configuration root of the application
         /// </summary>
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         #endregion
 

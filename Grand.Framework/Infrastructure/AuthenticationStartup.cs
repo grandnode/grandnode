@@ -16,7 +16,7 @@ namespace Grand.Framework.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration root of the application</param>
-        public void ConfigureServices(IServiceCollection services, IConfigurationRoot configuration)
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddGrandAuthentication();
         }
