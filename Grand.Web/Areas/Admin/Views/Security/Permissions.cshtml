@@ -62,8 +62,8 @@
                                                         {
                                                             <th scope="col">
                                                                 <strong>@cr.Name</strong>
-                                                                <input type="checkbox" id="selectall-@(cr.Id)" />
-                                                            </th>
+                                                                <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectall-@(cr.Id)" /><span></span></label>
+</th>
                                                         }
                                                     </tr>
                                                     @{
@@ -80,8 +80,8 @@
                                                             {
                                                                 var allowed = Model.Allowed.ContainsKey(pr.SystemName) && Model.Allowed[pr.SystemName][cr.Id];
                                                                 <td style="text-align:center">
-                                                                    <input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) />
-                                                                </td>
+                                                                    <label class='mt-checkbox mt-checkbox-outline'><input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) /><span></span></label>
+</td>
                                                             }
                                                         </tr>
                                                     }

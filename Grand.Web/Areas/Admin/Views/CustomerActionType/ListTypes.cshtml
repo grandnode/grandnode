@@ -78,10 +78,10 @@
                         width: 100
                     }, {
                         field: "Enabled",
-                        headerTemplate: "@T("Admin.Customers.ActionType.Fields.Enabled")&nbsp<input id='mastercheckbox' type='checkbox' />",
+                        headerTemplate: "@T("Admin.Customers.ActionType.Fields.Enabled")&nbsp<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox' /><span></span></label>",
                         headerAttributes: { style: "text-align:center" },
                         attributes: { style: "text-align:center" },
-                        template: "<input name='checkbox_action_types' value='#=Id#' type='checkbox' class='checkboxGroups' # if(Enabled) {# checked='checked' #}  # />",
+                        template: "<label class='mt-checkbox mt-checkbox-outline'><input name='checkbox_action_types' value='#=Id#' type='checkbox' class='checkboxGroups' # if(Enabled) {# checked='checked' #}  # /><span></span></label>",
                         width: 100
                     }
                 ]

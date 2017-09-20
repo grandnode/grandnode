@@ -83,10 +83,10 @@
             dataBound: onDataBound,
             columns: [{
                 field: "Id",
-                headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                headerTemplate: "<label class='mt-checkbox mt-checkbox-outline'><input id='mastercheckbox' type='checkbox'/><span></span></label>",
                 headerAttributes: { style: "text-align:center" },
                 attributes: { style: "text-align:center" },
-                template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                template: "<label class='mt-checkbox mt-checkbox-outline'><input type='checkbox' value='#=Id#' class='checkboxGroups'/><span></span></label>",
                 width: 50
             }, {
                 field: "Name",

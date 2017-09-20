@@ -48,8 +48,8 @@
                                         var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                         <th scope="col">
                                             <strong>@pm.FriendlyName</strong>
-                                            <input type="checkbox" id="selectroleall-@(systemNameWithoutDot)" />
-                                        </th>
+                                            <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectroleall-@(systemNameWithoutDot)" /><span></span></label>
+</th>
                                     }
                                 </tr>
                                 @{
@@ -68,8 +68,8 @@
 
                                             var systemNameWithoutDot = pm.SystemName.Replace(".", "");
                                             <td style="text-align:center">
-                                                <input class="restrictrole_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrictrole_@(pm.SystemName)" @(resticted ? " checked=checked" : null) />
-                                            </td>
+                                                <label class='mt-checkbox mt-checkbox-outline'><input class="restrictrole_@(systemNameWithoutDot)" type="checkbox" value="@(c.Id)" name="restrictrole_@(pm.SystemName)" @(resticted ? " checked=checked" : null) /><span></span></label>
+</td>
                                         }
                                     </tr>
                                 }

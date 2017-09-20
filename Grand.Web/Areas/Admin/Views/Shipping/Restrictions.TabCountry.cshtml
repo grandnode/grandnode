@@ -45,8 +45,8 @@
                                                     {
                                                         <th scope="col">
                                                             <strong>@sm.Name</strong>
-                                                            <input type="checkbox" id="selectall-@(sm.Id)" />
-                                                        </th>
+                                                            <label class='mt-checkbox mt-checkbox-outline'><input type="checkbox" id="selectall-@(sm.Id)" /><span></span></label>
+</th>
                                                     }
                                                 </tr>
                                                 @{
@@ -63,8 +63,8 @@
                                                         {
                                                             var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
                                                             <td style="text-align:center">
-                                                                <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
-                                                            </td>
+                                                                <label class='mt-checkbox mt-checkbox-outline'><input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) /><span></span></label>
+</td>
                                                         }
                                                     </tr>
                                                 }
