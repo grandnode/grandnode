@@ -11,6 +11,7 @@ using Grand.Core.Domain.Tax;
 using Grand.Core.Plugins;
 using Grand.Services.Catalog;
 using Grand.Services.Common;
+using Grand.Services.Customers;
 using Grand.Services.Directory;
 using Grand.Services.Discounts;
 using Grand.Services.Events;
@@ -65,6 +66,7 @@ namespace Grand.Services.Orders.Tests
         private AddressSettings _addressSettings;
         private IVendorService _vendorService;
         private IStoreService _storeService;
+        private ICustomerService _customerService;
 
         [TestInitialize()]
         public void TestInitialize()
@@ -95,11 +97,12 @@ namespace Grand.Services.Orders.Tests
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
+            _customerService = new Mock<ICustomerService>().Object;
 
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService,
-                _manufacturerService, _productAttributeParser,
-                _productService, cacheManager, _vendorService, _storeService,
+                _manufacturerService, _productAttributeParser, _productService, _customerService,
+                cacheManager, _vendorService, _storeService,
                 _shoppingCartSettings, _catalogSettings);
 
             var tempEventPublisher = new Mock<IEventPublisher>();

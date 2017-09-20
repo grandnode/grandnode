@@ -121,11 +121,12 @@ namespace Grand.Services.Orders.Tests
             _categoryService = new Mock<ICategoryService>().Object;
             _manufacturerService = new Mock<IManufacturerService>().Object;
             _storeService = new Mock<IStoreService>().Object;
+            _customerService = new Mock<ICustomerService>().Object;
 
             _productAttributeParser = new Mock<IProductAttributeParser>().Object;
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
                 _discountService, _categoryService, _manufacturerService,
-                _productAttributeParser, _productService,
+                _productAttributeParser, _productService, _customerService,
                 cacheManager, _vendorService, _storeService, _shoppingCartSettings, _catalogSettings);
 
             var tempEventPublisher = new Mock<IEventPublisher>();
@@ -213,7 +214,6 @@ namespace Grand.Services.Orders.Tests
             _productAttributeFormatter = new Mock<IProductAttributeFormatter>().Object;
             _shoppingCartService = new Mock<IShoppingCartService>().Object;
             _checkoutAttributeFormatter = new Mock<ICheckoutAttributeFormatter>().Object;
-            _customerService = new Mock<ICustomerService>().Object;
             _encryptionService = new Mock<IEncryptionService>().Object;
             _workflowMessageService = new Mock<IWorkflowMessageService>().Object;
             _customerActivityService = new Mock<ICustomerActivityService>().Object;
