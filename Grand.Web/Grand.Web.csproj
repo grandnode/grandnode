@@ -174,4 +174,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\bundles\" />
+  </ItemGroup>
 </Project>
