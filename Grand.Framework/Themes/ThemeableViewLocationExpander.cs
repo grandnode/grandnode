@@ -10,6 +10,9 @@ namespace Grand.Framework.Themes
 
         public void PopulateValues(ViewLocationExpanderContext context)
         {
+            if (context.AreaName?.Equals("Admin") ?? false)
+                return;
+
             var themeContext = (IThemeContext)context.ActionContext.HttpContext.RequestServices.GetService(typeof(IThemeContext));
             context.Values[THEME_KEY] = themeContext.WorkingThemeName;
         }
