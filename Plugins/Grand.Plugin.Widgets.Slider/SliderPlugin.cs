@@ -98,7 +98,7 @@ namespace Grand.Plugin.Widgets.Slider
             base.Uninstall();
         }
 
-        public void GetPublicViewComponent(out string viewComponentName)
+        public void GetPublicViewComponent(string widgetZone, out string viewComponentName)
         {
             viewComponentName = "Grand.Plugin.Widgets.Slider";
         }

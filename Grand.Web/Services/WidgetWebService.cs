@@ -30,6 +30,12 @@ namespace Grand.Web.Services
             var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY,
                 _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
 
+            //add widget zone to view component arguments
+            additionalData = new RouteValueDictionary(additionalData)
+            {
+                { "widgetZone", widgetZone }
+            };
+
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 //model
@@ -38,11 +44,12 @@ namespace Grand.Web.Services
                 var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone, _storeContext.CurrentStore.Id);
                 foreach (var widget in widgets)
                 {
-                    widget.GetPublicViewComponent(out string viewComponentName);
+                    widget.GetPublicViewComponent(widgetZone, out string viewComponentName);
 
                     var widgetModel = new RenderWidgetModel
                     {
-                        WidgetViewComponentName = viewComponentName
+                        WidgetViewComponentName = viewComponentName,
+                        WidgetViewComponentArguments = additionalData
                     };
 
                     model.Add(widgetModel);

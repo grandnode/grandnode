@@ -3,6 +3,7 @@ using Grand.Web.Areas.Admin.Models.Cms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Components
 {
@@ -24,33 +25,34 @@ namespace Grand.Web.Areas.Admin.Components
 
         #region Invoker
 
-        public IViewComponentResult Invoke(string widgetZone)//original Action name: WidgetsByZone
+        public IViewComponentResult Invoke(string widgetZone, object additionalData = null)
         {
-            //model
             var model = new List<RenderWidgetModel>();
+
+            //add widget zone to view component arguments
+            additionalData = new RouteValueDictionary(additionalData)
+            {
+                { "widgetZone", widgetZone }
+            };
 
             var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
             foreach (var widget in widgets)
             {
-                var widgetModel = new RenderWidgetModel();
+                widget.GetPublicViewComponent(widgetZone, out string viewComponentName);
 
-
-                //TODO ensure working
-                widget.GetPublicViewComponent(out string viewComponentName);
-                widgetModel.WidgetViewComponentName = viewComponentName;
-
-         
-
-                //string actionName;
-                //string controllerName;
-                //RouteValueDictionary routeValues;
-                //widget.GetDisplayWidgetRoute(widgetZone, out actionName, out controllerName, out routeValues);
-                //widgetModel.ActionName = actionName;
-                //widgetModel.ControllerName = controllerName;
-                //widgetModel.RouteValues = routeValues;
+                var widgetModel = new RenderWidgetModel
+                {
+                    WidgetViewComponentName = viewComponentName,
+                    WidgetViewComponentArguments = additionalData
+                };
 
                 model.Add(widgetModel);
             }
+
+            //no data?
+            if (!model.Any())
+                return Content("");
+
             return View(model);
         }
 
