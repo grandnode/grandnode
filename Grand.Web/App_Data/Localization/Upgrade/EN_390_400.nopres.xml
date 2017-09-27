@@ -284,5 +284,7 @@
   <LocaleResource Name="VendorReviews.VendorReviewPossibleOnlyAfterPurchasing">
     <Value>Vendor can be reviewed only after purchasing a product from this vendor.</Value>
   </LocaleResource>
-  
+  <LocaleResource Name="Admin.VendorReviews.Deleted">
+    <Value>Review deleted</Value>
+  </LocaleResource>
 </Language>
