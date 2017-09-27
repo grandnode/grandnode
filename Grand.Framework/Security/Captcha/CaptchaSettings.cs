@@ -53,6 +53,11 @@ namespace Grand.Framework.Security.Captcha
         public bool ShowOnApplyVendorPage { get; set; }
 
         /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the vendor reviews page
+        /// </summary>
+        public bool ShowOnVendorReviewPage { get; set; }
+
+        /// <summary>
         /// reCAPTCHA public key
         /// </summary>
         public string ReCaptchaPublicKey { get; set; }

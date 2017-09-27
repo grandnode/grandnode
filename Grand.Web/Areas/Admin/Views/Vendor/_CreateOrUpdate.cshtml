@@ -32,6 +32,9 @@
                 @T("Admin.Vendors.VendorNotes")
             </li>
         }
+        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+            @T("Admin.Vendors.Reviews")
+        </li>
     </ul>
     <div>
         @Html.Partial("_CreateOrUpdate.TabInfo", Model)
@@ -48,7 +51,11 @@
             @Html.Partial("_CreateOrUpdate.TabVendorNotes", Model)
         </div>
     }
+    <div>
+        @Html.Partial("_CreateOrUpdate.TabVendorReviews", Model)
+    </div>
 </div>
+
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "vendor-edit");

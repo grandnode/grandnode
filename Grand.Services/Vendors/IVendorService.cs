@@ -1,5 +1,6 @@
 using Grand.Core;
 using Grand.Core.Domain.Vendors;
+using System;
 using System.Collections.Generic;
 
 namespace Grand.Services.Vendors
@@ -72,5 +73,79 @@ namespace Grand.Services.Vendors
         /// <param name="discountId">Discount id mapping identifier</param>
         /// <returns>vendor mapping</returns>
         IList<Vendor> GetAllVendorsByDiscount(string discountId);
+
+        #region Vendor reviews
+
+        /// <summary>
+        /// Update Vendor review totals
+        /// </summary>
+        /// <param name="Vendor">Vendor</param>
+        void UpdateVendorReviewTotals(Vendor Vendor);
+
+        /// <summary>
+        /// Update Vendor review 
+        /// </summary>
+        /// <param name="Vendor">Vendor</param>
+        void UpdateVendorReview(VendorReview Vendorreview);
+
+        /// <summary>
+        /// Insert Vendor review 
+        /// </summary>
+        /// <param name="Vendor">Vendor</param>
+        void InsertVendorReview(VendorReview Vendorreview);
+
+        /// <summary>
+        /// Gets all vendor reviews
+        /// </summary>
+        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
+        /// <param name="fromUtc">Item creation from; null to load all records</param>
+        /// <param name="toUtc">Item item creation to; null to load all records</param>
+        /// <param name="message">Search title or review text; null to load all records</param>
+        /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <returns>Reviews</returns>
+        IPagedList<VendorReview> GetAllVendorReviews(string customerId, bool? approved,
+            DateTime? fromUtc = null, DateTime? toUtc = null,
+            string message = null, string vendorId = "", int pageIndex = 0, int pageSize = int.MaxValue);
+
+        /// <summary>
+        /// Get rating sum for vendor
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="storeId">Store identifier, 0 to load all records</param> 
+        /// <returns>Sum</returns>
+        int RatingSumVendor(string vendorId, string storeId);
+
+        /// <summary>
+        /// Total reviews for vendor
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="storeId">Store identifier, 0 to load all records</param> 
+        /// <returns>Sum</returns>
+        int TotalReviewsVendor(string vendorId, string storeId);
+
+        /// <summary>
+        /// Gets vendor review
+        /// </summary>
+        /// <param name="vendorReviewId">Vendor review identifier</param>
+        /// <returns>Vendor review</returns>
+        VendorReview GetVendorReviewById(string vendorReviewId);
+
+        /// <summary>
+        /// Deletes a vendor review
+        /// </summary>
+        /// <param name="vendorReview">Vendor review</param>
+        void DeleteVendorReview(VendorReview vendorReview);
+
+        /// <summary>
+        /// Search vendors
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="keywords">Keywords</param>
+        /// <returns>Vendors</returns>
+        IList<Vendor> SearchVendors(string vendorId = "", string keywords = null);
+
+        #endregion
     }
 }

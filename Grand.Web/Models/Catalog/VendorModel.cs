@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Grand.Framework.Mvc.Models;
 using Grand.Web.Models.Media;
+using Grand.Web.Models.Vendors;
 
 namespace Grand.Web.Models.Catalog
 {
@@ -21,7 +22,7 @@ namespace Grand.Web.Models.Catalog
         public bool AllowCustomersToContactVendors { get; set; }
         public PictureModel PictureModel { get; set; }
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
-
+        public VendorReviewOverviewModel VendorReviewOverview { get; set; }
         public IList<ProductOverviewModel> Products { get; set; }
     }
 }

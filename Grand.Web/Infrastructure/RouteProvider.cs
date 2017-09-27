@@ -380,6 +380,15 @@ namespace Grand.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerVendorInfo", "customer/vendorinfo",
                 new { controller = "Vendor", action = "Info" });
 
+
+            //vendor reviews
+            routeBuilder.MapLocalizedRoute("VendorReviews", "vendoreviews/{vendorId}",
+                new { controller = "Catalog", action = "VendorReviews" });
+
+            //set review helpfulness (AJAX link)
+            routeBuilder.MapRoute("SetVendorReviewHelpfulness", "setvendorreviewhelpfulness",
+                new { controller = "Catalog", action = "SetVendorReviewHelpfulness" });
+
             //poll vote AJAX link
             routeBuilder.MapLocalizedRoute("PollVote",
                             "poll/vote",

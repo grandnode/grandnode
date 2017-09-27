@@ -134,6 +134,16 @@ namespace Grand.Core.Domain.Customers
         public bool IsHasProductReviewH { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the customer has a Vendor review
+        /// </summary>
+        public bool IsHasVendorReview { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the customer has a Vendor review help
+        /// </summary>
+        public bool IsHasVendorReviewH { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the customer has a pool voting
         /// </summary>
         public bool IsHasPoolVoting { get; set; }

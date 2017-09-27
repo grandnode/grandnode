@@ -158,7 +158,8 @@ namespace Grand.Web.Controllers
                     PageSize = 6,
                     PictureId = pictureId,
                     AllowCustomersToSelectPageSize = true,
-                    PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions
+                    PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions,
+                    AllowCustomerReviews = _vendorSettings.DefaultAllowCustomerReview
                 };
                 _vendorService.InsertVendor(vendor);
                 //search engine name (the same as vendor name)

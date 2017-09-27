@@ -94,6 +94,31 @@ namespace Grand.Core.Domain.Vendors
         public string PageSizeOptions { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the vendor allows customer reviews
+        /// </summary>
+        public bool AllowCustomerReviews { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rating sum (approved reviews)
+        /// </summary>
+        public int ApprovedRatingSum { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rating sum (not approved reviews)
+        /// </summary>
+        public int NotApprovedRatingSum { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total rating votes (approved reviews)
+        /// </summary>
+        public int ApprovedTotalReviews { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total rating votes (not approved reviews)
+        /// </summary>
+        public int NotApprovedTotalReviews { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of locales
         /// </summary>
         public IList<LocalizedProperty> Locales { get; set; }

@@ -22,6 +22,7 @@ namespace Grand.Services.Security
         public static readonly PermissionRecord ManageActions = new PermissionRecord { Name = "Admin area. Manage Customers Actions", SystemName = "ManageActions", Category = "Customers" };
         public static readonly PermissionRecord ManageReminders = new PermissionRecord { Name = "Admin area. Manage Customers Reminders", SystemName = "ManageReminders", Category = "Customers" };
         public static readonly PermissionRecord ManageVendors = new PermissionRecord { Name = "Admin area. Manage Vendors", SystemName = "ManageVendors", Category = "Customers" };
+        public static readonly PermissionRecord ManageVendorReviews = new PermissionRecord { Name = "Admin area. Manage Vendor Reviews", SystemName = "ManageVendorReviews", Category = "Customers" };
         public static readonly PermissionRecord ManageCurrentCarts = new PermissionRecord { Name = "Admin area. Manage Current Carts", SystemName = "ManageCurrentCarts", Category = "Orders" };
         public static readonly PermissionRecord ManageOrders = new PermissionRecord { Name = "Admin area. Manage Orders", SystemName = "ManageOrders", Category = "Orders" };
         public static readonly PermissionRecord ManageRecurringPayments = new PermissionRecord { Name = "Admin area. Manage Recurring Payments", SystemName = "ManageRecurringPayments", Category = "Orders" };
@@ -87,6 +88,7 @@ namespace Grand.Services.Security
                 ManageBanners,
                 ManageInteractiveForm,
                 ManageVendors,
+                ManageVendorReviews,
                 ManageCurrentCarts,
                 ManageOrders,
                 ManageRecurringPayments,
@@ -151,6 +153,7 @@ namespace Grand.Services.Security
                         ManageAttributes,
                         ManageCustomers,
                         ManageVendors,
+                        ManageVendorReviews,
                         ManageCurrentCarts,
                         ManageOrders,
                         ManageRecurringPayments,
@@ -239,7 +242,8 @@ namespace Grand.Services.Security
                     {
                         AccessAdminPanel,
                         ManageProducts,
-                        ManageOrders
+                        ManageOrders,
+                        ManageVendorReviews
                     }
                 }
             };

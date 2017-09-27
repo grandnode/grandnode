@@ -50,5 +50,35 @@ namespace Grand.Core.Domain.Vendors
         /// </summary>
         public bool NotifyStoreOwnerAboutVendorInformationChange { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating vendor reviews must be approved
+        /// </summary>
+        public bool VendorReviewsMustBeApproved { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to allow anonymous users write vendor reviews.
+        /// </summary>
+        public bool AllowAnonymousUsersToReviewVendor { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether vendor can be reviewed only by customer who have already ordered a product from this vendor
+        /// </summary>
+        public bool VendorReviewPossibleOnlyAfterPurchasing { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether notification of a store owner about new vendor reviews is enabled
+        /// </summary>
+        public bool NotifyVendorAboutNewVendorReviews { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating the default rating value of the vendor reviews
+        /// </summary>
+        public int DefaultVendorRatingValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating the default allow customer review value of the vendor
+        /// </summary>
+        public bool DefaultAllowCustomerReview { get; set; }
+
     }
 }

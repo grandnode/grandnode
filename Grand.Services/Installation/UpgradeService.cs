@@ -595,6 +595,14 @@ namespace Grand.Services.Installation
                                     IsActive = true,
                                     EmailAccountId = emailAccount.Id
                                 },
+                                new MessageTemplate
+                                       {
+                                           Name = "Vendor.VendorReview",
+                                           Subject = "%Store.Name%. New vendor review.",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new vendor review has been written.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = emailAccount.Id,
+                                },
                             };
 
             EngineContext.Current.Resolve<IRepository<MessageTemplate>>().Insert(messageTemplates);
@@ -653,6 +661,14 @@ namespace Grand.Services.Installation
             topicService.InsertTopic(vendorTermsOfService);
 
             #endregion
+
+            #region Permisions
+
+            IPermissionProvider provider = new StandardPermissionProvider();
+            EngineContext.Current.Resolve<IPermissionService>().InstallPermissions(provider);
+
+            #endregion
+
         }
 
         private void InstallStringResources(string filenames)

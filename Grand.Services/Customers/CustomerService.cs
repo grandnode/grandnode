@@ -745,6 +745,24 @@ namespace Grand.Services.Customers
             var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
 
         }
+
+        public virtual void UpdateHasVendorReview(string customerId)
+        {
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.IsHasVendorReview, true);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+        }
+        public virtual void UpdateHasVendorReviewH(string customerId)
+        {
+            var builder = Builders<Customer>.Filter;
+            var filter = builder.Eq(x => x.Id, customerId);
+            var update = Builders<Customer>.Update
+                .Set(x => x.IsHasVendorReviewH, true);
+            var result = _customerRepository.Collection.UpdateOneAsync(filter, update).Result;
+        }
+
         /// <summary>
         /// Reset data required for checkout
         /// </summary>

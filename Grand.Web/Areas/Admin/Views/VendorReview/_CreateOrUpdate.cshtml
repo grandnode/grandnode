@@ -1,0 +1,74 @@
+﻿@model VendorReviewModel
+@using Grand.Core
+@inject IWorkContext workContext
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+<div class="form-horizontal">
+    <div class="form-body">
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.VendorName)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.ActionLink(Model.VendorName, "Edit", "Vendor", new { id = Model.VendorId }, new { })</label>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CustomerInfo)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })</label>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Title)
+            <div class="col-md-9 col-sm-9">
+                @if (workContext.CurrentVendor == null)
+                {
+                    @Html.GrandEditorFor(model => model.Title)
+                    @Html.ValidationMessageFor(model => model.Title)
+                }
+                else
+                {
+                    <span class="form-control">@Model.Title</span>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.ReviewText)
+            <div class="col-md-9 col-sm-9">
+                @if (workContext.CurrentVendor == null)
+                {
+                    @Html.GrandTextAreaFor(model => model.ReviewText, new { style = "Height: 100px;" })
+                    @Html.ValidationMessageFor(model => model.ReviewText)
+                }
+                else
+                {
+                    <span class="form-control">@Model.ReviewText</span>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.Rating)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.DisplayFor(model => model.Rating)</label>
+            </div>
+        </div>
+        @if (workContext.CurrentVendor == null)
+        {
+            <div class="form-group">
+                @Html.GrandLabelFor(model => model.IsApproved)
+                <div class="col-md-9 col-sm-9">
+                    <label class="mt-checkbox mt-checkbox-outline">
+                        @Html.EditorFor(model => model.IsApproved)
+                        <span></span>
+                    </label>
+                    @Html.ValidationMessageFor(model => model.IsApproved)
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.CreatedOn)
+            <div class="col-md-9 col-sm-9">
+                <label class="control-label">@Html.DisplayFor(model => model.CreatedOn)</label>
+            </div>
+        </div>
+    </div>
+</div>

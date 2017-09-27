@@ -147,5 +147,15 @@
                 @Html.ValidationMessageFor(model => model.DisplayOrder)
             </div>
         </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.AllowCustomerReviews)
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.EditorFor(model => model.AllowCustomerReviews)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.AllowCustomerReviews)
+            </div>
+        </div>
     </div>
 </div>

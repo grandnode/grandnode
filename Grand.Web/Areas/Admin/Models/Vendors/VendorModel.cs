@@ -52,7 +52,9 @@ namespace Grand.Web.Areas.Admin.Models.Vendors
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
-        
+
+        [GrandResourceDisplayName("Admin.Vendors.Fields.AllowCustomerReviews")]
+        public bool AllowCustomerReviews { get; set; }
 
         [GrandResourceDisplayName("Admin.Vendors.Fields.MetaKeywords")]
         

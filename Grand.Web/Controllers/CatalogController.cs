@@ -20,6 +20,13 @@ using Grand.Web.Models.Catalog;
 using Grand.Web.Services;
 using Grand.Framework.Mvc.Filters;
 using Microsoft.Net.Http.Headers;
+using Grand.Framework.Security.Captcha;
+using Grand.Services.Events;
+using Grand.Services.Orders;
+using Grand.Web.Models.Vendors;
+using Grand.Framework.Controllers;
+using Grand.Core.Domain.Orders;
+using Grand.Core.Infrastructure;
 
 namespace Grand.Web.Controllers
 {
@@ -44,13 +51,16 @@ namespace Grand.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICustomerActionEventService _customerActionEventService;
+        private readonly IVendorWebService _vendorWebService;
+        private readonly CaptchaSettings _captchaSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
-        
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IOrderService _orderService;
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public CatalogController(ICatalogWebService catalogWebService,
             ICategoryService categoryService,
@@ -69,10 +79,14 @@ namespace Grand.Web.Controllers
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
             ICustomerActionEventService customerActionEventService,
+            IVendorWebService vendorWebService,
+            CaptchaSettings captchaSettings,
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IEventPublisher eventPublisher,
+            IOrderService orderService)
         {
             this._catalogWebService = catalogWebService;
             this._categoryService = categoryService;
@@ -91,9 +105,13 @@ namespace Grand.Web.Controllers
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
             this._customerActionEventService = customerActionEventService;
+            this._vendorWebService = vendorWebService;
+            this._captchaSettings = captchaSettings;
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
+            this._eventPublisher = eventPublisher;
+            this._orderService = orderService;
         }
 
         #endregion
@@ -222,6 +240,8 @@ namespace Grand.Web.Controllers
                 DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
             var model = _catalogWebService.PrepareVendor(vendor, command);
+            //review
+            model.VendorReviewOverview = _vendorWebService.PrepareVendorReviewOverviewModel(vendor);
 
             return View(model);
         }
@@ -239,9 +259,152 @@ namespace Grand.Web.Controllers
 
         #endregion
 
+
+        #region Vendor reviews
+
+        [HttpsRequirement(SslRequirement.No)]
+        public virtual IActionResult VendorReviews(string vendorId)
+        {
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null || !vendor.Active || !vendor.AllowCustomerReviews)
+                return RedirectToRoute("HomePage");
+
+            var model = new VendorReviewsModel();
+            _vendorWebService.PrepareVendorReviewsModel(model, vendor);
+            //only registered users can leave reviews
+            if (_workContext.CurrentCustomer.IsGuest() && !_vendorSettings.AllowAnonymousUsersToReviewVendor)
+                ModelState.AddModelError("", _localizationService.GetResource("VendorReviews.OnlyRegisteredUsersCanWriteReviews"));
+            //default value
+            model.AddVendorReview.Rating = _vendorSettings.DefaultVendorRatingValue;
+            return View(model);
+        }
+
+        [HttpPost, ActionName("VendorReviews")]
+        [FormValueRequired("add-review")]
+        [PublicAntiForgery]
+        [ValidateCaptcha]
+        public virtual IActionResult VendorReviewsAdd(string vendorId, VendorReviewsModel model, bool captchaValid)
+        {
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null || !vendor.Active || !vendor.AllowCustomerReviews)
+                return RedirectToRoute("HomePage");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnVendorReviewPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
+            }
+
+            if (_workContext.CurrentCustomer.IsGuest() && !_vendorSettings.AllowAnonymousUsersToReviewVendor)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("VendorReviews.OnlyRegisteredUsersCanWriteReviews"));
+            }
+
+            //allow reviews only by customer that bought something from this vendor
+            if (_vendorSettings.VendorReviewPossibleOnlyAfterPurchasing &&
+                    !_orderService.SearchOrders(customerId: _workContext.CurrentCustomer.Id, vendorId: vendorId, os: OrderStatus.Complete).Any())
+                ModelState.AddModelError(string.Empty, _localizationService.GetResource("VendorReviews.VendorReviewPossibleOnlyAfterPurchasing"));
+
+            if (ModelState.IsValid)
+            {
+                var vendorReview = _vendorWebService.InsertVendorReview(vendor, model);
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.AddVendorReview", vendor.Id, _localizationService.GetResource("ActivityLog.PublicStore.AddVendorReview"), vendor.Name);
+
+                //raise event
+                if (vendorReview.IsApproved)
+                    _eventPublisher.Publish(new VendorReviewApprovedEvent(vendorReview));
+
+                _vendorWebService.PrepareVendorReviewsModel(model, vendor);
+                model.AddVendorReview.Title = null;
+                model.AddVendorReview.ReviewText = null;
+
+                model.AddVendorReview.SuccessfullyAdded = true;
+                if (!vendorReview.IsApproved)
+                    model.AddVendorReview.Result = _localizationService.GetResource("VendorReviews.SeeAfterApproving");
+                else
+                    model.AddVendorReview.Result = _localizationService.GetResource("VendorReviews.SuccessfullyAdded");
+
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            _vendorWebService.PrepareVendorReviewsModel(model, vendor);
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult SetVendorReviewHelpfulness(string VendorReviewId, string vendorId, bool washelpful)
+        {
+            var vendor = _vendorService.GetVendorById(vendorId);
+            var vendorReview = _vendorService.GetVendorReviewById(VendorReviewId);
+            if (vendorReview == null)
+                throw new ArgumentException("No vendor review found with the specified id");
+
+            if (_workContext.CurrentCustomer.IsGuest() && !_vendorSettings.AllowAnonymousUsersToReviewVendor)
+            {
+                return Json(new
+                {
+                    Result = _localizationService.GetResource("VendorReviews.Helpfulness.OnlyRegistered"),
+                    TotalYes = vendorReview.HelpfulYesTotal,
+                    TotalNo = vendorReview.HelpfulNoTotal
+                });
+            }
+
+            //customers aren't allowed to vote for their own reviews
+            if (vendorReview.CustomerId == _workContext.CurrentCustomer.Id)
+            {
+                return Json(new
+                {
+                    Result = _localizationService.GetResource("VendorReviews.Helpfulness.YourOwnReview"),
+                    TotalYes = vendorReview.HelpfulYesTotal,
+                    TotalNo = vendorReview.HelpfulNoTotal
+                });
+            }
+
+            //delete previous helpfulness
+            var prh = vendorReview.VendorReviewHelpfulnessEntries
+                .FirstOrDefault(x => x.CustomerId == _workContext.CurrentCustomer.Id);
+            if (prh != null)
+            {
+                //existing one
+                prh.WasHelpful = washelpful;
+            }
+            else
+            {
+                //insert new helpfulness
+                prh = new VendorReviewHelpfulness
+                {
+                    VendorReviewId = vendorReview.Id,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    WasHelpful = washelpful,
+                };
+                vendorReview.VendorReviewHelpfulnessEntries.Add(prh);
+                if (!_workContext.CurrentCustomer.IsHasVendorReviewH)
+                {
+                    _workContext.CurrentCustomer.IsHasVendorReviewH = true;
+                    EngineContext.Current.Resolve<ICustomerService>().UpdateHasVendorReviewH(_workContext.CurrentCustomer.Id);
+                }
+            }
+
+            //new totals
+            vendorReview.HelpfulYesTotal = vendorReview.VendorReviewHelpfulnessEntries.Count(x => x.WasHelpful);
+            vendorReview.HelpfulNoTotal = vendorReview.VendorReviewHelpfulnessEntries.Count(x => !x.WasHelpful);
+            _vendorService.UpdateVendorReview(vendorReview);
+
+            return Json(new
+            {
+                Result = _localizationService.GetResource("VendorReviews.Helpfulness.SuccessfullyVoted"),
+                TotalYes = vendorReview.HelpfulYesTotal,
+                TotalNo = vendorReview.HelpfulNoTotal
+            });
+        }
+
+        #endregion
+
         #region Product tags
-        
-      
+
+
         [HttpsRequirement(SslRequirement.No)]
         public virtual IActionResult ProductsByTag(string productTagId, CatalogPagingFilteringModel command)
         {

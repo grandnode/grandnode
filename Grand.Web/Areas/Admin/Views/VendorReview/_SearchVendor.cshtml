@@ -1,0 +1,36 @@
+﻿@model VendorReviewListModel
+@using Grand.Core
+@inject IWorkContext workContext
+
+<div class="form-group">
+    @Html.GrandLabelFor(model => model.SearchVendorId)
+    <div class="col-md-4 col-sm-6">
+        <input type="text" class="form-control text-box single-line" id="search-vendor-name" autocomplete="on" />
+        <span id="search-vendor-friendly-name"></span>
+        <input type="button" id="search-vendor-clear" class="k-button" style="display: none;" value="@T("Admin.Common.Clear")" />
+        @Html.TextBoxFor(model => model.SearchVendorId, new { autocomplete = "on", style = "display:none;" })
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#search-vendor-name').autocomplete({
+                    delay: 500,
+                    minLength: 3,
+                    source: '@(Url.Action("VendorSearchAutoComplete"))',
+                    select: function(event, ui) {
+                        $('#@Html.FieldIdFor(model => model.SearchVendorId)').val(ui.item.vendorid);
+                        $('#search-vendor-friendly-name').text(ui.item.label);
+                        $('#search-vendor-clear').show();
+                        return false;
+                    }
+                });
+
+                //remove button
+                $('#search-vendor-clear').click(function() {
+                    $('#@Html.FieldIdFor(model => model.SearchVendorId)').val('0');
+                    $('#search-vendor-friendly-name').text('');
+                    $('#search-vendor-clear').hide();
+                    return false;
+                });
+            });
+        </script>
+    </div>
+</div>

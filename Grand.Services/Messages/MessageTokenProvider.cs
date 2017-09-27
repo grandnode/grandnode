@@ -37,6 +37,7 @@ using Grand.Core.Domain.Vendors;
 using Grand.Core.Domain;
 using Grand.Core.Domain.Media;
 using System.Net;
+using Grand.Services.Vendors;
 
 namespace Grand.Services.Messages
 {
@@ -1013,6 +1014,15 @@ namespace Grand.Services.Messages
 
             //event notification
             _eventPublisher.EntityTokensAdded(productReview, tokens);
+        }
+
+        public virtual void AddVendorReviewTokens(IList<Token> tokens, VendorReview vendorReview)
+        {
+           var vendor = EngineContext.Current.Resolve<IVendorService>().GetVendorById(vendorReview.VendorId);
+           tokens.Add(new Token("VendorReview.VendorName", vendor.Name));
+
+            //event notification
+            _eventPublisher.EntityTokensAdded(vendorReview, tokens);
         }
 
         public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)

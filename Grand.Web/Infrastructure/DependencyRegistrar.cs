@@ -69,6 +69,8 @@ namespace Grand.Web.Infrastructure
             //Newsletter service
             builder.RegisterType<NewsletterWebService>().As<INewsletterWebService>().InstancePerLifetimeScope();
 
+            //vendor service
+            builder.RegisterType<VendorWebService>().As<IVendorWebService>().InstancePerLifetimeScope();
             //base shipping controller
             //builder.RegisterType<BaseShippingController>();
         }

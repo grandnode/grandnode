@@ -1,0 +1,134 @@
+﻿@model VendorReviewsModel
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    Html.AddTitleParts(Model.VendorName);
+    Html.AddTitleParts(T("PageTitle.VendorReviews").Text);
+}
+<div class="page vendor-reviews-page">
+    <h2 class="generalTitle text-center">@T("Reviews.VendorReviewsFor") <a href="@Url.RouteUrl("Vendor", new { SeName = Model.VendorSeName })">@Model.VendorName</a></h2>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "vendorreviews_page_top", additionalData = Model.VendorId })
+    @if (Model.AddVendorReview.SuccessfullyAdded)
+    {
+        <h4 class="text-center p-3">
+            @Model.AddVendorReview.Result
+        </h4>
+    }
+    else
+    {
+        <div class="write-review" id="review-form">
+            <h5 class="generalTitle"><strong>@T("Reviews.Write")</strong></h5>
+            <form asp-route="VendorReviews" method="post">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <fieldset>
+                    <div class="form-fields">
+                        <div class="form-group">
+                            <label asp-for="AddVendorReview.Title" class="col-form-label">@T("Reviews.Fields.Title"):</label>
+                            <input asp-for="AddVendorReview.Title" class="form-control review-title" asp-disabled="@(!Model.AddVendorReview.CanCurrentCustomerLeaveReview)" />
+                            <span asp-validation-for="AddVendorReview.Title"></span>
+                        </div>
+                        <label asp-for="AddVendorReview.ReviewText" class="col-form-label">@T("Reviews.Fields.ReviewText"):</label>
+                        <textarea asp-for="AddVendorReview.ReviewText" class="form-control review-text" asp-disabled="@(!Model.AddVendorReview.CanCurrentCustomerLeaveReview)"></textarea>
+                        <span asp-validation-for="AddVendorReview.ReviewText"></span>
+                        <div class="form-group review-rating row d-flex justify-content-around">
+                            <label asp-for="AddVendorReview.Rating" class="col-12 col-form-label">@T("Reviews.Fields.Rating"):</label>
+                            <span class="col col-form-label label first hidden-sm-down text-right">@T("Reviews.Fields.Rating.Bad")</span>
+                            <div class="col-12 col-sm-6 rating-options text-center">
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="AddVendorReview.Rating" value="1" type="radio" id="addvendorrating_1" class="custom-control-input" />
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">1</span>
+                                </label>
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="AddVendorReview.Rating" value="2" type="radio" id="addvendorrating_2" class="custom-control-input" />
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">2</span>
+                                </label>
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="AddVendorReview.Rating" value="3" type="radio" id="addvendorrating_3" class="custom-control-input" />
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">3</span>
+                                </label>
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="AddVendorReview.Rating" value="4" type="radio" id="addvendorrating_4" class="custom-control-input" />
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">4</span>
+                                </label>
+                                <label class="custom-control custom-radio">
+                                    <input asp-for="AddVendorReview.Rating" value="5" type="radio" id="addvendorrating_5" class="custom-control-input" />
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description">5</span>
+                                </label>
+                            </div>
+                            <span class="label col col-form-label hidden-sm-down text-left">@T("Reviews.Fields.Rating.Excellent")</span>
+                        </div>
+                        @if (Model.AddVendorReview.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                <captcha />
+                            </div>
+                        }
+                    </div>
+                </fieldset>
+                <div class="buttons text-left my-3">
+                    <input type="submit" name="add-review" class="btn btn-success write-vendor-review-button" value="@T("Reviews.SubmitButton")" />
+                </div>
+            </form>
+        </div>
+    }
+    @if (Model.Items.Count > 0)
+    {
+        <div class="vendor-review-list">
+            <h5><strong>@T("Reviews.ExistingReviews")</strong></h5>
+            @foreach (var review in Model.Items)
+                {
+                    int ratingPercent = review.Rating * 20;
+                <div class="card comment vendor-review-item pb-3">
+                    <div class="card-header review-item-head">
+                        <div class="rating rating_@review.Id float-right">
+                        </div>
+                        <script type="text/javascript">
+                                $(document).ready(function () {
+                                    productStarProgress5('@(ratingPercent)', 'rating_@review.Id');
+                                });
+                        </script>
+                        <div class="review-info">
+                            <span class="user">
+                                <span>@T("Reviews.From"):</span>
+                                @if (review.AllowViewingProfiles)
+                                {
+                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
+                                }
+                                else
+                                {
+                                    @review.CustomerName
+                                }
+                            </span>
+                            <span class="separator">|</span>
+                            <span class="date">
+                                <span>@T("Reviews.Date"):</span>
+                                <span>@review.WrittenOnStr</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-block mb-3">
+                        <div class="review-title">
+                            <strong>@review.Title</strong>
+                        </div>
+                        <div class="review-content">
+                            <div class="review-text">
+                                @Html.Raw(Grand.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_inside_review", additionalData = review.Id })
+                        @await Html.PartialAsync("_VendorReviewHelpfulness", review.Helpfulness)
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    @await Component.InvokeAsync("Widget", new { widgetZone = "productreviews_page_bottom", additionalData = Model.VendorId })
+</div>

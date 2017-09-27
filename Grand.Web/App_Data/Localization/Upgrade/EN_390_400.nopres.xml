@@ -164,4 +164,125 @@
   <LocaleResource Name="PageTitle.VendorInfo">
     <Value>Vendor info</Value>
   </LocaleResource>
+  <LocaleResource Name="Activitylog.PublicStore.AddvendorReview">
+    <Value>Add vendor review</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowAnonymousUsersToReviewVendor">
+    <Value>Allow anonymous users to write vendor reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.NotifyVendorAboutNewVendorReviews">
+    <Value>Notify about new vendor reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorReviewPossibleOnlyAfterPurchasing">
+    <Value>Vendor review possible only after purchasing product from vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorReviews">
+    <Value>Vendor reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorReviewsMustBeApproved">
+    <Value>Vendor reviews must be approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.VendorSettings">
+    <Value>Vendor settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews">
+    <Value>Vendor reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.ApproveSelected">
+    <Value>Approve selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.BackToList">
+    <Value>back to product review list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.DisapproveSelected">
+    <Value>Disapprove selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.EditVendorReviewDetails">
+    <Value>Edit vendor review details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.IsApproved">
+    <Value>Is approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.Rating">
+    <Value>Rating</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.ReviewText">
+    <Value>Review text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.ReviewText.Required">
+    <Value>Review text is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.Title">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.Title.Required">
+    <Value>Title is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Fields.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.List.CreatedOnFrom">
+    <Value>Created from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.List.CreatedOnTo">
+    <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.List.SearchText">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.List.SearchVendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Updated">
+    <Value> The vendor review has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.AllowCustomerReviews">
+    <Value>Allow customer reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Reviews">
+    <Value>Vendor reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Pagetitle.VendorReviews">
+    <Value>Vendor reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Reviews.VendorReviewsFor">
+    <Value>Vendor reviews for</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.Helpfulness.OnlyRegistered">
+    <Value>Only registered customers can set review helpfulness.</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.Helpfulness.SuccessfullyVoted">
+    <Value>Successfully voted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.Helpfulness.YourOwnReview">
+    <Value>You cannot vote for your own review.</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.OnlyRegisteredUsersCanWriteReviews">
+    <Value>Only registered users can write reviews.</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.Overview.AddNew">
+    <Value>Add your review</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.Overview.First">
+    <Value>Be the first to review this vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.Overview.Reviews">
+    <Value>review(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.SeeAfterApproving">
+    <Value>You will see the vendor review after approving by a store administrator or a vendor.</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.SuccessfullyAdded">
+    <Value>Vendor review is successfully added.</Value>
+  </LocaleResource>
+  <LocaleResource Name="VendorReviews.VendorReviewPossibleOnlyAfterPurchasing">
+    <Value>Vendor can be reviewed only after purchasing a product from this vendor.</Value>
+  </LocaleResource>
+  
 </Language>

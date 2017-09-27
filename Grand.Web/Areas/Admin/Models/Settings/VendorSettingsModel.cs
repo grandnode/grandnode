@@ -43,5 +43,22 @@ namespace Grand.Web.Areas.Admin.Models.Settings
         public bool TermsOfServiceEnabled { get; set; }
         public bool TermsOfServiceEnabled_OverrideForStore { get; set; }
 
+        //review vendor
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorReviewsMustBeApproved")]
+        public bool VendorReviewsMustBeApproved { get; set; }
+        public bool VendorReviewsMustBeApproved_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowAnonymousUsersToReviewVendor")]
+        public bool AllowAnonymousUsersToReviewVendor { get; set; }
+        public bool AllowAnonymousUsersToReviewVendor_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.VendorReviewPossibleOnlyAfterPurchasing")]
+        public bool VendorReviewPossibleOnlyAfterPurchasing { get; set; }
+        public bool VendorReviewPossibleOnlyAfterPurchasing_OverrideForStore { get; set; }
+
+        [GrandResourceDisplayName("Admin.Configuration.Settings.Vendor.NotifyVendorAboutNewVendorReviews")]
+        public bool NotifyVendorAboutNewVendorReviews { get; set; }
+        public bool NotifyVendorAboutNewVendorReviews_OverrideForStore { get; set; }
+
     }
 }

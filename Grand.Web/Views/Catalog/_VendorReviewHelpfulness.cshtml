@@ -1,0 +1,43 @@
+﻿@model VendorReviewHelpfulnessModel
+<div class="vendor-review-helpfulness">
+    <span class="question">@T("Reviews.Helpfulness.WasHelpful?")</span>
+    <span class="vote-options">
+        <span id="vote-yes-@(Model.VendorReviewId)" class="btn btn-sm btn-outline-success vote">@T("Common.Yes")</span>
+        <span id="vote-no-@(Model.VendorReviewId)" class="btn btn-sm btn-outline-danger vote">@T("Common.No")</span>
+    </span>
+    <span class="vote-stats">
+        (<span id="helpfulness-vote-yes-@(Model.VendorReviewId)">@(Model.HelpfulYesTotal)</span>/<span id="helpfulness-vote-no-@(Model.VendorReviewId)">@(Model.HelpfulNoTotal)</span>)
+    </span>
+    <span id="helpfulness-vote-result-@(Model.VendorReviewId)" class="result"></span>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#vote-yes-@(Model.VendorReviewId)').click(function () {
+                setVendorReviewHelpfulness@(Model.VendorReviewId)('true');
+            });
+            $('#vote-no-@(Model.VendorReviewId)').click(function () {
+                setVendorReviewHelpfulness@(Model.VendorReviewId)('false');
+            });
+        });
+
+        function setVendorReviewHelpfulness@(Model.VendorReviewId)(wasHelpful){
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.RouteUrl("SetVendorReviewHelpfulness"))",
+                    data: { "vendorReviewId": '@(Model.VendorReviewId)', "vendorId": '@(Model.VendorId)' ,"washelpful": wasHelpful },
+                    success: function (data) {
+                         $("#helpfulness-vote-yes-@(Model.VendorReviewId)").html(data.TotalYes);
+                         $("#helpfulness-vote-no-@(Model.VendorReviewId)").html(data.TotalNo);
+                         $("#helpfulness-vote-result-@(Model.VendorReviewId)").html(data.Result);
+
+                         $('#helpfulness-vote-result-@(Model.VendorReviewId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to vote. Please refresh the page and try one more time.');
+                    }
+                });
+        }
+    </script>
+</div>

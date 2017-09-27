@@ -291,6 +291,13 @@ namespace Grand.Web.Areas.Admin.Controllers
                 model.AllowVendorsToEditInfo_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowVendorsToEditInfo, storeScope);
                 model.NotifyStoreOwnerAboutVendorInformationChange_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.NotifyStoreOwnerAboutVendorInformationChange, storeScope);
                 model.TermsOfServiceEnabled_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.TermsOfServiceEnabled, storeScope);
+
+                //vendor review tab
+                model.VendorReviewsMustBeApproved_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.VendorReviewsMustBeApproved, storeScope);
+                model.AllowAnonymousUsersToReviewVendor_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowAnonymousUsersToReviewVendor, storeScope);
+                model.VendorReviewPossibleOnlyAfterPurchasing_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.VendorReviewPossibleOnlyAfterPurchasing, storeScope);
+                model.NotifyVendorAboutNewVendorReviews_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.NotifyVendorAboutNewVendorReviews, storeScope);
+                
             }
 
             return View(model);
@@ -350,6 +357,28 @@ namespace Grand.Web.Areas.Admin.Controllers
             else if (!String.IsNullOrEmpty(storeScope))
                 _settingService.DeleteSetting(vendorSettings, x => x.TermsOfServiceEnabled, storeScope);
 
+
+            //review vendor
+            if (model.VendorReviewsMustBeApproved_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(vendorSettings, x => x.VendorReviewsMustBeApproved, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(vendorSettings, x => x.VendorReviewsMustBeApproved, storeScope);
+
+            if (model.AllowAnonymousUsersToReviewVendor_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(vendorSettings, x => x.AllowAnonymousUsersToReviewVendor, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(vendorSettings, x => x.AllowAnonymousUsersToReviewVendor, storeScope);
+            
+            if (model.VendorReviewPossibleOnlyAfterPurchasing_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(vendorSettings, x => x.VendorReviewPossibleOnlyAfterPurchasing, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(vendorSettings, x => x.VendorReviewPossibleOnlyAfterPurchasing, storeScope);
+            
+            if (model.NotifyVendorAboutNewVendorReviews_OverrideForStore || storeScope == "")
+                _settingService.SaveSetting(vendorSettings, x => x.NotifyVendorAboutNewVendorReviews, storeScope, false);
+            else if (!String.IsNullOrEmpty(storeScope))
+                _settingService.DeleteSetting(vendorSettings, x => x.NotifyVendorAboutNewVendorReviews, storeScope);
+            
             //now clear cache
             _cacheManager.Clear();
 

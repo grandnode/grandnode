@@ -19,6 +19,7 @@ namespace Grand.Services.Vendors
         #region Fields
 
         private readonly IRepository<Vendor> _vendorRepository;
+        private readonly IRepository<VendorReview> _vendorReviewRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -30,10 +31,11 @@ namespace Grand.Services.Vendors
         /// </summary>
         /// <param name="vendorRepository">Vendor repository</param>
         /// <param name="eventPublisher">Event published</param>
-        public VendorService(IRepository<Vendor> vendorRepository,
+        public VendorService(IRepository<Vendor> vendorRepository, IRepository<VendorReview> vendorReviewRepository,
             IEventPublisher eventPublisher)
         {
             this._vendorRepository = vendorRepository;
+            this._vendorReviewRepository = vendorReviewRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -178,6 +180,210 @@ namespace Grand.Services.Vendors
             var vendors = query.ToList();
             return vendors;
         }
+
+        #region Vendor reviews
+
+        /// <summary>
+        /// Gets all vendor reviews
+        /// </summary>
+        /// <param name="customerId">Customer identifier; 0 to load all records</param>
+        /// <param name="approved">A value indicating whether to content is approved; null to load all records</param> 
+        /// <param name="fromUtc">Item creation from; null to load all records</param>
+        /// <param name="toUtc">Item item creation to; null to load all records</param>
+        /// <param name="message">Search title or review text; null to load all records</param>
+        /// <returns>Reviews</returns>
+        public virtual IPagedList<VendorReview> GetAllVendorReviews(string customerId, bool? approved,
+            DateTime? fromUtc = null, DateTime? toUtc = null,
+            string message = null, string vendorId = "", int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = from p in _vendorReviewRepository.Table
+                        select p;
+
+            if (approved.HasValue)
+                query = query.Where(c => c.IsApproved == approved.Value);
+            if (!String.IsNullOrEmpty(customerId))
+                query = query.Where(c => c.CustomerId == customerId);
+            if (fromUtc.HasValue)
+                query = query.Where(c => fromUtc.Value <= c.CreatedOnUtc);
+            if (toUtc.HasValue)
+                query = query.Where(c => toUtc.Value >= c.CreatedOnUtc);
+            if (!String.IsNullOrEmpty(message))
+                query = query.Where(c => c.Title.Contains(message) || c.ReviewText.Contains(message));
+            if (!String.IsNullOrEmpty(vendorId))
+                query = query.Where(c => c.VendorId == vendorId);
+            query = query.OrderByDescending(c => c.CreatedOnUtc);
+
+            var content = new PagedList<VendorReview>(query, pageIndex, pageSize);
+            return content;
+
+        }
+
+        public virtual int RatingSumVendor(string vendorId, string storeId)
+        {
+            var query = from p in _vendorReviewRepository.Table
+                        where p.VendorId == vendorId && p.IsApproved
+                        group p by true into g
+                        select new { Sum = g.Sum(x => x.Rating) };
+            var content = query.ToListAsync().Result;
+            return content.Count > 0 ? content.FirstOrDefault().Sum : 0;
+        }
+
+        public virtual int TotalReviewsVendor(string vendorId, string storeId)
+        {
+            var query = from p in _vendorReviewRepository.Table
+                        where p.VendorId == vendorId && p.IsApproved 
+                        group p by true into g
+                        select new { Count = g.Count() };
+            var content = query.ToListAsync().Result;
+            return content.Count > 0 ? content.FirstOrDefault().Count : 0;
+        }
+
+
+        /// <summary>
+        /// Update vendor review totals
+        /// </summary>
+        /// <param name="vendor">Vendor</param>
+        public virtual void UpdateVendorReviewTotals(Vendor vendor)
+        {
+            if (vendor == null)
+                throw new ArgumentNullException("vendor");
+
+            int approvedRatingSum = 0;
+            int notApprovedRatingSum = 0;
+            int approvedTotalReviews = 0;
+            int notApprovedTotalReviews = 0;
+            var reviews = _vendorReviewRepository.Table.Where(x => x.VendorId == vendor.Id);
+            foreach (var pr in reviews)
+            {
+                if (pr.IsApproved)
+                {
+                    approvedRatingSum += pr.Rating;
+                    approvedTotalReviews++;
+                }
+                else
+                {
+                    notApprovedRatingSum += pr.Rating;
+                    notApprovedTotalReviews++;
+                }
+            }
+
+            vendor.ApprovedRatingSum = approvedRatingSum;
+            vendor.NotApprovedRatingSum = notApprovedRatingSum;
+            vendor.ApprovedTotalReviews = approvedTotalReviews;
+            vendor.NotApprovedTotalReviews = notApprovedTotalReviews;
+
+            var filter = Builders<Vendor>.Filter.Eq("Id", vendor.Id);
+            var update = Builders<Vendor>.Update
+                    .Set(x => x.ApprovedRatingSum, vendor.ApprovedRatingSum)
+                    .Set(x => x.NotApprovedRatingSum, vendor.NotApprovedRatingSum)
+                    .Set(x => x.ApprovedTotalReviews, vendor.ApprovedTotalReviews)
+                    .Set(x => x.NotApprovedTotalReviews, vendor.NotApprovedTotalReviews)
+                    .CurrentDate("UpdateDate");
+            _vendorRepository.Collection.UpdateOneAsync(filter, update);
+           
+            //event notification
+            _eventPublisher.EntityUpdated(vendor);
+
+            //UpdateVendor(vendor);
+        }
+
+        public virtual void UpdateVendorReview(VendorReview vendorreview)
+        {
+            if (vendorreview == null)
+                throw new ArgumentNullException("vendorreview");
+
+            //_vendorPictureRepository.Update(vendorPicture);
+            var builder = Builders<VendorReview>.Filter;
+            var filter = builder.Eq(x => x.Id, vendorreview.Id);
+            var update = Builders<VendorReview>.Update
+                .Set(x => x.Title, vendorreview.Title)
+                .Set(x => x.ReviewText, vendorreview.ReviewText)
+                .Set(x => x.IsApproved, vendorreview.IsApproved);
+
+            var result = _vendorReviewRepository.Collection.UpdateManyAsync(filter, update).Result;
+
+            //event notification
+            _eventPublisher.EntityUpdated(vendorreview);
+        }
+
+        /// <summary>
+        /// Inserts a vendor review
+        /// </summary>
+        /// <param name="vendorPicture">Vendor picture</param>
+        public virtual void InsertVendorReview(VendorReview vendorReview)
+        {
+            if (vendorReview == null)
+                throw new ArgumentNullException("vendorPicture");
+
+            _vendorReviewRepository.Insert(vendorReview);
+
+            //event notification
+            _eventPublisher.EntityInserted(vendorReview);
+        }
+
+        /// <summary>
+        /// Deletes a vendor review
+        /// </summary>
+        /// <param name="vendorReview">Vendor review</param>
+        public virtual void DeleteVendorReview(VendorReview vendorReview)
+        {
+            if (vendorReview == null)
+                throw new ArgumentNullException("vendorReview");
+
+            _vendorReviewRepository.Delete(vendorReview);
+
+            //event notification
+            _eventPublisher.EntityDeleted(vendorReview);
+        }
+
+        /// <summary>
+        /// Gets vendor review
+        /// </summary>
+        /// <param name="vendorReviewId">Vendor review identifier</param>
+        /// <returns>Vendor review</returns>
+        public virtual VendorReview GetVendorReviewById(string vendorReviewId)
+        {
+            return _vendorReviewRepository.GetById(vendorReviewId);
+        }
+
+
+        /// <summary>
+        /// Search vendors
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
+        /// <param name="keywords">Keywords</param>
+        /// <returns>Vendors</returns>
+        public virtual IList<Vendor> SearchVendors(
+            string vendorId = "",
+            string keywords = null
+            )
+        {
+            //vendors
+            var builder = Builders<Vendor>.Filter;
+            var filter = FilterDefinition<Vendor>.Empty;
+
+            //searching by keyword
+            if (!String.IsNullOrWhiteSpace(keywords))
+            {
+                filter = filter & builder.Where(p =>
+                        p.Name.ToLower().Contains(keywords.ToLower())
+                        ||
+                        p.Locales.Any(x => x.LocaleKey == "Name" && x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keywords.ToLower()))
+                        );
+            }
+
+            //vendor filtering
+            if (!String.IsNullOrEmpty(vendorId))
+            {
+                filter = filter & builder.Where(x => x.Id == vendorId);
+            }
+            var vendors = _vendorRepository.Collection.Find(filter).ToList();
+
+            return vendors;
+        }
+
+        #endregion
+
         #endregion
     }
 }

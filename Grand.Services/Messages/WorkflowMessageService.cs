@@ -22,6 +22,7 @@ using Grand.Services.Catalog;
 using Grand.Core.Domain.Common;
 using Microsoft.AspNetCore.Http;
 using System.Net;
+using Grand.Services.Vendors;
 
 namespace Grand.Services.Messages
 {
@@ -1556,6 +1557,47 @@ namespace Grand.Services.Messages
 
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+
+        /// <summary>
+        /// Sends a vendor review notification message to a store owner
+        /// </summary>
+        /// <param name="vendorReview">Vendor review</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendVendorReviewNotificationMessage(VendorReview vendorReview,
+            string languageId)
+        {
+            if (vendorReview == null)
+                throw new ArgumentNullException("vendorReview");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("Vendor.VendorReview", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var customer = EngineContext.Current.Resolve<ICustomerService>().GetCustomerById(vendorReview.CustomerId);
+            var vendor = EngineContext.Current.Resolve<IVendorService>().GetVendorById(vendorReview.VendorId);
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddVendorReviewTokens(tokens, vendorReview);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            _messageTokenProvider.AddVendorTokens(tokens, vendor);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = vendor.Email;
+            var toName = vendor.Name;
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
                 toEmail, toName);

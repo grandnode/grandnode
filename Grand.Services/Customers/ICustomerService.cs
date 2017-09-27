@@ -148,6 +148,12 @@ namespace Grand.Services.Customers
         /// <param name="customer">Customer</param>
         void UpdateCustomerPassword(Customer customer);
 
+
+        /// <summary>
+        /// Update free shipping
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="freeShipping"></param>
         void UpdateFreeShipping(string customerId, bool freeShipping);
 
         /// <summary>
@@ -235,6 +241,7 @@ namespace Grand.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomerinAdminPanel(Customer customer);
+
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
@@ -250,8 +257,25 @@ namespace Grand.Services.Customers
             bool clearRewardPoints = true, bool clearShippingMethod = true,
             bool clearPaymentMethod = true);
 
-
+        /// <summary>
+        /// Update Customer Reminder History
+        /// </summary>
+        /// <param name="customerId"></param>
+        /// <param name="orderId"></param>
         void UpdateCustomerReminderHistory(string customerId, string orderId);
+
+
+        /// <summary>
+        /// Updates the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        void UpdateHasVendorReview(string customerId);
+        /// <summary>
+        /// Updates the customer
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        void UpdateHasVendorReviewH(string customerId);
+
         /// <summary>
         /// Delete guest customer records
         /// </summary>

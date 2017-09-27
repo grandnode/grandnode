@@ -349,6 +349,14 @@ namespace Grand.Services.Messages
         int SendProductReviewNotificationMessage(ProductReview productReview, string languageId);
 
         /// <summary>
+        /// Sends a vendor review notification message to a store owner
+        /// </summary>
+        /// <param name="vendorReview">Vendor review</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendVendorReviewNotificationMessage(VendorReview vendorReview, string languageId);
+
+        /// <summary>
         /// Sends a gift card notification
         /// </summary>
         /// <param name="giftCard">Gift card</param>

@@ -1,0 +1,42 @@
+﻿@model VendorReviewOverviewModel
+@using System.Globalization
+@{
+    int ratingPercent = 0;
+    if (Model.TotalReviews != 0)
+    {
+        ratingPercent = ((Model.RatingSum * 100) / Model.TotalReviews) / 5;
+    }
+}
+@if (Model.AllowCustomerReviews)
+{
+    <div class="vendor-reviews-overview" @if (Model.TotalReviews > 0) { <text> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" </text>  }>
+        <div class="vendor-review-box pb-1">
+            <div class="rating">
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                productStarProgress10('@(ratingPercent)', 'rating');
+            });
+        </script>
+        @if (Model.TotalReviews > 0)
+        {
+            <div class="vendor-review-links">
+                <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">
+                    @Model.TotalReviews
+                    @T("VendorReviews.Overview.Reviews")
+                </a> <span class="separator">|</span> <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">@T("VendorReviews.Overview.AddNew")</a>
+            </div>
+            @*hidden microdata info*@
+        decimal ratingValue = ratingPercent / (decimal)20;
+        <span itemprop="ratingValue" style="display: none;">@ratingValue.ToString("0.0", new CultureInfo("en-US"))</span>
+        <span itemprop="reviewCount" style="display: none;">@Model.TotalReviews</span>
+        }
+        else
+        {
+            <div class="vendor-no-reviews">
+                <a class="btn btn-secondary btn-sm" href="@Url.RouteUrl("VendorReviews", new { VendorId = Model.VendorId })">@T("VendorReviews.Overview.First")</a>
+            </div>
+        }
+    </div>
+}

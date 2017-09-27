@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Grand.Framework.Mvc.ModelBinding;
-using Grand.Framework.Mvc.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.Filters;
-using Grand.Framework.Extensions;
 using System.Linq;
-
 using System.Collections.Generic;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Vendors;
@@ -24,7 +19,9 @@ using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using System;
-using MongoDB.Bson;
+using Grand.Core.Domain.Customers;
+using Grand.Services.Stores;
+using Grand.Core;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -41,6 +38,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IPictureService _pictureService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDiscountService _discountService;
+        private readonly IStoreService _storeService;
+        private readonly IWorkContext _workContext;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -56,6 +55,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IPictureService pictureService,
             IDateTimeHelper dateTimeHelper,
             IDiscountService discountService,
+            IStoreService storeService,
+            IWorkContext workContext,
             VendorSettings vendorSettings)
         {
             this._customerService = customerService;
@@ -68,6 +69,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._vendorSettings = vendorSettings;
             this._discountService = discountService;
+            this._storeService = storeService;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -146,6 +149,36 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (!excludeProperties && vendor != null)
             {
                 model.SelectedDiscountIds = vendor.AppliedDiscounts.ToArray();
+            }
+        }
+
+        [NonAction]
+        protected virtual void PrepareVendorReviewModel(VendorReviewModel model,
+            VendorReview vendorReview, bool excludeProperties, bool formatReviewText)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (vendorReview == null)
+                throw new ArgumentNullException("vendorReview");
+            var vendor = _vendorService.GetVendorById(vendorReview.VendorId);
+            var customer = _customerService.GetCustomerById(vendorReview.CustomerId);
+
+            model.Id = vendorReview.Id;
+            model.VendorId = vendorReview.VendorId;
+            model.VendorName = vendor.Name;
+            model.CustomerId = vendorReview.CustomerId;
+            model.CustomerInfo = customer != null ? customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
+            model.Rating = vendorReview.Rating;
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(vendorReview.CreatedOnUtc, DateTimeKind.Utc);
+            if (!excludeProperties)
+            {
+                model.Title = vendorReview.Title;
+                if (formatReviewText)
+                    model.ReviewText = Core.Html.HtmlHelper.FormatText(vendorReview.ReviewText, false, true, false, false, false, false);
+                else
+                    model.ReviewText = vendorReview.ReviewText;
+                model.IsApproved = vendorReview.IsApproved;
             }
         }
         #endregion
@@ -475,6 +508,40 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #endregion
 
+        #region Reviews
+
+        [HttpPost]
+        public IActionResult Reviews(DataSourceRequest command, string vendorId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+                return AccessDeniedView();
+
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null)
+                throw new ArgumentException("No vendor found with the specified id");
+
+            //a vendor should have access only to his own profile
+            if (_workContext.CurrentVendor != null && vendor.Id != _workContext.CurrentVendor.Id)
+                return Content("This is not your vendor");
+
+            var vendorReviews = _vendorService.GetAllVendorReviews("", null,
+                null, null, "", vendorId, command.Page - 1, command.PageSize);
+
+            var gridModel = new DataSourceResult
+            {
+                Data = vendorReviews.Select(x =>
+                {
+                    var m = new VendorReviewModel();
+                    PrepareVendorReviewModel(m, x, false, true);
+                    return m;
+                }),
+                Total = vendorReviews.TotalCount,
+            };
+
+            return Json(gridModel);
+        }
+
+        #endregion
 
     }
 }

@@ -31,6 +31,13 @@
                    @Html.Raw(Model.Description)
                </article>
            }
+           @*review*@
+           @if (Model.VendorReviewOverview.AllowCustomerReviews)
+           {
+               <div>
+                   @await Html.PartialAsync("_VendorReviewOverview", Model.VendorReviewOverview)
+               </div>
+           }
            @*contact vendor*@
            @if (Model.Products.Count > 0)
            {
