@@ -13716,6 +13716,9 @@
   <LocaleResource Name="Admin.VendorReviews.BackToList">
     <Value>back to product review list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.VendorReviews.Deleted">
+    <Value>Review deleted</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.VendorReviews.DisapproveSelected">
     <Value>Disapprove selected</Value>
   </LocaleResource>
