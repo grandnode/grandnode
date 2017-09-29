@@ -11985,6 +11985,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToSubCategories.Hint">
     <Value>Check to apply discount to subcategories of the selected parent. But please note that it can affect performance if you have a lot of nested subcategories.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.CalculateByPlugin">
+    <Value>Calculate by plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.CalculateByPlugin.hint">
+    <Value>Check this box if discount amount should be calculated by plugin</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.CouponCode">
     <Value>Coupon code</Value>
   </LocaleResource>
@@ -12011,6 +12017,15 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPercentage.Hint">
     <Value>The percentage discount to apply to order/SKUs.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPluginName">
+    <Value>Plugin name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPluginName.hint">
+    <Value>Plugin name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPluginName.Required">
+    <Value>Field Plugin name is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountType">
     <Value>Discount type</Value>

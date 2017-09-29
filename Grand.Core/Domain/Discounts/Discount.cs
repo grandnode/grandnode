@@ -37,6 +37,16 @@ namespace Grand.Core.Domain.Discounts
         public decimal DiscountAmount { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to calculate by plugin
+        /// </summary>
+        public bool CalculateByPlugin { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to calculate by plugin
+        /// </summary>
+        public string DiscountPluginName { get; set; }
+
+        /// <summary>
         /// Gets or sets the maximum discount amount (used with "UsePercentage")
         /// </summary>
         public decimal? MaximumDiscountAmount { get; set; }

@@ -11,12 +11,30 @@
             $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);
             $("#@Html.FieldIdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
             $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
+            $("#@Html.FieldIdFor(model => model.CalculateByPlugin)").click(toggleCalculate);
 
             toggleDiscountType();
             toggleLimitation();
             toggleUsePercentage();
             toggleRequiresCouponCode();
+            toggleCalculate();
         });
+
+        function toggleCalculate() {
+            var selectedCalculateByPlugin = $("#@Html.FieldIdFor(model => model.CalculateByPlugin)").is(':checked');
+            console.log(selectedCalculateByPlugin);
+            if (selectedCalculateByPlugin) {
+                $('#pnlUsePercentage').hide();
+                $('#pnlDiscountAmount').hide();
+                $('#pnlDiscountPluginName').show();
+            }
+            else {
+                $('#pnlUsePercentage').show();
+                $('#pnlDiscountAmount').show();
+                $('#pnlDiscountPluginName').hide();
+            }
+        }
+
 
         function toggleDiscountType() {
             var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
@@ -118,7 +136,7 @@
                 @Html.ValidationMessageFor(model => model.DiscountTypeId)
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="pnlUsePercentage">
             @Html.GrandLabelFor(model => model.UsePercentage)
             <div class="col-md-9 col-sm-9">
                 <label class="mt-checkbox mt-checkbox-outline">
@@ -133,6 +151,23 @@
             <div class="col-md-9 col-sm-9">
                 @Html.GrandEditorFor(model => model.DiscountAmount) [@Model.PrimaryStoreCurrencyCode]
                 @Html.ValidationMessageFor(model => model.DiscountAmount)
+            </div>
+        </div>
+        <div class="form-group" id="pnlCalculateByPlugin">
+            @Html.GrandLabelFor(model => model.CalculateByPlugin)
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.CalculateByPlugin)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.CalculateByPlugin)
+            </div>
+        </div>
+        <div class="form-group" id="pnlDiscountPluginName">
+            @Html.GrandLabelFor(model => model.DiscountPluginName)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandDropDownListFor(model => model.DiscountPluginName, Model.AvailableDiscountAmountProviders)
+                @Html.ValidationMessageFor(model => model.DiscountPluginName)
             </div>
         </div>
         <div class="form-group" id="pnlDiscountPercentage">

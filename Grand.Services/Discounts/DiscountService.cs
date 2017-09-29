@@ -196,7 +196,7 @@ namespace Grand.Services.Discounts
                 throw new ArgumentNullException("discount");
 
             var usagehistory = GetAllDiscountUsageHistory(discount.Id);
-            if(usagehistory.Count > 0)
+            if (usagehistory.Count > 0)
                 throw new ArgumentNullException("discount has a history");
 
             var builder = Builders<BsonDocument>.Filter;
@@ -288,14 +288,14 @@ namespace Grand.Services.Discounts
                 }
                 if (!String.IsNullOrEmpty(couponCode))
                 {
-                    query = query.Where(d => d.CouponCode!=null && d.CouponCode.ToLower().Contains(couponCode.ToLower()));
+                    query = query.Where(d => d.CouponCode != null && d.CouponCode.ToLower().Contains(couponCode.ToLower()));
                 }
                 if (!String.IsNullOrEmpty(discountName))
                 {
-                    query = query.Where(d => d.Name!=null && d.Name.ToLower().Contains(discountName.ToLower()));
+                    query = query.Where(d => d.Name != null && d.Name.ToLower().Contains(discountName.ToLower()));
                 }
                 query = query.OrderBy(d => d.Name);
-                
+
                 var discounts = query.ToList();
                 return discounts;
             });
@@ -334,7 +334,7 @@ namespace Grand.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
-            foreach(var req in discount.DiscountRequirements)
+            foreach (var req in discount.DiscountRequirements)
             {
                 req.DiscountId = discount.Id;
             }
@@ -357,7 +357,7 @@ namespace Grand.Services.Discounts
                 throw new ArgumentNullException("discountRequirement");
 
             var discount = _discountRepository.GetById(discountRequirement.DiscountId);
-            if(discount==null)
+            if (discount == null)
                 throw new ArgumentNullException("discount");
             var req = discount.DiscountRequirements.FirstOrDefault(x => x.Id == discountRequirement.Id);
             if (req == null)
@@ -609,7 +609,7 @@ namespace Grand.Services.Discounts
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
         public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(string discountId = "",
-            string customerId = "", string orderId = "", 
+            string customerId = "", string orderId = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _discountUsageHistoryRepository.Table;
@@ -674,6 +674,149 @@ namespace Grand.Services.Discounts
 
             //event notification
             _eventPublisher.EntityDeleted(discountUsageHistory);
+        }
+
+        /// <summary>
+        /// Get discount amount
+        /// </summary>
+        /// <param name="discount"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public decimal GetDiscountAmount(Discount discount, decimal amount)
+        {
+            if (discount == null)
+                throw new ArgumentNullException("discount");
+
+            //calculate discount amount
+            decimal result = decimal.Zero;
+            if (!discount.CalculateByPlugin)
+            {
+                if (discount.UsePercentage)
+                    result = (decimal)((((float)amount) * ((float)discount.DiscountPercentage)) / 100f);
+                else
+                    result = discount.DiscountAmount;
+            }
+            else
+            {
+                result = GetDiscountAmountProvider(discount, amount);
+            }
+
+            //validate maximum disocunt amount
+            if (discount.UsePercentage &&
+                discount.MaximumDiscountAmount.HasValue &&
+                result > discount.MaximumDiscountAmount.Value)
+                result = discount.MaximumDiscountAmount.Value;
+
+            if (result < decimal.Zero)
+                result = decimal.Zero;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get preferred discount (with maximum discount value)
+        /// </summary>
+        /// <param name="discounts">A list of discounts to check</param>
+        /// <param name="amount">Amount</param>
+        /// <returns>Preferred discount</returns>
+        public List<Discount> GetPreferredDiscount(IList<Discount> discounts,
+            decimal amount, out decimal discountAmount)
+        {
+            if (discounts == null)
+                throw new ArgumentNullException("discounts");
+
+            var result = new List<Discount>();
+            discountAmount = decimal.Zero;
+            if (!discounts.Any())
+                return result;
+
+            //first we check simple discounts
+            foreach (var discount in discounts)
+            {
+                decimal currentDiscountValue = GetDiscountAmount(discount, amount);
+                if (currentDiscountValue > discountAmount)
+                {
+                    discountAmount = currentDiscountValue;
+
+                    result.Clear();
+                    result.Add(discount);
+                }
+            }
+            //now let's check cumulative discounts
+            //right now we calculate discount values based on the original amount value
+            //please keep it in mind if you're going to use discounts with "percentage"
+            var cumulativeDiscounts = discounts.Where(x => x.IsCumulative).OrderBy(x => x.Name).ToList();
+            if (cumulativeDiscounts.Count > 1)
+            {
+                var cumulativeDiscountAmount = cumulativeDiscounts.Sum(d => GetDiscountAmount(d, amount));
+                if (cumulativeDiscountAmount > discountAmount)
+                {
+                    discountAmount = cumulativeDiscountAmount;
+
+                    result.Clear();
+                    result.AddRange(cumulativeDiscounts);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Check whether a list of discounts already contains a certain discount intance
+        /// </summary>
+        /// <param name="discounts">A list of discounts</param>
+        /// <param name="discount">Discount to check</param>
+        /// <returns>Result</returns>
+        public bool ContainsDiscount(IList<Discount> discounts,
+            Discount discount)
+        {
+            if (discounts == null)
+                throw new ArgumentNullException("discounts");
+
+            if (discount == null)
+                throw new ArgumentNullException("discount");
+
+            foreach (var dis1 in discounts)
+                if (discount.Id == dis1.Id)
+                    return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get amount from discount amount provider 
+        /// </summary>
+        /// <param name="discount"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public virtual decimal GetDiscountAmountProvider(Discount discount, decimal amount)
+        {
+            var discountAmountProvider = LoadDiscountAmountProviderBySystemName(discount.DiscountPluginName);
+            if (discountAmountProvider == null)
+                return 0;
+            return discountAmountProvider.DiscountAmount(discount, amount);
+        }
+
+
+        public virtual IDiscountAmountProvider LoadDiscountAmountProviderBySystemName(string systemName)
+        {
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IDiscountAmountProvider>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<IDiscountAmountProvider>();
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get all discount amount providers
+        /// </summary>
+        /// <returns></returns>
+        public IList<IDiscountAmountProvider> LoadDiscountAmountProviders()
+        {
+            var discountAmountProviders = _pluginFinder.GetPlugins<IDiscountAmountProvider>();
+            return discountAmountProviders
+                .OrderBy(tp => tp.PluginDescriptor)
+                .ToList();
         }
 
         #endregion

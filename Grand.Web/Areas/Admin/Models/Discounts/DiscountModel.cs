@@ -4,11 +4,8 @@ using Grand.Framework.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 using FluentValidation.Attributes;
 using Grand.Web.Areas.Admin.Validators.Discounts;
-using Grand.Framework;
-using Grand.Framework.Mvc;
 
 namespace Grand.Web.Areas.Admin.Models.Discounts
 {
@@ -19,10 +16,10 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         {
             AvailableDiscountRequirementRules = new List<SelectListItem>();
             DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
+            AvailableDiscountAmountProviders = new List<SelectListItem>();
         }
 
         [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.Name")]
-        
         public string Name { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountType")]
@@ -42,6 +39,12 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
 
         [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountAmount")]
         public decimal DiscountAmount { get; set; }
+
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.CalculateByPlugin")]
+        public bool CalculateByPlugin { get; set; }
+
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountPluginName")]
+        public string DiscountPluginName { get; set; }
 
         [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.MaximumDiscountAmount")]
         [UIHint("DecimalNullable")]
@@ -77,14 +80,12 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         [UIHint("Int32Nullable")]
         public int? MaximumDiscountedQuantity { get; set; }
 
-
         [GrandResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
         public string AddDiscountRequirement { get; set; }
-
         public IList<SelectListItem> AvailableDiscountRequirementRules { get; set; }
-
         public IList<DiscountRequirementMetaInfo> DiscountRequirementMetaInfos { get; set; }
-        
+        public IList<SelectListItem> AvailableDiscountAmountProviders { get; set; }
+
 
         #region Nested classes
 

@@ -716,6 +716,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.AddDiscountRequirement, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableDiscountAmountProviders, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             CreateMap<DiscountModel, Discount>()

@@ -125,10 +125,10 @@ namespace Grand.Services.Orders
                 foreach (var discount in allDiscounts)
                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                discount.DiscountType == DiscountType.AssignedToOrderSubTotal &&
-                               !allowedDiscounts.ContainsDiscount(discount))
+                               !_discountService.ContainsDiscount(allowedDiscounts, discount))
                         allowedDiscounts.Add(discount);
 
-            appliedDiscounts = allowedDiscounts.GetPreferredDiscount(orderSubTotal, out discountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderSubTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;
@@ -156,10 +156,10 @@ namespace Grand.Services.Orders
                 foreach (var discount in allDiscounts)
                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                discount.DiscountType == DiscountType.AssignedToShipping &&
-                               !allowedDiscounts.ContainsDiscount(discount))
+                               !_discountService.ContainsDiscount(allowedDiscounts, discount))
                         allowedDiscounts.Add(discount);
 
-            appliedDiscounts = allowedDiscounts.GetPreferredDiscount(shippingTotal, out shippingDiscountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, shippingTotal, out shippingDiscountAmount);
 
             if (shippingDiscountAmount < decimal.Zero)
                 shippingDiscountAmount = decimal.Zero;
@@ -190,10 +190,10 @@ namespace Grand.Services.Orders
                 foreach (var discount in allDiscounts)
                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                discount.DiscountType == DiscountType.AssignedToOrderTotal &&
-                               !allowedDiscounts.ContainsDiscount(discount))
+                               !_discountService.ContainsDiscount(allowedDiscounts, discount))
                         allowedDiscounts.Add(discount);
 
-            appliedDiscounts = allowedDiscounts.GetPreferredDiscount(orderTotal, out discountAmount);
+            appliedDiscounts = _discountService.GetPreferredDiscount(allowedDiscounts, orderTotal, out discountAmount);
 
             if (discountAmount < decimal.Zero)
                 discountAmount = decimal.Zero;
@@ -203,7 +203,7 @@ namespace Grand.Services.Orders
 
             return discountAmount;
         }
-        
+
         #endregion
 
         #region Methods
@@ -217,13 +217,13 @@ namespace Grand.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="subTotalWithoutDiscount">Sub total (without discount)</param>
         /// <param name="subTotalWithDiscount">Sub total (with discount)</param>
-        public virtual void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart, 
+        public virtual void GetShoppingCartSubTotal(IList<ShoppingCartItem> cart,
             bool includingTax,
             out decimal discountAmount, out List<Discount> appliedDiscounts,
             out decimal subTotalWithoutDiscount, out decimal subTotalWithDiscount)
         {
             SortedDictionary<decimal, decimal> taxRates;
-            GetShoppingCartSubTotal(cart, includingTax, 
+            GetShoppingCartSubTotal(cart, includingTax,
                 out discountAmount, out appliedDiscounts,
                 out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
         }
@@ -255,7 +255,7 @@ namespace Grand.Services.Orders
 
             //get the customer 
             Customer customer = cart.GetCustomer();
-            
+
             //sub totals
             decimal subTotalExclTaxWithoutDiscount = decimal.Zero;
             decimal subTotalInclTaxWithoutDiscount = decimal.Zero;
@@ -269,7 +269,7 @@ namespace Grand.Services.Orders
                 decimal sciInclTax = _taxService.GetProductPrice(product, sciSubTotal, true, customer, out taxRate);
                 subTotalExclTaxWithoutDiscount += sciExclTax;
                 subTotalInclTaxWithoutDiscount += sciInclTax;
-                
+
                 //tax rates
                 decimal sciTax = sciInclTax - sciExclTax;
                 if (taxRate > decimal.Zero && sciTax > decimal.Zero)
@@ -386,7 +386,7 @@ namespace Grand.Services.Orders
                 subTotalWithDiscount = RoundingHelper.RoundPrice(subTotalWithDiscount);
         }
 
-        
+
         /// <summary>
         /// Gets shopping cart additional shipping charge
         /// </summary>
@@ -480,7 +480,7 @@ namespace Grand.Services.Orders
             //free shipping
             if (IsFreeShipping(cart))
                 return decimal.Zero;
-            
+
             //additional shipping charges
             decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
             var adjustedRate = shippingRate + additionalShippingCharge;
@@ -574,7 +574,7 @@ namespace Grand.Services.Orders
                     shippingAddress = customer.ShippingAddress;
 
                 var shippingRateComputationMethods = _shippingService.LoadActiveShippingRateComputationMethods(_storeContext.CurrentStore.Id, cart);
-                
+
                 if (!shippingRateComputationMethods.Any() && !_shippingSettings.AllowPickUpInStore)
                     throw new GrandException("Shipping rate computation method could not be loaded");
 
@@ -583,9 +583,9 @@ namespace Grand.Services.Orders
                     var shippingRateComputationMethod = shippingRateComputationMethods[0];
 
                     bool shippingFromMultipleLocations;
-                    var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(cart, 
-                        shippingAddress, 
-                        _storeContext.CurrentStore.Id, 
+                    var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(cart,
+                        shippingAddress,
+                        _storeContext.CurrentStore.Id,
                         out shippingFromMultipleLocations);
                     decimal? fixedRate = null;
                     foreach (var shippingOptionRequest in shippingOptionRequests)
@@ -600,7 +600,7 @@ namespace Grand.Services.Orders
                             fixedRate += fixedRateTmp.Value;
                         }
                     }
-                    
+
                     if (fixedRate.HasValue)
                     {
                         //adjust shipping rate
@@ -622,7 +622,7 @@ namespace Grand.Services.Orders
                     includingTax,
                     customer,
                     out taxRate);
-                
+
                 //round
                 if (_shoppingCartSettings.RoundPricesDuringCalculation)
                     shippingTotalTaxed = RoundingHelper.RoundPrice(shippingTotalTaxed.Value);
@@ -631,7 +631,7 @@ namespace Grand.Services.Orders
             return shippingTotalTaxed;
         }
 
-        
+
         /// <summary>
         /// Gets tax
         /// </summary>
@@ -678,7 +678,7 @@ namespace Grand.Services.Orders
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
             SortedDictionary<decimal, decimal> orderSubTotalTaxRates;
-            GetShoppingCartSubTotal(cart, false, 
+            GetShoppingCartSubTotal(cart, false,
                 out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscounts,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase,
                 out orderSubTotalTaxRates);
@@ -776,11 +776,11 @@ namespace Grand.Services.Orders
             int redeemedRewardPoints;
             decimal redeemedRewardPointsAmount;
             List<AppliedGiftCard> appliedGiftCards;
-            return GetShoppingCartTotal(cart, 
+            return GetShoppingCartTotal(cart,
                 out discountAmount,
                 out appliedDiscounts,
                 out appliedGiftCards,
-                out redeemedRewardPoints, 
+                out redeemedRewardPoints,
                 out redeemedRewardPointsAmount,
                 useRewardPoints,
                 usePaymentMethodAdditionalFee);
@@ -990,7 +990,7 @@ namespace Grand.Services.Orders
                 result = (int)Math.Ceiling(amount / _rewardPointsSettings.ExchangeRate);
             return result;
         }
- 
+
         /// <summary>
         /// Gets a value indicating whether a customer has minimum amount of reward points to use (if enabled)
         /// </summary>

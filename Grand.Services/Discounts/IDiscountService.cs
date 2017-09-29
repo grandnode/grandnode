@@ -139,5 +139,53 @@ namespace Grand.Services.Discounts
         /// <param name="discountUsageHistory">Discount usage history record</param>
         void DeleteDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
 
+
+        /// <summary>
+        /// Get discount amount from plugin
+        /// </summary>
+        /// <param name="discount"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        decimal GetDiscountAmount(Discount discount, decimal amount);
+
+        /// <summary>
+        /// Get preferred discount
+        /// </summary>
+        /// <param name="discounts"></param>
+        /// <param name="amount"></param>
+        /// <param name="discountAmount"></param>
+        /// <returns></returns>
+        List<Discount> GetPreferredDiscount(IList<Discount> discounts,
+            decimal amount, out decimal discountAmount);
+
+        /// <summary>
+        /// Contains Discount
+        /// </summary>
+        /// <param name="discounts"></param>
+        /// <param name="discount"></param>
+        /// <returns></returns>
+        bool ContainsDiscount(IList<Discount> discounts,
+            Discount discount);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="discount"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        decimal GetDiscountAmountProvider(Discount discount, decimal amount);
+
+        /// <summary>
+        /// Load discount amount provider by systemName
+        /// </summary>
+        /// <param name="systemName"></param>
+        /// <returns></returns>
+        IDiscountAmountProvider LoadDiscountAmountProviderBySystemName(string systemName);
+
+        /// <summary>
+        /// Load discount amount providers
+        /// </summary>
+        /// <returns></returns>
+        IList<IDiscountAmountProvider> LoadDiscountAmountProviders();
     }
 }

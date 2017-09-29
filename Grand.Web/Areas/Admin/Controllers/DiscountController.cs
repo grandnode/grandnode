@@ -117,6 +117,12 @@ namespace Grand.Web.Areas.Admin.Controllers
             foreach (var discountRule in discountRules)
                 model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = discountRule.PluginDescriptor.FriendlyName, Value = discountRule.PluginDescriptor.SystemName });
 
+            //discount amount providers
+            foreach (var item in _discountService.LoadDiscountAmountProviders())
+            {
+                model.AvailableDiscountAmountProviders.Add(new SelectListItem() { Value = item.PluginDescriptor.SystemName, Text = item.PluginDescriptor.FriendlyName });
+            }
+
             if (discount != null)
             {
                 //requirements
@@ -133,6 +139,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         });
                     }
                 }
+                
             }
         }
 
