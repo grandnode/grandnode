@@ -284,5 +284,19 @@
   <LocaleResource Name="VendorReviews.VendorReviewPossibleOnlyAfterPurchasing">
     <Value>Vendor can be reviewed only after purchasing a product from this vendor.</Value>
   </LocaleResource>
-  
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.CalculateByPlugin">
+    <Value>Calculate by plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.CalculateByPlugin.hint">
+    <Value>Check this box if discount amount should be calculated by plugin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPluginName">
+    <Value>Plugin name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPluginName.hint">
+    <Value>Plugin name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPluginName.Required">
+    <Value>Field Plugin name is required</Value>
+  </LocaleResource>
 </Language>

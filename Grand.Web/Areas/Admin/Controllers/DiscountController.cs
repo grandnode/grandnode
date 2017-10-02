@@ -185,7 +185,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 {
                     var discountModel = x.ToModel();
                     discountModel.DiscountTypeName = x.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
-                    discountModel.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+                    discountModel.PrimaryStoreCurrencyCode = x.CalculateByPlugin ? "" : _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
                     discountModel.TimesUsed = _discountService.GetAllDiscountUsageHistory(x.Id, pageSize: 1).TotalCount;
                     return discountModel;
                 }),

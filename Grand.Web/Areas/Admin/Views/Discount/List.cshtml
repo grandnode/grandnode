@@ -109,7 +109,7 @@
                     field: "DiscountAmount",
                     title: "@T("Admin.Promotions.Discounts.Fields.Discount")",
                     width: 200,
-                    template: '# if(UsePercentage) {# #=DiscountPercentage# % #} else {#  #=DiscountAmount# #=PrimaryStoreCurrencyCode# #} #'
+                    template: '# if(!CalculateByPlugin) { if(UsePercentage) {# #=DiscountPercentage# % #} else {#  #=DiscountAmount# #=PrimaryStoreCurrencyCode# #} } # '
                 }, {
                     field: "StartDateUtc",
                     title: "@T("Admin.Promotions.Discounts.Fields.StartDate")",
