@@ -1029,6 +1029,11 @@ footer .newsletter .fa,
 footer .block .fa {
     padding-right: 0px;
 }
+
+.newsletter-result{
+    text-align: center;
+}
+
 footer .fa {
     padding-right: 6px;
 }
