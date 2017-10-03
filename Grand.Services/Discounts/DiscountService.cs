@@ -463,6 +463,10 @@ namespace Grand.Services.Discounts
             //invalid by default
             var result = new DiscountValidationResult();
 
+            //check is enabled
+            if(!discount.IsEnabled)
+                return result;
+
             //check coupon code
             if (discount.RequiresCouponCode)
             {

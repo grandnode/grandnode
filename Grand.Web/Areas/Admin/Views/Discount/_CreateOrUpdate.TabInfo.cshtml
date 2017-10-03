@@ -245,5 +245,15 @@
                 @Html.ValidationMessageFor(model => model.MaximumDiscountedQuantity)
             </div>
         </div>
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.IsEnabled)
+            <div class="col-md-9 col-sm-9">
+                <label class="mt-checkbox mt-checkbox-outline">
+                    @Html.GrandEditorFor(model => model.IsEnabled)
+                    <span></span>
+                </label>
+                @Html.ValidationMessageFor(model => model.IsEnabled)
+            </div>
+        </div>
     </div>
 </div>

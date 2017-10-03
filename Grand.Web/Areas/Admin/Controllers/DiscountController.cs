@@ -126,7 +126,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (discount != null)
             {
                 //requirements
-                foreach (var dr in discount.DiscountRequirements.OrderBy(dr=>dr.Id))
+                foreach (var dr in discount.DiscountRequirements.OrderBy(dr => dr.Id))
                 {
                     var drr = _discountService.LoadDiscountRequirementRuleBySystemName(dr.DiscountRequirementRuleSystemName);
                     if (drr != null)
@@ -139,8 +139,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                         });
                     }
                 }
-                
+
             }
+            else
+                model.IsEnabled = true;
         }
 
         #endregion

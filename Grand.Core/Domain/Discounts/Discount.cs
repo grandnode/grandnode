@@ -93,6 +93,11 @@ namespace Grand.Core.Domain.Discounts
         public int? MaximumDiscountedQuantity { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether discount is enabled
+        /// </summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets the discount type
         /// </summary>
         public DiscountType DiscountType

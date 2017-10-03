@@ -86,6 +86,8 @@ namespace Grand.Web.Areas.Admin.Models.Discounts
         public IList<DiscountRequirementMetaInfo> DiscountRequirementMetaInfos { get; set; }
         public IList<SelectListItem> AvailableDiscountAmountProviders { get; set; }
 
+        [GrandResourceDisplayName("Admin.Promotions.Discounts.Fields.IsEnabled")]
+        public bool IsEnabled { get; set; }
 
         #region Nested classes
 

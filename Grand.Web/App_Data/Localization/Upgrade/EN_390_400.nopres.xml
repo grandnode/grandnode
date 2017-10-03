@@ -302,4 +302,10 @@
   <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToAllProducts">
     <Value>Assigned to all products</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsEnabled">
+    <Value>Discount is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsEnabled.Hint">
+    <Value>Indicates whether the discount is enabled.</Value>
+  </LocaleResource>
 </Language>
