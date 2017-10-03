@@ -53,17 +53,17 @@ namespace Grand.Services.Discounts
         void DeleteDiscountRequirement(DiscountRequirement discountRequirement);
 
         /// <summary>
-        /// Load discount requirement rule by system name
+        /// Load discount plugin by system name
         /// </summary>
         /// <param name="systemName">System name</param>
-        /// <returns>Found discount requirement rule</returns>
-        IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName);
+        /// <returns>Discount plugin</returns>
+        IDiscount LoadDiscountPluginBySystemName(string systemName);
 
         /// <summary>
-        /// Load all discount requirement rules
+        /// Load all discount plugins
         /// </summary>
         /// <returns>Discount requirement rules</returns>
-        IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules();
+        IList<IDiscount> LoadAllDiscountPlugins();
 
 
         /// <summary>

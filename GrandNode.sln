@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{F2418F56-9620-4BA3-9078-D9732EC8DD48}"
 EndProject
@@ -33,15 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Shipping.Shipp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.CashOnDelivery", "Plugins\Grand.Plugin.Payments.CashOnDelivery\Grand.Plugin.Payments.CashOnDelivery.csproj", "{E11097D1-0A02-4E57-8B0D-3998C9E260BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRules.CustomerRoles", "Plugins\Grand.Plugin.DiscountRules.CustomerRoles\Grand.Plugin.DiscountRules.CustomerRoles.csproj", "{340E63D8-F70C-4F73-9F7F-434BEA80250B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.CheckMoneyOrder", "Plugins\Grand.Plugin.Payments.CheckMoneyOrder\Grand.Plugin.Payments.CheckMoneyOrder.csproj", "{21796F6D-BE29-4820-BDB9-302B5911349E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRules.HasAllProducts", "Plugins\Grand.Plugin.DiscountRules.HasAllProducts\Grand.Plugin.DiscountRules.HasAllProducts.csproj", "{EF7D6994-F3B6-483F-8EE3-41162D7321D9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRules.HadSpentAmount", "Plugins\Grand.Plugin.DiscountRules.HadSpentAmount\Grand.Plugin.DiscountRules.HadSpentAmount.csproj", "{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRules.HasOneProduct", "Plugins\Grand.Plugin.DiscountRules.HasOneProduct\Grand.Plugin.DiscountRules.HasOneProduct.csproj", "{43EC414B-704B-482C-A06E-57531ADED9AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Payments.PayPalStandard", "Plugins\Grand.Plugin.Payments.PayPalStandard\Grand.Plugin.Payments.PayPalStandard.csproj", "{B6C1CD2E-8A0F-4E9E-A50F-BCD32565C4DF}"
 EndProject
@@ -60,6 +52,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Shipping.FixedRateShipping", "Plugins\Grand.Plugin.Shipping.FixedRateShipping\Grand.Plugin.Shipping.FixedRateShipping.csproj", "{EFEF8822-18EE-4DE9-964B-A5DB6A0641CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.Widgets.GoogleAnalytics", "Plugins\Grand.Plugin.Widgets.GoogleAnalytics\Grand.Plugin.Widgets.GoogleAnalytics.csproj", "{87C1BE44-52AF-4F46-B065-8356D59CEB13}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grand.Plugin.DiscountRequirements.Standard", "Plugins\Grand.Plugin.DiscountRequirements.Standard\Grand.Plugin.DiscountRequirements.Standard.csproj", "{B2A527D1-C59E-4B08-B17D-F68B1526FAEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,26 +109,10 @@ Global
 		{E11097D1-0A02-4E57-8B0D-3998C9E260BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E11097D1-0A02-4E57-8B0D-3998C9E260BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E11097D1-0A02-4E57-8B0D-3998C9E260BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{340E63D8-F70C-4F73-9F7F-434BEA80250B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{340E63D8-F70C-4F73-9F7F-434BEA80250B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{340E63D8-F70C-4F73-9F7F-434BEA80250B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{340E63D8-F70C-4F73-9F7F-434BEA80250B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{21796F6D-BE29-4820-BDB9-302B5911349E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{21796F6D-BE29-4820-BDB9-302B5911349E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21796F6D-BE29-4820-BDB9-302B5911349E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21796F6D-BE29-4820-BDB9-302B5911349E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF7D6994-F3B6-483F-8EE3-41162D7321D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF7D6994-F3B6-483F-8EE3-41162D7321D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF7D6994-F3B6-483F-8EE3-41162D7321D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF7D6994-F3B6-483F-8EE3-41162D7321D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43EC414B-704B-482C-A06E-57531ADED9AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43EC414B-704B-482C-A06E-57531ADED9AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43EC414B-704B-482C-A06E-57531ADED9AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43EC414B-704B-482C-A06E-57531ADED9AF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B6C1CD2E-8A0F-4E9E-A50F-BCD32565C4DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B6C1CD2E-8A0F-4E9E-A50F-BCD32565C4DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6C1CD2E-8A0F-4E9E-A50F-BCD32565C4DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -167,6 +145,10 @@ Global
 		{87C1BE44-52AF-4F46-B065-8356D59CEB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87C1BE44-52AF-4F46-B065-8356D59CEB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87C1BE44-52AF-4F46-B065-8356D59CEB13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2A527D1-C59E-4B08-B17D-F68B1526FAEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2A527D1-C59E-4B08-B17D-F68B1526FAEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2A527D1-C59E-4B08-B17D-F68B1526FAEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2A527D1-C59E-4B08-B17D-F68B1526FAEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,11 +166,7 @@ Global
 		{2B85C079-5B43-42A9-9D7F-373E4B7AC4C7} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{699A1235-B623-4D15-8604-60935CB24F0A} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{E11097D1-0A02-4E57-8B0D-3998C9E260BB} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
-		{340E63D8-F70C-4F73-9F7F-434BEA80250B} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{21796F6D-BE29-4820-BDB9-302B5911349E} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
-		{EF7D6994-F3B6-483F-8EE3-41162D7321D9} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
-		{A2F1BA82-9AF3-4933-9D1B-FEF67FB1ABA4} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
-		{43EC414B-704B-482C-A06E-57531ADED9AF} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{B6C1CD2E-8A0F-4E9E-A50F-BCD32565C4DF} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{C45A4DE0-62AC-4F82-9320-31FEA63EAAC2} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{F39AA2D5-FC27-4CDA-840A-9C0CDC7E6D54} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
@@ -197,6 +175,7 @@ Global
 		{B7E666B3-2B28-493F-B980-9CE8E2B50732} = {02A095EA-356B-4419-86B4-E7893017CBF2}
 		{EFEF8822-18EE-4DE9-964B-A5DB6A0641CF} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 		{87C1BE44-52AF-4F46-B065-8356D59CEB13} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
+		{B2A527D1-C59E-4B08-B17D-F68B1526FAEC} = {615BCD39-09A7-4924-AB80-AA4032D477D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {65BA1180-F5CC-42E1-B689-71E14D588393}

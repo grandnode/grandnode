@@ -1,0 +1,53 @@
+﻿@{
+    Layout = "";
+}
+@model Grand.Plugin.DiscountRequirements.CustomerRoles.Models.RequirementModel
+@using Grand.Framework;
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#savecustomerrolesrequirement@(Model.RequirementId)').click(function () {
+            var customerRoleId = $("#@Html.FieldIdFor(model => model.CustomerRoleId)").val();
+            var discountId = '@Model.DiscountId';
+            var requirementId = '@Model.RequirementId';
+
+			if(customerRoleId == "")return;
+
+            var postData = {
+                discountId: discountId,
+                discountRequirementId: requirementId,
+                customerRoleId: customerRoleId
+            };
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("Configure", "CustomerRoles"))",
+                data: postData,
+                success: function (data) {
+                    $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
+                    //notify parent if it's a new requirement
+                    @if (String.IsNullOrEmpty(Model.RequirementId))
+                    {
+                        <text>$("#discountRequirementContainer").trigger('nopnewdiscountruleadded', [data.NewRequirementId]);</text>
+                    }
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
+                }
+            });
+        });
+    });
+</script>
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.GrandLabelFor(model => model.CustomerRoleId)
+        <div class="col-md-9 col-sm-9">
+            @Html.GrandDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+            <div class="group-btn btn-group-devided margin-top-10">
+                <input type="button" id="savecustomerrolesrequirement@(Model.RequirementId)" class="btn default" value="@T("Admin.Common.Save")" />
+            </div>
+            <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
+        </div>
+    </div>
+</div>

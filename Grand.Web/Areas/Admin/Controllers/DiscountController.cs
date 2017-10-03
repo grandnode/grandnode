@@ -113,9 +113,10 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
-            var discountRules = _discountService.LoadAllDiscountRequirementRules();
-            foreach (var discountRule in discountRules)
-                model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = discountRule.PluginDescriptor.FriendlyName, Value = discountRule.PluginDescriptor.SystemName });
+            var discountPlugins = _discountService.LoadAllDiscountPlugins();
+            foreach (var discountPlugin in discountPlugins)
+                foreach (var discountRule in discountPlugin.GetRequirementRules())
+                    model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = discountRule.FriendlyName, Value = discountRule.SystemName });
 
             //discount amount providers
             foreach (var item in _discountService.LoadDiscountAmountProviders())
@@ -128,18 +129,20 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //requirements
                 foreach (var dr in discount.DiscountRequirements.OrderBy(dr => dr.Id))
                 {
-                    var drr = _discountService.LoadDiscountRequirementRuleBySystemName(dr.DiscountRequirementRuleSystemName);
-                    if (drr != null)
+                    var discountPlugin = _discountService.LoadDiscountPluginBySystemName(dr.DiscountRequirementRuleSystemName);
+                    var discountRequirement = discountPlugin.GetRequirementRules().Single(x => x.SystemName == dr.DiscountRequirementRuleSystemName);
                     {
-                        model.DiscountRequirementMetaInfos.Add(new DiscountModel.DiscountRequirementMetaInfo
+                        if (discountPlugin != null)
                         {
-                            DiscountRequirementId = dr.Id,
-                            RuleName = drr.PluginDescriptor.FriendlyName,
-                            ConfigurationUrl = GetRequirementUrlInternal(drr, discount, dr.Id)
-                        });
+                            model.DiscountRequirementMetaInfos.Add(new DiscountModel.DiscountRequirementMetaInfo
+                            {
+                                DiscountRequirementId = dr.Id,
+                                RuleName = discountRequirement.FriendlyName,
+                                ConfigurationUrl = GetRequirementUrlInternal(discountRequirement, discount, dr.Id)
+                            });
+                        }
                     }
                 }
-
             }
             else
                 model.IsEnabled = true;
@@ -367,16 +370,18 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
-            
-            var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(systemName);
-            if (discountRequirementRule == null)
+
+            var discountPlugin = _discountService.LoadDiscountPluginBySystemName(systemName);
+
+            if (discountPlugin == null)
                 throw new ArgumentException("Discount requirement rule could not be loaded");
 
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("Discount could not be loaded");
 
-            string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
+            var singleRequirement = discountPlugin.GetRequirementRules().Single(x => x.SystemName == systemName);
+            string url = GetRequirementUrlInternal(singleRequirement, discount, discountRequirementId);
             return Json(new { url = url });
         }
 
@@ -393,12 +398,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             if (discountRequirement == null)
                 throw new ArgumentException("Discount requirement could not be loaded");
 
-            var discountRequirementRule = _discountService.LoadDiscountRequirementRuleBySystemName(discountRequirement.DiscountRequirementRuleSystemName);
-            if (discountRequirementRule == null)
+            var discountPlugin = _discountService.LoadDiscountPluginBySystemName(discountRequirement.DiscountRequirementRuleSystemName);
+            if (discountPlugin == null)
                 throw new ArgumentException("Discount requirement rule could not be loaded");
 
+            var discountRequirementRule = discountPlugin.GetRequirementRules().First(x => x.SystemName == discountRequirement.DiscountRequirementRuleSystemName);
             string url = GetRequirementUrlInternal(discountRequirementRule, discount, discountRequirementId);
-            string ruleName = discountRequirementRule.PluginDescriptor.FriendlyName;
+            string ruleName = discountRequirementRule.FriendlyName;
+
             return Json(new { url = url, ruleName = ruleName });
         }
 

@@ -284,7 +284,7 @@ namespace Grand.Services.Discounts
                     query = query.Where(d =>
                         (!d.StartDateUtc.HasValue || d.StartDateUtc <= nowUtc)
                         && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc)
-                        );
+                        && !d.IsEnabled);
                 }
                 if (!String.IsNullOrEmpty(couponCode))
                 {
@@ -373,16 +373,21 @@ namespace Grand.Services.Discounts
         }
 
         /// <summary>
-        /// Load discount requirement rule by system name
+        /// Load discount by system name
         /// </summary>
         /// <param name="systemName">System name</param>
-        /// <returns>Found discount requirement rule</returns>
-        public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName)
+        /// <returns>Found discount</returns>
+        public virtual IDiscount LoadDiscountPluginBySystemName(string systemName)
         {
-            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IDiscountRequirementRule>(systemName);
-            if (descriptor != null)
-                return descriptor.Instance<IDiscountRequirementRule>();
+            var discountPlugins = LoadAllDiscountPlugins();
+            foreach (var discountPlugin in discountPlugins)
+            {
+                var rules = discountPlugin.GetRequirementRules();
 
+                if (!rules.Any(x => x.SystemName == systemName))
+                    continue;
+                return discountPlugin;
+            }
             return null;
         }
 
@@ -390,11 +395,12 @@ namespace Grand.Services.Discounts
         /// Load all discount requirement rules
         /// </summary>
         /// <returns>Discount requirement rules</returns>
-        public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules()
+        public virtual IList<IDiscount> LoadAllDiscountPlugins()
         {
-            var rules = _pluginFinder.GetPlugins<IDiscountRequirementRule>();
-            return rules.ToList();
+            var discountPlugins = _pluginFinder.GetPlugins<IDiscount>();
+            return discountPlugins.ToList();
         }
+
 
         /// <summary>
         /// Get discount by coupon code
@@ -565,14 +571,12 @@ namespace Grand.Services.Discounts
             foreach (var req in requirements)
             {
                 //load a plugin
-                var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(req.SystemName);
-                if (requirementRulePlugin == null)
+                var discountRequirementPlugin = LoadDiscountPluginBySystemName(req.SystemName);
+
+                if (discountRequirementPlugin == null)
                     continue;
 
-                //if (!_pluginFinder.AuthorizedForUser(requirementRulePlugin.PluginDescriptor, _workContext.CurrentCustomer))
-                //    continue;
-
-                if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
+                if (!_pluginFinder.AuthenticateStore(discountRequirementPlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
                     continue;
 
                 var ruleRequest = new DiscountRequirementValidationRequest
@@ -582,7 +586,9 @@ namespace Grand.Services.Discounts
                     Customer = customer,
                     Store = _storeContext.CurrentStore
                 };
-                var ruleResult = requirementRulePlugin.CheckRequirement(ruleRequest);
+
+                var singleRequirementRule = discountRequirementPlugin.GetRequirementRules().Single(x => x.SystemName == req.SystemName);
+                var ruleResult = singleRequirementRule.CheckRequirement(ruleRequest);
                 if (!ruleResult.IsValid)
                 {
                     result.UserError = ruleResult.UserError;
