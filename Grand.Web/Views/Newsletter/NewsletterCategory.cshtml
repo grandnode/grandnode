@@ -13,7 +13,7 @@
                 @foreach (var category in Model.NewsletterCategories)
                 {
                     <label for="Category_@(category.Id)" class="custom-control custom-checkbox col-12">
-                        <input id="Category_@(category.Id)"  name="Category_@(category.Id)" type="checkbox" class="custom-control-input">
+                        <input id="Category_@(category.Id)"  name="Category_@(category.Id)" type="checkbox" class="custom-control-input" @(category.Selected ? "checked": "")>
                         <span class="custom-control-indicator"></span>
                         <span class="custom-control-description">@category.Name</span>
                     </label>
