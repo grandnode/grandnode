@@ -4,9 +4,6 @@
 @using Grand.Web.Infrastructure.Installation;
 @{
     Layout = null;
-    //localization service for installation service
-    //we do not use standard localization because database is not installed yet
-    //locale resources for installation process are stored into \App_Data\Localization\Installation directory
     var ILS = EngineContext.Current.Resolve<IInstallationLocalizationService>();
 }
 <!DOCTYPE html>
@@ -20,9 +17,9 @@
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/public.common.js")" type="text/javascript"></script>
 
-    <link href="@Url.Content("~/Content/bootstrap/bootstrap.css")" rel="stylesheet">
+    <link href="@Url.Content("~/Content/bootstrap/bootstrap.min.css")" rel="stylesheet">
     <script src="@Url.Content("~/Content/bootstrap/tether.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Content/bootstrap/bootstrap.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Content/bootstrap/bootstrap.min.js")" type="text/javascript"></script>
    
 
 </head>
