@@ -1388,10 +1388,10 @@ namespace Grand.Services.Customers
         /// <returns>Customer product price</returns>
         public virtual decimal? GetPriceByCustomerProduct(string customerId, string productId)
         {
-            var query = from pp in _customerProductPriceRepository.Table
-                        where pp.CustomerId == customerId && pp.ProductId == productId
-                        select pp;
-            var productprice = query.FirstOrDefault();
+            var builder = Builders<CustomerProductPrice>.Filter;
+            var filter = builder.Eq(x => x.CustomerId, customerId);
+            filter = filter & builder.Eq(x => x.ProductId, productId);
+            var productprice = _customerProductPriceRepository.Collection.Find(filter).FirstOrDefault();
             if (productprice == null)
                 return null;
             else
