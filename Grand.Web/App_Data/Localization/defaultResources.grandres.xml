@@ -14688,6 +14688,9 @@
   <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountLimitationType.Unlimited">
     <Value>Unlimited</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToAllProducts">
+    <Value>Assigned to all products</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToCategories">
     <Value>Assigned to categories</Value>
   </LocaleResource>

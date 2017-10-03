@@ -108,14 +108,27 @@ namespace Grand.Services.Catalog
                     var discount = _discountService.GetDiscountById(appliedDiscount);
                     if (discount != null)
                         if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                            discount.DiscountType == DiscountType.AssignedToSkus &&
-                            !_discountService.ContainsDiscount(allowedDiscounts, discount))
+                            discount.DiscountType == DiscountType.AssignedToSkus)
                             allowedDiscounts.Add(discount);
                 }
             }
             return allowedDiscounts;
         }
 
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToAllProduct(Product product, Customer customer)
+        {
+            var allowedDiscounts = new List<Discount>();
+            if (_catalogSettings.IgnoreDiscounts)
+                return allowedDiscounts;
+
+            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToAllProducts);
+            foreach (var discount in discounts)
+            {
+                if (_discountService.ValidateDiscount(discount, customer).IsValid)
+                    allowedDiscounts.Add(discount);
+            }
+            return allowedDiscounts;
+        }
 
 
         /// <summary>
@@ -130,8 +143,6 @@ namespace Grand.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-
-
             foreach (var productCategory in product.ProductCategories)
             {
                 var category = _categoryService.GetCategoryById(productCategory.CategoryId);
@@ -142,13 +153,11 @@ namespace Grand.Services.Catalog
                         var discount = _discountService.GetDiscountById(appliedDiscount);
                         if (discount != null)
                             if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                    discount.DiscountType == DiscountType.AssignedToCategories &&
-                                    !_discountService.ContainsDiscount(allowedDiscounts, discount))
+                                    discount.DiscountType == DiscountType.AssignedToCategories)
                                 allowedDiscounts.Add(discount);
                     }
                 }
             }
-
             return allowedDiscounts;
         }
 
@@ -174,8 +183,7 @@ namespace Grand.Services.Catalog
                         var discount = _discountService.GetDiscountById(appliedDiscount);
                         if (discount != null)
                             if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                     discount.DiscountType == DiscountType.AssignedToManufacturers &&
-                                     !_discountService.ContainsDiscount(allowedDiscounts, discount))
+                                     discount.DiscountType == DiscountType.AssignedToManufacturers)
                                 allowedDiscounts.Add(discount);
                     }
                 }
@@ -207,8 +215,7 @@ namespace Grand.Services.Catalog
                             var discount = _discountService.GetDiscountById(appliedDiscount);
                             if (discount != null)
                                 if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                         discount.DiscountType == DiscountType.AssignedToVendors &&
-                                         !_discountService.ContainsDiscount(allowedDiscounts, discount))
+                                         discount.DiscountType == DiscountType.AssignedToVendors)
                                     allowedDiscounts.Add(discount);
                         }
                     }
@@ -248,8 +255,7 @@ namespace Grand.Services.Catalog
                                 var discount = _discountService.GetDiscountById(appliedDiscount);
                                 if (discount != null)
                                     if (_discountService.ValidateDiscount(discount, customer).IsValid &&
-                                             discount.DiscountType == DiscountType.AssignedToStores &&
-                                             !_discountService.ContainsDiscount(allowedDiscounts, discount))
+                                             discount.DiscountType == DiscountType.AssignedToStores)
                                         allowedDiscounts.Add(discount);
                             }
                         }
@@ -273,6 +279,11 @@ namespace Grand.Services.Catalog
 
             //discounts applied to products
             foreach (var discount in GetAllowedDiscountsAppliedToProduct(product, customer))
+                if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
+                    allowedDiscounts.Add(discount);
+
+            //discounts applied to all products
+            foreach (var discount in GetAllowedDiscountsAppliedToAllProduct(product, customer))
                 if (!_discountService.ContainsDiscount(allowedDiscounts, discount))
                     allowedDiscounts.Add(discount);
 

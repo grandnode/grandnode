@@ -37,5 +37,9 @@ namespace Grand.Core.Domain.Discounts
         /// Assigned to order subtotal
         /// </summary>
         AssignedToOrderSubTotal = 20,
+        /// <summary>
+        /// Assigned to all product
+        /// </summary>
+        AssignedToAllProducts = 30,
     }
 }

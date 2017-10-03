@@ -299,4 +299,7 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.DiscountPluginName.Required">
     <Value>Field Plugin name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Grand.Core.Domain.Discounts.DiscountType.AssignedToAllProducts">
+    <Value>Assigned to all products</Value>
+  </LocaleResource>
 </Language>
