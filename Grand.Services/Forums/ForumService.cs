@@ -582,7 +582,10 @@ namespace Grand.Services.Forums
             if (searchKeywords && searchPostText)
             {
                 var query1 = (from fp in _forumPostRepository.Table
-                              where fp.Text.ToLower().Contains(keywords.ToLower())
+                              where
+                              (forumId == "" || fp.ForumId == forumId) &&
+                              (customerId == "" || fp.CustomerId == customerId) &&
+                              (fp.Text.ToLower().Contains(keywords.ToLower()))
                               select fp.TopicId).ToList();
                 topicIds.AddRange(query1);
             }
@@ -600,9 +603,9 @@ namespace Grand.Services.Forums
                          select ft.Id).ToList();
 
             topicIds.AddRange(query2);
-
+            var _topicIds = topicIds.Distinct();
             var query3 = from ft in _forumTopicRepository.Table
-                         where topicIds.Contains(ft.Id)
+                         where _topicIds.Contains(ft.Id)
                          orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.Id descending
                          select ft;
 

@@ -12046,10 +12046,10 @@
     <Value>If checked, this discount can be used with other ones simultaneously. Please note that this feature works only for discounts with the same discount type. Right now discounts with distinct types are already cumulative.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsEnabled">
-    <Value>Discount is enabled.</Value>
+    <Value>Is enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsEnabled.Hint">
-    <Value>Indicates whether the discount is enabled.</Value>
+    <Value>Indicates whether the discount is enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.LimitationTimes">
     <Value>N times</Value>
@@ -15171,7 +15171,7 @@
   <LocaleResource Name="Forum.Search">
     <Value>Search Forums</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.Search.AdvancedSearch">
+  <LocaleResource Name="Forum.Search.AdvanceSearch">
     <Value>Advanced search</Value>
   </LocaleResource>
   <LocaleResource Name="Forum.Search.LimitResultsToPrevious">

@@ -303,9 +303,12 @@
     <Value>Assigned to all products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsEnabled">
-    <Value>Discount is enabled.</Value>
+    <Value>Is enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.IsEnabled.Hint">
-    <Value>Indicates whether the discount is enabled.</Value>
+    <Value>Indicates whether the discount is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Search.AdvanceSearch">
+    <Value>Advanced search</Value>
   </LocaleResource>
 </Language>
