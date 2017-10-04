@@ -56,7 +56,7 @@ namespace Grand.Web.Controllers
 
         #region Methods
 
-        public virtual IActionResult Index(int? page, string tab)
+        public virtual IActionResult Index(int? pageNumber, string tab)
         {
             if (!_forumSettings.AllowPrivateMessages)
             {
@@ -75,15 +75,15 @@ namespace Grand.Web.Controllers
             switch (tab)
             {
                 case "inbox":
-                    if (page.HasValue)
+                    if (pageNumber.HasValue)
                     {
-                        inboxPage = page.Value;
+                        inboxPage = pageNumber.Value;
                     }
                     break;
                 case "sent":
-                    if (page.HasValue)
+                    if (pageNumber.HasValue)
                     {
-                        sentItemsPage = page.Value;
+                        sentItemsPage = pageNumber.Value;
                     }
                     sentItemsTabSelected = true;
                     break;

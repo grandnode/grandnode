@@ -68,13 +68,13 @@ namespace Grand.Web.Controllers
         }
 
        
-        public virtual IActionResult ActiveDiscussions(string forumId = "", int page = 1)
+        public virtual IActionResult ActiveDiscussions(string forumId = "", int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
-            var model = _boardsWebService.PrepareActiveDiscussions(forumId, page);
+            var model = _boardsWebService.PrepareActiveDiscussions(forumId, pageNumber);
             return View(model);
         }
 
@@ -135,7 +135,7 @@ namespace Grand.Web.Controllers
             return View(model);
         }
 
-        public virtual IActionResult Forum(string id, int page = 1)
+        public virtual IActionResult Forum(string id, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -146,7 +146,7 @@ namespace Grand.Web.Controllers
 
             if (forum != null)
             {
-                var model = _boardsWebService.PrepareForumPage(forum, page);
+                var model = _boardsWebService.PrepareForumPage(forum, pageNumber);
                 return View(model);
             }
             return RedirectToRoute("Boards");
@@ -249,7 +249,7 @@ namespace Grand.Web.Controllers
             return Json(new { Subscribed = subscribed, Text = returnText, Error = false });
         }
 
-        public virtual IActionResult Topic(string id, int page = 1)
+        public virtual IActionResult Topic(string id, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
@@ -260,8 +260,8 @@ namespace Grand.Web.Controllers
 
             if (forumTopic != null)
             {
-                var model = _boardsWebService.PrepareForumTopicPage(forumTopic, page);
-                if (model == null && page > 1)
+                var model = _boardsWebService.PrepareForumTopicPage(forumTopic, pageNumber);
+                if (model == null && pageNumber > 1)
                 {
                     return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
                 }
@@ -1080,18 +1080,18 @@ namespace Grand.Web.Controllers
         }
 
         public virtual IActionResult Search(string searchterms, bool? adv, string forumId,
-            string within, string limitDays, int page = 1)
+            string within, string limitDays, int pageNumber = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
-            var model = _boardsWebService.PrepareSearch(searchterms, adv, forumId, within, limitDays, page);
+            var model = _boardsWebService.PrepareSearch(searchterms, adv, forumId, within, limitDays, pageNumber);
             return View(model);
         }
 
 
-        public virtual IActionResult CustomerForumSubscriptions(int? page)
+        public virtual IActionResult CustomerForumSubscriptions(int? pageNumber)
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
             {
@@ -1099,9 +1099,9 @@ namespace Grand.Web.Controllers
             }
 
             int pageIndex = 0;
-            if (page > 0)
+            if (pageNumber > 0)
             {
-                pageIndex = page.Value - 1;
+                pageIndex = pageNumber.Value - 1;
             }
             var model = _boardsWebService.PrepareCustomerForumSubscriptions(pageIndex);
             return View(model);

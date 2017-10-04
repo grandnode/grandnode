@@ -21,7 +21,7 @@
                 @if (Model.ForumsEnabled)
                 {
                     <div id="tab2" class="tab-pane active" role="tabpanel">
-                        @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, page = Model.PostsPage })
+                        @await Component.InvokeAsync("ProfilePosts", new { customerProfileId = Model.CustomerProfileId, pageNumber = Model.PostsPage })
                     </div>
                 }
         </div>

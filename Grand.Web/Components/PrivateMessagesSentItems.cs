@@ -37,17 +37,17 @@ namespace Grand.Web.ViewComponents
             this._dateTimeHelper = dateTimeHelper;
         }
 
-        public IViewComponentResult Invoke(int page, string tab)
+        public IViewComponentResult Invoke(int pageNumber, string tab)
         {
-            if (page > 0)
+            if (pageNumber > 0)
             {
-                page -= 1;
+                pageNumber -= 1;
             }
 
             var pageSize = _forumSettings.PrivateMessagesPageSize;
 
             var list = _forumService.GetAllPrivateMessages(_storeContext.CurrentStore.Id,
-                _workContext.CurrentCustomer.Id, "", null, false, null, string.Empty, page, pageSize);
+                _workContext.CurrentCustomer.Id, "", null, false, null, string.Empty, pageNumber, pageSize);
 
             var sentItems = new List<PrivateMessageModel>();
 
@@ -80,7 +80,7 @@ namespace Grand.Web.ViewComponents
                 ShowTotalSummary = false,
                 RouteActionName = "PrivateMessagesPaged",
                 UseRouteLinks = true,
-                RouteValues = new PrivateMessageRouteValues { page = page, tab = tab }
+                RouteValues = new PrivateMessageRouteValues { pageNumber = pageNumber, tab = tab }
             };
 
             var model = new PrivateMessageListModel

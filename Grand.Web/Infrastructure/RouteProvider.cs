@@ -293,7 +293,7 @@ namespace Grand.Web.Infrastructure
                             "backinstocksubscriptions/manage",
                             new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
             routeBuilder.MapLocalizedRoute("CustomerBackInStockSubscriptionsPaged",
-                            "backinstocksubscriptions/manage/{page}",
+                            "backinstocksubscriptions/manage/{pageNumber}",
                             new { controller = "BackInStockSubscription", action = "CustomerSubscriptions" });
             routeBuilder.MapLocalizedRoute("CustomerRewardPoints",
                             "rewardpoints/history",
@@ -311,7 +311,7 @@ namespace Grand.Web.Infrastructure
                             "boards/forumsubscriptions",
                             new { controller = "Boards", action = "CustomerForumSubscriptions" });
             routeBuilder.MapLocalizedRoute("CustomerForumSubscriptionsPaged",
-                            "boards/forumsubscriptions/{page}",
+                            "boards/forumsubscriptions/{pageNumber}",
                             new { controller = "Boards", action = "CustomerForumSubscriptions" });
             routeBuilder.MapLocalizedRoute("CustomerAddressEdit",
                             "customer/addressedit/{addressId}",
@@ -325,7 +325,7 @@ namespace Grand.Web.Infrastructure
                             new { controller = "Profile", action = "Index" });
 
             routeBuilder.MapLocalizedRoute("CustomerProfilePaged",
-                            "profile/{id}/page/{page}",
+                            "profile/{id}/page/{pageNumber}",
                             new { controller = "Profile", action = "Index" });
 
             //orders
@@ -436,7 +436,7 @@ namespace Grand.Web.Infrastructure
                             "boards/activediscussions",
                             new { controller = "Boards", action = "ActiveDiscussions" });
             routeBuilder.MapLocalizedRoute("ActiveDiscussionsPaged",
-                            "boards/activediscussions/page/{page}",
+                            "boards/activediscussions/page/{pageNumber}",
                             new { controller = "Boards", action = "ActiveDiscussions" });
             routeBuilder.MapLocalizedRoute("ActiveDiscussionsRSS",
                             "boards/activediscussionsrss",
@@ -472,7 +472,7 @@ namespace Grand.Web.Infrastructure
                             "boards/topic/{id}/{slug}",
                             new { controller = "Boards", action = "Topic" });
             routeBuilder.MapLocalizedRoute("TopicSlugPaged",
-                            "boards/topic/{id}/{slug}/page/{page}",
+                            "boards/topic/{id}/{slug}/page/{pageNumber}",
                             new { controller = "Boards", action = "Topic" });
             routeBuilder.MapLocalizedRoute("ForumWatch",
                             "boards/forumwatch/{id}",
@@ -484,7 +484,7 @@ namespace Grand.Web.Infrastructure
                             "boards/forum/{id}/{slug}",
                             new { controller = "Boards", action = "Forum" });
             routeBuilder.MapLocalizedRoute("ForumSlugPaged",
-                            "boards/forum/{id}/{slug}/page/{page}",
+                            "boards/forum/{id}/{slug}/page/{pageNumber}",
                             new { controller = "Boards", action = "Forum" });
             routeBuilder.MapLocalizedRoute("ForumGroupSlug",
                             "boards/forumgroup/{id}/{slug}",
@@ -498,7 +498,7 @@ namespace Grand.Web.Infrastructure
                             "privatemessages/{tab?}",
                             new { controller = "PrivateMessages", action = "Index" });
             routeBuilder.MapLocalizedRoute("PrivateMessagesPaged",
-                            "privatemessages/{tab}/page/{page}",
+                            "privatemessages/{tab}/page/{pageNumber}",
                             new { controller = "PrivateMessages", action = "Index" });
             routeBuilder.MapLocalizedRoute("PrivateMessagesInbox",
                             "inboxupdate",

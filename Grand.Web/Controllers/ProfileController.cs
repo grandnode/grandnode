@@ -53,7 +53,7 @@ namespace Grand.Web.Controllers
             this._mediaSettings = mediaSettings;
         }
 
-        public virtual IActionResult Index(string id, int? page)
+        public virtual IActionResult Index(string id, int? pageNumber)
         {
             if (!_customerSettings.AllowViewingProfiles)
             {
@@ -75,9 +75,9 @@ namespace Grand.Web.Controllers
             bool pagingPosts = false;
             int postsPage = 0;
 
-            if (page.HasValue)
+            if (pageNumber.HasValue)
             {
-                postsPage = page.Value;
+                postsPage = pageNumber.Value;
                 pagingPosts = true;
             }
 

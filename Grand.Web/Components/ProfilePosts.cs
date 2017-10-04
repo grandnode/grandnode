@@ -59,7 +59,7 @@ namespace Grand.Web.ViewComponents
             this._countryService = countryService;
         }
 
-        public IViewComponentResult Invoke(string customerProfileId, int page)
+        public IViewComponentResult Invoke(string customerProfileId, int pageNumber)
         {
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
@@ -67,14 +67,14 @@ namespace Grand.Web.ViewComponents
                 return Content("");
             }
 
-            if (page > 0)
+            if (pageNumber > 0)
             {
-                page -= 1;
+                pageNumber -= 1;
             }
 
             var pageSize = _forumSettings.LatestCustomerPostsPageSize;
 
-            var list = _forumService.GetAllPosts("", customer.Id, string.Empty, false, page, pageSize);
+            var list = _forumService.GetAllPosts("", customer.Id, string.Empty, false, pageNumber, pageSize);
 
             var latestPosts = new List<PostsModel>();
 
@@ -108,7 +108,7 @@ namespace Grand.Web.ViewComponents
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerProfilePaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { page = page, id = customerProfileId }
+                RouteValues = new RouteValues { pageNumber = pageNumber, id = customerProfileId }
             };
 
             var model = new ProfilePostsModel

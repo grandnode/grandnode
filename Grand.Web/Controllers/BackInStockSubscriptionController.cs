@@ -129,7 +129,7 @@ namespace Grand.Web.Controllers
 
 
         // My account / Back in stock subscriptions
-        public virtual IActionResult CustomerSubscriptions(int? page)
+        public virtual IActionResult CustomerSubscriptions(int? pageNumber)
         {
             if (_customerSettings.HideBackInStockSubscriptionsTab)
             {
@@ -137,9 +137,9 @@ namespace Grand.Web.Controllers
             }
 
             int pageIndex = 0;
-            if (page > 0)
+            if (pageNumber > 0)
             {
-                pageIndex = page.Value - 1;
+                pageIndex = pageNumber.Value - 1;
             }
             var pageSize = 10;
 
@@ -175,7 +175,7 @@ namespace Grand.Web.Controllers
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerBackInStockSubscriptionsPaged",
                 UseRouteLinks = true,
-                RouteValues = new BackInStockSubscriptionsRouteValues { page = pageIndex }
+                RouteValues = new BackInStockSubscriptionsRouteValues { pageNumber = pageIndex }
             };
 
             return View(model);

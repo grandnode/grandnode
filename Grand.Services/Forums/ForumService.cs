@@ -566,31 +566,47 @@ namespace Grand.Services.Forums
             {
                 limitDate = DateTime.UtcNow.AddDays(-limitDays);
             }
-            //we need to cast it to int, otherwise it won't work in SQLCE4
-            //we cannot use String.IsNullOrEmpty in query because it causes SqlCeException on SQLCE4
+
+            if (customerId == null)
+                customerId = "";
+            if (forumId == null)
+                forumId = "";
+
             bool searchKeywords = !String.IsNullOrEmpty(keywords);
             bool searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
             bool searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;
             if (!limitDate.HasValue)
                 limitDate = DateTime.MinValue;
 
-            var query1 = (from ft in _forumTopicRepository.Table                         
-                         where
+            List<string> topicIds = new List<string>();
+            if (searchKeywords && searchPostText)
+            {
+                var query1 = (from fp in _forumPostRepository.Table
+                              where fp.Text.ToLower().Contains(keywords.ToLower())
+                              select fp.TopicId).ToList();
+                topicIds.AddRange(query1);
+            }
+
+            var query2 = (from ft in _forumTopicRepository.Table
+                         where 
                          (forumId == "" || ft.ForumId == forumId) &&
                          (customerId == "" || ft.CustomerId == customerId) &&
                          (
                             !searchKeywords ||
-                            (searchTopicTitles && ft.Subject.Contains(keywords))
-                         ) && 
+                            (searchTopicTitles && ft.Subject.ToLower().Contains(keywords.ToLower()))
+                         )
+                         &&
                          (limitDate.Value <= ft.LastPostTime)
                          select ft.Id).ToList();
 
-            var query2 = from ft in _forumTopicRepository.Table
-                         where query1.Contains(ft.Id)
+            topicIds.AddRange(query2);
+
+            var query3 = from ft in _forumTopicRepository.Table
+                         where topicIds.Contains(ft.Id)
                          orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.Id descending
                          select ft;
 
-            var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
+            var topics = new PagedList<ForumTopic>(query3, pageIndex, pageSize);
             return topics;
         }
 

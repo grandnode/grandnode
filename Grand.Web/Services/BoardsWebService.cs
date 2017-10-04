@@ -94,13 +94,13 @@ namespace Grand.Web.Services
 
             return model;
         }
-        public virtual ActiveDiscussionsModel PrepareActiveDiscussions(string forumId = "", int page = 1)
+        public virtual ActiveDiscussionsModel PrepareActiveDiscussions(string forumId = "", int pageNumber = 1)
         {
             var model = new ActiveDiscussionsModel();
 
             int pageSize = _forumSettings.ActiveDiscussionsPageSize > 0 ? _forumSettings.ActiveDiscussionsPageSize : 50;
 
-            var topics = _forumService.GetActiveTopics(forumId, (page - 1), pageSize);
+            var topics = _forumService.GetActiveTopics(forumId, (pageNumber - 1), pageSize);
             model.TopicPageSize = topics.PageSize;
             model.TopicTotalRecords = topics.TotalCount;
             model.TopicPageIndex = topics.PageIndex;
@@ -116,7 +116,7 @@ namespace Grand.Web.Services
             return model;
         }
 
-        public virtual ForumPageModel PrepareForumPage(Forum forum, int page)
+        public virtual ForumPageModel PrepareForumPage(Forum forum, int pageNumber)
         {
             var model = new ForumPageModel();
             model.Id = forum.Id;
@@ -139,7 +139,7 @@ namespace Grand.Web.Services
             }
 
             var topics = _forumService.GetAllTopics(forum.Id, "", string.Empty,
-                ForumSearchType.All, 0, (page - 1), pageSize);
+                ForumSearchType.All, 0, (pageNumber - 1), pageSize);
             model.TopicPageSize = topics.PageSize;
             model.TopicTotalRecords = topics.TotalCount;
             model.TopicPageIndex = topics.PageIndex;
@@ -257,10 +257,10 @@ namespace Grand.Web.Services
             }
             return forumsList;
         }
-        public virtual ForumTopicPageModel PrepareForumTopicPage(ForumTopic forumTopic, int page)
+        public virtual ForumTopicPageModel PrepareForumTopicPage(ForumTopic forumTopic, int pageNumber)
         {
             var posts = _forumService.GetAllPosts(forumTopic.Id, "", string.Empty,
-                page - 1, _forumSettings.PostsPageSize);
+                pageNumber - 1, _forumSettings.PostsPageSize);
 
             //prepare model
             var model = new ForumTopicPageModel();
@@ -343,7 +343,7 @@ namespace Grand.Web.Services
                         forumPostModel.VoteIsUp = postVote.IsUp;
                 }
                 // page number is needed for creating post link in _ForumPost partial view
-                forumPostModel.CurrentTopicPage = page;
+                forumPostModel.CurrentTopicPage = pageNumber;
                 model.ForumPostModels.Add(forumPostModel);
             }
 
@@ -536,14 +536,14 @@ namespace Grand.Web.Services
                 ShowTotalSummary = false,
                 RouteActionName = "CustomerForumSubscriptionsPaged",
                 UseRouteLinks = true,
-                RouteValues = new ForumSubscriptionsRouteValues { page = pageIndex }
+                RouteValues = new ForumSubscriptionsRouteValues { pageNumber = pageIndex }
             };
 
             return model;
         }
 
         public virtual SearchModel PrepareSearch(string searchterms, bool? adv, string forumId,
-            string within, string limitDays, int page = 1)
+            string within, string limitDays, int pageNumber = 1)
         {
             int pageSize = 10;
 
@@ -691,7 +691,7 @@ namespace Grand.Web.Services
                     }
 
                     var topics = _forumService.GetAllTopics(forumIdSelected, "", searchterms, searchWithin,
-                        limitResultsToPrevious, page - 1, pageSize);
+                        limitResultsToPrevious, pageNumber - 1, pageSize);
                     model.TopicPageSize = topics.PageSize;
                     model.TopicTotalRecords = topics.TotalCount;
                     model.TopicPageIndex = topics.PageIndex;
@@ -716,7 +716,7 @@ namespace Grand.Web.Services
             //some exception raised
             model.TopicPageSize = pageSize;
             model.TopicTotalRecords = 0;
-            model.TopicPageIndex = page - 1;
+            model.TopicPageIndex = pageNumber - 1;
 
             return model;
         }

@@ -13,6 +13,7 @@ using Grand.Web.Models.Boards;
 using Grand.Web.Models.Common;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Grand.Framework;
 
 namespace Grand.Web.Extensions
 {
@@ -68,16 +69,16 @@ namespace Grand.Web.Extensions
                     //first page
                     if ((model.PageIndex >= 3) && (model.TotalPages > model.IndividualPagesDisplayedCount))
                     {
-                        model.RouteValues.page = 1;
+                        model.RouteValues.pageNumber = 1;
 
                         links.Append("<li class=\"first-page page-item\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle"), @class = "page-link" }));
+                            links.Append(html.RouteLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle"), @class = "page-link" }).ToHtmlString());
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle"), @class = "page-link" }));
+                            links.Append(html.ActionLink(model.FirstButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.FirstPageTitle"), @class = "page-link" }).ToHtmlString());
                         }
                         links.Append("</li>");
                     }
@@ -87,16 +88,16 @@ namespace Grand.Web.Extensions
                     //previous page
                     if (model.PageIndex > 0)
                     {
-                        model.RouteValues.page = (model.PageIndex);
+                        model.RouteValues.pageNumber = (model.PageIndex);
 
                         links.Append("<li class=\"previous-page page-item\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle"), @class = "page-link" }));
+                            links.Append(html.RouteLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle"), @class = "page-link" }).ToHtmlString());
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle"), @class = "page-link" }));
+                            links.Append(html.ActionLink(model.PreviousButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.PreviousPageTitle"), @class = "page-link" }).ToHtmlString());
                         }
                         links.Append("</li>");
                     }
@@ -114,16 +115,16 @@ namespace Grand.Web.Extensions
                         }
                         else
                         {
-                            model.RouteValues.page = (i + 1);
+                            model.RouteValues.pageNumber = (i + 1);
 
                             links.Append("<li class=\"individual-page page-item\">");
                             if (model.UseRouteLinks)
                             {
-                                links.Append(html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)), @class = "page-link" }));
+                                links.Append(html.RouteLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)), @class = "page-link" }).ToHtmlString());
                             }
                             else
                             {
-                                links.Append(html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)), @class = "page-link" }));
+                                links.Append(html.ActionLink((i + 1).ToString(), model.RouteActionName, model.RouteValues, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), (i + 1)), @class = "page-link" }).ToHtmlString());
                             }
                             links.Append("</li>");
                         }
@@ -134,16 +135,16 @@ namespace Grand.Web.Extensions
                     //next page
                     if ((model.PageIndex + 1) < model.TotalPages)
                     {
-                        model.RouteValues.page = (model.PageIndex + 2);
+                        model.RouteValues.pageNumber = (model.PageIndex + 2);
 
                         links.Append("<li class=\"next-page page-item\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle"), @class = "page-link" }));
+                            links.Append(html.RouteLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle"), @class = "page-link" }).ToHtmlString());
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle"), @class = "page-link" }));
+                            links.Append(html.ActionLink(model.NextButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.NextPageTitle"), @class = "page-link" }).ToHtmlString());
                         }
                         links.Append("</li>");
                     }
@@ -153,16 +154,16 @@ namespace Grand.Web.Extensions
                     //last page
                     if (((model.PageIndex + 3) < model.TotalPages) && (model.TotalPages > model.IndividualPagesDisplayedCount))
                     {
-                        model.RouteValues.page = model.TotalPages;
+                        model.RouteValues.pageNumber = model.TotalPages;
 
                         links.Append("<li class=\"last-page page-item\">");
                         if (model.UseRouteLinks)
                         {
-                            links.Append(html.RouteLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle"), @class = "page-link" }));
+                            links.Append(html.RouteLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle"), @class = "page-link" }).ToHtmlString());
                         }
                         else
                         {
-                            links.Append(html.ActionLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle"), @class = "page-link" }));
+                            links.Append(html.ActionLink(model.LastButtonText, model.RouteActionName, model.RouteValues, new { title = localizationService.GetResource("Pager.LastPageTitle"), @class = "page-link" }).ToHtmlString());
                         }
                         links.Append("</li>");
                     }
@@ -191,7 +192,7 @@ namespace Grand.Web.Extensions
                 {
                     for (int x = 1; x <= totalPages; x++)
                     {
-                        links.Append(html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) }));
+                        links.Append(html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) }).ToHtmlString());
                         if (x < totalPages)
                         {
                             links.Append(", ");
@@ -200,12 +201,12 @@ namespace Grand.Web.Extensions
                 }
                 else
                 {
-                    links.Append(html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, page = (1), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) }));
+                    links.Append(html.RouteLink("1", "TopicSlugPaged", new { id = forumTopicId, pageNumber = (1), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), 1) }).ToHtmlString());
                     links.Append(" ... ");
 
                     for (int x = (totalPages - 2); x <= totalPages; x++)
                     {
-                        links.Append(html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, page = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) }));
+                        links.Append(html.RouteLink(x.ToString(), "TopicSlugPaged", new { id = forumTopicId, pageNumber = (x), slug = forumTopicSlug }, new { title = String.Format(localizationService.GetResource("Pager.PageLinkTitle"), x.ToString()) }));
 
                         if (x < totalPages)
                         {
