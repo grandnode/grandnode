@@ -26,12 +26,14 @@
             if (selectedCalculateByPlugin) {
                 $('#pnlUsePercentage').hide();
                 $('#pnlDiscountAmount').hide();
+                $('#pnlDiscountPercentage').hide();
+                $('#pnlMaximumDiscountAmount').hide();
                 $('#pnlDiscountPluginName').show();
             }
             else {
                 $('#pnlUsePercentage').show();
-                $('#pnlDiscountAmount').show();
                 $('#pnlDiscountPluginName').hide();
+                toggleUsePercentage();
             }
         }
 
@@ -152,6 +154,20 @@
                 @Html.ValidationMessageFor(model => model.DiscountAmount)
             </div>
         </div>
+        <div class="form-group" id="pnlDiscountPercentage">
+            @Html.GrandLabelFor(model => model.DiscountPercentage)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.DiscountPercentage)
+                @Html.ValidationMessageFor(model => model.DiscountPercentage)
+            </div>
+        </div>
+        <div class="form-group" id="pnlMaximumDiscountAmount">
+            @Html.GrandLabelFor(model => model.MaximumDiscountAmount)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.MaximumDiscountAmount) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.MaximumDiscountAmount)
+            </div>
+        </div>
         <div class="form-group" id="pnlCalculateByPlugin">
             @Html.GrandLabelFor(model => model.CalculateByPlugin)
             <div class="col-md-9 col-sm-9">
@@ -167,20 +183,6 @@
             <div class="col-md-9 col-sm-9">
                 @Html.GrandDropDownListFor(model => model.DiscountPluginName, Model.AvailableDiscountAmountProviders)
                 @Html.ValidationMessageFor(model => model.DiscountPluginName)
-            </div>
-        </div>
-        <div class="form-group" id="pnlDiscountPercentage">
-            @Html.GrandLabelFor(model => model.DiscountPercentage)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.DiscountPercentage)
-                @Html.ValidationMessageFor(model => model.DiscountPercentage)
-            </div>
-        </div>
-        <div class="form-group" id="pnlMaximumDiscountAmount">
-            @Html.GrandLabelFor(model => model.MaximumDiscountAmount)
-            <div class="col-md-9 col-sm-9">
-                @Html.GrandEditorFor(model => model.MaximumDiscountAmount) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.MaximumDiscountAmount)
             </div>
         </div>
         <div class="form-group">
