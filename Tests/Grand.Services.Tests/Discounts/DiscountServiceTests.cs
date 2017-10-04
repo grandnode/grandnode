@@ -84,19 +84,5 @@ namespace Grand.Services.Discounts.Tests
             Assert.AreEqual(2, discounts.Count);
         }
 
-        [TestMethod()]
-        public void Can_load_discountRequirementRules() {
-           
-            var rules = _discountService.LoadAllDiscountRequirementRules();
-            Assert.IsNotNull(rules);
-            Assert.IsTrue(rules.Count > 0);
-        }
-
-        [TestMethod()]
-        public void Can_load_discountRequirementRuleBySystemKeyword() {
-
-            var rule = _discountService.LoadDiscountRequirementRuleBySystemName("TestDiscountRequirementRule");
-            Assert.IsNotNull(rule);
-        }
     }
 }

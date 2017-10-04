@@ -1,6 +1,5 @@
 ﻿using Grand.Core.Plugins;
 using Grand.Services.Tests.Directory;
-using Grand.Services.Tests.Discounts;
 using Grand.Services.Tests.Payments;
 using Grand.Services.Tests.Shipping;
 using Grand.Services.Tests.Tax;
@@ -37,13 +36,6 @@ namespace Grand.Services.Tests
             {
                 SystemName = "Payments.TestMethod",
                 FriendlyName = "Test payment method",
-                Installed = true,
-            });
-            plugins.Add(new PluginDescriptor(typeof(TestDiscountRequirementRule).Assembly,
-                null, typeof(TestDiscountRequirementRule))
-            {
-                SystemName = "TestDiscountRequirementRule",
-                FriendlyName = "Test discount requirement rule",
                 Installed = true,
             });
             plugins.Add(new PluginDescriptor(typeof(TestExchangeRateProvider).Assembly,

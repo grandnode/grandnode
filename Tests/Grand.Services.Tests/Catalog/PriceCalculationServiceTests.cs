@@ -36,7 +36,6 @@ namespace Grand.Services.Catalog.Tests
         private IVendorService _vendorService;
         private IStoreService _storeService;
         private ICustomerService _customerService;
-
         [TestInitialize()]
         public void TestInitialize()
         {
@@ -238,12 +237,6 @@ namespace Grand.Services.Catalog.Tests
         [TestMethod()]
         public void Can_get_final_product_price_with_discount()
         {
-            /*
-            make Discount object, assign it to product's collection AppliedDiscounts
-            customize ValidateDiscount() and GetAllDiscounts() methods via Moq
-            act and assert
-            */
-
             var product = new Product
             {
                 Id = "1",
@@ -264,7 +257,6 @@ namespace Grand.Services.Catalog.Tests
                 DiscountLimitation = DiscountLimitationType.Unlimited
             };
 
-            product.AppliedDiscounts.Add(discount001.Id);
             tempDiscountServiceMock.Setup(x => x.GetDiscountById(discount001.Id)).Returns(discount001);
 
             product.AppliedDiscounts.Add(discount001.Id);
@@ -272,6 +264,7 @@ namespace Grand.Services.Catalog.Tests
             tempDiscountServiceMock.Setup(x => x.ValidateDiscount(discount001, customer)).Returns(new DiscountValidationResult() { IsValid = true });
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).Returns(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).Returns(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).Returns(new List<Discount>());
 
             //it should return 39.99 - price cheaper about 10 
             Assert.AreEqual(39.99M, _priceCalcService.GetFinalPrice(product, customer, 0, true, 1));
@@ -305,6 +298,7 @@ namespace Grand.Services.Catalog.Tests
 
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).Returns(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).Returns(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).Returns(new List<Discount>());
 
             Assert.AreEqual(49.99M, _priceCalcService.GetUnitPrice(shoppingCartItem));
         }
@@ -336,6 +330,7 @@ namespace Grand.Services.Catalog.Tests
 
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToCategories, "", "", false)).Returns(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).Returns(new List<Discount>());
+            tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).Returns(new List<Discount>());
 
             Assert.AreEqual(110.22M, _priceCalcService.GetSubTotal(shoppingCartItem));
         }
