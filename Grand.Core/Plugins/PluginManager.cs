@@ -352,11 +352,7 @@ namespace Grand.Core.Plugins
             var shadowCopiedPlug = ShadowCopyFile(plug, shadowCopyPlugFolder);
 
             try
-            {
-                //old version
-                //var assemblyLoader = new AssemblyLoader();
-                //var shadowCopiedAssembly = assemblyLoader.LoadFromAssemblyPath(shadowCopiedPlug.FullName);
-                //new version
+            {                
                 Assembly shadowCopiedAssembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(shadowCopiedPlug.FullName);
 
                 //we can now register the plugin definition
@@ -369,12 +365,7 @@ namespace Grand.Core.Plugins
                 throw new InvalidOperationException($"The plugin directory for the {plug.Name} file exists in a folder outside of the allowed grandnode folder hierarchy - exception because of {shadowCopiedPlug.FullName} - exception: {ex.Message}");
             }
         }
-
-        public class AssemblyLoader : AssemblyLoadContext
-        {
-            protected override Assembly Load(AssemblyName assemblyName) { return null; }
-        }
-
+       
         /// <summary>
         /// Used to initialize plugins when running in Medium Trust
         /// </summary>

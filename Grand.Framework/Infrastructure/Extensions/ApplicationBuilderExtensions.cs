@@ -18,6 +18,7 @@ using StackExchange.Profiling.Storage;
 using Grand.Service.Authentication;
 using Grand.Core.Caching;
 using Microsoft.Extensions.Caching.Memory;
+using Grand.Services.Logging;
 
 namespace Grand.Framework.Infrastructure.Extensions
 {
@@ -99,6 +100,25 @@ namespace Grand.Framework.Infrastructure.Extensions
                             context.HttpContext.Features.Set<IStatusCodeReExecuteFeature>(null);
                         }
                     }
+                }
+            });
+        }
+
+        /// <summary>
+        /// Adds a special handler that checks for responses with the 400 status code (bad request)
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseBadRequestResult(this IApplicationBuilder application)
+        {
+            #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+            application.UseStatusCodePages(async context =>
+            #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+            {
+                if (context.HttpContext.Response.StatusCode == StatusCodes.Status400BadRequest)
+                {
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                    logger.Error("Error 400. Bad request", null, customer: workContext.CurrentCustomer);
                 }
             });
         }

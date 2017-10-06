@@ -373,7 +373,6 @@ namespace Grand.Services.Localization
 
                     //do not use "Insert"/"Update" methods because they clear cache
                     //let's bulk insert
-                    //var resource = language.LocaleStringResources.FirstOrDefault(x => x.ResourceName.Equals(name, StringComparison.OrdinalIgnoreCase));
                     var resource = (from l in _lsrRepository.Table
                                     where l.ResourceName.ToLowerInvariant() == name.ToLowerInvariant() && l.LanguageId == language.Id
                                     select l).FirstOrDefault();

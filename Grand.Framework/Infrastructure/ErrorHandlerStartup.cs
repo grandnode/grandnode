@@ -30,6 +30,9 @@ namespace Grand.Framework.Infrastructure
             //exception handling
             application.UseGrandExceptionHandler();
 
+            //handle 400 errors (bad request)
+            application.UseBadRequestResult();
+
             //handle 404 errors
             application.UsePageNotFound();
         }

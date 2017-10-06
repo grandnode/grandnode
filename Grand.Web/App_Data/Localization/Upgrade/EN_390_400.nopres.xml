@@ -311,4 +311,7 @@
   <LocaleResource Name="Forum.Search.AdvanceSearch">
     <Value>Advanced search</Value>
   </LocaleResource>
+  <LocaleResource Name="newsrss">
+    <Value>Rss</Value>
+  </LocaleResource>
 </Language>
