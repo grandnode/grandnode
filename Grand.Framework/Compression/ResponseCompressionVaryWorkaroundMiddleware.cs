@@ -1,13 +1,8 @@
-﻿using System.Collections.Specialized;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Grand.Core;
-using Grand.Core.Infrastructure;
 
 namespace Grand.Framework.Compression
 {
