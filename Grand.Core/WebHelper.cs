@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Grand.Core.Data;
@@ -12,6 +11,7 @@ using Microsoft.Extensions.Primitives;
 using Grand.Core.Configuration;
 using Microsoft.Net.Http.Headers;
 using System.Net;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Grand.Core
 {
@@ -26,7 +26,7 @@ namespace Grand.Core
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HostingConfig _hostingConfig;
-
+        private readonly IApplicationLifetime _applicationLifetime;
 
         #endregion
 
@@ -36,10 +36,11 @@ namespace Grand.Core
         /// Ctor
         /// </summary>
         /// <param name="httpContext">HTTP context</param>
-        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig)
+        public WebHelper(IHttpContextAccessor httpContextAccessor, HostingConfig hostingConfig, IApplicationLifetime applicationLifetime)
         {
             this._hostingConfig = hostingConfig;
             this._httpContextAccessor = httpContextAccessor;
+            this._applicationLifetime = applicationLifetime;
         }
 
         #endregion
@@ -67,21 +68,7 @@ namespace Grand.Core
 
             return true;
         }
-        protected virtual bool TryWriteWebConfig()
-        {
-            try
-            {
-                // In medium trust, "UnloadAppDomain" is not supported. Touch web.config
-                // to force an AppDomain restart.
-                File.SetLastWriteTimeUtc(CommonHelper.MapPath("~/web.config"), DateTime.UtcNow);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }        
-
+        
         protected virtual bool IsIpAddressSet(IPAddress address)
         {
             return address != null && address.ToString() != NullIpAddress;
@@ -514,20 +501,9 @@ namespace Grand.Core
         /// <summary>
         /// Restart application domain
         /// </summary>
-        /// <param name="makeRedirect">A value indicating whether we should made redirection after restart</param>
-        /// <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
-        public virtual void RestartAppDomain(bool makeRedirect = false)
+        public virtual void RestartAppDomain()
         {
-            
-            bool success = TryWriteWebConfig();
-            if (!success)
-            {
-                throw new GrandException("GrandNode needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +
-                    "To prevent this issue in the future, a change to the web server configuration is required:" + Environment.NewLine +
-                    "- run the application in a full trust environment, or" + Environment.NewLine +
-                    "- give the application write access to the 'web.config' file.");
-            }
-            
+            _applicationLifetime.StopApplication();
         }
 
         /// <summary>
