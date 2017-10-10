@@ -453,7 +453,7 @@ namespace Grand.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
-                searchSku: false,
+                searchSku: _catalogSettings.SearchBySku,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,
                 pageSize: productNumber);

@@ -659,7 +659,7 @@ namespace Grand.Services.Catalog
             out IList<string> filterableSpecificationAttributeOptionIds,
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
-            int pageSize = int.MaxValue,  //Int32.MaxValue
+            int pageSize = int.MaxValue,  
             IList<string> categoryIds = null,
             string manufacturerId = "",
             string storeId = "",
@@ -706,7 +706,6 @@ namespace Grand.Services.Catalog
 
             //Access control list. Allowed customer roles
             var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-            //stored procedures aren't supported. Use LINQ
 
             #region Search products
 
@@ -815,6 +814,8 @@ namespace Grand.Services.Catalog
                             p.Name.ToLower().Contains(keywords.ToLower())
                             ||
                             p.Locales.Any(x => x.LocaleKey == "Name" && x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keywords.ToLower()))
+                            ||
+                            (searchSku && p.Sku.ToLower().Contains(keywords.ToLower()))
                             );
                     else
                     {
@@ -825,7 +826,10 @@ namespace Grand.Services.Catalog
                                 ||
                                 (p.FullDescription != null && p.FullDescription.ToLower().Contains(keywords.ToLower()))
                                 ||
-                                (p.Locales.Any(x => x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keywords.ToLower()))));
+                                (p.Locales.Any(x => x.LocaleValue != null && x.LocaleValue.ToLower().Contains(keywords.ToLower())))
+                                ||
+                                (searchSku && p.Sku.ToLower().Contains(keywords.ToLower()))
+                                );
                     }
                 }
                 

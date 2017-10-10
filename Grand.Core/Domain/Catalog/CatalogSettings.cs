@@ -188,6 +188,12 @@ namespace Grand.Core.Domain.Catalog
         public bool ProductSearchAutoCompleteEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether search by sku is enabled
+        /// </summary>
+        public bool SearchBySku { get; set; }
+
+
+        /// <summary>
         /// Gets or sets a number of products to return when using "autocomplete" feature
         /// </summary>
         public int ProductSearchAutoCompleteNumberOfProducts { get; set; }
