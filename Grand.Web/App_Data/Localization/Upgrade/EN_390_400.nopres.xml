@@ -314,4 +314,7 @@
   <LocaleResource Name="newsrss">
     <Value>Rss</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Products.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
 </Language>
