@@ -10311,6 +10311,9 @@
   <LocaleResource Name="Admin.Customers.OnlineCustomers.Fields.Location">
     <Value>Location</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Products.AddNew">
+    <Value>Add new</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Reports">
     <Value>Customer reports</Value>
   </LocaleResource>
