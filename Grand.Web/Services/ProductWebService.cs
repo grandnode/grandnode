@@ -440,7 +440,6 @@ namespace Grand.Web.Services
 
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             return _cacheManager.Get(cacheKey, () =>
-                //specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
                 product.ProductSpecificationAttributes.Where(x => x.ShowOnProductPage)
                 .Select(psa =>
                 {
@@ -1126,11 +1125,7 @@ namespace Grand.Web.Services
 
             #region Product specifications
 
-            //do not prepare this model for the associated products. any it's not used
-            if (!isAssociatedProduct)
-            {
-                model.ProductSpecifications = PrepareProductSpecificationModel(product);
-            }
+            model.ProductSpecifications = PrepareProductSpecificationModel(product);
 
             #endregion
 
@@ -1167,18 +1162,15 @@ namespace Grand.Web.Services
 
             #region Manufacturers
 
-            //do not prepare this model for the associated products. any it's not used
-            if (!isAssociatedProduct)
-            {
-                string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY,
-                    product.Id,
-                    _workContext.WorkingLanguage.Id,
-                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
-                    _storeContext.CurrentStore.Id);
-                model.ProductManufacturers = _cacheManager.Get(manufacturersCacheKey, () =>
-                    product.ProductManufacturers.Select(x => _manufacturerService.GetManufacturerById(x.ManufacturerId).ToModel()).ToList()
-                    );
-            }
+            string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY,
+                product.Id,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
+            model.ProductManufacturers = _cacheManager.Get(manufacturersCacheKey, () =>
+                product.ProductManufacturers.Select(x => _manufacturerService.GetManufacturerById(x.ManufacturerId).ToModel()).ToList()
+                );
+
             #endregion
 
             #region Rental products
