@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "94450b5f37e8a6b44a6d90cc8d6016a8278c5773"
+    "signature": "fe0f232caac1c44b12a9ca611b613e674e15d883"
   },
   "compilationOptions": {},
   "targets": {
@@ -69,7 +69,7 @@
           "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
-      "AWSSDK.Core/3.3.17.5": {
+      "AWSSDK.Core/3.3.17.10": {
         "dependencies": {
           "Microsoft.CSharp": "4.4.0",
           "System.Net.Requests": "4.3.0",
@@ -81,21 +81,21 @@
           "lib/netstandard1.3/AWSSDK.Core.dll": {}
         }
       },
-      "AWSSDK.S3/3.3.10.1": {
+      "AWSSDK.S3/3.3.11": {
         "dependencies": {
-          "AWSSDK.Core": "3.3.17.5"
+          "AWSSDK.Core": "3.3.17.10"
         },
         "runtime": {
           "lib/netstandard1.3/AWSSDK.S3.dll": {}
         }
       },
-      "BundlerMinifier.Core/2.4.337": {
+      "BundlerMinifier.Core/2.5.357": {
         "dependencies": {
           "NUglify": "1.5.5",
           "Newtonsoft.Json": "10.0.3"
         },
         "runtime": {
-          "lib/netcoreapp1.0/dotnet-bundle.dll": {}
+          "lib/netcoreapp2.0/dotnet-bundle.dll": {}
         }
       },
       "CoreCompat.System.Drawing.v2/5.2.0-preview1-r131": {
@@ -145,9 +145,9 @@
           "lib/netstandard1.6/FluentValidation.AspNetCore.dll": {}
         }
       },
-      "Google.Apis/1.28.0": {
+      "Google.Apis/1.29.2": {
         "dependencies": {
-          "Google.Apis.Core": "1.28.0",
+          "Google.Apis.Core": "1.29.2",
           "Newtonsoft.Json": "10.0.3",
           "System.Net.Http": "4.3.1",
           "System.Reflection.TypeExtensions": "4.4.0"
@@ -156,19 +156,19 @@
           "lib/netstandard1.3/Google.Apis.dll": {}
         }
       },
-      "Google.Apis.AnalyticsReporting.v4/1.28.0.916": {
+      "Google.Apis.AnalyticsReporting.v4/1.29.2.998": {
         "dependencies": {
-          "Google.Apis": "1.28.0",
-          "Google.Apis.Auth": "1.28.0"
+          "Google.Apis": "1.29.2",
+          "Google.Apis.Auth": "1.29.2"
         },
         "runtime": {
           "lib/netstandard1.3/Google.Apis.AnalyticsReporting.v4.dll": {}
         }
       },
-      "Google.Apis.Auth/1.28.0": {
+      "Google.Apis.Auth/1.29.2": {
         "dependencies": {
-          "Google.Apis": "1.28.0",
-          "Google.Apis.Core": "1.28.0",
+          "Google.Apis": "1.29.2",
+          "Google.Apis.Core": "1.29.2",
           "System.Diagnostics.Process": "4.3.0",
           "System.Net.Requests": "4.3.0"
         },
@@ -177,7 +177,7 @@
           "lib/netstandard1.3/Google.Apis.Auth.dll": {}
         }
       },
-      "Google.Apis.Core/1.28.0": {
+      "Google.Apis.Core/1.29.2": {
         "dependencies": {
           "Newtonsoft.Json": "10.0.3",
           "System.Net.Http": "4.3.1",
@@ -341,6 +341,14 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Core.dll": {}
+        }
+      },
+      "Microsoft.AspNetCore.Authentication.Facebook/2.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication.OAuth": "2.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.AspNetCore.Authentication.Facebook.dll": {}
         }
       },
       "Microsoft.AspNetCore.Authentication.OAuth/2.0.0": {
@@ -1318,7 +1326,7 @@
           }
         }
       },
-      "MimeMapping/0.1.6": {
+      "MimeMapping/1.0.1.10": {
         "runtime": {
           "lib/netstandard1.1/MimeMapping.dll": {}
         }
@@ -2063,7 +2071,7 @@
           "System.Runtime.Extensions": "4.3.0"
         }
       },
-      "System.Linq.Dynamic.Core/1.0.7.6": {
+      "System.Linq.Dynamic.Core/1.0.7.9": {
         "dependencies": {
           "System.ComponentModel.TypeConverter": "4.3.0",
           "System.Diagnostics.TraceSource": "4.3.0",
@@ -2995,7 +3003,7 @@
           "lib/netstandard1.3/System.Xml.XPath.XmlDocument.dll": {}
         }
       },
-      "WindowsAzure.Storage/8.3.0": {
+      "WindowsAzure.Storage/8.4.0": {
         "dependencies": {
           "Microsoft.Data.OData": "5.8.2",
           "Newtonsoft.Json": "10.0.3",
@@ -3046,7 +3054,7 @@
       "Grand.Framework/1.0.0": {
         "dependencies": {
           "Autofac": "4.6.1",
-          "BundlerMinifier.Core": "2.4.337",
+          "BundlerMinifier.Core": "2.5.357",
           "FluentValidation": "7.1.1",
           "FluentValidation.AspNetCore": "7.1.1",
           "Grand.Core": "1.0.0",
@@ -3060,7 +3068,7 @@
           "MongoDB.Driver": "2.4.4",
           "MongoDB.Driver.Core": "2.4.4",
           "System.IO.FileSystem.AccessControl": "4.4.0",
-          "System.Linq.Dynamic.Core": "1.0.7.6",
+          "System.Linq.Dynamic.Core": "1.0.7.9",
           "System.Reflection.Extensions": "4.3.0",
           "System.Reflection.TypeExtensions": "4.4.0",
           "System.Security.AccessControl": "4.4.0"
@@ -3071,24 +3079,25 @@
       },
       "Grand.Services/1.0.0": {
         "dependencies": {
-          "AWSSDK.Core": "3.3.17.5",
-          "AWSSDK.S3": "3.3.10.1",
+          "AWSSDK.Core": "3.3.17.10",
+          "AWSSDK.S3": "3.3.11",
           "Autofac": "4.6.1",
           "CoreCompat.System.Drawing.v2": "5.2.0-preview1-r131",
           "EPPlus.Core": "1.5.2",
           "FluentScheduler": "5.3.0",
-          "Google.Apis": "1.28.0",
-          "Google.Apis.AnalyticsReporting.v4": "1.28.0.916",
+          "Google.Apis": "1.29.2",
+          "Google.Apis.AnalyticsReporting.v4": "1.29.2.998",
           "Grand.Core": "1.0.0",
           "Grand.Data": "1.0.0",
           "MaxMind.GeoIP2": "2.8.0",
           "Microsoft.AspNetCore": "2.0.0",
           "Microsoft.AspNetCore.Authentication": "2.0.0",
           "Microsoft.AspNetCore.Authentication.Cookies": "2.0.0",
+          "Microsoft.AspNetCore.Authentication.Facebook": "2.0.0",
           "Microsoft.AspNetCore.Authentication.OAuth": "2.0.0",
           "Microsoft.AspNetCore.Mvc": "2.0.0",
           "Microsoft.AspNetCore.Routing": "2.0.0",
-          "MimeMapping": "0.1.6",
+          "MimeMapping": "1.0.1.10",
           "MongoDB.Driver.GridFS": "2.4.4",
           "OfficeOpenXml.Core.ExcelPackage": "1.0.0",
           "System.ServiceModel.Duplex": "4.4.0",
@@ -3096,7 +3105,7 @@
           "System.ServiceModel.NetTcp": "4.4.0",
           "System.ServiceModel.Security": "4.4.0",
           "System.Xml.XmlSerializer": "4.3.0",
-          "WindowsAzure.Storage": "8.3.0",
+          "WindowsAzure.Storage": "8.4.0",
           "iTextSharp.LGPLv2.Core": "1.3.2"
         },
         "runtime": {
@@ -3139,26 +3148,26 @@
       "path": "automapper.extensions.microsoft.dependencyinjection/3.0.1",
       "hashPath": "automapper.extensions.microsoft.dependencyinjection.3.0.1.nupkg.sha512"
     },
-    "AWSSDK.Core/3.3.17.5": {
+    "AWSSDK.Core/3.3.17.10": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-utbrK5szgWJymHPC2HRMIgPLdBEFIfeffpprnBQdY1xYiNxZ2mo1ZMfOVBQmINhzAdQTRCrqXQoW8Yro1nS4/A==",
-      "path": "awssdk.core/3.3.17.5",
-      "hashPath": "awssdk.core.3.3.17.5.nupkg.sha512"
+      "sha512": "sha512-GzVqi+KS6KcGy34J38EZO2gWcAm0GPrN/2vAp5PrqNBnQcjB2bGcVS/PhINOQVsi5kLaJI2L+VY4M3Hf6E8GkA==",
+      "path": "awssdk.core/3.3.17.10",
+      "hashPath": "awssdk.core.3.3.17.10.nupkg.sha512"
     },
-    "AWSSDK.S3/3.3.10.1": {
+    "AWSSDK.S3/3.3.11": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-8g+2CCylO8yGF3oCHkD4F1etBnsYrMWEOp/+uz9qRH53TmxSbwjE+hUrx6wuY7C9pNtheKSkbBvBIWIl4EXG0A==",
-      "path": "awssdk.s3/3.3.10.1",
-      "hashPath": "awssdk.s3.3.3.10.1.nupkg.sha512"
+      "sha512": "sha512-cMe0yG16Jw5jmw5IvGNhs0PsrJXnN9qNkI1hUKqdQBMcUrjy02MRDe4vQ7DDH7xo5vJJJSAWpzbB0UeyV6Q0nw==",
+      "path": "awssdk.s3/3.3.11",
+      "hashPath": "awssdk.s3.3.3.11.nupkg.sha512"
     },
-    "BundlerMinifier.Core/2.4.337": {
+    "BundlerMinifier.Core/2.5.357": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-dJrgItLLzsp7qWeTYDieGhVIPZU2KRwUwOlQq+UakqSHieMnbZocscfy29ZFwzTUrNUjmr/G94ej5wVLcCGrgQ==",
-      "path": "bundlerminifier.core/2.4.337",
-      "hashPath": "bundlerminifier.core.2.4.337.nupkg.sha512"
+      "sha512": "sha512-TJPDxLHcqj2DvmPB22x0hQ8MeyJwFMzLAcIiYqwFh27u9tTfNaNAMYm29y5KJPG6FNVyOOz2dB1sZpVrtkgEWw==",
+      "path": "bundlerminifier.core/2.5.357",
+      "hashPath": "bundlerminifier.core.2.5.357.nupkg.sha512"
     },
     "CoreCompat.System.Drawing.v2/5.2.0-preview1-r131": {
       "type": "package",
@@ -3195,33 +3204,33 @@
       "path": "fluentvalidation.aspnetcore/7.1.1",
       "hashPath": "fluentvalidation.aspnetcore.7.1.1.nupkg.sha512"
     },
-    "Google.Apis/1.28.0": {
+    "Google.Apis/1.29.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-2Hy0evlOnejdbY3o3H7QE0GVnF/dmLQ+Xoy/dfp0smGXDKSNEJhhBPB7LPBF9Ur+QTMvqriY1eifmpC0lr79WQ==",
-      "path": "google.apis/1.28.0",
-      "hashPath": "google.apis.1.28.0.nupkg.sha512"
+      "sha512": "sha512-TKRI5QyAIBVogzG4tyz7fZ3EQxcSp1dofC3Q1CeIz6bD2iJGHAQlNjV/EPYSvXSUWTrdjj5bGcncKOUw4Xn+gQ==",
+      "path": "google.apis/1.29.2",
+      "hashPath": "google.apis.1.29.2.nupkg.sha512"
     },
-    "Google.Apis.AnalyticsReporting.v4/1.28.0.916": {
+    "Google.Apis.AnalyticsReporting.v4/1.29.2.998": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-EvCtCWsw2uvVswJnpc+1yfADTEg7sZm0tKakreZsRBZQ2mAj+msebvdhoFdHGpqzV4grb+fzmSwkiQD70AKQdA==",
-      "path": "google.apis.analyticsreporting.v4/1.28.0.916",
-      "hashPath": "google.apis.analyticsreporting.v4.1.28.0.916.nupkg.sha512"
+      "sha512": "sha512-io6GbNuy9gNLnAdbSBrE1EUoDPoJGiNPIJ5Cn392BB6T2jJgIAcjcrWgWtsLpIxV3/ie2m2div3D8l3jdJgBcQ==",
+      "path": "google.apis.analyticsreporting.v4/1.29.2.998",
+      "hashPath": "google.apis.analyticsreporting.v4.1.29.2.998.nupkg.sha512"
     },
-    "Google.Apis.Auth/1.28.0": {
+    "Google.Apis.Auth/1.29.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-v5tdjhTY6Up2YG4fF2U/E81ksyfmNK9UzRTBHWoNb9p6/QLSk5g/pLnOkWtCEOEZ/ByaPdiFybz/0Ucghzw6Uw==",
-      "path": "google.apis.auth/1.28.0",
-      "hashPath": "google.apis.auth.1.28.0.nupkg.sha512"
+      "sha512": "sha512-kmtRIt2fI1uU1730HTknsELGj1dxyTR4wCCZpkQ8lk5nB3aGkfKeAMubyVUx3+3AZNbAx4kBpGlN6I8oYg6+vg==",
+      "path": "google.apis.auth/1.29.2",
+      "hashPath": "google.apis.auth.1.29.2.nupkg.sha512"
     },
-    "Google.Apis.Core/1.28.0": {
+    "Google.Apis.Core/1.29.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-klkKHqZLAcGMBiXE9FIlQG8MeXYSQo7m6PqRC15tHpok0V3A6W48mumvr9B2Klgau6gq0XZKOnJ5nJuVVj+h2Q==",
-      "path": "google.apis.core/1.28.0",
-      "hashPath": "google.apis.core.1.28.0.nupkg.sha512"
+      "sha512": "sha512-WEd2r7kIEYooLz7Vf3Jvc5VQrllkQrNcjyHldrSFq8GpFc/ZHOaZEryevTLp1tBfJrq0UsNQ6cHHhJwhOEQ8wQ==",
+      "path": "google.apis.core/1.29.2",
+      "hashPath": "google.apis.core.1.29.2.nupkg.sha512"
     },
     "iTextSharp.LGPLv2.Core/1.3.2": {
       "type": "package",
@@ -3292,6 +3301,13 @@
       "sha512": "sha512-fO3HRV8+8trdBvi0zpQBu/TtoK//JC4fdeREud08589wxc8+mkP9gzXuLMMst88fa5EkjPeIGEnc2OvRpOLyMw==",
       "path": "microsoft.aspnetcore.authentication.core/2.0.0",
       "hashPath": "microsoft.aspnetcore.authentication.core.2.0.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Authentication.Facebook/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-5jkm/lj+QXWIMqPZ7YuBDdGcoJMQHxnsfoOYH/OyR+3g9FzeLjWi/QoSsMtcIc/YsHtjiO1YW2X0aWMPjslfhA==",
+      "path": "microsoft.aspnetcore.authentication.facebook/2.0.0",
+      "hashPath": "microsoft.aspnetcore.authentication.facebook.2.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authentication.OAuth/2.0.0": {
       "type": "package",
@@ -3951,12 +3967,12 @@
       "path": "microsoft.win32.registry/4.4.0",
       "hashPath": "microsoft.win32.registry.4.4.0.nupkg.sha512"
     },
-    "MimeMapping/0.1.6": {
+    "MimeMapping/1.0.1.10": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-/xzD30c2cpdvsWoigqKT8AbJjPa9HRlKJ/Hwu8m8ndt81fiK7k/mGn/yAktdso0uv4+SfOIiLpL3S2y0sL0Fkw==",
-      "path": "mimemapping/0.1.6",
-      "hashPath": "mimemapping.0.1.6.nupkg.sha512"
+      "sha512": "sha512-h8FwZVtUvnGyBYkwzFDYPphLci6hPYSgDidSH5CCEGOMc5ssFFNw1ylLNJRx+owq+NW/OXVDp4ExxjWgt1cdKA==",
+      "path": "mimemapping/1.0.1.10",
+      "hashPath": "mimemapping.1.0.1.10.nupkg.sha512"
     },
     "MiniProfiler.AspNetCore/4.0.0-alpha6-79": {
       "type": "package",
@@ -4441,12 +4457,12 @@
       "path": "system.linq/4.3.0",
       "hashPath": "system.linq.4.3.0.nupkg.sha512"
     },
-    "System.Linq.Dynamic.Core/1.0.7.6": {
+    "System.Linq.Dynamic.Core/1.0.7.9": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-bt/dzI4v7lBJWULpPszAfDJOALaS08A6yddghODuFmQ7VRbtmOI4ZEjTnhjrrUczg4ayifq59G9Fpflci7I3cQ==",
-      "path": "system.linq.dynamic.core/1.0.7.6",
-      "hashPath": "system.linq.dynamic.core.1.0.7.6.nupkg.sha512"
+      "sha512": "sha512-lfc6RGf1SpaF+IXnrK6VAN5WiaJzkOw46sDpGw+TIr9GuEf1DcBi2/OyeaHRQxy4GxpB6R9bmiQKhkuWmJ2GrA==",
+      "path": "system.linq.dynamic.core/1.0.7.9",
+      "hashPath": "system.linq.dynamic.core.1.0.7.9.nupkg.sha512"
     },
     "System.Linq.Expressions/4.3.0": {
       "type": "package",
@@ -4966,12 +4982,12 @@
       "path": "system.xml.xpath.xmldocument/4.3.0",
       "hashPath": "system.xml.xpath.xmldocument.4.3.0.nupkg.sha512"
     },
-    "WindowsAzure.Storage/8.3.0": {
+    "WindowsAzure.Storage/8.4.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-0wSBMXDUGPK4DEF6bJQHV6QyKLe6E+fws4jtoxWBzJEWH9FWGCOFDYY6+Mnc/SL8H6uaxIFAxXNe0w2rhxjY4w==",
-      "path": "windowsazure.storage/8.3.0",
-      "hashPath": "windowsazure.storage.8.3.0.nupkg.sha512"
+      "sha512": "sha512-2BzIL/b/2d86+kd74xRoNqz97VVnNv0+aaggSCR6k78nN2UVKWudMe2kxi6gmimGcJqq8BkFCavXhS8xF1INvg==",
+      "path": "windowsazure.storage/8.4.0",
+      "hashPath": "windowsazure.storage.8.4.0.nupkg.sha512"
     },
     "Grand.Core/1.0.0": {
       "type": "project",

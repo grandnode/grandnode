@@ -266,6 +266,9 @@ namespace Grand.Services.Catalog.Tests
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToManufacturers, "", "", false)).Returns(new List<Discount>());
             tempDiscountServiceMock.Setup(x => x.GetAllDiscounts(DiscountType.AssignedToAllProducts, "", "", false)).Returns(new List<Discount>());
 
+            var discountAmount = discount001.DiscountAmount;
+            tempDiscountServiceMock.Setup(x => x.GetPreferredDiscount(It.IsAny<List<Discount>>(), 49.99M, out discountAmount)).Returns(new List<Discount>());
+
             //it should return 39.99 - price cheaper about 10 
             Assert.AreEqual(39.99M, _priceCalcService.GetFinalPrice(product, customer, 0, true, 1));
         }
