@@ -14,7 +14,13 @@
         @foreach (var item in Model.NewsItems)
         {
             <div class="card mb-3">
-                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })"><h4 class="card-header">@item.Title</h4></a>
+                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
+                {
+                    <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                }
+                <h4 class="card-header">@item.Title</h4>
+                </a>
                 <div class="card-block">
                     <h6 class="card-subtitle text-muted">-@item.CreatedOn.ToString("D")</h6>
                     @Html.Raw(item.Short)

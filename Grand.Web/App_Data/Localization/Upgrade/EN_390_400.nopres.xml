@@ -329,4 +329,16 @@
   <LocaleResource Name="Media.Blog.ImageAlternateTextFormat">
     <Value>Picture for blog post {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.Picture.Hint">
+    <Value>The news item picture.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.News.ImageLinkTitleFormat">
+    <Value>Show news item for {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.News.ImageAlternateTextFormat">
+    <Value>Picture for news item {0}</Value>
+  </LocaleResource>
 </Language>

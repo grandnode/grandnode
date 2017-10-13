@@ -18,13 +18,12 @@ using Grand.Services.News;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using Grand.Framework;
-using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Core.Infrastructure;
 using Grand.Services.Customers;
 using Grand.Core.Domain.Localization;
+using Grand.Services.Media;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -41,6 +40,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ICustomerService _customerService;
+        private readonly IPictureService _pictureService;
 
         #endregion
 
@@ -54,7 +54,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             IUrlRecordService urlRecordService,
             IStoreService storeService, 
             IStoreMappingService storeMappingService,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            IPictureService pictureService)
         {
             this._newsService = newsService;
             this._languageService = languageService;
@@ -65,6 +66,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._customerService = customerService;
+            this._pictureService = pictureService;
         }
 
         #endregion
@@ -180,6 +182,13 @@ namespace Grand.Web.Areas.Admin.Controllers
             return localized;
         }
 
+        [NonAction]
+        protected virtual void UpdatePictureSeoNames(NewsItem newsitem)
+        {
+            var picture = _pictureService.GetPictureById(newsitem.PictureId);
+            if (picture != null)
+                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(newsitem.Title));
+        }
         #endregion
 
         #region News items
@@ -272,6 +281,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 //search engine name
                 _urlRecordService.SaveSlug(newsItem, seName, "");
 
+                //update picture seo file name
+                UpdatePictureSeoNames(newsItem);
+
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
             }
@@ -330,6 +342,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                string prevPictureId = newsItem.PictureId;
                 newsItem = model.ToEntity(newsItem);
                 newsItem.StartDateUtc = model.StartDate;
                 newsItem.EndDateUtc = model.EndDate;
@@ -342,6 +355,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 //search engine name
                 _urlRecordService.SaveSlug(newsItem, seName, "");
+
+                //delete an old picture (if deleted or updated)
+                if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != newsItem.PictureId)
+                {
+                    var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                    if (prevPicture != null)
+                        _pictureService.DeletePicture(prevPicture);
+                }
+
+                //update picture seo file name
+                UpdatePictureSeoNames(newsItem);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));
 

@@ -11,7 +11,12 @@
                     <div class="col-lg-4 col-md-6 col-12 mb-3">
                         <div class="card">
                             <div class="card-header">
-                                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })"><h3 class="h5">@item.Title</h3></a>
+                                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                                @if (!string.IsNullOrEmpty(item.PictureModel.ImageUrl))
+                                {
+                                    <img class="card-img-top img-fluid" alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl" title="@item.PictureModel.Title">
+                                }
+                                <h3 class="h5">@item.Title</h3></a>
                                 <span class="news-date">-@item.CreatedOn.ToString("D")</span>
                             </div>
                             <div class="card-block">

@@ -58,7 +58,13 @@
                 </div>
             </div>
             ))
-
+        <div class="form-group">
+            @Html.GrandLabelFor(model => model.PictureId)
+            <div class="col-md-9 col-sm-9">
+                @Html.GrandEditorFor(model => model.PictureId)
+                @Html.ValidationMessageFor(model => model.PictureId)
+            </div>
+        </div>
         <div class="form-group">
             @Html.GrandLabelFor(model => model.AllowComments)
             <div class="col-md-9 col-sm-9">

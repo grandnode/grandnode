@@ -18,6 +18,7 @@ using Grand.Web.Infrastructure.Cache;
 using Grand.Web.Models.News;
 using System;
 using System.Linq;
+using Grand.Web.Models.Media;
 
 namespace Grand.Web.Services
 {
@@ -31,6 +32,8 @@ namespace Grand.Web.Services
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IWebHelper _webHelper;
 
         private readonly CaptchaSettings _captchaSettings;
         private readonly CustomerSettings _customerSettings;
@@ -40,7 +43,7 @@ namespace Grand.Web.Services
 
         public NewsWebService(INewsService newsService, IWorkContext workContext, IStoreContext storeContext,
             IPictureService pictureService, IDateTimeHelper dateTimeHelper, ICacheManager cacheManager,
-            IWorkflowMessageService workflowMessageService,
+            IWorkflowMessageService workflowMessageService, ILocalizationService localizationService, IWebHelper webHelper,
             CaptchaSettings captchaSettings, NewsSettings newsSettings,
             CustomerSettings customerSettings, MediaSettings mediaSettings, LocalizationSettings localizationSettings)
         {
@@ -51,6 +54,8 @@ namespace Grand.Web.Services
             this._dateTimeHelper = dateTimeHelper;
             this._cacheManager = cacheManager;
             this._workflowMessageService = workflowMessageService;
+            this._localizationService = localizationService;
+            this._webHelper = webHelper;
 
             this._captchaSettings = captchaSettings;
             this._newsSettings = newsSettings;
@@ -105,6 +110,24 @@ namespace Grand.Web.Services
                     }
                     model.Comments.Add(commentModel);
                 }
+            }
+            //prepare picture model
+            if (!string.IsNullOrEmpty(newsItem.PictureId))
+            {
+                int pictureSize = prepareComments ? _mediaSettings.NewsThumbPictureSize : _mediaSettings.NewsListThumbPictureSize;
+                var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.NEWS_PICTURE_MODEL_KEY, newsItem.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                model.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                {
+                    var picture = _pictureService.GetPictureById(newsItem.PictureId);
+                    var pictureModel = new PictureModel
+                    {
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        Title = string.Format(_localizationService.GetResource("Media.News.ImageLinkTitleFormat"), newsItem.Title),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.News.ImageAlternateTextFormat"), newsItem.Title)
+                    };
+                    return pictureModel;
+                });
             }
 
         }

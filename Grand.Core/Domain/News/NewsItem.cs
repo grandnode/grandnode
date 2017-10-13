@@ -28,6 +28,11 @@ namespace Grand.Core.Domain.News
         public string Title { get; set; }
 
         /// <summary>
+        /// Gets or sets the picture identifier
+        /// </summary>
+        public string PictureId { get; set; }
+
+        /// <summary>
         /// Gets or sets the sename
         /// </summary>
         public string SeName { get; set; }

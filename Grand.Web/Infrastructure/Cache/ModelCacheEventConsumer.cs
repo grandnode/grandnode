@@ -643,6 +643,20 @@ namespace Grand.Web.Infrastructure.Cache
         public const string NEWS_PATTERN_KEY = "Grand.pres.news";
 
         /// <summary>
+        /// Key for news picture caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : blog id
+        /// {1} : picture size
+        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
+        /// {3} : language ID ("alt" and "title" can depend on localized category name)
+        /// {4} : is connection SSL secured?
+        /// {5} : current store ID
+        /// </remarks>
+        public const string NEWS_PICTURE_MODEL_KEY = "Grand.pres.news.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+
+
+        /// <summary>
         /// Key for states by country id
         /// </summary>
         /// <remarks>

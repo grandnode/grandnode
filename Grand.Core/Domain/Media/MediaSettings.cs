@@ -6,6 +6,8 @@ namespace Grand.Core.Domain.Media
     {
         public int AvatarPictureSize { get; set; }
         public int BlogThumbPictureSize { get; set; }
+        public int NewsThumbPictureSize { get; set; }
+        public int NewsListThumbPictureSize { get; set; }
         public int ProductThumbPictureSize { get; set; }
         public int ProductDetailsPictureSize { get; set; }
         public int ProductThumbPictureSizeOnProductDetailsPage { get; set; }
