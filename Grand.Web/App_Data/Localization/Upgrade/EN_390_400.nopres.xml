@@ -317,4 +317,16 @@
   <LocaleResource Name="Admin.Customers.Products.AddNew">
     <Value>Add new</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Picture.Hint">
+    <Value>The blog post picture.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Blog.ImageLinkTitleFormat">
+    <Value>Show blog post for {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Blog.ImageAlternateTextFormat">
+    <Value>Picture for blog post {0}</Value>
+  </LocaleResource>
 </Language>

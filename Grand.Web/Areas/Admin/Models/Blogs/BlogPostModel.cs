@@ -22,6 +22,10 @@ namespace Grand.Web.Areas.Admin.Models.Blogs
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")]
         public string Title { get; set; }
 
+        [UIHint("Picture")]
+        [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Picture")]
+        public string PictureId { get; set; }
+
         [GrandResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Body")]
         
         public string Body { get; set; }

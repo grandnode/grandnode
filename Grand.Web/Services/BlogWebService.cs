@@ -22,6 +22,7 @@ using Grand.Web.Models.Blogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Grand.Web.Models.Media;
 
 namespace Grand.Web.Services
 {
@@ -178,6 +179,26 @@ namespace Grand.Web.Services
                     model.Comments.Add(commentModel);
                 }
             }
+
+            //prepare picture model
+            if (!string.IsNullOrEmpty(blogPost.PictureId))
+            {
+                int pictureSize = _mediaSettings.BlogThumbPictureSize;
+                var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.BLOG_PICTURE_MODEL_KEY, blogPost.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                model.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                {
+                    var picture = _pictureService.GetPictureById(blogPost.PictureId);
+                    var pictureModel = new PictureModel
+                    {
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        Title = string.Format(_localizationService.GetResource("Media.Blog.ImageLinkTitleFormat"), blogPost.Title),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Blog.ImageAlternateTextFormat"), blogPost.Title)
+                    };
+                    return pictureModel;
+                });
+            }
+
         }
 
         public BlogPostTagListModel PrepareBlogPostTagListModel()

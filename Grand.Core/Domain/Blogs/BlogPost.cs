@@ -24,6 +24,11 @@ namespace Grand.Core.Domain.Blogs
         public string Title { get; set; }
 
         /// <summary>
+        /// Gets or sets the picture identifier
+        /// </summary>
+        public string PictureId { get; set; }
+
+        /// <summary>
         /// Gets or sets the blog post body
         /// </summary>
         public string Body { get; set; }

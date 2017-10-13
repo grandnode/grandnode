@@ -7941,6 +7941,12 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.MetaTitle.Hint">
     <Value>Override the page title. The default is the title of the blog post.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Picture.Hint">
+    <Value>The blog post picture.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.SeName">
     <Value>Search engine friendly page name</Value>
   </LocaleResource>
@@ -15338,6 +15344,12 @@
   </LocaleResource>
   <LocaleResource Name="Manufacturers.ViewAll">
     <Value>View all</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Blog.ImageLinkTitleFormat">
+    <Value>Show blog post for {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Blog.ImageAlternateTextFormat">
+    <Value>Picture for blog post {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Media.Category.ImageAlternateTextFormat">
     <Value>Picture for category {0}</Value>

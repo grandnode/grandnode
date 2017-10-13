@@ -11,20 +11,16 @@ using Grand.Services.Localization;
 using Grand.Services.Security;
 using Grand.Services.Seo;
 using Grand.Services.Stores;
-using Grand.Framework;
-using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Core.Infrastructure;
 using Grand.Services.Customers;
 using MongoDB.Driver;
-using MongoDB.Bson.Serialization.Attributes;
 using Grand.Core.Domain.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.Filters;
 using Grand.Framework.Extensions;
+using Grand.Services.Media;
 
 namespace Grand.Web.Areas.Admin.Controllers
 {
@@ -40,16 +36,18 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IPictureService _pictureService;
 
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, 
             ILocalizationService localizationService, IPermissionService permissionService,
             IUrlRecordService urlRecordService,
-            IStoreService storeService, IStoreMappingService storeMappingService)
+            IStoreService storeService, IStoreMappingService storeMappingService,
+            IPictureService pictureService)
         {
             this._blogService = blogService;
             this._languageService = languageService;
@@ -59,7 +57,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
-		}
+            this._pictureService = pictureService;
+
+        }
 
 		#endregion 
         
@@ -156,6 +156,14 @@ namespace Grand.Web.Areas.Admin.Controllers
             return localized;
         }
 
+        [NonAction]
+        protected virtual void UpdatePictureSeoNames(BlogPost blogpost)
+        {
+            var picture = _pictureService.GetPictureById(blogpost.PictureId);
+            if (picture != null)
+                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(blogpost.Title));
+        }
+
         #endregion
 
         #region Blog posts
@@ -238,6 +246,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _blogService.UpdateBlogPost(blogPost);
                 _urlRecordService.SaveSlug(blogPost, seName, "");
 
+                //update picture seo file name
+                UpdatePictureSeoNames(blogPost);
+
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = blogPost.Id }) : RedirectToAction("List");
             }
@@ -292,6 +303,8 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                string prevPictureId = blogPost.PictureId;
+
                 blogPost = model.ToEntity(blogPost);
                 blogPost.StartDateUtc = model.StartDate;
                 blogPost.EndDateUtc = model.EndDate;
@@ -305,6 +318,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                 blogPost.Locales = UpdateLocales(blogPost, model);
                 _blogService.UpdateBlogPost(blogPost);
                 _urlRecordService.SaveSlug(blogPost, seName, "");
+
+                //delete an old picture (if deleted or updated)
+                if (!String.IsNullOrEmpty(prevPictureId) && prevPictureId != blogPost.PictureId)
+                {
+                    var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                    if (prevPicture != null)
+                        _pictureService.DeletePicture(prevPicture);
+                }
+
+                //update picture seo file name
+                UpdatePictureSeoNames(blogPost);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));
                 if (continueEditing)

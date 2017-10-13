@@ -4905,6 +4905,7 @@ namespace Grand.Services.Installation
             _settingService.SaveSetting(new MediaSettings
             {
                 AvatarPictureSize = 120,
+                BlogThumbPictureSize = 450,
                 ProductThumbPictureSize = 415,
                 ProductDetailsPictureSize = 550,
                 ProductThumbPictureSizeOnProductDetailsPage = 100,

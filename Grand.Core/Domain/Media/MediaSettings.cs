@@ -5,6 +5,7 @@ namespace Grand.Core.Domain.Media
     public class MediaSettings : ISettings
     {
         public int AvatarPictureSize { get; set; }
+        public int BlogThumbPictureSize { get; set; }
         public int ProductThumbPictureSize { get; set; }
         public int ProductDetailsPictureSize { get; set; }
         public int ProductThumbPictureSizeOnProductDetailsPage { get; set; }
