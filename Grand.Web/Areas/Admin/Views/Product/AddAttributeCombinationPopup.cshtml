@@ -8,9 +8,11 @@
 }
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
 @using (Html.BeginForm("AddAttributeCombinationPopup", "Product",
-                new RouteValueDictionary(new { productId = Model.ProductId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+                new { productId = Model.ProductId, btnId = ViewBag.btnId, formId = ViewBag.formId },
                 FormMethod.Post,
-                new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+                false,
+                new Dictionary<string, Object> { { "enctype", "multipart/form-data" } })
+            )
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(false)
@@ -28,7 +30,7 @@
                         <button class="btn btn-success" type="submit" name="save"><i class="fa fa-check"></i> @T("Admin.Common.Save") </button>
                     </div>
                 </div>
-                <div class="portlet-body form">
+                <div class="portlet-body">
                     <div class="form-horizontal">
                         <div class="form-body">
                             @Html.Partial("_ProductAttributes", Model.ProductAttributes)

@@ -4,11 +4,11 @@
 @if (Model.Count > 0)
 {
     <div class="form-group">
-        
             @foreach (var attribute in Model)
             {
                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                <div class="form-group">
                 <div class="col-md-3 col-sm-3">
                     @if (attribute.IsRequired)
                     {
@@ -86,6 +86,7 @@
                             }
                             break;
                     }
+                </div>
                 </div>
             }
     </div>
