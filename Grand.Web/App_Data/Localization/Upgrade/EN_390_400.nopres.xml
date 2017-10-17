@@ -341,4 +341,7 @@
   <LocaleResource Name="Media.News.ImageAlternateTextFormat">
     <Value>Picture for news item {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Update">
+    <Value>Enter details below</Value>
+  </LocaleResource>
 </Language>

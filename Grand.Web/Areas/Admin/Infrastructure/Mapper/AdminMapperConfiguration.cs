@@ -347,6 +347,13 @@ namespace Grand.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(dest => dest.ProductAttributeCombinations, mo => mo.Ignore())
                 .ForMember(dest => dest.TierPrices, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
+
+            //product attributes combination
+            CreateMap<ProductAttributeCombination, ProductAttributeCombinationModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            CreateMap<ProductAttributeCombinationModel, ProductAttributeCombination>()
+                .ForMember(dest => dest.Id, mo => mo.Ignore());
+
             //logs
             CreateMap<Log, LogModel>()
                 .ForMember(dest => dest.CustomerEmail, mo => mo.Ignore())

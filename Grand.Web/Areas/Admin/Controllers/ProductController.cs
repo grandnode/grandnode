@@ -348,51 +348,52 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual void PrepareAddProductAttributeCombinationModel(AddProductAttributeCombinationModel model, Product product)
+        protected virtual void PrepareAddProductAttributeCombinationModel(ProductAttributeCombinationModel model, Product product)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            model.ProductId = product.Id;
-            model.StockQuantity = 0;
-            model.NotifyAdminForQuantityBelow = 1;
-
-            var attributes = product.ProductAttributeMappings //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
-                                                              //ignore non-combinable attributes for combinations
-                .Where(x => !x.IsNonCombinable())
-                .ToList();
-            foreach (var attribute in attributes)
+            if (string.IsNullOrEmpty(model.Id))
             {
-                var productAttribute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
-                var attributeModel = new AddProductAttributeCombinationModel.ProductAttributeModel
+                model.ProductId = product.Id;
+                model.StockQuantity = 0;
+                model.NotifyAdminForQuantityBelow = 1;
+                var attributes = product.ProductAttributeMappings
+                    .Where(x => !x.IsNonCombinable())
+                    .ToList();
+                foreach (var attribute in attributes)
                 {
-                    Id = attribute.Id,
-                    ProductAttributeId = attribute.ProductAttributeId,
-                    Name = productAttribute.Name,
-                    TextPrompt = attribute.TextPrompt,
-                    IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType
-                };
-
-                if (attribute.ShouldHaveValues())
-                {
-                    //values
-                    var attributeValues = attribute.ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(attribute.Id);
-                    foreach (var attributeValue in attributeValues)
+                    var productAttribute = _productAttributeService.GetProductAttributeById(attribute.ProductAttributeId);
+                    var attributeModel = new ProductAttributeCombinationModel.ProductAttributeModel
                     {
-                        var attributeValueModel = new AddProductAttributeCombinationModel.ProductAttributeValueModel
-                        {
-                            Id = attributeValue.Id,
-                            Name = attributeValue.Name,
-                            IsPreSelected = attributeValue.IsPreSelected
-                        };
-                        attributeModel.Values.Add(attributeValueModel);
-                    }
-                }
+                        Id = attribute.Id,
+                        ProductAttributeId = attribute.ProductAttributeId,
+                        Name = productAttribute.Name,
+                        TextPrompt = attribute.TextPrompt,
+                        IsRequired = attribute.IsRequired,
+                        AttributeControlType = attribute.AttributeControlType
+                    };
 
-                model.ProductAttributes.Add(attributeModel);
+                    if (attribute.ShouldHaveValues())
+                    {
+                        //values
+                        var attributeValues = attribute.ProductAttributeValues; //_productAttributeService.GetProductAttributeValues(attribute.Id);
+                        foreach (var attributeValue in attributeValues)
+                        {
+                            var attributeValueModel = new ProductAttributeCombinationModel.ProductAttributeValueModel
+                            {
+                                Id = attributeValue.Id,
+                                Name = attributeValue.Name,
+                                IsPreSelected = attributeValue.IsPreSelected,
+                            };
+                            attributeModel.Values.Add(attributeValueModel);
+                        }
+                    }
+
+                    model.ProductAttributes.Add(attributeModel);
+                }
             }
         }
 
@@ -526,7 +527,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     });
                 }
 
-                
+
                 //specification attributes
                 model.AddSpecificationAttributeModel.AvailableAttributes = _cacheManager
                     .Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, () =>
@@ -674,7 +675,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             var units = _measureService.GetAllMeasureUnits();
             model.AvailableUnits.Add(new SelectListItem { Text = "---", Value = "" });
             foreach (var un in units)
-                model.AvailableUnits.Add(new SelectListItem { Text = un.Name, Value = un.Id.ToString(), Selected = product != null  && un.Id == product.UnitId });
+                model.AvailableUnits.Add(new SelectListItem { Text = un.Name, Value = un.Id.ToString(), Selected = product != null && un.Id == product.UnitId });
 
             //default specs values
             model.AddSpecificationAttributeModel.ShowOnProductPage = true;
@@ -765,14 +766,14 @@ namespace Grand.Web.Areas.Admin.Controllers
                     }
 
                 var existingPwI = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
-                
+
                 if (existingPwI != null)
                 {
                     existingPwI.ProductId = product.Id;
                     if (used)
                     {
                         //update existing record
-                        
+
                         existingPwI.StockQuantity = stockQuantity;
                         existingPwI.ReservedQuantity = reservedQuantity;
                         _productService.UpdateProductWarehouseInventory(existingPwI);
@@ -822,7 +823,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             model.ProductId = productReview.ProductId;
             model.ProductName = product.Name;
             model.CustomerId = productReview.CustomerId;
-            model.CustomerInfo = customer!=null ? customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
+            model.CustomerInfo = customer != null ? customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest") : "";
             model.Rating = productReview.Rating;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(productReview.CreatedOnUtc, DateTimeKind.Utc);
             if (!excludeProperties)
@@ -953,7 +954,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 productModel.FullDescription = "";
 
                 //picture
-                var defaultProductPicture = x.ProductPictures.FirstOrDefault();  
+                var defaultProductPicture = x.ProductPictures.FirstOrDefault();
                 if (defaultProductPicture == null)
                     defaultProductPicture = new ProductPicture();
                 productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture.PictureId, 75, true);
@@ -1188,21 +1189,21 @@ namespace Grand.Web.Areas.Admin.Controllers
                     product.UseMultipleWarehouses &&
                     product.Published)
                 {
-                    foreach(var prevstock in prevMultiWarehouseStock)
+                    foreach (var prevstock in prevMultiWarehouseStock)
                     {
-                        if(prevstock.StockQuantity - prevstock.ReservedQuantity <= 0)
+                        if (prevstock.StockQuantity - prevstock.ReservedQuantity <= 0)
                         {
                             var actualStock = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == prevstock.WarehouseId);
-                            if(actualStock!=null)
+                            if (actualStock != null)
                             {
-                                if(actualStock.StockQuantity - actualStock.ReservedQuantity > 0)
+                                if (actualStock.StockQuantity - actualStock.ReservedQuantity > 0)
                                     _backInStockSubscriptionService.SendNotificationsToSubscribers(product, prevstock.WarehouseId);
                             }
                         }
                     }
-                    if(product.ProductWarehouseInventory.Sum(x=>x.StockQuantity - x.ReservedQuantity) > 0)
+                    if (product.ProductWarehouseInventory.Sum(x => x.StockQuantity - x.ReservedQuantity) > 0)
                     {
-                        if(prevMultiWarehouseStock.Sum(x => x.StockQuantity - x.ReservedQuantity) <=0)
+                        if (prevMultiWarehouseStock.Sum(x => x.StockQuantity - x.ReservedQuantity) <= 0)
                         {
                             _backInStockSubscriptionService.SendNotificationsToSubscribers(product, "");
                         }
@@ -1329,7 +1330,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Required products
 
         [HttpPost]
-        
+
         public IActionResult LoadProductFriendlyNames(string productIds)
         {
             var result = "";
@@ -1954,7 +1955,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 }
             }
 
-            var crossSellProducts = product.CrossSellProduct; 
+            var crossSellProducts = product.CrossSellProduct;
             var crossSellProductsModel = crossSellProducts
                 .Select(x => new ProductModel.CrossSellProductModel
                 {
@@ -2322,7 +2323,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product pictures
 
-        
+
         public IActionResult ProductPictureAdd(string pictureId, int displayOrder,
             string overrideAltAttribute, string overrideTitleAttribute,
             string productId)
@@ -2397,7 +2398,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         Id = x.Id,
                         ProductId = product.Id,
                         PictureId = x.PictureId,
-                        PictureUrl = picture!=null ? _pictureService.GetPictureUrl(picture) : null,
+                        PictureUrl = picture != null ? _pictureService.GetPictureUrl(picture) : null,
                         OverrideAltAttribute = picture != null ? picture.AltAttribute : null,
                         OverrideTitleAttribute = picture != null ? picture.TitleAttribute : null,
                         DisplayOrder = x.DisplayOrder
@@ -2496,7 +2497,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Product specification attributes
 
-        
+
         public IActionResult ProductSpecificationAttributeAdd(int attributeTypeId, string specificationAttributeId, string specificationAttributeOptionId,
             string customValue, bool allowFiltering, bool showOnProductPage,
             int displayOrder, string productId)
@@ -2599,7 +2600,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         default:
                             break;
                     }
-                    return psaModel; 
+                    return psaModel;
                 })
                 .ToList();
 
@@ -4232,7 +4233,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             AddLocales(_languageService, model.Locales);
 
             //pictures
-            model.ProductPictureModels = product.ProductPictures 
+            model.ProductPictureModels = product.ProductPictures
                 .Select(x => new ProductModel.ProductPictureModel
                 {
                     Id = x.Id,
@@ -4487,7 +4488,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         //delete
         [HttpPost]
-        public IActionResult ProductAttributeValueDelete(string Id, string pam, string productId) 
+        public IActionResult ProductAttributeValueDelete(string Id, string pam, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4673,45 +4674,6 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProductAttributeCombinationUpdate(ProductModel.ProductAttributeCombinationModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return AccessDeniedView();
-
-            var product = _productService.GetProductById(model.ProductId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
-            var combination = product.ProductAttributeCombinations.Where(x => x.Id == model.Id).FirstOrDefault();
-            if (combination == null)
-                throw new ArgumentException("No product attribute combination found with the specified id");
-
-
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
-            combination.ProductId = model.ProductId;
-            combination.StockQuantity = model.StockQuantity;
-            combination.AllowOutOfStockOrders = model.AllowOutOfStockOrders;
-            combination.Sku = model.Sku;
-            combination.ManufacturerPartNumber = model.ManufacturerPartNumber;
-            combination.Gtin = model.Gtin;
-            combination.OverriddenPrice = model.OverriddenPrice;
-            combination.NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow;
-            _productAttributeService.UpdateProductAttributeCombination(combination);
-
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
-            {
-                var pr = _productService.GetProductById(model.ProductId);
-                pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
-                _productService.UpdateStockProduct(pr);
-            }
-
-            return new NullJsonResult();
-        }
-
-        [HttpPost]
         public IActionResult ProductAttributeCombinationDelete(string id, string productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -4744,7 +4706,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         }
 
         //edit
-        public IActionResult AddAttributeCombinationPopup(string btnId, string formId, string productId)
+        public IActionResult AttributeCombinationPopup(string btnId, string formId, string productId, string Id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4760,15 +4722,24 @@ namespace Grand.Web.Areas.Admin.Controllers
 
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
-            var model = new AddProductAttributeCombinationModel();
+            var model = new ProductAttributeCombinationModel();
+            if (!string.IsNullOrEmpty(Id))
+            {
+                var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == Id);
+                if (combination != null)
+                {
+                    model = combination.ToModel();
+                    model.AttributesXML = _productAttributeFormatter.FormatAttributes(product, combination.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false);
+                }
+            }
             PrepareAddProductAttributeCombinationModel(model, product);
             return View(model);
         }
 
         [HttpPost]
-        
-        public IActionResult AddAttributeCombinationPopup(string btnId, string formId, string productId,
-            AddProductAttributeCombinationModel model, IFormCollection form)
+
+        public IActionResult AttributeCombinationPopup(string btnId, string formId, string productId,
+            ProductAttributeCombinationModel model, IFormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4789,147 +4760,170 @@ namespace Grand.Web.Areas.Admin.Controllers
             string attributesXml = "";
             var warnings = new List<string>();
 
-            #region Product attributes
-
-            var attributes = product.ProductAttributeMappings //_productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
-                                                              //ignore non-combinable attributes for combinations
-                .Where(x => !x.IsNonCombinable())
-                .ToList();
-            foreach (var attribute in attributes)
+            if (string.IsNullOrEmpty(model.Id))
             {
-                //string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
-                attribute.ProductId = productId;
-                string controlId = string.Format("product_attribute_{0}", attribute.Id);
-                switch (attribute.AttributeControlType)
+                #region Product attributes
+
+                var attributes = product.ProductAttributeMappings
+                    .Where(x => !x.IsNonCombinable())
+                    .ToList();
+                foreach (var attribute in attributes)
                 {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.ImageSquares:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                    //string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                    attribute.ProductId = productId;
+                    string controlId = string.Format("product_attribute_{0}", attribute.Id);
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.ImageSquares:
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, ctrlAttributes);
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
-                            {
-                                foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                var ctrlAttributes = form[controlId];
+                                if (!String.IsNullOrEmpty(ctrlAttributes))
                                 {
-                                    if (!String.IsNullOrEmpty(item))
-                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                            attribute, item);
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, ctrlAttributes);
                                 }
                             }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //load read-only (already server-side selected) values
-                            var attributeValues = attribute.ProductAttributeValues;
-                            foreach (var selectedAttributeId in attributeValues
-                                .Where(v => v.IsPreSelected)
-                                .Select(v => v.Id)
-                                .ToList())
+                            break;
+                        case AttributeControlType.Checkboxes:
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedAttributeId);
+                                var cblAttributes = form[controlId];
+                                if (!String.IsNullOrEmpty(cblAttributes))
+                                {
+                                    foreach (var item in cblAttributes.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                    {
+                                        if (!String.IsNullOrEmpty(item))
+                                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                                attribute, item);
+                                    }
+                                }
                             }
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            break;
+                        case AttributeControlType.ReadonlyCheckboxes:
                             {
-                                string enteredText = ctrlAttributes.ToString().Trim();
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, enteredText);
+                                //load read-only (already server-side selected) values
+                                var attributeValues = attribute.ProductAttributeValues;
+                                foreach (var selectedAttributeId in attributeValues
+                                    .Where(v => v.IsPreSelected)
+                                    .Select(v => v.Id)
+                                    .ToList())
+                                {
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, selectedAttributeId);
+                                }
                             }
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                        {
-                            var date = form[controlId + "_day"];
-                            var month = form[controlId + "_month"];
-                            var year = form[controlId + "_year"];
-                            DateTime? selectedDate = null;
-                            try
+                            break;
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                                var ctrlAttributes = form[controlId];
+                                if (!String.IsNullOrEmpty(ctrlAttributes))
+                                {
+                                    string enteredText = ctrlAttributes.ToString().Trim();
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, enteredText);
+                                }
                             }
-                            catch { }
-                            if (selectedDate.HasValue)
+                            break;
+                        case AttributeControlType.Datepicker:
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                    attribute, selectedDate.Value.ToString("D"));
+                                var date = form[controlId + "_day"];
+                                var month = form[controlId + "_month"];
+                                var year = form[controlId + "_year"];
+                                DateTime? selectedDate = null;
+                                try
+                                {
+                                    selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                                }
+                                catch { }
+                                if (selectedDate.HasValue)
+                                {
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, selectedDate.Value.ToString("D"));
+                                }
                             }
-                        }
-                        break;
-                    case AttributeControlType.FileUpload:
-                        {
-                            Guid downloadGuid;
-                            Guid.TryParse(form[controlId], out downloadGuid);
-                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
-                            if (download != null)
+                            break;
+                        case AttributeControlType.FileUpload:
                             {
-                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
-                                        attribute, download.DownloadGuid.ToString());
+                                Guid downloadGuid;
+                                Guid.TryParse(form[controlId], out downloadGuid);
+                                var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                                if (download != null)
+                                {
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, download.DownloadGuid.ToString());
+                                }
                             }
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                //validate conditional attributes (if specified)
+                foreach (var attribute in attributes)
+                {
+                    attribute.ProductId = productId;
+                    var conditionMet = _productAttributeParser.IsConditionMet(product, attribute, attributesXml);
+                    if (conditionMet.HasValue && !conditionMet.Value)
+                    {
+                        attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
+                    }
+                }
+
+
+                #endregion
+
+                warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
+                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
+                if (product.ProductAttributeCombinations.Where(x => x.AttributesXml == attributesXml).Count() > 0)
+                {
+                    warnings.Add("This combination attributes exists!");
+                }
+                if (warnings.Count == 0)
+                {
+                    var combination = new ProductAttributeCombination
+                    {
+                        ProductId = product.Id,
+                        AttributesXml = attributesXml,
+                        StockQuantity = model.StockQuantity,
+                        AllowOutOfStockOrders = model.AllowOutOfStockOrders,
+                        Sku = model.Sku,
+                        ManufacturerPartNumber = model.ManufacturerPartNumber,
+                        Gtin = model.Gtin,
+                        OverriddenPrice = model.OverriddenPrice,
+                        NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow,
+                    };
+                    _productAttributeService.InsertProductAttributeCombination(combination);
+
+                    if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+                    {
+                        var pr = _productService.GetProductById(productId);
+                        pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
+                        _productService.UpdateStockProduct(pr);
+                    }
+                    ViewBag.RefreshPage = true;
+                    return View(model);
                 }
             }
-
-            //validate conditional attributes (if specified)
-            foreach (var attribute in attributes)
+            else
             {
-                attribute.ProductId = productId;
-                var conditionMet = _productAttributeParser.IsConditionMet(product, attribute, attributesXml);
-                if (conditionMet.HasValue && !conditionMet.Value)
-                {
-                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
-                }
-            }
-
-
-            #endregion
-
-            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
-            if (product.ProductAttributeCombinations.Where(x => x.AttributesXml == attributesXml).Count() > 0)
-            {
-                warnings.Add("This combination attributes exists!");
-            }
-            if (warnings.Count == 0)
-            {
-                //save combination
-                var combination = new ProductAttributeCombination
-                {
-                    ProductId = product.Id,
-                    AttributesXml = attributesXml,
-                    StockQuantity = model.StockQuantity,
-                    AllowOutOfStockOrders = model.AllowOutOfStockOrders,
-                    Sku = model.Sku,
-                    ManufacturerPartNumber = model.ManufacturerPartNumber,
-                    Gtin = model.Gtin,
-                    OverriddenPrice = model.OverriddenPrice,
-                    NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow,
-                };
-                _productAttributeService.InsertProductAttributeCombination(combination);
+                var combination = product.ProductAttributeCombinations.FirstOrDefault(x => x.Id == model.Id);
+                combination.StockQuantity = model.StockQuantity;
+                combination.AllowOutOfStockOrders = model.AllowOutOfStockOrders;
+                combination.Sku = model.Sku;
+                combination.ManufacturerPartNumber = model.ManufacturerPartNumber;
+                combination.Gtin = model.Gtin;
+                combination.OverriddenPrice = model.OverriddenPrice;
+                combination.NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow;
+                combination.ProductId = product.Id;
+                _productAttributeService.UpdateProductAttributeCombination(combination);
 
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
                 {
-                    var pr = _productService.GetProductById(productId);
+                    var pr = _productService.GetProductById(model.ProductId);
                     pr.StockQuantity = pr.ProductAttributeCombinations.Sum(x => x.StockQuantity);
                     _productService.UpdateStockProduct(pr);
                 }

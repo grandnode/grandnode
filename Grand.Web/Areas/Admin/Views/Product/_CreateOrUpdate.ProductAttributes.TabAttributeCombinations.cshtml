@@ -12,7 +12,7 @@
         <div id="attributecombinations-grid"></div>
     </div>
     <div class="panel-footer">
-        <input type="submit" id="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 600, true); return false;" class="k-button" />
+        <input type="submit" id="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AttributeCombinationPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 600, true); return false;" class="k-button" />
         <input type="button" id="btnGenerateAllCombinations" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")" class="k-button" />
         <input type="submit" id="btnRefreshCombinations" style="display: none" />
     </div>
@@ -91,38 +91,38 @@
                         {
                             field: "AttributesXml",
                             title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")",
-                            width: 400,
+                            width: 200,
                             template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
                             encoded: false
                         }, {
                             field: "StockQuantity",
                             title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")",
-                            width: 150,
+                            width: 100,
                             //integer format
                             format: "{0:0}"
                         }, {
                             field: "AllowOutOfStockOrders",
                             title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
-                            width: 150,
+                            width: 100,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
                             template: '# if(AllowOutOfStockOrders) {# <i class="fa fa-check" aria-hidden="true" style="color:green"></i> #} else {# <i class="fa fa-times" aria-hidden="true" style="color:red"></i> #} #'
                         }, {
                             field: "Sku",
                             title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")",
-                            width: 200
+                            width: 100
                         }, {
                             field: "ManufacturerPartNumber",
                             title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")",
-                            width: 200
+                            width: 100
                         }, {
                             field: "Gtin",
                             title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")",
-                            width: 200
+                            width: 100
                         }, {
                             field: "OverriddenPrice",
                             title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")",
-                            width: 200,
+                            width: 100,
                             editor: function (container, options) {
                                 $('<input name="' + options.field + '"/>')
                                         .appendTo(container)
@@ -131,22 +131,16 @@
                                             decimals: 4
                                         });
                             }
-                        }, {
-                            field: "NotifyAdminForQuantityBelow",
-                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")",
-                            width: 150,
-                            //integer format
-                            format: "{0:0}"
-                        }, {
+                        },
+                        {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 120,
+                            template: "<a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/AttributeCombinationPopup/")?productId=@(Model.Id)&Id=#=Id#&btnId=btnRefreshCombinations&formId=product-form\", 800, 600, true);'>@T("Admin.Common.Edit")</a>"
+                        },
+                        {
                             command: [
                                 {
-                                    name: "edit",
-                                    text: {
-                                        edit: "@T("Admin.Common.Edit")",
-                                        update: "@T("Admin.Common.Update")",
-                                        cancel: "@T("Admin.Common.Cancel")"
-                                    }
-                                }, {
                                     name: "destroy",
                                     text: "@T("Admin.Common.Delete")"
                                 }
@@ -159,43 +153,43 @@
 </script>
 
 <script type="text/javascript">
-            $(document).ready(function () {
-                //refresh button
-                $('#btnRefreshCombinations').click(function () {
-                    //refresh grid
-                    var grid = $("#attributecombinations-grid").data('kendoGrid');
-                    grid.dataSource.read();
+    $(document).ready(function () {
+        //refresh button
+        $('#btnRefreshCombinations').click(function () {
+            //refresh grid
+            var grid = $("#attributecombinations-grid").data('kendoGrid');
+            grid.dataSource.read();
 
-                    //return false to don't reload a page
-                    return false;
-                });
+            //return false to don't reload a page
+            return false;
+        });
 
 
-                //generate combinations
-                $('#btnGenerateAllCombinations').click(function () {
-                    if (confirm('@T("Admin.Common.AreYouSure")')) {
+        //generate combinations
+        $('#btnGenerateAllCombinations').click(function () {
+            if (confirm('@T("Admin.Common.AreYouSure")')) {
 
-                        var postData = {
-                        };
-                        addAntiForgeryToken(postData);
+                var postData = {
+                };
+                addAntiForgeryToken(postData);
 
-                        $.ajax({
-                            cache: false,
-                            type: 'POST',
-                            url: '@Url.Action("GenerateAllAttributeCombinations", "Product", new { productId = Model.Id })',
-                            data: postData,
-                            dataType: 'json',
-                            success: function(data) {
-                                //refresh grid
-                                var grid = $("#attributecombinations-grid").data('kendoGrid');
-                                grid.dataSource.read();
-                            },
-                            error: function(xhr, ajaxOptions, thrownError) {
-                                alert('Error while generating attribute combinations');
-                            }
-                        });
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.Action("GenerateAllAttributeCombinations", "Product", new { productId = Model.Id })',
+                    data: postData,
+                    dataType: 'json',
+                    success: function(data) {
+                        //refresh grid
+                        var grid = $("#attributecombinations-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Error while generating attribute combinations');
                     }
-                    return false;
                 });
-            });
+            }
+            return false;
+        });
+    });
 </script>

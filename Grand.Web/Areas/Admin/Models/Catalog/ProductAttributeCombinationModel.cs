@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Grand.Framework.Mvc.ModelBinding;
 namespace Grand.Web.Areas.Admin.Models.Catalog
 {
-    public partial class AddProductAttributeCombinationModel : BaseGrandModel
+    public partial class ProductAttributeCombinationModel : BaseGrandModel
     {
-        public AddProductAttributeCombinationModel()
+        public string Id { get; set; }
+
+        public ProductAttributeCombinationModel()
         {
             ProductAttributes = new List<ProductAttributeModel>();
             Warnings = new List<string>();
@@ -44,6 +46,7 @@ namespace Grand.Web.Areas.Admin.Models.Catalog
         public IList<string> Warnings { get; set; }
 
         public string ProductId { get; set; }
+        public string AttributesXML { get; set; }
 
         #region Nested classes
 
