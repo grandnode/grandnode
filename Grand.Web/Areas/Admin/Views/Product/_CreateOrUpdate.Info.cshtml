@@ -1,9 +1,9 @@
 ﻿@model ProductModel
 @{
     //resources for product tags input
-    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css");
-    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js");
-    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js");
+    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css", excludeFromBundle: true);
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js", excludeFromBundle: true);
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js", excludeFromBundle: true);
 }
 @using Grand.Core.Domain.Catalog;
 @using Grand.Services.Catalog;
@@ -65,7 +65,6 @@
     function toggleProductType() {
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
         if (selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
-            $('#group-prices').show();
             $('#group-required-other-products').show();
             $('#group-giftcard').show();
             $('#group-downloads').show();
@@ -73,10 +72,13 @@
             $('#group-rental').show();
             $('#group-shipping').show();
             $('#group-tax').show();
-            $('#group-inventory').show();
             $('#tab-associated-products').hide();
+            $('#tab-price-product').show();
+            $('#tab-inventory-product').show();
+            $('#tab-attributes-product').show();
+            $('#tab-purchased-product').show();
+            
         } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
-            $('#group-prices').hide();
             $('#group-required-other-products').hide();
             $('#group-giftcard').hide();
             $('#group-downloads').hide();
@@ -84,8 +86,12 @@
             $('#group-rental').hide();
             $('#group-shipping').hide();
             $('#group-tax').hide();
-            $('#group-inventory').hide();
             $('#tab-associated-products').show();
+            $('#tab-price-product').hide();
+            $('#tab-inventory-product').hide();
+            $('#tab-attributes-product').hide();
+            $('#tab-purchased-product').hide(); 
+            
         }
     }
 
