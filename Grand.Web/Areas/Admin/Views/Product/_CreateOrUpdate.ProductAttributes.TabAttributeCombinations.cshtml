@@ -14,6 +14,7 @@
     <div class="panel-footer">
         <input type="submit" id="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AttributeCombinationPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 600, true); return false;" class="k-button" />
         <input type="button" id="btnGenerateAllCombinations" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")" class="k-button" />
+        <input type="button" id="btnClearAllCombinations" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.ClearAll")" class="k-button" />
         <input type="submit" id="btnRefreshCombinations" style="display: none" />
     </div>
 </div>
@@ -191,5 +192,33 @@
             }
             return false;
         });
+
+        //clear combinations
+        $('#btnClearAllCombinations').click(function () {
+            if (confirm('@T("Admin.Common.AreYouSure")')) {
+
+                var postData = {
+                };
+                addAntiForgeryToken(postData);
+
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.Action("ClearAllAttributeCombinations", "Product", new { productId = Model.Id })',
+                    data: postData,
+                    dataType: 'json',
+                    success: function(data) {
+                        //refresh grid
+                        var grid = $("#attributecombinations-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('Error while clearing attribute combinations');
+                    }
+                });
+            }
+            return false;
+        });
+
     });
 </script>

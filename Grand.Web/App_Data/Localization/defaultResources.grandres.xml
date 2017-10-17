@@ -3315,6 +3315,9 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll">
     <Value>Generate all possible combinations</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.ClearAll">
+    <Value>Clear all combinations</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes">
     <Value>Attributes</Value>
   </LocaleResource>

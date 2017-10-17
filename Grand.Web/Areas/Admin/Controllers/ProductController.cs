@@ -4995,6 +4995,35 @@ namespace Grand.Web.Areas.Admin.Controllers
             return Json(new { Success = true });
         }
 
+        [HttpPost]
+        public IActionResult ClearAllAttributeCombinations(string productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            foreach (var combination in product.ProductAttributeCombinations.ToList())
+            {
+                combination.ProductId = productId;
+                _productAttributeService.DeleteProductAttributeCombination(combination);
+            }
+
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            {
+                product.StockQuantity = 0;
+                _productService.UpdateStockProduct(product);
+            }
+            return Json(new { Success = true });
+        }
+
+
         #endregion
 
         #endregion

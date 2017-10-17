@@ -344,4 +344,7 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Update">
     <Value>Enter details below</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.AttributeCombinations.ClearAll">
+    <Value>Clear all combinations</Value>
+  </LocaleResource>
 </Language>
