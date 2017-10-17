@@ -109,7 +109,7 @@ namespace Grand.Core
                 {
                     //the X-Forwarded-For (XFF) HTTP header field is a de facto standard for identifying the originating IP address of a client
                     //connecting to a web server through an HTTP proxy or load balancer
-                    var forwardedHttpHeaderKey = "X-FORWARD-FOR";
+                    var forwardedHttpHeaderKey = "X-FORWARDED-FOR";
                     if (!string.IsNullOrEmpty(_hostingConfig.ForwardedHttpHeader))
                     {
                         //but in some cases server use other HTTP header
