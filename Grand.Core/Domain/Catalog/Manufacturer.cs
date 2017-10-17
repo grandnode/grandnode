@@ -4,7 +4,6 @@ using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Security;
 using Grand.Core.Domain.Seo;
 using Grand.Core.Domain.Stores;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Catalog
 {

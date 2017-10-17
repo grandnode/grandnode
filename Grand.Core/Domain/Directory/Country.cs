@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Stores;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Directory
 {

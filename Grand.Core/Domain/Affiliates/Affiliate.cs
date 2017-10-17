@@ -1,4 +1,3 @@
-using MongoDB.Bson.Serialization.Attributes;
 using Grand.Core.Domain.Common;
 
 namespace Grand.Core.Domain.Affiliates

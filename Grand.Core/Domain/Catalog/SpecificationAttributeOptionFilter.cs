@@ -1,6 +1,4 @@
 ﻿
-using MongoDB.Bson.Serialization.Attributes;
-
 namespace Grand.Core.Domain.Catalog
 {
     /// <summary>

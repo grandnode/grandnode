@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Localization;
 using Grand.Core.Domain.Stores;
-using MongoDB.Bson.Serialization.Attributes;
 using Grand.Core.Domain.Security;
 
 namespace Grand.Core.Domain.Orders

@@ -1,6 +1,4 @@
 ﻿using System;
-using Grand.Core.Domain.Customers;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Forums
 {

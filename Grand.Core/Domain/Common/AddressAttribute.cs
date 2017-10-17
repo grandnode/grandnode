@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Grand.Core.Domain.Catalog;
 using Grand.Core.Domain.Localization;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Common
 {

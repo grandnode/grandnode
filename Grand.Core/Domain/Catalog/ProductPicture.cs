@@ -1,7 +1,4 @@
 
-using MongoDB.Bson.Serialization.Attributes;
-using Grand.Core.Domain.Media;
-
 namespace Grand.Core.Domain.Catalog
 {
     /// <summary>

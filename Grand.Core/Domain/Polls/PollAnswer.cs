@@ -1,5 +1,4 @@
 using Grand.Core.Domain.Localization;
-using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
 
 namespace Grand.Core.Domain.Polls

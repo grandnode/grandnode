@@ -8,8 +8,6 @@ using Grand.Core.Domain.Customers;
 using Grand.Core.Domain.Payments;
 using Grand.Core.Domain.Shipping;
 using Grand.Core.Domain.Tax;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
 
 namespace Grand.Core.Domain.Orders
 {

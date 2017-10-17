@@ -1,6 +1,4 @@
 
-using MongoDB.Bson.Serialization.Attributes;
-using Grand.Core.Domain.Catalog;
 
 namespace Grand.Core.Domain.Shipping
 {

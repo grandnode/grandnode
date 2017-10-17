@@ -1,5 +1,4 @@
-﻿
-namespace Grand.Core.Configuration
+﻿namespace Grand.Core.Configuration
 {
     /// <summary>
     /// Setting interface

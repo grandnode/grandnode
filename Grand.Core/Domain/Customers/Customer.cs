@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Grand.Core.Domain.Common;
 using Grand.Core.Domain.Orders;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace Grand.Core.Domain.Customers
 {
